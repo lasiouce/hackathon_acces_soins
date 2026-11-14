@@ -228,6 +228,18 @@ body.levopen #legend{display:none}
   body.cardon #levers,body.cardon #actions{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* panneau « Questions » : l'agent de v2/agent explique les sorties ; il ne calcule rien */
+#ask{display:none;position:fixed;right:16px;top:76px;width:min(420px,calc(100vw - 32px));max-height:calc(100dvh - 100px);z-index:30;flex-direction:column;font-size:14px}
+body.askon #ask{display:flex}
+#ask header{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}#ask header b{flex:1}
+#asklog{overflow:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px;min-height:80px}
+#asklog .u{align-self:flex-end;background:var(--ground);border-radius:8px;padding:6px 10px;max-width:85%}
+#asklog .a{white-space:pre-wrap}#asklog .a .chk{display:block;margin-top:6px;font-size:12px;color:var(--mute)}
+#asklog .a .chk.warn{color:#8C5A1B}#asklog .st{color:var(--mute);font-size:13px}
+#askchips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}#askchips button{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;cursor:pointer}
+#askf{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--line)}#askf input{flex:1;min-width:0;height:38px;border:1px solid var(--line);border-radius:8px;padding:0 10px}
+#askf button{height:38px;border:1px solid var(--line);background:var(--ground);border-radius:8px;padding:0 12px;cursor:pointer}
+@media (max-width:700px){#ask{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:75dvh}}
 </style>
 </head>
 <body>
@@ -243,6 +255,7 @@ body.levopen #legend{display:none}
   <div id="profs" class="float" style="position:static" role="group" aria-label="Profession"></div>
   <div class="spacer"></div>
   <div id="actions"><button class="btn" id="txt" title="Taille du texte" aria-pressed="false">A+</button>
+    <button class="btn" id="askbtn" title="Poser une question sur le résultat affiché (agent conversationnel)" aria-pressed="false">Questions</button>
     <button class="btn" id="xbtn" title="Flux, paramètres, sources, comparaison de scénarios, export JSON" aria-pressed="false">Expert</button>
     <button class="btn" id="save" title="Copie un lien qui restaure ce scénario"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2L8 3.8"/><path d="M9.5 6.5a3 3 0 0 0-4.2 0L2.7 9.1a3 3 0 0 0 4.2 4.2L8 12.2"/></svg>Enregistrer le scénario</button>
   </div>
@@ -275,6 +288,11 @@ body.levopen #legend{display:none}
 <aside id="xp" class="float" aria-label="Mode expert"><header><b>Mode expert</b><nav>
   <button data-t="flux" aria-pressed="true">Flux</button><button data-t="lev">Leviers</button><button data-t="cmp">Scénarios</button></nav>
   <button class="icon" id="xclose" aria-label="Fermer le mode expert">×</button></header><div id="xbody"></div></aside>
+<aside id="ask" class="float" aria-label="Questions sur le résultat"><header><b>Questions sur le résultat</b>
+  <button class="icon" id="askclose" aria-label="Fermer les questions">×</button></header>
+  <div id="asklog" aria-live="polite"><p class="st" id="askst">Un agent explique les chiffres du modèle (écart par flux, délai, fourchette, sources). Il ne calcule rien : chaque nombre vient du modèle et est vérifié.</p></div>
+  <div id="askchips"><button>Pourquoi ce résultat ?</button><button>Quelle confiance accorder à ce chiffre ?</button><button>Quels leviers sont supposés ?</button></div>
+  <form id="askf" autocomplete="off"><input id="askq" maxlength="1000" placeholder="ex. combien de kinés en 2035 si on forme 20 % de plus ?" aria-label="Votre question"><button>Envoyer</button></form></aside>
 <div id="nl" class="float" role="dialog" aria-modal="true" aria-labelledby="nlh"></div>
 <div id="tip"></div>
 
@@ -309,7 +327,7 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
     bbox[r.id]=r.deps.map(d=>bbox[d.id]).filter(Boolean).reduce((a,b)=>[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[2],b[2]),Math.max(a[3],b[3])]);}
   names.FR="France";bbox.FR=[-7.8,41.3,9.6,51.1];   // inclut les encarts DROM à l'ouest
   if(!META.professions[S.prof]){toast("Lien : profession inconnue, retour aux kinés");S.prof="kines";}
-  buildProfs();buildMap();buildSearch();buildLevers();
+  buildProfs();buildMap();buildSearch();buildLevers();buildAsk();
   $("#xbtn").onclick=()=>{const on=document.body.classList.toggle("xpon");$("#xbtn").setAttribute("aria-pressed",on);renderExpert();};
   $("#xclose").onclick=()=>$("#xbtn").click();
   $("#xp nav").onclick=e=>{const t=e.target.closest("button");if(!t)return;XT=t.dataset.t;$("#xp nav").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===t));renderExpert();};
@@ -735,6 +753,29 @@ function crumb(){const chain=[];for(let t=S.terr||"FR";t;t=parent(t))chain.unshi
   $("#crumb").querySelectorAll("button").forEach(b=>b.onclick=()=>b.dataset.t=="FR"?backToFrance():select(b.dataset.t));}
 // précédent / suivant du navigateur
 addEventListener("popstate",()=>{const t=new URLSearchParams(location.hash.slice(1)).get("t");if(t&&t!=="FR"&&t!==S.terr)select(t,true,false);else if(!t&&S.terr)backToFrance(false);});
+// ---------- panneau « Questions » (agent, v2/agent) : la clé d'API reste sur le serveur ----------
+const ASK={hist:[],busy:false};
+function askEsc(t){return t.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]);}
+function askCtx(){const lv={};for(const l of META.levers)if(!isDef(l))lv[l.k]=S.lv[l.k];return{prof:S.prof,terr:S.terr||"FR",territoire:names[S.terr||"FR"],leviers:lv};}
+async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");
+  log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st">Recherche dans le modèle…</div>`);const st=log.lastElementChild;log.scrollTop=log.scrollHeight;
+  try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),historique:ASK.hist})});
+    const d=await r.json();
+    if(d.error){st.textContent=d.error;}
+    else{const a=d.ancrage,lx=d.lexique,ok=a.ok&&lx.ok;
+      const chk=a.ok?`✓ ${a.nombres} nombre${a.nombres>1?"s":""}, tous retrouvés dans les sorties du modèle`:`⚠ ${a.non_ancres.length} nombre(s) non retrouvé(s) dans les sorties du modèle : ${a.non_ancres.join(", ")}`;
+      const lxs=lx.ok?"":` · ⚠ terme(s) hors lexique neutre : ${lx.termes.join(", ")}`;
+      const tools=[...new Set(d.appels.map(x=>x.outil))].join(", ");
+      st.outerHTML=`<div class="a">${askEsc(d.reponse)}<span class="chk${ok?"":" warn"}">${chk}${lxs} · outils : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
+      ASK.hist.push({role:"user",texte:q},{role:"assistant",texte:d.reponse});ASK.hist=ASK.hist.slice(-8);}
+  }catch(e){st.textContent="Serveur injoignable.";}
+  ASK.busy=false;log.scrollTop=log.scrollHeight;}
+function buildAsk(){
+  $("#askbtn").onclick=async()=>{const on=document.body.classList.toggle("askon");$("#askbtn").setAttribute("aria-pressed",on);
+    if(on){try{const e=await fetch("/api/agent/etat").then(r=>r.json());if(!e.disponible){$("#askst").textContent=e.message;$("#askf button").disabled=true;}}catch{}$("#askq").focus();}};
+  $("#askclose").onclick=()=>$("#askbtn").click();
+  $("#askf").onsubmit=e=>{e.preventDefault();const q=$("#askq").value;$("#askq").value="";askSend(q);};
+  $("#askchips").onclick=e=>{const b=e.target.closest("button");if(b)askSend(b.textContent);};}
 </script>
 </body>
 </html>

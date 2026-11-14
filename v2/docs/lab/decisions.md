@@ -3278,3 +3278,31 @@ après des erreurs de lancement chez des coéquipiers (fichiers de `data/raw/` a
 fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/carte`, `/api/scenario` (densité),
 `/api/interpret`, page et contours répondent ; `manifest.py --check` OK.
 **Remplace** « La v1 (`sante/`, `app/`, `docs/lab/`) est figée et se consulte en lecture seule ».
+
+## 2026-11-14 — Agent conversationnel qui interprète les sorties du jumeau (v2/agent), branché dans la carte
+
+**Décision.**
+- `v2/agent/` : agent à outils (SDK `anthropic`, boucle manuelle), modèle `claude-opus-5-5` par défaut (`AGENT_MODEL`),
+  effort `medium` (`AGENT_EFFORT`), repli serveur `fallbacks: "default"` en cas de refus. Il **explique, il ne calcule pas** :
+  5 outils (`meta`, `territoire`, `scenario`, `carte`, `interpreter`) appellent le serveur de la carte et renvoient des
+  digests **déjà arrondis et déjà dérivés par du code déterministe** (écart, écart en %, évolution, fourchette
+  s × (1 ± k × horizon) comme le résumé de la carte, flux cumulés). Le modèle choisit et explique.
+- **Garde-fous mesurés** (`garde_fous.py`) : ancrage (chaque nombre de la réponse se retrouve, à la précision affichée,
+  dans une sortie d'outil, la question ou le contexte de la carte) et lexique neutre (termes de `lexicon.md`). Le panneau
+  affiche le résultat du contrôle sous chaque réponse ; une réponse non ancrée est signalée, pas masquée.
+- **Clé** : `ANTHROPIC_API_KEY` dans l'environnement du serveur, ou dans un `.env` local à la racine (ajouté au
+  `.gitignore`). Jamais dans le dépôt, jamais renvoyée au navigateur. Sans clé : `/api/agent/etat` le dit, la carte reste
+  entière.
+- Carte : bouton « Questions », panneau à droite (feuille en bas sur mobile), `POST /api/agent` (contexte = profession,
+  territoire, leviers affichés ; historique texte des 8 derniers tours). L'agent ne modifie pas les leviers de la carte.
+- Jeu de 22 questions écrit avant le code (`v2/agent/questions.yaml`) ; plan dans
+  `v2/docs/lab/derivations/2026-11-14-agent-interprete.md`.
+**Pourquoi.** Demande relayée par la session principale : un agent qui interprète les résultats bruts pour un public non
+technique. Conforme à la décision du compilateur (« un modèle de langage pour l'analyse seule, jamais le calcul »).
+Alternative la moins chère (gabarit de phrases à trous) gardée comme sol : les digests en sont la partie chiffrée.
+**Ce qui le renverserait.** Moins de 90 % de réponses entièrement ancrées sur le jeu de 22 questions : repli sur le gabarit
+déterministe pour tous les chiffres.
+**Mesures.** Aucune pour l'instant : pas de clé d'API dans l'environnement de la session. Commit sans mesure à la demande
+de l'utilisateur·rice (« Commit sans mesure »). Vérifié sans clé : `/api/agent/etat` et `POST /api/agent` répondent
+« indisponible », panneau ouvert sur ordinateur et mobile, aucune erreur JavaScript ; test unitaire des garde-fous
+(`uv run python v2/agent/garde_fous.py`). Mesure ouverte dans `open.md`.

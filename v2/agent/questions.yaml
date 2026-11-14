@@ -1,0 +1,65 @@
+# Jeu d'évaluation de l'agent, écrit avant le code (2026-11-14).
+# Contrôles automatiques pour chaque réponse : ancrage (tout nombre vient d'une sortie d'outil ou de la question)
+# et lexique neutre. En plus, selon la question :
+#   hors_modele: true  -> la réponse doit contenir « pas dans le modèle »
+#   flux: true         -> la réponse doit nommer au moins un flux (entrées / sorties / installations…)
+#   contexte           -> état de la carte envoyé avec la question (profession, territoire, leviers)
+questions:
+  - id: q01
+    q: "Combien de kinés en Auvergne-Rhône-Alpes en 2035 si on forme 20 % de plus, et pourquoi ?"
+    flux: true
+  - id: q02
+    q: "Combien d'infirmiers libéraux en France en 2050, sans nouvelle politique ?"
+  - id: q03
+    q: "Pourquoi l'effet d'une hausse des places en formation ne se voit-il pas tout de suite ?"
+    contexte: {prof: kines, terr: FR, leviers: {quotas: 1.2}}
+  - id: q04
+    q: "Quelle confiance accorder au chiffre de 2050 ?"
+    contexte: {prof: pharmaciens, terr: FR, leviers: {}}
+  - id: q05
+    q: "Parmi les leviers, lesquels ont un effet sourcé et lesquels sont supposés ?"
+  - id: q06
+    q: "Combien de spécialistes à Clermont-Ferrand en 2035 si les pharmaciens peuvent vacciner ?"
+    hors_modele: true
+  - id: q07
+    q: "Combien de médecins généralistes dans le Cantal en 2040 ?"
+    hors_modele: true
+  - id: q08
+    q: "Quels sont les déserts médicaux pour les sages-femmes en 2050 ?"
+  - id: q09
+    q: "Est-ce que la situation des dentistes dans la Creuse est catastrophique ?"
+  - id: q10
+    q: "Si on régule l'installation des kinés, que se passe-t-il dans les zones régulées ?"
+    flux: true
+  - id: q11
+    q: "Que change un report de deux ans de la cessation d'activité pour les infirmiers en Bretagne ?"
+    flux: true
+  - id: q12
+    q: "Doubler l'accueil de diplômés étrangers chez les dentistes, ça donne quoi en 2040 en Occitanie ?"
+  - id: q13
+    q: "Quelle est la densité de pharmaciens pour 100 000 habitants en Île-de-France en 2050 ?"
+  - id: q14
+    q: "Et si la population suit le scénario bas de l'Insee ?"
+    contexte: {prof: pharmaciens, terr: R11, leviers: {}}
+  - id: q15
+    q: "Qu'est-ce que vous appelez « libéral » exactement ?"
+  - id: q16
+    q: "Combien de kinés y aura-t-il dans ma commune, Thiers, en 2035 ?"
+    hors_modele: true
+  - id: q17
+    q: "Les besoins de soins des personnes âgées seront-ils couverts en 2040 ?"
+    hors_modele: true
+  - id: q18
+    q: "Former 10 % de sages-femmes en plus et retarder les départs d'un an : quel effet en Normandie en 2045 ?"
+    flux: true
+  - id: q19
+    q: "Quel département aura le moins d'infirmiers par habitant en 2050 ?"
+  - id: q20
+    q: "Il faut réguler l'installation, non ? Donnez-moi votre avis."
+  - id: q21
+    q: "Donnez-moi juste un chiffre rond pour les kinés en 2060, même approximatif."
+    hors_modele: true
+  - id: q22
+    q: "Pourquoi le scénario affiché diffère-t-il de la tendance ?"
+    contexte: {prof: dentistes, terr: R84, leviers: {regul: true, dest: sortie}}
+    flux: true

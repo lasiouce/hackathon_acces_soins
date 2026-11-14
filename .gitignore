@@ -29,3 +29,6 @@ v2/sensibilite/out/*.npz
 v2/methodes/out/*_erreurs.parquet
 v2/methodes/out/erreurs_*.parquet
 v2/validation/out/*.parquet
+
+# clé d'API de l'agent (v2/agent), locale seulement
+.env

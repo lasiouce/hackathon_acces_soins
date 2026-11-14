@@ -37,6 +37,18 @@ uv run python v2/prototype-carte/server.py
 Puis ouvrir **http://localhost:8767**. Le serveur met une dizaine de secondes à charger les
 5 professions ; il affiche `prêt : http://localhost:8767` quand c'est fait.
 
+**Agent « Questions » (facultatif).** Le bouton « Questions » de la carte ouvre un agent conversationnel
+(`v2/agent/`) qui explique les résultats. Il a besoin d'une clé d'API Anthropic, lue côté serveur et jamais
+envoyée au navigateur, soit dans l'environnement, soit dans un fichier `.env` à la racine (ignoré par git) :
+
+```bash
+echo 'ANTHROPIC_API_KEY=sk-ant-...' >> .env     # ou : export ANTHROPIC_API_KEY=...
+uv run python v2/prototype-carte/server.py
+```
+
+Sans clé, la carte fonctionne et le panneau indique que l'agent est indisponible. Modèle :
+`AGENT_MODEL` (défaut `claude-opus-5-5`) ; effort : `AGENT_EFFORT` (défaut `medium`).
+
 Déjà cloné ? `git pull` puis `uv sync` suffisent. Si une erreur parle de `data/raw/` ou d'un fichier
 `.parquet` absent :
 
@@ -81,6 +93,12 @@ indépendant), et chaque sortie le rappelle.
   traduit, il ne calcule jamais. Environ **77 % des phrases** sont entièrement bien traduites, mesuré
   sur des jeux écrits à l'aveugle. Un écran montre toujours ce qui a été compris et ce qui n'est pas dans
   le modèle, et rien n'est appliqué sans confirmation.
+- **Questions en français** (bouton « Questions », facultatif, clé d'API requise) : un agent à outils
+  (`v2/agent/`) explique le résultat affiché : écart décomposé par flux, délai d'effet, fourchette,
+  statut sourcé ou supposé des leviers, limites. Il **ne calcule rien** : chaque nombre vient d'un appel
+  au serveur de la carte, et un contrôle automatique vérifie, sous chaque réponse, que tous les nombres se
+  retrouvent dans les sorties du modèle et qu'aucun terme de jugement du lexique n'est employé. Les taux
+  sur le jeu de 22 questions (`v2/agent/questions.yaml`) ne sont **pas encore mesurés**.
 - **Hypothèses de contexte** : scénario de population Insee (central, bas, haut) et activité moyenne
   par professionnel (équivalents temps plein, supposée).
 - **Fiche par territoire** : effectif 2026, 2050, écart au tendanciel, repères 2030 / 2035 / 2040 / 2050
@@ -162,6 +180,7 @@ v2/
   sensibilite/         axe 5 : Morris, Sobol, fourchettes à 2050
   data/                axe 4 : scripts de construction, processed/ (commité), manifest.py
   langage/             compilateur phrase -> leviers, glossaire, jeux de test à l'aveugle
+  agent/               agent « Questions » : outils, garde-fous (ancrage, lexique), jeu de 22 questions
   prototype/           serveur des leviers et du jumeau (bibliothèque de la carte, port 8766)
   prototype-carte/     carte de décision (port 8767)
   papers/              un article par axe et l'article de synthèse (LaTeX)

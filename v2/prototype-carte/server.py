@@ -5,11 +5,14 @@ Run (racine du dépôt) : uv run python v2/prototype-carte/server.py [port]   ->
 Réutilise v2/prototype/server.py (Model, leviers par famille, parse_levers : mêmes bornes que /api/scenario).
 Ajouts : /geo (contours départementaux, coordonnées arrondies à 1e-3°, gzip) et /api/carte
 (une valeur 2026 / 2050 par département, tendanciel et scénario, en un seul appel), /api/interpret
-(phrase d'un·e élu·e -> réglage des leviers, par le compilateur déterministe de v2/langage).
+(phrase d'un·e élu·e -> réglage des leviers, par le compilateur déterministe de v2/langage),
+/api/agent (POST : question -> réponse de l'agent de v2/agent, qui explique les sorties sans calculer ; la clé
+ANTHROPIC_API_KEY reste côté serveur) et /api/agent/etat.
 """
 import gzip
 import importlib.util
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -166,11 +169,52 @@ class Handler(V1.Handler):
                 return self.send_json(NL.compile(texte, q.get("prof"), q.get("terr")))
             except Exception as e:
                 return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
+        if u.path == "/api/agent/etat":
+            ok, msg = _agent().disponible()
+            return self.send_json({"disponible": ok, "message": msg})
         return super().do_GET()
+
+    def do_POST(self):
+        if urlparse(self.path).path != "/api/agent":
+            return self.send_json({"error": "inconnu"}, 404)
+        n = int(self.headers.get("Content-Length") or 0)
+        if not 0 < n <= 65536:
+            return self.send_json({"error": "requête vide ou trop longue"}, 400)
+        try:
+            body = json.loads(self.rfile.read(n))
+            q = str(body.get("question", "")).strip()[:1000]
+        except (ValueError, AttributeError):
+            return self.send_json({"error": "JSON invalide"}, 400)
+        if not q:
+            return self.send_json({"error": "question vide"}, 400)
+        hist = [{"role": m.get("role"), "texte": str(m.get("texte", ""))[:4000]} for m in body.get("historique", [])[-8:]
+                if isinstance(m, dict) and m.get("role") in ("user", "assistant")]
+        try:
+            r = _agent().repondre(q, body.get("contexte") or None, hist)
+        except Exception as e:
+            return self.send_json({"error": f"{type(e).__name__}"}, 500)
+        if "erreur" in r:
+            return self.send_json({"error": r["erreur"]}, 503)
+        r["appels"] = [{"outil": a["outil"], "entree": a["entree"]} for a in r["appels"]]   # sorties complètes : côté serveur
+        return self.send_json(r)
+
+
+_AG = None
+
+
+def _agent():
+    """Agent de v2/agent, chargé au premier appel (la carte démarre sans lui, et sans clé)."""
+    global _AG
+    if _AG is None:
+        sp = importlib.util.spec_from_file_location("agent", HERE.parent / "agent" / "agent.py")
+        _AG = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(_AG)
+    return _AG
 
 
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8767
+    os.environ.setdefault("AGENT_CARTE_URL", f"http://127.0.0.1:{port}")   # l'agent interroge ce serveur-ci
     t0 = time.perf_counter()
     geo_bytes()
     regions_bytes()
