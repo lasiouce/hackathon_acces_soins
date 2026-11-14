@@ -26,8 +26,11 @@ sur des mondes simulés, ils divisent par trois\mesure{} l'erreur sur la part de
 rétention des seniors prolongée en tendance dégrade la prévision ($+0{,}33$\mesure{} point). La borne de
 rétention $r \le 1{,}2$ d'un modèle voisin produit une croissance composée (+23\,\%\mesure{} de dentistes
 en 2050 par rapport à la référence). Limite principale : le gain est petit, l'intervalle ignore la
-corrélation entre origines, et les cibles ont déjà été vues lors d'un banc antérieur. L'article est une
-première étape ; les familles de méthodes hors stock-flux restent à mesurer.
+corrélation entre origines, et les cibles ont déjà été vues lors d'un banc antérieur. Première méthode hors stock-flux déterministe, un modèle âge-période-cohorte bayésien de la rétention
+nette fait jeu égal (8,74\,\%\mesure) ; sa prévision probabiliste réussit la calibration par
+simulation mais reste trop étroite hors échantillon (couverture de 50\,\%\mesure{} pour 80\,\% nominal),
+faute d'incertitude sur les entrées. L'article rend compte des premières étapes d'un programme en boîte
+blanche.
 \end{abstract}
 
 {\renewcommand\abstractname{Abstract}
@@ -43,10 +46,13 @@ Single-year ages tie on the total headcount; on simulated worlds they divide the
 aged 60+ by three. Extrapolating the trend in senior retention degrades forecasts ($+0.33$ point). A
 retention cap $r \le 1.2$ used by a related model yields compounding growth (+23\,\% dentists in 2050
 relative to the reference). Main limits: the gain is small, the interval ignores correlation between
-origins, and targets were already seen by an earlier bench. This is a first step; non stock-flow
-families remain to be measured.
+origins, and targets were already seen by an earlier bench. A first non-deterministic method, a
+Bayesian age-period-cohort model of net retention, ties (8.74\,\%); its probabilistic forecast passes
+simulation-based calibration but is too narrow out of sample (50\,\% coverage of nominal 80\,\%
+intervals), because entries carry no uncertainty. This paper reports the first steps of a white-box
+programme.
 \end{abstract}}
-\noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; stock-flux ;
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; stock-flux ; âge-période-cohorte ;
 shrinkage hiérarchique ; backtest pré-enregistré ; jumeau numérique.
 
 \medskip
@@ -76,9 +82,11 @@ ne le peut pas est exclue.
         Les écarts mesurés (de l'ordre de 0,1\mesure{} point) en sont la conséquence.
   \item Un test sur mondes simulés à âges connus, une vérification de la borne de rétention d'un modèle
         voisin, et un diagnostic sur la répartition régionale des entrées.
-  \item Les familles de méthodes hors stock-flux (microsimulation, bayésien hiérarchique ou espace-état,
-        choix discret de l'installation) \emph{ne sont pas mesurées ici}. La section~\ref{sec:conclusion}
-        en donne la feuille de route.
+  \item Une première méthode hors stock-flux déterministe (section~\ref{sec:apc}) : un modèle
+        âge-période-cohorte bayésien de la rétention nette, avec calibration par simulation et prévision
+        probabiliste. Les autres familles (cohortes bayésiennes hiérarchiques, choix discret de
+        l'installation, réconciliation entre échelles) \emph{ne sont pas encore mesurées} ; la
+        section~\ref{sec:conclusion} en donne l'ordre.
 \end{itemize}
 
 \section{Travaux existants}
@@ -186,6 +194,42 @@ rétrécis vers le national : $r = (\text{num} + k\,r_{\text{nat}})/(\text{den} 
         absolue.
 \end{description}
 
+\subsection{Première méthode hors stock-flux déterministe : APC bayésien de la rétention nette}
+\label{sec:apc}
+\paragraph{Identification.} Le RPPS ne donne que des stocks par tranche de 5 ans et par année, pas les
+cessations. La seule quantité observée est le ratio de cohorte
+$r = N(a, \tau) / A(N(\tau-1))(a)$, qui mêle cessations, reprises, changements de secteur et
+déménagements. Dans un département, la sortie nette $A(N) - N$ est négative dans 27 à 47\,\%\mesure{}
+des cellules de 35 ans et plus. Un modèle de Poisson sur des sorties reconstruites inventerait donc
+des cessations non observées : nous modélisons la \emph{rétention nette}, sur l'échelle logarithmique.
+
+\paragraph{Modèle.} Pour chaque profession $\times$ sexe et chaque observation $i$ = (département $d$,
+tranche $a$, année d'arrivée $\tau$), sur les tranches dont la rétention nationale de la fenêtre est
+inférieure ou égale à 1 :
+\begin{align}
+  y_i &= \log\frac{N_i + 1/2}{B_i + 1/2} \sim \mathcal N\!\left(\eta_i,\ \sigma_e^2 / B_i + \omega^2\right),\\
+  \eta_i &= \mu_a + \pi_{g(a),\tau} + \gamma_{\tau - a} + v_{\text{rég}(d),a} + w_{d,a},
+\end{align}
+où $B_i$ est l'effectif exposé (vieillissement uniforme, comme A0), $\mu_a \sim \mathcal N(0, 10^2)$,
+$\pi_g$ est une marche aléatoire d'ordre 1 par groupe d'âge ($<35$, 35--59, $\ge 60$ ans),
+$\gamma$ une marche aléatoire d'ordre 1 sur la cohorte (âge et période ont des pas différents : la
+cohorte est indexée en années, comme dans~\cite{schmid2007bamp}), $v \sim \mathcal N(0,\tau_r^2)$ et
+$w \sim \mathcal N(0, \tau_d^2)$ les écarts région $\times$ tranche et département $\times$ tranche.
+Les hyperparamètres $\theta = (\sigma_\pi, \sigma_\gamma, \tau_r, \tau_d, \sigma_e, \omega)$ maximisent
+la vraisemblance marginale (Bayes empirique) ; sachant $\hat\theta$, la loi a posteriori des effets
+est exactement gaussienne et se calcule par une factorisation de Cholesky, sans MCMC.
+
+\paragraph{Ce qui n'est pas identifié.} Âge, période et cohorte sont liés linéairement ; seules les
+variations non linéaires sont interprétables, et les marches d'ordre 1 imposent une contrainte
+stochastique qui choisit la décomposition la plus plate~\cite{schmid2007bamp}. Avec 14 transitions
+annuelles et des tranches de 5 ans, l'effet cohorte n'apprend presque rien : écart-type a posteriori /
+a priori de 0,98\mesure{} (médiane, dentistes, origine 2021).
+
+\paragraph{Projection et levier.} Les marches d'ordre 1 sont prolongées à plat, avec une variance qui
+croît avec l'horizon ; l'ordre 2, qui prolongerait la pente, est écarté a priori puisque A3 a échoué.
+La rétention projetée est $s = \min(1, e^{\eta})$ ; les entrées restent celles de A0. Le levier
+\texttt{apc\_sorties.periode\_60plus} ajoute un choc au log de la rétention des 60 ans et plus.
+
 \subsection{Ce que chaque levier modifie}
 \begin{table}[h]
 \centering\small
@@ -251,6 +295,37 @@ $|\Delta(\text{A1}, \text{A0})| < 0{,}3$ point (observé $+0{,}09$ et $+0{,}03$\
 A2 améliore A0 de 0 à 0,3 point (observé $-0{,}11$\mesure : tient) ;
 A3 réduit le biais national des pharmaciens et des dentistes (pharmaciens : $-0{,}15$ $\to$
 $+2{,}28$\,\%\mesure{} : \textbf{falsifiée}).
+
+\subsection{APC de la rétention nette (inscrit avant passage)}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+& MAPE $h=5$ (\%) & $\Delta$ vs A0 (IC 95\,\%) \\
+\midrule
+A0 stock-flux taux locaux & 8,68 & --- \\
+APC, moyenne a posteriori & 8,74 & $+0{,}07$ $[-0{,}03\,;\,+0{,}16]$ \\
+A3 rétention 60+ en tendance & 9,00 & $+0{,}33$ $[+0{,}23\,;\,+0{,}42]$ \\
+\bottomrule
+\end{tabular}
+\caption{Périmètre privé ; toutes les valeurs sont mesurées\mesure. L'APC bat la tendance
+($-0{,}56$ $[-0{,}91\,;\,-0{,}20]$\mesure) et fait jeu égal avec A0.}
+\end{table}
+
+\paragraph{Prévision probabiliste.} Sur 2\,056 couples département $\times$ origine à $h = 5$, le CRPS
+relatif des 100 tirages prédictifs de l'APC vaut 6,82\,\%\mesure, contre 8,68\,\%\mesure{} pour la
+prévision ponctuelle de A0 (dont le CRPS est l'erreur absolue). Mais les intervalles sont trop
+étroits : 50\,\%\mesure{} des valeurs observées tombent dans l'intervalle à 80\,\% et 60\,\%\mesure{}
+dans celui à 90\,\% ; l'histogramme PIT est en U. La cause est dérivée\derive{} : seule la rétention
+est probabiliste, alors que les entrées, qui dominent l'erreur départementale, restent fixes, et
+$\theta$ est fixé à son estimation.
+
+\paragraph{Contrôles.} La calibration par simulation (même plan d'observation, effets tirés de l'a
+priori) donne des rangs uniformes pour les quatre quantités suivies, avec $\theta$ fixé (200 jeux,
+$p_{KS}$ de 0,20 à 0,56\mesure) et avec $\theta$ ré-estimé (40 jeux, $p_{KS}$ de 0,23 à
+0,80\mesure). Dans l'échantillon, 90,9 à 91,8\,\%\mesure{} des $y$ tombent dans l'intervalle
+prédictif à 90\,\%. Le modèle est donc correctement codé et calibré sur ce qu'il voit ; c'est
+l'extrapolation hors échantillon qui manque d'incertitude.
 
 \subsection{Ancien périmètre (secondaire)}
 Sur le périmètre libéral + mixte, A2 reste le seul gain : $-0{,}10$\mesure{} point
@@ -333,6 +408,8 @@ uv run python -m methodes.monde     # mondes simulés
 uv run python -m methodes.b4        # borne r <= 1,2
 uv run python -m methodes.c5        # région de formation
 uv run python -m methodes.ablation  # exploratoire
+uv run --with scipy python -m methodes.banc_apc  # étape 1 : APC
+uv run --with scipy python -m methodes.sbc       # calibration par simulation
 \end{verbatim}
 Graine du bootstrap 20261114, 2\,000 tirages. Sorties dans \texttt{v2/methodes/out/}. Données :
 \texttt{data/processed/stock.parquet} (DREES, 2026-07-02) et
@@ -347,20 +424,20 @@ hiérarchique l'améliore de peu mais de façon reproductible sur deux périmèt
 pas la prévision de l'effectif total ; ils corrigent la structure par âge, dont dépendent les leviers
 retraite. Prolonger la tendance de rétention des seniors dégrade la prévision.
 
-Ces résultats restent internes à une seule famille : \textbf{les cinq variantes sont des stock-flux}.
-Leur proximité (écarts de l'ordre de 0,1 point) dit que l'estimation des sorties n'est plus le
-facteur limitant. Feuille de route vers d'autres familles, par ordre de priorité :
+Les cinq premières variantes restent internes à une seule famille, le stock-flux. Le programme de
+l'axe 2 décidé le 2026-11-14 en sort par étapes, en gardant l'identité des cohortes par composantes
+mais en estimant chaque flux par un modèle statistique explicite. \textbf{Étape 1, faite :} un APC
+bayésien de la rétention nette fait jeu égal avec le stock-flux en prévision ponctuelle et fournit une
+prévision probabiliste, correctement codée (calibration par simulation réussie) mais trop étroite hors
+échantillon, faute d'incertitude sur les entrées. Étapes suivantes, dans l'ordre décidé :
 \begin{enumerate}
-  \item \textbf{Choix discret de l'installation} (logit sur des attributs départementaux datés :
-        croissance de la population, densité relative, zonage). C'est la famille qui vise la source
-        d'erreur dominante, la répartition des entrées, et son coefficient de zonage est le levier
-        régulation. Il faut une série de population par département avant 2018 (\textasciitilde{}1\,h).
-  \item \textbf{Bayésien hiérarchique ou espace-état}, évalué à la commune selon le protocole
-        d'échelle fine, où les petits effectifs rendent le partage d'information décisif
-        (\textasciitilde{}2\,h).
-  \item \textbf{Microsimulation individuelle}, pour les bandes d'incertitude et les règles non
-        linéaires (régulation par commune) ; sa prévision ponctuelle égale celle du stock-flux à taux
-        égaux\derive.
+  \item cohortes par composantes en bayésien hiérarchique, commune $\subset$ département $\subset$
+        région, \emph{entrées comprises} : c'est la condition d'une bande calibrée
+        (\textasciitilde{}1 jour)\suppose ;
+  \item logit conditionnel de l'installation, la régulation devenant un ensemble de choix restreint ;
+  \item réconciliation des prévisions entre échelles ;
+  \item validation par CRPS, PIT, calibration par simulation et mondes simulés, avec une référence
+        naïve probabiliste pour comparer les CRPS à armes égales.
 \end{enumerate}
 Autres suites : inscrire et passer la combinaison A2 + A1b (\textasciitilde{}10\,min), déposer les
 prévisions 2027--2030 (\textasciitilde{}10\,min), et trancher entre A0 et B4 à 2050 par la
