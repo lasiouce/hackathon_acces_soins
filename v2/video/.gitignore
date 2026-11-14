@@ -1,3 +1,7 @@
 node_modules/
 out/
 .remotion/
+# V2 : séquences d'images de la carte (64 Mo), régénérées par `npm run capture:v2`
+public/textures/v2/vol1/
+public/textures/v2/vol2/
+public/textures/v2/an/

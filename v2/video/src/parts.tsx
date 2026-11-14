@@ -121,7 +121,7 @@ export const Shot: React.FC<{ src: string; keys: Cam[]; opacity?: number; blur?:
   return (
     <AbsoluteFill style={{ opacity, overflow: 'hidden', filter: blur ? `blur(${blur}px)` : undefined }}>
       <div style={{ position: 'absolute', width: 1920, height: 1080, transformOrigin: '0 0', transform: `translate(${960 - cx * z}px, ${540 - cy * z}px) scale(${z})` }}>
-        <Img src={staticFile(`textures/${src}.png`)} style={{ width: 1920, height: 1080 }} />
+        {src && <Img src={staticFile(`textures/${/\.\w+$/.test(src) ? src : src + '.png'}`)} style={{ width: 1920, height: 1080 }} />}
         {children}
       </div>
     </AbsoluteFill>
