@@ -17,20 +17,20 @@ date: 2026-11-14
 # β_IDE — effet mesuré de la régulation infirmière
 
 **Mécanisme.**
-- Depuis 2012, une infirmière libérale ne peut se conventionner en zone
+- Depuis la généralisation de 2012 (expérimentation dès 2008-2009), une infirmière libérale ne peut se conventionner en zone
   sur-dotée qu'en succédant à un départ.
 - Le flux d'installation y est donc plafonné par les sorties.
 - β mesure ce que ce plafond a changé à la densité, par rapport à des zones
   comparables non régulées.
 
 **Valeur** (*citée*, différence de différences avec appariement exact :
-396 zones traitées, 454 témoins).
+396 zones traitées et 454 témoins, p. 4 ; effets p. 5). *[Corrigé le 2026-11-14 après audit en texte intégral : voir [[2026-11-14-audit-sources]].]*
 | Contraste | Effet | Signif. |
 |---|---|---|
 | Sur-dotées comparées aux intermédiaires, IDEL total | −25,57 / 100 000 hab. | p < 0,001 |
 | Sur-dotées comparées aux intermédiaires, IDEL < 40 ans | −18,8 / 100 000 hab. | p < 0,001 |
 | Très sous-dotées comparées aux intermédiaires (incitations), total / < 40 ans | +4,31 / +4,25 | p < 0,01 / p < 0,001 |
-| Sur-dotées comparées aux intermédiaires, actes AMI / AIS par hab. | −0,66 / −0,35 | — |
+| Sur-dotées comparées aux intermédiaires, actes AMI / AIS par hab. | −0,66 / −0,35 | p < 0,001 |
 
 L'écart de densité entre zones très sous-dotées et zones sur-dotées a
 été réduit « de moitié » entre 2006 et 2016 (*cité*, descriptif).

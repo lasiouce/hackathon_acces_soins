@@ -55,15 +55,15 @@ Légende des statuts :
 | 1 Régulation | MK | [[param-mk-regul-regle]] | régulation | non prioritaire : 1 pour 1 ; 26,5 % de la population | avenant 7 (2023) | sourcé |
 | 1 Régulation | MK | [[param-mk-obligation-exercice]] | installation | 2 ans en zone (très) sous-dotée ou 2 ans en établissement | 2023, effet en 2027 | sourcé |
 | 1 Régulation | MK | [[param-mk-regul-effet]] | régulation | non chiffré | — | non mesurable |
-| 1 Régulation | CD | [[param-cd-regul-regle]] | régulation | non prioritaire : 1 pour 1 ; 4,8 % de la population ; spécialistes exemptés | convention 2023, effet au 01/01/2025 | sourcé |
+| 1 Régulation | CD | [[param-cd-regul-regle]] | régulation | non prioritaire : 1 pour 1 ; 4,8 % de la population ; spécialistes dérogatoires (art. 35.5) | convention 2023, effet au 01/01/2025 | sourcé |
 | 1 Régulation | CD | [[param-cd-regul-effet]] | régulation | non chiffré ; borne haute ≈ 5 % du flux | — | non mesurable |
 | 1 Régulation | SF, CD, MK, IDE | [[param-regul-report-entrants]] | régulation | destination des entrants bloqués : qualitative seulement | 2022-2024 | non mesurable |
 | 2 Filières | PH | [[param-ph-filiere-primo-inscrits]] | filières | D 71,0 % · H 9,5 % · B 8,6 % · G 5,7 % · E 3,5 % · A 1,2 % · C 0,4 % | 1/1/2026 | sourcé |
 | 2 Filières | PH | [[param-ph-part-privee-biologie]] | transitions | G privé 55,8 % | 1/1/2026 | sourcé |
 | 2 Filières | PH | [[param-ph-part-privee-etablissements]] | transitions | H privé 28,6 % (Ordre), contre 17 % (DREES, axe 4) | 1/1/2026 | sourcé |
-| 2 Filières | PH | [[param-ph-internat-postes]] | filières | 746 postes (biologie 266, pharmacie hospitalière 480) ; ≈ 14 % d'une promotion | rentrée 2025 | sourcé |
+| 2 Filières | PH | [[param-ph-internat-postes]] | filières | 746 postes (biologie 266, pharmacie hospitalière 480) ; ≈ 19 % d'une promotion en postes (14 % en inscrits) | rentrée 2025 | sourcé |
 | 2 Filières | PH | [[param-ph-taux-inscription-diplomes]] | abandon | 32,8 % de non-inscrits à 3 ans | 2015 | sourcé |
-| 3 Odontologie | CD | [[param-cd-specialisation-des]] | filières | 9,2 % d'une promotion ; ODF 52 · CO 25 · MBD 44 | 2024-25 | sourcé |
+| 3 Odontologie | CD | [[param-cd-specialisation-des]] | filières | 9,1 % d'une promotion ; ODF 52 · CO 25 · MBD 44 | 2024-25 | sourcé |
 | 3 Odontologie | CD | [[param-cd-stock-specialistes]] | filières | ODF 5,3 % · CO 0,5 % · MBD 0,2 % du stock | 2022 | sourcé |
 | 4 Abandon IFSI | IDE | [[param-ide-rendement-diplomes]] | formation | ρ = 0,72 (1 − ρ = 28,2 %) | entrée 2022 | mesuré |
 | 4 Abandon IFSI | IDE | [[param-ide-abandon-promotion]] | abandon | 25,0 % (toutes interruptions) ; 11,9 % définitives | promotions 2024-2025 | sourcé |
@@ -76,7 +76,7 @@ Légende des statuts :
 | Suite | PH | [[param-ph-sorties-ordre]] | sorties | 3 902 radiations par an ; 18,4 % de 60 ans et plus | 2024 | sourcé |
 
 **Trois résultats qui changent le modèle.**
-1. **« 30 % d'abandon par an » chez les IDE n'a pas de source primaire.**
+1. **« 30 % d'abandon en 1re année » chez les IDE n'a pas de source primaire.**
    - Le chiffre vient d'une réponse ministérielle (QO AN n° 101, 2023) qui
      ne cite aucune source.
    - Ce que mesure la DREES : 12-13,5 % d'interruptions en 1re année, et un
@@ -90,7 +90,7 @@ Légende des statuts :
 3. **La régulation ne touche pas toutes les professions de la même façon.**
    - Part de la population couverte : CD 4,8 %, SF 12,2 %, MK 26,5 %,
      IDE 27,4 %.
-   - Les spécialistes dentaires sont exemptés.
+   - Les spécialistes dentaires peuvent déroger (art. 35.5).
    - Le seul effet causal publié (IDE) est une borne haute de l'effet
      national, car les zones témoins reçoivent le report.
 
@@ -151,17 +151,17 @@ jouer, dans l'interface, sur un grand panel de politiques applicables.
 | 1 | Réguler l'installation des infirmiers (activer, retirer, étendre les zones) | [[param-ide-regul-regle]], [[param-regul-theta-fuite]], [[param-regul-report-entrants]] → `regulation.zones`, `.destination` | 27,4 % de la population en zone sur-dotée | de 0 à 100 % des communes ; θ ∈ [0,5 ; 1] (supposé) | IRDES, DiD | module présent, levier suspendu (2e revue) |
 | 2 | Idem, sages-femmes | [[param-sf-regul-regle]] | 12,2 % | idem | direction seulement | idem |
 | 3 | Idem, kinés | [[param-mk-regul-regle]] | 26,5 % | idem | aucune | idem |
-| 4 | Idem, dentistes ; étendre ou non aux spécialistes | [[param-cd-regul-regle]] | 4,8 % ; spécialistes exemptés | idem ; exemption on/off | aucune | idem ; exemption non codée |
+| 4 | Idem, dentistes ; étendre ou non aux spécialistes | [[param-cd-regul-regle]] | 4,8 % ; spécialistes dérogatoires | idem ; exemption on/off | aucune | idem ; exemption non codée |
 | 5 | Règle des deux tiers d'activité en périphérie (IDE) | [[param-ide-regul-regle]] | en vigueur | on/off | aucune | non (pas de module) |
 | 6 | Obligation d'exercice en zone sous-dotée (MK ; extension à IDE, SF, CD) | [[param-mk-obligation-exercice]] | MK, 2 ans, à partir de 2027 | 0 à 3 ans, par profession | aucune avant 2028 | non (pas de module d'installation communale) |
 | 7 | Réduire l'abandon en IFSI | [[param-ide-rendement-diplomes]] → `formation.abandon` | ≈ 0,105 par an (ρ = 0,72, dérivé) | 0,056 à 0,105 par an (niveaux 2009-2018 à 2022) | ER 1319 : diviser la perte par 2 ≈ +14 % de places | oui (défaut à corriger, actuellement 0) |
-| 8 | Places en formation (IFSI, MK, SF, odontologie, pharmacie) | `formation.capacite`, `entrees.multiplicateur` | 1 | × [0,8 ; 1,2] (DD76 ±20 %) | DD76 : ±12-13 % d'effectif à 2050 | oui (quotas bornés à [0,7 ; 1,5] dans le prototype) |
+| 8 | Places en formation (IFSI, MK, SF, odontologie, pharmacie) | `formation.capacite`, `entrees.multiplicateur` | 1 | × [0,8 ; 1,2] (DD76 ±20 %) | DD76 : ±9 % (CD), ±12 % (SF), ±13 % (PH) d'effectif à 2050 | oui (quotas bornés à [0,7 ; 1,5] dans le prototype) |
 | 9 | Postes d'internat en pharmacie (biologie, pharmacie hospitalière) | [[param-ph-internat-postes]], [[param-ph-filiere-primo-inscrits]] | 746 postes | ±20 % (supposé) | mécanique (postes) | non (pas de module filières) |
 | 10 | Postes de DES en odontologie | [[param-cd-specialisation-des]] | 121 postes | 100-160 (supposé ; 140 annoncés pour 2026-27) | mécanique | non |
-| 11 | Retenir les diplômés en pharmacie (inscription à l'Ordre) | [[param-ph-taux-inscription-diplomes]] | 32,8 % de non-inscrits (2015) | 20-35 % (2006-2015 observé) | aucune | non |
+| 11 | Retenir les diplômés en pharmacie (inscription à l'Ordre) | [[param-ph-taux-inscription-diplomes]] | 32,8 % de non-inscrits (2015) | 10-33 % (2006-2015 observé) | aucune | non |
 | 12 | Cumul emploi-retraite (plafonner, inciter) | [[param-cumul-emploi-retraite]] → `sorties.part_cumul`, `.cumul_multiplicateur` | SF 0,8 · CD 4,7 · PH 1,8 · MK-IDE 1,5 % | × [0,5 ; 2] (plan de l'axe 5) | aucune propre | oui (défaut 0,10 « médecins » à corriger) |
-| 13 | Report de l'âge de départ | [[param-mk-age-retraite]], [[param-cessation-par-age]] → `sorties.decalage_retraite` | 0 | 0 à 2 ans | DREES : +1 % d'effectif par an de décalage (IDE, MK) | module présent, levier suspendu |
-| 14 | Diplômés étrangers (reconnaissance, EVC) | [[param-age-entree-exercice]] (flux : SF 70, CD 665, MK 1 175 par an) | flux observés | × [0,5 ; 2] (supposé) | DD76, variante | partiel (`entrees.multiplicateur` global, pas de flux séparé) |
+| 13 | Report de l'âge de départ | [[param-mk-age-retraite]], [[param-cessation-par-age]] → `sorties.decalage_retraite` | 0 | 0 à 2 ans | DREES : +1 % par rapport au tendanciel pour un an de décalage (IDE, MK) | module présent, levier suspendu |
+| 14 | Diplômés étrangers (reconnaissance, EVC) | [[param-age-entree-exercice]] (flux : SF 70, CD 665, MK 1 175 par an en 2015) | flux observés | × [0,5 ; 2] (supposé) | DD76, variante | partiel (`entrees.multiplicateur` global, pas de flux séparé) |
 
 **Ce que cela dit.**
 - **Huit politiques sur quatorze ont un point d'entrée dans le code**

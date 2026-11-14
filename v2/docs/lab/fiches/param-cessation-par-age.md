@@ -9,7 +9,7 @@ valeur: "non publiée par la DREES (définition seule) ; à mesurer sur nos stoc
 unite: "probabilité annuelle"
 incertitude: "la DREES calcule ces taux sur le panel RPPS 2016-2020 (DD76, tab. 11) sans en publier les valeurs ; décès inclus implicitement ; cumul emploi-retraite inclus (champ < 70 ans)"
 source: "DREES, Les Dossiers n° 76 (mars 2021), tableau 11, p. 41-42 — https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-03/DD76.pdf ; ER n° 1062 (IDE) et n° 1075 (MK), encadré 2 (bornes : aucune cessation avant 40 ans ; aucun exercice après 67 ans pour les IDE, après 70 ans pour les MK)"
-millesime: "panel RPPS 2016-2020 (DD76) ; CNAM 2011-2016 et DADS 2011-2014 (ER 1062, 1075)"
+millesime: "panel RPPS 2016-2020 (DD76) ; CNAM 2011-2015 (IDE, ER 1062) et 2011-2016 (MK, ER 1075) ; DADS 2011-2014"
 statut: non mesurable
 date: 2026-11-14
 ---

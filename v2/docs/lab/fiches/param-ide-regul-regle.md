@@ -28,7 +28,7 @@ date: 2026-11-14
 - Le surplus va vers ψ ([[param-regul-report-entrants]]).
 
 **Zones** (5 niveaux par bassin de vie ou pseudo-canton, indicateur APL ;
-cibles nationales de l'avenant) :
+cibles nationales de l'avenant, art. 3.2.1) :
 | Zone | Cible (population) |
 |---|---|
 | Très sous-dotée | 5 % |
@@ -39,8 +39,9 @@ cibles nationales de l'avenant) :
 
 - **Zonage observé.** Colonne `zide` du fichier par commune : 27,4 % de la
   population et 13,7 % des communes en zone sur-dotée (*dérivé*, 35 002
-  communes, 68,9 M d'habitants).
-- **Historique.** La régulation existe depuis 2012 (avenant 3). L'effet
+  communes, 68,9 M d'habitants). Convention de comptage : Paris, Lyon et Marseille sont comptées par arrondissement. Avec les seules communes, on obtient IDE 26,1 %, MK 24,4 %, CD 2,2 % (73 communes).
+- **Historique.** Expérimentée en 2008-2009, généralisée en 2012 (IRDES
+  QES 270, p. 2 et 5). *[Corrigé le 2026-11-14 après audit en texte intégral : voir [[2026-11-14-audit-sources]].]* L'effet
   mesuré sur 2006-2016 est dans [[param-ide-regul-effet-densite]].
 - **Méthode du zonage.** Arrêté de méthodologie du 10/01/2020, cité par
   les ARS et non ouvert. Le zonage est arrêté par le DG de l'ARS

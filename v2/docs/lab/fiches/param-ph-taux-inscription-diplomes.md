@@ -8,7 +8,7 @@ module: abandon
 valeur: "32,8 % (2015)"
 unite: "1 − nouveaux inscrits diplômés depuis < 3 ans / numerus clausus de l'année t−6"
 incertitude: "fort : 27,8 % en 2014, entre 10 et 26 % sur 2006-2013 ; aucune valeur récente vérifiée (une valeur de presse de 26 %, non datée, n'est pas retenue)"
-source: "Ordre national des pharmaciens, Éléments démographiques 2016 (données 2015), p. 8 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf"
+source: "Ordre national des pharmaciens, Éléments démographiques 2016 (données 2015), p. 7 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf"
 millesime: "2015"
 statut: sourcé
 date: 2026-11-14

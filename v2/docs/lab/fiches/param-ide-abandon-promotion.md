@@ -31,8 +31,10 @@ promotion (*cité*, données DREES) :
 - L'ER 1266 donne 14 % d'abandon pour la promotion entrée en 2018 ; 39 % des
   abandons ont lieu en 1re année (*cité*).
 - **« 30 % d'abandon »** : non retrouvé dans une source primaire. Le
-  chiffre vient d'une réponse ministérielle à la question orale AN n° 101
-  (11/01/2023), qui n'en donne pas la source. Il ne concorde avec aucune
+  chiffre figure dans la question orale AN n° 101 (JO du 3/01/2023) et dans
+  la réponse ministérielle (11/01/2023). Il porte sur la **1re année** ; le
+  ministère cite aussi « 20 % à la fin du parcours ». Aucune source n'est
+  donnée. *[Corrigé le 2026-11-14 après audit : [[2026-11-14-audit-sources]].]* Il ne concorde avec aucune
   série DREES. **Non retenu.**
 
 **Mesure.**

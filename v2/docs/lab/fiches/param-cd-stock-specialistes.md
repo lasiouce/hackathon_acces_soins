@@ -18,7 +18,7 @@ date: 2026-11-14
 
 **Mécanisme.**
 - Les spécialistes sont un sous-stock du stock dentaire.
-- Les ODF sont presque tous libéraux. Ils sont exemptés de la régulation et
+- Les ODF sont presque tous libéraux. Ils peuvent déroger à la régulation (art. 35.5) et
   ne sont pas interchangeables avec les omnipraticiens.
 - Le stock ODF est stable : les entrées (≈ 50 DES par an, plus les
   qualifications par commission et les diplômes de l'UE) compensent à peu

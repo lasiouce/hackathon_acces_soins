@@ -7,7 +7,7 @@ profession: kines
 module: régulation
 valeur: "non chiffré"
 unite: "—"
-incertitude: "aucun bilan publié ; l'IRDES (projet DRIMK) annonce un « effet localisé attendu de réduction de la densité » sans chiffre ; le nombre de dérogations est demandé par les QE AN 14558 et 14922 (2026), sans réponse à ce jour ; la régulation 2012 a été annulée par le Conseil d'État"
+incertitude: "aucun bilan publié ; l'IRDES (projet DRIMK) annonce un « effet localisé attendu de réduction de la densité » sans chiffre ; le nombre de dérogations est demandé par la QE AN 14558 (2026), sans réponse à ce jour ; la QE 14922 porte sur la régulation, pas sur les dérogations ; la régulation 2012 a été annulée par le Conseil d'État"
 source: "IRDES, fiche projet DRIMK (juillet 2026), p. 4 ; Cour des comptes, mai 2024, p. 31 (écart d'APL creusé pour les MK sur 2016-2019) — https://www.vie-publique.fr/files/rapport/pdf/294141.pdf"
 millesime: "2026 (projet en cours)"
 statut: non mesurable
@@ -23,11 +23,11 @@ sous-dotée s'ajoute pour les nouveaux conventionnés.
 
 **Ce qu'on sait.**
 - Aucune ampleur publiée.
-- Contexte : entre 2016 et 2019, avant l'avenant 7, les disparités ont
-  augmenté pour les MK (IGAS) et leur écart d'APL s'est creusé (Cour des
-  comptes).
-- Ce contexte sert de contrefactuel naïf : une tendance divergente sans
-  régulation.
+- Contexte : les disparités ont augmenté pour les MK selon l'IGAS
+  (note 133, sans période précise), et leur écart d'APL s'est creusé sur
+  2016-2019 selon la Cour des comptes.
+- Ce **n'est pas** un contrefactuel « sans régulation » : la régulation de
+  l'avenant 5 (2018) était déjà en vigueur sur une partie de la période. *[Corrigé le 2026-11-14 après audit en texte intégral : voir [[2026-11-14-audit-sources]].]*
 
 **Comment le mesurer.**
 - Différence de différences par commune, avant/après la date d'effet de

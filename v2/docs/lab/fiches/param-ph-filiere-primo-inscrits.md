@@ -7,7 +7,7 @@ profession: pharmaciens
 module: filières
 valeur: "2025 : A 1,2 % · B 8,6 % · C 0,4 % · D 71,0 % · E 3,5 % · G 5,7 % · H 9,5 % (N = 3 044)"
 unite: "part des primo-inscrits de l'année (somme = 1)"
-incertitude: "±1,5 point par section entre 2015, 2024 et 2025 (D : 66 → 71 %, H : 14 → 9,5 %) ; φ décrit la section d'inscription, pas l'employeur"
+incertitude: "jusqu'à ±3 points par section d'une année à l'autre (D +3,1 entre 2024 et 2025) et ±5 points sur dix ans (D : 66 → 71 %, H : 14 → 9,5 %) ; φ décrit la section d'inscription, pas l'employeur"
 source: "Ordre national des pharmaciens (CNOP, traitement EY), Panorama 2025, dépliant, p. 2 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2025-depliant-fr%20 ; Synthèse Panorama 2024, p. 2 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2024-synthese ; Éléments démographiques 2016, p. 10 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf"
 millesime: "au 1er janvier 2026 (Panorama 2025) ; au 1er janvier 2025 ; données 2015"
 statut: sourcé

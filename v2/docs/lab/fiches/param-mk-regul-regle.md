@@ -34,11 +34,13 @@ date: 2026-11-14
 | Non prioritaire | 30 % |
 
 - Zonage observé (colonne `zmk`) : 26,5 % de la population, 8,1 % des
-  communes en zone non prioritaire (*dérivé*).
+  communes en zone non prioritaire (*dérivé*). Convention de comptage : Paris, Lyon et Marseille sont comptées par arrondissement. Avec les seules communes, on obtient IDE 26,1 %, MK 24,4 %, CD 2,2 % (73 communes).
 - Méthode : arrêté du 20/03/2024, qui modifie celui du 24/09/2018.
 
 **Historique.** Une régulation de 2012 a été annulée par le Conseil d'État
-en 2014. Celle de 2023 a été validée par le Conseil d'État (17/07/2024).
+en 2014. Une régulation en zone « sur-dotée » existait aussi depuis
+l'avenant 5 (2018) : Cour des comptes 2024, p. 95, note 152. L'avenant 7
+renomme la zone « non prioritaire ». *[Corrigé le 2026-11-14 après audit en texte intégral : voir [[2026-11-14-audit-sources]].]* Celle de 2023 a été validée par le Conseil d'État (17/07/2024).
 Obligation d'exercice associée : [[param-mk-obligation-exercice]].
 
 **Géocodes (axe 4).** [[data-zonage-mk]] : liste des communes en « remplacement seul », extraite de CartoSanté. Le nombre concorde avec le fichier data.gouv (à ±10 communes près).

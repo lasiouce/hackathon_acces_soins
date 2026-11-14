@@ -19,10 +19,10 @@ date: 2026-11-14
 **Mécanisme.**
 - En zone sur-dotée, le conventionnement est accordé « uniquement si une
   autre sage-femme a préalablement mis fin » à son activité conventionnée
-  dans la zone (avenant 4, art. 3.3).
+  dans la zone (avenant 4, art. 3.3.2).
 - Dans le jumeau : E_SF,lib(c, t) ≤ X_SF,lib(c, t) pour c sur-dotée.
 
-**Dérogations** (art. 3.3).
+**Dérogations** (art. 3.3.3).
 - Motifs de vie personnelle.
 - Accompagnement global de la grossesse.
 - Réduction d'activité d'au moins 50 % pendant 2 ans.
@@ -34,7 +34,7 @@ Ces dérogations rendent la contrainte « molle » : un taux de dérogation est
 **Zones.**
 - 5 niveaux.
 - Zonage observé (colonne `zsf`) : sur-dotées = 12,2 % de la population,
-  4,2 % des communes (*dérivé*).
+  4,2 % des communes (*dérivé*). Convention de comptage : Paris, Lyon et Marseille sont comptées par arrondissement. Avec les seules communes, on obtient IDE 26,1 %, MK 24,4 %, CD 2,2 % (73 communes).
 - Méthode : arrêté du 17/10/2019, modifié le 26/03/2024 (cités par les ARS).
 - Le zonage est arrêté par le DG de l'ARS, pour 2 ans au plus.
 

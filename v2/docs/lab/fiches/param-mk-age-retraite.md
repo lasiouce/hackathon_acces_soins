@@ -26,9 +26,11 @@ ou une réforme des retraites déplace R.
 - Deux autres flux de sortie, de nature différente :
   - les cessations hors retraite, à 41,9-48,3 ans en moyenne ;
   - en sens inverse, des entrées : 1 175 diplômés à l'étranger par an
-    (2016, ER 1075).
+    (2015, ER 1075).
 
 **Mesure.** Tableau 7 du rapport annuel de l'Ordre. Contrôle : la DREES
 (ER 1075) borne l'exercice à 70 ans. Une variante « cessation décalée d'un
-an » donne +1 % d'effectifs (*cité*, ER 1062 et 1075). C'est un premier
+an » (plus de 60 ans, à partir de 2018) donne des effectifs supérieurs de 1 % au
+tendanciel dès 2020-2021 (*cité*, ER 1062 et 1075, p. 5). C'est un écart de
+niveau, pas un rythme annuel. *[Corrigé le 2026-11-14 après audit : [[2026-11-14-audit-sources]].]* C'est un premier
 repère de sensibilité pour l'axe 5.
