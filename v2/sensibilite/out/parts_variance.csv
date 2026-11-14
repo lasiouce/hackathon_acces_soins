@@ -1,0 +1,16 @@
+profession,annee,S_decision,S_connaissance,ST_decision,ST_connaissance,interaction,decision_pese_plus
+dentistes,2030,0.092,0.879,0.092,0.862,0.029,False
+dentistes,2040,0.327,0.666,0.344,0.605,0.007,False
+dentistes,2050,0.411,0.59,0.433,0.527,-0.001,False
+infirmiers,2030,0.808,0.138,0.872,0.145,0.054,True
+infirmiers,2040,0.864,0.112,0.891,0.106,0.024,True
+infirmiers,2050,0.875,0.116,0.887,0.104,0.009,True
+kines,2030,0.406,0.64,0.401,0.659,-0.045,False
+kines,2040,0.677,0.217,0.727,0.255,0.106,True
+kines,2050,0.713,0.151,0.782,0.19,0.136,True
+pharmaciens,2030,0.036,0.905,0.039,0.918,0.059,False
+pharmaciens,2040,0.305,0.67,0.304,0.697,0.025,False
+pharmaciens,2050,0.479,0.523,0.474,0.552,-0.002,False
+sages-femmes,2030,0.028,1.039,0.019,1.027,-0.067,False
+sages-femmes,2040,0.258,0.763,0.234,0.76,-0.021,False
+sages-femmes,2050,0.411,0.566,0.405,0.574,0.023,False

@@ -3,7 +3,7 @@ type: analysis
 date: 2026-11-14
 author: Claude (session axe 5)
 question: "Quels hyperparamètres déplacent vraiment l'effectif « libéral » (privé) en 2030, 2040 et 2050, de combien, et avec quelle fourchette ?"
-headline: "À 2050, la variance de N privé vient de 3 sources : part privée des salariés ambigus (ST 0,91 SF, 0,48 PH), lien formation → entrées (filière CD 0,55, PH 0,32 ; quotas 0,2–0,6 en levier) et fenêtre d'ajustement (MK 0,53, IDE 0,53). Le cumul emploi-retraite ne bouge rien (μ* ≤ 0,25 %). Fourchette 2050 : propagation −17 à +34 %, backtest extrapolé ±9 à ±66 %"
+headline: "Partie 2 : en 2050, la décision pèse plus que l'ignorance pour les IDE (0,88 contre 0,12) et les kinés (0,71 contre 0,15), pas pour SF ni CD (0,41 contre 0,57–0,59) ; au département, le modèle n'est assez sûr pour décider que pour 57 dép. IDE et 26 MK. Partie 1 : à 2050, la variance de N privé vient de 3 sources : part privée des salariés ambigus (ST 0,91 SF, 0,48 PH), lien formation → entrées (filière CD 0,55, PH 0,32 ; quotas 0,2–0,6 en levier) et fenêtre d'ajustement (MK 0,53, IDE 0,53). Le cumul emploi-retraite ne bouge rien (μ* ≤ 0,25 %). Fourchette 2050 : propagation −17 à +34 %, backtest extrapolé ±9 à ±66 %"
 status: done
 professions: [sages-femmes, dentistes, pharmaciens, kines, infirmiers]
 hypothesis: "Une poignée de paramètres porte l'essentiel de la variance de N(2050) ; la plupart des fiches de l'axe 1 ne la déplacent pas"
@@ -233,6 +233,135 @@ Ce n'est **pas** une question pour l'axe 1 : la fenêtre et la variante
 d'entrées (ST 0,5 pour MK et IDE) sont des choix d'estimation. Le banc
 de l'axe 3 doit les trancher sur l'erreur hors échantillon, pas une source.
 
+## Partie 2 — leviers branchés : le choix du décideur pèse-t-il plus que notre ignorance ?
+
+**Code.** [`leviers.py`](../../../sensibilite/leviers.py) et
+[`priorites.py`](../../../sensibilite/priorites.py).
+- Composition `LEVIERS` du jumeau, instantané `git archive` (`v2/jumeau`
+  au commit 4721268, empreinte `a8cb2750`).
+- N = 512 par profession, plans par facteur et par groupe : 8 693 à
+  11 253 runs par profession.
+- 0,12 à 0,7 s par run selon la charge (mesuré).
+- 5 processus en parallèle, de 56 à 115 min chacun.
+- Décisions du 2026-11-14 : « Axe 5, partie 2 » et « fourchettes
+  départementales ».
+
+**Groupes.**
+- **Décision** : quotas, capacité de formation, report de la retraite,
+  cumul emploi-retraite, départs précoces, abandon IFSI (IDE), diplômés
+  étrangers (SF, CD, MK) et part des zones régulées.
+- **Connaissance** :
+  - les choix d'estimation ;
+  - la part privée des salariés ambigus ;
+  - la fraction de vieillissement et la part en cumul ;
+  - θ, la destination des entrants bloqués et la part exemptée.
+- **Infirmiers** : on passe au **privé complet** (table axe 4, hypothèse
+  H_ind), soit 301 681 en 2030 au tendanciel, contre les libéraux seuls
+  de la partie 1.
+
+### Part de la variance de N privé en 2050 (Sobol par groupe, IC 95 % bootstrap, mesuré)
+
+| Profession | Décision S1 | Connaissance S1 | Interaction | Qui pèse le plus en 2050 ? | 2030 (décision / connaissance) |
+|---|---|---|---|---|---|
+| Infirmiers (privé complet) | **0,88** [0,77–0,99] | 0,12 [0,08–0,15] | 0,01 | la décision | 0,81 / 0,14 |
+| Kinés | **0,71** [0,60–0,82] | 0,15 [0,10–0,20] | 0,14 | la décision | 0,41 / 0,64 |
+| Pharmaciens | 0,48 [0,39–0,57] | 0,52 [0,44–0,61] | 0,00 | à égalité (IC chevauchants) | 0,04 / 0,91 |
+| Sages-femmes | 0,41 [0,33–0,48] | **0,57** [0,49–0,63] | 0,02 | la connaissance | 0,03 / 1,04 |
+| Dentistes | 0,41 [0,33–0,50] | **0,59** [0,50–0,67] | 0,00 | la connaissance | 0,09 / 0,88 |
+
+**Message pour le décideur.**
+- **En 2030, l'ignorance l'emporte presque partout.** La connaissance
+  pèse de 0,64 à 1,04 ; la seule exception est celle des IDE, où les
+  leviers rapides (capacité IFSI en 3 ans, abandon) agissent déjà.
+- **En 2050, le choix pèse plus que l'ignorance pour les IDE et les
+  kinés.** Pour les pharmaciens, les deux sont à égalité.
+- **Pour les sages-femmes et les dentistes**, notre incertitude reste plus
+  grande que l'effet du choix. Pour eux, réduire l'incertitude (part
+  privée, filière) vaut autant que choisir.
+
+**Leviers, ST à 2050 (mesuré).**
+- Les **quotas** (0,14–0,39) et la **capacité de formation** (0,08–0,36)
+  dominent partout. Ce sont deux mécanismes d'une même politique : leur
+  somme approche la part « décision ».
+- Diplômés étrangers : 0,27 pour les MK, 0,17 pour les CD, 0,04 pour les
+  SF.
+- Départs précoces : ≤ 0,08. Abandon IFSI : 0,07 (IDE).
+- Report de la retraite (≤ 0,01), cumul (0,00) et part des zones régulées
+  (≤ 0,01) **ne déplacent pas le total national**. La régulation
+  redistribue les effectifs entre territoires, sans changer le total ;
+  θ, la destination et la part exemptée ont un ST ≤ 0,011.
+
+### Fourchettes 2050 par département
+Figure : [`figures/2026-11-14-axe5-fourchettes-dep.svg`](../figures/2026-11-14-axe5-fourchettes-dep.svg).
+Table : [`out/fourchettes_dep.csv`](../../../sensibilite/out/fourchettes_dep.csv).
+
+- **(a) Largeur P5–P95** sur 500 tirages de la connaissance seule, en %
+  du tendanciel départemental. Mesuré.
+- **Seuil « assez sûr pour décider »** = 2 × l'effet national de quotas
+  × 1,2 à 2050, soit 22,6 à 27,4 % selon la profession (dérivé).
+
+| Profession | Effet quotas × 1,2 (2050) | Largeur (a), médiane [P10–P90] des départements | Départements « assez sûrs » | (b) backtest extrapolé, médiane (demi-largeur) |
+|---|---|---|---|---|
+| Sages-femmes | +12,3 % | 66 % [36–146] | 0 / 101 | ±77 % |
+| Dentistes | +11,9 % | 69 % [48–114] | 0 / 101 | ±56 % |
+| Pharmaciens | +11,3 % | 55 % [41–95] | 0 / 101 | ±32 % |
+| Kinés | +11,9 % | 34 % [19–53] | 26 / 101 | ±46 % |
+| Infirmiers (privé complet) | +13,7 % | 26 % [16–47] | 57 / 100 | ±460 % ⚠ |
+
+- **Au département, le modèle n'est assez sûr pour décider que pour les
+  IDE (57 départements) et les MK (26).** Pour les SF, CD et PH, la bande
+  de connaissance dépasse partout deux fois l'effet du levier le plus
+  fort.
+- **Aucun backtest n'existe à 2050.** La composante (b) prolonge
+  linéairement des erreurs observées jusqu'à h ≤ 10.
+- **⚠ IDE, composante (b).** La pente d'erreur départementale médiane est
+  de 10,4 %/an, alors que la série privée nationale est lisse (2013–2023,
+  mesuré). La ventilation départementale sous H_ind (axe 4) est suspecte.
+  Cette (b) n'est pas utilisable en l'état (open.md).
+
+### Convergence (N suffisant ?)
+Fichier : [`out/convergence.csv`](../../../sensibilite/out/convergence.csv).
+On recalcule les indices sur les N premières lignes, avec 300 tirages
+bootstrap.
+
+- **Partie 1** (N = 2048) : la largeur max de l'IC de ST, pour les
+  facteurs de ST ≥ 0,05 à 2050, passe de 0,19–0,41 à N = 128 à
+  0,05–0,09 à N = 2048. L'écart à la valeur finale est ≤ 0,021 dès
+  N = 1024.
+- **Partie 2** (N = 512) :
+  - largeur max de l'IC : 0,12–0,17 ;
+  - l'écart entre N = 256 et N = 512 reste ≤ 0,05 ;
+  - pour les 61 facteurs de ST ≥ 0,05, aucun IC n'est plus large que
+    l'indice ;
+  - les IC des parts « décision » et « connaissance » se séparent pour
+    les IDE, les MK, les SF et les CD, et se chevauchent pour les PH.
+- **Verdict** : N = 512 suffit pour le classement et pour les parts par
+  groupe, pas pour départager des facteurs à ±0,08 près. Prolonger le
+  plan coûte environ 1 h 30 de machine par doublement.
+
+### Où mettre l'effort de recherche
+Le gain attendu vaut ST × la fraction réductible (dérivé, voir
+`priorites.py`) :
+- 1 pour un choix d'estimation que le banc tranche ;
+- 0,75 pour une plage divisée par deux ;
+- 0,5 pour un encadrement de donnée resserré.
+
+Les prix sont des estimations de temps (supposées).
+
+| Rang | Source d'incertitude | ST 2050 (partie 2) | Moyen | Axe | Prix | Gain attendu |
+|---|---|---|---|---|---|---|
+| 1 | **Filière** (le vivier suit-il les entrées ?) | CD 0,33 · PH 0,17 | relier le vivier aux entrées (`lien_formation`) et le valider au banc N1 | 2 | ~1 h | CD 0,33 · PH 0,17 |
+| 2 | **Part privée des salariés ambigus** | SF 0,50 · PH 0,26 · CD 0,14 · MK 0,03 | secteur par personne (Annuaire Santé), FINESS, SAE | 4 | ~1–2 h | SF 0,25 · PH 0,13 · CD 0,07 |
+| 3 | **Fenêtre et entrées, ensemble** (interaction) | MK 0,09+0,03 · PH 0,07+0,04 · CD 0,06+0,05 | les trancher au banc N1, sur l'erreur hors échantillon | 2/3 | ~30 min machine | 0,05–0,12 par profession |
+| 4 | Âges fins dans les tranches | IDE 0,05 · SF 0,02 | A1b (axe 2, adopté) à brancher dans le jumeau | 2 | ~45 min | IDE 0,04 |
+| 5 | Ventilation départementale des IDE privés (H_ind) | ne pèse pas au national ; casse (b) au département | revoir le ratissage BTS × âge × sexe | 4 | ~1 h | (b) IDE utilisable |
+| — | **Inutile d'approfondir** : cumul emploi-retraite, θ, destination des bloqués, part exemptée | ≤ 0,011 | — | 1 | 0 | ≈ 0 |
+
+**Ce que le tableau ne mesure pas.** Les facteurs ont une prise sur le
+total national ou départemental. La régulation, θ et la destination
+agissent sur la **répartition entre communes**, que cette analyse ne
+regarde pas. Leur ST nul ne dit rien de l'effet local.
+
 ## ⚑ Ce qui pourrait rendre ce résultat faux
 - **Les plages font les indices.**
   - Les niveaux discrets sont équiprobables : une fenêtre de 2 ans pèse
@@ -247,7 +376,15 @@ de l'axe 3 doit les trancher sur l'erreur hors échantillon, pas une source.
   h ≤ 5) à h = 24–27, avec un facteur 1,6 cité et non reproduit. Pour les
   SF, c'est un biais qui croît, pas une dispersion.
 - **La sortie est nationale.** Au département, le classement peut changer
-  (`shrink` y pèserait plus) : pas mesuré.
+  (`shrink` y pèserait plus) : pas mesuré. La partie 2 donne les
+  fourchettes départementales, mais pas les indices par département.
+- **Partie 2.**
+  - Les IDE n'ont aucun facteur « données » : l'hypothèse H_ind n'est pas
+    variée. Leur part « connaissance » est donc sous-estimée.
+  - Les parts par groupe dépendent des amplitudes jouables choisies
+    (quotas ±20 % ; l'interface va de 0,7 à 1,5).
+  - Quotas et capacité, deux mécanismes d'une même politique, sont
+    comptés tous les deux.
 - **Le jumeau a changé plusieurs fois pendant l'analyse.** Le calcul
   final tourne sur un instantané figé (empreinte `c2dc7601`, 04:14). Les
   leviers branchés ensuite par l'axe 0 (commit 063c192) font l'objet de la
@@ -277,6 +414,11 @@ PYTHONPATH=v2:. uv run python -m sensibilite.backtest                # banc N1 p
 PYTHONPATH=v2:. uv run python -m sensibilite.tendance                # grille « tendance »
 PYTHONPATH=v2:. uv run python -m sensibilite.retraite_b1             # levier retraite contre B1
 PYTHONPATH=v2:. uv run python -m sensibilite.resume                  # tableaux -> out/resume.md
+# partie 2 (instantané git archive de v2/jumeau au commit 4721268 en tête de PYTHONPATH)
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.leviers --n 512 --mc 500 --profs <p> --tag _<p>   # une par profession
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.carte backtest && ... carte
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.convergence
+PYTHONPATH=v2:. uv run python -m sensibilite.priorites
 ```
 
 ## ? Pour la suite
@@ -287,3 +429,7 @@ PYTHONPATH=v2:. uv run python -m sensibilite.resume                  # tableaux 
 | Brancher formation → N (axe 2), puis relancer pour rendre décidables les fiches formation | 815 s machine après l'axe 2 |
 | Plages pondérées (fenêtre, entrées) par l'erreur du banc N1 au lieu de l'équiprobabilité | ~30 min |
 | Reproduire le facteur 1,6 de la méthode A3 sur notre banc (couverture observée à h ≤ 10) | ~20 min |
+| Indices de Sobol par département (régulation, `shrink`, part privée locales) | ~2 h machine |
+| Varier H_ind (ventilation IDE) comme facteur « données » | ~30 min + 1 h machine |
+| Doubler N de la partie 2 (512 → 1024) pour départager les leviers à ±0,05 | ~1 h 30 machine |
+| Vectoriser le vivier du module `formation` (axe 0) : ×10 sur le coût d'un run | ~1 h (axe 0) |
