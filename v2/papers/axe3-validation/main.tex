@@ -1,0 +1,555 @@
+\documentclass[11pt]{article}
+% Le préambule commun charge babel avec [french] seul ; le résumé anglais (otherlanguage{english})
+% a besoin de la langue english chargée. On l'ajoute ici sans modifier le préambule commun.
+\PassOptionsToPackage{english}{babel}
+\input{../template/preamble}
+% Ajouts propres à cet article (le préambule commun n'est pas modifié).
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{babel}   % les deux-points et points-virgules actifs de babel-french cassent TikZ sans cela
+
+\title{Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats :\\
+six protocoles pré-enregistrés, et un levier qui ne passe pas le sien}
+\author[1]{Équipe hackathon-santé}
+\author[1]{Claude (Anthropic), assistant de recherche}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Prétirage, version du \today{} --- non relu par des pairs}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Un jumeau numérique de l'offre de soins projette l'effectif « libéral » (secteur privé) de cinq
+professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Il ne vaut que s'il est validé.
+Or les données courent de 2012 à 2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas
+un levier. Nous proposons six protocoles, un par niveau, écrits et gelés par empreinte SHA-256
+avant tout calcul. Ils portent sur la prévision à dix ans au plus, la cohérence à 2050, l'effet
+causal d'un levier, l'échelle communale, des mondes simulés à vérité connue et la calibration des
+prévisions probabilistes. Le niveau du
+levier a été lancé sur la régulation de l'installation infirmière en zone sur-dotée, par différence
+de différences entre zones sur-dotées et intermédiaires de \num{59}\mesure{} départements. L'effet
+estimé est de $\num{-30.3}$\mesure{}~log-points sur 2012--2019 (IC à 95~\% $[\num{-34.1} ;
+\num{-26.4}]$), et les trois placebos passent. Mais le test de tendances parallèles fixé d'avance
+échoue ($p = \num{0.043}$\mesure{} pour un seuil de \num{0.10}\suppose{}). Le levier n'est donc pas
+validé. Pour les kinés, la prédiction pré-enregistrée de marche puis d'arrêt (régulation annulée en
+2014) est confirmée : la pente relative remonte de \num{3.1}\mesure{}~points par an
+($[\num{1.1} ; \num{5.1}]$). Nous tirons aussi une leçon des deux revues adversariales du jumeau :
+plusieurs de ses critères d'acceptation passaient par construction. Limite principale : la date du
+zonage utilisé est probable mais pas prouvée.
+\end{abstract}
+\begin{otherlanguage}{english}
+\begin{abstract}
+A digital twin of French healthcare supply projects the private-sector headcount of five professions
+up to 2050, at every scale down to the municipality. It is only worth what its validation shows, yet
+the data run from 2012 to 2026: no backtest reaches 2050, and a backtest cannot validate a policy
+lever. We propose six protocols, one per level, written and frozen by SHA-256 hash before any
+computation. They cover forecasting up to ten years, consistency at 2050, the causal effect of a
+lever, the municipal scale, simulated worlds with known truth, and the calibration of probabilistic
+forecasts. The lever level was run on the
+regulation of nurses' practice installation in over-supplied zones, through a difference in
+differences between over-supplied and intermediate zones of 59\mesure{} départements. The estimated
+effect is $-30.3$\mesure{} log-points over 2012--2019 (95~\% CI $[-34.1, -26.4]$), and all three
+placebos pass. However, the pre-specified parallel-trends test fails ($p = 0.043$\mesure{} against a
+$0.10$\suppose{} threshold), so the lever is not validated. For physiotherapists, the pre-registered
+on/off prediction (regulation struck down in 2014) holds: the relative slope rises by
+3.1\mesure{} points per year ($[1.1, 5.1]$). We also draw a lesson from the twin's two adversarial
+reviews: several of its acceptance criteria passed by construction. The main limitation is that the
+vintage of the zoning map is likely but not proven.
+\end{abstract}
+\end{otherlanguage}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; validation ; pré-enregistrement ;
+différence de différences ; zonage conventionnel ; jumeau numérique.
+
+\medskip
+\noindent\textbf{Convention.} Chaque nombre porte sa provenance : \mesure{}~mesuré (par nous, ou par
+la source citée à côté), \derive{}~dérivé (calculé à partir d'autres nombres), \suppose{}~supposé
+(un choix ou une hypothèse). Tous les nombres viennent des rapports de \texttt{v2/docs/lab/reports/}.
+
+\section{Introduction}
+Le projet construit un jumeau numérique de l'offre de soins. Il simule des politiques nationales,
+exprimées comme des réglages d'hyperparamètres sourcés, et en mesure l'effet à 2050 sur l'effectif
+« libéral » des sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et
+infirmiers. Ici, « libéral » désigne le secteur privé, lucratif ou non, tout employeur public
+exclu. Le décideur visé est un directeur général d'agence régionale de santé (ARS), qui veut voir la
+commune.
+
+Trois obstacles rendent la validation difficile. D'abord, les séries du répertoire RPPS couvrent
+2012--2026 \citep{drees2026demo}, soit au plus dix ans de recul pour un backtest. L'horizon de
+référence, 2050, est 24\derive{}~ans après la dernière donnée. Ensuite, un backtest ne valide pas un
+levier : il juge le modèle sur un passé où le paramètre du levier n'a pas bougé. Enfin, le premier
+backtest du projet (K1, version~1) a choisi la meilleure de trois variantes \emph{après} avoir vu les
+résultats, pour un écart de \num{0.1}\mesure{}~point de MAPE. C'est un biais de
+sélection\footnote{Rapport interne \texttt{docs/lab/reports/2026-11-13-k1-backtest.md}, section
+« What could make it wrong ».}.
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item Six protocoles de validation, un par niveau, chacun avec le test qui le falsifierait, gelés
+        par empreinte SHA-256 avant tout calcul (section~\ref{sec:methode}).
+  \item Une différence de différences sur le zonage infirmier, avec trois placebos et un test du
+        mécanisme du module de régulation du jumeau. Le résultat est rapporté tel quel : levier
+        non validé (section~\ref{sec:resultats}).
+  \item Une expérience de marche et d'arrêt chez les kinés, dont la prédiction pré-enregistrée tient.
+  \item Une étude de cas : les deux revues adversariales du jumeau, qui montrent comment des critères
+        d'acceptation peuvent passer par construction (section~\ref{sec:menaces}).
+  \item Un code de validation indépendant de l'intérieur du jumeau, applicable à tout estimateur
+        qui expose \texttt{fit} et \texttt{predict} (section~\ref{sec:repro}).
+\end{itemize}
+
+\section{Travaux existants}
+\paragraph{Projections nationales.} La DREES projette les dentistes, sages-femmes et pharmaciens
+jusqu'en 2050 avec un modèle par composantes (âge $\times$ sexe $\times$ mode d'exercice), sous un
+scénario tendanciel à comportements constants \citep{drees2021dd76}. Les infirmiers ont leur propre
+projection à 2050 \citep{er1319}. Ces travaux sont nationaux et ne publient pas leur propre erreur
+de prévision. Comparée à nos effectifs 2026, la projection de 2021 sous-estimait de 4 à
+7\derive{}~\% en six ans, après correction de l'écart de champ\footnote{Exploration interne
+\texttt{docs/lab/explorations/drees-projections-and-apl.md}.}. Nous l'utilisons comme cible de
+reproduction, pas comme vérité (niveau~2).
+
+\paragraph{Effet du zonage infirmier.} L'IRDES a estimé l'effet des restrictions à l'installation en
+zone sur-dense et des incitations en zone sous-dense, par différence de différences sur le zonage de
+2011 et des données 2006--2016 \citep{irdes270}. Il rapporte un écart de densité de $-\num{25.57}$\mesure{}
+infirmières libérales pour \num{100000}~habitants en zone sur-dense (relevé par la fiche
+\texttt{param-ide-regul-effet-densite} de l'axe~1). Notre niveau~3 reprend ce plan d'expérience sur
+une autre série (CartoSanté 2004--2025), une autre unité (le département $\times$ classe de zone) et
+une autre mesure (l'effectif en logarithme). Il y ajoute un pré-enregistrement et des placebos.
+
+\paragraph{Tendances parallèles.} Rambachan et Roth \citep{rambachan2023} proposent de borner les
+violations des tendances parallèles après traitement par celles observées avant. Leur restriction
+$\Delta^{RM}(\bar M)$ borne chaque variation annuelle de la violation après traitement par
+$\bar M$ fois la plus grande variation annuelle observée avant. Nous l'utilisons seulement à titre
+exploratoire, faute de l'avoir fixée d'avance.
+
+\paragraph{Mondes simulés.} L'observatoire d'un membre de l'équipe \citep{evolutionsoin2026} valide
+son modèle sur sept mondes simulés à vérité connue. Il rapporte, sans que nous l'ayons reproduit,
+un biais de $+8$ à $+19$\mesure{}~\% sur les seniors et de $-\num{12.4}$\mesure{}~\% à 15~ans quand
+les entrées croissent de 3~\% par an. Notre niveau~5 reprend l'idée et transforme ces chiffres en
+prédictions.
+
+\paragraph{Prévision probabiliste.} Un score est propre si le prévisionniste maximise son score
+espéré en annonçant sa vraie croyance. Le CRPS est propre, et il généralise l'erreur absolue
+\citep{gneiting2007jasa}. La démarche recommandée consiste à maximiser la netteté des distributions
+prédictives sous contrainte de calibration. La calibration probabiliste revient à l'uniformité des
+valeurs PIT, condition nécessaire mais pas suffisante \citep{gneiting2007jrssb}. Pour un
+algorithme d'inférence, la calibration par simulation (SBC) vérifie que le rang du paramètre vrai
+parmi les tirages a posteriori est uniforme \citep{talts2018sbc}. Ces trois références fondent
+notre niveau~6. Il a été proposé par l'état de l'art de l'axe~2\footnote{Exploration interne
+\texttt{v2/docs/lab/explorations/2026-11-14-etat-de-lart-methodes.md}, \S~3.6.}.
+
+\section{Données}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}p{3.2cm}p{3.6cm}p{2.3cm}p{5.2cm}@{}}
+\toprule
+Jeu & Producteur, millésime & Grain & Contrôles \\
+\midrule
+RPPS \citep{drees2026demo} & DREES, publié le 2026-07-02 & dép.\ $\times$ âge $\times$ sexe $\times$ mode, 2012--2026 & kinés seulement à partir de 2017 (rupture de série) ; infirmiers libéraux jusqu'en 2023 \\
+CartoSanté \citep{cartosante2026} & FNPS/SNDS via ARS, extrait le 2026-11-13 & commune $\times$ tranche d'âge, IDE 2004--2025, MK 2005--2025, CD 2006--2025 & la somme des communes égale le département à 1 près dans \num{99.2}\mesure{}~\% des département-années ; Marseille absente \\
+Zonage \citep{atlasante2014zonage} & ARS / Atlasanté, métadonnées 2014 & commune, classes 1 à 5 et 9 & \num{36700}\mesure{} communes ; codes des anciennes régions, donc antérieur à 2016 \\
+DD76 \citep{drees2021dd76} & DREES, mars 2021 & national, 2030 / 2040 / 2050 & cible du niveau 2 \\
+\bottomrule
+\end{tabular}
+\caption{Données. Toutes sont ouvertes.}
+\end{table}
+
+\paragraph{Codage du zonage.} Les classes vont de 1 (très sous-dotée) à 5 (sur-dotée), 9 signifiant
+« non défini ». Nous avons vérifié le codage sans regarder les effectifs. Montpellier, Toulon, Brest
+et Marseille sont en classe~5 pour les infirmiers ; Paris, Saint-Denis et Lille en classe~3.
+
+\paragraph{Appariement.} Les communes CartoSanté (code géographique 2026) sont appariées au zonage
+(code d'environ 2012) par leur code. En 2008, \num{57366}\mesure{} infirmiers sur
+\num{57369}\mesure{} sont appariés. Le taux est le même pour les dentistes en 2008 et les kinés en
+2011 (plus de \num{99.9}\derive{}~\%).
+
+\section{Méthode}\label{sec:methode}
+\subsection{Règles communes}
+\begin{itemize}
+  \item \textbf{Gel.} Chaque protocole est un rapport écrit avant tout calcul. Une copie immuable est
+        rangée dans \texttt{v2/validation/preregistered/}, et son empreinte SHA-256 est inscrite au
+        journal des décisions (tableau~\ref{tab:sha}). Tout écart ultérieur est une nouvelle entrée
+        datée ; une analyse hors protocole est dite \emph{exploratoire}.
+  \item \textbf{Interface.} Un estimateur expose \texttt{fit(t, fenêtre, origine)} et
+        \texttt{predict(cible)}, qui rend une série indexée par (profession, territoire). Pour le
+        niveau~2, il expose aussi \texttt{trajectory(jusqu'à, scénario)}.
+  \item \textbf{Registre.} Une variante n'est confirmatoire que si elle est inscrite et datée
+        dans le fichier \texttt{registry.py}, avant son premier passage.
+\end{itemize}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Niveau & Gel & SHA-256 (12 car.) & État \\
+\midrule
+Plan & 2026-11-14 02:54 & \texttt{0108455d34aa} & --- \\
+N1 Prévision & 02:54 & \texttt{eb527ecb06a0} & lancé par l'axe 2 \\
+N2 Long terme & 02:54 & \texttt{bc5df3083cc5} & non lancé \\
+N3 Leviers & 02:54 & \texttt{c37e36457f12} & \textbf{lancé} \\
+N4 Échelle fine & 02:54 & \texttt{91f897cc5071} & non lancé \\
+N5 Mondes simulés & 03:46 & \texttt{1046545b17c0} & non lancé \\
+N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & non lancé \\
+\bottomrule
+\end{tabular}
+\caption{Protocoles gelés. N5 et N6 ont été ajoutés après le lancement de N3, mais avant tout
+calcul qui les concerne. Ils s'ajoutent aux autres sans les modifier.}\label{tab:sha}
+\end{table}
+
+\subsection{Niveau 1 --- prévision à dix ans au plus}
+Les origines sont glissantes. La fenêtre d'ajustement s'élargit à partir de 2012 (kinés : 2017) et
+compte au moins 5\suppose{}~ans. Les horizons sont $h \in \{1, 3, 5, 8, 10\}$. La \textbf{métrique
+principale}, unique, est la MAPE par département à $h = 5$, sur les départements d'au moins
+30\suppose{}~professionnels à l'origine. Elle est moyennée à poids égal sur les cellules
+profession $\times$ origine. Soit $\Delta$ l'écart de MAPE entre le candidat et la meilleure des deux
+références naïves (persistance, tendance linéaire) :
+\[
+  \Delta = \mathrm{MAPE}(\text{candidat}) - \min\bigl(\mathrm{MAPE}(\text{persistance}),
+  \mathrm{MAPE}(\text{tendance})\bigr).
+\]
+Le candidat \emph{gagne} si la borne haute de l'IC à 95~\% de $\Delta$ est négative. L'IC vient d'un
+bootstrap des départements : 2\,000 tirages, graine \texttt{20261114}, mêmes départements pour
+toutes les cellules. La variante par défaut est le stock-flux à taux locaux. Les prévisions de
+l'origine 2026 vers 2027, 2028 et 2030 sont \emph{déposées}, avec leur empreinte, avant la
+publication du RPPS 2027. C'est le seul test qu'aucune analyse antérieure n'a pu voir.
+
+\subsection{Niveau 2 --- long terme (2050)}
+\paragraph{Reproduction.} On impose au moteur les hypothèses du tendanciel DD76 : origine 2020, taux
+moyens 2016--2020, entrées tenues au niveau 2016--2020. On compare ensuite des ratios
+$g(t) = N(t)/N(2020)$, ce qui neutralise l'écart de champ (+0,8 à +2,5\mesure{}~\% en 2020). La
+tolérance est de $\pm 2$\suppose{}~\% en 2030 et de $\pm 3$\suppose{}~\% en 2040 et 2050. On
+contrôle aussi la forme : un creux pour les pharmaciens, un plateau pour les sages-femmes. La
+tolérance est un choix. Elle reste quatre fois plus petite que l'effet publié d'un quota de
+$\pm 20$~\%, soit $\pm 12$ à $\pm 13$\mesure{}~\% en 2050 \citep{drees2021dd76}.
+
+\paragraph{Cas limites.}
+\begin{itemize}
+  \item \textbf{L1, $h \to 0$} : $\hat N(o) = N(o)$ à $10^{-9}$ près en écart relatif.
+  \item \textbf{L2, $h \to \infty$, scénario stationnaire} : l'effectif tend vers
+        $N^\star = Q \cdot C$, avec $C$ le nombre de personnes-années d'une cohorte d'un entrant. La
+        tolérance est de 1\suppose{}~\%, et deux états initiaux doivent donner le même $N(o+200)$.
+  \item \textbf{L3, $h < L$} : un choc de quota n'a aucun effet avant $t_0 + L_p$.
+  \item \textbf{L4, conservation} : déjà testée par l'axe~0.
+\end{itemize}
+
+\subsection{Niveau 3 --- effet d'un levier par expérience naturelle}
+\paragraph{Expérience E1 (infirmiers).} L'avenant~1 à la convention infirmière (2009) n'autorise le
+conventionnement en zone « sur-dotée » qu'en remplacement d'un départ. Un nouveau zonage s'applique
+à partir de 2012 (avenant~3, arrêté du 25 novembre 2011, et arrêté du 21 décembre 2011 sur la
+méthode)\footnote{Dates relevées dans des sources secondaires (questions écrites à l'Assemblée
+nationale, presse professionnelle) le 2026-11-14 ; textes primaires non relus.}. La cellule est un
+département $d$ $\times$ une classe de zone $z$. On note $Y_{d,z,t}$ la somme des communes appariées
+et on pose
+\[
+  D_{d,t} = \log Y_{d,5,t} - \log Y_{d,3,t}.
+\]
+Un département entre s'il a au moins 10\suppose{}~infirmiers dans chaque cellule en 2008. Avec deux
+classes et des effets fixes département $\times$ année, la différence de différences se réduit à des
+moyennes entre départements :
+\[
+  \beta_k = \overline{D_{\cdot,k} - D_{\cdot,2008}}, \qquad
+  \beta = \overline{\textstyle\frac18\sum_{t=2012}^{2019} D_{\cdot,t}
+           - \frac15\sum_{t=2004}^{2008} D_{\cdot,t}}.
+\]
+La période de transition, 2009--2011, est exclue : elle relève d'un zonage de première génération
+dont nous n'avons pas la carte. L'estimation s'arrête en 2019, avant le rezonage issu de
+l'avenant~6 et la crise sanitaire. Les grappes sont les départements, et l'inférence suit une loi de
+Student à $G-1$ degrés de liberté. Cinq tests sont fixés dans cet ordre :
+\begin{itemize}
+  \item \textbf{T1, tendances parallèles} : $T^2$ de Hotelling sur $(\beta_{2004},\dots,\beta_{2007})$,
+        à passer si $p \ge \num{0.10}$\suppose{} ;
+  \item \textbf{T2, placebo de date} : un faux traitement en 2006 ;
+  \item \textbf{T3, placebo de profession} : les dentistes, dont l'installation n'était pas
+        régulée\suppose{} ;
+  \item \textbf{T4, placebo de retour à la moyenne} : la zone~4 (très dotée, non régulée) contre la
+        zone~3 ;
+  \item \textbf{T5, effet}.
+\end{itemize}
+Un placebo échoue s'il a le même signe que $\beta$ et au moins la moitié\suppose{} de son ampleur.
+
+\paragraph{Test du mécanisme.} Le module \texttt{regulation} du jumeau impose, en zone régulée,
+entrées $\le$ sorties. Un plafond parfaitement contraignant tient la zone~5 à son niveau de 2008,
+tandis que le contre-factuel croît comme la zone~3 du même département. On compare l'effet que
+prédit le module à l'effet observé :
+\[
+  \beta_{\text{mod}} = \overline{\min\bigl(0, -(\log Y_{\cdot,3,t} - \log Y_{\cdot,3,2008})\bigr)},
+  \qquad \theta = \beta_{\text{obs}} / \beta_{\text{mod}} .
+\]
+Si l'IC de $\theta$ contient 1, le plafond strict survit. S'il tombe dans $]0, 1[$, le module devient
+un plafond qui fuit, de paramètre $\theta$. Cette lecture n'est permise que si T1 à T4 passent.
+
+\paragraph{Expérience E2 (kinés).} L'avenant~3 des kinés (arrêté du 10 janvier 2012) instaure la même
+régulation. Le Conseil d'État l'annule le 17 mars 2014, pour incompétence : une telle limite relève
+de la loi \citep{ce2014mk}. La prédiction pré-enregistrée est double. La pente relative de la zone~5
+est négative pendant la régulation (2011--2014). Elle remonte ensuite (2014--2017).
+
+\subsection{Niveau 4 --- échelle fine}
+On mesure l'erreur à 5~ans par classe de taille de commune ($1$--$2$, \dots, $>200$), sur les
+origines 2014, 2016, 2018 et 2020. L'estimateur par défaut multiplie la projection départementale
+par la part communale observée à l'origine. On note $N_{\min}$ la plus petite classe à partir de
+laquelle le 80\textsuperscript{e} centile de l'erreur absolue est d'au plus 25\suppose{}~\%. Sous
+$N_{\min}$, aucune projection communale n'est affichée sans sa bande. Le bruit de Poisson seul
+donne $1{,}28/\sqrt{N} \le 0{,}25$, soit $N \ge 26$\derive{}.
+
+\subsection{Niveau 5 --- mondes simulés à vérité connue}
+Le générateur simule 30 départements en âges simples, agrégés en tranches comme le RPPS, avec
+20 réplications. Il produit sept mondes : équilibre, pyramide non stationnaire, bruit, cohorte
+nombreuse de 55--60 ans, entrées $+3$~\% par an, saut des entrées, report de l'âge de départ.
+Quand un monde respecte les hypothèses de l'estimateur, l'erreur nationale doit rester sous
+1\suppose{}~\% à 15~ans. Quand il les viole, le signe du biais est prédit d'avance, et doit être
+observé dans au moins 16 réplications sur 20. Le générateur ne partage aucun code avec les
+estimateurs (section~\ref{sec:menaces}).
+
+\subsection{Niveau 6 --- prévision probabiliste}
+N1 juge un point. N6 juge une distribution prédictive : celle que donne l'estimateur s'il rend des
+tirages, sinon une distribution empirique construite de la même façon pour tous les estimateurs.
+On multiplie la prédiction par $\exp(e)$, où $e$ est tiré parmi les erreurs logarithmiques passées
+du même estimateur, de la même profession et au même horizon. Seules comptent les origines dont la
+cible ne dépasse pas l'origine courante, avec au moins 20\suppose{} erreurs.
+\begin{itemize}
+  \item \textbf{Score} : $\mathrm{CRPS}(F, y) = \mathbb{E}|X - y| - \tfrac12\,\mathbb{E}|X - X'|$,
+        la forme par échantillon de \citet[éq.~21, au signe près]{gneiting2007jasa}, calculé sur
+        $\log N$. Diviser par $y$ rendrait le score impropre ; le passage au logarithme le garde
+        propre. Le critère est celui de N1 : bootstrap des départements, borne haute de $\Delta < 0$.
+  \item \textbf{Calibration} : la couverture des intervalles centraux doit être de
+        $[75 ; 85]$\suppose{}~\% à 80~\% et de $[44 ; 56]$\suppose{}~\% à 50~\%. On juge la
+        couverture plutôt qu'un $\chi^2$ sur l'histogramme PIT, parce que les départements d'une
+        même origine ne sont pas indépendants. Une bande qui échoue est affichée avec sa couverture
+        mesurée, jamais sous son niveau nominal.
+  \item \textbf{SBC} : 200 mondes de N5 (monde M3), $L = 99$ tirages a posteriori ou de bootstrap
+        paramétrique. On teste l'uniformité des rangs en 20 classes par un $\chi^2$, avec
+        $p \ge \num{0.01}$\suppose{} et une correction de Bonferroni.
+\end{itemize}
+Conséquence dérivée de la grille : à $h = 5$, seule l'origine 2021 a des erreurs passées (celles de
+l'origine 2016). Les kinés (série depuis 2017) et les infirmiers libéraux (série jusqu'en 2023) en
+sont exclus\derive{}. N6 à $h = 5$ ne jugera donc d'abord que trois professions sur une origine.
+
+\section{Résultats}\label{sec:resultats}
+\subsection{Niveau 3, E1 : régulation infirmière}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccl@{}}
+\toprule
+Test & Estimation (log-points $\times 100$) & Seuil & Verdict \\
+\midrule
+T1 tendances parallèles ($G = 59$) & $F(4, 55) = \num{2.65}$\mesure{}, $p = \num{0.043}$\mesure{} & $p \ge \num{0.10}$ & \textbf{échoue} \\
+T2 placebo de date 2006 & $+\num{1.4}$\mesure{} $[\num{-0.7} ; \num{3.4}]$ & IC contient 0 & passe \\
+T3 placebo dentistes ($G = 43$) & $+\num{1.7}$\mesure{} $[\num{-1.3} ; \num{4.7}]$ & pas même signe & passe \\
+T4 placebo zone~4 ($G = 42$) & $\num{-4.2}$\mesure{} $[\num{-9.6} ; \num{1.3}]$ & $< \frac12|\beta|$ & passe \\
+\textbf{T5 effet} & $\mathbf{\num{-30.3}}$\mesure{} $[\num{-34.1} ; \num{-26.4}]$ & IC $< 0$ & détecté \\
+\midrule
+Pondéré par l'effectif 2008 & $\num{-37.9}$\mesure{} $[\num{-48.9} ; \num{-26.9}]$ & --- & non décisif \\
+Transition 2009--2011 & $\num{-1.1}$\mesure{} $[\num{-3.9} ; \num{1.8}]$ & --- & rapporté \\
+Zone~1 (incitations) contre zone~3 & $+\num{11.3}$\mesure{} $[\num{5.9} ; \num{16.6}]$ & --- & rapporté \\
+\bottomrule
+\end{tabular}
+\caption{E1, infirmiers, zone sur-dotée (5) contre intermédiaire (3). IC à 95~\%. Source :
+\texttt{v2/validation/out/did\_results.json}.}\label{tab:e1}
+\end{table}
+
+\textbf{Verdict du protocole : design invalide, levier non validé.} T1 échoue. Le paramètre
+$\theta$ n'est donc pas interprété au sens du protocole. Pour mémoire, il vaut
+$\num{0.80}$\mesure{} $[\num{0.74} ; \num{0.87}]$ ($\beta_{\text{obs}} = \num{-32.4}$\mesure{},
+$\beta_{\text{mod}} = \num{-40.5}$\mesure{}).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\linewidth, height=6.5cm, xlabel={Année}, ylabel={$\beta_k$ (log-points $\times 100$)},
+  xmin=2003.5, xmax=2019.5, ymin=-56, ymax=8, grid=major, legend pos=south west,
+  xticklabel style={/pgf/number format/1000 sep={}}, legend style={font=\small}]
+\addplot+[mark=*, thick] coordinates {(2004,-3.0) (2005,-2.8) (2006,-2.2) (2007,-2.5) (2008,0) (2009,-1.1)
+  (2010,-2.9) (2011,-5.8) (2012,-10.2) (2013,-18.6) (2014,-24.2) (2015,-31.9) (2016,-36.6) (2017,-41.9)
+  (2018,-45.6) (2019,-50.1)};
+\addlegendentry{IDE, zone 5 contre 3}
+\addplot+[mark=square*, dashed] coordinates {(2004,-3.6) (2005,-3.4) (2006,1.1) (2007,1.0) (2008,0) (2009,-1.0)
+  (2010,0.2) (2011,-0.4) (2012,-1.6) (2013,-2.7) (2014,-3.9) (2015,-4.6) (2016,-5.2) (2017,-7.3) (2018,-7.3)
+  (2019,-8.7)};
+\addlegendentry{IDE, zone 4 contre 3 (placebo)}
+\addplot+[mark=triangle*, dotted] coordinates {(2006,0.0) (2007,-0.1) (2008,0) (2009,2.1) (2010,2.3) (2011,2.4)
+  (2012,1.8) (2013,0.7) (2014,1.7) (2015,1.0) (2016,1.6) (2017,1.9) (2018,1.7) (2019,3.1)};
+\addlegendentry{Dentistes, zone IDE 5 contre 3 (placebo)}
+\draw[gray] (axis cs:2008.5,-56) -- (axis cs:2008.5,8);
+\draw[gray] (axis cs:2011.5,-56) -- (axis cs:2011.5,8);
+\end{axis}
+\end{tikzpicture}
+\caption{Étude d'événement E1, référence 2008\mesure{}. Les traits verticaux encadrent la transition
+2009--2011. Les quatre années d'avant sont au même niveau entre elles ($-2{,}2$ à $-3{,}0$) : c'est
+2008 qui s'en écarte, ce que T1 rejette. Source : \texttt{did\_e1\_event\_study*.csv}.}
+\label{fig:es}
+\end{figure}
+
+\paragraph{Lecture.} L'écart entre les années 2004--2007 est faible : de $-\num{2.2}$ à
+$-\num{3.0}$\mesure{} points par rapport à 2008. Il prend la forme d'un saut en 2008, pas d'une
+tendance. Après 2011, l'écart se creuse de 5 à 8\mesure{}~points par an, sans plateau jusqu'en 2019
+(figure~\ref{fig:es}). Ce profil est compatible avec une régulation qui n'agit qu'au flux des
+entrées, mais le protocole ne permet pas de conclure.
+
+\paragraph{Analyses exploratoires (écrites après avoir vu T1).} Ces analyses ne valident rien.
+\begin{itemize}
+  \item En prolongeant la tendance linéaire des années 2004--2008 (\num{+0.64}\mesure{}~point par
+        an), l'effet devient $\num{-36.4}$\derive{}. Avant 2009, la zone sur-dotée croissait plus vite :
+        la violation joue contre l'effet.
+  \item Avec la restriction $\Delta^{RM}(\bar M = 1)$ \citep{rambachan2023}, chaque variation
+        annuelle de la violation après 2008 est bornée par la plus grande variation annuelle d'avant,
+        \num{2.5}\mesure{}~points. La violation en $t$ vaut donc au plus \num{2.5}\,$(t-2008)$,
+        soit un biais d'au plus \num{18.6}\derive{}~points sur la moyenne 2012--2019. En élargissant l'IC de ce biais, on obtient
+        $[\num{-52.7} ; \num{-7.9}]$\derive{}. Le signe tient. C'est une approximation (borne
+        ajoutée à l'IC), et non l'inférence uniformément valide des auteurs.
+  \item L'IRDES trouve un effet de même signe sur une autre série et une autre période
+        \citep{irdes270}.
+\end{itemize}
+
+\subsection{Niveau 3, E2 : marche et arrêt chez les kinés}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccl@{}}
+\toprule
+Test & Estimation & Prédiction & Verdict \\
+\midrule
+Tendances parallèles 2005--2010 ($G = 26$) & $F(6, 20) = \num{1.47}$\mesure{}, $p = \num{0.24}$\mesure{} & $p \ge \num{0.10}$ & passe \\
+Pente 2011--2014 (pts/an) & $\num{-2.4}$\mesure{} $[\num{-3.5} ; \num{-1.2}]$ & $< 0$ & confirmée \\
+Pente 2014--2017 (pts/an) & $+\num{0.7}$\mesure{} $[\num{-0.7} ; \num{2.1}]$ & --- & --- \\
+\textbf{Écart des pentes} ($G = 29$) & $\mathbf{+\num{3.1}}$\mesure{} $[\num{1.1} ; \num{5.1}]$ & $> 0$ & \textbf{confirmée} \\
+\bottomrule
+\end{tabular}
+\caption{E2, kinés, zone sur-dotée contre intermédiaire, référence 2011.}\label{tab:e2}
+\end{table}
+La zone sur-dotée décroche de 7\mesure{}~points pendant les deux ans et demi de régulation (2014 :
+$\num{-7.0}$\mesure{}). Après l'annulation, elle cesse de décrocher (2017 : $\num{-4.4}$\mesure{}).
+C'est la première prédiction pré-enregistrée sur un levier qui tient. Ce n'est pas encore une
+validation du module, car $\theta$ n'a pas été pré-enregistré pour E2.
+
+\subsection{Niveau 1 : premier passage confirmatoire}
+La session de l'axe~2 a lancé le banc N1 sur le périmètre privé, après avoir inscrit ses
+variantes\footnote{Rapport interne \texttt{v2/docs/lab/reports/2026-11-14-axe2-methodes.md}.}. La
+variante par défaut obtient une MAPE de \num{8.68}\mesure{}~\%, contre \num{9.30}\mesure{}~\% pour la
+tendance et \num{9.92}\mesure{}~\% pour la persistance. Elle gagne donc :
+$\Delta = \num{-0.63}$\mesure{} $[\num{-0.97} ; \num{-0.27}]$. Le seul gain reproduit sur les deux
+périmètres est le rétrécissement hiérarchique : $-\num{0.11}$\mesure{} $[\num{-0.21} ;
+\num{-0.02}]$. La clause d'instabilité du protocole joue pour les dentistes : la variante par défaut
+ne bat la naïve que sur 2\mesure{} origines sur 6. Aucune prévision n'est encore déposée pour 2027.
+
+\subsection{Niveaux 2, 4, 5 et 6}
+Ils ne sont pas lancés. Le code des niveaux 1, 2 et 4 a été vérifié sur données synthétiques
+seulement, pour ne rien voir avant le gel :
+\begin{itemize}
+  \item un estimateur oracle gagne au critère N1, et la référence contre elle-même finit à égalité ;
+  \item sur un modèle jouet, l'écart à $N^\star = Q \cdot C$ est nul\mesure{} ;
+  \item avec une erreur de Poisson pure, $N_{\min}$ tombe dans la classe 21--50\mesure{}, ce qui
+        est cohérent avec la dérivation ($N \ge 26$).
+\end{itemize}
+
+\section{Validation et menaces à la validité}\label{sec:menaces}
+\subsection{Cas d'étude : des tests vrais par construction}
+Le jumeau a subi deux revues adversariales\footnote{Rapports internes
+\texttt{2026-11-14-revue-adversariale-axe0.md} et \texttt{-v2.md}.}. Neuf agents en lecture seule
+les ont menées selon trois angles. Pour chaque angle, les deux constats les plus graves ont été
+soumis à un agent chargé de les réfuter en exécutant le code.
+\begin{itemize}
+  \item \textbf{Première revue :} 6\mesure{} constats soumis à réfutation, 6 confirmés, dont
+        4 bloquants. Le critère « plug-in » écrivait le module factice dans un dossier temporaire :
+        son contrôle « aucun fichier modifié » ne pouvait pas échouer. Le critère de conservation
+        comparait le registre des flux à une variation qu'il stockait lui-même, si bien que son
+        résidu de $3 \cdot 10^{-11}$ ne mesurait que l'arrondi. L'agrégation comparait les communes
+        à des regroupements des mêmes lignes ; face au RPPS, l'écart est de
+        $-\num{5.4}$\mesure{}~\% pour les kinés en 2025.
+  \item \textbf{Seconde revue :} 6\mesure{} constats confirmés, soit 4 défauts bloquants
+        distincts. Le test du levier retraite comparait le jumeau à la version~1, qui portait le
+        même masque fautif : il ne pouvait pas voir le défaut (+41\mesure{}~\% d'effet à 2050 pour un
+        report de 2~ans). Une correction en avait aussi introduit un nouveau : un scénario passé à
+        \texttt{trajectory} remplaçait le scénario de base ($-\num{15.2}$\mesure{}~\%).
+\end{itemize}
+\textbf{Leçon pour nos protocoles.} Un test qui compare un objet à une copie de lui-même, ou qui
+mesure une identité, passe par construction. Nos protocoles s'en gardent de quatre façons :
+\begin{itemize}
+  \item N5 interdit au générateur de partager du code ou une hypothèse avec l'estimateur ;
+  \item N2 compare à une source extérieure, DD76, et pas à la version~1 ;
+  \item N3 ajoute des placebos qui \emph{peuvent} échouer ;
+  \item la règle de mutation de l'axe~0 (réintroduire le défaut et vérifier que le test échoue)
+        est la contrepartie, dans le code, du pré-enregistrement.
+\end{itemize}
+
+\subsection{Menaces propres à nos résultats}
+\begin{itemize}
+  \item \textbf{Date du zonage.} Le jeu Atlasanté porte des codes de régions antérieurs à 2016 et
+        des métadonnées de 2014 : il est \emph{probablement} le zonage de 2012. S'il s'agissait
+        d'une révision de 2014 fondée sur des densités postérieures à 2012, le traitement serait en
+        partie choisi sur le résultat. E1 et E2 tomberaient ensemble.
+  \item \textbf{Un verdict qui tient à un seuil.} Le test donne $p = \num{0.043}$ pour un seuil de
+        \num{0.10}. Ce seuil était fixé d'avance, et nous ne le changeons pas. Un second test, par
+        exemple $\Delta^{RM}$ avec $\bar M$ fixé d'avance, devra être pré-enregistré et déclaré
+        comme tel.
+  \item \textbf{Retour à la moyenne.} La zone~4 décroche aussi, de $-\num{4.2}$\mesure{}~points en
+        moyenne. Jusqu'à environ un septième\derive{} de l'effet IDE peut venir de la convergence
+        des zones denses.
+  \item \textbf{Dates d'effet.} Elles viennent de sources secondaires. L'absence de régulation
+        dentaire avant 2025 et la date du rezonage infirmier sont supposées.
+  \item \textbf{Contamination de N1.} Les cibles 2023 et 2026 avaient déjà été vues par K1. Seul le
+        dépôt de 2027 est propre. Le bootstrap par département ignore aussi la corrélation entre
+        origines, si bien que l'IC est probablement trop étroit\suppose{}.
+  \item \textbf{Ordre de gel.} N5 a été gelé après le lancement de N3. Les deux niveaux ne partagent
+        ni données ni seuil.
+  \item \textbf{Seuils choisis.} Les seuils de 3~\% (N2), 25~\% (N4) et $p \ge 0{,}10$ (N3) sont des
+        choix argumentés, pas des dérivations.
+\end{itemize}
+
+\section{Reproductibilité}\label{sec:repro}
+Toutes les commandes se lancent depuis la racine du dépôt. \texttt{scipy} est ajouté à la volée,
+sans toucher au \texttt{pyproject.toml} partagé.
+\begin{verbatim}
+# N3 (~3 s), analyses exploratoires, auto-test du code N1, N2, N4
+PYTHONPATH=v2 uv run --with scipy python -m validation.did
+PYTHONPATH=v2 uv run --with scipy python -m validation.did_explore
+PYTHONPATH=v2 uv run --with scipy python -m validation.selftest
+# empreintes des protocoles gelés
+shasum -a 256 v2/validation/preregistered/*.md
+\end{verbatim}
+\begin{itemize}
+  \item \textbf{Graines} : \texttt{20261114} pour tous les bootstraps ; \texttt{20261114}~+~$r$ pour
+        la réplication $r$ des mondes simulés.
+  \item \textbf{Données} :
+        \begin{itemize}
+          \item \texttt{data/processed/stock\_commune.parquet} (CartoSanté, extrait le 2026-11-13) ;
+          \item \texttt{v2/validation/raw/zonage\_conv\_c987.geojson} (Atlasanté, extrait le
+                2026-11-14 ; libre réutilisation en citant la source et la date) ;
+          \item \texttt{data/processed/stock.parquet} (RPPS, publié le 2026-07-02).
+        \end{itemize}
+  \item \textbf{Sorties} : \texttt{v2/validation/out/}.
+  \item \textbf{Code} : dossier \texttt{v2/validation/}, avec \texttt{did.py},
+        \texttt{forecast.py}, \texttt{limits.py}, \texttt{fine\_scale.py} et
+        \texttt{registry.py}.
+  \item \textbf{Version} : le dépôt n'était pas encore versionné au moment des calculs ; les
+        empreintes des protocoles tiennent lieu de version.
+\end{itemize}
+
+\section{Conclusion}
+La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en six
+niveaux, chacun gelé avant ses résultats et doté de son test d'échec. Le premier levier testé
+illustre l'intérêt du gel. L'effet de la régulation infirmière est grand, de même signe que la
+littérature, et résiste à trois placebos. Il n'est pourtant pas validé, parce qu'un test fixé
+d'avance échoue de peu. Le gel interdit de relâcher ce seuil après coup ; on ne peut le revoir que
+par un second test, déclaré comme tel. Chez les kinés, la prédiction de marche et d'arrêt tient.
+
+\paragraph{Ce que cela change.}
+\begin{itemize}
+  \item Le module \texttt{regulation} (axe~0) reste non validé. La valeur exploratoire
+        $\theta \approx \num{0.8}$ entre dans les fiches de l'axe~1 comme valeur \emph{supposée}.
+  \item Aucun chiffre 2050 n'est montré sans le niveau~2.
+  \item Sous $N_{\min}$, aucune projection communale n'est affichée sans bande.
+\end{itemize}
+
+\paragraph{Questions ouvertes, avec leur coût (temps Claude).}
+\begin{itemize}
+  \item Pré-enregistrer puis lancer un second test IDE ($\Delta^{RM}$, $\bar M$ fixé d'avance) :
+        environ 30~min.
+  \item Pré-enregistrer et lancer $\theta$ pour E2 (kinés) : environ 15~min.
+  \item Dater le jeu Atlasanté contre un arrêté ARS de 2012 : environ 30~min.
+  \item Déposer les prévisions 2027--2030 : environ 5~min.
+  \item Lancer N2 : environ 1~h~15.
+  \item Lancer N4 : environ 15~min.
+  \item Lancer N5 : environ 1~h.
+  \item Écrire et lancer N6 (CRPS, couverture) : environ 40~min ; SBC après N5, environ 45~min.
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}
