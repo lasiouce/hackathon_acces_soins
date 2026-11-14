@@ -63,3 +63,63 @@ questions:
     q: "Pourquoi le scénario affiché diffère-t-il de la tendance ?"
     contexte: {prof: dentistes, terr: R84, leviers: {regul: true, dest: sortie}}
     flux: true
+
+# --- Objectifs et politiques hors modèle, écrits avant `planifier` (2026-11-14, 17:50) ---
+# objectif: true      -> la réponse doit donner l'objectif compris (territoire, année, référence) et, si la cible
+#                        n'est pas déjà atteinte, au moins un mélange vérifié et une année limite de décision
+# deja_atteint: true  -> la réponse doit dire que la tendance atteint déjà la cible (référence aujourd'hui)
+# impossible: true    -> la réponse doit dire que la cible n'est pas atteignable dans les bornes / zones plausibles
+# traduction: true    -> politique hors modèle : traduction supposée annoncée, ou « pas dans le modèle »
+objectifs:
+  - id: o01
+    q: "Pour 2040, quelles sont les politiques qui me permettent d'atteindre une augmentation de 20 % de la population de kinés ?"
+    objectif: true
+    deja_atteint: true
+  - id: o02
+    q: "Je veux 10 % de kinés en plus que la tendance en Auvergne-Rhône-Alpes en 2040 : quels leviers actionner aujourd'hui ?"
+    objectif: true
+  - id: o03
+    q: "Comment atteindre 200 kinés pour 100 000 habitants en Bretagne en 2035 ?"
+    objectif: true
+  - id: o04
+    q: "Quels leviers pour avoir 5 % d'infirmiers libéraux de plus que prévu en France en 2035, sans toucher à la retraite ?"
+    objectif: true
+  - id: o05
+    q: "Je veux 8 % de sages-femmes en plus que la tendance en Île-de-France dès 2030. Que faire ?"
+    objectif: true
+    impossible: true
+  - id: o06
+    q: "Objectif : la densité de dentistes en Normandie au niveau de la moyenne nationale en 2045. Quels leviers ?"
+    objectif: true
+  - id: o07
+    q: "Par quoi commencer pour gagner 3 % de pharmaciens en Occitanie en 2040 par rapport à la tendance ?"
+    objectif: true
+  - id: o08
+    q: "Je veux doubler le nombre de kinés en France d'ici 2030."
+    objectif: true
+    impossible: true
+  - id: o09
+    q: "Pour les infirmiers en Hauts-de-France, quel mélange de politiques donne +6 % en 2040 par rapport à la tendance ?"
+    objectif: true
+  - id: o10
+    q: "Combien de places en formation faut-il ouvrir en plus pour avoir 12 % de dentistes de plus que prévu en 2045 en France ?"
+    objectif: true
+hors_modele:
+  - id: h01
+    q: "Des aides à l'installation pour les kinés en Bretagne : quel effet en 2035 ?"
+    traduction: true
+  - id: h02
+    q: "Si on rend obligatoire l'exercice en zone sous-dotée pour les jeunes infirmiers, que se passe-t-il en 2040 ?"
+    traduction: true
+  - id: h03
+    q: "Développer les maisons de santé pluriprofessionnelles : quel effet sur les sages-femmes en 2040 ?"
+    traduction: true
+  - id: h04
+    q: "Augmenter les tarifs des actes de kinésithérapie : quel effet sur l'effectif en 2035 ?"
+    traduction: true
+  - id: h05
+    q: "Rendre le métier de pharmacien plus attractif : quel effet en 2040 ?"
+    traduction: true
+  - id: h06
+    q: "Si les pharmaciens peuvent vacciner, combien de spécialistes à Clermont-Ferrand en 2035 ?"
+    traduction: true
