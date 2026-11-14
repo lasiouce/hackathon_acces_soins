@@ -119,3 +119,52 @@ N = 0 à l'origine sont comptées à part (erreur absolue en effectif, pas en
 |---|---|
 | Lancer avec l'oracle départemental (répartition seule) | ~15 min Claude + ~1 min machine |
 | Relancer avec la projection départementale par défaut du niveau 1 | ~10 min, après le niveau 1 |
+
+---
+
+## Résultat (ajouté le 2026-11-14, matin)
+`PYTHONPATH=v2 uv run --with scipy python -m validation.fine_scale_run`
+(~7 s) → `v2/validation/out/fine_*`.
+
+**Exclusions (sauts > 3 écarts de Poisson)** : 2 651 / 134 790
+commune-origine-horizons (IDE), 1 838 / 101 484 (MK), 916 / 73 305 (CD).
+
+**P80 de |erreur| à h = 5, estimateur par défaut (oracle départemental ×
+part tenue), en %** :
+
+| Classe | CD 2014 | 2016 | 2018 | 2020 | IDE 2014 | 2016 | 2018 | 2020 | MK 2014 | 2016 | 2018 | 2020 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1–2 | 39,5 | 46,7 | 46,8 | 44,6 | 39,1 | 41,6 | 42,9 | 44,3 | 45,3 | 45,3 | 45,0 | 44,3 |
+| 3–5 | 40,6 | 46,8 | 49,4 | 55,2 | 43,4 | 42,7 | 41,3 | 40,6 | 51,2 | 55,6 | 57,8 | 58,3 |
+| 6–10 | 31,7 | 31,4 | 36,2 | 39,6 | 34,5 | 32,5 | 31,6 | 28,9 | 42,0 | 40,8 | 42,3 | 42,4 |
+| 11–20 | 24,6 | 24,6 | 27,9 | 32,5 | 28,6 | 25,1 | 23,4 | 22,4 | 30,7 | 30,1 | 31,0 | 32,9 |
+| 21–50 | 20,7 | 18,9 | 18,4 | 22,8 | 24,7 | 18,5 | 16,7 | 18,3 | 21,0 | 22,9 | 25,4 | 26,3 |
+| 51–100 | 12,8 | 10,4 | 10,5 | 11,6 | 20,5 | 14,1 | 14,6 | 15,5 | 14,2 | 14,4 | 21,0 | 20,4 |
+| 101–200 | 6,8 | 5,4 | 7,9 | 12,0 | 16,2 | 11,8 | 9,2 | 12,7 | 9,4 | 12,5 | 20,1 | 19,0 |
+| > 200 | 6,9 | 6,4 | 4,3 | 6,8 | 4,7 | 7,8 | 10,3 | 14,3 | 6,0 | 5,8 | 12,2 | 15,2 |
+
+N_min par profession × origine : CD 11 / 11 / 21 / 21 ; IDE 21 / 21 / 11 /
+11 ; MK 21 / 21 / **51 / 51**.
+
+**N_min (règle : 3 professions, ≥ 3 origines sur 4) = 51.** Il est fixé par
+les kinés aux origines récentes (leur forte croissance). Pour CD et IDE
+seuls, il serait de 21. La prédiction dérivée (N_min ≥ 16, attendu 20–50)
+tient pour le plancher ; la valeur dépasse de peu la fourchette attendue.
+
+Toutes classes et professions confondues, à h = 5 : le défaut bat la
+persistance à partir de 11 professionnels (27,8 contre 29,1 %) ; la tendance
+communale est la pire partout (91,7 % de P80 pour 1–2).
+
+**Bande P10–P90 par classe** (calibrée sur 2014–2018, testée sur 2020) :
+couverture dans [75 ; 85] % pour **14 classes sur 21** (classes ≥ 3) ; les
+échecs sont surtout dans les grandes classes à peu de communes (> 100 :
+55–70 %).
+
+**Monotonie** : l'erreur décroît avec N, sauf une inversion entre 1–2 et 3–5
+(une seule classe : le falsificateur, « ≥ 2 classes consécutives », ne joue
+pas).
+
+**Verdict N4 : N_min = 51.** Sous 51 professionnels, une projection
+communale n'est pas affichée sans sa bande, ou elle est agrégée au groupe de
+communes. ⚑ L'oracle retire l'erreur départementale (≈ 8 % de MAPE à 5 ans) :
+l'erreur réelle est plus grande.

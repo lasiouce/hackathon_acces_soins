@@ -6,7 +6,7 @@
 \usetikzlibrary{babel}   % les deux-points et points-virgules actifs de babel-french cassent TikZ sans cela
 
 \title{Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats :\\
-sept protocoles pré-enregistrés, et ce qui n'y résiste pas}
+huit protocoles pré-enregistrés, et ce qui n'y résiste pas}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
 \date{Version du \today}
@@ -17,10 +17,10 @@ sept protocoles pré-enregistrés, et ce qui n'y résiste pas}
 \begin{abstract}
 Un jumeau numérique de l'offre de soins projette l'effectif « libéral » (secteur privé) de cinq
 professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Les données courent de 2012 à
-2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit sept
+2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit huit
 protocoles, gelés par empreinte SHA-256 avant tout calcul qui les concerne : prévision à dix ans au
 plus, cohérence à 2050, effet causal d'un levier, échelle communale, mondes simulés à vérité connue,
-prévision probabiliste, et un addendum daté. Nous les avons appliqués tels quels. La régulation de
+prévision probabiliste, un addendum daté et une bande d'incertitude en $\sqrt h$. Nous les avons appliqués tels quels. La régulation de
 l'installation infirmière en zone sur-dotée a un effet estimé de $\num{-30.3}$\mesure{}~log-points
 au département et de $\num{-32.2}$\mesure{} au sein des bassins de vie. Le test de tendances
 parallèles fixé d'avance échoue pourtant deux fois ($p = \num{0.043}$\mesure{} puis
@@ -28,9 +28,12 @@ parallèles fixé d'avance échoue pourtant deux fois ($p = \num{0.043}$\mesure{
 l'annulation de la régulation en 2014 (\num{3.1}\mesure{} points par an). Au backtest, la variante
 par défaut ne bat la tendance qu'à l'origine 2021 ; aux origines 2016 et 2018, c'est l'égalité. Dans
 des mondes simulés, le moteur est exact sans bruit mais biaisé par le bruit, qu'il lit comme des
-entrées. Aucune bande d'incertitude n'est calibrée, et la reproduction des projections DREES à 2050
-échoue de 14 à 25\mesure{}~\%. Aucun chiffre 2050 n'est donc citable. Ces échecs, obtenus avant
-toute retouche, sont le résultat principal.
+entrées. Les cas limites analytiques passent, mais la reproduction des projections DREES à 2050
+échoue de 14 à 25\mesure{}~\% : aucun chiffre 2050 n'est citable. Seule une bande dont la largeur
+croît comme $\sqrt h$ est calibrée (couverture de 49 et 76\mesure{}~\% pour 50 et 80~\% nominaux),
+résultat à confirmer sur les prévisions déposées pour 2027. Sous 51\mesure{} professionnels, une
+projection communale ne s'affiche pas sans sa bande. Ces verdicts, obtenus sans retouche des
+protocoles, sont le résultat principal.
 \end{abstract}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; validation ; pré-enregistrement ;
 différence de différences ; zonage conventionnel ; jumeau numérique.
@@ -158,15 +161,16 @@ Niveau & Gel & SHA-256 (12 car.) & État \\
 \midrule
 Plan & 2026-11-14 02:54 & \texttt{0108455d34aa} & --- \\
 N1 Prévision & 02:54 & \texttt{eb527ecb06a0} & lancé par l'axe 2 \\
-N2 Long terme & 02:54 & \texttt{bc5df3083cc5} & lancé (forme affaiblie) \\
+N2 Long terme & 02:54 & \texttt{bc5df3083cc5} & lancé (A affaiblie) \\
 N3 Leviers & 02:54 & \texttt{c37e36457f12} & \textbf{lancé} \\
-N4 Échelle fine & 02:54 & \texttt{91f897cc5071} & non lancé \\
+N4 Échelle fine & 02:54 & \texttt{91f897cc5071} & lancé \\
 N5 Mondes simulés & 03:46 & \texttt{1046545b17c0} & lancé \\
 N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & lancé \\
 N7 Addendum & 04:37 & \texttt{06ba47b91647} & lancé \\
+N8 Bande en $\sqrt h$ & 08:06 & \texttt{97ef367fd221} & lancé \\
 \bottomrule
 \end{tabular}
-\caption{Protocoles gelés. N5, N6 et N7 ont été ajoutés après le lancement de N3, mais avant tout
+\caption{Protocoles gelés. N5 à N8 ont été ajoutés après le lancement de N3, mais avant tout
 calcul qui les concerne. Ils s'ajoutent aux autres sans les modifier.}\label{tab:sha}
 \end{table}
 
@@ -313,6 +317,13 @@ Gelé à 04:37, après le résultat de N3, il ajoute quatre volets.
         réconciliation des dentistes à 2050 par valeurs de Shapley sur trois facteurs (périmètre,
         origine et fenêtre, niveau des entrées), avec un résidu toléré d'au plus 25\suppose{}~\%.
 \end{itemize}
+
+\subsection{N8 : bande en $\sqrt h$}
+Gelé à 08:06, après avoir vu que la bande linéaire en $h$ était trop large, N8 teste
+$\log N \sim \mathcal N(\log \hat N, s^2 h)$, avec $s^2$ la moyenne de $e^2/h'$ sur les erreurs passées :
+la variance d'une marche aléatoire. Origines, CRPS et seuils de couverture sont ceux de N6 et N7-C.
+L'hypothèse a été suggérée par les données et elle est testée sur les mêmes origines : seul le dépôt
+2027 la confirmera.
 
 \section{Résultats}\label{sec:resultats}
 \subsection{Niveau 3, E1 : régulation infirmière}
@@ -475,7 +486,7 @@ Avec la bande « pente d'erreur » (origines 2017--2021), tous les modèles batt
 ($\Delta \approx -\num{0.006}$\mesure{}), mais la bande est trop large : l'intervalle « 80~\% »
 couvre environ 96\mesure{}~\%. Les tirages propres de l'APC (100 par cellule, moins que les 200
 prévus par N6) font jeu égal avec la persistance ($+\num{0.0014}$ $[\num{-0.0033} ; \num{0.0068}]$),
-mais leur intervalle « 80~\% » ne couvre que 54\mesure{}~\% des cas. Aucune bande n'est donc publiable sous son niveau nominal. La SBC passe
+mais leur intervalle « 80~\% » ne couvre que 54\mesure{}~\% des cas. Aucune de ces bandes n'est donc publiable sous son niveau nominal. La SBC passe
 pour les cinq taux de rétention ($p$ de \num{0.14} à \num{0.94}\mesure{}) et échoue pour les entrées
 ($p \approx 3 \cdot 10^{-46}$\mesure{}, rang moyen \num{0.22}) : le bruit biaise les entrées vers le
 haut, comme dans le monde bruité.
@@ -494,9 +505,29 @@ DD76 (\num{61800}) de \num{19691}. Les valeurs de Shapley attribuent \num{13056}
 (16\derive{}~\%) passe le seuil. La variante par défaut, à entrées moyennes, donne
 \num{61964}\mesure{}, proche de DD76.
 
-\subsection{Niveau 4}
-Il n'est pas lancé. Son code a été vérifié sur données synthétiques : avec une erreur de Poisson pure,
-$N_{\min}$ tombe dans la classe 21--50\mesure{}, en accord avec la dérivation ($N \ge 26$).
+\subsection{Niveau 2 : cas limites (N2-B)}
+Sur le jumeau par défaut, au périmètre privé, les trois cas limites passent pour les cinq
+professions. À l'origine, l'état reproduit l'observé (test faible, puisque l'état en est construit).
+À 200 ans, l'effectif égale $Q \cdot C$ à $-\num{0.05}$ à $-\num{0.46}$\mesure{}~\% près ; l'écart vient
+du plancher à zéro. Un état initial divisé par deux ne change rien. Une hausse de capacité de
+formation n'agit qu'à $o + L_p + 1$\mesure{}, comme prévu.
+
+\subsection{Niveau 4 : échelle fine}
+Avec l'estimateur par défaut (total départemental de la cible, oracle, $\times$ part communale tenue),
+le 80\textsuperscript{e} centile de l'erreur à 5~ans passe de 40--58\mesure{}~\% pour 3 à 5
+professionnels à 4--15\mesure{}~\% au-delà de 200. La règle fixée d'avance donne
+$N_{\min} = 51$\mesure{}, imposé par les kinés aux origines 2018 et 2020 ; il serait de 21 pour les
+dentistes et les infirmiers seuls. La prédiction dérivée ($N_{\min} \ge 16$) tient. La bande
+P10--P90 par classe est calibrée dans 14 classes sur 21\mesure{}. L'oracle retire l'erreur
+départementale : l'erreur réelle est plus grande.
+
+\subsection{N8 et dépôt 2027}
+Avec la bande en $\sqrt h$, la variante par défaut couvre \num{49.2}\mesure{}~\% des cas à 50~\% et
+\num{75.9}\mesure{}~\% à 80~\% : elle est calibrée, et elle bat la tendance en CRPS
+($\num{-0.0045}$ $[\num{-0.0070} ; \num{-0.0020}]$\mesure{}). Le PIT reste chargé dans sa première
+classe : les valeurs réelles sous la bande sont plus fréquentes que prévu. Les prévisions de
+l'origine 2026 pour 2027, 2028 et 2030, avec leurs quantiles, sont déposées (empreinte
+\texttt{ca036374d216}) et seront jugées à la publication du RPPS 2027.
 
 \section{Validation et menaces à la validité}\label{sec:menaces}
 \subsection{Cas d'étude : des tests vrais par construction}
@@ -569,6 +600,9 @@ PYTHONPATH=v2 uv run --with scipy python -m validation.stability prive
 PYTHONPATH=v2 uv run --with scipy python -m validation.probabilistic
 PYTHONPATH=v2 uv run --with scipy python -m validation.worlds all
 PYTHONPATH=v2 uv run --with scipy python -m validation.dd76
+PYTHONPATH=v2 uv run --with scipy python -m validation.limits_twin
+PYTHONPATH=v2 uv run --with scipy python -m validation.fine_scale_run
+PYTHONPATH=v2 uv run --with scipy python -m validation.depot
 # empreintes des protocoles gelés
 shasum -a 256 v2/validation/preregistered/*.md
 \end{verbatim}
@@ -601,13 +635,14 @@ protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous
         valider ;
   \item la précision par département n'est acquise que sur une origine ;
   \item le moteur par défaut confond bruit, passage de cohorte et entrées ;
-  \item aucune bande n'est calibrée ;
+  \item seule la bande en $\sqrt h$ est calibrée, sous réserve du dépôt 2027 ;
   \item à 2050, l'hypothèse d'entrées domine tout, de $-15$ à $+15$\mesure{}~\% autour de DD76.
 \end{itemize}
 
 \paragraph{Ce que cela change.}
 \begin{itemize}
-  \item Aucun chiffre 2050 n'est citable, et aucune bande n'est affichée sous son niveau nominal.
+  \item Aucun chiffre 2050 n'est citable. Seule la bande en $\sqrt h$ peut être affichée sous son niveau
+        nominal, et sous 51 professionnels une projection communale ne s'affiche pas sans elle.
   \item Les axes 0 et 2 doivent séparer les entrées de la rétention.
   \item L'axe~5 doit vérifier la calibration de sa composante (b), linéaire en $h$.
   \item Le niveau d'entrées de référence (moyenne de fenêtre ou années récentes) est une décision qui
@@ -616,12 +651,11 @@ protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous
 
 \paragraph{Questions ouvertes, avec leur coût (temps de travail estimé).}
 \begin{itemize}
-  \item Bande en $\sqrt h$ pré-enregistrée, puis test de couverture : environ 30~min.
   \item Troisième test du levier IDE (contrôle synthétique par bassin de vie) : environ 1~h.
   \item Série ouverte des quotas 2016--2020 pour une reproduction fidèle de DD76 : environ 45~min.
   \item Dater le jeu Atlasanté contre un arrêté ARS de 2012 : environ 30~min.
-  \item Cas limites L1--L3 sur le jumeau et niveau~4 : environ 30~min.
-  \item Dépôt des prévisions 2027--2030 : environ 5~min.
+  \item $N_{\min}$ avec la projection départementale réelle au lieu de l'oracle : environ 15~min.
+  \item Score du dépôt 2027 (juillet 2027) : environ 15~min.
 \end{itemize}
 
 \bibliographystyle{plainnat}

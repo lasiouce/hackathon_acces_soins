@@ -161,3 +161,28 @@ citable. Le moteur suit les entrées qu'on lui donne : à 2050, l'hypothèse
 d'entrées domine tout (de −15 % à +15 % autour de DD76 selon la variante).
 
 Cas limites L1–L3 sur le jumeau : non lancés cette nuit (ledger).
+
+## Partie B : cas limites sur le jumeau (ajouté le 2026-11-14, matin)
+`PYTHONPATH=v2 uv run --with scipy python -m validation.limits_twin` (~1 min)
+→ `v2/validation/out/limits_twin.json`. Variante par défaut du jumeau
+(`jumeau_taux_locaux`), périmètre privé, origine 2026 (IDE libéraux : 2023).
+
+| Profession | L1 écart | L2 N(o+200) / (Q·C) − 1 | L2 état × 0,5 | L3 1re année d'effet (attendue) |
+|---|---|---|---|---|
+| Dentistes | 0 | −0,10 % | 0 | 2033 (2033) |
+| Infirmiers libéraux | 0 | −0,05 % | 0 | 2027 (2027) |
+| Kinés | 0 | −0,13 % | 0 | 2032 (2032) |
+| Pharmaciens | 0 | −0,18 % | 0 | 2033 (2033) |
+| Sages-femmes | 0 | −0,46 % | 0 | 2032 (2032) |
+
+**Verdict : L1, L2 et L3 passent pour les 5 professions.**
+- L1 est un test faible : l'état initial du jumeau est construit à partir de
+  l'observé ; il vérifie seulement que le chargement ne perd rien.
+- L2 : Q·C = personnes-années d'une seule promotion d'entrées lancée dans un
+  état vide. L'écart négatif (−0,05 à −0,46 %) vient du plancher à 0, qui
+  tronque les entrées nettes négatives.
+- L3 : une hausse de capacité dès o + 1 n'agit qu'à o + L_p + 1.
+
+**Verdict N2 complet :** B passe ; A échoue (forme affaiblie). Le moteur est
+cohérent à l'infini, mais ses chiffres 2050 dépendent de l'hypothèse
+d'entrées, qui n'est pas encore validée.

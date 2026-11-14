@@ -63,15 +63,22 @@ def n6(e: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def n7c(e: pd.DataFrame) -> pd.DataFrame:
+def n7c(e: pd.DataFrame, root: bool = False) -> pd.DataFrame:
+    """root=False : bande linéaire en h (N7-C). root=True : bande en √h (N8, SHA-256 97ef367fd221…),
+    s² = moyenne de e²/h′, σ = s·√h."""
     rows = []
     cur = e[(e.h == H) & (e.n_origin >= MIN_N) & e.origin.between(2017, 2021)]
     for (m, p, o), g in cur.groupby(["model", "profession", "origin"]):
         past = e[(e.model == m) & (e.profession == p) & (e.origin >= 2016) & (e.origin + e.h <= o)]
         if len(past) < MIN_ERR:
             continue
-        s = float(np.sqrt(((past.e / past.h) ** 2).mean()))
-        mu, y, sig = np.log(g.pred.to_numpy()), np.log(g.actual.to_numpy()), s * H
+        if root:
+            s = float(np.sqrt((past.e ** 2 / past.h).mean()))
+            sig = s * np.sqrt(H)
+        else:
+            s = float(np.sqrt(((past.e / past.h) ** 2).mean()))
+            sig = s * H
+        mu, y = np.log(g.pred.to_numpy()), np.log(g.actual.to_numpy())
         rows.append(pd.DataFrame({"model": m, "profession": p, "origin": o, "territory": g.territory.to_numpy(),
                                   "crps": crps_gauss(mu, sig, y), "pit": norm.cdf((y - mu) / sig), "s": s,
                                   "n_past": len(past)}))
@@ -153,9 +160,14 @@ def main(argv):
         d = apc_draws()
         d.to_parquet(OUT / "prob_apc_tirages.parquet")
         a = pd.concat([a, d], ignore_index=True)
+    elif (OUT / "prob_apc_tirages.parquet").exists():
+        a = pd.concat([a, pd.read_parquet(OUT / "prob_apc_tirages.parquet")], ignore_index=True)
+    c = n7c(e, root=True)
+    c.to_parquet(OUT / "prob_n8_scores.parquet")
     a.to_parquet(OUT / "prob_n6_scores.parquet")
     b.to_parquet(OUT / "prob_n7c_scores.parquet")
-    v = pd.concat([verdicts(a, "N6 empirique même h"), verdicts(b, "N7-C pente d'erreur")], ignore_index=True)
+    v = pd.concat([verdicts(a, "N6 empirique même h"), verdicts(b, "N7-C pente d'erreur"),
+                   verdicts(c, "N8 racine de h")], ignore_index=True)
     v.to_csv(OUT / "prob_verdicts.csv", index=False)
     cells = {"N6": a.groupby(["profession", "origin"]).size().reset_index().values.tolist(),
              "N7C": b.groupby(["profession", "origin"]).size().reset_index().values.tolist()}
