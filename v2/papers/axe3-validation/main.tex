@@ -6,7 +6,7 @@
 \usetikzlibrary{babel}   % les deux-points et points-virgules actifs de babel-french cassent TikZ sans cela
 
 \title{Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats :\\
-huit protocoles pré-enregistrés, et ce qui n'y résiste pas}
+neuf protocoles pré-enregistrés, et ce qui n'y résiste pas}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
 \date{Version du \today}
@@ -17,10 +17,10 @@ huit protocoles pré-enregistrés, et ce qui n'y résiste pas}
 \begin{abstract}
 Un jumeau numérique de l'offre de soins projette l'effectif « libéral » (secteur privé) de cinq
 professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Les données courent de 2012 à
-2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit huit
+2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit neuf
 protocoles, gelés par empreinte SHA-256 avant tout calcul qui les concerne : prévision à dix ans au
 plus, cohérence à 2050, effet causal d'un levier, échelle communale, mondes simulés à vérité connue,
-prévision probabiliste, un addendum daté et une bande d'incertitude en $\sqrt h$. Nous les avons appliqués tels quels. La régulation de
+prévision probabiliste, un addendum daté, une bande d'incertitude en $\sqrt h$ et le signe de deux boucles de rétroaction. Nous les avons appliqués tels quels. La régulation de
 l'installation infirmière en zone sur-dotée a un effet estimé de $\num{-30.3}$\mesure{}~log-points
 au département et de $\num{-32.2}$\mesure{} au sein des bassins de vie. Le test de tendances
 parallèles fixé d'avance échoue pourtant deux fois ($p = \num{0.043}$\mesure{} puis
@@ -32,7 +32,9 @@ entrées. Les cas limites analytiques passent, mais la reproduction des projecti
 échoue de 14 à 25\mesure{}~\% : aucun chiffre 2050 n'est citable. Seule une bande dont la largeur
 croît comme $\sqrt h$ est calibrée (couverture de 49 et 76\mesure{}~\% pour 50 et 80~\% nominaux),
 résultat à confirmer sur les prévisions déposées pour 2027. Sous 51\mesure{} professionnels, une
-projection communale ne s'affiche pas sans sa bande. Ces verdicts, obtenus sans retouche des
+projection communale ne s'affiche pas sans sa bande. La boucle densité $\to$ installations n'a de signe
+établi pour aucune profession ; la boucle densité $\to$ départs avant 60~ans n'est confirmée que pour les
+infirmiers libéraux. Ces verdicts, obtenus sans retouche des
 protocoles, sont le résultat principal.
 \end{abstract}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; validation ; pré-enregistrement ;
@@ -169,9 +171,10 @@ N5 Mondes simulés & 03:46 & \texttt{1046545b17c0} & lancé \\
 N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & lancé \\
 N7 Addendum & 04:37 & \texttt{06ba47b91647} & lancé \\
 N8 Bande en $\sqrt h$ & 08:06 & \texttt{97ef367fd221} & lancé \\
+N9 Boucles & 08:10 & \texttt{96a39bc087bb} & lancé \\
 \bottomrule
 \end{tabular}
-\caption{Protocoles gelés. N5 à N8 ont été ajoutés après le lancement de N3, mais avant tout
+\caption{Protocoles gelés. N5 à N9 ont été ajoutés après le lancement de N3, mais avant tout
 calcul qui les concerne. Ils s'ajoutent aux autres sans les modifier.}\label{tab:sha}
 \end{table}
 
@@ -198,8 +201,10 @@ moyens 2016--2020, entrées tenues au niveau 2016--2020. On compare ensuite des 
 $g(t) = N(t)/N(2020)$, ce qui neutralise l'écart de champ (+0,8 à +2,5\mesure{}~\% en 2020). La
 tolérance est de $\pm 2$\suppose{}~\% en 2030 et de $\pm 3$\suppose{}~\% en 2040 et 2050. On
 contrôle aussi la forme : un creux pour les pharmaciens, un plateau pour les sages-femmes. La
-tolérance est un choix. Elle reste quatre fois plus petite que l'effet publié d'un quota de
-$\pm 20$~\%, soit $\pm 12$ à $\pm 13$\mesure{}~\% en 2050 \citep{drees2021dd76}.
+tolérance est un choix. Elle reste au moins trois fois plus petite que l'effet publié d'un quota
+de $\pm 20$~\% en 2050 : $\pm 9$ (dentistes), $\pm 12$ (sages-femmes) et $\pm 13$\mesure{}~\%
+(pharmaciens) \citep[p.~3 et 58--59]{drees2021dd76}. Le protocole gelé citait « $\pm 12$ à 13~\% » ;
+la correction, relevée par l'audit des sources de l'axe~1, ne change ni la tolérance ni le verdict.
 
 \paragraph{Cas limites.}
 \begin{itemize}
@@ -288,8 +293,9 @@ cible ne dépasse pas l'origine courante, avec au moins 20\suppose{} erreurs.
 \begin{itemize}
   \item \textbf{Score} : $\mathrm{CRPS}(F, y) = \mathbb{E}|X - y| - \tfrac12\,\mathbb{E}|X - X'|$,
         la forme par échantillon de \citet[éq.~21, au signe près]{gneiting2007jasa}, calculé sur
-        $\log N$. Diviser par $y$ rendrait le score impropre ; le passage au logarithme le garde
-        propre. Le critère est celui de N1 : bootstrap des départements, borne haute de $\Delta < 0$.
+        $\log N$, une transformation de la variable qui garde le score propre. Le protocole
+        justifiait ce choix par l'impropreté d'un score divisé par $y$ ; cette propriété ne vient pas
+        de \citet{gneiting2007jasa}, et sa source n'est pas vérifiée ici (question ouverte). Le critère est celui de N1 : bootstrap des départements, borne haute de $\Delta < 0$.
   \item \textbf{Calibration} : la couverture des intervalles centraux doit être de
         $[75 ; 85]$\suppose{}~\% à 80~\% et de $[44 ; 56]$\suppose{}~\% à 50~\%. On juge la
         couverture plutôt qu'un $\chi^2$ sur l'histogramme PIT, parce que les départements d'une
@@ -530,6 +536,53 @@ classe : les valeurs réelles sous la bande sont plus fréquentes que prévu. Le
 l'origine 2026 pour 2027, 2028 et 2030, avec leurs quantiles, sont déposées (empreinte
 \texttt{ca036374d216}) et seront jugées à la publication du RPPS 2027.
 
+\subsection{N9 : signe des boucles de rétroaction}
+Avant qu'une boucle soit modélisée, N9 (gelé à 08:10, empreinte \texttt{96a39bc087bb}) teste son signe.
+\begin{itemize}
+  \item \textbf{B2, densité $\to$ installations nettes des moins de 40~ans}, par bassin de vie $\times$
+        année (2014--2025). Le résultat est le solde d'installations pour \num{100000} habitants ; le
+        régresseur est $\log(1 + D)$, densité décalée de deux ans. Contrôles : population, parts des
+        moins de 15 et des plus de 65~ans, zonages 2012 et actuel ; effets fixes département et
+        année. Signe attendu : $\beta < 0$.
+  \item \textbf{B1, densité $\to$ rétention des 45--54~ans à 5~ans}, par département $\times$ année
+        (RPPS, libéral et mixte). Contrôles : population, effectif de base ; effets fixes région et
+        année. Signe attendu : $\beta > 0$.
+  \item Pour les deux, variance robuste par département et placebo « densité des autres
+        professions » : si le placebo a le même signe et au moins la moitié de l'effet, le verdict
+        devient « non attribuable ».
+\end{itemize}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}llccl@{}}
+\toprule
+Boucle & Profession & $\beta$ [IC 95~\%] & Placebo & Verdict \\
+\midrule
+B2 & Infirmiers & $\num{-1.52}$ $[\num{-4.05} ; \num{1.01}]$ & $\num{-1.72}$ & nul \\
+B2 & Kinés & $\num{-1.66}$ $[\num{-3.43} ; \num{0.11}]$ & $\num{-2.76}$ & nul \\
+B2 & Dentistes & $+\num{0.17}$ $[\num{-0.05} ; \num{0.39}]$ & $\num{-0.45}$ & nul \\
+B1 & Sages-femmes ($G = 15$) & $\num{-0.24}$ $[\num{-0.48} ; \num{0.01}]$ & $+\num{0.02}$ & nul \\
+B1 & Dentistes & $+\num{0.04}$ $[\num{-0.03} ; \num{0.10}]$ & $+\num{0.05}$ & nul \\
+B1 & Pharmaciens & $\num{-0.01}$ $[\num{-0.14} ; \num{0.11}]$ & $+\num{0.05}$ & nul \\
+B1 & Kinés & $\num{-0.02}$ $[\num{-0.08} ; \num{0.03}]$ & $+\num{0.05}$ & nul \\
+B1 & Infirmiers libéraux & $+\num{0.11}$ $[\num{0.05} ; \num{0.18}]$ & $\num{-0.00}$ & \textbf{confirmé} \\
+\bottomrule
+\end{tabular}
+\caption{N9. B2 : installations nettes pour \num{100000} habitants par unité de $\log(1+D)$ (moyenne :
+6,0 pour les IDE, 4,4 pour les kinés, 1,7 pour les dentistes) ; 20\,460 bassins de vie $\times$
+années, 96 départements. B1 : $\log R$ par unité de $\log D$.\mesure{}}\label{tab:n9}
+\end{table}
+
+\textbf{B2 n'est confirmé pour aucune profession.} Pour les IDE et les kinés, le point estimé a le
+signe attendu, mais l'intervalle contient zéro. La densité des \emph{autres} professions pèse
+autant ou plus : ce qui se voit ressemble à une attractivité générale du territoire, pas à une
+saturation propre à la profession. Avec une densité décalée d'un an seulement, l'effet double
+($\num{-2.3}$ et $\num{-2.7}$\mesure{}) : c'est le retour à la moyenne mécanique que le décalage de deux
+ans devait écarter. \textbf{B1 est confirmé pour les seuls infirmiers libéraux} : une densité deux fois
+plus forte va avec une rétention à 5~ans des 45--54~ans plus haute d'environ
+8\derive{}~\% ($2^{0.113} - 1$). Ces relations restent écologiques, mesurées sur des soldes, et la
+densité est elle-même le produit des installations passées : elles ne sont pas causales.
+
 \section{Validation et menaces à la validité}\label{sec:menaces}
 \subsection{Cas d'étude : des tests vrais par construction}
 Le jumeau a subi deux revues adversariales\footnote{Rapports internes
@@ -604,6 +657,7 @@ PYTHONPATH=v2 uv run --with scipy python -m validation.dd76
 PYTHONPATH=v2 uv run --with scipy python -m validation.limits_twin
 PYTHONPATH=v2 uv run --with scipy python -m validation.fine_scale_run
 PYTHONPATH=v2 uv run --with scipy python -m validation.depot
+PYTHONPATH=v2 uv run --with scipy python -m validation.boucles
 # empreintes des protocoles gelés
 shasum -a 256 v2/validation/preregistered/*.md
 \end{verbatim}
@@ -628,7 +682,7 @@ shasum -a 256 v2/validation/preregistered/*.md
 \end{itemize}
 
 \section{Conclusion}
-La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en sept
+La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en neuf
 protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous les tests qui pouvaient
 échouer ont échoué, et c'est l'information principale :
 \begin{itemize}
@@ -646,6 +700,9 @@ protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous
         nominal, et sous 51 professionnels une projection communale ne s'affiche pas sans elle.
   \item Les axes 0 et 2 doivent séparer les entrées de la rétention.
   \item L'axe~5 doit vérifier la calibration de sa composante (b), linéaire en $h$.
+  \item La boucle densité $\to$ installations (B2) n'a pas de signe établi : l'axe~2 ne l'ajoute pas comme
+        covariable confirmée. La boucle densité $\to$ départs (B1) n'est confirmée que pour les
+        infirmiers libéraux, au département.
   \item Le niveau d'entrées de référence (moyenne de fenêtre ou années récentes) est une décision qui
         revient à l'équipe : il fait passer les dentistes en 2050 de \num{62000} à \num{81000}\mesure{}.
 \end{itemize}
