@@ -31,7 +31,7 @@ def main():
                     r = r.merge(q.reset_index().rename(columns={"territory": "dep"}), on=["profession", "dep"])
                 rows.append(r)
         d = pd.concat(rows, ignore_index=True).assign(variante=name, perimetre="privé central")
-        f = OUT / f"{name}_2026-11-14.parquet"
+        f = OUT / f"{name if name.startswith('axe2_') else 'axe2_a0_' + name}_2026-11-14.parquet"   # préfixe axe2_ (collision du 2026-11-14)
         d.to_parquet(f, index=False)
         print(f, len(d), hashlib.sha256(f.read_bytes()).hexdigest()[:12],
               d.groupby(["profession", "cible"]).pred.sum().unstack().round(0).to_dict())
