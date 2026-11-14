@@ -22,3 +22,10 @@ Memoire123.pdf
 .claude/skills/design-taste-frontend/
 .claude/settings.local.json
 .Rhistory
+# sorties régénérables (2026-11-14) : relancer le script de l'axe ; les dépôts pré-enregistrés N10 (n10_*) restent commités
+v2/papers/axe*/main.pdf
+v2/papers/axe*/main.blg
+v2/sensibilite/out/*.npz
+v2/methodes/out/*_erreurs.parquet
+v2/methodes/out/erreurs_*.parquet
+v2/validation/out/*.parquet

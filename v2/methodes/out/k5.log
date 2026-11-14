@@ -1,0 +1,43 @@
+infirmiers 2014 h=5 · b=0.0047 sD=0.0854 phi=0.4945 kap=0.0371 sD_brut=0.0854 phi_brut=0.4945 kap_brut=0.0371 · 3 s
+infirmiers 2015 h=5 · b=0.0375 sD=0.0823 phi=0.5042 kap=0.0190 sD_brut=0.0876 phi_brut=0.5245 kap_brut=0.0256 · 7 s
+kines 2015 h=5 · b=0.1080 sD=0.0727 phi=0.4658 kap=0.0104 sD_brut=0.0683 phi_brut=0.4478 kap_brut=0.0077 · 8 s
+infirmiers 2016 h=5 · b=0.0358 sD=0.0686 phi=0.4694 kap=0.0120 sD_brut=0.0674 phi_brut=0.5314 kap_brut=0.0216 · 16 s
+kines 2016 h=5 · b=0.0689 sD=0.0744 phi=0.4368 kap=0.0069 sD_brut=0.0793 phi_brut=0.4601 kap_brut=0.0070 · 17 s
+dentistes 2016 h=5 · b=0.0346 sD=0.0668 phi=0.3479 kap=0.0037 sD_brut=0.0639 phi_brut=0.2918 kap_brut=0.0020 · 18 s
+infirmiers 2017 h=5 · b=0.0355 sD=0.0654 phi=0.4777 kap=0.0113 sD_brut=0.0655 phi_brut=0.5348 kap_brut=0.0193 · 27 s
+kines 2017 h=5 · b=0.0428 sD=0.0678 phi=0.4466 kap=0.0071 sD_brut=0.0704 phi_brut=0.4675 kap_brut=0.0075 · 28 s
+dentistes 2017 h=5 · b=0.0253 sD=0.0627 phi=0.3641 kap=0.0037 sD_brut=0.0603 phi_brut=0.3107 kap_brut=0.0020 · 29 s
+infirmiers 2018 h=5 · b=0.0316 sD=0.0655 phi=0.4877 kap=0.0100 sD_brut=0.0650 phi_brut=0.5389 kap_brut=0.0169 · 40 s
+kines 2018 h=5 · b=0.0301 sD=0.0671 phi=0.4637 kap=0.0064 sD_brut=0.0682 phi_brut=0.4872 kap_brut=0.0068 · 41 s
+dentistes 2018 h=5 · b=0.0193 sD=0.0655 phi=0.3800 kap=0.0033 sD_brut=0.0650 phi_brut=0.3272 kap_brut=0.0018 · 42 s
+infirmiers 2019 h=5 · b=0.0251 sD=0.0737 phi=0.5059 kap=0.0085 sD_brut=0.0669 phi_brut=0.5552 kap_brut=0.0110 · 51 s
+kines 2019 h=5 · b=0.0176 sD=0.0809 phi=0.4919 kap=0.0066 sD_brut=0.0808 phi_brut=0.5250 kap_brut=0.0066 · 52 s
+dentistes 2019 h=5 · b=-0.0112 sD=0.0893 phi=0.3936 kap=0.0051 sD_brut=0.0984 phi_brut=0.3361 kap_brut=0.0039 · 53 s
+infirmiers 2020 h=5 · b=0.0077 sD=0.0740 phi=0.5126 kap=0.0080 sD_brut=0.0703 phi_brut=0.5487 kap_brut=0.0104 · 63 s
+kines 2020 h=5 · b=-0.0006 sD=0.0739 phi=0.5213 kap=0.0062 sD_brut=0.0702 phi_brut=0.5673 kap_brut=0.0062 · 64 s
+dentistes 2020 h=5 · b=-0.0183 sD=0.0864 phi=0.4111 kap=0.0048 sD_brut=0.0959 phi_brut=0.3529 kap_brut=0.0038 · 65 s
+v2/methodes/out/n10_soumission_k5.parquet                      min   max   size
+profession grain                     
+dentistes  bv2022   2016  2020   8520
+           commune  2016  2020  36735
+           epci     2016  2020   6200
+infirmiers bv2022   2014  2020  11935
+           commune  2014  2020  99876
+           epci     2014  2020   8764
+kines      bv2022   2015  2020  10230
+           commune  2015  2020  69414
+           epci     2015  2020   7512
+infirmiers 2022 h=3 · b=-0.0316 sD=0.0465 phi=0.3213 kap=0.0030 sD_brut=0.0450 phi_brut=0.3140 kap_brut=0.0031 · 11 s
+kines 2022 h=3 · b=-0.0067 sD=0.0467 phi=0.3554 kap=0.0037 sD_brut=0.0454 phi_brut=0.3843 kap_brut=0.0049 · 12 s
+dentistes 2022 h=3 · b=-0.0168 sD=0.0511 phi=0.3110 kap=0.0021 sD_brut=0.0543 phi_brut=0.2942 kap_brut=0.0015 · 12 s
+v2/methodes/out/n10_reservee_k5_2022h3.parquet                      min   max   size
+profession grain                     
+dentistes  bv2022   2022  2022   1704
+           commune  2022  2022   7347
+           epci     2022  2022   1240
+infirmiers bv2022   2022  2022   1705
+           commune  2022  2022  14268
+           epci     2022  2022   1252
+kines      bv2022   2022  2022   1705
+           commune  2022  2022  11569
+           epci     2022  2022   1252
