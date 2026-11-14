@@ -115,6 +115,18 @@ PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : nouvelles 
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
 ```
 
+Carte de décision v2 (MapLibre, branchée sur le jumeau) :
+
+```bash
+uv run python v2/prototype-carte/server.py    # http://localhost:8767
+```
+
+Elle montre, par département et par région, l'effectif libéral, l'écart au tendanciel et la **densité 2050 pour
+100 000 habitants** (Insee Omphale 2022, scénario de population au choix). Elle offre 9 leviers en 4 familles, une phrase en
+langage naturel (compilateur déterministe de `v2/langage/`, environ 77 % de phrases bien traduites sur des jeux écrits à
+l'aveugle, toujours confirmées avant application), une hypothèse d'activité par professionnel (équivalents temps plein,
+supposée), un mode expert (flux, paramètres, 3 scénarios, export JSON) et un export de fiche avec sources.
+
 Application de démonstration v1 (Streamlit) :
 
 ```bash

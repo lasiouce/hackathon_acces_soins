@@ -261,7 +261,7 @@ body.levopen #legend{display:none}
   </div>
 </aside>
 
-<div id="legend" class="float"><div class="seg" id="var" style="margin-bottom:8px"><button data-v="evo" aria-pressed="true">Évolution 2026 → 2050</button><button data-v="ecart" aria-pressed="false">Écart au tendanciel</button></div><div class="t" id="lt"></div><div class="ramp" id="ramp"></div><div class="ticks" id="ticks"></div><p class="note" style="margin:8px 0 0">Vue France : régions. Clic : la région s'ouvre en départements, puis clic sur un département. Maj + clic : le département directement.</p><div id="lat">—</div></div>
+<div id="legend" class="float"><div class="seg" id="var" style="margin-bottom:8px"><button data-v="evo" aria-pressed="true">Évolution 2026 → 2050</button><button data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button data-v="dens" aria-pressed="false">Densité 2050</button></div><div class="t" id="lt"></div><div class="ramp" id="ramp"></div><div class="ticks" id="ticks"></div><p class="note" style="margin:8px 0 0">Vue France : régions. Clic : la région s'ouvre en départements, puis clic sur un département. Maj + clic : le département directement.</p><div id="lat">—</div></div>
 
 <div id="zoom" class="float">
   <button class="icon" id="zin" aria-label="Zoomer"><svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg></button>
@@ -282,7 +282,7 @@ body.levopen #legend{display:none}
 const PCOL={"sages-femmes":"#7A4E8C",dentistes:"#2F6A8A",pharmaciens:"#8A6A1E",kines:"#3D4F9E",infirmiers:"#2E7D6B"};
 // gamme divergente neutre : ocre (baisse) ↔ bleu encre (hausse), jamais rouge ni vert
 const RAMP=["#8C5A1B","#B88A4E","#DCC39C","#C4C2B8","#A9B6D6","#6A80B8","#1B3A8C"];
-const BREAKS={evo:[-.30,-.15,-.05,.05,.15,.30],ecart:[-.08,-.03,-.01,.01,.03,.08]};
+const BREAKS={evo:[-.30,-.15,-.05,.05,.15,.30],ecart:[-.08,-.03,-.01,.01,.03,.08],dens:[-.5,-.25,-.1,.1,.25,.5]};
 const FLOWLBL={entrees:"Entrées",sorties:"Sorties",regulation:"Régulation",formation:"Formation",installations:"Installations"};
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n).toLocaleString("fr-FR");
@@ -380,10 +380,11 @@ function pad(card){const w=innerWidth,h=innerHeight,wide=w>=1100,z=parseFloat(ge
   const sheet=card&&w<=600;   // feuille du bas : la carte se cadre au-dessus
   return {left,right,top:sheet?120:Math.min(130,h*.14),bottom:sheet?Math.round(h*.6)+12:24};}
 // évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
-const raw=d=>S.v=="evo"?d.s50/d.s26-1:d.s50/d.b50-1;
+// densité : professionnels (× activité) pour 100 000 habitants en 2050, en écart à la densité France (Insee Omphale 2022)
+const raw=d=>S.v=="evo"?d.s50/d.s26-1:S.v=="dens"?(d.p50?d.s50*(carte?.activite??1)/d.p50/carte.natD-1:0):d.s50/d.b50-1;
 const val=d=>S.v=="evo"&&carte?raw(d)-carte.nat:raw(d);
 // paliers de l'écart au tendanciel : fixés tant que l'écart est faible, élargis par paliers ronds sinon
-function brk(){if(S.v=="evo"||!carte)return BREAKS[S.v];const m=Math.max(...Object.values(carte.deps).map(d=>Math.abs(raw(d))));
+function brk(){if(S.v!="ecart"||!carte)return BREAKS[S.v];const m=Math.max(...Object.values(carte.deps).map(d=>Math.abs(raw(d))));
   const top=[.08,.15,.3,.5,1].find(t=>m<=t)??1;return [-1,-.4,-.12,.12,.4,1].map(x=>Math.round(x*top*100)/100);}
 // dégradé continu : 7 couleurs réparties de −B à +B (B = dernier palier), interpolées en RVB, bornées aux extrêmes
 const hex=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
@@ -391,7 +392,8 @@ function colorOf(x){const B=brk().at(-1),t=Math.max(0,Math.min(1,(x/B+1)/2))*(RA
   const a=hex(RAMP[i]),b=hex(RAMP[i+1]);return "#"+a.map((v,k)=>Math.round(v+(b[k]-v)*f).toString(16).padStart(2,"0")).join("");}
 
 function legend(){
-  $("#lt").textContent=S.v=="evo"?`Évolution 2026 → 2050, en points d'écart à la France (${pct(carte.nat)})`:"Effectif libéral 2050, écart scénario − tendanciel";
+  $("#lt").textContent=S.v=="evo"?`Évolution 2026 → 2050, en points d'écart à la France (${pct(carte.nat)})`
+    :S.v=="dens"?`Densité 2050 pour 100 000 habitants, écart à la moyenne France (${Math.round(carte.natD*1e5)} pour 100 000)`:"Effectif libéral 2050, écart scénario − tendanciel";
   $("#ramp").innerHTML=`<span style="background:linear-gradient(90deg,${RAMP.join(",")})"></span>`;
   const B=brk().at(-1),b=[-B,-B/2,0,B/2,B];$("#ticks").innerHTML=b.map(x=>`<span>${(x>0?"+":"")+Math.round(x*100)}</span>`).join("")+`<span>${S.v=="evo"?"pts":"%"}</span>`;
 }
@@ -408,7 +410,7 @@ async function refresh(){
     const [c,f]=await Promise.all([fetch(`/api/carte?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),
       fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json())]);
     if(c.error){toast(c.error);if(!carte){META.levers.forEach(l=>setL(l,l.default));levState();setTimeout(refresh);}return;}
-    const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("s50")/T("s26")-1;carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();if(S.terr&&SC&&fresh)renderCard(f);renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
+    const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("s50")/T("s26")-1;c.natD=T("s50")*(c.activite??1)/T("p50");carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();if(S.terr&&SC&&fresh)renderCard(f);renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
     // jusqu'à l'image affichée ; borné à 100 ms (onglet en arrière-plan : rAF suspendu, sinon inflight reste bloqué)
     await Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),new Promise(r=>setTimeout(r,100))]);
     if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
@@ -416,7 +418,7 @@ async function refresh(){
   try{await inflight}finally{inflight=null;if(pending){pending=false;refresh();}}
 }
 function paint(){legend();const R={};
-  for(const [id,d] of Object.entries(carte.deps)){const r=regOf["D"+id];if(!r)continue;R[r]??={s26:0,s50:0,b50:0};for(const k in R[r])R[r][k]+=d[k];}
+  for(const [id,d] of Object.entries(carte.deps)){const r=regOf["D"+id];if(!r)continue;R[r]??={s26:0,s50:0,b50:0,p26:0,p50:0};for(const k in R[r])R[r][k]+=d[k];}
   carte.reg=R;
   for(const [id,d] of Object.entries(carte.deps)){const r=R[regOf["D"+id]];
     // région ouverte : les autres passent en gris uni (retour utilisateur·rice : l'estompage gênait la lecture)
@@ -450,8 +452,9 @@ const FAM={former:{q:"Former plus ?",main:"quotas",more:["quotas_region"],flows:
   installer:{q:"Réguler l'installation ?",main:"regul",more:["part_zones","dest"],flows:["regulation","regulation_sortie"],ic:"rapide ; déplace plus qu'il ne crée"},
   retenir:{q:"Retenir plus longtemps ?",main:"retraite",more:["cumul","precoces"],flows:["sorties"],ic:"rapide, montée de 3 mois par an"}};
 const LBL={quotas:"Places en formation",quotas_region:"Seulement dans la région affichée",etrangers:"Diplômés étrangers accueillis",regul:"Conventionner seulement en remplacement d'un départ",
-  part_zones:"Part des zones concernées",dest:"Les professionnels bloqués…",retraite:"Partir à la retraite plus tard",cumul:"Cumul emploi-retraite",precoces:"Départs avant 60 ans"};
-const NOCOUNT=["dest","part_zones","quotas_region"];
+  part_zones:"Part des zones concernées",dest:"Les professionnels bloqués…",retraite:"Partir à la retraite plus tard",cumul:"Cumul emploi-retraite",precoces:"Départs avant 60 ans",
+  pop_scen:"Population (Insee)",activite:"Activité moyenne par professionnel"};
+const NOCOUNT=["dest","part_zones","quotas_region","pop_scen","activite"];   // les hypothèses de contexte ne sont pas des politiques
 const LV=k=>META.levers.find(l=>l.k==k);
 const isDef=l=>S.lv[l.k]===(l.type=="toggle"?!!l.default:l.default);
 function LQ(){return Object.entries(S.lv).map(([k,v])=>k+"="+(typeof v=="boolean"?+v:v)).join("&");}
@@ -465,7 +468,9 @@ function phrase(k,v){switch(k){
   case"dest":return {salariat:"vont vers le salariat",sortie:"quittent la profession",voisine:"s'installent dans une zone voisine"}[v];
   case"retraite":return v==0?"au même âge qu'aujourd'hui":`${String(v).replace(".",",")} an${v>1?"s":""} plus tard`;
   case"cumul":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"}`;
-  case"precoces":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"}`;}}
+  case"precoces":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"}`;
+  case"pop_scen":return {central:"scénario central",pop_basse:"population basse",pop_haute:"population haute"}[v];
+  case"activite":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"} par professionnel (équivalents temps plein)`;}}
 function setL(l,v){const e=document.querySelector("#lv-"+l.k);
   if(l.type=="toggle"){S.lv[l.k]=v===true||v==="1"||v===1;if(e)e.checked=S.lv[l.k];}else if(l.type=="select"){S.lv[l.k]=v;if(e)e.value=v;}else{S.lv[l.k]=+v;if(e)e.value=v;}
   const o=document.querySelector("#o-"+l.k);if(o)o.textContent=phrase(l.k,S.lv[l.k]);}
@@ -479,7 +484,10 @@ function levState(){
   let html="";
   if(SC){const i=SC.years.length-1,b=SC.base[i],s=SC.scn[i],k=SC.k*(2050-SC.origin);
     html=changed?`<b>Scénario : ${changed} levier${changed>1?"s":""} modifié${changed>1?"s":""}</b><br>${terrName}, 2050 : ${sg(s-b)} par rapport à la tendance (${fmtN(s)}, probablement entre ${fmtN(s*(1-k))} et ${fmtN(s*(1+k))}).`
-      :`<b>Tendance, sans nouvelle politique</b><br>${terrName}, 2050 : environ ${fmtN(b)}, probablement entre ${fmtN(b*(1-k))} et ${fmtN(b*(1+k))}.`;}
+      :`<b>Tendance, sans nouvelle politique</b><br>${terrName}, 2050 : environ ${fmtN(b)}, probablement entre ${fmtN(b*(1-k))} et ${fmtN(b*(1+k))}.`;
+    if(SC.dens_scn)html+=` Soit ${Math.round(SC.dens_scn[i])} pour 100 000 habitants (${Math.round(SC.dens_base[0])} en ${SC.origin}).`;
+    const hyp=["pop_scen","activite"].map(LV).filter(l=>l&&!isDef(l)).map(l=>phrase(l.k,S.lv[l.k]));
+    if(hyp.length)html+=`<br><i>Hypothèses : ${hyp.join(" ; ")}.</i>`;}
   html+=`<div class="acts"><button id="reset">Revenir à la tendance</button><button id="keep">Garder ce scénario</button><button id="exp">Exporter la fiche</button>
     <button class="preset" data-p="former">Former 20 % de plus</button><button class="preset" data-p="installer">Réguler l'installation</button><button class="preset" data-p="retenir">Partir 2 ans plus tard</button></div>`;
   $("#scen").innerHTML=html;
@@ -507,7 +515,9 @@ function leverHTML(l,main){const sup=l.status!="sourcé"&&l.status!="mesuré";
     <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div><p class="note" id="n-${l.k}"></p></div>`;}
 function buildLevFam(){
   $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>`<details class="q" id="q-${f}" open><summary><span class="ttl">${F.q}</span><span class="st" id="st-${f}"></span><span class="ef" id="ef-${f}"></span></summary>`+
-    leverHTML(LV(F.main),true)+(F.more.length?`<details class="more"><summary>Plus de réglages ▸</summary>${F.more.map(k=>leverHTML(LV(k),false)).join("")}</details>`:"")+"</details>").join("");
+    leverHTML(LV(F.main),true)+(F.more.length?`<details class="more"><summary>Plus de réglages ▸</summary>${F.more.map(k=>leverHTML(LV(k),false)).join("")}</details>`:"")+"</details>").join("")
+    // hypothèses de contexte (pas des politiques) : population Insee et activité par professionnel
+    +`<details class="q" id="q-contexte"><summary><span class="ttl">Hypothèses de contexte</span><span class="st">population, activité</span><span class="ef"></span></summary>${META.levers.filter(l=>l.famille=="contexte").map(l=>leverHTML(l,false)).join("")}</details>`;
   // curseur principal de chaque famille visible d'emblée (retour utilisateur·rice : « les curseurs ont disparu ») ; plus d'accordéon
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
   const H=S.lvHash||{},bad=[];
@@ -593,7 +603,7 @@ function renderCard(f){
   q("zone").textContent=dep?(zone?"Département régulé : au moins la moitié des communes en « remplacement seul » (zonage actuel).":"Département non régulé : moins de la moitié des communes en « remplacement seul » (zonage actuel). La régulation n'a pas d'effet ici.")
     :`Départements régulés${ndep?` dans la région : ${regd.length} sur ${ndep}`:` : ${regd.length}`}${regd.length?" ("+regd.map(d=>names["D"+d]||d).join(", ")+")":" — la régulation n'a pas d'effet ici"}.`;
   q("rep").innerHTML=[2030,2035,2040,2050].filter(Y=>y.includes(Y)).map(Y=>{const j=y.indexOf(Y),h=k*(Y-f.origin),v=f.scn[j];
-    return `<div class="flow"><span>${Y}</span><span class="num">≈ ${fmt(v)}</span><output>${fmt(v*(1-h))} – ${fmt(v*(1+h))}</output></div>`}).join("");
+    return `<div class="flow"><span>${Y}</span><span class="num">≈ ${fmt(v)}</span><output>${fmt(v*(1-h))} – ${fmt(v*(1+h))}${f.dens_scn?` · ${Math.round(f.dens_scn[j])} pour 100 000 hab.`:""}</output></div>`}).join("");
   chart(f,i26);
 }
 const tw=new WeakMap();
@@ -670,7 +680,7 @@ async function interpret(t){
 }
 function closeNL(){$("#nl").classList.remove("on");$("#nlq").focus();}
 function applyNL(){const r=NLR;if(!r)return;$("#nl").classList.remove("on");
-  META.levers.forEach(l=>{if(l.k in r.leviers_valides)setL(l,r.leviers_valides[l.k]);});
+  META.levers.forEach(l=>{if(l.famille!="contexte"&&l.k in r.leviers_valides)setL(l,r.leviers_valides[l.k]);});   // une phrase ne touche pas aux hypothèses
   if(r.profession&&r.profession!==S.prof){S.prof=r.profession;applyProf();}
   levState();refresh();
   if(r.territoire&&r.territoire!=="FR"&&r.territoire!==S.terr)select(r.territoire);else if(r.territoire=="FR"&&S.terr)closeCard();
@@ -687,7 +697,8 @@ function renderExpert(){if(!document.body.classList.contains("xpon")||!META)retu
     b.innerHTML=`<p><b>${where}</b> — écart cumulé au tendanciel, par flux (professionnels)</p><table><tr><th>Flux</th>${ys.map(y=>`<th>${y}</th>`).join("")}</tr>
       ${Object.entries(G.flows).map(([k,v])=>row(XFL[k]||k,i=>sg(v[i]))).join("")}
       ${row("<b>Écart total</b>",i=>`<b>${sg(G.scn[i]-G.base[i])}</b>`)}${row("Tendanciel",i=>fmtN(G.base[i]))}${row("Scénario",i=>fmtN(G.scn[i]))}
-      ${row("Fourchette ≈ 8/10",i=>{const h=G.k*(G.years[i]-G.origin);return fmtN(G.scn[i]*(1-h))+" – "+fmtN(G.scn[i]*(1+h))})}</table>
+      ${row("Fourchette ≈ 8/10",i=>{const h=G.k*(G.years[i]-G.origin);return fmtN(G.scn[i]*(1-h))+" – "+fmtN(G.scn[i]*(1+h))})}
+      ${G.pop?row(`Habitants (Omphale, ${phrase("pop_scen",G.pop_scen)})`,i=>fmtN(G.pop[i]))+row("Densité pour 100 000, tendanciel",i=>Math.round(G.dens_base[i]))+row(`Densité pour 100 000, scénario${G.activite!=1?" (× activité "+G.activite+")":""}`,i=>Math.round(G.dens_scn[i])):""}</table>
       <p class="note">Origine des données ${G.origin}, décision ${G.decision}, premier effet d'une hausse des places ${G.first_effect} (délai ${G.lag} ans). Fourchette : pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon, extrapolée au-delà d'environ 10 ans. Version du code ${META.version||"?"}.</p>`;}
   if(XT=="lev")b.innerHTML=`<table><tr><th>Levier</th><th>Valeur</th><th>Unité</th><th>Paramètre du jumeau</th><th>Délai</th><th>Statut</th><th>Source</th></tr>
     ${META.levers.map(l=>`<tr><td>${esc(LBL[l.k]||l.label)}${isDef(l)?"":" <b>●</b>"}</td><td>${esc(typeof S.lv[l.k]=="boolean"?(S.lv[l.k]?"oui":"non"):S.lv[l.k])}</td><td>${esc(l.unit||"")}</td>

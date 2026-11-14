@@ -121,9 +121,12 @@ def carte(prof: str, lv: dict, terr: str = "FR") -> dict:
     y26 = max(V1.DECISION, m.o)   # 2026 = origine actuelle : valeur observée
     b26, s26 = (obs, obs) if y26 <= m.o else (agg(m.base, y26), agg(scn, y26))
     b50, s50 = agg(m.base, V1.H), agg(scn, V1.H)
-    out = {d: {"o": float(obs[i]), "b26": float(b26[i]), "s26": float(s26[i]), "b50": float(b50[i]), "s50": float(s50[i])}
+    P = V1.population().loc[lv["pop_scen"]]          # habitants, Insee Omphale 2022, scénario choisi
+    pp = lambda d, y: float(P.loc[y, d]) if d in P.columns else 0.0
+    out = {d: {"o": float(obs[i]), "b26": float(b26[i]), "s26": float(s26[i]), "b50": float(b50[i]), "s50": float(s50[i]),
+               "p26": pp(d, y26), "p50": pp(d, V1.H)}
            for i, d in enumerate(codes)}
-    return {"prof": prof, "origin": m.o, "y26": y26, "k": m.k, "deps": out,
+    return {"prof": prof, "origin": m.o, "y26": y26, "k": m.k, "deps": out, "activite": lv["activite"], "pop_scen": lv["pop_scen"],
             "regul_deps": V1.zones().get(prof, []), "ms": round((time.perf_counter() - t0) * 1000, 1)}
 
 

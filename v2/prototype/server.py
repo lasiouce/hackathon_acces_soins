@@ -78,8 +78,31 @@ LEVIERS_UI = [
          min=0.5, max=2.0, step=0.1, default=1.0, fmt="x", delai="rapide"),
     dict(k="precoces", famille="retenir", type="range", param="sorties.multiplicateur_precoces", label="Départs avant 60 ans",
          min=0.5, max=1.5, step=0.1, default=1.0, fmt="x", delai="rapide"),
+    # Hypothèses de contexte : pas des politiques, et hors du jumeau (appliquées à la sortie). Statut et source écrits ici.
+    dict(k="pop_scen", famille="contexte", type="select", param=None, label="Population (Insee Omphale 2022)",
+         options={"central": "scénario central", "pop_basse": "population basse", "pop_haute": "population haute"},
+         default="central", delai="—", status="sourcé",
+         source="Insee, Omphale 2022, tableaux détaillés départements (page 7747107) : 3 scénarios, 2018–2070",
+         unit="habitants"),
+    dict(k="activite", famille="contexte", type="range", param=None, label="Activité moyenne par professionnel",
+         min=0.8, max=1.1, step=0.05, default=1.0, fmt="pct", delai="immédiat", status="supposé",
+         source="aucune série ouverte d'équivalents temps plein vérifiée ; DREES, Les Dossiers n° 76 (2021) projette « à comportements constants » (= 1)",
+         unit="× activité d'aujourd'hui"),
 ]
 UI = {l["k"]: l for l in LEVIERS_UI}
+
+
+@lru_cache(maxsize=1)
+def population() -> pd.DataFrame:
+    """Habitants par (scénario, année) × département, Insee Omphale 2022 (data/processed/population.parquet, chargeur v1)."""
+    p = pd.read_parquet(ROOT / "data" / "processed" / "population.parquet")
+    return p.groupby(["scenario", "year", "dep"])["pop"].sum().unstack("dep")
+
+
+def pop_series(scen: str, deps, years) -> list[float]:
+    t = population().loc[scen]
+    cols = [d for d in deps if d in t.columns]
+    return [float(t.loc[y, cols].sum()) if y in t.index else float("nan") for y in years]
 
 
 def lever_meta():
@@ -88,7 +111,8 @@ def lever_meta():
     out = []
     for l in LEVIERS_UI:
         p = params.get(l["param"])
-        out.append({**l, "status": p.status if p else "?", "source": p.source if p else "", "unit": p.unit if p else ""})
+        out.append({**l, "status": p.status if p else l.get("status", "?"), "source": p.source if p else l.get("source", ""),
+                    "unit": p.unit if p else l.get("unit", "")})
     return out
 REGIONS = {"11": "Île-de-France", "24": "Centre-Val de Loire", "27": "Bourgogne-Franche-Comté", "28": "Normandie",
            "32": "Hauts-de-France", "44": "Grand Est", "52": "Pays de la Loire", "53": "Bretagne",
@@ -217,7 +241,11 @@ class Model:
                 "lag": LAG[self.prof], "first_effect": max(self.o, DECISION) + LAG[self.prof] + 1,
                 "years": years, "base": base, "scn": sc, "obs": [[int(y), float(n)] for y, n in hist],
                 "flows": flows, "k": self.k, "matrix": {"years": my, "rows": rows},
-                "regul_deps": zones().get(self.prof, []), "ms": round(ms, 1)}
+                "regul_deps": zones().get(self.prof, []), "ms": round(ms, 1),
+                # contexte : habitants (scénario Omphale choisi) et densité pour 100 000 ; activité appliquée au scénario seul
+                "pop": (pop := pop_series(lv["pop_scen"], deps, years)), "pop_scen": lv["pop_scen"], "activite": lv["activite"],
+                "dens_base": [b / p * 1e5 if p else None for b, p in zip(base, pop)],
+                "dens_scn": [s_ * lv["activite"] / p * 1e5 if p else None for s_, p in zip(sc, pop)]}
 
     def obs_total(self, deps, y) -> float:
         o = self.obs

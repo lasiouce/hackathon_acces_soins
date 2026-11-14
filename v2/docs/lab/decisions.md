@@ -3217,3 +3217,22 @@ L'accordéon (une seule famille ouverte) est retiré. Sur mobile, le panneau res
 **Pourquoi.** L'utilisateur·rice, relayé par une session sœur : garder les deux façons de régler une politique, la phrase et
 les curseurs ; repliés, les curseurs semblaient avoir disparu. Vérifié en Chromium headless (1440×900 : 4 familles ouvertes,
 curseur fonctionnel ; 390×844 : panneau replié ; aucune erreur JavaScript).
+
+## 2026-11-14 — Population, densité pour 100 000 et activité par professionnel dans la carte (v1 L32 et L14 repris)
+
+**Décision.**
+- **Population** : Insee Omphale 2022 par département (`data/processed/population.parquet`, chargeur v1), 3 scénarios
+  (central, basse, haute ; 2050 : 69,2 / 63,9 / 74,7 M). Exposée comme hypothèse de contexte `pop_scen` (reprend L32 de la v1).
+- **Densité** = effectif libéral × activité / habitants × 100 000, pour le tendanciel et le scénario, par territoire et par
+  année (`/api/scenario` : `pop`, `dens_base`, `dens_scn` ; `/api/carte` : `p26`, `p50`). Carte : troisième variable
+  « Densité 2050 », en écart à la densité France (lexique : au-dessus / en dessous de la moyenne). Kinés 2026 : 150,7 pour
+  100 000 (mesuré, central).
+- **Activité** : hypothèse `activite` (0,8 à 1,1, défaut 1), « × activité d'aujourd'hui », **supposée** : aucune série
+  ouverte d'équivalents temps plein n'a été vérifiée, donc aucune valeur de base par profession n'est inventée. Elle ne
+  change que la densité (offre en équivalents temps plein), pas l'effectif (reprend L14 de la v1).
+- Les deux sont des **hypothèses de contexte**, pas des politiques : elles ne comptent pas dans « N leviers modifiés », sont
+  rappelées sous le résumé, et une phrase du compilateur ne les modifie pas.
+**Pourquoi.** L'utilisateur·rice : « /go 1 4 » (densité, priorité 3 des tests utilisateurs ; étape 1 du sujet : offre +
+population → densité). Vérifié en Chromium headless : vue densité, changement de scénario de population et d'activité,
+repères de la fiche, mode expert ; aucune erreur JavaScript.
+**Non fait.** Densité à la commune (population communale non chargée) ; besoin (module de demande) toujours ouvert.
