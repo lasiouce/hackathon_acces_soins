@@ -2093,6 +2093,33 @@ corrélation.
 **Pourquoi.** Audit des sources de l'axe 1 (`reports/2026-11-14-audit-sources.md`, lots C1 et C2).
 **Ce qui le renverserait.** Un texte primaire contredisant l'audit sur une date d'effet.
 
+## 2026-11-14 — Infirmiers branchés dans le jumeau et le prototype
+
+**Décision.**
+- `jumeau.history.sector_table(["infirmiers"])` lit la table de
+  l'axe 4 `v2/data/processed/infirmiers_secteur_age_sexe.parquet` :
+  - libéraux : SNDS, tous privés ;
+  - salariés : BTS, ventilés public / privé, puis croisés avec âge ×
+    sexe sous indépendance (H_ind).
+- **Années 2013 à 2023 seulement.** En 2012, les salariés ne sont pas
+  observés (le BTS commence en 2013).
+- `variant` (min / central / max) est sans effet pour les infirmiers : le
+  BTS tranche déjà le secteur.
+- **Contrôle C18.** Le total par dep × année égale SNDS libéraux + BTS
+  salariés (v1) à 7·10⁻¹² près, sur 1 100 dep × années. Le privé
+  contient bien tous les libéraux. Mesure en 2023 : 277 788 dans le
+  privé, 329 856 dans le public. Projection : 336 422 dans le privé en
+  2050 (tendanciel).
+- **Prototype** (`v2/prototype/server.py`) : `infirmiers` passe de
+  MISSING à PROFS. `/api/scenario` et `/api/carte` répondent pour
+  `prof=infirmiers` (vérifié par un serveur de test).
+
+**Pourquoi.** Demande de l'utilisateur·rice (via la session v2),
+2026-11-14.
+**Ce qui le renverserait.** L'hypothèse d'indépendance âge × sexe ×
+secteur pour les salariés (H_ind, axe 4) rejetée sur l'âge : la
+répartition par âge du public et du privé serait alors à revoir.
+
 ## Open / not yet decided
 - **Brancher la rétention dépendante de la densité pour les IDE dans le tendanciel ?**
   L'effet est mesuré (N9 : +0,11 [+0,05 ; +0,18]) mais corrélationnel. Question posée le
