@@ -2448,6 +2448,7 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- ~~**Assistant : objectif chiffré → leviers**~~ **Construit le 2026-11-14** (entrée « Assistant : objectifs → mélanges de leviers… »).
 - ~~**Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement**~~ **Tranchée le 2026-11-14 : ouvert
   au chargement** (entrée « Option 1 : la conversation ouverte au chargement… »). (relevé le 2026-11-14 en fusionnant
   `main` dans la PR #3). `index-option1.html` ouvre le chat par une icône sur la carte (demande de l'utilisateur·rice) ;
@@ -3644,3 +3645,91 @@ vérification « ok ». Recette : `index.html` 31/32 (R14, latence 659 ms, en é
 l'axe 2 recalcule ; à revoir à machine calme), option 1 36/37 (R25 A+, absent). **Tests du chatbot non rejouables** :
 la modification en cours de l'axe 2 (`v2/prototype/server.py` → `cohortes.py`, `scipy`) empêche la passerelle de
 démarrer dans l'environnement de `chatbot/` ; signalé à l'axe 2.
+
+## 2026-11-14 — C1 servi par la carte et l'assistant à la place de A0 (choix configurable)
+
+**Décision.**
+- **Le modèle servi est C1** (cohortes bayésiennes, étape 2 de l'axe 2).
+  Il est servi par défaut, dans `v2/prototype/server.py` (`Model`) ; A0 est
+  servi si `JUMEAU_MODELE=A0`.
+- **Branchement.**
+  - C1 n'ajoute aucun module. Sa moyenne a posteriori remplace la
+    rétention et les entrées de base de A0 pour les cellules privées, au
+    point où le jumeau calcule ses taux (`stock_flow_rates`).
+  - Le moyen est un cache de l'historique qui applique C1
+    (`v2/methodes/c1_jumeau.py`, `install`).
+  - Tous les leviers gardent leur mécanisme, avec le même état de départ
+    et le même registre.
+  - Le salariat public garde les taux de A0.
+  - Aucun fichier de `v2/jumeau/` n'est modifié.
+- **Rejeté : surcharger par `params`** (`sorties.retention`,
+  `entrees.flux`). La régulation ajoute des cellules à l'état, et un
+  tableau figé n'a plus la bonne taille.
+- **Fourchette affichée.** Même méthode que A0, ± pente × h × 1,6, avec la
+  pente de C1 mesurée au banc N1 (`v2/methodes/out/c1_pente.json`).
+  - La bande probabiliste propre de C1 n'est pas publiée au national :
+    sa calibration par simulation échoue sur le niveau des entrées.
+- **Taux précalculés** dans `v2/methodes/out/c1_taux/<profession>.npz`,
+  avec l'empreinte de la table privée.
+  - Au service, il n'y a ni scipy (absent de l'environnement du chatbot)
+    ni ajustement : le serveur de la carte démarre en 3 s au lieu de 73 s.
+  - Une table qui change déclenche un nouvel ajustement.
+  - **scipy ≥ 1.14 est ajouté à `pyproject.toml`** pour ce recalcul.
+- **Textes `MODELE`** (carte, passerelle du chatbot) : ils suivent la même
+  variable `JUMEAU_MODELE`.
+
+**Mesures.**
+- `jumeau.check` : tous les critères passent.
+- Recette de la carte : 32 contrôles sur 32 ; recalcul perçu p95 de 394 ms.
+- Page « option 1 » : 36 sur 37. R25 échoue de la même façon avec A0 :
+  ce n'est pas une régression.
+- Décomposition par flux exacte : écart ≤ 0,07 personne.
+- Recalcul d'un scénario à tous leviers : 280 à 330 ms.
+- Approximation de la rétention tenue constante sur l'horizon : −1,1 à
+  +1,2 % sur le total privé national à 5 ans.
+
+**Limites.**
+- Infirmiers : C1 a été mesuré au banc sur les libéraux RPPS, alors que la
+  carte sert la table privée de l'axe 4 (non mesurée au banc).
+- Le gain de C1 faiblit sur les origines récentes (CD, PH ; open.md).
+- Le cache dépend d'un détail interne du jumeau : un point d'injection
+  officiel des taux reste à demander à l'axe 0 (open.md).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « lance sur l'axe 2 »,
+relayé par la session de l'agent d'interprétation. La décision « C1 adopté
+comme prévision par défaut proposée » n'avait jamais été branchée.
+**Ce qui le renverserait.** Le dépôt 2027–2030, où C1 ne battrait pas A0.
+
+## 2026-11-14 — Assistant : objectif chiffré → mélanges de leviers vérifiés et datés ; politique hors modèle → traduction supposée
+
+**Décision.**
+- **`planifier`** (`chatbot/passerelle/requetes.py`) : pour une cible (effectif ou densité, en % du tendanciel ou
+  d'aujourd'hui, ou en valeur absolue), renvoie les deux lectures de « +X % », « déjà atteint sans politique » le cas échéant,
+  sinon jusqu'à 3 mélanges (le plus simple, effet le plus tôt, prudent = cible atteinte au bas de la fourchette), chacun
+  **recalculé par le jumeau**, avec délai, premier effet (décision en 2026 dans le modèle), dernier moment pour un premier
+  effet, statut, source, fourchette ; « hors d'atteinte » avec le meilleur atteignable sinon. Recherche sur la somme des
+  effets seuls (additivité mesurée : écart médian 0,2 %, 1 mélange sur 20 > 10 %, avec régulation ; la régulation est exclue
+  de la recherche). **Zones plausibles supposées** : places +0 à +20 %, étrangers ×1 à ×1,5, retraite +0 à +1 an, cumul ×1
+  à ×1,5, départs avant 60 ans ×1 à ×0,8 ; au-delà, jusqu'aux bornes, chaque réglage est signalé « hors zone ».
+- `atteindre` signale « déjà atteint par la tendance » (il proposait le premier cran de chaque levier).
+- **`traduire_politique`** + `chatbot/passerelle/correspondances.yaml` : 12 politiques hors modèle du glossaire →
+  leviers du même mécanisme, **supposé**, sens sans ampleur, deux essais (bas et haut de la zone plausible) ; « aucune »
+  traduction pour 8 d'entre elles (dont aides à l'installation : la redistribution vers le territoire aidé n'est pas
+  représentable) ; un effet nul dû à l'absence de zone régulée est expliqué, pas présenté comme une absence d'effet.
+- **Prompt** : question d'objectif → `planifier`, première ligne « **Objectif : …** », deux lectures, mélanges datés,
+  hors zone signalé, jamais « il faut » ; **sans territoire nommé : France** (pas le territoire affiché) ; politique hors
+  modèle → `traduire_politique`. `planifier` renvoie l'écart cible − tendanciel (le modèle de langage le calculait).
+- **Interface** : encadré « Ce que l'assistant a compris : un objectif » (cible, référence, horizon, territoire) au lieu des
+  leviers ; « Afficher ce scénario sur la carte » applique le premier mélange.
+- **Noms affichés** : « modèle bayésien hiérarchique » (C1) et « modèle stock-flux multi-échelle » (A0) ; identifiants
+  internes et articles inchangés.
+**Pourquoi.** L'utilisateur·rice : « je veux un outcome précis à tel horizon. quels leviers actionner aujourd'hui » ;
+critique d'une réponse qui jouait sur l'entrée au lieu de la cible ; « la bonne réponse : Objectif : +20 % de kinés
+libéraux en France en 2040… » ; « changer les appellations A0 et C1 ».
+**Mesure** (Haiku 5.5, 16 questions écrites avant le code, `v2/agent/score_objectifs.txt`, second passage) : objectif
+annoncé en tête 10/10, `planifier` appelé 10/10, mélanges qui atteignent la cible au recalcul 8/8, déjà atteint 1/1,
+impossible 2/2, traduction ou « pas dans le modèle » 6/6, qualificatifs 16/16, ancrage strict 13/16 (2 écarts cible −
+tendanciel calculés par le modèle de langage, corrigés à la source ensuite et revérifiés sur o02 ; 1 année d'exemple),
+lexique 15/16 (« il faut la durée des études », temporel) ; médiane 11,4 s, max 20,6 s.
+**Limites.** Zones plausibles et traductions **supposées**, à valider par l'équipe ; une seule région ou la France à la
+fois ; le jeu est écrit par l'auteur de l'agent.

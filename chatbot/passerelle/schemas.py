@@ -68,6 +68,27 @@ OUTILS: dict[str, tuple[str, dict]] = {
                         "reference": {"type": "string", "enum": ["tendanciel", "origine"],
                                       "description": "tendanciel : même année sans politique (défaut) ; origine : aujourd'hui."}},
                        ["profession", "territoire", "hausse_pct"])),
+    "traduire_politique": ("POLITIQUE HORS MODÈLE -> leviers du même mécanisme. Pour une politique de la liste « politiques_non_modelisees » "
+                           "du périmètre (aides à l'installation, rémunération, maisons de santé, obligation en zone, CESP…), renvoie "
+                           "la traduction SUPPOSÉE (leviers, sens, mécanisme, limite) et deux essais (ampleur basse et haute), ou « pas "
+                           "dans le modèle » s'il n'y a aucun mécanisme commun.",
+                           _obj({"politique": {"type": "string", "enum": ["obligation_zone", "exercice_coordonne", "remuneration",
+                                 "duree_etudes", "aides_installation", "cesp", "vaccination_officine", "ipa", "acces_direct",
+                                 "teleconsultation", "quatrieme_annee_mg", "medecins_specialistes"]},
+                                 "profession": PROF, "territoire": TERR, "annee": ANNEE}, ["politique", "profession"])),
+    "planifier": ("OBJECTIF -> LEVIERS. Pour une cible chiffrée à un horizon (« je veux +X % », « atteindre N pour 100 000 », "
+                  "« quels leviers actionner pour… », « doubler… »), renvoie : les deux lectures (par rapport à aujourd'hui et à la "
+                  "tendance), si la tendance l'atteint déjà, et sinon 1 à 3 mélanges de leviers vérifiés par le jumeau (le plus simple, "
+                  "le plus tôt, prudent), avec délai, premier effet, année limite de décision, statut et fourchette.",
+                  _obj({"profession": PROF, "territoire": TERR, "annee": ANNEE,
+                        "grandeur": {"type": "string", "enum": ["effectif", "densite"]},
+                        "hausse_pct": {"type": "number", "minimum": 0.5, "maximum": 300},
+                        "valeur_cible": {"type": "number", "minimum": 0, "maximum": 1000000,
+                                         "description": "cible absolue (effectif, ou densité pour 100 000 si grandeur = densite)"},
+                        "reference": {"type": "string", "enum": ["tendanciel", "origine"]},
+                        "leviers_exclus": {"type": "array", "maxItems": 5, "items": {"type": "string", "enum": ["quotas", "etrangers", "retraite", "cumul", "precoces"]}},
+                        "n_max_leviers": {"type": "integer", "minimum": 1, "maximum": 5}},
+                       ["profession"])),
     "effets_des_leviers": ("Compare l'effet de CHAQUE levier seul, à un réglage de référence, puis de tous ensemble, pour une "
                            "profession, un territoire et une année. À utiliser pour « quelles politiques ont le plus d'effet », "
                            "« quoi d'autre », « par quoi commencer ».",

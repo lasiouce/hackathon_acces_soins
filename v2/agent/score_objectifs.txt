@@ -1,0 +1,16 @@
+Objectifs et politiques hors modèle — 2026-11-14 18:23 — 16 questions (erreurs : 0)
+objectif_annonce : 10/10
+planifier : 10/10
+melanges_atteignent : 8/8
+deja_atteint : 1/1
+impossible : 2/2
+traduction : 6/6
+ancrage : 13/16
+qualificatifs : 16/16
+lexique : 15/16
+mélanges proposés au total : 11
+latence : médiane 11.4 s, max 20.6 s
+  o02 : ancrage ['1 780']
+  o07 : ancrage ['187']
+  o08 : ancrage ['2040']
+  h05 : lexique   ['il faut']

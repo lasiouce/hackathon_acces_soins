@@ -1,0 +1,53 @@
+# Politiques hors modèle -> leviers du jumeau qui portent le même MÉCANISME (2026-11-14).
+# Toutes les traductions sont SUPPOSÉES : aucune élasticité n'est estimée sur données ouvertes (glossaire, non_modelises).
+# Une traduction donne le levier et le SENS, jamais l'ampleur : l'ampleur se teste dans la zone plausible, et la réponse
+# le dit. « aucune » = pas de mécanisme commun : la réponse dit « pas dans le modèle ». À relire par l'équipe.
+# Clés = clés de v2/langage/glossaire.yaml (non_modelises).
+obligation_zone:
+  traduction: partielle
+  leviers:
+    - {levier: regul, reglage: {regul: true, dest: voisine}, sens: "redistribue les entrées vers les zones voisines",
+       mecanisme: "une installation contrainte dans les zones à faible densité ressemble à la régulation « un départ pour une arrivée » appliquée aux zones à forte densité, l'excédent allant dans une zone voisine"}
+  limite: "déplace des professionnels entre territoires, n'en crée pas ; le jumeau n'a pas d'affectation des jeunes diplômés"
+exercice_coordonne:
+  traduction: partielle
+  leviers:
+    - {levier: precoces, sens: "moins de départs avant 60 ans", mecanisme: "l'exercice coordonné est associé à une meilleure tenue dans le métier"}
+    - {levier: cumul, sens: "plus de cumul emploi-retraite", mecanisme: "travail en équipe plus compatible avec une activité réduite en fin de carrière"}
+  limite: "les centres de santé salarient souvent : une partie de l'effet peut passer du libéral au salariat, ce que la traduction ne capte pas"
+remuneration:
+  traduction: partielle
+  leviers:
+    - {levier: precoces, sens: "moins de départs avant 60 ans", mecanisme: "un revenu plus élevé rend la sortie précoce moins attractive"}
+    - {levier: cumul, sens: "plus de cumul emploi-retraite", mecanisme: "un revenu plus élevé favorise la poursuite d'activité après la retraite"}
+  limite: "aucune élasticité au revenu n'est estimée ; l'effet sur les entrées en formation n'est pas représenté"
+aides_installation:
+  traduction: aucune
+  limite: "une aide ciblée attire des installations vers le territoire aidé, au détriment des voisins ; le jumeau ne relie pas un montant en euros à un flux et ne représente pas cette redistribution (la régulation ne joue que dans les zones « remplacement seul »)"
+duree_etudes:
+  traduction: aucune
+  limite: "le jumeau ne modélise pas la durée des études, seulement le délai entre une hausse des places et les premiers diplômés"
+cesp:
+  traduction: partielle
+  leviers:
+    - {levier: regul, reglage: {regul: true, dest: voisine}, sens: "oriente une partie des entrants vers des zones désignées",
+       mecanisme: "contrat d'installation en zone en échange d'une bourse : proche d'une redistribution des entrées"}
+  limite: "concerne surtout la médecine (hors périmètre) et les dentistes ; pas de flux CESP dans le jumeau"
+vaccination_officine:
+  traduction: aucune
+  limite: "agit sur l'activité et le recours aux soins, pas sur le nombre de professionnels : il faudrait un module de besoin"
+ipa:
+  traduction: aucune
+  limite: "les IPA ne sont pas distingués dans les effectifs ; agit sur l'activité, pas sur l'effectif projeté"
+acces_direct:
+  traduction: aucune
+  limite: "change le parcours et la demande, pas l'effectif ; aucun module de demande"
+teleconsultation:
+  traduction: aucune
+  limite: "agit sur l'accès et l'activité, pas sur le nombre de professionnels"
+quatrieme_annee_mg:
+  traduction: aucune
+  limite: "médecine générale hors périmètre du projet"
+medecins_specialistes:
+  traduction: aucune
+  limite: "spécialistes prévus en phase 2, non construits"
