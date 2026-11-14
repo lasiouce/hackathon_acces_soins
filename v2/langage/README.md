@@ -66,9 +66,14 @@ toute modification** ; ses échecs servent ensuite à corriger des *classes* d'e
 |---|---|---|---|---|---|
 | glossaire d'origine | jeu 1 | 14/30 (47 %) | 17/30 | 28/30 | 30/30 |
 | + synonymes, fractions, demi-années, quantité par type de levier | jeu 2 | 16/30 (53 %) | 20/30 | 28/30 | 28/30 |
-| + sens le plus proche de la quantité, racines conjuguées, arrondi au pas, « emploi et retraite » | jeu 3 | **21/30 (70 %)** | 25/30 | 30/30 | 24/30 |
+| + sens le plus proche de la quantité, racines conjuguées, arrondi au pas, « emploi et retraite » | jeu 3 | 21/30 (70 %) | 25/30 | 30/30 | 24/30 |
+| + gentilés, « remplacer un confrère », « % des territoires », « réservée à la région » (et sa négation), comparatif après la quantité, « doublement » | jeu 4 | **24/30 (80 %)** | 25/30 | 30/30 | 30/30 |
 
-**Le chiffre à citer est 70 %** (jeu 3). Les jeux 1 et 2 sont désormais en échantillon (29/30 et 24/30 : non citables) ;
+**Le chiffre à citer est 80 %** (jeu 4). Échecs du jeu 4 : « doublait » (forme conjuguée de « doubler »), « formés hors de France »
+lu comme les places en formation (**mauvais levier**, la classe à corriger d'abord), négation « on n'augmentera pas … ; on mise
+plutôt sur … » qui perd le second levier, « année supplémentaire d'internat » non reconnue comme non modélisée, « facilité de 30 % »
+sans sens, « diviser par quatre » hors des formules. Un jeu 5 mesurera la version suivante.
+Avant ce tour : les jeux 1 et 2 étaient en échantillon (29/30 et 24/30 : non citables) ;
 les cas d'origine restent à 35/36. Défauts restants (jeu 3) : gentilés de ville (« lyonnais », « marseillaises » :
 6 territoires sur 9 échecs), « remplacer un confrère qui part » (régulation sans le mot), « % des territoires » pour la part
 des zones, négation qui écarte un levier alors qu'un autre est demandé (« sans réguler…, un doublement des étrangers »),

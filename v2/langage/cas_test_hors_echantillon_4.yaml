@@ -1,0 +1,163 @@
+# Quatrième jeu écrit à l'aveugle (sans voir le glossaire, le compilateur ni les jeux précédents), 2026-11-14 ; ne pas modifier après évaluation.
+# Leviers et bornes lus dans v2/prototype/server.py (LEVIERS_UI). Défauts : quotas 1.0, etrangers 1.0, part_zones 1.0,
+# dest salariat, retraite 0.0, cumul 1.0, precoces 1.0, booléens faux. Territoire absent -> FR.
+
+# --- simple (12) ---
+- id: "h4-01"
+  texte: "Augmentons de 20 % les places en formation des sages-femmes."
+  attendu: {leviers: {quotas: 1.2}, profession: sages-femmes, territoire: FR, non_modelise: false}
+  note: "impératif, pourcentage simple"
+  categorie: simple
+- id: "h4-02"
+  texte: "Et si on doublait le nombre de dentistes diplômés à l'étranger qu'on accueille ?"
+  attendu: {leviers: {etrangers: 2.0}, profession: dentistes, territoire: FR, non_modelise: false}
+  note: "conditionnel, « doubler » = x2"
+  categorie: simple
+- id: "h4-03"
+  texte: "Les kinés toulousains devraient travailler un an et demi de plus avant de partir à la retraite."
+  attendu: {leviers: {retraite: 1.5}, profession: kines, territoire: D31, non_modelise: false}
+  note: "adjectif de ville -> Haute-Garonne ; durée en toutes lettres"
+  categorie: simple
+- id: "h4-04"
+  texte: "En Bretagne, un infirmier libéral ne pourrait plus s'installer que pour remplacer un collègue qui part."
+  attendu: {leviers: {regul: true}, profession: infirmiers, territoire: R53, non_modelise: false}
+  note: "régulation décrite sans le mot"
+  categorie: simple
+- id: "h4-05"
+  texte: "Le gouvernement a annoncé qu'il faciliterait le cumul emploi-retraite des pharmaciens, avec 50 % de cumulants en plus."
+  attendu: {leviers: {cumul: 1.5}, profession: pharmaciens, territoire: FR, non_modelise: false}
+  note: "style presse, discours indirect"
+  categorie: simple
+- id: "h4-06"
+  texte: "Combien de sages-femmes en Gironde si on réduit d'un tiers les départs avant 60 ans ?"
+  attendu: {leviers: {precoces: 0.7}, profession: sages-femmes, territoire: D33, non_modelise: false}
+  note: "un tiers -> 0,667 arrondi au pas 0,1"
+  categorie: simple
+- id: "h4-07"
+  texte: "On réduirait les quotas de formation des pharmaciens de 15 %."
+  attendu: {leviers: {quotas: 0.85}, profession: pharmaciens, territoire: FR, non_modelise: false}
+  note: "baisse, pas 0,05"
+  categorie: simple
+- id: "h4-08"
+  texte: "Pour les infirmiers marseillais, relevez de 10 % les places dans les instituts de formation, mais uniquement dans les Bouches-du-Rhône."
+  attendu: {leviers: {quotas: 1.1, quotas_region: true}, profession: infirmiers, territoire: D13, non_modelise: false}
+  note: "IFSI paraphrasé ; restriction territoriale"
+  categorie: simple
+- id: "h4-09"
+  texte: "Accueillir moitié moins de chirurgiens-dentistes formés hors de France."
+  attendu: {leviers: {etrangers: 0.5}, profession: dentistes, territoire: FR, non_modelise: false}
+  note: "infinitif, synonyme long de la profession"
+  categorie: simple
+- id: "h4-10"
+  texte: "Repousser de deux ans la cessation d'activité des infirmiers en Occitanie."
+  attendu: {leviers: {retraite: 2.0}, profession: infirmiers, territoire: R76, non_modelise: false}
+  note: "registre administratif"
+  categorie: simple
+- id: "h4-11"
+  texte: "Je voudrais voir l'effet d'une hausse d'un quart des places en masso-kinésithérapie dans le Nord."
+  attendu: {leviers: {quotas: 1.25}, profession: kines, territoire: D59, non_modelise: false}
+  note: "fraction en lettres ; « le Nord » = département 59"
+  categorie: simple
+- id: "h4-12"
+  texte: "Les départs anticipés des pharmaciens lyonnais augmentent de 20 %, que se passe-t-il ?"
+  attendu: {leviers: {precoces: 1.2}, profession: pharmaciens, territoire: D69, non_modelise: false}
+  note: "présent de l'indicatif, hausse des sorties précoces"
+  categorie: simple
+
+# --- combine (6) ---
+- id: "h4-13"
+  texte: "Pour les sages-femmes normandes : 30 % de places en plus à l'école, seulement en Normandie, et un an de report du départ en retraite."
+  attendu: {leviers: {quotas: 1.3, quotas_region: true, retraite: 1.0}, profession: sages-femmes, territoire: R28, non_modelise: false}
+  note: "adjectif régional"
+  categorie: combine
+- id: "h4-14"
+  texte: "Régulation à l'installation des kinés sur 60 % des zones, les jeunes bloqués allant s'installer dans une zone voisine."
+  attendu: {leviers: {regul: true, part_zones: 0.6, dest: voisine}, profession: kines, territoire: FR, non_modelise: false}
+  note: "trois leviers d'installation"
+  categorie: combine
+- id: "h4-15"
+  texte: "Infirmiers du Grand Est : 1,4 fois plus de diplômés étrangers et un cumul emploi-retraite multiplié par 1,8."
+  attendu: {leviers: {etrangers: 1.4, cumul: 1.8}, profession: infirmiers, territoire: R44, non_modelise: false}
+  note: "décimales à virgule"
+  categorie: combine
+- id: "h4-16"
+  texte: "Combien de dentistes à Clermont-Ferrand en 2040 si l'on augmente les quotas de 10 % et qu'on limite de 20 % les départs précoces ?"
+  attendu: {leviers: {quotas: 1.1, precoces: 0.8}, profession: dentistes, territoire: D63, non_modelise: false}
+  note: "ville -> Puy-de-Dôme ; horizon cité sans effet sur les leviers"
+  categorie: combine
+- id: "h4-17"
+  texte: "Imaginons qu'on régule les pharmaciens partout et que ceux qui ne peuvent pas s'installer quittent le métier, tout en ouvrant 5 % de places en plus."
+  attendu: {leviers: {regul: true, dest: sortie, quotas: 1.05}, profession: pharmaciens, territoire: FR, non_modelise: false}
+  note: "« partout » = part_zones par défaut (1,0), donc absent"
+  categorie: combine
+- id: "h4-18"
+  texte: "Chez les kinés lillois, 20 % de places en formation en moins, mais moitié plus de cumul emploi-retraite."
+  attendu: {leviers: {quotas: 0.8, cumul: 1.5}, profession: kines, territoire: D59, non_modelise: false}
+  note: "baisse et hausse dans la même phrase"
+  categorie: combine
+
+# --- negation (4) ---
+- id: "h4-19"
+  texte: "Sans toucher aux quotas, que donnerait un report de six mois de l'âge de départ des sages-femmes ?"
+  attendu: {leviers: {retraite: 0.5}, profession: sages-femmes, territoire: FR, non_modelise: false}
+  note: "quotas nommés mais exclus"
+  categorie: negation
+- id: "h4-20"
+  texte: "Je ne veux pas de régulation à l'installation pour les dentistes, plutôt 30 % de diplômés étrangers en plus."
+  attendu: {leviers: {etrangers: 1.3}, profession: dentistes, territoire: FR, non_modelise: false}
+  note: "rejette regul, demande etrangers"
+  categorie: negation
+- id: "h4-21"
+  texte: "On n'augmentera pas le numerus des infirmiers en Pays de la Loire ; on mise plutôt sur un an de travail supplémentaire avant la retraite."
+  attendu: {leviers: {retraite: 1.0}, profession: infirmiers, territoire: R52, non_modelise: false}
+  note: "futur négatif puis levier alternatif"
+  categorie: negation
+- id: "h4-22"
+  texte: "Ne régulez pas les kinés et ne changez rien aux étrangers : seulement 40 % de places de formation en plus à Bordeaux, pas ailleurs."
+  attendu: {leviers: {quotas: 1.4, quotas_region: true}, profession: kines, territoire: D33, non_modelise: false}
+  note: "deux négations, une demande restreinte au territoire"
+  categorie: negation
+
+# --- non_modelise (4) ---
+- id: "h4-23"
+  texte: "Autoriser les pharmaciens à vacciner et à prescrire des antibiotiques, avec en plus 10 % de places en fac."
+  attendu: {leviers: {quotas: 1.1}, profession: pharmaciens, territoire: FR, non_modelise: true}
+  note: "extension de compétences non modélisée"
+  categorie: non_modelise
+- id: "h4-24"
+  texte: "Revaloriser de 15 % la consultation des sages-femmes en Île-de-France."
+  attendu: {leviers: {}, profession: sages-femmes, territoire: R11, non_modelise: true}
+  note: "tarif : aucun levier ; le 15 % ne doit pas être affecté à un levier"
+  categorie: non_modelise
+- id: "h4-25"
+  texte: "Créer une année supplémentaire d'internat pour les dentistes et accueillir 20 % de praticiens étrangers en plus."
+  attendu: {leviers: {etrangers: 1.2}, profession: dentistes, territoire: FR, non_modelise: true}
+  note: "allongement des études non modélisé (ne pas le confondre avec quotas)"
+  categorie: non_modelise
+- id: "h4-26"
+  texte: "Une prime d'installation de 50 000 euros pour les infirmiers qui s'installent dans la Creuse, et un cumul emploi-retraite facilité de 30 %."
+  attendu: {leviers: {cumul: 1.3}, profession: infirmiers, territoire: D23, non_modelise: true}
+  note: "aide financière non modélisée ; montant ne doit rien produire"
+  categorie: non_modelise
+
+# --- piege (4) ---
+- id: "h4-27"
+  texte: "Tripler les places en formation des kinés !"
+  attendu: {leviers: {quotas: 1.5}, profession: kines, territoire: FR, non_modelise: false}
+  note: "x3 hors borne, écrêté à 1,5"
+  categorie: piege
+- id: "h4-28"
+  texte: "Combien de kinés en 2050 si on multiplie par 1,07 les quotas des sages-femmes à Montpellier ?"
+  attendu: {leviers: {quotas: 1.05}, profession: kines, territoire: D34, non_modelise: false}
+  note: "« combien de X » prime sur la première profession ; 1,07 arrondi au pas 0,05"
+  categorie: piege
+- id: "h4-29"
+  texte: "Comparer les infirmiers et les sages-femmes de Rennes puis de Nantes avec 12 % d'étrangers en plus."
+  attendu: {leviers: {etrangers: 1.1}, profession: infirmiers, territoire: D35, non_modelise: false}
+  note: "deux professions, deux villes : premières citées ; 1,12 arrondi au pas 0,1"
+  categorie: piege
+- id: "h4-30"
+  texte: "Diviser par quatre les départs avant 60 ans des dentistes de Strasbourg."
+  attendu: {leviers: {precoces: 0.5}, profession: dentistes, territoire: D67, non_modelise: false}
+  note: "0,25 hors borne, écrêté à 0,5"
+  categorie: piege

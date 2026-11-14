@@ -9,7 +9,7 @@ leviers:
     unite: multiplicateur          # 1,2 = +20 % de places
     termes: [numerus apertus, numerus clausus, quotas, quota, places en formation, places de formation,
              places en ifsi, places en ifmk, places, capacites de formation, capacites d accueil,
-             nombre d etudiants, etudiants formes, admissions en formation, ifsi, ifmk,
+             nombre d etudiants, etudiants formes, admissions en formation, ifsi, ifmk, formation,
              former, formait, formerait, formons, forme, formes, formees, diplomer, diplomes formes,
              etudiants, etudiantes, promotions, entrees en formation, places d etudiants, numerus]
     source: "Loi n° 2019-774 du 24 juillet 2019, art. 1 (numerus apertus pour médecine, maïeutique, odontologie, pharmacie) ; quotas IFSI et IFMK : arrêtés annuels (référence non citée)"
@@ -18,7 +18,8 @@ leviers:
     unite: bascule
     termes: [seulement dans la region, uniquement dans la region, dans la region seulement, quotas regionaux,
              places regionales, seulement dans cette region, uniquement en, seulement en, uniquement dans,
-             seulement dans, exclusivement, dans la region uniquement, formes dans la region]
+             seulement dans, exclusivement, dans la region uniquement, formes dans la region, reservee a la region,
+             reserve a la region, reservees a la region, reserves a la region, limitee a la region, reservee au departement]
     source: null
   etrangers:
     famille: attirer
@@ -36,7 +37,8 @@ leviers:
     termes: [regulation a l installation, regulation de l installation, reguler l installation, regulation,
              reguler, regulant, regule, regulee, regulees, regules, regulera, conventionnement selectif, conventionnement, zonage,
              un depart pour une arrivee, une arrivee pour un depart, remplacement d un depart,
-             installation regulee, installation conditionnee]
+             installation regulee, installation conditionnee, remplacer un confrere, remplacer une consoeur,
+             remplacer un collegue, remplacer un depart, pour remplacer, que pour remplacer, conventionnement conditionne]
     source: null    # avenants conventionnels par profession (infirmiers, kinés, sages-femmes, dentistes) : références non vérifiées ici
   part_zones:
     famille: installer
@@ -59,7 +61,8 @@ leviers:
              fin d activite, en activite, age de depart, depart a la retraite, departs a la retraite,
              partir plus tard, partent plus tard, travailler plus longtemps, de travail en plus,
              annees de travail, an de travail, ans de travail, restent, rester, restant, plus longtemps,
-             prolonger l activite, carriere plus longue, la carriere, carriere, carrieres]
+             prolonger l activite, carriere plus longue, la carriere, carriere, carrieres, travailler,
+             travailleraient, travailleront, travaillent, raccrocher, raccrochent, partiront, partiraient]
     source: "Loi n° 2023-270 du 14 avril 2023 de financement rectificative de la sécurité sociale pour 2023 (report de l'âge légal)"
   cumul:
     famille: retenir
@@ -91,6 +94,8 @@ directions:
     double: 2.0
     deux fois plus: 2.0
     tripler: 3.0
+    doublement: 2.0
+    triplement: 3.0
     triple: 3.0
     diviser par deux: 0.5
     divise par deux: 0.5
@@ -178,6 +183,42 @@ villes:
   brest: "29"
   aurillac: "15"
   gueret: "23"
+
+# Gentilés (adjectifs de lieu) -> code serveur. Forme de base au masculin singulier ; le compilateur ajoute e, s, es (ne, nes).
+gentiles:
+  D69: [lyonnais]
+  D13: [marseillais]
+  D33: [bordelais]
+  D59: [lillois]
+  D67: [strasbourgeois]
+  D75: [parisien]
+  D31: [toulousain]
+  D44: [nantais]
+  D06: [nicois]
+  D34: [montpellierain]
+  D35: [rennais]
+  D38: [grenoblois]
+  D42: [stephanois]
+  D21: [dijonnais]
+  D37: [tourangeau]
+  D87: [limougeaud]
+  D76: [rouennais]
+  D51: [remois]
+  D29: [brestois]
+  D63: [clermontois]
+  D15: [aurillacois]
+  R53: [breton]
+  R28: [normand]
+  R94: [corse]
+  R84: [auvergnat]
+  R11: [francilien]
+  R93: [provencal]
+  R44: [alsacien, lorrain]
+  R32: [nordiste, picard]
+  R76: [occitan]
+  R75: [aquitain]
+  R27: [bourguignon, franc comtois]
+  R52: [ligerien]
 
 # Neutralisation du lexique (docs/lab/lexicon.md) : terme jugeant -> formulation neutre.
 neutralisation:

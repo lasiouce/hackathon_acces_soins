@@ -3173,3 +3173,14 @@ attendaient « aucun » : écart de convention, pas d'erreur ; le jeu 3 a été 
 **Pourquoi.** L'utilisateur·rice : « Extend glossary ». Mesurer sur un jeu jamais vu à chaque version évite de se tromper
 sur des cas déjà corrigés.
 **Ouvert.** Gentilés de ville (6 échecs sur 9 au jeu 3), négation partielle, « remplacer un confrère qui part » ; un jeu 4 pour mesurer.
+
+## 2026-11-14 — Compilateur, tour 4 : 80 % sur un quatrième jeu à l'aveugle
+
+**Décision.** Ajouts par classe : gentilés de villes et de régions (avec accords), « remplacer un confrère / un départ » pour
+la régulation, « % des territoires / communes » pour la part des zones, « réservée à la région » et sa négation, comparatif
+placé après la quantité prioritaire sur le verbe (« accueillir 30 % … en moins »), « doublement ». Mesure sur le jeu 4, jamais
+vu : **24/30 (80 %, chiffre à citer)** ; territoire et profession 30/30, leviers 25/30. Jeux 1 à 3 : 29/30, 27/30, 30/30
+(en échantillon, non citables) ; cas d'origine 35/36.
+**À signaler :** une erreur de mauvais levier (« formés hors de France » → places en formation). L'écran de confirmation la
+rend visible ; c'est la première classe à corriger au tour suivant.
+**Pourquoi.** L'utilisateur·rice : « Yes, round 4 ».

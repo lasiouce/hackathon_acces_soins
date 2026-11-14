@@ -1,0 +1,9 @@
+exact 24/30 = 80%
+{'simple': '10/12', 'combine': '6/6', 'negation': '3/4', 'non_modelise': '2/4', 'piege': '3/4'}
+{'leviers': '25/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '29/30'}
+- ('h4-02', 'simple', "Et si on doublait le nombre de dentistes diplômés à l'étranger qu'on accueille ?", {'leviers': ({}, {'etrangers': 2.0})})
+- ('h4-09', 'simple', 'Accueillir moitié moins de chirurgiens-dentistes formés hors de France.', {'leviers': ({'quotas': 0.7}, {'etrangers': 0.5})})
+- ('h4-21', 'negation', "On n'augmentera pas le numerus des infirmiers en Pays de la Loire ; on mise plutôt sur un an de travail supplémentaire avant la retraite.", {'leviers': ({}, {'retraite': 1.0})})
+- ('h4-25', 'non_modelise', "Créer une année supplémentaire d'internat pour les dentistes et accueillir 20 % de praticiens étrangers en plus.", {'non_modelise': (False, True)})
+- ('h4-26', 'non_modelise', "Une prime d'installation de 50 000 euros pour les infirmiers qui s'installent dans la Creuse, et un cumul emploi-retraite facilité de 30 %.", {'leviers': ({}, {'cumul': 1.3})})
+- ('h4-30', 'piege', 'Diviser par quatre les départs avant 60 ans des dentistes de Strasbourg.', {'leviers': ({}, {'precoces': 0.5})})

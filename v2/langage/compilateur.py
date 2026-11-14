@@ -76,6 +76,10 @@ def _territoires() -> list[tuple[str, str, bool]]:
         out.append((norm(row.dep_name), "D" + dep, True))
     for ville, dep in G["villes"].items():
         out.append((norm(ville), "D" + dep, False))
+    for code, formes in G.get("gentiles", {}).items():      # « les kinés lyonnais » -> D69 ; variantes en e, s, es, ne, nes
+        for f in formes:
+            for v in {f, f + "e", f + "s", f + "es"} | ({f + "ne", f + "nes"} if f.endswith("en") else set()):
+                out.append((v, code, False))
     out.append(("france", "FR", False))
     out.append(("national", "FR", False))
     return sorted(out, key=lambda x: -len(x[0]))
@@ -136,6 +140,11 @@ def _direction(c: str, pos: int | None = None) -> str | None:
         return None
     if pos is None:
         return min(hits)[1]
+    # un comparatif placé après la quantité (« 30 % de … en moins ») l'emporte sur le verbe qui la précède
+    post = [(m.start(), "hausse" if m.group(1) == "plus" else "baisse")
+            for m in re.finditer(r"(?<![a-z])(?:en|de) (plus|moins)(?![a-z])", c) if m.start() > pos]
+    if post:
+        return min(post)[1]
     return min(hits, key=lambda h: (abs(h[0] - pos), h[0] < pos))[1]
 
 
@@ -324,7 +333,7 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
 
     # régulation : part des zones, destination, quotas régionaux
     if brut.get("regul"):
-        m = re.search(rf"{NUM}\s*(?:%|pour ?cent)\s*des zones", t)
+        m = re.search(rf"{NUM}\s*(?:%|pour ?cent)\s*des (?:zones|territoires|communes|secteurs)", t)
         frac = {"la moitie": 0.5, "un tiers": 1 / 3, "le tiers": 1 / 3, "un quart": 0.25, "le quart": 0.25,
                 "toutes les": 1.0, "deux tiers": 2 / 3, "trois quarts": 0.75}
         if m:
@@ -338,8 +347,10 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
             if _find(t, termes):
                 brut["dest"] = opt
                 break
-    if "quotas" in brut and (_find(t, G["leviers"]["quotas_region"]["termes"])
-                             or (res["territoire"] != "FR" and re.search(r"(?<![a-z])(?:seulement|uniquement|exclusivement)(?![a-z])", t))):
+    reg_hits = [h for h in _find(t, G["leviers"]["quotas_region"]["termes"])
+                if not re.search(r"(?:pas|non|sans|ni)\s+(?:\S+\s+)?$", t[:h[0]])]          # « pas réservée à la région »
+    if "quotas" in brut and (reg_hits
+                             or (res["territoire"] != "FR" and re.search(r"(?<![a-z])(?<!pas )(?:seulement|uniquement|exclusivement)(?![a-z])", t))):
         brut["quotas_region"] = 1
         if res["territoire"] == "FR":
             res["avertissements"].append("Quotas « seulement dans la région » sans région ni département cité : le serveur refusera ce scénario.")
