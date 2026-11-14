@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+data/raw/
+.obsidian/workspace*.json
+.obsidian/cache
+data/processed/
+.claude/hooks/state/
+
+# ajouts 2026-11-14 (premier commit)
+v2/data/raw/
+v2/data/processed/
+v2/validation/raw/
+v2/artifacts/
+app/cache/
+.impeccable/
+.taste-skill/
+# document tiers (mémoire EHESP), gardé en local
+Memoire123.pdf
+# skill tiers volumineux (39 Mo), réinstallable depuis github.com/Leonxlnx/taste-skill
+.claude/skills/design-taste-frontend/
+.claude/settings.local.json

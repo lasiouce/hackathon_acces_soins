@@ -1,0 +1,15 @@
+{
+  "newFileLocation": "folder",
+  "newFileFolderPath": "docs/lab/reports",
+  "attachmentFolderPath": "docs/lab/figures",
+  "useMarkdownLinks": true,
+  "newLinkFormat": "relative",
+  "alwaysUpdateLinks": true,
+  "showFrontmatter": false,
+  "userIgnoreFilters": [
+    ".venv/",
+    ".claude/",
+    "data/raw/",
+    "uv.lock"
+  ]
+}
