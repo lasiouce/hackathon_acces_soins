@@ -49,6 +49,7 @@ class Param:
     status: str
     doc: str = ""
     bounds: tuple | None = None    # (min, max) admissibles ; Scenario.validate refuse une valeur hors plage
+    famille: str = ""              # levier : former, attirer, installer, retenir ("" = paramètre technique, pas un levier)
 
     def __post_init__(self):
         if self.status not in STATUTS:
@@ -95,6 +96,7 @@ class Module:
     order = 50
     params: tuple = ()
     needs: tuple = ()
+    optional: tuple = ()           # flux lus s'ils sont produits par la composition (0 sinon)
     produces: tuple | None = None
     doc = ""
 

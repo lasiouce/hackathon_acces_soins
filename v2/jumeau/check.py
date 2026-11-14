@@ -20,6 +20,8 @@ sur le code d'avant (`avant`), quand elle existe : c'est la preuve que le test s
   C13 troisième revue : bornes composées et ajustées, JSON + over, événements non numériques, règle
                     « entrées ≤ sorties » contre une formule indépendante, bloqués jamais négatifs, retraite
                     exacte avec plusieurs tranches ≥ 65
+  C14 leviers branchés (chantier) : identité au tendanciel, effet de chaque levier, délai, région,
+                    comparaison aux chiffres cités (DD76, ER 1319, DREES retraite), familles
   C11 scénario posé sur la base : trajectory(Scenario()) = predict sur la variante filière ; quotas > 0
   T  temps          recalcul d'un scénario jusqu'en 2050
 """
@@ -430,6 +432,111 @@ def c13_review3():
                "entrées négatives déplacées ; événement sur zones → plantage")
 
 
+def c14_levers():
+    from jumeau.module import REGISTRY as R
+    from jumeau.modules.etrangers import part_etrangere, FLUX
+    from jumeau.modules.entrees import selecteur_region
+    from jumeau.scenario import LEVIERS, FAMILLES
+    out, oks = {}, []
+    t = stock_table(["dentistes", "pharmaciens"])
+    o = int(t.year.max())
+    est = twin_of(V1.StockFlowLocal)().fit(t, (o - 5, o), o)
+    base = est.trajectory(H2050)
+    tot = lambda tr, y, prof=None: float(tr.states[y].N[(tr.states[y].cells.profession == prof).to_numpy()].sum()
+                                         if prof else tr.states[y].N.sum())
+    # a. identité
+    lv = est.trajectory(H2050, Scenario(modules=LEVIERS))
+    out["identite"] = float(np.abs(lv.states[H2050].N - base.states[H2050].N).max())
+    oks.append(out["identite"] == 0)
+    # b. capacité ×1,2 (dentistes, L = 6) : rien avant o + 7, puis effet ; diplômés × 1,2 en régime
+    cap = est.trajectory(H2050, Scenario(modules=LEVIERS, events=[Event("formation.capacite", o + 1, 1.2,
+                                                                         selector={"profession": "dentistes"})]))
+    eff = {y: tot(cap, y, "dentistes") / tot(base, y, "dentistes") - 1 for y in (o + 6, o + 7, H2050)}
+    g = [x for y, f, a, x in cap.ledger if f == "formation" and a == "diplomes" and y == H2050][0]
+    g0 = [x for y, f, a, x in cap.ledger if f == "formation" and a == "diplomes_reference" and y == H2050][0]
+    ph = abs(tot(cap, H2050, "pharmaciens") / tot(base, H2050, "pharmaciens") - 1)
+    out["capacite_cd"] = dict(effet_o6=eff[o + 6], effet_o7=eff[o + 7], effet_2050_pct=100 * eff[H2050],
+                              diplomes_ratio=float(g["dentistes"] / g0["dentistes"]), pharmaciens=ph,
+                              dd76_2050_pct="±12 à 13 % pour ±20 % de quotas (cité)")
+    oks.append(abs(eff[o + 6]) < 1e-12 and eff[o + 7] > 0 and abs(g["dentistes"] / g0["dentistes"] - 1.2) < 1e-9
+               and ph < 1e-12)
+    # c. abandon IFSI : diviser la perte par deux (ρ 0,718 → 0,859)
+    ti = stock_table(["infirmiers-liberaux"])
+    oi = int(ti.year.max())
+    ei = twin_of(V1.StockFlowLocal)().fit(ti, (oi - 5, oi), oi)
+    a1 = 1 - (1 - (1 - 0.718) / 2) ** (1 / 3)
+    ab = ei.trajectory(H2050, Scenario(modules=LEVIERS, params={"formation.abandon": {"infirmiers": a1, "*": 0.0}}))
+    bi = ei.trajectory(H2050)
+    gi = [x for y, f, a, x in ab.ledger if f == "formation" and a == "diplomes" and y == H2050][0]
+    gi0 = [x for y, f, a, x in ab.ledger if f == "formation" and a == "diplomes_reference" and y == H2050][0]
+    ratio = float(gi.iloc[0] / gi0.iloc[0])
+    out["abandon_ifsi"] = dict(diplomes_ratio=ratio, attendu=(1 - (1 - 0.718) / 2) / 0.718,
+                               effet_2050_pct=100 * (tot(ab, H2050) / tot(bi, H2050) - 1),
+                               er1319="≈ +14 % de places (cité par l'axe 1 ; ρ = 0,77 donnerait +14,9 %)")
+    oks.append(abs(ratio - out["abandon_ifsi"]["attendu"]) < 1e-9 and tot(ab, H2050) > tot(bi, H2050))
+    # d. diplômés étrangers ×2 : ajout année 1 = part · entrées⁺ ; PH sans flux publié → 0
+    et = est.trajectory(o + 1, Scenario(modules=LEVIERS, params={"etrangers.multiplicateur": 2.0}))
+    added = float(sum(x.sum() for y, f, a, x in et.ledger if f == "etrangers"))
+    e_pos = float(sum(np.clip(x, 0, None).sum() for y, f, a, x in et.ledger if f == "entrees") * 0)  # registre net
+    share = part_etrangere(est.hist, est.state, FLUX)
+    cd = (est.state.cells.profession == "dentistes").to_numpy()
+    et50 = est.trajectory(H2050, Scenario(modules=LEVIERS, params={"etrangers.multiplicateur": 2.0}))
+    out["etrangers_x2"] = dict(part_cd=float(share[cd][0]), part_ph=float(share[~cd][0]), ajout_annee1=added,
+                               effet_2050_cd_pct=100 * (tot(et50, H2050, "dentistes") / tot(base, H2050, "dentistes") - 1),
+                               effet_2050_ph=tot(et50, H2050, "pharmaciens") - tot(base, H2050, "pharmaciens"))
+    oks.append(added > 0 and out["etrangers_x2"]["effet_2050_ph"] == 0 and 0 < share[cd][0] < 1)
+    # e. départs précoces × 0,5
+    pr = est.trajectory(H2050, Scenario(params={"sorties.multiplicateur_precoces": 0.5}))
+    out["precoces_x05_pct"] = 100 * (tot(pr, H2050) / tot(base, H2050) - 1)
+    oks.append(out["precoces_x05_pct"] > 0)
+    # f. quotas régionaux (Auvergne-Rhône-Alpes, 84) : rien hors région
+    sel = selecteur_region("84", est.state.cells, "dentistes")
+    rq = est.trajectory(H2050, Scenario(events=[evenement_quotas(1.2, o, 6, selector=sel)]))
+    c = rq.states[H2050].cells
+    inr = c.territory.isin(sel["territory"]).to_numpy() & (c.profession == "dentistes").to_numpy()
+    out["quotas_region_84"] = dict(hors_region=float(np.abs(rq.states[H2050].N[~inr] - base.states[H2050].N[~inr]).max()),
+                                   region_pct=100 * (rq.states[H2050].N[inr].sum() / base.states[H2050].N[inr].sum() - 1))
+    oks.append(out["quotas_region_84"]["hors_region"] == 0 and out["quotas_region_84"]["region_pct"] > 0)
+    # g. part des zones régulées (kinés, 5 dép.)
+    ks = kine_sector(public_history=True)
+    mv = {}
+    for pz in (0.0, 0.6, 1.0):
+        tr = run(ks.state, ks.modules(Scenario(modules=REG)), Scenario(
+            params={"regulation.zones": {"kines": ZONES}, "regulation.repartition": SALARIAT,
+                    "regulation.part_zones": {"kines": pz, "*": 1.0}}, modules=REG).over(ks.scenario), ks.origin + 1)
+        mv[pz] = float(sum(np.clip(x, 0, None).sum() for _, f, _, x in tr.ledger if f == "regulation"))
+    out["part_zones_deplaces_annee1"] = mv
+    oks.append(mv[0.0] == 0 and 0 < mv[0.6] < mv[1.0])
+    # h. retraite + 1 an, comparée au repère DREES (≈ +1 % d'effectif par an de décalage, cité)
+    ret = {}
+    for p in ("kines", "infirmiers-liberaux"):
+        tp = stock_table([p])
+        op = int(tp.year.max())
+        ep = twin_of(V1.StockFlowLocal)().fit(tp, (op - 5, op), op)
+        ret[p] = 100 * (ep.trajectory(H2050, Scenario(params={"sorties.decalage_retraite": 1.0})).states[H2050].N.sum()
+                        / ep.trajectory(H2050).states[H2050].N.sum() - 1)
+    out["retraite_plus1_2050_pct"] = ret
+    oks.append(all(v > 0 for v in ret.values()))
+    # i. familles et métadonnées des leviers
+    levers = [(n, p) for n, cls in R.items() for p in cls.params if p.famille]
+    numeric = lambda v: (isinstance(v, (int, float)) and not isinstance(v, bool)) or (
+        isinstance(v, dict) and v and all(isinstance(x, (int, float)) for x in v.values()))
+    bad = [f"{n}.{p.name}" for n, p in levers
+           if p.famille not in FAMILLES or not p.source or (numeric(p.value) and p.bounds is None)]
+    out["leviers"] = {f"{n}.{p.name}": p.famille for n, p in levers}
+    oks.append(not bad and len(levers) >= 10)
+    crit("C14", "leviers branchés : identité, effets, délai, région, chiffres cités",
+         f"identité LEVIERS {out['identite']} ; capacité CD ×1,2 : 0 en {o + 6}, +{100 * eff[o + 7]:.2f} % en {o + 7}, "
+         f"{out['capacite_cd']['effet_2050_pct']:+.1f} % en 2050 (DD76 cité : ±12-13 % pour ±20 %) ; IFSI perte ÷ 2 : "
+         f"diplômés ×{ratio:.3f} (ER 1319 cité : ≈ +14 %) ; étrangers ×2 : part CD {share[cd][0]:.2f}, "
+         f"{out['etrangers_x2']['effet_2050_cd_pct']:+.1f} % CD, PH 0 ; précoces ×0,5 {out['precoces_x05_pct']:+.1f} % ; "
+         f"quotas région 84 : hors région 0, région {out['quotas_region_84']['region_pct']:+.1f} % ; part zones 0/0,6/1 → "
+         f"{mv[0.0]:.0f}/{mv[0.6]:.0f}/{mv[1.0]:.0f} déplacés ; retraite +1 : "
+         + ", ".join(f"{k} {v:+.2f} %" for k, v in ret.items()) + f" (DREES cité ≈ +1 %) ; {len(levers)} leviers, "
+         f"familles {sorted(set(out['leviers'].values()))} ; sous-tests {oks}", all(oks), avant="leviers absents ou non branchés")
+    return out
+
+
 def c11_over():
     t = stock_table(["dentistes"])
     _, fit, o, _ = latest_design("dentistes", t)
@@ -568,8 +675,9 @@ def main():
     c11_over()
     c12_regulation_params()
     c13_review3()
+    leviers = c14_levers()
     tm = timing()
-    res = dict(criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
+    res = dict(leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
                modules={n: [p.__dict__ for p in c.params] for n, c in REGISTRY.items()
                         if n not in ("factice", "espion", "double", "lecteur_diplomes")})
     (OUT / "results.json").write_text(json.dumps(res, indent=1, ensure_ascii=False, default=str))

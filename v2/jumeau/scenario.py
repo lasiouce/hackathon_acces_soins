@@ -17,6 +17,9 @@ from dataclasses import asdict, dataclass, field
 import numpy as np
 
 DEFAULT_MODULES = ("vieillissement", "sorties", "entrees")
+# Composition « tous leviers » : identité exacte au tendanciel (chaque levier vaut l'identité à son défaut).
+LEVIERS = ("formation", "vieillissement", "sorties", "entrees", "lien_formation", "etrangers", "regulation")
+FAMILLES = ("former", "attirer", "installer", "retenir")
 FORMAT = 1
 OPS = ("set", "mul", "add")
 AXES = ("profession", "sector", "territory", "sex")

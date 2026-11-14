@@ -16,6 +16,7 @@ tranche ouverte de façon permanente (séjour infini pour Δ ≥ 5, seconde revu
   tranches à solde net positif (s plafonné à 1, e = 0) : inchangées.
 La montée en charge (3 mois par an) se fait dans le scénario : evenement_retraite().
 cumul_multiplicateur k : e[65+] × max(0, 1 − part_cumul_p · (k − 1)), part_cumul par profession (COR 2016).
+multiplicateur_precoces m : e[âge < 60] × m (départs précoces ; effet d'une politique non chiffré, supposé).
 Le chemin v1 (app/levers.perturb_retention) n'est plus reproduit pour ce levier : la v1 porte le défaut.
 """
 import math
@@ -85,13 +86,18 @@ class Sorties(Module):
         Param("retention", None, "par an", SOURCE_RPPS, "fenêtre d'ajustement", "mesuré",
               "Rétention nette annuelle par cellule × âge, moindres carrés sur la fenêtre, plafonnée à 1.", (0.0, 1.0)),
         Param("decalage_retraite", 0.0, "années", "Loi n° 2023-270 ; LFSS 2026 ; mécanisme B1 de l'observatoire",
-              "2023", "supposé", "Report de l'âge de départ ; séjour en 65+ allongé de Δ ans.", (0.0, 5.0)),
-        Param("cumul_multiplicateur", 1.0, "× part 2018", "DREES ER n° 1097 (médecins ; autres professions : hypothèse)",
-              "2018", "supposé", "", (0.0, 5.0)),
+              "2023", "supposé", "Report de l'âge de départ ; séjour en 65+ allongé de Δ ans.", (0.0, 5.0), "retenir"),
+        Param("cumul_multiplicateur", 1.0, "× part 2015", "COR 2016 (parts par profession) ; effet : hypothèse",
+              "2015", "supposé", "Incitation au cumul emploi-retraite : sorties en 65+ × (1 − part · (k − 1)).",
+              (0.0, 5.0), "retenir"),
         Param("part_cumul", PART_CUMUL, "part, par profession",
               "COR 2016, doc. 11, annexe 2 (CARCDSF, CAVP, CARPIMKO) ; médecins : DREES ER n° 1097",
               "30/06/2015 ; médecins 2018", "sourcé",
               "Part des libéraux en cumul emploi-retraite ; MK et IDE confondus (1,5 %).", (0.0, 1.0)),
+        Param("multiplicateur_precoces", 1.0, "× taux de sortie avant 60 ans",
+              "mécanisme : taux de sortie ajustés ; aucune source ne chiffre l'effet d'une politique (fiche "
+              "param-cessation-par-age)", "—", "supposé",
+              "Départs précoces (reconversions, cessations avant 60 ans) : e[âge < 60] × m.", (0.0, 3.0), "retenir"),
     )
 
     def fit(self, hist):
@@ -100,7 +106,8 @@ class Sorties(Module):
     def step(self, state, ctx):
         s = ctx.param(self, "retention", base=stock_flow_rates(self.hist, state)[0])
         d, k = ctx.param(self, "decalage_retraite"), ctx.param(self, "cumul_multiplicateur")
-        if np.any(d != 0) or np.any(k != 1):
+        mp = ctx.param(self, "multiplicateur_precoces")
+        if np.any(d != 0) or np.any(k != 1) or np.any(mp != 1):
             a = state.ages
             col = lambda v: np.reshape(v, (-1, 1)) if np.ndim(v) else v
             d = col(d)
@@ -127,5 +134,8 @@ class Sorties(Module):
             if np.any(k != 1):
                 part = col(par_profession(ctx.param(self, "part_cumul"), state.cells.profession))
                 e[:, old] = e[:, old] * np.maximum(0.0, 1.0 - part * (col(k) - 1.0))
+            if np.any(mp != 1):
+                young = a < 60
+                e[:, young] = np.minimum(1.0, e[:, young] * col(mp))
             s = 1.0 - e
         return [Rate(self.name, s, to="sorties")]

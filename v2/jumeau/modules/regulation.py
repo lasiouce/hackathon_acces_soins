@@ -38,23 +38,30 @@ class Regulation(Module):
     name = "regulation"
     order = 40
     needs = ("entrees", "sorties")
+    optional = ("lien_formation", "etrangers")      # entrées supplémentaires de l'année, plafonnées aussi si présentes
     produces = ("regulation", "regulation_sortie")
     params = (
         Param("zones", {}, "profession -> [géocodes]", "avenants conventionnels SF, CD, MK, IDE (axe 4 : zonage)",
-              "à renseigner", "sourcé", "Territoires en « remplacement d'un départ seulement »."),
+              "à renseigner", "sourcé", "Territoires en « remplacement d'un départ seulement », dans l'ordre de "
+              "priorité (ex. densité décroissante) : `part_zones` garde les premiers.", None, "installer"),
+        Param("part_zones", {"*": 1.0}, "part des zones listées, par profession", "levier de scénario",
+              "—", "supposé", "0 = régulation retirée ; 1 = toutes les zones listées. Garde les round(part × n) "
+              "premières zones de la liste.", (0.0, 1.0), "installer"),
         Param("secteur_regule", "prive", "secteur", "décision 2026-11-14 « libéral » = privé", "2026", "sourcé"),
         Param("theta", 0.80, "sans dimension", "axe 3, N3 (DiD zonage IDE 2012-2019) ; fiche param-regul-theta-fuite",
-              "2004-2019", "supposé", "Part contraignante du plafond ; plage 0,5-1 pour l'axe 5.", (0.0, 1.0)),
+              "2004-2019", "supposé", "Part contraignante du plafond ; plage 0,5-1 pour l'axe 5.", (0.0, 1.0),
+              "installer"),
         Param("repartition", {"voisine": 1.0, "salariat": 0.0, "sortie": 0.0}, "parts (somme = 1)",
               "fiche param-regul-report-entrants (IRDES QES 270, 2022 ; Cour des comptes 2024 : qualitatif)",
               "2022 ; 2024", "non mesurable", "Destination des entrants bloqués ; défaut supposé : commune voisine.",
-              (0.0, 1.0)),
+              (0.0, 1.0), "installer"),
         Param("destination", "bloques", "secteur", "hypothèse en attendant l'axe 1", "—", "supposé",
               "Secteur qui reçoit la part « salariat » (créé vide si absent ; démographie du privé par repli)."),
         Param("part_exemptee", {"dentistes": 0.0, "*": 0.0}, "part des entrants, par profession",
               "convention nationale des chirurgiens-dentistes 2023, art. 35.5 (spécialistes exemptés) ; fiche "
               "param-cd-regul-regle", "2023", "non mesurable",
-              "Part des entrants non soumis à la règle ; dentistes spécialistes : part non mesurée → 0.", (0.0, 1.0)),
+              "Part des entrants non soumis à la règle ; dentistes spécialistes : part non mesurée → 0.", (0.0, 1.0),
+              "installer"),
         Param("voisins", None, "{territoire régulé : territoire voisin}", "à construire (axe 4)", "—", "supposé",
               "Requis à la commune si la part « voisine » est non nulle."),
     )
@@ -76,14 +83,18 @@ class Regulation(Module):
             raise ValueError(f"regulation.repartition : clés {PARTS}, somme 1 (reçu {rep})")
         c = state.cells
         reg = np.zeros(len(c), bool)
+        pz = ctx.param(self, "part_zones")
         for prof, geo in zones.items():
-            reg |= (c.profession == prof).to_numpy() & c.territory.isin(geo).to_numpy()
+            keep = list(geo)[:int(round(float(par_profession(pz, [prof])[0]) * len(geo)))]
+            reg |= (c.profession == prof).to_numpy() & c.territory.isin(keep).to_numpy()
+        if not reg.any() and all(float(par_profession(pz, [p])[0]) == 0 for p in zones):
+            return []                                    # régulation retirée par part_zones = 0
         reg &= (c.sector == ctx.param(self, "secteur_regule")).to_numpy()
         src = np.flatnonzero(reg)
         if src.size == 0:
             raise ValueError(f"regulation : aucune cellule du secteur {ctx.param(self, 'secteur_regule')!r} dans les zones "
                              f"(secteurs de l'état : {sorted(c.sector.unique())})")
-        ent = np.clip(ctx.delta(self, "entrees")[src], 0, None)   # entrées brutes positives seulement : une entrée
+        ent = np.clip(sum(ctx.delta(self, n) for n in ("entrees",) + self.optional)[src], 0, None)   # entrées brutes positives seulement : une entrée
                                                                     # nette négative (départ) n'est pas « bloquée »
         out = -ctx.delta(self, "sorties")[src]
         e, x = ent.sum(1), out.sum(1)

@@ -19,6 +19,19 @@ def evenement_quotas(m: float, origin: int, lag: int, selector: dict | None = No
     return Event("entrees.multiplicateur", origin + lag + 1, m, "set", selector=selector or {}, source=source)
 
 
+def selecteur_region(region: str, cells, profession=None) -> dict:
+    """Sélecteur d'événement pour une région (code Insee) : ses départements présents dans l'état (RPPS dep → région)."""
+    import pandas as pd
+    reg = pd.read_parquet("data/processed/stock.parquet", columns=["dep", "region"]).drop_duplicates()
+    deps = sorted(set(reg.loc[reg.region == region, "dep"]) & set(cells.territory))
+    if not deps:
+        raise ValueError(f"région {region!r} : aucun département dans l'état")
+    sel = {"territory": deps}
+    if profession is not None:
+        sel["profession"] = profession
+    return sel
+
+
 @register
 class Entrees(Module):
     name = "entrees"
@@ -29,7 +42,8 @@ class Entrees(Module):
         Param("filiere", False, "booléen", "DREES, inscrits par année d'étude (990_drees_mmop2)", "2020–2025", "mesuré",
               "Entrées proportionnelles à la cohorte en formation (CD, PH, spécialistes)."),
         Param("multiplicateur", 1.0, "× niveau actuel", "Loi OTSS 2019 ; arrêtés d'objectifs 2021 et 2026", "2026",
-              "supposé", "Effet d'un changement de quotas sur les entrées, après le délai de formation.", (0.0, 3.0)),
+              "supposé", "Quotas : multiplie les entrées après le délai de formation. Par profession et par région "
+              "via le sélecteur (selecteur_region). Plage DD76 : × [0,8 ; 1,2].", (0.0, 3.0), "former"),
     )
 
     def fit(self, hist):

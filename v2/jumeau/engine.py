@@ -32,12 +32,13 @@ class Context:
     def h(self) -> int:
         return self.year - self.origin
 
-    def param(self, module, name, base=None):
-        """Valeur résolue pour l'année : base (ajustée) ou défaut, puis surcharges et événements du scénario."""
+    def param(self, module, name, base=None, cells=None):
+        """Valeur résolue pour l'année : base (ajustée) ou défaut, puis surcharges et événements du scénario.
+        `cells` remplace les cellules de l'état pour les sélecteurs (ex. vivier : une ligne par profession)."""
         p = module.param(name)
         default = p.value if base is None else base
         key = f"{module.name}.{name}"
-        val = self.scenario.resolve(key, default, self.year, self.cells)
+        val = self.scenario.resolve(key, default, self.year, self.cells if cells is None else cells)
         if p.bounds is not None and self.scenario.touches(key, self.year) and not isinstance(val, (dict, str, bool)):
             arr = np.asarray(val, dtype=float)                 # bornes sur la valeur composée, ajustée ou non
             if not np.isfinite(arr).all() or arr.min() < p.bounds[0] or arr.max() > p.bounds[1]:
@@ -51,7 +52,7 @@ class Context:
 
     def delta(self, module, name) -> np.ndarray:
         """ΔN [cellule, âge] du flux `name` dans l'année ; seulement s'il est déclaré dans module.needs."""
-        if name not in module.needs:
+        if name not in module.needs and name not in module.optional:
             raise KeyError(f"{module.name} lit le flux {name!r} sans le déclarer dans needs")
         if name in self.pools:
             raise TypeError(f"{name!r} est un flux de vivier (Pool) : le lire par ctx.pool_out(module, flux, compte)")
@@ -108,7 +109,11 @@ def apply(x: np.ndarray, f) -> np.ndarray:
 def check_dependencies(modules) -> None:
     """Chaque flux lu (needs) doit être produit par un module placé avant ; deux modules ne produisent pas le même."""
     produced = {}
+    later = {n: m.name for m in modules for n in m.outputs()}
     for m in modules:
+        for n in m.optional:
+            if n in later and n not in produced:
+                raise ValueError(f"module {m.name!r} lit le flux optionnel {n!r}, produit après lui par {later[n]!r}")
         for n in m.needs:
             if n not in produced:
                 raise ValueError(f"module {m.name!r} a besoin du flux {n!r}, produit par aucun module placé avant lui")
@@ -154,7 +159,7 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
                     x.pool = f.new
                     ctx.pools[f.name] = dict(f.out)
                     for acct, v in f.out.items():
-                        ledger.append((year, f.name, acct, np.asarray(v, float)))
+                        ledger.append((year, f.name, acct, v if hasattr(v, "index") else np.asarray(v, float)))   # Series : par profession
                     continue
                 new = apply(N, f)
                 d = new - N
