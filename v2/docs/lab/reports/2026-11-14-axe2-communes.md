@@ -229,6 +229,52 @@ relative par classe, sur des pseudo-prévisions dans la fenêtre.
 - **Jugement.** Confié à l'axe 3. L'axe 2 n'a regardé aucune couverture de
   K5.
 
+### Verdict de K5 (axe 3, N12, commit 1e1f4c6) : non confirmé, moins bon que K3 et K4
+- **Étape 1 (N10).** Échec partout, avec des bandes **trop étroites**.
+  Couverture globale :
+
+| | Commune | BV | EPCI |
+|---|---|---|---|
+| CD | 75,0 % | 74,5 % | 73,0 % |
+| IDE | 79,7 % | 65,9 % | 59,1 % |
+| MK | 73,6 % | 69,9 % | 67,3 % |
+
+  - IDE aux grains agrégés : 33 à 61 % au-delà de 20 professionnels.
+- **Étape 2 (2022, h = 3).** Échec partout. Le plus proche : MK au BV, une
+  classe sur 8 hors bande (1–2 : 71,2 %).
+  - Comme en 2021, la tendance naïve calibre cette période : 2022 est
+    facile.
+- **Prédictions de K5.** Fausses. Ni les IDE ni les CD ne se rapprochent de
+  80 % à tous les grains, et aucun grain ne passe pour les kinés.
+- **Lecture (dérivé).**
+  - **L'erreur départementale a des queues lourdes.** L'écart-type robuste
+    (MAD), retenu pour écarter les départements aberrants, enlève
+    justement les grandes erreurs qui font la couverture aux grains
+    agrégés. Les bandes BV et EPCI s'effondrent : 59 à 66 % pour les IDE.
+  - K3, qui tirait les erreurs empiriques avec leurs queues, reste **le
+    moins mal calibré** des cinq.
+  - L'écart avant passage de K5 était motivé, mais il allait dans le
+    mauvais sens.
+
+## Bilan du chantier communal (K, K2, K3, K4, K5)
+- **Aucun grain infra-départemental n'est calibré**, pour aucune
+  profession, selon N10, N11 et N12. **L'affichage reste au département.**
+- **Ce qui est établi (mesuré).**
+  - Il faut une erreur départementale commune aux communes, faute de quoi
+    les grandes unités sont sous-couvertes. K3 l'a montré.
+  - Sa loi a des queues lourdes, et un estimateur robuste la sous-estime
+    (K5).
+  - Le niveau d'erreur propre à chaque profession change d'une période à
+    l'autre, et ni la récence (K4) ni la mise en commun (K5) ne le
+    stabilisent.
+- **Ce qui reste.**
+  - Trois dépôts (K4, K5, et C1 au département) seront scorés sur
+    CartoSanté et le RPPS 2027 : c'est la seule mesure hors échantillon
+    propre.
+  - Une K6 ne se justifierait qu'avec une source nouvelle : des flux
+    d'installation par commune, ou une série plus longue. Une nouvelle
+    façon de rééchantillonner les mêmes erreurs ne suffirait pas.
+
 ## Ce que ça change (dérivé)
 1. **La bande d'une commune a deux parties.**
    - Une partie **locale** : de type Poisson, indépendante entre communes.
