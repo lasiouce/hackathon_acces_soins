@@ -111,7 +111,7 @@ indépendant), et chaque sortie le rappelle.
   leviers ; il **ne calcule rien**, et les nombres non rattachés à un résultat sont corrigés puis bloqués.
   **Assistant de simulation** (interface de chatbot, scénarios à essayer) : on y propose une politique ou un **mélange de
   politiques** ; la réponse dit ce que ça change concrètement, la part de chaque levier et leur interaction, et nomme le
-  modèle servi (A0, stock-flux à taux départementaux, MAPE 8,68 % à 5 ans). Proposer « former 20 % de kinés en plus en Auvergne d'ici 2035 » : le bouton
+  modèle servi (C1, cohortes bayésiennes, MAPE 7,73 % à 5 ans ; A0, stock-flux à taux départementaux, si `JUMEAU_MODELE=A0`). Proposer « former 20 % de kinés en plus en Auvergne d'ici 2035 » : le bouton
   « Afficher ce scénario sur la carte » règle profession, territoire, leviers et année. Les grandeurs sont dites dans un
   **vocabulaire fixe calculé par le code** (« légère hausse », « incertitude modérée », « moyen terme », « proche de la
   moyenne nationale » ; seuils dans `v2/docs/lab/lexicon.md`), vérifié comme les nombres. Mesuré sur 22 questions avec
@@ -194,7 +194,8 @@ Points de méthode :
   un flux absolu, pour éviter le double comptage relevé lors du premier backtest.
 - **Backtest contre des références naïves.** Par département, à 5 ans : 8,68 % de MAPE pour le
   stock-flux à taux locaux, 7,73 % pour les cohortes bayésiennes de l'axe 2, contre 9,30 % pour la
-  tendance (mesuré, secteur privé).
+  tendance (mesuré, secteur privé). La carte et l'assistant servent C1 par défaut (taux précalculés dans
+  `v2/methodes/out/c1_taux/`, `v2/methodes/c1_jumeau.py`).
 - **2050 ne se backteste pas.** Les données vont de 2012 à 2026, donc on valide au plus sur environ
   10 ans. Au-delà, on s'appuie sur la reproduction des projections DREES, les cas limites du modèle et
   des fourchettes extrapolées, toujours affichées comme telles.
