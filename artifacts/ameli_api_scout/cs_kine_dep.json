@@ -1,0 +1,1254 @@
+{
+"header": {
+    "contentOrder": [
+        "dataset",
+        "indic",
+        "nivgeo",
+        "options",
+        "zonrefs",
+        "distribution"
+    ],
+    "date": "Fri, 13 Nov 2026 22:59:04 +0100",
+    "params": {
+        "lang": "fr",
+        "view": "map5",
+        "dataset": "kine_popage",
+        "indic": "eft",
+        "lastfilter": null,
+        "filters": "annee=2024"
+    }
+},
+
+
+"content": {
+    "dataset": {
+        "c_id_dataset": "kine_popage",
+        "c_datemaj": null,
+        "c_profil_owner": "ADMIN",
+        "c_nivgeo_agreg": null,
+        "c_tjs": 1,
+        "c_version": null,
+        "c_release_date": null,
+        "c_id_zonref": null,
+        "c_csw": 0,
+        "c_opened": 1,
+        "c_obs_opened": 1,
+        "c_id_tjs": null,
+        "c_dataset_tjs": null,
+        "c_published": 1,
+        "c_embargo_date": null,
+        "c_lang": "fr",
+        "c_lib_dataset": "Effectifs des masseurs-kinésithérapeutes libéraux",
+        "c_abstract": null,
+        "c_source": "FNPS",
+        "c_url_dataset": null,
+        "c_nbperiodesmax": {
+            "annee": null,
+            "age": null
+        },
+        "axis": [
+            {
+                "name": "annee",
+                "type": "T",
+                "mods": [
+                    "2025",
+                    "2024",
+                    "2023",
+                    "2022",
+                    "2021",
+                    "2020",
+                    "2019",
+                    "2018",
+                    "2017",
+                    "2016",
+                    "2015",
+                    "2014",
+                    "2013",
+                    "2012",
+                    "2011",
+                    "2010",
+                    "2009",
+                    "2008",
+                    "2007",
+                    "2006",
+                    "2005"
+                ]
+            },
+            {
+                "name": "age",
+                "type": "F",
+                "mods": [
+                    ""
+                ]
+            }
+        ],
+        "profils": []
+    },
+    "indic": {
+        "c_id_indicateur": "eft",
+        "c_id_dataset": "kine_popage",
+        "c_formule": null,
+        "c_id_typind": "R",
+        "c_topo": "PG",
+        "c_nbdec": 0,
+        "c_published": 1,
+        "c_essential": 0,
+        "c_ss_indicateur": null,
+        "c_ss_seuil": null,
+        "c_diff_level": 0,
+        "c_id_symb": null,
+        "c_indic_assoc": null,
+        "c_denom": null,
+        "c_date_maj": null,
+        "c_tjs_indicateur": null,
+        "c_external_ref": null,
+        "c_output": "A",
+        "c_id_user": null,
+        "c_highisbad": 0,
+        "c_formule_ucl": null,
+        "c_formule_lcl": null,
+        "c_embargo_date": null,
+        "c_id_block_synth": null,
+        "c_block_synth_nivgeo1": null,
+        "c_block_synth_nivgeo2": null,
+        "c_lang": "fr",
+        "c_lib_indicateur": "Nombre de masseurs-kinésithérapeutes libéraux par tranche d'âge en activité au 31/12/NN",
+        "c_lib_indicateur_court": "Nbre de kinés lib. au 31/12",
+        "c_unite": null,
+        "c_source": "FNPS",
+        "c_classeslib": null,
+        "c_desc_indicateur": "Nombre de masseurs kinésithérapeutes libéraux présents au 31/12/N. par tranche d'âge",
+        "c_url_indicateur": null,
+        "c_urllib_indicateur": null,
+        "c_formula_indicateur": null,
+        "c_limutil_indicateur": null,
+        "c_url_logo": null,
+        "c_precisions": null,
+        "c_url_data": null,
+        "c_urllib_data": null,
+        "c_external_ref_lang": null,
+        "c_data_state": null,
+        "c_id_view": "map5",
+        "c_id_colfam": "GC_Green",
+        "c_classes": null,
+        "c_rdmax": null,
+        "c_falpha": 50,
+        "c_method": null,
+        "c_diverging_val": 0,
+        "c_tjs_fwk": null,
+        "c_default_view": 0,
+        "c_opened": 1,
+        "c_shape": "sp",
+        "c_drawsymbs_asc": 0,
+        "c_show_arrow": 1,
+        "c_curve_level": "INTERM",
+        "c_id_theme": [
+            "offre_kine",
+            "offre_ot"
+        ],
+        "c_ordre": {
+            "offre_kine": 0,
+            "offre_ot": 14
+        },
+        "c_mods_nomenc": {
+            "offre_kine": null,
+            "offre_ot": null
+        },
+        "colorPalette": [
+            "#9dcc66"
+        ],
+        "nbVars": 1
+    },
+    "nivgeo": "dep",
+    "options": {
+        "axisFilters": {
+            "annee": "2024",
+            "age": "0"
+        },
+        "allSeriesFilters": [],
+        "allFiltersFilters": [],
+        "lastFilter": null,
+        "codgeoColumn": true,
+        "seriesFilters": [],
+        "hasEstimated": false,
+        "axisAvailableMods": {
+            "annee": [
+                "2005",
+                "2006",
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025"
+            ],
+            "age": [
+                "0",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+            ]
+        },
+        "ctrlCodesMD5": "48b566a8219e7ce31c5f453b2d545d7c"
+    },
+    "zonrefs": [
+        {
+            "zonref": {
+                "c_id_zonref": "zon0",
+                "c_id_nivgeo": "fra",
+                "c_ordre": 2,
+                "c_zonref_type": "S",
+                "c_zonref_def": "100",
+                "c_lang": [
+                    "fr"
+                ],
+                "c_lib_zonref": {
+                    "fr": "France"
+                }
+            },
+            "options": {
+                "axisFilters": [],
+                "allSeriesFilters": [
+                    "annee"
+                ],
+                "allFiltersFilters": [
+                    "age"
+                ],
+                "lastFilter": null,
+                "codgeoColumn": true,
+                "seriesFilters": [],
+                "hasEstimated": false,
+                "axisAvailableMods": null,
+                "ctrlCodesMD5": "48b566a8219e7ce31c5f453b2d545d7c"
+            },
+            "values": [
+                {
+                    "codgeo": "100",
+                    "annee": "2005",
+                    "age": "0",
+                    "eft": 47770
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2005",
+                    "age": "F",
+                    "eft": 3164
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2005",
+                    "age": "E",
+                    "eft": 6712
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2005",
+                    "age": "D",
+                    "eft": 5285
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2005",
+                    "age": "C",
+                    "eft": 11354
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2005",
+                    "age": "B",
+                    "eft": 21255
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2006",
+                    "age": "F",
+                    "eft": 3173
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2006",
+                    "age": "0",
+                    "eft": 44949
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2006",
+                    "age": "B",
+                    "eft": 20023
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2006",
+                    "age": "C",
+                    "eft": 10702
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2006",
+                    "age": "D",
+                    "eft": 4877
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2006",
+                    "age": "E",
+                    "eft": 6174
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2007",
+                    "age": "0",
+                    "eft": 46029
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2007",
+                    "age": "B",
+                    "eft": 20652
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2007",
+                    "age": "C",
+                    "eft": 10738
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2007",
+                    "age": "D",
+                    "eft": 4902
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2007",
+                    "age": "E",
+                    "eft": 5974
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2007",
+                    "age": "F",
+                    "eft": 3763
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2008",
+                    "age": "D",
+                    "eft": 4963
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2008",
+                    "age": "0",
+                    "eft": 47483
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2008",
+                    "age": "B",
+                    "eft": 21705
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2008",
+                    "age": "C",
+                    "eft": 10840
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2008",
+                    "age": "E",
+                    "eft": 5749
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2008",
+                    "age": "F",
+                    "eft": 4226
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2009",
+                    "age": "0",
+                    "eft": 45806
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2009",
+                    "age": "F",
+                    "eft": 4300
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2009",
+                    "age": "E",
+                    "eft": 5300
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2009",
+                    "age": "D",
+                    "eft": 4825
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2009",
+                    "age": "C",
+                    "eft": 10285
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2009",
+                    "age": "B",
+                    "eft": 21143
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2010",
+                    "age": "F",
+                    "eft": 4991
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2010",
+                    "age": "0",
+                    "eft": 51523
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2010",
+                    "age": "B",
+                    "eft": 24272
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2010",
+                    "age": "C",
+                    "eft": 11306
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2010",
+                    "age": "D",
+                    "eft": 5306
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2010",
+                    "age": "E",
+                    "eft": 5648
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2011",
+                    "age": "0",
+                    "eft": 53041
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2011",
+                    "age": "F",
+                    "eft": 6418
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2011",
+                    "age": "E",
+                    "eft": 5497
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2011",
+                    "age": "D",
+                    "eft": 5120
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2011",
+                    "age": "C",
+                    "eft": 11239
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2011",
+                    "age": "B",
+                    "eft": 24767
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2012",
+                    "age": "B",
+                    "eft": 26272
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2012",
+                    "age": "C",
+                    "eft": 11835
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2012",
+                    "age": "D",
+                    "eft": 5313
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2012",
+                    "age": "E",
+                    "eft": 5849
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2012",
+                    "age": "F",
+                    "eft": 5467
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2012",
+                    "age": "0",
+                    "eft": 54736
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2013",
+                    "age": "F",
+                    "eft": 5516
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2013",
+                    "age": "B",
+                    "eft": 27738
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2013",
+                    "age": "C",
+                    "eft": 12051
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2013",
+                    "age": "D",
+                    "eft": 5374
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2013",
+                    "age": "E",
+                    "eft": 5919
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2013",
+                    "age": "0",
+                    "eft": 56598
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2014",
+                    "age": "D",
+                    "eft": 5384
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2014",
+                    "age": "0",
+                    "eft": 60004
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2014",
+                    "age": "B",
+                    "eft": 30966
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2014",
+                    "age": "C",
+                    "eft": 11742
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2014",
+                    "age": "E",
+                    "eft": 6080
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2014",
+                    "age": "F",
+                    "eft": 5832
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2015",
+                    "age": "F",
+                    "eft": 6015
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2015",
+                    "age": "0",
+                    "eft": 63164
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2015",
+                    "age": "B",
+                    "eft": 32327
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2015",
+                    "age": "C",
+                    "eft": 12969
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2015",
+                    "age": "D",
+                    "eft": 5668
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2015",
+                    "age": "E",
+                    "eft": 6185
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2016",
+                    "age": "0",
+                    "eft": 65210
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2016",
+                    "age": "F",
+                    "eft": 6548
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2016",
+                    "age": "E",
+                    "eft": 6239
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2016",
+                    "age": "D",
+                    "eft": 5848
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2016",
+                    "age": "C",
+                    "eft": 13342
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2016",
+                    "age": "B",
+                    "eft": 33233
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2017",
+                    "age": "F",
+                    "eft": 6289
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2017",
+                    "age": "0",
+                    "eft": 67340
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2017",
+                    "age": "B",
+                    "eft": 34551
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2017",
+                    "age": "C",
+                    "eft": 13906
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2017",
+                    "age": "D",
+                    "eft": 5893
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2017",
+                    "age": "E",
+                    "eft": 6278
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2018",
+                    "age": "0",
+                    "eft": 69279
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2018",
+                    "age": "B",
+                    "eft": 35453
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2018",
+                    "age": "C",
+                    "eft": 14627
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2018",
+                    "age": "D",
+                    "eft": 5908
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2018",
+                    "age": "E",
+                    "eft": 6363
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2018",
+                    "age": "F",
+                    "eft": 6453
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2019",
+                    "age": "D",
+                    "eft": 5891
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2019",
+                    "age": "0",
+                    "eft": 70912
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2019",
+                    "age": "B",
+                    "eft": 36072
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2019",
+                    "age": "C",
+                    "eft": 15401
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2019",
+                    "age": "E",
+                    "eft": 6433
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2019",
+                    "age": "F",
+                    "eft": 6647
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2020",
+                    "age": "F",
+                    "eft": 6862
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2020",
+                    "age": "0",
+                    "eft": 73672
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2020",
+                    "age": "B",
+                    "eft": 37745
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2020",
+                    "age": "C",
+                    "eft": 16223
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2020",
+                    "age": "D",
+                    "eft": 5958
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2020",
+                    "age": "E",
+                    "eft": 6463
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2021",
+                    "age": "0",
+                    "eft": 75317
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2021",
+                    "age": "F",
+                    "eft": 6730
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2021",
+                    "age": "E",
+                    "eft": 6563
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2021",
+                    "age": "D",
+                    "eft": 5932
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2021",
+                    "age": "C",
+                    "eft": 16652
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2021",
+                    "age": "B",
+                    "eft": 38987
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2022",
+                    "age": "F",
+                    "eft": 6730
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2022",
+                    "age": "0",
+                    "eft": 77862
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2022",
+                    "age": "B",
+                    "eft": 40905
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2022",
+                    "age": "C",
+                    "eft": 17139
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2022",
+                    "age": "D",
+                    "eft": 6095
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2022",
+                    "age": "E",
+                    "eft": 6625
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2023",
+                    "age": "0",
+                    "eft": 81222
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2023",
+                    "age": "C",
+                    "eft": 17791
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2023",
+                    "age": "D",
+                    "eft": 6314
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2023",
+                    "age": "F",
+                    "eft": 6831
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2023",
+                    "age": "E",
+                    "eft": 6675
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2023",
+                    "age": "B",
+                    "eft": 43288
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2024",
+                    "age": "C",
+                    "eft": 18728
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2024",
+                    "age": "B",
+                    "eft": 45439
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2024",
+                    "age": "0",
+                    "eft": 84687
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2024",
+                    "age": "F",
+                    "eft": 7067
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2024",
+                    "age": "E",
+                    "eft": 6658
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2024",
+                    "age": "D",
+                    "eft": 6528
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2025",
+                    "age": "F",
+                    "eft": 7290
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2025",
+                    "age": "0",
+                    "eft": 87250
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2025",
+                    "age": "B",
+                    "eft": 46424
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2025",
+                    "age": "C",
+                    "eft": 19741
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2025",
+                    "age": "D",
+                    "eft": 6822
+                },
+                {
+                    "codgeo": "100",
+                    "annee": "2025",
+                    "age": "E",
+                    "eft": 6715
+                }
+            ]
+        }
+    ],
+    "distribution": {
+        "minth": 34,
+        "maxth": 3842,
+        "sumth": 84687,
+        "eftvalth": 103,
+        "eftth": 103,
+        "eftdiv0th": 0,
+        "eftallnath": 0,
+        "avgth": 822.2038834951456,
+        "stdevth": 0,
+        "nv_neg": 0,
+        "nv_pos": 103,
+        "eftnath": 0,
+        "diverging_value": 0,
+        "precision": 1,
+        "valref": null,
+        "nv_min": 1,
+        "nv_max": 1,
+        "nv_diverging": 0,
+        "i_diverging": -1,
+        "v_diverging_inf": null,
+        "i_valref": -1,
+        "nb_distinct_values": 98,
+        "margin_extreme": 0,
+        "v_mediane": 539,
+        "eftssth": 0,
+        "eftssthind": 0,
+        "eftnaolpth": 0,
+        "diverging": 0,
+        "i_9999999_a": [],
+        "i_8888_a": [],
+        "v_dec1": 73,
+        "v_dec9": 3771,
+        "v_dec01": 62,
+        "v_dec99": 3842,
+        "sortIndices": [
+            12,
+            75,
+            59,
+            69,
+            33,
+            34,
+            31,
+            83,
+            67,
+            5,
+            44,
+            38,
+            92,
+            99,
+            62,
+            64,
+            35,
+            74,
+            78,
+            27,
+            94,
+            66,
+            56,
+            30,
+            76,
+            77,
+            57,
+            16,
+            91,
+            63,
+            73,
+            95,
+            42,
+            96,
+            93,
+            49,
+            97,
+            40,
+            68,
+            84,
+            19,
+            54,
+            85,
+            13,
+            24,
+            37,
+            45,
+            10,
+            23,
+            0,
+            20,
+            51,
+            80,
+            81,
+            60,
+            87,
+            71,
+            4,
+            65,
+            72,
+            50,
+            6,
+            11,
+            22,
+            25,
+            2,
+            86,
+            82,
+            29,
+            28,
+            47,
+            1,
+            88,
+            18,
+            7,
+            15,
+            8,
+            9,
+            3,
+            43,
+            39,
+            41,
+            79,
+            89,
+            26,
+            32,
+            53,
+            17,
+            46,
+            61,
+            70,
+            36,
+            58,
+            14,
+            55,
+            98,
+            21,
+            52,
+            48,
+            90,
+            100,
+            102,
+            101
+        ],
+        "values": [
+            547,
+            308,
+            360,
+            244,
+            393,
+            1967,
+            383,
+            289,
+            252,
+            252,
+            573,
+            381,
+            3842,
+            710,
+            141,
+            266,
+            935,
+            207,
+            296,
+            744,
+            547,
+            105,
+            372,
+            570,
+            680,
+            370,
+            230,
+            1223,
+            342,
+            349,
+            1106,
+            2521,
+            228,
+            2720,
+            2624,
+            1479,
+            143,
+            631,
+            1896,
+            236,
+            821,
+            236,
+            880,
+            239,
+            1955,
+            603,
+            206,
+            318,
+            100,
+            852,
+            385,
+            539,
+            103,
+            208,
+            723,
+            121,
+            1143,
+            965,
+            143,
+            3701,
+            478,
+            171,
+            1756,
+            912,
+            1744,
+            390,
+            1213,
+            2123,
+            779,
+            2851,
+            166,
+            452,
+            386,
+            907,
+            1344,
+            3771,
+            1090,
+            991,
+            1246,
+            232,
+            529,
+            526,
+            351,
+            2178,
+            765,
+            714,
+            360,
+            457,
+            298,
+            231,
+            93,
+            917,
+            1824,
+            861,
+            1216,
+            890,
+            871,
+            837,
+            110,
+            1785,
+            73,
+            34,
+            62
+        ]
+    }
+},
+
+"footer": {
+    "version": "4.26.1",
+    "product": "Powered by Géoclip",
+    "time": "0.138 s",
+    "usage": "4,00 Mo",
+    "peak_usage": "4,00 Mo"
+}
+}

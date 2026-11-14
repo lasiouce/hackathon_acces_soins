@@ -1,0 +1,12 @@
+rows=1,240,401 extracted=2026-11-13
+    dataset  communes     years  max|bands-total|  max|Σcom-dep|  France_last
+infi_popage     34847 2004-2025                19           2725       104074
+kine_popage     34847 2005-2025                47           1886        87076
+dent_popage     34847 2006-2025                14            774        38938
+    dataset framework  dropped                                   dropped_codes  kept
+infi_popage   com2026       30 13055,14666,15031,15035,15047,15171,55138,60694 34847
+infi_popage       dep        3                                     976,977,978   100
+kine_popage   com2026       30 13055,14666,15031,15035,15047,15171,55138,60694 34847
+kine_popage       dep        3                                     976,977,978   100
+dent_popage   com2026       30 13055,14666,15031,15035,15047,15171,55138,60694 34847
+dent_popage       dep        3                                     976,977,978   100

@@ -1,0 +1,1739 @@
+Schema report | 2026-11-13 22:26:26 | 19 files
+
+========== 2026 - Données Modèles Démo Medicale Junior.xlsx (0.0 MB) ==========
+
+-- sheet: Feuille 1 - data-sources-hippoc | 4 rows x 5 cols | header found after skipping 0 row(s)
+  - Producteur | character | distinct=2 | NA=0% | length 5-5
+      values: Insee (3); DREES (1)
+  - Description | character | distinct=4 | NA=0% | length 43-93
+  - Date | character | distinct=4 | NA=0% | length 4-54
+      values: 1 Jan 2022 (année de référence utilisée) (1); 2022 (1); 2022, selon géographie 2025 (1); Professionnels de santé au 1er Jan 2022; Code COG 2023 (1)
+  - Utilisé pour | character | distinct=4 | NA=0% | length 65-197
+  - Url | character | distinct=4 | NA=0% | length 43-116
+
+========== 990_drees_mmop2_2526.xlsx (0.0 MB) ==========
+
+-- sheet: 2025-2026 | 898 rows x 8 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=2 | NA=0% | length 4-12
+      values: 2025 (897); Inscriptions (1)
+  - type_de_diplome | character | distinct=7 | NA=0% | length 1-32
+      values: DES MEDECINE (282); DE DOCTEUR EN MEDECINE (211); DE DOCTEUR EN PHARMACIE (140); DES PHARMACIE (107); DE DOCTEUR EN CHIRURGIE DENTAIRE (106); DES ODONTOLOGIE (51); - (1)
+  - année_dans_le_diplôme | character | distinct=8 | NA=0% | length 1-2
+      values: 02 (174); 03 (168); 04 (165); 05 (127); 06 (106); 01 (90); 13 (67); - (1)
+  - lieu_où_est_dispensée_la_formation | character | distinct=74 | NA=0% | length 1-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=40 | NA=0% | length 1-30
+  - etablissement_de_rattachement | character | distinct=36 | NA=0% | length 1-8
+  - etablissement_de_rattachement_lib | character | distinct=36 | NA=0% | length 1-33
+  - Inscriptions | character | distinct=347 | NA=0% | length 1-6
+
+========== 990_drees_mmop2_f.xlsx (0.4 MB) ==========
+
+-- sheet: Feuil2 | 36 rows x 27 cols | header found after skipping 6 row(s)
+  - Auvergne-Rhône-Alpes | character | distinct=36 | NA=0% | length 8-33
+  - ...2 | numeric | distinct=24 | NA=31% | min=69 max=3450 sum=6 900
+  - ...3 | numeric | distinct=25 | NA=31% | min=81 max=3777 sum=7 554
+  - ...4 | numeric | distinct=25 | NA=31% | min=76 max=3605 sum=7 210
+  - ...5 | numeric | distinct=25 | NA=31% | min=68 max=3983 sum=7 966
+  - ...6 | numeric | distinct=23 | NA=31% | min=57 max=3630 sum=7 260
+  - ...7 | numeric | distinct=25 | NA=31% | min=74 max=3936 sum=7 872
+  - ...8 | numeric | distinct=25 | NA=31% | min=75 max=3606 sum=7 212
+  - ...9 | numeric | distinct=22 | NA=31% | min=75 max=3602 sum=7 204
+  - ...10 | numeric | distinct=23 | NA=31% | min=71 max=3907 sum=7 814
+  - ...11 | numeric | distinct=23 | NA=31% | min=68 max=4085 sum=8 170
+  - ...12 | numeric | distinct=21 | NA=33% | min=51 max=3210 sum=6 420
+  - ...13 | numeric | distinct=24 | NA=33% | min=65 max=3596 sum=7 192
+  - ...14 | numeric | distinct=24 | NA=33% | min=59 max=3337 sum=6 674
+  - ...15 | numeric | distinct=24 | NA=33% | min=72 max=3791 sum=7 582
+  - ...16 | numeric | distinct=25 | NA=31% | min=66 max=4134 sum=8 268
+  - ...17 | numeric | distinct=24 | NA=31% | min=51 max=3448 sum=6 896
+  - ...18 | numeric | distinct=24 | NA=31% | min=58 max=3195 sum=6 390
+  - ...19 | numeric | distinct=23 | NA=31% | min=61 max=3516 sum=7 032
+  - ...20 | numeric | distinct=24 | NA=31% | min=66 max=3685 sum=7 370
+  - ...21 | numeric | distinct=24 | NA=31% | min=64 max=3889 sum=7 778
+  - ...22 | numeric | distinct=24 | NA=31% | min=74 max=3980 sum=7 960
+  - ...23 | numeric | distinct=25 | NA=31% | min=51 max=3259 sum=6 518
+  - ...24 | numeric | distinct=23 | NA=31% | min=58 max=3076 sum=6 152
+  - ...25 | numeric | distinct=24 | NA=31% | min=4 max=3515 sum=7 030
+  - ...26 | numeric | distinct=23 | NA=31% | min=53 max=3942 sum=7 884
+  - ...27 | numeric | distinct=25 | NA=31% | min=1727 max=91154 sum=182 308
+
+-- sheet: Feuil1 | 4266 rows x 14 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=5 | NA=0% | length 4-4
+      values: 2024 (886); 2023 (871); 2022 (849); 2020 (835); 2021 (825)
+  - type_de_diplome | character | distinct=6 | NA=0% | length 12-32
+      values: DES MEDECINE (1318); DE DOCTEUR EN MEDECINE (1031); DE DOCTEUR EN PHARMACIE (700); DES PHARMACIE (480); DE DOCTEUR EN CHIRURGIE DENTAIRE (475); DES ODONTOLOGIE (262)
+  - année_dans_le_diplôme | character | distinct=7 | NA=0% | length 2-2
+      values: 02 (839); 03 (823); 04 (777); 05 (559); 06 (463); 01 (459); 13 (346)
+  - lieu_où_est_dispensée_la_formation | character | distinct=81 | NA=0% | length 8-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=69 | NA=0% | length 9-30
+  - ARS | character | distinct=14 | NA=0% | length 8-26
+      values: Auvergne-Rhône-Alpes (605); Ile-de-France (548); Grand Est (537); Occitanie (381); Nouvelle-Aquitaine (373); Bretagne (293); Pays de la Loire (283); Provence-Alpes-Côte d'Azur (280); Haut de France (276); Bourgogne-Franche-Comté (228); Normandie (224); Centre-Val de Loire (111); Antilles Guyane (81); Océan Indien (46)
+  - etablissement_de_rattachement | character | distinct=43 | NA=0% | length 8-8
+  - etablissement_de_rattachement_lib | character | distinct=36 | NA=0% | length 18-38
+  - Inscriptions | numeric | distinct=552 | NA=0% | min=4 max=1056 sum=617 009
+  - ...10 | logical | distinct=0 | NA=100%
+  - ...11 | logical | distinct=0 | NA=100%
+  - ...12 | logical | distinct=0 | NA=100%
+  - UFRs | character | distinct=36 | NA=99% | length 4-38
+  - Régions | character | distinct=15 | NA=99% | length 8-34
+      values: Ile-de-France (6); Auvergne-Rhône-Alpes (4); Grand Est (3); Nouvelle-Aquitaine (3); Antilles Guyane (2); Bourgogne-Franche-Comté (2); Bretagne (2); Centre-Val de Loire (2); Haut de France (2); Normandie (2); Occitanie (2); Pays de la Loire (2); Provence-Alpes-Côte d'Azur (2); Océan Indien (1); Provence-Alpes-Côte d'Azur / Corse (1)
+
+-- sheet: 2020-2021 | 836 rows x 8 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=2 | NA=0% | length 4-12
+      values: 2020 (835); Inscriptions (1)
+  - type_de_diplome | character | distinct=7 | NA=0% | length 1-32
+      values: DES MEDECINE (246); DE DOCTEUR EN MEDECINE (208); DE DOCTEUR EN PHARMACIE (142); DE DOCTEUR EN CHIRURGIE DENTAIRE (95); DES PHARMACIE (86); DES ODONTOLOGIE (58); - (1)
+  - année_dans_le_diplôme | character | distinct=8 | NA=0% | length 1-2
+      values: 02 (165); 03 (163); 04 (158); 05 (110); 01 (92); 06 (75); 13 (72); - (1)
+  - lieu_où_est_dispensée_la_formation | character | distinct=73 | NA=0% | length 1-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=39 | NA=0% | length 1-30
+  - etablissement_de_rattachement | character | distinct=34 | NA=0% | length 1-8
+  - etablissement_de_rattachement_lib | character | distinct=34 | NA=0% | length 1-30
+  - Inscriptions | character | distinct=306 | NA=0% | length 1-6
+
+-- sheet: 2021-2022 | 826 rows x 8 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=2 | NA=0% | length 4-12
+      values: 2021 (825); Inscriptions (1)
+  - type_de_diplome | character | distinct=7 | NA=0% | length 1-32
+      values: DES MEDECINE (246); DE DOCTEUR EN MEDECINE (204); DE DOCTEUR EN PHARMACIE (140); DES PHARMACIE (94); DE DOCTEUR EN CHIRURGIE DENTAIRE (88); DES ODONTOLOGIE (53); - (1)
+  - année_dans_le_diplôme | character | distinct=8 | NA=0% | length 1-2
+      values: 02 (165); 03 (165); 04 (153); 05 (108); 01 (92); 06 (75); 13 (67); - (1)
+  - lieu_où_est_dispensée_la_formation | character | distinct=71 | NA=0% | length 1-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=38 | NA=0% | length 1-30
+  - etablissement_de_rattachement | character | distinct=34 | NA=0% | length 1-8
+  - etablissement_de_rattachement_lib | character | distinct=34 | NA=0% | length 1-30
+  - Inscriptions | character | distinct=322 | NA=0% | length 1-6
+
+-- sheet: 2022-2023 | 850 rows x 8 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=2 | NA=0% | length 4-12
+      values: 2022 (849); Inscriptions (1)
+  - type_de_diplome | character | distinct=7 | NA=0% | length 1-32
+      values: DES MEDECINE (274); DE DOCTEUR EN MEDECINE (200); DE DOCTEUR EN PHARMACIE (137); DES PHARMACIE (95); DE DOCTEUR EN CHIRURGIE DENTAIRE (91); DES ODONTOLOGIE (52); - (1)
+  - année_dans_le_diplôme | character | distinct=8 | NA=0% | length 1-2
+      values: 02 (163); 03 (159); 04 (155); 05 (108); 06 (102); 01 (93); 13 (69); - (1)
+  - lieu_où_est_dispensée_la_formation | character | distinct=71 | NA=0% | length 1-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=39 | NA=0% | length 1-30
+  - etablissement_de_rattachement | character | distinct=34 | NA=0% | length 1-8
+  - etablissement_de_rattachement_lib | character | distinct=34 | NA=0% | length 1-30
+  - Inscriptions | character | distinct=316 | NA=0% | length 1-6
+
+-- sheet: 2023-2024 | 872 rows x 8 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=2 | NA=0% | length 4-12
+      values: 2023 (871); Inscriptions (1)
+  - type_de_diplome | character | distinct=7 | NA=0% | length 1-32
+      values: DES MEDECINE (276); DE DOCTEUR EN MEDECINE (208); DE DOCTEUR EN PHARMACIE (141); DES PHARMACIE (99); DE DOCTEUR EN CHIRURGIE DENTAIRE (98); DES ODONTOLOGIE (49); - (1)
+  - année_dans_le_diplôme | character | distinct=8 | NA=0% | length 1-2
+      values: 02 (173); 03 (165); 04 (154); 05 (112); 06 (106); 01 (91); 13 (70); - (1)
+  - lieu_où_est_dispensée_la_formation | character | distinct=75 | NA=0% | length 1-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=30 | NA=0% | length 1-30
+      values: Unité de formation et de reche (256); UNITE DE FORMATION ET DE RECHE (200); Unité de Formation et de Reche (122); unité de formation et de reche (31); Unite de formation et de reche (23); UNIVERSITE AMIENS (22); Faculté de pharmacie - Univers (15); Faculté de pharmacie (14); INSTITUT DES SCIENCES PHARMACE (14); UFR d'Odontologie Université d (13); Faculté de médecine (12); Faculté de médecine - Universi (12); UFR DE MEDECINE (12); UFR DE MEDECINE POLE DE RECHER (12); UFR de médecine unique de l'Un (12); UFR médecine Université Nice (12); unite de formation et de reche (12); Faculté de chirurgie dentaire (10); UFR 3ème cycle des Sc-Médicale (10); UFR de Médecine Odontologie Ph (10); UFR DE SCIENCES PHARMACEUTIQUE (10); UFR ODONTOLOGIE  DE L'UNIVERSI (10); ufr odontologie université nic (10); ANTENNE UNITE DE FORMATION ET (7); Antenne de l'UFR de médecine, (5); UNIVERSITE DE TOURS (2); - (1); COLLEGIUM SCIENCES ET TECHNIQU (1); Département de Formation et de (1); Institut national supérieur du (1)
+  - etablissement_de_rattachement | character | distinct=36 | NA=0% | length 1-8
+  - etablissement_de_rattachement_lib | character | distinct=36 | NA=0% | length 1-30
+  - Inscriptions | character | distinct=328 | NA=0% | length 1-6
+
+-- sheet: 2024-2025 | 887 rows x 8 cols | header found after skipping 0 row(s)
+  - ANNEE | character | distinct=2 | NA=0% | length 4-12
+      values: 2024 (886); Inscriptions (1)
+  - type_de_diplome | character | distinct=7 | NA=0% | length 1-32
+      values: DES MEDECINE (276); DE DOCTEUR EN MEDECINE (211); DE DOCTEUR EN PHARMACIE (140); DES PHARMACIE (106); DE DOCTEUR EN CHIRURGIE DENTAIRE (103); DES ODONTOLOGIE (50); - (1)
+  - année_dans_le_diplôme | character | distinct=8 | NA=0% | length 1-2
+      values: 02 (173); 03 (171); 04 (157); 05 (121); 06 (105); 01 (91); 13 (68); - (1)
+  - lieu_où_est_dispensée_la_formation | character | distinct=75 | NA=0% | length 1-8
+  - lieu_où_est_dispensée_la_formation_lib_UFR | character | distinct=40 | NA=0% | length 1-30
+  - etablissement_de_rattachement | character | distinct=36 | NA=0% | length 1-8
+  - etablissement_de_rattachement_lib | character | distinct=36 | NA=0% | length 1-33
+  - Inscriptions | character | distinct=341 | NA=0% | length 1-6
+
+========== Base inscrits 2ème cycle MOP.xlsx (0.5 MB) ==========
+
+-- sheet: Feuil1 | 20241 rows x 14 cols | header found after skipping 0 row(s)
+  - Année universitaire | character | distinct=6 | NA=88% | length 9-9
+      values: 2025-2026 (442); 2020-2021 (397); 2021-2022 (397); 2022-2023 (397); 2023-2024 (397); 2024-2025 (397)
+  - Cycle | character | distinct=2 | NA=88% | length 9-10
+      values: 2ème cycle (1737); 1er cycle (690)
+  - Année | character | distinct=6 | NA=88% | length 10-16
+      values: 2ème année (480); 3ème année (480); 4ème année (474); 5ème année (474); 6ème année (473); Inscrit en thèse (46)
+  - Médecine/odontologie/pharmacie/maïeutique | character | distinct=3 | NA=88% | length 8-11
+      values: Médecine (1032); Pharmacie (775); Odontologie (620)
+  - UFR | character | distinct=37 | NA=88% | length 18-38
+  - Nbre d'étudiants inscrits | numeric | distinct=517 | NA=89% | min=4 max=1314 sum=469 796
+  - ville | character | distinct=28 | NA=88% | length 4-16
+      values: PARIS (255); TOURS (122); AMIENS (92); BESANCON (92); BORDEAUX (92); CLERMONT-FERRAND (92); DIJON (92); LILLE (92); LYON (92); MARSEILLE (92); MONTPELLIER (92); NANCY (92); NANTES (92); NICE (92); REIMS (92); RENNES (92); ROUEN (92); STRASBOURG (92); TOULOUSE (92); ANGERS (61); BREST (61); CAEN (61); GRENOBLE (61); LIMOGES (61); POITIERS (61); POINTE-A-PITRE (42); LA REUNION (30); SAINT-ETIENNE (30)
+  - ARS | character | distinct=14 | NA=88% | length 8-26
+      values: Grand Est (276); Auvergne-Rhône-Alpes (275); Ile-de-France (255); Nouvelle-Aquitaine (214); Bourgogne-Franche-Comté (184); Hauts-de-France (184); Occitanie (184); Provence-Alpes-Côte d'Azur (184); Bretagne (153); Normandie (153); Pays de la Loire (153); Centre-Val de Loire (122); Antilles Guyane (42); Océan Indien (30)
+  - ...9 | logical | distinct=0 | NA=100%
+  - Subdivision | character | distinct=35 | NA=100% | length 18-38
+  - Ville | character | distinct=28 | NA=100% | length 4-16
+      values: PARIS (6); POINTE-A-PITRE (2); TOURS (2); AMIENS (1); ANGERS (1); BESANCON (1); BORDEAUX (1); BREST (1); CAEN (1); CLERMONT-FERRAND (1); DIJON (1); GRENOBLE (1); LA REUNION (1); LILLE (1); LIMOGES (1); LYON (1); MARSEILLE (1); MONTPELLIER (1); NANCY (1); NANTES (1); NICE (1); POITIERS (1); REIMS (1); RENNES (1); ROUEN (1); SAINT-ETIENNE (1); STRASBOURG (1); TOULOUSE (1)
+  - Régions | character | distinct=14 | NA=100% | length 8-26
+      values: Ile-de-France (6); Auvergne-Rhône-Alpes (4); Grand Est (3); Nouvelle-Aquitaine (3); Antilles Guyane (2); Bourgogne-Franche-Comté (2); Bretagne (2); Centre-Val de Loire (2); Hauts-de-France (2); Normandie (2); Occitanie (2); Pays de la Loire (2); Provence-Alpes-Côte d'Azur (2); Océan Indien (1)
+  - Ʌ (° ' "") | character | distinct=14 | NA=100% | length 10-16
+      values: 2°30'17" E (4); 4°32'17" E (4); 0°06'24" E (3); 0°11'52" E (3); 5°37'10" E (3); 0°49'26" O (2); 1°41'07" E (2); 16° 13′ 60″ N (2); 2°08'14" E (2); 2°46'31" E (2); 2°50'19" O (2); 4°48'33" E (2); 6°03'12" E (2); 21° 0' 41.321" S (1)
+  - ɸ (° ' "") | character | distinct=14 | NA=100% | length 9-17
+      values: 45°30'57" (4); 48°42'33" (4); 45°11'32" (3); 48°41'21" (3); 49°07'16" (3); 43°42'08" (2); 43°57'18" (2); 47°14'07" (2); 47°28'29" (2); 47°28'50" (2); 48°10'47" (2); 49°57'58" (2); 61° 31' 0'' O (2); 55° 16' 19.632" E (1)
+
+========== Données médecine 1er_2ème_3ème cycle.xlsx (0.0 MB) ==========
+
+-- sheet: 1er cycle médecine | 39 rows x 14 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=18 | NA=54% | length 8-48
+      values: Antilles-Guyane (1); Auvergne-Rhône-Alpes (1); Bourgogne-Franche-Comté (1); Bretagne (1); Centre-Val de Loire (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Normandie (1); Nouvelle-Aquitaine (1); Occitanie (1); Océan Indien (1); Pays de la Loire (1); Pourcentage de variation par année d'études (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=35 | NA=10% | length 18-38
+  - 2ème année...3 | numeric | distinct=33 | NA=10% | min=112 max=19160 sum=38 154
+  - 3ème année...4 | numeric | distinct=31 | NA=13% | min=116 max=9663 sum=19 326
+  - 2ème année...5 | numeric | distinct=35 | NA=5% | min=0.1145094 max=21354 sum=44 458.33
+  - 3ème année...6 | numeric | distinct=31 | NA=10% | min=0.01438477 max=9802 sum=19 604.01
+  - 2ème année...7 | numeric | distinct=35 | NA=5% | min=-0.01843837 max=22351 sum=45 216.03
+  - 3ème année...8 | numeric | distinct=33 | NA=13% | min=0.1234442 max=11012 sum=22 181.12
+  - 2ème année...9 | numeric | distinct=35 | NA=0% | min=0.006085193 max=22525 sum=45 341.01
+  - 3ème année...10 | numeric | distinct=33 | NA=10% | min=0.009535053 max=11117 sum=22 234.01
+  - 2ème année...11 | numeric | distinct=38 | NA=0% | min=0.01176471 max=22790 sum=45 922.03
+  - 3ème année...12 | numeric | distinct=34 | NA=5% | min=0.009624899 max=11224 sum=22 448.01
+  - 2ème année...13 | numeric | distinct=38 | NA=0% | min=-0.01521702 max=22783 sum=45 562.98
+  - 3ème année...14 | numeric | distinct=35 | NA=5% | min=0.01505702 max=11393 sum=22 786.02
+
+-- sheet: 2ème cycle médecine | 38 rows x 20 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=18 | NA=53% | length 8-48
+      values: Antilles-Guyane (1); Auvergne-Rhône-Alpes (1); Bourgogne-Franche-Comté (1); Bretagne (1); Centre-Val de Loire (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Normandie (1); Nouvelle-Aquitaine (1); Occitanie (1); Océan Indien (1); Pays de la Loire (1); Pourcentage de variation par année d'études (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=34 | NA=11% | length 7-47
+  - FASM1...3 | numeric | distinct=30 | NA=13% | min=162 max=27113 sum=45 619
+  - FASM2...4 | numeric | distinct=30 | NA=16% | min=153 max=8985 sum=17 970
+  - FASM3...5 | numeric | distinct=29 | NA=16% | min=138 max=8875 sum=17 750
+  - FASM1...6 | numeric | distinct=33 | NA=8% | min=0.05602479 max=28632 sum=48 682.14
+  - FASM2...7 | numeric | distinct=31 | NA=13% | min=0.0327212 max=9279 sum=18 558.03
+  - FASM3...8 | numeric | distinct=31 | NA=13% | min=0.05104225 max=9328 sum=18 656.05
+  - FASM1...9 | numeric | distinct=32 | NA=8% | min=0.0208508 max=29229 sum=50 117.06
+  - FASM2...10 | numeric | distinct=32 | NA=13% | min=-0.007543916 max=9209 sum=18 417.99
+  - FASM3...11 | numeric | distinct=32 | NA=13% | min=0.02658662 max=9576 sum=19 152.03
+  - FASM1...12 | numeric | distinct=35 | NA=3% | min=0.05511649 max=30840 sum=54 830.2
+  - FASM2...13 | numeric | distinct=32 | NA=13% | min=0.1042458 max=10169 sum=20 338.1
+  - FASM3...14 | numeric | distinct=31 | NA=13% | min=-0.09398496 max=8676 sum=17 351.91
+  - FASM1...15 | numeric | distinct=36 | NA=3% | min=-0.02300959 max=33206 sum=56 644.05
+  - FASM2...16 | numeric | distinct=33 | NA=8% | min=0.1761235 max=11960 sum=23 920.18
+  - FASM3...17 | numeric | distinct=33 | NA=13% | min=0.09808668 max=9527 sum=19 054.1
+  - FASM1...18 | numeric | distinct=35 | NA=0% | min=-0.03216998 max=34244 sum=56 928
+  - FASM2...19 | numeric | distinct=33 | NA=8% | min=-0.01839465 max=11740 sum=23 479.98
+  - FASM3...20 | numeric | distinct=32 | NA=8% | min=0.1716175 max=11162 sum=22 324.17
+
+-- sheet: Internat Médecine | 37 rows x 44 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=18 | NA=51% | length 8-48
+      values: Antilles-Guyane (1); Auvergne-Rhône-Alpes (1); Bourgogne-Franche-Comté (1); Bretagne (1); Centre-Val de Loire (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Normandie (1); Nouvelle-Aquitaine (1); Occitanie (1); Océan Indien (1); Pays de la Loire (1); Pourcentage de variation par année d'internat (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=33 | NA=11% | length 18-38
+  - 1ère année...3 | numeric | distinct=35 | NA=5% | min=103 max=35242 sum=54 698
+  - 2ème année...4 | numeric | distinct=33 | NA=8% | min=47 max=8040 sum=16 080
+  - 3ème année...5 | numeric | distinct=33 | NA=8% | min=33 max=10174 sum=20 348
+  - 4ème année...6 | numeric | distinct=33 | NA=8% | min=14 max=4967 sum=9 934
+  - 5ème année...7 | numeric | distinct=28 | NA=8% | min=20 max=2328 sum=4 656
+  - 6ème année...8 | numeric | distinct=1 | NA=95% | min=5 max=5 sum=10
+  - Inscrit en thèse...9 | numeric | distinct=32 | NA=8% | min=4 max=3446 sum=6 892
+  - 1ère année...10 | numeric | distinct=37 | NA=0% | min=0.005756579 max=36016 sum=55 584.03
+  - 2ème année...11 | numeric | distinct=34 | NA=5% | min=0.03097015 max=8289 sum=16 578.03
+  - 3ème année...12 | numeric | distinct=34 | NA=5% | min=-0.02447415 max=9925 sum=19 849.98
+  - 4ème année...13 | numeric | distinct=33 | NA=5% | min=0.0763036 max=5346 sum=10 692.08
+  - 5ème année...14 | numeric | distinct=30 | NA=5% | min=0.1426117 max=2660 sum=5 320.143
+  - 6ème année...15 | numeric | distinct=3 | NA=86% | min=1.4 max=12 sum=25.4
+  - Inscrit en thèse...16 | numeric | distinct=32 | NA=11% | min=0.1047591 max=3807 sum=7 614.105
+  - 1ère année...17 | numeric | distinct=36 | NA=0% | min=0.0302088 max=37104 sum=57 408.07
+  - 2ème année...18 | numeric | distinct=33 | NA=5% | min=0.03438292 max=8574 sum=17 148.03
+  - 3ème année...19 | numeric | distinct=35 | NA=5% | min=-0.03979849 max=9530 sum=19 059.96
+  - 4ème année...20 | numeric | distinct=34 | NA=5% | min=-0.01346801 max=5274 sum=10 547.99
+  - 5ème année...21 | numeric | distinct=29 | NA=5% | min=0.1432331 max=3041 sum=6 082.143
+  - 6ème année...22 | numeric | distinct=23 | NA=14% | min=4 max=533 sum=1 109.417
+  - Inscrit en thèse...23 | numeric | distinct=33 | NA=8% | min=0.1949041 max=4549 sum=9 098.195
+  - 1ère année...24 | numeric | distinct=36 | NA=0% | min=0.01457841 max=39029 sum=59 629.07
+  - 2ème année...25 | numeric | distinct=32 | NA=5% | min=0.06029858 max=9091 sum=18 182.06
+  - 3ème année...26 | numeric | distinct=32 | NA=5% | min=0.07240294 max=10220 sum=20 440.07
+  - 4ème année...27 | numeric | distinct=33 | NA=5% | min=0.008911642 max=5321 sum=10 642.01
+  - 5ème année...28 | numeric | distinct=33 | NA=5% | min=0.04965472 max=3192 sum=6 384.05
+  - 6ème année...29 | numeric | distinct=25 | NA=11% | min=4 max=905 sum=1 810
+  - Inscrit en thèse...30 | numeric | distinct=30 | NA=8% | min=-0.8010552 max=905 sum=4 925.199
+  - 1ère année...31 | numeric | distinct=36 | NA=0% | min=-0.09495146 max=39093 sum=57 736.91
+  - 2ème année...32 | numeric | distinct=33 | NA=5% | min=0.03508965 max=9410 sum=18 820.04
+  - 3ème année...33 | numeric | distinct=33 | NA=5% | min=0.03590998 max=10587 sum=21 174.04
+  - 4ème année...34 | numeric | distinct=32 | NA=5% | min=0.03138508 max=5488 sum=10 976.03
+  - 5ème année...35 | numeric | distinct=33 | NA=5% | min=0.05921053 max=3381 sum=6 762.059
+  - 6ème année...36 | numeric | distinct=24 | NA=11% | min=0 max=905 sum=1 810
+  - Inscrit en thèse...37 | numeric | distinct=33 | NA=8% | min=4 max=4564 sum=9 132.043
+  - 1ère année...38 | numeric | distinct=36 | NA=0% | min=-0.01851994 max=38369 sum=57 737.02
+  - 2ème année...39 | numeric | distinct=33 | NA=5% | min=-0.09521785 max=8514 sum=17 027.9
+  - 3ème année...40 | numeric | distinct=33 | NA=5% | min=-0.03475961 max=10219 sum=20 437.97
+  - 4ème année...41 | numeric | distinct=35 | NA=5% | min=-0.006377551 max=5453 sum=10 905.99
+  - 5ème année...42 | numeric | distinct=33 | NA=5% | min=0.04347826 max=3528 sum=7 056.043
+  - 6ème année...43 | numeric | distinct=29 | NA=5% | min=-0.787248 max=971 sum=1 941.213
+  - Inscrit en thèse...44 | numeric | distinct=28 | NA=8% | min=-0.1397897 max=3926 sum=7 851.86
+
+========== Données odontologie 2ème et 3ème cycle.xlsx (0.0 MB) ==========
+
+-- sheet: Internat odonto | 19 rows x 26 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=13 | NA=32% | length 8-48
+      values: Auvergne-Rhône-Alpes (1); Bretagne (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Nouvelle-Aquitaine (1); Occitanie (1); Pays de la Loire (1); Pourcentage de variation par année d'internat (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=15 | NA=21% | length 18-33
+      values: Université d'Aix-Marseille (1); Université de Bordeaux (1); Université de Brest (1); Université de Clermont Auvergne (1); Université de Côte d'Azur (1); Université de Lille (1); Université de Lorraine (1); Université de Lyon (1); Université de Montpellier (1); Université de Nantes (1); Université de Rennes (1); Université de Strasbourg (1); Université de Toulouse 3 Paul Sab (1); Université Paris Cité (1); Université Reims Champagne Ard (1)
+  - 1ère année...3 | numeric | distinct=9 | NA=11% | min=4 max=355 sum=581
+  - 2ème année...4 | numeric | distinct=8 | NA=16% | min=4 max=99 sum=198
+  - 3ème année...5 | numeric | distinct=6 | NA=16% | min=4 max=103 sum=206
+  - 4ème année...6 | numeric | distinct=2 | NA=42% | min=4 max=40 sum=80
+  - 1ère année...7 | numeric | distinct=10 | NA=0% | min=-0.06478873 max=332 sum=551.9087
+  - 2ème année...8 | numeric | distinct=8 | NA=11% | min=-0.01010101 max=98 sum=195.9899
+  - 3ème année...9 | numeric | distinct=9 | NA=11% | min=-0.1067961 max=92 sum=183.8932
+  - 4ème année...10 | numeric | distinct=3 | NA=47% | min=-0.2 max=32 sum=63.8
+  - 1ère année...11 | numeric | distinct=12 | NA=0% | min=0.04216867 max=346 sum=576.0876
+  - 2ème année...12 | numeric | distinct=9 | NA=16% | min=-0.02040816 max=96 sum=191.9796
+  - 3ème année...13 | numeric | distinct=9 | NA=11% | min=0.1195652 max=103 sum=206.1196
+  - 4ème année...14 | numeric | distinct=3 | NA=47% | min=0 max=32 sum=64
+  - 1ère année...15 | numeric | distinct=11 | NA=0% | min=-0.02608696 max=343 sum=566.9652
+  - 2ème année...16 | numeric | distinct=9 | NA=11% | min=0.09375 max=105 sum=210.0938
+  - 3ème année...17 | numeric | distinct=8 | NA=11% | min=-0.04854369 max=98 sum=195.9515
+  - 4ème année...18 | numeric | distinct=3 | NA=53% | min=-0.125 max=28 sum=55.875
+  - 1ère année...19 | numeric | distinct=12 | NA=0% | min=-0.01785714 max=346 sum=565.9909
+  - 2ème année...20 | numeric | distinct=9 | NA=11% | min=0.02857143 max=108 sum=216.0286
+  - 3ème année...21 | numeric | distinct=9 | NA=11% | min=0.02040816 max=100 sum=200.0204
+  - 4ème année...22 | numeric | distinct=3 | NA=53% | min=0 max=28 sum=56
+  - 1ère année...23 | numeric | distinct=12 | NA=0% | min=0.06936416 max=370 sum=616.1875
+  - 2ème année...24 | numeric | distinct=9 | NA=11% | min=-0.0462963 max=103 sum=205.9537
+  - 3ème année...25 | numeric | distinct=9 | NA=11% | min=0.08 max=108 sum=216.08
+  - 4ème année...26 | numeric | distinct=3 | NA=42% | min=0.2857143 max=36 sum=72.28571
+
+-- sheet: 2ème cycle odonto | 24 rows x 33 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=16 | NA=33% | length 8-48
+      values: Auvergne-Rhône-Alpes (1); Bourgogne-Franche-Comté (1); Bretagne (1); Centre-Val de Loire (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Normandie (1); Nouvelle-Aquitaine (1); Occitanie (1); Pays de la Loire (1); Pourcentage de variation par année d'internat (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=20 | NA=17% | length 18-33
+      values: Université d'Aix-Marseille (1); Université d'Amiens (1); Université de Besançon (1); Université de Bordeaux (1); Université de Brest (1); Université de Clermont Auvergne (1); Université de Côte d'Azur (1); Université de Dijon (1); Université de Lille (1); Université de Lorraine (1); Université de Lyon (1); Université de Montpellier (1); Université de Nantes (1); Université de Rennes (1); Université de Rouen Normandie (1); Université de Strasbourg (1); Université de Toulouse 3 Paul Sab (1); Université de Tours (1); Université Paris Cité (1); Université Reims Champagne Ard (1)
+  - 2ème année...3 | numeric | distinct=15 | NA=29% | min=35 max=6888 sum=9 510
+  - 3ème année...4 | numeric | distinct=14 | NA=33% | min=36 max=1404 sum=2 808
+  - 4ème année...5 | numeric | distinct=16 | NA=33% | min=32 max=1324 sum=2 648
+  - 5ème année...6 | numeric | distinct=15 | NA=33% | min=35 max=1392 sum=2 784
+  - 6ème année...7 | numeric | distinct=16 | NA=33% | min=36 max=1457 sum=2 914
+  - 2ème année...8 | numeric | distinct=18 | NA=21% | min=0.01437282 max=6987 sum=9 951.145
+  - 3ème année...9 | numeric | distinct=17 | NA=29% | min=0.005698006 max=1412 sum=2 824.006
+  - 4ème année...10 | numeric | distinct=15 | NA=29% | min=0.01208459 max=1340 sum=2 680.012
+  - 5ème année...11 | numeric | distinct=17 | NA=29% | min=-0.01005747 max=1378 sum=2 755.99
+  - 6ème année...12 | numeric | distinct=17 | NA=29% | min=-0.05628003 max=1375 sum=2 816.944
+  - 2ème année...13 | numeric | distinct=21 | NA=8% | min=-0.0317139 max=7045 sum=9 914.977
+  - 3ème année...14 | numeric | distinct=16 | NA=29% | min=0.0878187 max=1536 sum=3 072.088
+  - 4ème année...15 | numeric | distinct=16 | NA=29% | min=-0.01119403 max=1325 sum=2 649.989
+  - 5ème année...16 | numeric | distinct=16 | NA=29% | min=0.006531205 max=1387 sum=2 774.007
+  - 6ème année...17 | numeric | distinct=15 | NA=29% | min=-0.009454545 max=1362 sum=2 781.991
+  - 2ème année...18 | numeric | distinct=22 | NA=0% | min=0.02242725 max=7203 sum=10 239.08
+  - 3ème année...19 | numeric | distinct=19 | NA=12% | min=-0.03255208 max=1486 sum=2 971.967
+  - 4ème année...20 | numeric | distinct=17 | NA=29% | min=0.06264151 max=1408 sum=2 816.063
+  - 5ème année...21 | numeric | distinct=17 | NA=29% | min=-0.005767844 max=1379 sum=2 757.994
+  - 6ème année...22 | numeric | distinct=16 | NA=29% | min=0.03671072 max=1412 sum=2 824.037
+  - 2ème année...23 | numeric | distinct=24 | NA=0% | min=0.01844532 max=7361 sum=10 453.04
+  - 3ème année...24 | numeric | distinct=22 | NA=8% | min=0.02960969 max=1530 sum=3 060.03
+  - 4ème année...25 | numeric | distinct=20 | NA=12% | min=0.03053977 max=1451 sum=2 902.031
+  - 5ème année...26 | numeric | distinct=16 | NA=29% | min=0.04641044 max=1443 sum=2 886.046
+  - 6ème année...27 | numeric | distinct=16 | NA=29% | min=-0.01487252 max=1391 sum=2 781.985
+  - 2ème année...28 | numeric | distinct=23 | NA=0% | min=0.02716688 max=7710 sum=10 886.07
+  - 3ème année...29 | numeric | distinct=21 | NA=8% | min=0.02222222 max=1564 sum=3 128.022
+  - 4ème année...30 | numeric | distinct=20 | NA=8% | min=0.03997243 max=1509 sum=3 018.04
+  - 5ème année...31 | numeric | distinct=19 | NA=12% | min=0.1226611 max=1620 sum=3 240.123
+  - 6ème année...32 | numeric | distinct=17 | NA=29% | min=0.02731848 max=1429 sum=2 858.027
+  - Incrit en thèse | numeric | distinct=14 | NA=42% | min=4 max=977 sum=1 954
+
+========== Données pharma 2ème et 3ème cycle.xlsx (0.0 MB) ==========
+
+-- sheet: Internat Pharma | 28 rows x 30 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=16 | NA=43% | length 8-48
+      values: Auvergne-Rhône-Alpes (1); Bourgogne-Franche-Comté (1); Bretagne (1); Centre-Val de Loire (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Normandie (1); Nouvelle-Aquitaine (1); Occitanie (1); Pays de la Loire (1); Pourcentage de variation par année d'internat (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=24 | NA=14% | length 18-33
+      values: Université d'Aix-Marseille (1); Université d'Amiens (1); université d'Angers (1); Université de Besançon (1); Université de Bordeaux (1); Université de Caen Normandie (1); Université de Clermont Auvergne (1); Université de Dijon (1); Université de Grenoble Alpes (1); Université de Lille (1); Université de Limoges (1); Université de Lorraine (1); Université de Lyon (1); Université de Montpellier (1); Université de Nantes (1); Université de Paris-Saclay (1); Université de Poitiers (1); Université de Rennes (1); Université de Rouen Normandie (1); Université de Strasbourg (1); Université de Toulouse 3 Paul Sab (1); Université de Tours (1); Université Paris Cité (1); Université Reims Champagne Ard (1)
+  - 1ère année...3 | numeric | distinct=17 | NA=14% | min=7 max=1307 sum=2 069
+  - 2ème année...4 | numeric | distinct=16 | NA=18% | min=4 max=295 sum=590
+  - 3ème année...5 | numeric | distinct=15 | NA=21% | min=5 max=295 sum=590
+  - 4ème année...6 | numeric | distinct=18 | NA=21% | min=4 max=336 sum=672
+  - 1ère année...7 | numeric | distinct=19 | NA=0% | min=0.0627391 max=1389 sum=2 285.239
+  - 2ème année...8 | numeric | distinct=16 | NA=7% | min=0.1118644 max=328 sum=656.1119
+  - 3ème année...9 | numeric | distinct=17 | NA=14% | min=-0.1186441 max=260 sum=519.8814
+  - 4ème année...10 | numeric | distinct=19 | NA=7% | min=0.05059524 max=353 sum=706.0506
+  - 1ère année...11 | numeric | distinct=21 | NA=0% | min=-0.007919366 max=1378 sum=2 277.997
+  - 2ème année...12 | numeric | distinct=16 | NA=11% | min=-0.02439024 max=320 sum=639.9756
+  - 3ème année...13 | numeric | distinct=17 | NA=11% | min=0.08076923 max=281 sum=562.0808
+  - 4ème année...14 | numeric | distinct=16 | NA=7% | min=-0.07365439 max=327 sum=653.9263
+  - 5ème année...15 | numeric | distinct=1 | NA=96% | min=-1 max=-1 sum=-1
+  - 1ère année...16 | numeric | distinct=20 | NA=0% | min=0.06240929 max=1464 sum=2 496.209
+  - 2ème année...17 | numeric | distinct=19 | NA=7% | min=0.075 max=344 sum=688.075
+  - 3ème année...18 | numeric | distinct=16 | NA=11% | min=0.02846975 max=289 sum=578.0285
+  - 4ème année...19 | numeric | distinct=16 | NA=7% | min=-0.08562691 max=299 sum=597.9144
+  - 5ème année...20 | numeric | distinct=2 | NA=82% | min=4 max=16 sum=32
+  - 1ère année...21 | numeric | distinct=25 | NA=0% | min=0.06589147 max=1566 sum=2 624.136
+  - 2ème année...22 | numeric | distinct=20 | NA=7% | min=0.1366279 max=391 sum=823.1366
+  - 3ème année...23 | numeric | distinct=17 | NA=7% | min=0.100346 max=318 sum=636.1003
+  - 4ème année...24 | numeric | distinct=16 | NA=14% | min=-0.1204013 max=263 sum=525.8796
+  - 5ème année...25 | numeric | distinct=3 | NA=54% | min=1.75 max=44 sum=89.75
+  - 1ère année...26 | numeric | distinct=23 | NA=0% | min=-0.02545455 max=1717 sum=2 789.071
+  - 2ème année...27 | numeric | distinct=19 | NA=7% | min=0.1994885 max=469 sum=938.1995
+  - 3ème année...28 | numeric | distinct=19 | NA=7% | min=0.1352201 max=361 sum=722.1352
+  - 4ème année...29 | numeric | distinct=18 | NA=11% | min=0.1520913 max=303 sum=606.1521
+  - 5ème année...30 | numeric | distinct=3 | NA=50% | min=0.09090909 max=48 sum=96.09091
+
+-- sheet: 2ème cycle pharma | 29 rows x 33 cols | header found after skipping 1 row(s)
+  - ARS | character | distinct=16 | NA=45% | length 8-48
+      values: Auvergne-Rhône-Alpes (1); Bourgogne-Franche-Comté (1); Bretagne (1); Centre-Val de Loire (1); Grand Est (1); Haut de France (1); Ile-de-France (1); Normandie (1); Nouvelle-Aquitaine (1); Occitanie (1); Pays de la Loire (1); Pourcentage de variation par année d'internat (1); Pourcentage de variation par année universitaire (1); Provence-Alpes-Côte d'Azur (1); Total général (1); Total général par année universitaire (1)
+  - UFRs | character | distinct=25 | NA=14% | length 18-33
+      values: Universite Côte d'Azur (1); Université d'Aix-Marseille (1); Université d'Amiens (1); Université d'Angers (1); Université de Besançon (1); Université de Bordeaux (1); Université de Caen Normandie (1); Université de Clermont Auvergne (1); Université de Dijon (1); Université de Grenoble Alpes (1); Université de Lille (1); Université de Limoges (1); Université de Lorraine (1); Université de Lyon (1); Université de Montpellier (1); Université de Nantes (1); Université de Paris-Saclay (1); Université de Poitiers (1); Université de Rennes (1); Université de Rouen Normandie (1); Université de Strasbourg (1); Université de Toulouse 3 Paul Sab (1); Université de Tours (1); Université Paris Cité (1); Université Reims Champagne Ard (1)
+  - 2ème année...3 | numeric | distinct=25 | NA=10% | min=69 max=18445 sum=25 345
+  - 3ème année...4 | numeric | distinct=25 | NA=14% | min=81 max=3777 sum=7 554
+  - 4ème année...5 | numeric | distinct=25 | NA=14% | min=76 max=3605 sum=7 210
+  - 5ème année...6 | numeric | distinct=25 | NA=14% | min=68 max=3983 sum=7 966
+  - 6ème année...7 | numeric | distinct=23 | NA=14% | min=57 max=3630 sum=7 260
+  - 2ème année...8 | numeric | distinct=28 | NA=3% | min=0.03746273 max=19136 sum=27 008.18
+  - 3ème année...9 | numeric | distinct=26 | NA=10% | min=-0.04527403 max=3606 sum=7 211.955
+  - 4ème année...10 | numeric | distinct=23 | NA=10% | min=-0.0008321775 max=3602 sum=7 203.999
+  - 5ème année...11 | numeric | distinct=24 | NA=10% | min=-0.01908109 max=3907 sum=7 813.981
+  - 6ème année...12 | numeric | distinct=24 | NA=10% | min=0.1253444 max=4085 sum=8 170.125
+  - 2ème année...13 | numeric | distinct=25 | NA=3% | min=-0.1844512 max=18068 sum=24 557.76
+  - 3ème année...14 | numeric | distinct=26 | NA=10% | min=-0.002773156 max=3596 sum=7 263.997
+  - 4ème année...15 | numeric | distinct=26 | NA=10% | min=-0.07357024 max=3337 sum=6 754.926
+  - 5ème année...16 | numeric | distinct=26 | NA=10% | min=-0.0296903 max=3791 sum=7 682.97
+  - 6ème année...17 | numeric | distinct=26 | NA=10% | min=0.0119951 max=4134 sum=8 236.012
+  - 2ème année...18 | numeric | distinct=27 | NA=3% | min=-0.01854107 max=17733 sum=24 629.06
+  - 3ème année...19 | numeric | distinct=25 | NA=10% | min=-0.1115128 max=3195 sum=6 389.888
+  - 4ème année...20 | numeric | distinct=24 | NA=10% | min=0.05364099 max=3516 sum=7 032.054
+  - 5ème année...21 | numeric | distinct=25 | NA=10% | min=-0.02796096 max=3685 sum=7 369.972
+  - 6ème année...22 | numeric | distinct=25 | NA=10% | min=-0.05926463 max=3889 sum=7 777.941
+  - 2ème année...23 | numeric | distinct=27 | NA=3% | min=0.002199289 max=17772 sum=25 732.16
+  - 3ème année...24 | numeric | distinct=26 | NA=10% | min=0.0200313 max=3259 sum=6 518.02
+  - 4ème année...25 | numeric | distinct=24 | NA=10% | min=-0.1251422 max=3076 sum=6 151.875
+  - 5ème année...26 | numeric | distinct=25 | NA=10% | min=-0.04613297 max=3515 sum=7 029.954
+  - 6ème année...27 | numeric | distinct=24 | NA=10% | min=0.01362818 max=3942 sum=7 884.014
+  - 2ème année...28 | numeric | distinct=29 | NA=0% | min=0.004614 max=17854 sum=26 138.05
+  - 3ème année...29 | numeric | distinct=25 | NA=10% | min=0.1098496 max=3617 sum=7 234.11
+  - 4ème année...30 | numeric | distinct=24 | NA=10% | min=0.007152146 max=3098 sum=6 196.007
+  - 5ème année...31 | numeric | distinct=24 | NA=10% | min=-0.1192034 max=3096 sum=6 191.881
+  - 6ème année...32 | numeric | distinct=24 | NA=10% | min=-0.01040081 max=3901 sum=7 801.99
+  - Inscrit en thèse | numeric | distinct=19 | NA=28% | min=4 max=1629 sum=3 258
+
+========== drees/chirurgiens_dentistes_rpps_2012_2026.xlsx (15.2 MB) ==========
+
+-- sheet: Lisez-moi | 118 rows x 4 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=34 | NA=71% | length 3-2848
+  - 2012-2026 | character | distinct=10 | NA=92% | length 4-88
+  - ...3 | character | distinct=5 | NA=96% | length 43-270
+  - ...4 | character | distinct=69 | NA=42% | length 9-62
+
+-- sheet: Effectifs | 72907 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (66320); 2-DROM (4858); 0-France entière (1252); 3-COM ou Etranger (477)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (7679); 76-Occitanie (7577); 75-Nouvelle Aquitaine (7179); 44-Grand Est (6722); 11-Ile de France (6663); 93-Provence Alpes-Côte d Azur (4752); 27-Bourgogne Franche Comté (4580); 32-Hauts de France (4041); 24-Centre Val de Loire (3851); 28-Normandie (3713); 52-Pays de la Loire (3552); 53-Bretagne (3379); 00-Ensemble (3322); 94-Corse (1385); 02-Martinique (992); 04-La Reunion (916); 01-Guadeloupe (880); 03-Guyane (736); 06-Mayotte (670); 99-COM ou etranger (318)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (17648); 06-Cabinet de groupe, société (12996); 05-Cabinet individuel (12238); 04-Centre de santé, maison de santé (9687); 01-Hôpital public (8505); 09-Autre secteur (5488); 07-Prévention (2694); 08-Etablissement sanitaire et social (1389); 02-Etablissement privé ESPIC (1348); 03-Etablissement privé lucratif (914)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (23392); 4-Autre Salarié (16467); 2-Mixte (14994); 1-Libéral (12801); 3-Salarié hospitalier (5253)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (9373); 09-entre 60 et 64 ans (7057); 08-entre 55 et 59 ans (6913); 03-entre 30 et 34 ans (6884); 07-entre 50 et 54 ans (6684); 04-entre 35 et 39 ans (6657); 05-entre 40 et 44 ans (6505); 10- 65 ans et plus (6504); 06-entre 45 et 49 ans (6465); 02-entre 25 et 29 ans (6459); 01-moins de 25 ans (3406)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (26794); 1-Hommes (23201); 2-Femmes (22912)
+  - effectif_2012 | numeric | distinct=1080 | NA=0% | min=0 max=40488 sum=2 591 232
+  - effectif_2013 | numeric | distinct=1088 | NA=0% | min=0 max=40745 sum=2 607 680
+  - effectif_2014 | numeric | distinct=1087 | NA=0% | min=0 max=41221 sum=2 638 144
+  - effectif_2015 | numeric | distinct=1076 | NA=0% | min=0 max=41290 sum=2 642 560
+  - effectif_2016 | numeric | distinct=1103 | NA=0% | min=0 max=41584 sum=2 661 376
+  - effectif_2017 | numeric | distinct=1104 | NA=0% | min=0 max=41980 sum=2 686 720
+  - effectif_2018 | numeric | distinct=1090 | NA=0% | min=0 max=42051 sum=2 691 264
+  - effectif_2019 | numeric | distinct=1116 | NA=0% | min=0 max=42143 sum=2 697 152
+  - effectif_2020 | numeric | distinct=1129 | NA=0% | min=0 max=42843 sum=2 741 952
+  - effectif_2021 | numeric | distinct=1114 | NA=0% | min=0 max=43134 sum=2 760 576
+  - effectif_2022 | numeric | distinct=1125 | NA=0% | min=0 max=44154 sum=2 825 856
+  - effectif_2023 | numeric | distinct=1138 | NA=0% | min=0 max=45249 sum=2 895 936
+  - effectif_2024 | numeric | distinct=1159 | NA=0% | min=0 max=45779 sum=2 929 856
+  - effectif_2025 | numeric | distinct=1167 | NA=0% | min=0 max=47636 sum=3 048 704
+  - effectif_2026 | numeric | distinct=1186 | NA=0% | min=0 max=48690 sum=3 116 160
+
+-- sheet: Ages moyens | 9373 rows x 21 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (8420); 2-DROM (708); 0-France entière (128); 3-COM ou Etranger (117)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 76-Occitanie (993); 84-Auvergne Rhône-Alpes (969); 75-Nouvelle Aquitaine (957); 44-Grand Est (836); 11-Ile de France (773); 27-Bourgogne Franche Comté (630); 93-Provence Alpes-Côte d Azur (587); 32-Hauts de France (509); 24-Centre Val de Loire (501); 28-Normandie (486); 52-Pays de la Loire (442); 53-Bretagne (424); 00-Ensemble (377); 94-Corse (185); 01-Guadeloupe (132); 02-Martinique (132); 04-La Reunion (128); 03-Guyane (118); 06-Mayotte (116); 99-COM ou etranger (78)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (1836); 06-Cabinet de groupe, société (1460); 05-Cabinet individuel (1435); 01-Hôpital public (1266); 04-Centre de santé, maison de santé (1119); 09-Autre secteur (951); 07-Prévention (474); 08-Etablissement sanitaire et social (332); 02-Etablissement privé ESPIC (265); 03-Etablissement privé lucratif (235)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (2709); 4-Autre Salarié (2271); 2-Mixte (2206); 1-Libéral (1377); 3-Salarié hospitalier (810)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (3333); 1-Hommes (3066); 2-Femmes (2974)
+  - am_2012 | character | distinct=226 | NA=0% | length 1-18
+  - am_2013 | character | distinct=240 | NA=0% | length 1-18
+  - am_2014 | character | distinct=243 | NA=0% | length 1-18
+  - am_2015 | character | distinct=248 | NA=0% | length 1-18
+  - am_2016 | character | distinct=253 | NA=0% | length 1-18
+  - am_2017 | character | distinct=262 | NA=0% | length 1-18
+  - am_2018 | character | distinct=263 | NA=0% | length 1-18
+  - am_2019 | character | distinct=263 | NA=0% | length 1-18
+  - am_2020 | character | distinct=263 | NA=0% | length 1-18
+  - am_2021 | character | distinct=276 | NA=0% | length 1-18
+  - am_2022 | character | distinct=288 | NA=0% | length 1-18
+  - am_2023 | character | distinct=283 | NA=0% | length 1-18
+  - am_2024 | character | distinct=289 | NA=0% | length 1-18
+  - am_2025 | character | distinct=288 | NA=0% | length 1-18
+  - am_2026 | character | distinct=288 | NA=0% | length 1-18
+
+-- sheet: Densités | 72907 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (66320); 2-DROM (4858); 0-France entière (1252); 3-COM ou Etranger (477)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (7679); 76-Occitanie (7577); 75-Nouvelle Aquitaine (7179); 44-Grand Est (6722); 11-Ile de France (6663); 93-Provence Alpes-Côte d Azur (4752); 27-Bourgogne Franche Comté (4580); 32-Hauts de France (4041); 24-Centre Val de Loire (3851); 28-Normandie (3713); 52-Pays de la Loire (3552); 53-Bretagne (3379); 00-Ensemble (3322); 94-Corse (1385); 02-Martinique (992); 04-La Reunion (916); 01-Guadeloupe (880); 03-Guyane (736); 06-Mayotte (670); 99-COM ou etranger (318)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (17648); 06-Cabinet de groupe, société (12996); 05-Cabinet individuel (12238); 04-Centre de santé, maison de santé (9687); 01-Hôpital public (8505); 09-Autre secteur (5488); 07-Prévention (2694); 08-Etablissement sanitaire et social (1389); 02-Etablissement privé ESPIC (1348); 03-Etablissement privé lucratif (914)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (23392); 4-Autre Salarié (16467); 2-Mixte (14994); 1-Libéral (12801); 3-Salarié hospitalier (5253)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (9373); 09-entre 60 et 64 ans (7057); 08-entre 55 et 59 ans (6913); 03-entre 30 et 34 ans (6884); 07-entre 50 et 54 ans (6684); 04-entre 35 et 39 ans (6657); 05-entre 40 et 44 ans (6505); 10- 65 ans et plus (6504); 06-entre 45 et 49 ans (6465); 02-entre 25 et 29 ans (6459); 01-moins de 25 ans (3406)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (26794); 1-Hommes (23201); 2-Femmes (22912)
+  - densite_2012 | numeric | distinct=2394 | NA=0% | min=0 max=136.57 sum=108 507.5
+  - densite_2013 | numeric | distinct=2394 | NA=0% | min=0 max=138.18 sum=108 694.3
+  - densite_2014 | numeric | distinct=2388 | NA=0% | min=0 max=138.17 sum=109 931
+  - densite_2015 | numeric | distinct=2355 | NA=0% | min=0 max=139.18 sum=109 537.2
+  - densite_2016 | numeric | distinct=2365 | NA=0% | min=0 max=139.89 sum=110 090.7
+  - densite_2017 | numeric | distinct=2363 | NA=0% | min=0 max=140.57 sum=110 817.2
+  - densite_2018 | numeric | distinct=2364 | NA=0% | min=0 max=140.83 sum=110 511
+  - densite_2019 | numeric | distinct=2359 | NA=0% | min=0 max=143.11 sum=109 953.4
+  - densite_2020 | numeric | distinct=2355 | NA=0% | min=0 max=146.6 sum=111 233.7
+  - densite_2021 | numeric | distinct=2313 | NA=0% | min=0 max=147.16 sum=110 810.4
+  - densite_2022 | numeric | distinct=2356 | NA=0% | min=0 max=149.12 sum=112 518
+  - densite_2023 | numeric | distinct=2370 | NA=0% | min=0 max=152.73 sum=113 498.5
+  - densite_2024 | numeric | distinct=2373 | NA=0% | min=0 max=154.59 sum=114 320.1
+  - densite_2025 | numeric | distinct=2420 | NA=0% | min=0 max=161.55 sum=118 260.2
+  - densite_2026 | numeric | distinct=2456 | NA=0% | min=0 max=164.83 sum=120 873.8
+
+========== drees/infirmieres_liberales_snds_2012_2023.xlsx (0.3 MB) ==========
+
+-- sheet: Lisez-moi | 22 rows x 3 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=13 | NA=41% | length 7-915
+  - 2012-2023 | character | distinct=4 | NA=82% | length 11-54
+      values: Effectifs d'infirmières libérales actives chaque année (1); en fonction (1); France hors Mayotte (1); Système national des données de santé (SNDS) (1)
+  - ...3 | character | distinct=5 | NA=77% | length 24-137
+
+-- sheet: Effectifs | 3832 rows x 17 cols | header found after skipping 0 row(s)
+  - region | character | distinct=18 | NA=0% | length 10-31
+      values: 76 - Occitanie (456); 84 - Auvergne-Rhône-Alpes (422); 75 - Nouvelle-Aquitaine (421); 44 - Grand Est (358); 11 - Ile-de-France (295); 27 - Bourgogne-Franche-Comté (291); 24 - Centre-Val de Loire (227); 93 - Provence-Alpes-Côte d'Azur (227); 28 - Normandie (196); 32 - Hauts-de-France (196); 52 - Pays de la Loire (195); 53 - Bretagne (165); 94 - Corse (94); 02 - Martinique (66); 04 - La Réunion (66); 01 - Guadeloupe (64); 03 - Guyane (60); 00 - Ensemble (33)
+  - departement | character | distinct=101 | NA=0% | length 8-28
+  - sexe | character | distinct=3 | NA=0% | length 10-12
+      values: 0 - Ensemble (1294); 2 - Femmes (1293); 1 - Hommes (1245)
+  - tranche_age | character | distinct=11 | NA=0% | length 13-23
+      values: 00 - Ensemble (354); 02 - Entre 25 et 29 ans (354); 03 - Entre 30 et 34 ans (354); 04 - Entre 35 et 39 ans (354); 05 - Entre 40 et 44 ans (354); 06 - Entre 45 et 49 ans (354); 07 - Entre 50 et 54 ans (354); 08 - Entre 55 et 59 ans (354); 09 - Entre 60 et 64 ans (354); 10 - 65 ans et plus (351); 01 - Moins de 25 ans (295)
+  - effectif_2012 | numeric | distinct=636 | NA=0% | min=0 max=73496 sum=881 952
+  - effectif_2013 | numeric | distinct=644 | NA=0% | min=0 max=76738 sum=920 856
+  - effectif_2014 | numeric | distinct=648 | NA=0% | min=0 max=80199 sum=962 388
+  - effectif_2015 | numeric | distinct=673 | NA=0% | min=0 max=83855 sum=1 006 260
+  - effectif_2016 | numeric | distinct=678 | NA=0% | min=0 max=87205 sum=1 046 460
+  - effectif_2017 | numeric | distinct=690 | NA=0% | min=0 max=90312 sum=1 083 744
+  - effectif_2018 | numeric | distinct=693 | NA=0% | min=0 max=92918 sum=1 115 016
+  - effectif_2019 | numeric | distinct=700 | NA=0% | min=0 max=95523 sum=1 146 276
+  - effectif_2020 | numeric | distinct=711 | NA=0% | min=0 max=97357 sum=1 168 284
+  - effectif_2021 | numeric | distinct=722 | NA=0% | min=0 max=98631 sum=1 183 572
+  - effectif_2022 | numeric | distinct=718 | NA=0% | min=0 max=99171 sum=1 190 052
+  - effectif_2023 | numeric | distinct=734 | NA=0% | min=0 max=98854 sum=1 186 248
+  - ...17 | logical | distinct=0 | NA=100%
+
+========== drees/infirmieres_salariees_bts_2013_2023.xlsx (0.2 MB) ==========
+
+-- sheet: Lisez-moi | 28 rows x 3 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=17 | NA=39% | length 7-1795
+  - 2013-2023 | character | distinct=4 | NA=86% | length 11-64
+  - ...3 | character | distinct=7 | NA=75% | length 24-161
+
+-- sheet: Effectifs | 2259 rows x 17 cols | header found after skipping 0 row(s)
+  - Région | character | distinct=18 | NA=0% | length 8-32
+      values: 76-Occitanie (287); 75-Nouvelle-Aquitaine (265); 84-Auvergne-Rhône-Alpes (265); 44-Grand Est (221); 11-Ile-de-France (177); 27-Bourgogne-Franche-Comté (177); 24-Centre-Val de Loire (133); 93-Provence-Alpes-Côte d'Azur (133); 28-Normandie (111); 32-Hauts-de-France (111); 52-Pays de la Loire (111); 53-Bretagne (89); 94-Corse (45); 00-France entière (hors Mayotte) (42); 01-Guadeloupe (23); 02-Martinique (23); 03-Guyane (23); 04-La Réunion (23)
+  - Département | character | distinct=102 | NA=0% | length 6-32
+  - Secteur d'activité | character | distinct=7 | NA=0% | length 10-40
+      values: 0-Ensemble (1653); 1-Hôpital public (101); 2-Hôpital privé (101); 3-Secteur social ou médico-social public (101); 4-Secteur social ou médico-social privé (101); 5-Autre secteur public (101); 6-Autre secteur privé (101)
+  - Spécialité | character | distinct=4 | NA=0% | length 10-46
+      values: 0-Ensemble (1956); 1-Infirmières en soins généraux et spécialisés (101); 2-Infirmières spécialisées (101); 3-Cadres infirmières (101)
+  - Sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (2037); 1-Hommes (111); 2-Femmes (111)
+  - Tranche d'âge | character | distinct=11 | NA=0% | length 11-23
+      values: 00-Ensemble (1229); 01 - Moins de 25 ans (103); 02 - Entre 25 et 29 ans (103); 03-Entre 30 et 34 ans (103); 04-Entre 35 et 39 ans (103); 05-Entre 40 et 44 ans (103); 06-Entre 45 et 49 ans (103); 07-Entre 50 et 54 ans (103); 08-Entre 55 et 59 ans (103); 09-Entre 60 et 64 ans (103); 10-65 ans et plus (103)
+  - effectif_2013 | numeric | distinct=1270 | NA=0% | min=0 max=467894 sum=5 614 729
+  - effectif_2014 | numeric | distinct=1292 | NA=0% | min=1 max=474714 sum=5 696 585
+  - effectif_2015 | numeric | distinct=1283 | NA=0% | min=0 max=479817 sum=5 757 834
+  - effectif_2016 | numeric | distinct=1270 | NA=0% | min=1 max=487975 sum=5 855 713
+  - effectif_2017 | numeric | distinct=1290 | NA=0% | min=0 max=490133 sum=5 881 693
+  - effectif_2018 | numeric | distinct=1303 | NA=0% | min=0 max=492030 sum=5 904 191
+  - effectif_2019 | numeric | distinct=1298 | NA=0% | min=0 max=494995 sum=5 939 753
+  - effectif_2020 | numeric | distinct=1291 | NA=0% | min=0 max=502024 sum=6 024 439
+  - effectif_2021 | numeric | distinct=1300 | NA=0% | min=0 max=500284 sum=6 003 390
+  - effectif_2022 | numeric | distinct=1292 | NA=0% | min=0 max=500695 sum=6 008 340
+  - effectif_2023 | numeric | distinct=1328 | NA=0% | min=0 max=508790 sum=6 105 480
+
+========== drees/kinesitherapeutes_adeli_2012_2016.xlsx (3.8 MB) ==========
+
+-- sheet: Lisez-moi | 59 rows x 3 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=35 | NA=41% | length 3-1574
+  - 2012-2016 | character | distinct=10 | NA=83% | length 5-103
+  - ...3 | character | distinct=4 | NA=93% | length 51-497
+
+-- sheet: Effectifs | 66023 rows x 12 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=3 | NA=0% | length 6-23
+      values: 1-France métropolitaine (60468); 2-DROM (4410); 0-France entière (1145)
+  - region | character | distinct=19 | NA=0% | length 8-29
+      values: 76-Occitanie (7474); 84-Auvergne-Rhône-Alpes (7410); 75-Nouvelle Aquitaine (6622); 11-Île-de-France (6276); 44-Grand Est (5524); 93-Provence-Alpes-Côte d’Azur (4308); 27-Bourgogne-Franche-Comté (4243); 32-Hauts de France (3567); 28-Normandie (3333); 24-Centre –Val de Loire (3283); 52-Pays de la Loire (3237); 53-Bretagne (2962); 00-Ensemble (2936); 94-Corse (1084); 04-La Réunion (992); 01-Guadeloupe (818); 02-Martinique (782); 03-Guyane (738); 06-Mayotte (434)
+  - departement | character | distinct=102 | NA=0% | length 6-26
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (24111); 2-Femmes (21840); 1-Hommes (20072)
+  - exercice | character | distinct=4 | NA=0% | length 10-23
+      values: 0-Ensemble (27069); 1-Libéraux ou mixtes (15471); 3-Autres salariés (11766); 2-Salariés hospitaliers (11717)
+  - secteur_activite | character | distinct=13 | NA=0% | length 11-54
+      values: 00-Ensemble (13865); 01-Hôpital public (8003); 06-Cabinet de groupe,exercice en societé (7873); 05-Cabinet individuel (7698); 03-Etablissement privé lucratif (5826); 08-Etablissement pour handicapés (5277); 02-Etablissement privé ESPIC (5195); 12-Autres secteurs (4413); 09-Etablissement pour personnes âgées (2617); 10-Autre établissement sanitaire et social (2020); 04-Centre de santé (1269); 07-Prévention (1051); 11-Sécurité sociale,ministère,collectivité,association (916)
+  - tranche_age | character | distinct=10 | NA=0% | length 10-20
+      values: 0-Ensemble (8948); 2-entre 25 et 29 ans (6979); 3-entre 30 et 34 ans (6707); 4-entre 35 et 39 ans (6518); 8-entre 55 et 59 ans (6408); 7-entre 50 et 54 ans (6311); 5-entre 40 et 44 ans (6301); 6-entre 45 et 49 ans (6283); 9-60 ans et plus (5814); 1-moins de 25 ans (5754)
+  - effectif_2012 | numeric | distinct=1391 | NA=18% | min=1 max=68200 sum=4 364 800
+  - effectif_2013 | numeric | distinct=1379 | NA=17% | min=1 max=70289 sum=4 498 496
+  - effectif_2014 | numeric | distinct=1408 | NA=16% | min=1 max=72762 sum=4 656 768
+  - effectif_2015 | numeric | distinct=1439 | NA=15% | min=1 max=75151 sum=4 809 664
+  - effectif_2016 | numeric | distinct=1457 | NA=16% | min=1 max=77429 sum=4 955 456
+
+-- sheet: Ages moyens | 8948 rows x 11 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=3 | NA=0% | length 6-23
+      values: 1-France métropolitaine (8165); 2-DROM (663); 0-France entière (120)
+  - region | character | distinct=19 | NA=0% | length 8-29
+      values: 76-Occitanie (1011); 84-Auvergne-Rhône-Alpes (1008); 75-Nouvelle Aquitaine (898); 11-Île-de-France (817); 44-Grand Est (768); 27-Bourgogne-Franche-Comté (590); 93-Provence-Alpes-Côte d’Azur (572); 28-Normandie (477); 32-Hauts de France (471); 24-Centre –Val de Loire (443); 52-Pays de la Loire (443); 53-Bretagne (396); 00-Ensemble (327); 94-Corse (151); 04-La Réunion (136); 03-Guyane (124); 02-Martinique (120); 01-Guadeloupe (112); 06-Mayotte (84)
+  - departement | character | distinct=102 | NA=0% | length 6-26
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (3195); 2-Femmes (2913); 1-Hommes (2840)
+  - exercice | character | distinct=4 | NA=0% | length 10-23
+      values: 0-Ensemble (3461); 1-Libéraux ou mixtes (2186); 3-Autres salariés (2000); 2-Salariés hospitaliers (1301)
+  - secteur_activite | character | distinct=13 | NA=0% | length 11-54
+      values: 00-Ensemble (1462); 01-Hôpital public (973); 06-Cabinet de groupe,exercice en societé (883); 05-Cabinet individuel (847); 08-Etablissement pour handicapés (815); 03-Etablissement privé lucratif (812); 12-Autres secteurs (783); 02-Etablissement privé ESPIC (685); 09-Etablissement pour personnes âgées (566); 10-Autre établissement sanitaire et social (382); 07-Prévention (259); 04-Centre de santé (255); 11-Sécurité sociale,ministère,collectivité,association (226)
+  - am_2012 | character | distinct=237 | NA=11% | length 2-18
+  - am_2013 | character | distinct=238 | NA=10% | length 2-18
+  - am_2014 | character | distinct=241 | NA=9% | length 2-18
+  - am_2015 | character | distinct=225 | NA=7% | length 2-18
+  - am_2016 | character | distinct=233 | NA=7% | length 2-18
+
+-- sheet: Densités | 3195 rows x 10 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=3 | NA=0% | length 6-23
+      values: 1-France métropolitaine (2916); 2-DROM (239); 0-France entière (40)
+  - region | character | distinct=19 | NA=0% | length 8-29
+      values: 76-Occitanie (360); 84-Auvergne-Rhône-Alpes (359); 75-Nouvelle Aquitaine (318); 11-Île-de-France (290); 44-Grand Est (274); 27-Bourgogne-Franche-Comté (214); 93-Provence-Alpes-Côte d’Azur (204); 28-Normandie (175); 32-Hauts de France (167); 52-Pays de la Loire (158); 24-Centre –Val de Loire (155); 53-Bretagne (144); 00-Ensemble (111); 94-Corse (58); 04-La Réunion (50); 03-Guyane (44); 02-Martinique (42); 01-Guadeloupe (40); 06-Mayotte (32)
+  - departement | character | distinct=102 | NA=0% | length 6-20
+  - exercice | character | distinct=4 | NA=0% | length 10-23
+      values: 0-Ensemble (1216); 1-Libéraux ou mixtes (798); 3-Autres salariés (742); 2-Salariés hospitaliers (439)
+  - secteur_activite | character | distinct=13 | NA=0% | length 11-54
+      values: 00-Ensemble (488); 01-Hôpital public (337); 06-Cabinet de groupe,exercice en societé (306); 08-Etablissement pour handicapés (292); 05-Cabinet individuel (291); 03-Etablissement privé lucratif (286); 12-Autres secteurs (286); 02-Etablissement privé ESPIC (244); 09-Etablissement pour personnes âgées (218); 10-Autre établissement sanitaire et social (142); 07-Prévention (112); 04-Centre de santé (98); 11-Sécurité sociale,ministère,collectivité,association (95)
+  - densite_2012 | numeric | distinct=1225 | NA=10% | min=0 max=219.99 sum=47 336.81
+  - densite_2013 | numeric | distinct=1242 | NA=9% | min=0 max=229.75 sum=48 698.93
+  - densite_2014 | numeric | distinct=1246 | NA=8% | min=0 max=235.91 sum=50 397.53
+  - densite_2015 | numeric | distinct=1253 | NA=7% | min=0 max=241.99 sum=52 073.68
+  - densite_2016 | numeric | distinct=1255 | NA=7% | min=0 max=246.62 sum=53 532.87
+
+========== drees/kinesitherapeutes_rpps_2017_2026.xlsx (16.0 MB) ==========
+
+-- sheet: Lisez-moi | 120 rows x 4 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=35 | NA=71% | length 3-2754
+  - 2017-2026 | character | distinct=10 | NA=92% | length 4-88
+  - ...3 | character | distinct=6 | NA=95% | length 51-698
+  - ...4 | character | distinct=69 | NA=42% | length 9-62
+
+-- sheet: Effectifs | 93744 rows x 17 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (85168); 2-DROM (6484); 0-France entière (1417); 3-COM ou Etranger (675)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (10346); 76-Occitanie (10220); 75-Nouvelle Aquitaine (9687); 11-Ile de France (8549); 44-Grand Est (7744); 93-Provence Alpes-Côte d Azur (6322); 27-Bourgogne Franche Comté (6040); 24-Centre Val de Loire (4967); 28-Normandie (4955); 32-Hauts de France (4824); 52-Pays de la Loire (4368); 53-Bretagne (4004); 00-Ensemble (3951); 94-Corse (1727); 04-La Reunion (1500); 02-Martinique (1218); 01-Guadeloupe (1202); 03-Guyane (1026); 06-Mayotte (644); 99-COM ou etranger (450)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (19332); 09-Autre secteur (12253); 05-Cabinet individuel (11601); 06-Cabinet de groupe, société (11212); 01-Hôpital public (10267); 08-Etablissement sanitaire et social (9442); 03-Etablissement privé lucratif (8130); 02-Etablissement privé ESPIC (6707); 04-Centre de santé, maison de santé (4139); 07-Prévention (661)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (30583); 1-Libéral (18995); 2-Mixte (15722); 4-Autre Salarié (14959); 3-Salarié hospitalier (13485)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (11325); 02-entre 25 et 29 ans (9406); 03-entre 30 et 34 ans (9285); 04-entre 35 et 39 ans (8819); 05-entre 40 et 44 ans (8483); 06-entre 45 et 49 ans (8118); 07-entre 50 et 54 ans (7947); 08-entre 55 et 59 ans (7891); 01-moins de 25 ans (7869); 09-entre 60 et 64 ans (7743); 10- 65 ans et plus (6858)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (33830); 2-Femmes (30637); 1-Hommes (29277)
+  - effectif_2017 | numeric | distinct=1535 | NA=0% | min=0 max=84449 sum=5 405 427
+  - effectif_2018 | numeric | distinct=1581 | NA=0% | min=0 max=89049 sum=5 699 512
+  - effectif_2019 | numeric | distinct=1586 | NA=0% | min=0 max=89165 sum=5 706 307
+  - effectif_2020 | numeric | distinct=1578 | NA=0% | min=0 max=91485 sum=5 854 262
+  - effectif_2021 | numeric | distinct=1620 | NA=0% | min=0 max=94895 sum=6 072 790
+  - effectif_2022 | numeric | distinct=1648 | NA=0% | min=0 max=97241 sum=6 222 776
+  - effectif_2023 | numeric | distinct=1670 | NA=0% | min=0 max=100569 sum=6 435 645
+  - effectif_2024 | numeric | distinct=1721 | NA=0% | min=0 max=104231 sum=6 664 747
+  - effectif_2025 | numeric | distinct=1754 | NA=0% | min=0 max=108033 sum=6 912 844
+  - effectif_2026 | numeric | distinct=1753 | NA=0% | min=0 max=111384 sum=7 127 304
+
+-- sheet: Ages moyens | 11325 rows x 16 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (10184); 2-DROM (859); 3-COM ou Etranger (150); 0-France entière (132)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (1239); 76-Occitanie (1221); 75-Nouvelle Aquitaine (1212); 11-Ile de France (992); 44-Grand Est (944); 27-Bourgogne Franche Comté (753); 93-Provence Alpes-Côte d Azur (731); 24-Centre Val de Loire (608); 28-Normandie (566); 32-Hauts de France (560); 52-Pays de la Loire (522); 53-Bretagne (474); 00-Ensemble (421); 94-Corse (230); 04-La Reunion (182); 01-Guadeloupe (172); 02-Martinique (148); 03-Guyane (140); 06-Mayotte (110); 99-COM ou etranger (100)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (1866); 09-Autre secteur (1432); 01-Hôpital public (1295); 05-Cabinet individuel (1278); 06-Cabinet de groupe, société (1272); 03-Etablissement privé lucratif (1206); 08-Etablissement sanitaire et social (1200); 02-Etablissement privé ESPIC (904); 04-Centre de santé, maison de santé (748); 07-Prévention (124)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (3133); 2-Mixte (2503); 1-Libéral (2164); 4-Autre Salarié (2124); 3-Salarié hospitalier (1401)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (3964); 2-Femmes (3749); 1-Hommes (3612)
+  - am_2017 | character | distinct=288 | NA=0% | length 1-18
+  - am_2018 | character | distinct=295 | NA=0% | length 1-18
+  - am_2019 | character | distinct=276 | NA=0% | length 1-18
+  - am_2020 | character | distinct=287 | NA=0% | length 1-18
+  - am_2021 | character | distinct=282 | NA=0% | length 1-18
+  - am_2022 | character | distinct=283 | NA=0% | length 1-18
+  - am_2023 | character | distinct=285 | NA=0% | length 1-18
+  - am_2024 | character | distinct=286 | NA=0% | length 1-18
+  - am_2025 | character | distinct=285 | NA=0% | length 1-18
+  - am_2026 | character | distinct=281 | NA=0% | length 1-18
+
+-- sheet: Densités | 93744 rows x 17 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (85168); 2-DROM (6484); 0-France entière (1417); 3-COM ou Etranger (675)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (10346); 76-Occitanie (10220); 75-Nouvelle Aquitaine (9687); 11-Ile de France (8549); 44-Grand Est (7744); 93-Provence Alpes-Côte d Azur (6322); 27-Bourgogne Franche Comté (6040); 24-Centre Val de Loire (4967); 28-Normandie (4955); 32-Hauts de France (4824); 52-Pays de la Loire (4368); 53-Bretagne (4004); 00-Ensemble (3951); 94-Corse (1727); 04-La Reunion (1500); 02-Martinique (1218); 01-Guadeloupe (1202); 03-Guyane (1026); 06-Mayotte (644); 99-COM ou etranger (450)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (19332); 09-Autre secteur (12253); 05-Cabinet individuel (11601); 06-Cabinet de groupe, société (11212); 01-Hôpital public (10267); 08-Etablissement sanitaire et social (9442); 03-Etablissement privé lucratif (8130); 02-Etablissement privé ESPIC (6707); 04-Centre de santé, maison de santé (4139); 07-Prévention (661)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (30583); 1-Libéral (18995); 2-Mixte (15722); 4-Autre Salarié (14959); 3-Salarié hospitalier (13485)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (11325); 02-entre 25 et 29 ans (9406); 03-entre 30 et 34 ans (9285); 04-entre 35 et 39 ans (8819); 05-entre 40 et 44 ans (8483); 06-entre 45 et 49 ans (8118); 07-entre 50 et 54 ans (7947); 08-entre 55 et 59 ans (7891); 01-moins de 25 ans (7869); 09-entre 60 et 64 ans (7743); 10- 65 ans et plus (6858)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (33830); 2-Femmes (30637); 1-Hommes (29277)
+  - densite_2017 | numeric | distinct=3393 | NA=0% | min=0 max=248.81 sum=232 606.7
+  - densite_2018 | numeric | distinct=3484 | NA=0% | min=0 max=257.51 sum=245 501.2
+  - densite_2019 | numeric | distinct=3523 | NA=0% | min=0 max=273.26 sum=245 704.6
+  - densite_2020 | numeric | distinct=3590 | NA=0% | min=0 max=273.3 sum=250 995.7
+  - densite_2021 | numeric | distinct=3662 | NA=0% | min=0 max=290.78 sum=260 296.7
+  - densite_2022 | numeric | distinct=3706 | NA=0% | min=0 max=295.12 sum=267 149.2
+  - densite_2023 | numeric | distinct=3783 | NA=0% | min=0 max=321.45 sum=276 843.7
+  - densite_2024 | numeric | distinct=3846 | NA=0% | min=0 max=338.46 sum=287 032.4
+  - densite_2025 | numeric | distinct=3921 | NA=0% | min=0 max=347.57 sum=296 869.6
+  - densite_2026 | numeric | distinct=3921 | NA=0% | min=0 max=347.57 sum=296 869.6
+
+========== drees/medecins_rpps_2012_2026.xlsx (73.1 MB) ==========
+
+-- sheet: Lisez-moi | 121 rows x 4 cols | header found after skipping 11 row(s)
+  - Effectifs : | character | distinct=35 | NA=69% | length 3-2848
+  - effectif de médecins enregistrés à l'ordre, actifs au1er janvier de l'année, exerçant au moins une des 5 activités récentes en France métroplitaine ou dans les DROM | character | distinct=10 | NA=92% | length 42-463
+  - ...3 | character | distinct=3 | NA=98% | length 292-503
+  - ...4 | character | distinct=71 | NA=41% | length 9-95
+
+-- sheet: Effectifs | 301320 rows x 23 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (271993); 2-DROM (24277); 0-France entière (3058); 3-COM ou Etranger (1992)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 76-Occitanie (32363); 84-Auvergne Rhône-Alpes (32210); 75-Nouvelle Aquitaine (30979); 44-Grand Est (26665); 11-Ile de France (25541); 27-Bourgogne Franche Comté (20894); 93-Provence Alpes-Côte d Azur (18096); 24-Centre Val de Loire (16668); 32-Hauts de France (16015); 52-Pays de la Loire (15027); 28-Normandie (14946); 53-Bretagne (13089); 00-Ensemble (9581); 94-Corse (6442); 04-La Reunion (5022); 02-Martinique (4818); 01-Guadeloupe (4788); 03-Guyane (4050); 06-Mayotte (2798); 99-COM ou etranger (1328)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - specialites_agregees | character | distinct=3 | NA=0% | length 11-20
+      values: 2-Autres spécialités (235923); 1-Médecine générale (43266); 00-Ensemble (22131)
+  - specialites | character | distinct=15 | NA=0% | length 11-25
+      values: 00-Ensemble (65573); 01-Médecine générale (21633); 14-Autre spécialité (20043); 12-Psychiatrie (19259); 13-Plateaux techniques (18574); 05-Anesthésie-Réanimation (17584); 10-Pédiatrie (17255); 09-Gynécologie (17067); 02-Chirurgie (16788); 06-Cardiologie (16305); 03-Ophtalmologie (15856); 11-Pneumologie (14342); 08-Gastro-entérologie (14141); 04-Oto-rhino-laryngologie (13475); 07-Dermatologie (13425)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (70455); 1-Libéral (62778); 3-Salarié hospitalier (62495); 2-Mixte (56040); 4-Autre Salarié (49552)
+  - tranche_age | character | distinct=12 | NA=0% | length 11-21
+      values: 00-Ensemble (30477); 08-entre 60 et 64 ans (27405); 07-entre 55 et 59 ans (27227); 06-entre 50 et 54 ans (26872); 09-entre 65 et 69 ans (26686); 05-entre 45 et 49 ans (26422); 03-entre 35 et 39 ans (26364); 04-entre 40 et 44 ans (26315); 02-entre 30 et 34 ans (25859); 10-entre 70 et 74 ans (22712); 01-moins de 30 ans (18193); 11- 75 ans et plus (16788)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (107983); 1-Hommes (101056); 2-Femmes (92281)
+  - effectif_2012 | numeric | distinct=2705 | NA=0% | min=0 max=215930 sum=20 729 280
+  - effectif_2013 | numeric | distinct=2742 | NA=0% | min=0 max=217598 sum=20 889 408
+  - effectif_2014 | numeric | distinct=2765 | NA=0% | min=0 max=219566 sum=21 078 336
+  - effectif_2015 | numeric | distinct=2742 | NA=0% | min=0 max=221001 sum=21 216 096
+  - effectif_2016 | numeric | distinct=2770 | NA=0% | min=0 max=222453 sum=21 355 488
+  - effectif_2017 | numeric | distinct=2784 | NA=0% | min=0 max=223739 sum=21 478 944
+  - effectif_2018 | numeric | distinct=2787 | NA=0% | min=0 max=225046 sum=21 604 416
+  - effectif_2019 | numeric | distinct=2788 | NA=0% | min=0 max=225064 sum=21 606 144
+  - effectif_2020 | numeric | distinct=2807 | NA=0% | min=0 max=227298 sum=21 820 608
+  - effectif_2021 | numeric | distinct=2805 | NA=0% | min=0 max=227946 sum=21 882 816
+  - effectif_2022 | numeric | distinct=2830 | NA=0% | min=0 max=228858 sum=21 970 368
+  - effectif_2023 | numeric | distinct=2849 | NA=0% | min=0 max=230143 sum=22 093 728
+  - effectif_2024 | numeric | distinct=2881 | NA=0% | min=0 max=233416 sum=22 407 936
+  - effectif_2025 | numeric | distinct=2889 | NA=0% | min=0 max=237214 sum=22 772 544
+  - effectif_2026 | numeric | distinct=2905 | NA=0% | min=0 max=242185 sum=23 249 760
+
+-- sheet: Ages moyens | 30477 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (27192); 2-DROM (2610); 3-COM ou Etranger (420); 0-France entière (255)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 76-Occitanie (3362); 84-Auvergne Rhône-Alpes (3227); 75-Nouvelle Aquitaine (3197); 44-Grand Est (2704); 11-Ile de France (2292); 27-Bourgogne Franche Comté (2199); 93-Provence Alpes-Côte d Azur (1743); 24-Centre Val de Loire (1736); 32-Hauts de France (1518); 52-Pays de la Loire (1491); 28-Normandie (1490); 53-Bretagne (1265); 00-Ensemble (904); 94-Corse (713); 01-Guadeloupe (498); 02-Martinique (498); 04-La Reunion (496); 03-Guyane (476); 06-Mayotte (388); 99-COM ou etranger (280)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - specialites_agregees | character | distinct=3 | NA=0% | length 11-20
+      values: 2-Autres spécialités (24879); 1-Médecine générale (3726); 00-Ensemble (1872)
+  - specialites | character | distinct=15 | NA=0% | length 11-25
+      values: 00-Ensemble (5607); 14-Autre spécialité (1869); 01-Médecine générale (1863); 12-Psychiatrie (1853); 13-Plateaux techniques (1833); 05-Anesthésie-Réanimation (1827); 09-Gynécologie (1822); 10-Pédiatrie (1820); 02-Chirurgie (1803); 03-Ophtalmologie (1788); 06-Cardiologie (1747); 11-Pneumologie (1709); 08-Gastro-entérologie (1672); 04-Oto-rhino-laryngologie (1645); 07-Dermatologie (1619)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (6339); 1-Libéral (6177); 3-Salarié hospitalier (6157); 2-Mixte (6107); 4-Autre Salarié (5697)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (10367); 1-Hommes (10213); 2-Femmes (9897)
+  - am_2012 | character | distinct=274 | NA=0% | length 1-18
+  - am_2013 | character | distinct=290 | NA=0% | length 1-18
+  - am_2014 | character | distinct=300 | NA=0% | length 1-18
+  - am_2015 | character | distinct=300 | NA=0% | length 1-18
+  - am_2016 | character | distinct=308 | NA=0% | length 1-18
+  - am_2017 | character | distinct=315 | NA=0% | length 1-18
+  - am_2018 | character | distinct=324 | NA=0% | length 1-18
+  - am_2019 | character | distinct=322 | NA=0% | length 1-18
+  - am_2020 | character | distinct=332 | NA=0% | length 1-18
+  - am_2021 | character | distinct=337 | NA=0% | length 1-18
+  - am_2022 | character | distinct=337 | NA=0% | length 1-18
+  - am_2023 | character | distinct=335 | NA=0% | length 1-18
+  - am_2024 | character | distinct=335 | NA=0% | length 1-18
+  - am_2025 | character | distinct=342 | NA=0% | length 1-18
+  - am_2026 | character | distinct=340 | NA=0% | length 1-18
+
+-- sheet: Densités | 301320 rows x 23 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (271993); 2-DROM (24277); 0-France entière (3058); 3-COM ou Etranger (1992)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 76-Occitanie (32363); 84-Auvergne Rhône-Alpes (32210); 75-Nouvelle Aquitaine (30979); 44-Grand Est (26665); 11-Ile de France (25541); 27-Bourgogne Franche Comté (20894); 93-Provence Alpes-Côte d Azur (18096); 24-Centre Val de Loire (16668); 32-Hauts de France (16015); 52-Pays de la Loire (15027); 28-Normandie (14946); 53-Bretagne (13089); 00-Ensemble (9581); 94-Corse (6442); 04-La Reunion (5022); 02-Martinique (4818); 01-Guadeloupe (4788); 03-Guyane (4050); 06-Mayotte (2798); 99-COM ou etranger (1328)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - specialites_agregees | character | distinct=3 | NA=0% | length 11-20
+      values: 2-Autres spécialités (235923); 1-Médecine générale (43266); 00-Ensemble (22131)
+  - specialites | character | distinct=15 | NA=0% | length 11-25
+      values: 00-Ensemble (65573); 01-Médecine générale (21633); 14-Autre spécialité (20043); 12-Psychiatrie (19259); 13-Plateaux techniques (18574); 05-Anesthésie-Réanimation (17584); 10-Pédiatrie (17255); 09-Gynécologie (17067); 02-Chirurgie (16788); 06-Cardiologie (16305); 03-Ophtalmologie (15856); 11-Pneumologie (14342); 08-Gastro-entérologie (14141); 04-Oto-rhino-laryngologie (13475); 07-Dermatologie (13425)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (70455); 1-Libéral (62778); 3-Salarié hospitalier (62495); 2-Mixte (56040); 4-Autre Salarié (49552)
+  - tranche_age | character | distinct=12 | NA=0% | length 11-21
+      values: 00-Ensemble (30477); 08-entre 60 et 64 ans (27405); 07-entre 55 et 59 ans (27227); 06-entre 50 et 54 ans (26872); 09-entre 65 et 69 ans (26686); 05-entre 45 et 49 ans (26422); 03-entre 35 et 39 ans (26364); 04-entre 40 et 44 ans (26315); 02-entre 30 et 34 ans (25859); 10-entre 70 et 74 ans (22712); 01-moins de 30 ans (18193); 11- 75 ans et plus (16788)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (107983); 1-Hommes (101056); 2-Femmes (92281)
+  - densite_2012 | numeric | distinct=5934 | NA=0% | min=0 max=799.29 sum=858 874.3
+  - densite_2013 | numeric | distinct=5877 | NA=0% | min=0 max=805.34 sum=862 918.7
+  - densite_2014 | numeric | distinct=5830 | NA=0% | min=0 max=816.01 sum=869 667.8
+  - densite_2015 | numeric | distinct=5850 | NA=0% | min=0 max=825.7 sum=872 079.1
+  - densite_2016 | numeric | distinct=5802 | NA=0% | min=0 max=834.03 sum=875 977.4
+  - densite_2017 | numeric | distinct=5779 | NA=0% | min=0 max=856.26 sum=879 296.4
+  - densite_2018 | numeric | distinct=5780 | NA=0% | min=0 max=867.58 sum=881 596
+  - densite_2019 | numeric | distinct=5753 | NA=0% | min=0 max=866.16 sum=878 036.6
+  - densite_2020 | numeric | distinct=5805 | NA=0% | min=0 max=884.85 sum=885 338.7
+  - densite_2021 | numeric | distinct=5769 | NA=0% | min=0 max=894.14 sum=884 278.1
+  - densite_2022 | numeric | distinct=5759 | NA=0% | min=0 max=898.94 sum=884 311.7
+  - densite_2023 | numeric | distinct=5778 | NA=0% | min=0 max=892.16 sum=888 030.2
+  - densite_2024 | numeric | distinct=5781 | NA=0% | min=0 max=903.79 sum=900 190.9
+  - densite_2025 | numeric | distinct=5833 | NA=0% | min=0 max=934.61 sum=913 471.9
+  - densite_2026 | numeric | distinct=5933 | NA=0% | min=0 max=970.21 sum=930 981.6
+
+-- sheet: Effectifs par spécialités | 108 rows x 18 cols | header found after skipping 0 row(s)
+  - specialites_agregees | character | distinct=3 | NA=0% | length 10-20
+      values: 2-Autres spécialités (102); 1-Médecine générale (5); 0-Ensemble (1)
+  - specialites | character | distinct=15 | NA=0% | length 11-25
+      values: 14-Autre spécialité (28); 02-Chirurgie (18); 13-Plateaux techniques (13); 10-Pédiatrie (7); 12-Psychiatrie (6); 05-Anesthésie-Réanimation (5); 06-Cardiologie (5); 09-Gynécologie (5); 01-Médecine générale (4); 04-Oto-rhino-laryngologie (4); 00-Ensemble (3); 03-Ophtalmologie (3); 11-Pneumologie (3); 07-Dermatologie (2); 08-Gastro-entérologie (2)
+  - specialites_detaillees | character | distinct=92 | NA=0% | length 8-78
+  - effectif_2012 | numeric | distinct=65 | NA=0% | min=0 max=215930 sum=863 720
+  - effectif_2013 | numeric | distinct=66 | NA=0% | min=0 max=217598 sum=870 392
+  - effectif_2014 | numeric | distinct=65 | NA=0% | min=0 max=219566 sum=878 264
+  - effectif_2015 | numeric | distinct=65 | NA=0% | min=0 max=221001 sum=884 004
+  - effectif_2016 | numeric | distinct=67 | NA=0% | min=0 max=222453 sum=889 812
+  - effectif_2017 | numeric | distinct=66 | NA=0% | min=0 max=223739 sum=894 956
+  - effectif_2018 | numeric | distinct=67 | NA=0% | min=0 max=225046 sum=900 184
+  - effectif_2019 | numeric | distinct=71 | NA=0% | min=0 max=225064 sum=900 256
+  - effectif_2020 | numeric | distinct=74 | NA=0% | min=0 max=227298 sum=909 192
+  - effectif_2021 | numeric | distinct=75 | NA=0% | min=0 max=227946 sum=911 784
+  - effectif_2022 | numeric | distinct=78 | NA=0% | min=0 max=228858 sum=915 432
+  - effectif_2023 | numeric | distinct=81 | NA=0% | min=0 max=230143 sum=920 572
+  - effectif_2024 | numeric | distinct=94 | NA=0% | min=0 max=233416 sum=933 664
+  - effectif_2025 | numeric | distinct=96 | NA=0% | min=0 max=237214 sum=948 856
+  - effectif_2026 | numeric | distinct=98 | NA=0% | min=0 max=242185 sum=968 740
+
+-- sheet: Effectifs par lieu diplome | 4909 rows x 19 cols | header found after skipping 0 row(s)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 00-Ensemble (272); 11-Ile de France (272); 75-Nouvelle Aquitaine (272); 93-Provence Alpes-Côte d Azur (272); 76-Occitanie (271); 84-Auvergne Rhône-Alpes (271); 04-La Reunion (267); 53-Bretagne (266); 52-Pays de la Loire (264); 32-Hauts de France (263); 24-Centre Val de Loire (260); 28-Normandie (260); 44-Grand Est (259); 27-Bourgogne Franche Comté (256); 01-Guadeloupe (242); 02-Martinique (240); 94-Corse (227); 03-Guyane (208); 06-Mayotte (166); 99-COM ou etranger (101)
+  - region_diplome | character | distinct=16 | NA=0% | length 11-27
+      values: 00-Ensemble (339); 99-Etranger (330); 11-Ile de France (328); 84-Auvergne Rhone Alpes (320); 44-Grand Est (318); 75-Nouvelle Aquitaine (318); 76-Occitanie (312); 32-Hauts-de-France (310); 93-Provence Alpes-Côte Azur (308); 53-Bretagne (304); 27-Bourgogne Franche Comté (301); 52-Pays de la Loire (300); 28-Normandie (299); 24-Centre Val de Loire (292); 01-Antilles-Guyane (266); 98-Région inconnue (264)
+  - specialites_agregees | character | distinct=3 | NA=0% | length 10-20
+      values: 2-Autres spécialités (3961); 1-Médecine générale (628); 0-Ensemble (320)
+  - specialites | character | distinct=15 | NA=0% | length 11-25
+      values: 00-Ensemble (954); 01-Médecine générale (314); 14-Autre spécialité (309); 02-Chirurgie (301); 05-Anesthésie-Réanimation (299); 13-Plateaux techniques (294); 12-Psychiatrie (293); 09-Gynécologie (289); 10-Pédiatrie (286); 03-Ophtalmologie (275); 06-Cardiologie (275); 07-Dermatologie (261); 04-Oto-rhino-laryngologie (257); 08-Gastro-entérologie (254); 11-Pneumologie (248)
+  - effectif_2012 | numeric | distinct=768 | NA=0% | min=0 max=215930 sum=2 591 160
+  - effectif_2013 | numeric | distinct=757 | NA=0% | min=0 max=217598 sum=2 611 176
+  - effectif_2014 | numeric | distinct=772 | NA=0% | min=0 max=219566 sum=2 634 792
+  - effectif_2015 | numeric | distinct=777 | NA=0% | min=0 max=221001 sum=2 652 012
+  - effectif_2016 | numeric | distinct=776 | NA=0% | min=0 max=222453 sum=2 669 436
+  - effectif_2017 | numeric | distinct=769 | NA=0% | min=0 max=223739 sum=2 684 868
+  - effectif_2018 | numeric | distinct=780 | NA=0% | min=0 max=225046 sum=2 700 552
+  - effectif_2019 | numeric | distinct=771 | NA=0% | min=0 max=225064 sum=2 700 768
+  - effectif_2020 | numeric | distinct=789 | NA=0% | min=0 max=227298 sum=2 727 576
+  - effectif_2021 | numeric | distinct=782 | NA=0% | min=0 max=227946 sum=2 735 352
+  - effectif_2022 | numeric | distinct=775 | NA=0% | min=0 max=228858 sum=2 746 296
+  - effectif_2023 | numeric | distinct=799 | NA=0% | min=0 max=230143 sum=2 761 716
+  - effectif_2024 | numeric | distinct=805 | NA=0% | min=0 max=233416 sum=2 800 992
+  - effectif_2025 | numeric | distinct=790 | NA=0% | min=0 max=237214 sum=2 846 568
+  - effectif_2026 | numeric | distinct=812 | NA=0% | min=0 max=242185 sum=2 906 220
+
+-- sheet: Nombre d'activités | 49094 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=3 | NA=0% | length 6-23
+      values: 1-France métropolitaine (44723); 2-DROM (3826); 0-France entière (545)
+  - region | character | distinct=19 | NA=0% | length 8-29
+      values: 76-Occitanie (5337); 84-Auvergne Rhône-Alpes (5333); 75-Nouvelle Aquitaine (5116); 44-Grand Est (4405); 11-Ile de France (4165); 27-Bourgogne Franche Comté (3366); 93-Provence Alpes-Côte d Azur (3042); 24-Centre Val de Loire (2686); 32-Hauts de France (2604); 28-Normandie (2472); 52-Pays de la Loire (2428); 53-Bretagne (2197); 00-Ensemble (1540); 94-Corse (1027); 04-La Reunion (794); 01-Guadeloupe (722); 02-Martinique (706); 03-Guyane (706); 06-Mayotte (448)
+  - departement | character | distinct=102 | NA=0% | length 8-28
+  - mode_exercice | character | distinct=3 | NA=0% | length 9-10
+      values: 0-Ensemble (19462); 2-Salarié (15548); 1-Libéral (14084)
+  - secteur_activite | character | distinct=11 | NA=0% | length 11-39
+      values: 00-Ensemble (6212); 10-Remplaçants, activité non renseignée (5804); 01-Hôpital public (5427); 09-Autre secteur (5228); 06-Cabinet de groupe, société (4932); 03-Etablissement privé lucratif (4790); 05-Cabinet individuel (4438); 08-Etablissement sanitaire et social (3647); 04-Centre de santé, maison de santé (3381); 07-Prévention (2622); 02-Etablissement privé ESPIC (2613)
+  - specialites | character | distinct=15 | NA=0% | length 11-25
+      values: 00-Ensemble (10653); 01-Médecine générale (3416); 14-Autre spécialité (3304); 13-Plateaux techniques (3040); 02-Chirurgie (2933); 10-Pédiatrie (2736); 12-Psychiatrie (2733); 06-Cardiologie (2722); 09-Gynécologie (2717); 03-Ophtalmologie (2699); 05-Anesthésie-Réanimation (2586); 08-Gastro-entérologie (2487); 04-Oto-rhino-laryngologie (2469); 11-Pneumologie (2463); 07-Dermatologie (2136)
+  - specialites_agregees | character | distinct=3 | NA=0% | length 11-20
+      values: 2-Autres spécialités (38624); 1-Médecine générale (6832); 00-Ensemble (3638)
+  - activités_2012 | numeric | distinct=2042 | NA=0% | min=0 max=268335 sum=12 880 080
+  - activités_2013 | numeric | distinct=2064 | NA=0% | min=0 max=278536 sum=13 369 728
+  - activités_2014 | numeric | distinct=2137 | NA=0% | min=0 max=286929 sum=13 772 592
+  - activités_2015 | numeric | distinct=2186 | NA=0% | min=0 max=294241 sum=14 123 568
+  - activités_2016 | numeric | distinct=2191 | NA=0% | min=0 max=301225 sum=14 458 800
+  - activités_2017 | numeric | distinct=2227 | NA=0% | min=0 max=309544 sum=14 858 112
+  - activités_2018 | numeric | distinct=2245 | NA=0% | min=0 max=314689 sum=15 105 072
+  - activités_2019 | numeric | distinct=2293 | NA=0% | min=0 max=319342 sum=15 328 416
+  - activités_2020 | numeric | distinct=2310 | NA=0% | min=0 max=327923 sum=15 740 304
+  - activités_2021 | numeric | distinct=2341 | NA=0% | min=0 max=333113 sum=15 989 424
+  - activités_2022 | numeric | distinct=2363 | NA=0% | min=0 max=338731 sum=16 259 088
+  - activités_2023 | numeric | distinct=2392 | NA=0% | min=0 max=345100 sum=16 564 800
+  - activités_2024 | numeric | distinct=2429 | NA=0% | min=0 max=361298 sum=17 342 304
+  - activités_2025 | numeric | distinct=2454 | NA=0% | min=0 max=366996 sum=17 615 808
+  - activités_2026 | numeric | distinct=2532 | NA=0% | min=0 max=385556 sum=18 506 688
+
+========== drees/pharmaciens_rpps_2012_2026.xlsx (18.5 MB) ==========
+
+-- sheet: Lisez-moi | 117 rows x 4 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=34 | NA=71% | length 3-2848
+  - 2012-2026 | character | distinct=10 | NA=91% | length 4-88
+  - ...3 | character | distinct=5 | NA=96% | length 45-270
+  - ...4 | character | distinct=67 | NA=43% | length 9-62
+
+-- sheet: Effectifs | 86381 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (78161); 2-DROM (6832); 0-France entière (1139); 3-COM ou Etranger (249)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (9221); 76-Occitanie (9075); 75-Nouvelle Aquitaine (8853); 44-Grand Est (7574); 11-Ile de France (7290); 27-Bourgogne Franche Comté (5907); 93-Provence Alpes-Côte d Azur (5212); 24-Centre Val de Loire (4752); 32-Hauts de France (4697); 28-Normandie (4383); 52-Pays de la Loire (4310); 53-Bretagne (3724); 00-Ensemble (3147); 94-Corse (2024); 04-La Reunion (1436); 03-Guyane (1226); 01-Guadeloupe (1222); 02-Martinique (1218); 06-Mayotte (944); 99-COM ou etranger (166)
+  - departement | character | distinct=104 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=9 | NA=0% | length 11-39
+      values: 00-Ensemble (17414); 05-Pharmacie (12760); 06-Laboratoire (10379); 01-Hôpital public (9559); 08-Autre secteur (9411); 03-Etablissement privé lucratif (7777); 04-Prévention et établissement de santé (7341); 07-Médicament (6718); 02-Etablissement privé ESPIC (5022)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (30604); 4-Autre Salarié (25096); 3-Salarié hospitalier (13352); 1-Libéral (11823); 2-Mixte (5506)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (10308); 08-entre 55 et 59 ans (8722); 07-entre 50 et 54 ans (8586); 09-entre 60 et 64 ans (8457); 06-entre 45 et 49 ans (8429); 04-entre 35 et 39 ans (8269); 05-entre 40 et 44 ans (8226); 03-entre 30 et 34 ans (8135); 10- 65 ans et plus (7544); 02-entre 25 et 29 ans (7190); 01-moins de 25 ans (2515)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (30921); 2-Femmes (28753); 1-Hommes (26707)
+  - effectif_2012 | numeric | distinct=1387 | NA=0% | min=0 max=72658 sum=4 650 112
+  - effectif_2013 | numeric | distinct=1409 | NA=0% | min=0 max=73599 sum=4 710 336
+  - effectif_2014 | numeric | distinct=1412 | NA=0% | min=0 max=73799 sum=4 723 136
+  - effectif_2015 | numeric | distinct=1424 | NA=0% | min=0 max=74334 sum=4 757 376
+  - effectif_2016 | numeric | distinct=1428 | NA=0% | min=0 max=74484 sum=4 766 976
+  - effectif_2017 | numeric | distinct=1419 | NA=0% | min=0 max=74232 sum=4 750 848
+  - effectif_2018 | numeric | distinct=1415 | NA=0% | min=0 max=73756 sum=4 720 384
+  - effectif_2019 | numeric | distinct=1405 | NA=0% | min=0 max=73628 sum=4 712 192
+  - effectif_2020 | numeric | distinct=1394 | NA=0% | min=0 max=73788 sum=4 722 432
+  - effectif_2021 | numeric | distinct=1429 | NA=0% | min=0 max=73427 sum=4 699 328
+  - effectif_2022 | numeric | distinct=1401 | NA=0% | min=0 max=73574 sum=4 708 736
+  - effectif_2023 | numeric | distinct=1408 | NA=0% | min=0 max=73381 sum=4 696 384
+  - effectif_2024 | numeric | distinct=1423 | NA=0% | min=0 max=74227 sum=4 750 528
+  - effectif_2025 | numeric | distinct=1415 | NA=0% | min=0 max=74554 sum=4 771 456
+  - effectif_2026 | numeric | distinct=1431 | NA=0% | min=0 max=75335 sum=4 821 440
+
+-- sheet: Ages moyens | 10296 rows x 21 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (9252); 2-DROM (839); 0-France entière (118); 3-COM ou Etranger (87)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 76-Occitanie (1101); 84-Auvergne Rhône-Alpes (1088); 75-Nouvelle Aquitaine (1044); 44-Grand Est (912); 11-Ile de France (851); 27-Bourgogne Franche Comté (700); 93-Provence Alpes-Côte d Azur (611); 24-Centre Val de Loire (572); 32-Hauts de France (556); 28-Normandie (528); 52-Pays de la Loire (503); 53-Bretagne (434); 00-Ensemble (356); 94-Corse (234); 04-La Reunion (170); 02-Martinique (152); 03-Guyane (148); 01-Guadeloupe (142); 06-Mayotte (136); 99-COM ou etranger (58)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=9 | NA=0% | length 11-39
+      values: 00-Ensemble (1805); 05-Pharmacie (1353); 06-Laboratoire (1262); 01-Hôpital public (1180); 08-Autre secteur (1139); 03-Etablissement privé lucratif (1073); 04-Prévention et établissement de santé (954); 02-Etablissement privé ESPIC (792); 07-Médicament (738)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (3215); 4-Autre Salarié (3005); 3-Salarié hospitalier (1474); 1-Libéral (1369); 2-Mixte (1233)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (3601); 2-Femmes (3390); 1-Hommes (3305)
+  - am_2012 | character | distinct=218 | NA=0% | length 1-18
+  - am_2013 | character | distinct=219 | NA=0% | length 1-18
+  - am_2014 | character | distinct=229 | NA=0% | length 1-18
+  - am_2015 | character | distinct=226 | NA=0% | length 1-18
+  - am_2016 | character | distinct=222 | NA=0% | length 1-18
+  - am_2017 | character | distinct=225 | NA=0% | length 1-18
+  - am_2018 | character | distinct=228 | NA=0% | length 1-18
+  - am_2019 | character | distinct=230 | NA=0% | length 1-18
+  - am_2020 | character | distinct=225 | NA=0% | length 1-18
+  - am_2021 | character | distinct=230 | NA=0% | length 1-18
+  - am_2022 | character | distinct=246 | NA=0% | length 1-18
+  - am_2023 | character | distinct=246 | NA=0% | length 1-18
+  - am_2024 | character | distinct=264 | NA=0% | length 1-18
+  - am_2025 | character | distinct=264 | NA=0% | length 1-18
+  - am_2026 | character | distinct=271 | NA=0% | length 1-18
+
+-- sheet: Densités | 86273 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (78053); 2-DROM (6832); 0-France entière (1139); 3-COM ou Etranger (249)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (9221); 76-Occitanie (9075); 75-Nouvelle Aquitaine (8853); 44-Grand Est (7574); 11-Ile de France (7290); 27-Bourgogne Franche Comté (5907); 93-Provence Alpes-Côte d Azur (5212); 24-Centre Val de Loire (4752); 32-Hauts de France (4697); 28-Normandie (4383); 52-Pays de la Loire (4310); 53-Bretagne (3724); 00-Ensemble (3147); 94-Corse (1916); 04-La Reunion (1436); 03-Guyane (1226); 01-Guadeloupe (1222); 02-Martinique (1218); 06-Mayotte (944); 99-COM ou etranger (166)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=9 | NA=0% | length 11-39
+      values: 00-Ensemble (17360); 05-Pharmacie (12760); 06-Laboratoire (10379); 01-Hôpital public (9559); 08-Autre secteur (9357); 03-Etablissement privé lucratif (7777); 04-Prévention et établissement de santé (7341); 07-Médicament (6718); 02-Etablissement privé ESPIC (5022)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (30550); 4-Autre Salarié (25042); 3-Salarié hospitalier (13352); 1-Libéral (11823); 2-Mixte (5506)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (10296); 08-entre 55 et 59 ans (8710); 07-entre 50 et 54 ans (8574); 09-entre 60 et 64 ans (8445); 06-entre 45 et 49 ans (8421); 04-entre 35 et 39 ans (8257); 05-entre 40 et 44 ans (8218); 03-entre 30 et 34 ans (8123); 10- 65 ans et plus (7536); 02-entre 25 et 29 ans (7178); 01-moins de 25 ans (2515)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (30881); 2-Femmes (28713); 1-Hommes (26679)
+  - densite_2012 | numeric | distinct=3206 | NA=0% | min=0 max=9999 sum=12 371 717
+  - densite_2013 | numeric | distinct=3207 | NA=0% | min=0 max=9999 sum=12 373 390
+  - densite_2014 | numeric | distinct=3223 | NA=0% | min=0 max=9999 sum=12 373 610
+  - densite_2015 | numeric | distinct=3175 | NA=0% | min=0 max=9999 sum=12 374 389
+  - densite_2016 | numeric | distinct=3171 | NA=0% | min=0 max=9999 sum=12 374 502
+  - densite_2017 | numeric | distinct=3160 | NA=0% | min=0 max=9999 sum=12 373 738
+  - densite_2018 | numeric | distinct=3168 | NA=0% | min=0 max=9999 sum=12 372 187
+  - densite_2019 | numeric | distinct=3123 | NA=0% | min=0 max=179.32 sum=206 089.4
+  - densite_2020 | numeric | distinct=3153 | NA=0% | min=0 max=181.09 sum=205 532.1
+  - densite_2021 | numeric | distinct=3121 | NA=0% | min=0 max=181.14 sum=204 032.7
+  - densite_2022 | numeric | distinct=3076 | NA=0% | min=0 max=183.52 sum=203 082.1
+  - densite_2023 | numeric | distinct=3100 | NA=0% | min=0 max=182.15 sum=201 028.6
+  - densite_2024 | numeric | distinct=3082 | NA=0% | min=0 max=184.47 sum=202 489.2
+  - densite_2025 | numeric | distinct=3099 | NA=0% | min=0 max=189.83 sum=202 225.4
+  - densite_2026 | numeric | distinct=3097 | NA=0% | min=0 max=195.74 sum=203 517.3
+
+========== drees/sages_femmes_rpps_2012_2026.xlsx (14.7 MB) ==========
+
+-- sheet: Lisez-moi | 118 rows x 4 cols | header found after skipping 0 row(s)
+  - Années : | character | distinct=34 | NA=71% | length 3-2848
+  - 2012-2026 | character | distinct=10 | NA=92% | length 4-88
+  - ...3 | character | distinct=5 | NA=96% | length 53-301
+  - ...4 | character | distinct=69 | NA=42% | length 9-62
+
+-- sheet: Effectifs | 70327 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (62703); 2-DROM (6207); 0-France entière (1165); 3-COM ou Etranger (252)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (7938); 76-Occitanie (7233); 75-Nouvelle Aquitaine (6835); 11-Ile de France (6647); 44-Grand Est (5863); 27-Bourgogne Franche Comté (4256); 93-Provence Alpes-Côte d Azur (4143); 32-Hauts de France (3999); 24-Centre Val de Loire (3525); 52-Pays de la Loire (3502); 53-Bretagne (3246); 00-Ensemble (3191); 28-Normandie (3019); 94-Corse (1334); 03-Guyane (1222); 04-La Reunion (1218); 02-Martinique (1042); 01-Guadeloupe (1004); 06-Mayotte (942); 99-COM ou etranger (168)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (15968); 01-Hôpital public (9824); 09-Autre secteur (8820); 05-Cabinet individuel (8279); 06-Cabinet de groupe, société (7721); 03-Etablissement privé lucratif (6460); 07-Prévention (5616); 04-Centre de santé, maison de santé (3094); 08-Etablissement sanitaire et social (2280); 02-Etablissement privé ESPIC (2265)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (23671); 2-Mixte (13469); 1-Libéral (11718); 4-Autre Salarié (11334); 3-Salarié hospitalier (10135)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (9192); 03-entre 30 et 34 ans (7576); 02-entre 25 et 29 ans (7482); 04-entre 35 et 39 ans (7435); 05-entre 40 et 44 ans (6887); 06-entre 45 et 49 ans (6193); 07-entre 50 et 54 ans (5925); 08-entre 55 et 59 ans (5665); 01-moins de 25 ans (5325); 09-entre 60 et 64 ans (5135); 10- 65 ans et plus (3512)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (30579); 2-Femmes (30478); 1-Hommes (9270)
+  - effectif_2012 | numeric | distinct=702 | NA=0% | min=0 max=19552 sum=1 251 328
+  - effectif_2013 | numeric | distinct=725 | NA=0% | min=0 max=20322 sum=1 300 608
+  - effectif_2014 | numeric | distinct=734 | NA=0% | min=0 max=20960 sum=1 341 440
+  - effectif_2015 | numeric | distinct=747 | NA=0% | min=0 max=21604 sum=1 382 656
+  - effectif_2016 | numeric | distinct=765 | NA=0% | min=0 max=22299 sum=1 427 136
+  - effectif_2017 | numeric | distinct=777 | NA=0% | min=0 max=22724 sum=1 454 336
+  - effectif_2018 | numeric | distinct=776 | NA=0% | min=0 max=22824 sum=1 460 736
+  - effectif_2019 | numeric | distinct=787 | NA=0% | min=0 max=22956 sum=1 469 184
+  - effectif_2020 | numeric | distinct=783 | NA=0% | min=0 max=23175 sum=1 483 200
+  - effectif_2021 | numeric | distinct=794 | NA=0% | min=0 max=23541 sum=1 506 624
+  - effectif_2022 | numeric | distinct=791 | NA=0% | min=0 max=23764 sum=1 520 896
+  - effectif_2023 | numeric | distinct=818 | NA=0% | min=0 max=24354 sum=1 558 656
+  - effectif_2024 | numeric | distinct=832 | NA=0% | min=0 max=25404 sum=1 625 856
+  - effectif_2025 | numeric | distinct=842 | NA=0% | min=0 max=25760 sum=1 648 640
+  - effectif_2026 | numeric | distinct=845 | NA=0% | min=0 max=26428 sum=1 691 392
+
+-- sheet: Ages moyens | 9192 rows x 21 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (8200); 2-DROM (808); 0-France entière (124); 3-COM ou Etranger (60)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (1042); 76-Occitanie (941); 75-Nouvelle Aquitaine (915); 11-Ile de France (817); 44-Grand Est (776); 27-Bourgogne Franche Comté (570); 93-Provence Alpes-Côte d Azur (550); 32-Hauts de France (513); 24-Centre Val de Loire (469); 52-Pays de la Loire (466); 53-Bretagne (417); 28-Normandie (413); 00-Ensemble (364); 94-Corse (187); 03-Guyane (174); 04-La Reunion (154); 06-Mayotte (138); 02-Martinique (126); 01-Guadeloupe (120); 99-COM ou etranger (40)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (1734); 01-Hôpital public (1298); 09-Autre secteur (1225); 05-Cabinet individuel (997); 06-Cabinet de groupe, société (962); 03-Etablissement privé lucratif (897); 07-Prévention (743); 04-Centre de santé, maison de santé (585); 08-Etablissement sanitaire et social (411); 02-Etablissement privé ESPIC (340)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (2797); 2-Mixte (2104); 4-Autre Salarié (1711); 1-Libéral (1471); 3-Salarié hospitalier (1109)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (3662); 2-Femmes (3644); 1-Hommes (1886)
+  - am_2012 | character | distinct=227 | NA=0% | length 2-18
+  - am_2013 | character | distinct=235 | NA=0% | length 2-18
+  - am_2014 | character | distinct=244 | NA=0% | length 2-18
+  - am_2015 | character | distinct=242 | NA=0% | length 1-18
+  - am_2016 | character | distinct=245 | NA=0% | length 1-18
+  - am_2017 | character | distinct=243 | NA=0% | length 1-18
+  - am_2018 | character | distinct=241 | NA=0% | length 1-18
+  - am_2019 | character | distinct=246 | NA=0% | length 1-18
+  - am_2020 | character | distinct=245 | NA=0% | length 1-18
+  - am_2021 | character | distinct=246 | NA=0% | length 1-18
+  - am_2022 | character | distinct=247 | NA=0% | length 1-18
+  - am_2023 | character | distinct=229 | NA=0% | length 1-18
+  - am_2024 | character | distinct=224 | NA=0% | length 1-18
+  - am_2025 | character | distinct=213 | NA=0% | length 1-18
+  - am_2026 | character | distinct=216 | NA=0% | length 1-18
+
+-- sheet: Densités | 70327 rows x 22 cols | header found after skipping 0 row(s)
+  - territoire | character | distinct=4 | NA=0% | length 6-23
+      values: 1-France métropolitaine (62703); 2-DROM (6207); 0-France entière (1165); 3-COM ou Etranger (252)
+  - region | character | distinct=20 | NA=0% | length 8-29
+      values: 84-Auvergne Rhône-Alpes (7938); 76-Occitanie (7233); 75-Nouvelle Aquitaine (6835); 11-Ile de France (6647); 44-Grand Est (5863); 27-Bourgogne Franche Comté (4256); 93-Provence Alpes-Côte d Azur (4143); 32-Hauts de France (3999); 24-Centre Val de Loire (3525); 52-Pays de la Loire (3502); 53-Bretagne (3246); 00-Ensemble (3191); 28-Normandie (3019); 94-Corse (1334); 03-Guyane (1222); 04-La Reunion (1218); 02-Martinique (1042); 01-Guadeloupe (1004); 06-Mayotte (942); 99-COM ou etranger (168)
+  - departement | character | distinct=103 | NA=0% | length 8-28
+  - secteur_activite | character | distinct=10 | NA=0% | length 11-36
+      values: 00-Ensemble (15968); 01-Hôpital public (9824); 09-Autre secteur (8820); 05-Cabinet individuel (8279); 06-Cabinet de groupe, société (7721); 03-Etablissement privé lucratif (6460); 07-Prévention (5616); 04-Centre de santé, maison de santé (3094); 08-Etablissement sanitaire et social (2280); 02-Etablissement privé ESPIC (2265)
+  - exercice | character | distinct=5 | NA=0% | length 7-21
+      values: 0-Ensemble (23671); 2-Mixte (13469); 1-Libéral (11718); 4-Autre Salarié (11334); 3-Salarié hospitalier (10135)
+  - tranche_age | character | distinct=11 | NA=0% | length 11-21
+      values: 00-Ensemble (9192); 03-entre 30 et 34 ans (7576); 02-entre 25 et 29 ans (7482); 04-entre 35 et 39 ans (7435); 05-entre 40 et 44 ans (6887); 06-entre 45 et 49 ans (6193); 07-entre 50 et 54 ans (5925); 08-entre 55 et 59 ans (5665); 01-moins de 25 ans (5325); 09-entre 60 et 64 ans (5135); 10- 65 ans et plus (3512)
+  - sexe | character | distinct=3 | NA=0% | length 8-10
+      values: 0-Ensemble (30579); 2-Femmes (30478); 1-Hommes (9270)
+  - densite_2012 | numeric | distinct=2772 | NA=0% | min=0 max=215.31 sum=262 979.9
+  - densite_2013 | numeric | distinct=2903 | NA=0% | min=0 max=210.38 sum=274 723.7
+  - densite_2014 | numeric | distinct=2989 | NA=0% | min=0 max=250.46 sum=291 186.1
+  - densite_2015 | numeric | distinct=3067 | NA=0% | min=0 max=277.5 sum=302 297.4
+  - densite_2016 | numeric | distinct=3129 | NA=0% | min=0 max=271.33 sum=313 257.4
+  - densite_2017 | numeric | distinct=3202 | NA=0% | min=0 max=273.93 sum=320 640.9
+  - densite_2018 | numeric | distinct=3260 | NA=0% | min=0 max=279.58 sum=324 537.1
+  - densite_2019 | numeric | distinct=3244 | NA=0% | min=0 max=275.27 sum=325 525.7
+  - densite_2020 | numeric | distinct=3314 | NA=0% | min=0 max=269.16 sum=329 862.5
+  - densite_2021 | numeric | distinct=3300 | NA=0% | min=0 max=258.12 sum=333 578.3
+  - densite_2022 | numeric | distinct=3388 | NA=0% | min=0 max=271.78 sum=338 889.7
+  - densite_2023 | numeric | distinct=3488 | NA=0% | min=0 max=2601.27 sum=383 330.3
+  - densite_2024 | numeric | distinct=3564 | NA=0% | min=0 max=2771.57 sum=397 769.6
+  - densite_2025 | numeric | distinct=3628 | NA=0% | min=0 max=2781.25 sum=402 699.6
+  - densite_2026 | numeric | distinct=3623 | NA=0% | min=0 max=2845.74 sum=411 147.8
+
+========== nf-sies-2025-31-tableaux-et-graphiques--38647.xlsx (0.1 MB) ==========
+
+-- sheet: Sommaire | 16 rows x 1 cols | header found after skipping 0 row(s)
+  - Sommaire | character | distinct=12 | NA=25% | length 12-199
+
+-- sheet: Méthodologie | 0 rows x 1 cols | header found after skipping 0 row(s)
+  - Retour au sommaire | logical | distinct=0 | NA=0%
+
+-- sheet: Schéma illustratif des parcours | 27 rows x 1 cols | header found after skipping 0 row(s)
+  - Schéma illustratif du parcours en étude de santé | character | distinct=2 | NA=93% | length 18-180
+
+-- sheet: Numerus apertus | 7 rows x 3 cols | header found after skipping 4 row(s)
+  - Medecine | character | distinct=7 | NA=0% | length 9-146
+  - 50450 | numeric | distinct=5 | NA=29% | min=4000 max=84000 sum=117 560
+  - 60.06 | numeric | distinct=5 | NA=29% | min=4.76 max=100 sum=139.94
+
+-- sheet: Tableau 1 | 10 rows x 6 cols | header found after skipping 5 row(s)
+  - Médecine | character | distinct=8 | NA=20% | length 9-517
+  - 22.71 | numeric | distinct=7 | NA=30% | min=1.33 max=34.51 sum=80.82
+  - 24.67 | numeric | distinct=7 | NA=30% | min=1.9 max=40.37 sum=96.43
+  - 24.15 | numeric | distinct=7 | NA=30% | min=2 max=40.05 sum=96
+  - 29.43 | numeric | distinct=7 | NA=30% | min=2.41 max=47.51 sum=113.11
+  - 14.05 | numeric | distinct=7 | NA=30% | min=1.21 max=25.74 sum=63.17
+
+-- sheet: Tableau 2 | 6 rows x 7 cols | header found after skipping 5 row(s)
+  - Total admis en 2ème année de MMPOK en un an | character | distinct=2 | NA=67% | length 265-576
+  - Admis en 3ème année | character | distinct=2 | NA=67% | length 11-26
+      values: Redoublants (1); Réorientés ou sortants (1) (1)
+  - 90.4 | numeric | distinct=2 | NA=67% | min=2.58 max=7.02 sum=9.6
+  - 93.5 | numeric | distinct=2 | NA=67% | min=1.06 max=5.44 sum=6.5
+  - 93.78 | numeric | distinct=2 | NA=67% | min=0.79 max=5.43 sum=6.22
+  - 94.79 | numeric | distinct=2 | NA=67% | min=0.71 max=4.5 sum=5.21
+  - 90.42 | numeric | distinct=2 | NA=67% | min=1.05 max=8.52 sum=9.57
+
+-- sheet: Tableau 3 | 11 rows x 6 cols | header found after skipping 4 row(s)
+  - 2020-2021 | character | distinct=4 | NA=64% | length 9-603
+  - PASS | character | distinct=3 | NA=27% | length 4-8
+      values: Ensemble (3); L.AS (3); PASS (2)
+  - 13.62 | numeric | distinct=7 | NA=27% | min=13.57 max=15.21 sum=115.69
+  - 47.35 | numeric | distinct=8 | NA=27% | min=31.76 max=48.7 sum=318.05
+  - 6.22 | numeric | distinct=8 | NA=27% | min=7.51 max=22.45 sum=121.35
+  - 32.799999999999997 | numeric | distinct=8 | NA=27% | min=27.14 max=32.62 sum=244.92
+
+-- sheet: Annexe 1 | 13 rows x 10 cols | header found after skipping 4 row(s)
+  - Néo-bacheliers | character | distinct=8 | NA=31% | length 15-661
+  - 25800 | numeric | distinct=8 | NA=38% | min=0.0594 max=42000 sum=74 401.77
+  - 9100 | numeric | distinct=8 | NA=38% | min=0.1418 max=12600 sum=19 601.64
+  - 34900 | numeric | distinct=8 | NA=38% | min=0.0883 max=54600 sum=94 001.74
+  - 24600 | numeric | distinct=8 | NA=38% | min=0.011 max=27300 sum=32 701.19
+  - 10700 | numeric | distinct=8 | NA=38% | min=0.1465 max=14600 sum=22 401.92
+  - 35300 | numeric | distinct=8 | NA=38% | min=0.1106 max=41900 sum=55 101.5
+  - 22500 | numeric | distinct=4 | NA=69% | min=100 max=25200 sum=30 600
+  - 11700 | numeric | distinct=4 | NA=69% | min=400 max=14700 sum=20 700
+  - 34200 | numeric | distinct=4 | NA=69% | min=500 max=39900 sum=51 300
+
+-- sheet: Annexe 2  | 14 rows x 8 cols | header found after skipping 2 row(s)
+  - Disciplines majeures L.AS | character | distinct=13 | NA=7% | length 7-620
+  - Cohorte 2022 inscrite en L.AS admis en 2ème année de MMOPK | character | distinct=12 | NA=7% | length 1-18
+      values: 7 (2); 18.8 (1); 19.100000000000001 (1); 22.1 (1); 22.3 (1); 24.3 (1); 25.74 (1); 27 (1); 31.4 (1); 34.799999999999997 (1); 7.8 (1); Taux (%) (1)
+  - dont admis en médecine | character | distinct=13 | NA=7% | length 3-18
+      values: 100 (1); 36.479999999999997 (1); 47.62 (1); 53.74 (1); 54.58 (1); 55.4 (1); 56.58 (1); 57.18 (1); 57.51 (1); 66.23 (1); 67.72 (1); 72.11 (1); Part (%) (1)
+  - dont admis en maïeutique | numeric | distinct=11 | NA=14% | min=0 max=15.87 sum=55.64
+  - dont admis en odontologie | numeric | distinct=12 | NA=14% | min=0 max=19.55 sum=104.91
+  - dont admis en pharmacie | numeric | distinct=11 | NA=14% | min=0 max=21.22 sum=134.37
+  - dont admis en kinésithérapie | numeric | distinct=12 | NA=14% | min=0 max=50.11 sum=179.9
+  - TOTAL | numeric | distinct=1 | NA=14% | min=100 max=100 sum=1 200
+
+-- sheet: Annexe 3 | 23 rows x 16 cols | header found after skipping 3 row(s)
+  - Rentrée 2022...1 | character | distinct=4 | NA=83% | length 51-385
+  - Rentrée 2023...2 | character | distinct=8 | NA=65% | length 9-42
+      values: 13 sortent (1) de l'enseignement supérieur (1); 18 poursuivent en L.AS (1); 22 en L1 et 8 en L2 (1); 29 sont admis en 2ème année de MMOPK (1); 40  se réorientent (1); 5 dans d'autres formations (1); 5 en IFSI (1); dont  17 en LAS2 (1)
+  - ...3 | logical | distinct=0 | NA=100%
+  - Rentrée 2024...4 | character | distinct=10 | NA=57% | length 7-94
+  - ...5 | logical | distinct=0 | NA=100%
+  - ...6 | logical | distinct=0 | NA=100%
+  - Rentrée 2022...7 | character | distinct=1 | NA=96% | length 40-40
+      values: Sur 100 bacheliers 2022 inscrits en PASS (1)
+  - Rentrée 2023...8 | character | distinct=8 | NA=65% | length 9-42
+      values: 11 sortent (1) de l'enseignement supérieur (1); 18 poursuivent en L.AS (1); 21 en L1 et 6 en L2 (1); 34 sont admis en 2ème année de MMOPK (1); 37  se réorientent (1); 5 dans d'autres formations (1); 5 en IFSI (1); dont  17 en LAS2 (1)
+  - ...9 | logical | distinct=0 | NA=100%
+  - Rentrée 2024...10 | character | distinct=10 | NA=57% | length 7-93
+  - ...11 | logical | distinct=0 | NA=100%
+  - ...12 | logical | distinct=0 | NA=100%
+  - Rentrée 2022...13 | character | distinct=1 | NA=96% | length 40-40
+      values: Sur 100 bacheliers 2022 inscrits en L.AS (1)
+  - Rentrée 2023...14 | character | distinct=8 | NA=65% | length 9-42
+      values: 17 poursuivent en L.AS
+ (1); 17 sortent (1) de l'enseignement supérieur (1); 19 sont admis en 2ème année de MMOPK (1); 24 en L1 et 12 en L2 (1); 4 en IFSI (1); 46 se réorientent (1); 6 dans d'autres formations (1); dont 15 en LAS2 (1)
+  - ...15 | logical | distinct=0 | NA=100%
+  - Rentrée 2024...16 | character | distinct=10 | NA=57% | length 8-91
+
+-- sheet: Annexe 4 | 10 rows x 10 cols | header found after skipping 4 row(s)
+  - Médecine | character | distinct=8 | NA=20% | length 9-516
+  - 25.4 | numeric | distinct=7 | NA=30% | min=1.46 max=37.88 sum=88.23
+  - 15.07 | numeric | distinct=7 | NA=30% | min=0.98 max=24.96 sum=59.79
+  - 22.71 | numeric | distinct=7 | NA=30% | min=1.33 max=34.51 sum=80.82
+  - 29.64 | numeric | distinct=7 | NA=30% | min=2.2 max=47.78 sum=113.71
+  - 13.26 | numeric | distinct=7 | NA=30% | min=1.21 max=23.32 sum=56.69
+  - 24.67 | numeric | distinct=7 | NA=30% | min=1.9 max=40.37 sum=96.43
+  - 29.43 | numeric | distinct=7 | NA=30% | min=2.41 max=47.51 sum=113.11
+  - 14.05 | numeric | distinct=7 | NA=30% | min=1.21 max=25.74 sum=63.17
+  - 24.15 | numeric | distinct=7 | NA=30% | min=2 max=40.05 sum=96
+
+-- sheet: Annexe 5 | 26 rows x 11 cols | header found after skipping 4 row(s)
+  - Total admis en 2ème année de MMPOK en un an | character | distinct=7 | NA=73% | length 8-540
+  - Admis en 3ème année | character | distinct=4 | NA=35% | length 11-26
+      values: Redoublants (6); Admis en 3ème année (5); Réorientés ou sortants (5); Réorientés ou sortants (1) (1)
+  - 91.13 | numeric | distinct=17 | NA=35% | min=0.64 max=95.74 sum=508.87
+  - 87.19 | numeric | distinct=17 | NA=35% | min=0.64 max=96.5 sum=512.78
+  - 90.4 | numeric | distinct=17 | NA=35% | min=0.69 max=95.16 sum=509.58
+  - 94.34 | numeric | distinct=16 | NA=35% | min=0 max=96.82 sum=505.67
+  - 89.49 | numeric | distinct=17 | NA=35% | min=0 max=90.63 sum=510.52
+  - 93.5 | numeric | distinct=17 | NA=35% | min=0 max=95.56 sum=506.51
+  - 94.79 | numeric | distinct=17 | NA=35% | min=0.18 max=97.99 sum=505.21
+  - 90.42 | numeric | distinct=17 | NA=35% | min=0.63 max=96.3 sum=509.58
+  - 93.78 | numeric | distinct=17 | NA=35% | min=0.4 max=96.64 sum=506.21
+
+-- sheet: Annexe 6 | 19 rows x 11 cols | header found after skipping 4 row(s)
+  - sexe | character | distinct=5 | NA=74% | length 3-414
+  - Femme | character | distinct=12 | NA=26% | length 1-17
+      values: NR (3); AB (1); Assez défavorisée (1); Autres Bac (1); B (1); Bac scientifique (1); Défavorisée (1); Favorisée (1); Homme (1); Sans mention (1); TB (1); Très favorisée (1)
+  - 69.13 | numeric | distinct=15 | NA=21% | min=0.17 max=97.74 sum=396.59
+  - 67.44 | numeric | distinct=15 | NA=21% | min=0.61 max=90.26 sum=366.9
+  - 68.55 | numeric | distinct=15 | NA=21% | min=0.32 max=100 sum=431.47
+  - 32.5 | numeric | distinct=15 | NA=21% | min=2.3 max=62.2 sum=410.95
+  - 19.5 | numeric | distinct=15 | NA=21% | min=1.9 max=55.5 sum=279.87
+  - 28.1 | numeric | distinct=15 | NA=21% | min=2.1 max=61 sum=365.19
+  - 46.7 | numeric | distinct=15 | NA=21% | min=4.5 max=79.3 sum=572.51
+  - 26.1 | numeric | distinct=15 | NA=21% | min=3 max=66.5 sum=363.34
+  - 39.74 | numeric | distinct=15 | NA=21% | min=3.62 max=77.04 sum=499.14
+
+========== omphale/omphale_2022_Central.xlsx (1.1 MB) ==========
+
+-- sheet: Documentation | 18 rows x 4 cols | header found after skipping 15 row(s)
+  - Composantes | character | distinct=16 | NA=11% | length 7-26
+      values: Central (1); Description des scénarios (1); Espérance de vie (1); Espérance de vie basse (1); Espérance de vie haute (1); Fécondité (1); Fécondité basse (1); Fécondité haute (1); Migrations avec l’étranger (1); Migrations basses (1); Migrations hautes (1); Population âgée (1); Population basse (1); Population haute (1); Population jeune (1); Scénarios standards (1)
+  - Hypothèse centrale | character | distinct=8 | NA=11% | length 5-183
+  - Hypothèse basse | character | distinct=7 | NA=17% | length 5-182
+  - Hypothèse haute | character | distinct=7 | NA=17% | length 5-182
+
+-- sheet: Population | 4040 rows x 56 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - SEXE | numeric | distinct=2 | NA=0% | min=1 max=2 sum=6 060
+  - TRAGE | character | distinct=20 | NA=0% | length 5-8
+      values: [0;5[ (202); [10;15[ (202); [15;20[ (202); [20;25[ (202); [25;30[ (202); [30;35[ (202); [35;40[ (202); [40;45[ (202); [45;50[ (202); [5;10[ (202); [50;55[ (202); [55;60[ (202); [60;65[ (202); [65;70[ (202); [70;75[ (202); [75;80[ (202); [80;85[ (202); [85;90[ (202); [90;95[ (202); [95;99+] (202)
+  - POP_2018 | numeric | distinct=2460 | NA=0% | min=40 max=120910 sum=66 992 320
+  - POP_2019 | numeric | distinct=2426 | NA=0% | min=50 max=121550 sum=67 144 380
+  - POP_2020 | numeric | distinct=2450 | NA=0% | min=40 max=121690 sum=67 287 090
+  - POP_2021 | numeric | distinct=2459 | NA=0% | min=40 max=121330 sum=67 407 390
+  - POP_2022 | numeric | distinct=2472 | NA=0% | min=40 max=120260 sum=67 515 350
+  - POP_2023 | numeric | distinct=2460 | NA=0% | min=40 max=118440 sum=67 659 400
+  - POP_2024 | numeric | distinct=2454 | NA=0% | min=40 max=117490 sum=67 811 770
+  - POP_2025 | numeric | distinct=2471 | NA=0% | min=40 max=116260 sum=67 955 320
+  - POP_2026 | numeric | distinct=2471 | NA=0% | min=50 max=115110 sum=68 089 920
+  - POP_2027 | numeric | distinct=2471 | NA=0% | min=60 max=114100 sum=68 217 120
+  - POP_2028 | numeric | distinct=2447 | NA=0% | min=60 max=113300 sum=68 335 500
+  - POP_2029 | numeric | distinct=2475 | NA=0% | min=70 max=112610 sum=68 448 010
+  - POP_2030 | numeric | distinct=2498 | NA=0% | min=80 max=112410 sum=68 553 850
+  - POP_2031 | numeric | distinct=2482 | NA=0% | min=80 max=111860 sum=68 652 730
+  - POP_2032 | numeric | distinct=2479 | NA=0% | min=90 max=112650 sum=68 745 430
+  - POP_2033 | numeric | distinct=2441 | NA=0% | min=90 max=113320 sum=68 831 840
+  - POP_2034 | numeric | distinct=2467 | NA=0% | min=90 max=114250 sum=68 910 880
+  - POP_2035 | numeric | distinct=2460 | NA=0% | min=90 max=115300 sum=68 983 010
+  - POP_2036 | numeric | distinct=2492 | NA=0% | min=90 max=116560 sum=69 046 730
+  - POP_2037 | numeric | distinct=2483 | NA=0% | min=90 max=116580 sum=69 103 540
+  - POP_2038 | numeric | distinct=2465 | NA=0% | min=90 max=116940 sum=69 151 860
+  - POP_2039 | numeric | distinct=2478 | NA=0% | min=90 max=116760 sum=69 192 490
+  - POP_2040 | numeric | distinct=2463 | NA=0% | min=100 max=116750 sum=69 224 990
+  - POP_2041 | numeric | distinct=2469 | NA=0% | min=100 max=115660 sum=69 249 890
+  - POP_2042 | numeric | distinct=2450 | NA=0% | min=120 max=114670 sum=69 268 120
+  - POP_2043 | numeric | distinct=2465 | NA=0% | min=140 max=113580 sum=69 279 440
+  - POP_2044 | numeric | distinct=2468 | NA=0% | min=150 max=112190 sum=69 284 630
+  - POP_2045 | numeric | distinct=2434 | NA=0% | min=160 max=110530 sum=69 284 000
+  - POP_2046 | numeric | distinct=2465 | NA=0% | min=160 max=108980 sum=69 279 130
+  - POP_2047 | numeric | distinct=2444 | NA=0% | min=160 max=107200 sum=69 268 480
+  - POP_2048 | numeric | distinct=2425 | NA=0% | min=160 max=105570 sum=69 252 640
+  - POP_2049 | numeric | distinct=2437 | NA=0% | min=160 max=104340 sum=69 232 000
+  - POP_2050 | numeric | distinct=2438 | NA=0% | min=170 max=103130 sum=69 206 310
+  - POP_2051 | numeric | distinct=2438 | NA=0% | min=170 max=102370 sum=69 175 230
+  - POP_2052 | numeric | distinct=2458 | NA=0% | min=180 max=102100 sum=69 138 870
+  - POP_2053 | numeric | distinct=2442 | NA=0% | min=180 max=101900 sum=69 097 390
+  - POP_2054 | numeric | distinct=2448 | NA=0% | min=190 max=101810 sum=69 049 860
+  - POP_2055 | numeric | distinct=2457 | NA=0% | min=190 max=101900 sum=68 996 760
+  - POP_2056 | numeric | distinct=2434 | NA=0% | min=200 max=102170 sum=68 938 880
+  - POP_2057 | numeric | distinct=2409 | NA=0% | min=200 max=102470 sum=68 877 130
+  - POP_2058 | numeric | distinct=2428 | NA=0% | min=200 max=102760 sum=68 812 100
+  - POP_2059 | numeric | distinct=2448 | NA=0% | min=210 max=103020 sum=68 744 670
+  - POP_2060 | numeric | distinct=2434 | NA=0% | min=220 max=103240 sum=68 675 870
+  - POP_2061 | numeric | distinct=2441 | NA=0% | min=220 max=103390 sum=68 607 280
+  - POP_2062 | numeric | distinct=2435 | NA=0% | min=230 max=103580 sum=68 539 750
+  - POP_2063 | numeric | distinct=2412 | NA=0% | min=240 max=103810 sum=68 473 200
+  - POP_2064 | numeric | distinct=2430 | NA=0% | min=250 max=104060 sum=68 409 670
+  - POP_2065 | numeric | distinct=2403 | NA=0% | min=260 max=104320 sum=68 348 710
+  - POP_2066 | numeric | distinct=2408 | NA=0% | min=260 max=104560 sum=68 291 860
+  - POP_2067 | numeric | distinct=2420 | NA=0% | min=260 max=104780 sum=68 238 570
+  - POP_2068 | numeric | distinct=2403 | NA=0% | min=260 max=104940 sum=68 189 610
+  - POP_2069 | numeric | distinct=2432 | NA=0% | min=260 max=105040 sum=68 144 500
+  - POP_2070 | numeric | distinct=2416 | NA=0% | min=260 max=105040 sum=68 103 730
+
+-- sheet: Solde naturel | 101 rows x 53 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - 2018 | numeric | distinct=93 | NA=0% | min=-3440 max=15680 sum=65 250
+  - 2019 | numeric | distinct=95 | NA=0% | min=-3580 max=15260 sum=56 280
+  - 2020 | numeric | distinct=94 | NA=0% | min=-4210 max=15140 sum=33 220
+  - 2021 | numeric | distinct=93 | NA=0% | min=-4110 max=14970 sum=38 170
+  - 2022 | numeric | distinct=92 | NA=0% | min=-3520 max=15560 sum=74 300
+  - 2023 | numeric | distinct=87 | NA=0% | min=-3480 max=15760 sum=82 770
+  - 2024 | numeric | distinct=90 | NA=0% | min=-3730 max=15500 sum=73 560
+  - 2025 | numeric | distinct=90 | NA=0% | min=-3980 max=15250 sum=65 010
+  - 2026 | numeric | distinct=92 | NA=0% | min=-4190 max=15060 sum=56 800
+  - 2027 | numeric | distinct=96 | NA=0% | min=-4400 max=14850 sum=49 250
+  - 2028 | numeric | distinct=92 | NA=0% | min=-4620 max=14710 sum=42 530
+  - 2029 | numeric | distinct=94 | NA=0% | min=-4800 max=14600 sum=35 930
+  - 2030 | numeric | distinct=95 | NA=0% | min=-4990 max=14470 sum=29 430
+  - 2031 | numeric | distinct=92 | NA=0% | min=-5190 max=14380 sum=22 910
+  - 2032 | numeric | distinct=95 | NA=0% | min=-5350 max=14320 sum=16 170
+  - 2033 | numeric | distinct=95 | NA=0% | min=-5560 max=14270 sum=9 220
+  - 2034 | numeric | distinct=94 | NA=0% | min=-5750 max=14200 sum=2 060
+  - 2035 | numeric | distinct=91 | NA=0% | min=-5920 max=14170 sum=-5 820
+  - 2036 | numeric | distinct=92 | NA=0% | min=-6110 max=14130 sum=-13 410
+  - 2037 | numeric | distinct=91 | NA=0% | min=-6280 max=14090 sum=-21 480
+  - 2038 | numeric | distinct=94 | NA=0% | min=-6440 max=14060 sum=-29 560
+  - 2039 | numeric | distinct=96 | NA=0% | min=-6600 max=14020 sum=-37 380
+  - 2040 | numeric | distinct=94 | NA=0% | min=-6710 max=14000 sum=-44 840
+  - 2041 | numeric | distinct=92 | NA=0% | min=-6830 max=13950 sum=-51 850
+  - 2042 | numeric | distinct=96 | NA=0% | min=-6920 max=13950 sum=-58 570
+  - 2043 | numeric | distinct=97 | NA=0% | min=-6990 max=14230 sum=-64 550
+  - 2044 | numeric | distinct=94 | NA=0% | min=-7040 max=14500 sum=-69 970
+  - 2045 | numeric | distinct=93 | NA=0% | min=-7060 max=14770 sum=-75 270
+  - 2046 | numeric | distinct=94 | NA=0% | min=-7100 max=15040 sum=-80 380
+  - 2047 | numeric | distinct=94 | NA=0% | min=-7160 max=15340 sum=-85 560
+  - 2048 | numeric | distinct=94 | NA=0% | min=-7200 max=15650 sum=-90 380
+  - 2049 | numeric | distinct=91 | NA=0% | min=-7260 max=15950 sum=-95 640
+  - 2050 | numeric | distinct=92 | NA=0% | min=-7300 max=16300 sum=-100 900
+  - 2051 | numeric | distinct=91 | NA=0% | min=-7370 max=16620 sum=-106 290
+  - 2052 | numeric | distinct=92 | NA=0% | min=-7460 max=16970 sum=-111 550
+  - 2053 | numeric | distinct=98 | NA=0% | min=-7540 max=17360 sum=-117 460
+  - 2054 | numeric | distinct=91 | NA=0% | min=-7650 max=17740 sum=-122 810
+  - 2055 | numeric | distinct=94 | NA=0% | min=-7740 max=18180 sum=-127 640
+  - 2056 | numeric | distinct=89 | NA=0% | min=-7820 max=18600 sum=-131 780
+  - 2057 | numeric | distinct=92 | NA=0% | min=-7900 max=19050 sum=-135 020
+  - 2058 | numeric | distinct=92 | NA=0% | min=-7960 max=19530 sum=-137 110
+  - 2059 | numeric | distinct=91 | NA=0% | min=-8000 max=20010 sum=-138 570
+  - 2060 | numeric | distinct=92 | NA=0% | min=-8010 max=20520 sum=-138 560
+  - 2061 | numeric | distinct=95 | NA=0% | min=-8040 max=21040 sum=-137 790
+  - 2062 | numeric | distinct=91 | NA=0% | min=-8020 max=21570 sum=-136 200
+  - 2063 | numeric | distinct=88 | NA=0% | min=-7970 max=22130 sum=-133 700
+  - 2064 | numeric | distinct=91 | NA=0% | min=-7950 max=22690 sum=-130 590
+  - 2065 | numeric | distinct=87 | NA=0% | min=-7870 max=23260 sum=-126 940
+  - 2066 | numeric | distinct=95 | NA=0% | min=-7820 max=23830 sum=-122 990
+  - 2067 | numeric | distinct=92 | NA=0% | min=-7740 max=24410 sum=-118 830
+  - 2068 | numeric | distinct=90 | NA=0% | min=-7700 max=25010 sum=-114 800
+  - 2069 | numeric | distinct=88 | NA=0% | min=-7620 max=25610 sum=-111 030
+
+-- sheet: Solde migratoire | 101 rows x 53 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - 2018 | numeric | distinct=97 | NA=0% | min=-23830 max=16010 sum=86 750
+  - 2019 | numeric | distinct=94 | NA=0% | min=-22240 max=15570 sum=86 770
+  - 2020 | numeric | distinct=99 | NA=0% | min=-20640 max=15190 sum=86 880
+  - 2021 | numeric | distinct=98 | NA=0% | min=-20550 max=14280 sum=69 760
+  - 2022 | numeric | distinct=98 | NA=0% | min=-19110 max=13940 sum=69 750
+  - 2023 | numeric | distinct=99 | NA=0% | min=-17760 max=13630 sum=69 860
+  - 2024 | numeric | distinct=94 | NA=0% | min=-16630 max=13370 sum=69 800
+  - 2025 | numeric | distinct=93 | NA=0% | min=-15540 max=13120 sum=69 770
+  - 2026 | numeric | distinct=94 | NA=0% | min=-14550 max=12860 sum=69 720
+  - 2027 | numeric | distinct=96 | NA=0% | min=-13710 max=12600 sum=69 830
+  - 2028 | numeric | distinct=91 | NA=0% | min=-12860 max=12310 sum=69 800
+  - 2029 | numeric | distinct=98 | NA=0% | min=-12070 max=12000 sum=69 740
+  - 2030 | numeric | distinct=97 | NA=0% | min=-11340 max=11720 sum=69 790
+  - 2031 | numeric | distinct=96 | NA=0% | min=-11150 max=11390 sum=69 850
+  - 2032 | numeric | distinct=94 | NA=0% | min=-11290 max=11120 sum=69 840
+  - 2033 | numeric | distinct=96 | NA=0% | min=-11410 max=10760 sum=69 830
+  - 2034 | numeric | distinct=93 | NA=0% | min=-11540 max=10460 sum=69 860
+  - 2035 | numeric | distinct=92 | NA=0% | min=-11670 max=10150 sum=70 040
+  - 2036 | numeric | distinct=93 | NA=0% | min=-11820 max=9880 sum=69 930
+  - 2037 | numeric | distinct=96 | NA=0% | min=-11940 max=9600 sum=69 900
+  - 2038 | numeric | distinct=96 | NA=0% | min=-12080 max=9320 sum=69 850
+  - 2039 | numeric | distinct=92 | NA=0% | min=-12220 max=9100 sum=69 910
+  - 2040 | numeric | distinct=94 | NA=0% | min=-12350 max=8890 sum=69 890
+  - 2041 | numeric | distinct=93 | NA=0% | min=-12480 max=8690 sum=69 860
+  - 2042 | numeric | distinct=95 | NA=0% | min=-12590 max=8520 sum=69 890
+  - 2043 | numeric | distinct=95 | NA=0% | min=-12700 max=8370 sum=69 870
+  - 2044 | numeric | distinct=93 | NA=0% | min=-12790 max=8210 sum=69 740
+  - 2045 | numeric | distinct=94 | NA=0% | min=-12860 max=8130 sum=69 850
+  - 2046 | numeric | distinct=96 | NA=0% | min=-12910 max=8130 sum=69 870
+  - 2047 | numeric | distinct=93 | NA=0% | min=-12990 max=8110 sum=69 950
+  - 2048 | numeric | distinct=91 | NA=0% | min=-13030 max=8080 sum=69 840
+  - 2049 | numeric | distinct=89 | NA=0% | min=-13060 max=8060 sum=69 800
+  - 2050 | numeric | distinct=92 | NA=0% | min=-13090 max=8010 sum=69 840
+  - 2051 | numeric | distinct=95 | NA=0% | min=-13100 max=7970 sum=69 950
+  - 2052 | numeric | distinct=99 | NA=0% | min=-13110 max=7910 sum=69 890
+  - 2053 | numeric | distinct=96 | NA=0% | min=-13090 max=7860 sum=69 890
+  - 2054 | numeric | distinct=95 | NA=0% | min=-13070 max=7810 sum=69 900
+  - 2055 | numeric | distinct=94 | NA=0% | min=-13030 max=7770 sum=69 890
+  - 2056 | numeric | distinct=96 | NA=0% | min=-13010 max=7720 sum=69 850
+  - 2057 | numeric | distinct=94 | NA=0% | min=-12990 max=7690 sum=69 860
+  - 2058 | numeric | distinct=92 | NA=0% | min=-12960 max=7660 sum=69 890
+  - 2059 | numeric | distinct=94 | NA=0% | min=-12960 max=7640 sum=70 020
+  - 2060 | numeric | distinct=90 | NA=0% | min=-12930 max=7620 sum=69 930
+  - 2061 | numeric | distinct=90 | NA=0% | min=-12920 max=7620 sum=69 930
+  - 2062 | numeric | distinct=89 | NA=0% | min=-12920 max=7610 sum=69 870
+  - 2063 | numeric | distinct=95 | NA=0% | min=-12930 max=7610 sum=69 940
+  - 2064 | numeric | distinct=95 | NA=0% | min=-12940 max=7610 sum=69 880
+  - 2065 | numeric | distinct=91 | NA=0% | min=-12950 max=7620 sum=69 910
+  - 2066 | numeric | distinct=91 | NA=0% | min=-12990 max=7640 sum=69 860
+  - 2067 | numeric | distinct=95 | NA=0% | min=-13020 max=7660 sum=69 980
+  - 2068 | numeric | distinct=92 | NA=0% | min=-13070 max=7680 sum=69 920
+  - 2069 | numeric | distinct=94 | NA=0% | min=-13120 max=7700 sum=69 940
+
+========== omphale/omphale_2022_Pop_basse.xlsx (1.1 MB) ==========
+
+-- sheet: Documentation | 18 rows x 4 cols | header found after skipping 15 row(s)
+  - Composantes | character | distinct=16 | NA=11% | length 7-26
+      values: Central (1); Description des scénarios (1); Espérance de vie (1); Espérance de vie basse (1); Espérance de vie haute (1); Fécondité (1); Fécondité basse (1); Fécondité haute (1); Migrations avec l’étranger (1); Migrations basses (1); Migrations hautes (1); Population âgée (1); Population basse (1); Population haute (1); Population jeune (1); Scénarios standards (1)
+  - Hypothèse centrale | character | distinct=8 | NA=11% | length 5-183
+  - Hypothèse basse | character | distinct=7 | NA=17% | length 5-182
+  - Hypothèse haute | character | distinct=7 | NA=17% | length 5-182
+
+-- sheet: Population | 4040 rows x 56 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - SEXE | numeric | distinct=2 | NA=0% | min=1 max=2 sum=6 060
+  - TRAGE | character | distinct=20 | NA=0% | length 5-8
+      values: [0;5[ (202); [10;15[ (202); [15;20[ (202); [20;25[ (202); [25;30[ (202); [30;35[ (202); [35;40[ (202); [40;45[ (202); [45;50[ (202); [5;10[ (202); [50;55[ (202); [55;60[ (202); [60;65[ (202); [65;70[ (202); [70;75[ (202); [75;80[ (202); [80;85[ (202); [85;90[ (202); [90;95[ (202); [95;99+] (202)
+  - POP_2018 | numeric | distinct=2460 | NA=0% | min=40 max=120910 sum=66 992 320
+  - POP_2019 | numeric | distinct=2445 | NA=0% | min=40 max=121560 sum=67 144 030
+  - POP_2020 | numeric | distinct=2479 | NA=0% | min=20 max=121750 sum=67 287 490
+  - POP_2021 | numeric | distinct=2470 | NA=0% | min=20 max=121430 sum=67 407 320
+  - POP_2022 | numeric | distinct=2448 | NA=0% | min=10 max=119870 sum=67 442 220
+  - POP_2023 | numeric | distinct=2454 | NA=0% | min=10 max=117480 sum=67 505 370
+  - POP_2024 | numeric | distinct=2445 | NA=0% | min=10 max=115850 sum=67 569 970
+  - POP_2025 | numeric | distinct=2489 | NA=0% | min=10 max=113850 sum=67 611 860
+  - POP_2026 | numeric | distinct=2475 | NA=0% | min=20 max=111870 sum=67 631 360
+  - POP_2027 | numeric | distinct=2485 | NA=0% | min=30 max=110050 sum=67 629 230
+  - POP_2028 | numeric | distinct=2462 | NA=0% | min=30 max=108510 sum=67 605 830
+  - POP_2029 | numeric | distinct=2473 | NA=0% | min=30 max=107180 sum=67 561 820
+  - POP_2030 | numeric | distinct=2459 | NA=0% | min=20 max=106480 sum=67 497 820
+  - POP_2031 | numeric | distinct=2463 | NA=0% | min=20 max=105570 sum=67 413 580
+  - POP_2032 | numeric | distinct=2433 | NA=0% | min=20 max=106100 sum=67 318 050
+  - POP_2033 | numeric | distinct=2462 | NA=0% | min=20 max=106620 sum=67 211 440
+  - POP_2034 | numeric | distinct=2434 | NA=0% | min=10 max=107480 sum=67 094 040
+  - POP_2035 | numeric | distinct=2463 | NA=0% | min=20 max=108510 sum=66 964 760
+  - POP_2036 | numeric | distinct=2453 | NA=0% | min=20 max=109750 sum=66 824 370
+  - POP_2037 | numeric | distinct=2467 | NA=0% | min=10 max=109760 sum=66 672 000
+  - POP_2038 | numeric | distinct=2429 | NA=0% | min=20 max=110110 sum=66 509 040
+  - POP_2039 | numeric | distinct=2417 | NA=0% | min=20 max=109920 sum=66 335 800
+  - POP_2040 | numeric | distinct=2435 | NA=0% | min=20 max=109880 sum=66 152 120
+  - POP_2041 | numeric | distinct=2418 | NA=0% | min=40 max=108740 sum=65 959 350
+  - POP_2042 | numeric | distinct=2390 | NA=0% | min=40 max=107640 sum=65 758 850
+  - POP_2043 | numeric | distinct=2407 | NA=0% | min=50 max=106400 sum=65 551 070
+  - POP_2044 | numeric | distinct=2387 | NA=0% | min=60 max=104840 sum=65 336 880
+  - POP_2045 | numeric | distinct=2393 | NA=0% | min=60 max=103020 sum=65 115 900
+  - POP_2046 | numeric | distinct=2386 | NA=0% | min=70 max=101320 sum=64 889 810
+  - POP_2047 | numeric | distinct=2424 | NA=0% | min=80 max=99350 sum=64 658 440
+  - POP_2048 | numeric | distinct=2375 | NA=0% | min=80 max=97560 sum=64 421 740
+  - POP_2049 | numeric | distinct=2397 | NA=0% | min=90 max=95840 sum=64 180 290
+  - POP_2050 | numeric | distinct=2400 | NA=0% | min=100 max=93850 sum=63 933 030
+  - POP_2051 | numeric | distinct=2376 | NA=0% | min=100 max=92040 sum=63 680 120
+  - POP_2052 | numeric | distinct=2357 | NA=0% | min=110 max=90530 sum=63 421 430
+  - POP_2053 | numeric | distinct=2381 | NA=0% | min=110 max=88820 sum=63 156 610
+  - POP_2054 | numeric | distinct=2364 | NA=0% | min=120 max=87270 sum=62 885 320
+  - POP_2055 | numeric | distinct=2372 | NA=0% | min=110 max=85900 sum=62 606 810
+  - POP_2056 | numeric | distinct=2362 | NA=0% | min=120 max=84690 sum=62 321 330
+  - POP_2057 | numeric | distinct=2344 | NA=0% | min=120 max=83760 sum=62 029 530
+  - POP_2058 | numeric | distinct=2329 | NA=0% | min=120 max=83070 sum=61 731 150
+  - POP_2059 | numeric | distinct=2359 | NA=0% | min=120 max=82600 sum=61 428 540
+  - POP_2060 | numeric | distinct=2367 | NA=0% | min=130 max=82320 sum=61 120 750
+  - POP_2061 | numeric | distinct=2343 | NA=0% | min=130 max=82240 sum=60 809 540
+  - POP_2062 | numeric | distinct=2311 | NA=0% | min=130 max=82210 sum=60 495 420
+  - POP_2063 | numeric | distinct=2283 | NA=0% | min=140 max=82230 sum=60 180 390
+  - POP_2064 | numeric | distinct=2310 | NA=0% | min=140 max=82290 sum=59 864 090
+  - POP_2065 | numeric | distinct=2309 | NA=0% | min=140 max=82370 sum=59 548 900
+  - POP_2066 | numeric | distinct=2321 | NA=0% | min=140 max=82460 sum=59 233 660
+  - POP_2067 | numeric | distinct=2327 | NA=0% | min=140 max=82530 sum=58 920 540
+  - POP_2068 | numeric | distinct=2287 | NA=0% | min=140 max=82570 sum=58 608 550
+  - POP_2069 | numeric | distinct=2293 | NA=0% | min=140 max=82560 sum=58 298 510
+  - POP_2070 | numeric | distinct=2277 | NA=0% | min=140 max=82480 sum=57 990 240
+
+-- sheet: Solde naturel | 101 rows x 53 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - 2018 | numeric | distinct=88 | NA=0% | min=-3440 max=15660 sum=65 090
+  - 2019 | numeric | distinct=96 | NA=0% | min=-3550 max=15290 sum=56 250
+  - 2020 | numeric | distinct=92 | NA=0% | min=-4240 max=15130 sum=33 060
+  - 2021 | numeric | distinct=92 | NA=0% | min=-4570 max=14670 sum=15 380
+  - 2022 | numeric | distinct=88 | NA=0% | min=-4070 max=14970 sum=42 930
+  - 2023 | numeric | distinct=95 | NA=0% | min=-4050 max=14850 sum=45 030
+  - 2024 | numeric | distinct=89 | NA=0% | min=-4480 max=14180 sum=22 110
+  - 2025 | numeric | distinct=92 | NA=0% | min=-4920 max=13540 sum=-320
+  - 2026 | numeric | distinct=93 | NA=0% | min=-5290 max=12900 sum=-22 130
+  - 2027 | numeric | distinct=92 | NA=0% | min=-5720 max=12320 sum=-43 280
+  - 2028 | numeric | distinct=95 | NA=0% | min=-6060 max=11740 sum=-63 730
+  - 2029 | numeric | distinct=94 | NA=0% | min=-6460 max=11190 sum=-84 290
+  - 2030 | numeric | distinct=97 | NA=0% | min=-6860 max=10770 sum=-104 380
+  - 2031 | numeric | distinct=93 | NA=0% | min=-7090 max=10600 sum=-115 120
+  - 2032 | numeric | distinct=93 | NA=0% | min=-7350 max=10420 sum=-126 350
+  - 2033 | numeric | distinct=89 | NA=0% | min=-7610 max=10260 sum=-137 420
+  - 2034 | numeric | distinct=91 | NA=0% | min=-7860 max=10090 sum=-149 040
+  - 2035 | numeric | distinct=93 | NA=0% | min=-8090 max=9940 sum=-160 730
+  - 2036 | numeric | distinct=95 | NA=0% | min=-8330 max=9820 sum=-171 800
+  - 2037 | numeric | distinct=91 | NA=0% | min=-8530 max=9690 sum=-182 890
+  - 2038 | numeric | distinct=90 | NA=0% | min=-8740 max=9560 sum=-193 630
+  - 2039 | numeric | distinct=96 | NA=0% | min=-8920 max=9610 sum=-203 320
+  - 2040 | numeric | distinct=91 | NA=0% | min=-9060 max=9740 sum=-212 300
+  - 2041 | numeric | distinct=94 | NA=0% | min=-9190 max=9860 sum=-220 570
+  - 2042 | numeric | distinct=95 | NA=0% | min=-9270 max=9960 sum=-227 830
+  - 2043 | numeric | distinct=96 | NA=0% | min=-9360 max=10050 sum=-234 610
+  - 2044 | numeric | distinct=92 | NA=0% | min=-9420 max=10120 sum=-240 420
+  - 2045 | numeric | distinct=95 | NA=0% | min=-9460 max=10180 sum=-245 930
+  - 2046 | numeric | distinct=92 | NA=0% | min=-9510 max=10240 sum=-251 310
+  - 2047 | numeric | distinct=91 | NA=0% | min=-9530 max=10280 sum=-256 600
+  - 2048 | numeric | distinct=93 | NA=0% | min=-9590 max=10340 sum=-261 770
+  - 2049 | numeric | distinct=95 | NA=0% | min=-9630 max=10410 sum=-267 100
+  - 2050 | numeric | distinct=90 | NA=0% | min=-9660 max=10460 sum=-272 790
+  - 2051 | numeric | distinct=90 | NA=0% | min=-9730 max=10550 sum=-278 630
+  - 2052 | numeric | distinct=90 | NA=0% | min=-9800 max=10630 sum=-284 680
+  - 2053 | numeric | distinct=94 | NA=0% | min=-9900 max=10740 sum=-291 650
+  - 2054 | numeric | distinct=94 | NA=0% | min=-10000 max=10860 sum=-298 490
+  - 2055 | numeric | distinct=95 | NA=0% | min=-10080 max=10990 sum=-305 240
+  - 2056 | numeric | distinct=98 | NA=0% | min=-10180 max=11150 sum=-311 800
+  - 2057 | numeric | distinct=92 | NA=0% | min=-10240 max=11300 sum=-317 730
+  - 2058 | numeric | distinct=92 | NA=0% | min=-10340 max=11490 sum=-322 940
+  - 2059 | numeric | distinct=94 | NA=0% | min=-10380 max=11680 sum=-327 630
+  - 2060 | numeric | distinct=93 | NA=0% | min=-10450 max=11890 sum=-331 230
+  - 2061 | numeric | distinct=91 | NA=0% | min=-10480 max=12080 sum=-333 790
+  - 2062 | numeric | distinct=93 | NA=0% | min=-10480 max=12320 sum=-335 210
+  - 2063 | numeric | distinct=93 | NA=0% | min=-10500 max=12560 sum=-335 930
+  - 2064 | numeric | distinct=98 | NA=0% | min=-10460 max=12810 sum=-335 560
+  - 2065 | numeric | distinct=95 | NA=0% | min=-10460 max=13070 sum=-334 730
+  - 2066 | numeric | distinct=93 | NA=0% | min=-10410 max=13320 sum=-333 420
+  - 2067 | numeric | distinct=95 | NA=0% | min=-10370 max=13580 sum=-331 840
+  - 2068 | numeric | distinct=95 | NA=0% | min=-10340 max=13840 sum=-329 960
+  - 2069 | numeric | distinct=94 | NA=0% | min=-10300 max=14090 sum=-328 230
+
+-- sheet: Solde migratoire | 101 rows x 53 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - 2018 | numeric | distinct=97 | NA=0% | min=-23110 max=16200 sum=86 880
+  - 2019 | numeric | distinct=99 | NA=0% | min=-21560 max=15760 sum=86 860
+  - 2020 | numeric | distinct=97 | NA=0% | min=-19960 max=15370 sum=86 960
+  - 2021 | numeric | distinct=96 | NA=0% | min=-24180 max=13120 sum=19 820
+  - 2022 | numeric | distinct=97 | NA=0% | min=-22600 max=12740 sum=19 790
+  - 2023 | numeric | distinct=96 | NA=0% | min=-21090 max=12410 sum=19 880
+  - 2024 | numeric | distinct=94 | NA=0% | min=-19780 max=12130 sum=19 810
+  - 2025 | numeric | distinct=94 | NA=0% | min=-18490 max=11840 sum=19 790
+  - 2026 | numeric | distinct=90 | NA=0% | min=-17290 max=11560 sum=19 840
+  - 2027 | numeric | distinct=98 | NA=0% | min=-16190 max=11270 sum=19 910
+  - 2028 | numeric | distinct=93 | NA=0% | min=-15100 max=10960 sum=19 870
+  - 2029 | numeric | distinct=94 | NA=0% | min=-14070 max=10620 sum=20 050
+  - 2030 | numeric | distinct=92 | NA=0% | min=-13090 max=10320 sum=19 860
+  - 2031 | numeric | distinct=93 | NA=0% | min=-12250 max=9950 sum=19 790
+  - 2032 | numeric | distinct=96 | NA=0% | min=-11840 max=9650 sum=19 960
+  - 2033 | numeric | distinct=94 | NA=0% | min=-11900 max=9280 sum=19 820
+  - 2034 | numeric | distinct=95 | NA=0% | min=-11980 max=8940 sum=19 850
+  - 2035 | numeric | distinct=95 | NA=0% | min=-12040 max=8620 sum=19 990
+  - 2036 | numeric | distinct=94 | NA=0% | min=-12130 max=8330 sum=19 840
+  - 2037 | numeric | distinct=93 | NA=0% | min=-12200 max=8030 sum=19 850
+  - 2038 | numeric | distinct=95 | NA=0% | min=-12280 max=7730 sum=19 900
+  - 2039 | numeric | distinct=97 | NA=0% | min=-12380 max=7510 sum=19 940
+  - 2040 | numeric | distinct=95 | NA=0% | min=-12450 max=7540 sum=19 860
+  - 2041 | numeric | distinct=95 | NA=0% | min=-12540 max=7550 sum=19 950
+  - 2042 | numeric | distinct=92 | NA=0% | min=-12620 max=7560 sum=20 000
+  - 2043 | numeric | distinct=89 | NA=0% | min=-12690 max=7580 sum=20 010
+  - 2044 | numeric | distinct=91 | NA=0% | min=-12750 max=7590 sum=19 850
+  - 2045 | numeric | distinct=96 | NA=0% | min=-12970 max=7590 sum=19 910
+  - 2046 | numeric | distinct=93 | NA=0% | min=-13140 max=7590 sum=19 970
+  - 2047 | numeric | distinct=89 | NA=0% | min=-13290 max=7580 sum=19 960
+  - 2048 | numeric | distinct=95 | NA=0% | min=-13350 max=7550 sum=19 970
+  - 2049 | numeric | distinct=92 | NA=0% | min=-13320 max=7510 sum=19 940
+  - 2050 | numeric | distinct=91 | NA=0% | min=-13240 max=7460 sum=20 050
+  - 2051 | numeric | distinct=92 | NA=0% | min=-13080 max=7410 sum=19 910
+  - 2052 | numeric | distinct=93 | NA=0% | min=-12900 max=7330 sum=19 880
+  - 2053 | numeric | distinct=92 | NA=0% | min=-12840 max=7270 sum=19 990
+  - 2054 | numeric | distinct=95 | NA=0% | min=-12800 max=7200 sum=19 940
+  - 2055 | numeric | distinct=94 | NA=0% | min=-12740 max=7120 sum=19 890
+  - 2056 | numeric | distinct=93 | NA=0% | min=-12670 max=7050 sum=19 960
+  - 2057 | numeric | distinct=93 | NA=0% | min=-12580 max=6990 sum=19 950
+  - 2058 | numeric | distinct=90 | NA=0% | min=-12520 max=6930 sum=19 910
+  - 2059 | numeric | distinct=92 | NA=0% | min=-12440 max=6860 sum=19 990
+  - 2060 | numeric | distinct=94 | NA=0% | min=-12370 max=6820 sum=19 970
+  - 2061 | numeric | distinct=92 | NA=0% | min=-12300 max=6770 sum=19 930
+  - 2062 | numeric | distinct=90 | NA=0% | min=-12240 max=6730 sum=19 860
+  - 2063 | numeric | distinct=90 | NA=0% | min=-12160 max=6710 sum=19 970
+  - 2064 | numeric | distinct=88 | NA=0% | min=-12100 max=6670 sum=20 010
+  - 2065 | numeric | distinct=91 | NA=0% | min=-12040 max=6670 sum=20 020
+  - 2066 | numeric | distinct=95 | NA=0% | min=-12000 max=6640 sum=19 950
+  - 2067 | numeric | distinct=90 | NA=0% | min=-11970 max=6630 sum=19 910
+  - 2068 | numeric | distinct=95 | NA=0% | min=-11950 max=6630 sum=19 930
+  - 2069 | numeric | distinct=92 | NA=0% | min=-11920 max=6630 sum=19 820
+
+========== omphale/omphale_2022_Pop_haute.xlsx (1.1 MB) ==========
+
+-- sheet: Documentation | 18 rows x 4 cols | header found after skipping 15 row(s)
+  - Composantes | character | distinct=16 | NA=11% | length 7-26
+      values: Central (1); Description des scénarios (1); Espérance de vie (1); Espérance de vie basse (1); Espérance de vie haute (1); Fécondité (1); Fécondité basse (1); Fécondité haute (1); Migrations avec l’étranger (1); Migrations basses (1); Migrations hautes (1); Population âgée (1); Population basse (1); Population haute (1); Population jeune (1); Scénarios standards (1)
+  - Hypothèse centrale | character | distinct=8 | NA=11% | length 5-183
+  - Hypothèse basse | character | distinct=7 | NA=17% | length 5-182
+  - Hypothèse haute | character | distinct=7 | NA=17% | length 5-182
+
+-- sheet: Population | 4040 rows x 56 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - SEXE | numeric | distinct=2 | NA=0% | min=1 max=2 sum=6 060
+  - TRAGE | character | distinct=20 | NA=0% | length 5-8
+      values: [0;5[ (202); [10;15[ (202); [15;20[ (202); [20;25[ (202); [25;30[ (202); [30;35[ (202); [35;40[ (202); [40;45[ (202); [45;50[ (202); [5;10[ (202); [50;55[ (202); [55;60[ (202); [60;65[ (202); [65;70[ (202); [70;75[ (202); [75;80[ (202); [80;85[ (202); [85;90[ (202); [90;95[ (202); [95;99+] (202)
+  - POP_2018 | numeric | distinct=2460 | NA=0% | min=40 max=120910 sum=66 992 320
+  - POP_2019 | numeric | distinct=2440 | NA=0% | min=40 max=121460 sum=67 144 110
+  - POP_2020 | numeric | distinct=2473 | NA=0% | min=20 max=121480 sum=67 287 540
+  - POP_2021 | numeric | distinct=2454 | NA=0% | min=20 max=120940 sum=67 407 070
+  - POP_2022 | numeric | distinct=2473 | NA=0% | min=10 max=120260 sum=67 588 010
+  - POP_2023 | numeric | distinct=2455 | NA=0% | min=10 max=118890 sum=67 811 760
+  - POP_2024 | numeric | distinct=2469 | NA=0% | min=10 max=118510 sum=68 057 440
+  - POP_2025 | numeric | distinct=2471 | NA=0% | min=10 max=117970 sum=68 307 760
+  - POP_2026 | numeric | distinct=2483 | NA=0% | min=30 max=117610 sum=68 563 330
+  - POP_2027 | numeric | distinct=2461 | NA=0% | min=30 max=117400 sum=68 825 090
+  - POP_2028 | numeric | distinct=2453 | NA=0% | min=30 max=117380 sum=69 094 110
+  - POP_2029 | numeric | distinct=2496 | NA=0% | min=40 max=117380 sum=69 370 080
+  - POP_2030 | numeric | distinct=2471 | NA=0% | min=20 max=117730 sum=69 654 140
+  - POP_2031 | numeric | distinct=2481 | NA=0% | min=20 max=117600 sum=69 946 470
+  - POP_2032 | numeric | distinct=2488 | NA=0% | min=20 max=118690 sum=70 236 330
+  - POP_2033 | numeric | distinct=2496 | NA=0% | min=20 max=119550 sum=70 524 490
+  - POP_2034 | numeric | distinct=2505 | NA=0% | min=20 max=120610 sum=70 809 600
+  - POP_2035 | numeric | distinct=2499 | NA=0% | min=30 max=121750 sum=71 091 380
+  - POP_2036 | numeric | distinct=2510 | NA=0% | min=30 max=123060 sum=71 370 660
+  - POP_2037 | numeric | distinct=2470 | NA=0% | min=20 max=123140 sum=71 644 870
+  - POP_2038 | numeric | distinct=2509 | NA=0% | min=40 max=123550 sum=71 915 030
+  - POP_2039 | numeric | distinct=2524 | NA=0% | min=40 max=123430 sum=72 179 280
+  - POP_2040 | numeric | distinct=2510 | NA=0% | min=50 max=123490 sum=72 438 760
+  - POP_2041 | numeric | distinct=2521 | NA=0% | min=70 max=122470 sum=72 693 020
+  - POP_2042 | numeric | distinct=2477 | NA=0% | min=80 max=121550 sum=72 941 060
+  - POP_2043 | numeric | distinct=2516 | NA=0% | min=110 max=120520 sum=73 183 710
+  - POP_2044 | numeric | distinct=2501 | NA=0% | min=140 max=119180 sum=73 420 360
+  - POP_2045 | numeric | distinct=2468 | NA=0% | min=160 max=117570 sum=73 652 480
+  - POP_2046 | numeric | distinct=2501 | NA=0% | min=190 max=116080 sum=73 878 580
+  - POP_2047 | numeric | distinct=2501 | NA=0% | min=210 max=114470 sum=74 099 830
+  - POP_2048 | numeric | distinct=2513 | NA=0% | min=250 max=113030 sum=74 316 460
+  - POP_2049 | numeric | distinct=2507 | NA=0% | min=270 max=112240 sum=74 528 370
+  - POP_2050 | numeric | distinct=2499 | NA=0% | min=280 max=111770 sum=74 735 330
+  - POP_2051 | numeric | distinct=2494 | NA=0% | min=300 max=112060 sum=74 939 210
+  - POP_2052 | numeric | distinct=2493 | NA=0% | min=310 max=113040 sum=75 137 860
+  - POP_2053 | numeric | distinct=2522 | NA=0% | min=320 max=114380 sum=75 333 880
+  - POP_2054 | numeric | distinct=2499 | NA=0% | min=340 max=115900 sum=75 526 890
+  - POP_2055 | numeric | distinct=2496 | NA=0% | min=340 max=117600 sum=75 717 900
+  - POP_2056 | numeric | distinct=2530 | NA=0% | min=360 max=119510 sum=75 907 900
+  - POP_2057 | numeric | distinct=2495 | NA=0% | min=370 max=121200 sum=76 098 640
+  - POP_2058 | numeric | distinct=2475 | NA=0% | min=380 max=122610 sum=76 290 990
+  - POP_2059 | numeric | distinct=2514 | NA=0% | min=400 max=123730 sum=76 487 530
+  - POP_2060 | numeric | distinct=2496 | NA=0% | min=420 max=124540 sum=76 688 000
+  - POP_2061 | numeric | distinct=2490 | NA=0% | min=430 max=124990 sum=76 894 810
+  - POP_2062 | numeric | distinct=2547 | NA=0% | min=450 max=125480 sum=77 108 430
+  - POP_2063 | numeric | distinct=2488 | NA=0% | min=480 max=125980 sum=77 329 210
+  - POP_2064 | numeric | distinct=2513 | NA=0% | min=500 max=126480 sum=77 557 670
+  - POP_2065 | numeric | distinct=2515 | NA=0% | min=510 max=126960 sum=77 794 190
+  - POP_2066 | numeric | distinct=2531 | NA=0% | min=520 max=127410 sum=78 039 090
+  - POP_2067 | numeric | distinct=2512 | NA=0% | min=540 max=127800 sum=78 292 010
+  - POP_2068 | numeric | distinct=2503 | NA=0% | min=550 max=128120 sum=78 552 610
+  - POP_2069 | numeric | distinct=2512 | NA=0% | min=550 max=128350 sum=78 820 100
+  - POP_2070 | numeric | distinct=2541 | NA=0% | min=560 max=128470 sum=79 094 110
+
+-- sheet: Solde naturel | 101 rows x 53 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - 2018 | numeric | distinct=94 | NA=0% | min=-3430 max=15680 sum=65 140
+  - 2019 | numeric | distinct=93 | NA=0% | min=-3570 max=15290 sum=56 430
+  - 2020 | numeric | distinct=94 | NA=0% | min=-4230 max=15140 sum=33 250
+  - 2021 | numeric | distinct=96 | NA=0% | min=-3710 max=15300 sum=60 700
+  - 2022 | numeric | distinct=95 | NA=0% | min=-3100 max=16110 sum=104 360
+  - 2023 | numeric | distinct=97 | NA=0% | min=-2960 max=16680 sum=125 910
+  - 2024 | numeric | distinct=94 | NA=0% | min=-2980 max=16860 sum=130 520
+  - 2025 | numeric | distinct=95 | NA=0% | min=-3020 max=17030 sum=136 110
+  - 2026 | numeric | distinct=95 | NA=0% | min=-3060 max=17250 sum=141 960
+  - 2027 | numeric | distinct=93 | NA=0% | min=-3060 max=17500 sum=148 740
+  - 2028 | numeric | distinct=90 | NA=0% | min=-3070 max=17760 sum=156 310
+  - 2029 | numeric | distinct=92 | NA=0% | min=-3100 max=18090 sum=164 370
+  - 2030 | numeric | distinct=93 | NA=0% | min=-3090 max=18330 sum=172 260
+  - 2031 | numeric | distinct=96 | NA=0% | min=-3210 max=18330 sum=170 270
+  - 2032 | numeric | distinct=93 | NA=0% | min=-3330 max=18380 sum=168 160
+  - 2033 | numeric | distinct=94 | NA=0% | min=-3450 max=18420 sum=165 550
+  - 2034 | numeric | distinct=92 | NA=0% | min=-3600 max=18470 sum=162 260
+  - 2035 | numeric | distinct=96 | NA=0% | min=-3720 max=18530 sum=158 930
+  - 2036 | numeric | distinct=89 | NA=0% | min=-3880 max=18590 sum=154 460
+  - 2037 | numeric | distinct=93 | NA=0% | min=-3990 max=18640 sum=149 950
+  - 2038 | numeric | distinct=95 | NA=0% | min=-4100 max=18680 sum=144 850
+  - 2039 | numeric | distinct=97 | NA=0% | min=-4240 max=18720 sum=139 450
+  - 2040 | numeric | distinct=95 | NA=0% | min=-4330 max=18740 sum=134 120
+  - 2041 | numeric | distinct=93 | NA=0% | min=-4460 max=18780 sum=128 340
+  - 2042 | numeric | distinct=96 | NA=0% | min=-4560 max=18760 sum=122 710
+  - 2043 | numeric | distinct=98 | NA=0% | min=-4710 max=18760 sum=117 200
+  - 2044 | numeric | distinct=98 | NA=0% | min=-4790 max=18880 sum=111 870
+  - 2045 | numeric | distinct=94 | NA=0% | min=-4910 max=19350 sum=106 490
+  - 2046 | numeric | distinct=93 | NA=0% | min=-5000 max=19910 sum=101 590
+  - 2047 | numeric | distinct=95 | NA=0% | min=-5080 max=20460 sum=96 550
+  - 2048 | numeric | distinct=94 | NA=0% | min=-5130 max=21030 sum=92 000
+  - 2049 | numeric | distinct=96 | NA=0% | min=-5190 max=21640 sum=87 370
+  - 2050 | numeric | distinct=97 | NA=0% | min=-5250 max=22250 sum=83 320
+  - 2051 | numeric | distinct=95 | NA=0% | min=-5300 max=22890 sum=79 440
+  - 2052 | numeric | distinct=95 | NA=0% | min=-5350 max=23560 sum=76 180
+  - 2053 | numeric | distinct=91 | NA=0% | min=-5420 max=24220 sum=73 140
+  - 2054 | numeric | distinct=95 | NA=0% | min=-5500 max=24940 sum=71 020
+  - 2055 | numeric | distinct=93 | NA=0% | min=-5530 max=25690 sum=70 200
+  - 2056 | numeric | distinct=94 | NA=0% | min=-5580 max=26450 sum=70 860
+  - 2057 | numeric | distinct=89 | NA=0% | min=-5590 max=27260 sum=72 790
+  - 2058 | numeric | distinct=97 | NA=0% | min=-5590 max=28090 sum=76 260
+  - 2059 | numeric | distinct=93 | NA=0% | min=-5560 max=28960 sum=81 190
+  - 2060 | numeric | distinct=95 | NA=0% | min=-5550 max=29850 sum=86 790
+  - 2061 | numeric | distinct=94 | NA=0% | min=-5510 max=30790 sum=93 640
+  - 2062 | numeric | distinct=91 | NA=0% | min=-5450 max=31730 sum=100 970
+  - 2063 | numeric | distinct=92 | NA=0% | min=-5400 max=32720 sum=108 900
+  - 2064 | numeric | distinct=95 | NA=0% | min=-5320 max=33710 sum=116 930
+  - 2065 | numeric | distinct=92 | NA=0% | min=-5260 max=34720 sum=124 960
+  - 2066 | numeric | distinct=96 | NA=0% | min=-5190 max=35780 sum=133 010
+  - 2067 | numeric | distinct=97 | NA=0% | min=-5120 max=36830 sum=140 620
+  - 2068 | numeric | distinct=95 | NA=0% | min=-5080 max=37900 sum=147 650
+  - 2069 | numeric | distinct=96 | NA=0% | min=-5010 max=39000 sum=154 300
+
+-- sheet: Solde migratoire | 101 rows x 53 cols | header found after skipping 5 row(s)
+  - ZONE | character | distinct=101 | NA=0% | length 3-23
+  - 2018 | numeric | distinct=99 | NA=0% | min=-24430 max=15800 sum=86 760
+  - 2019 | numeric | distinct=95 | NA=0% | min=-22820 max=15370 sum=86 680
+  - 2020 | numeric | distinct=95 | NA=0% | min=-21160 max=15000 sum=86 800
+  - 2021 | numeric | distinct=94 | NA=0% | min=-16710 max=15440 sum=119 610
+  - 2022 | numeric | distinct=94 | NA=0% | min=-15380 max=15140 sum=119 780
+  - 2023 | numeric | distinct=93 | NA=0% | min=-14180 max=14870 sum=119 600
+  - 2024 | numeric | distinct=97 | NA=0% | min=-13180 max=14630 sum=119 780
+  - 2025 | numeric | distinct=92 | NA=0% | min=-12280 max=14400 sum=119 670
+  - 2026 | numeric | distinct=97 | NA=0% | min=-11490 max=14190 sum=119 710
+  - 2027 | numeric | distinct=96 | NA=0% | min=-10820 max=13950 sum=119 950
+  - 2028 | numeric | distinct=95 | NA=0% | min=-10200 max=13700 sum=119 940
+  - 2029 | numeric | distinct=93 | NA=0% | min=-10240 max=13420 sum=119 750
+  - 2030 | numeric | distinct=91 | NA=0% | min=-10390 max=13200 sum=119 850
+  - 2031 | numeric | distinct=96 | NA=0% | min=-10540 max=12900 sum=119 930
+  - 2032 | numeric | distinct=97 | NA=0% | min=-10740 max=12640 sum=119 830
+  - 2033 | numeric | distinct=96 | NA=0% | min=-10900 max=12330 sum=119 650
+  - 2034 | numeric | distinct=94 | NA=0% | min=-11080 max=12070 sum=119 930
+  - 2035 | numeric | distinct=92 | NA=0% | min=-11260 max=11810 sum=119 780
+  - 2036 | numeric | distinct=95 | NA=0% | min=-11450 max=11560 sum=119 900
+  - 2037 | numeric | distinct=89 | NA=0% | min=-11650 max=11300 sum=119 900
+  - 2038 | numeric | distinct=97 | NA=0% | min=-11820 max=11050 sum=119 820
+  - 2039 | numeric | distinct=95 | NA=0% | min=-12010 max=10860 sum=119 850
+  - 2040 | numeric | distinct=92 | NA=0% | min=-12170 max=10710 sum=119 820
+  - 2041 | numeric | distinct=89 | NA=0% | min=-12360 max=10570 sum=119 830
+  - 2042 | numeric | distinct=90 | NA=0% | min=-12510 max=10480 sum=119 880
+  - 2043 | numeric | distinct=90 | NA=0% | min=-12660 max=10390 sum=119 870
+  - 2044 | numeric | distinct=94 | NA=0% | min=-12770 max=10300 sum=119 890
+  - 2045 | numeric | distinct=95 | NA=0% | min=-12870 max=10240 sum=119 860
+  - 2046 | numeric | distinct=93 | NA=0% | min=-12940 max=10140 sum=119 780
+  - 2047 | numeric | distinct=96 | NA=0% | min=-13020 max=10050 sum=120 020
+  - 2048 | numeric | distinct=94 | NA=0% | min=-13100 max=9950 sum=119 740
+  - 2049 | numeric | distinct=90 | NA=0% | min=-13140 max=9820 sum=119 900
+  - 2050 | numeric | distinct=96 | NA=0% | min=-13180 max=9690 sum=119 890
+  - 2051 | numeric | distinct=94 | NA=0% | min=-13220 max=9540 sum=119 810
+  - 2052 | numeric | distinct=95 | NA=0% | min=-13230 max=9400 sum=119 860
+  - 2053 | numeric | distinct=92 | NA=0% | min=-13260 max=9280 sum=119 890
+  - 2054 | numeric | distinct=95 | NA=0% | min=-13280 max=9140 sum=119 800
+  - 2055 | numeric | distinct=94 | NA=0% | min=-13290 max=9020 sum=119 840
+  - 2056 | numeric | distinct=97 | NA=0% | min=-13290 max=8910 sum=119 880
+  - 2057 | numeric | distinct=95 | NA=0% | min=-13310 max=8780 sum=119 850
+  - 2058 | numeric | distinct=97 | NA=0% | min=-13360 max=8670 sum=119 780
+  - 2059 | numeric | distinct=94 | NA=0% | min=-13410 max=8600 sum=119 810
+  - 2060 | numeric | distinct=93 | NA=0% | min=-13460 max=8630 sum=119 820
+  - 2061 | numeric | distinct=91 | NA=0% | min=-13510 max=8660 sum=119 850
+  - 2062 | numeric | distinct=94 | NA=0% | min=-13580 max=8700 sum=119 810
+  - 2063 | numeric | distinct=95 | NA=0% | min=-13660 max=8730 sum=119 760
+  - 2064 | numeric | distinct=90 | NA=0% | min=-13740 max=8780 sum=119 790
+  - 2065 | numeric | distinct=92 | NA=0% | min=-13840 max=8820 sum=119 830
+  - 2066 | numeric | distinct=97 | NA=0% | min=-13950 max=8880 sum=119 750
+  - 2067 | numeric | distinct=91 | NA=0% | min=-14070 max=8910 sum=119 860
+  - 2068 | numeric | distinct=99 | NA=0% | min=-14180 max=8970 sum=119 840
+  - 2069 | numeric | distinct=98 | NA=0% | min=-14300 max=9000 sum=119 820
