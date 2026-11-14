@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+\input{../template/preamble}
+
+\title{Ce qui déplace l'effectif « libéral » en 2050 : criblage de Morris et indices de Sobol sur un jumeau numérique de l'offre de soins}
+\author[1]{Équipe hackathon-santé}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Prétirage, version du \today{} --- non relu par des pairs}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+On cherche quels hyperparamètres déplacent l'effectif du secteur privé (« libéral ») de cinq professions de santé
+en France (sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes, infirmiers) en 2030, 2040
+et 2050. Le modèle est un jumeau numérique stock-flux par département, âge et sexe. Dix facteurs au plus par
+profession --- choix d'estimation, ambiguïté public/privé des données, paramètres sourcés et leviers de politique
+--- sont criblés par la méthode de Morris puis décomposés par les indices de Sobol (\num{2048} échantillons de
+base, \num{201276}\mesure{} runs). À 2050, trois sources portent l'essentiel de la variance : la part privée des
+salariés ambigus (indice total 0,91\mesure{} chez les sages-femmes, 0,48\mesure{} chez les pharmaciens), le lien
+formation~$\to$~entrées (filière 0,55\mesure{} chez les dentistes ; quotas 0,19 à 0,61\mesure{} comme levier) et la
+fenêtre d'ajustement (0,53\mesure{} chez les kinésithérapeutes et les infirmiers). Le cumul emploi-retraite ne
+déplace pas la sortie (effet $\le 0{,}25$\,\%\mesure{}). Les fourchettes à 2050 sont données en deux composantes
+séparées : propagation des incertitudes (de $-17$ à $+34$\,\%\mesure{}) et erreur de backtest extrapolée
+($\pm 9$ à $\pm 66$\,\%\derive{}). Limite principale : aucun backtest n'existe au-delà de 10 ans.
+\end{abstract}
+\begin{otherlanguage}{english}
+\begin{abstract}
+We ask which hyperparameters move the private-sector headcount of five French health professions (midwives,
+dentists, pharmacists, physiotherapists, nurses) in 2030, 2040 and 2050. The model is a stock-flow digital twin by
+département, age and sex. Up to ten factors per profession --- estimation choices, the public/private ambiguity of
+the data, sourced parameters and policy levers --- are screened with the Morris method and then decomposed with
+Sobol indices (2,048 base samples, 201,276 runs). In 2050 three sources carry most of the variance: the private
+share of ambiguous salaried workers (total index 0.91 for midwives, 0.48 for pharmacists), the training-to-entry
+link (pipeline switch 0.55 for dentists; training quotas 0.19 to 0.61 as a lever) and the fitting window (0.53 for
+physiotherapists and nurses). Work-retirement combination does not move the output (effect $\le$ 0.25\,\%). Ranges
+for 2050 are reported as two separate components: parameter-uncertainty propagation ($-17$ to $+34$\,\%) and
+extrapolated backtest error ($\pm 9$ to $\pm 66$\,\%). Main limitation: no backtest exists beyond 10 years.
+\end{abstract}
+\end{otherlanguage}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; analyse de sensibilité globale ;
+indices de Sobol ; méthode de Morris ; incertitude.
+
+\noindent\textit{Provenance des nombres :} \mesure{} mesuré, \derive{} dérivé, \suppose{} supposé.
+
+\section{Introduction}
+Le jumeau numérique de l'offre de soins (axe~0 du projet) projette l'effectif par profession, secteur, territoire,
+sexe et âge jusqu'en 2050. L'axe~1 a produit 27 fiches de paramètres sourcés. Deux questions restent ouvertes :
+lesquels de ces paramètres méritent une recherche de source plus fine, et quelle bande d'incertitude afficher à
+2050, horizon pour lequel aucun backtest n'est possible sur les données 2012--2026.
+
+\textbf{Contributions.}
+\begin{itemize}
+  \item Un classement des facteurs par profession et par horizon (2030, 2040, 2050), avec indices de Sobol et
+        intervalles bootstrap (section~\ref{sec:res}).
+  \item Des fourchettes à 2050 en deux composantes séparées et étiquetées.
+  \item Une liste priorisée pour l'axe~1, y compris les paramètres qui ne déplacent pas la sortie.
+  \item Une mesure du défaut du levier retraite avant et après sa correction.
+\end{itemize}
+
+\section{Travaux existants}
+La méthode des effets élémentaires de \citet{morris1991} crible à faible coût les entrées d'un modèle déterministe
+par des plans un-facteur-à-la-fois randomisés. Les indices de \citet{sobol2001} rapportent la variance partielle
+due à une entrée (ou à un groupe) à la variance totale de la sortie. L'indice total, qui inclut toutes les
+interactions, s'estime par le plan et l'estimateur comparés par \citet{saltelli2010} ; nous utilisons l'estimateur
+de \citet{jansen1999} pour l'indice total et celui de \citet{saltelli2010} pour le premier ordre. À notre
+connaissance, nous n'avons pas vérifié d'analyse de sensibilité globale publiée sur une projection d'effectifs de
+professions de santé en France ; nous ne revendiquons pas de nouveauté sur ce point.
+
+\section{Données}
+\begin{itemize}
+  \item \textbf{Effectifs privés par département, âge et sexe, 2012--2026} : DREES, RPPS, croisé avec le secteur
+        d'activité et FINESS (axe~4, fichier \texttt{secteur\_stock.parquet}). Les salariés
+        « ambigus » sont répartis selon une part privée minimale, centrale ou maximale.
+  \item \textbf{Infirmiers} : le fichier par secteur n'a ni âge ni sexe. On utilise les infirmiers libéraux (SNDS,
+        2012--2023, v1), soit \num{98854}\mesure{} en 2023 contre \num{277788}\mesure{} dans tout le privé
+        (environ 36\,\%\derive{}).
+  \item \textbf{Inscrits en formation} : DREES, inscrits par année d'étude 2020--2025 (dentistes, pharmaciens).
+  \item \textbf{Paramètres} : fiches de l'axe~1 (\texttt{v2/docs/lab/fiches/}), en particulier la part des
+        libéraux en cumul emploi-retraite (Conseil d'orientation des retraites, 2016, données 2015).
+\end{itemize}
+
+\section{Méthode}
+\subsection{Modèle et sortie}
+Le jumeau applique chaque année, dans l'ordre, le vieillissement (une fraction $f$ de chaque tranche quinquennale
+passe à la suivante), les sorties ($N \leftarrow s\,N$, rétention nette $s$ ajustée par cellule et âge) et les
+entrées nettes ($N \leftarrow N + k(t)\,m\,(I + p\,h)$). La sortie étudiée est
+\[
+  Y_{p,t} = \sum_{\text{dép., âge, sexe}} N_{\text{privé}}(p, t), \qquad t \in \{2030, 2040, 2050\}.
+\]
+Le jumeau tourne au département, sur le privé seul : sans régulation ni transition, aucun flux ne relie le privé et
+le public. Origine 2026 (infirmiers : 2023).
+
+\subsection{Facteurs}
+Le tableau~\ref{tab:fac} liste les facteurs. Les niveaux discrets sont équiprobables\suppose{}. La variante
+d'entrées « tendance » (pente linéaire prolongée) est exclue du plan : elle multiplie $Y_{2050}$ par 4 à
+10\mesure{} avec une fenêtre de 2 ans (sages-femmes : \num{183200} contre \num{19000}\mesure{}).
+
+\begin{table}[h]\centering\small
+\begin{tabular}{llll}
+\toprule
+Facteur & Famille & Plage & Statut \\
+\midrule
+fenêtre d'ajustement & estimation & \{2, 3, 5, 8\} ans & choix \\
+shrink & estimation & \{20, 200, 2000, national\} & choix \\
+entrées & estimation & \{plates, récentes 2 ans\} & choix \\
+filière (dentistes, pharmaciens) & estimation & \{non, oui\} & choix \\
+part privée (sauf infirmiers) & données & \{min, centrale, max\} & mesuré (bornes) \\
+fraction de vieillissement & paramètre & $[0{,}18 ; 0{,}22]$ & supposé \\
+part en cumul emploi-retraite & paramètre & fiche $\times [0{,}5 ; 2]$ & sourcé $\times$ supposé \\
+décalage de la retraite & levier & $[0 ; 2]$ ans & levier \\
+multiplicateur de cumul & levier & $[1 ; 2]$ & levier \\
+quotas (après le délai $L_p$) & levier & $[0{,}8 ; 1{,}2]$ & levier \\
+\bottomrule
+\end{tabular}
+\caption{Facteurs de l'analyse. Famille « tout » : tous les facteurs ; famille « incertitude » : leviers au
+tendanciel.}\label{tab:fac}
+\end{table}
+
+\subsection{Morris puis Sobol}
+\textbf{Morris} : $r = 30$ trajectoires, $p = 4$ niveaux, pas $\Delta = 2/3$ ; on rapporte $\mu^*$, moyenne des
+effets élémentaires absolus, en \% de $Y$ tendanciel. \textbf{Sobol} : matrices $A$, $B$ et $A_B^{(i)}$
+($N = 2048$, soit $N(k+2)$ runs), $Y$ centré,
+\[
+  S_i = \frac{\overline{f(B)\,[f(A_B^{(i)}) - f(A)]}}{V}, \qquad
+  S_{T,i} = \frac{\overline{[f(A) - f(A_B^{(i)})]^2}}{2V},
+\]
+intervalles à 95\,\% par 500 rééchantillonnages bootstrap des lignes, graine \num{20261114}. Comme $k \le 10$,
+Sobol porte sur tous les facteurs.
+
+\subsection{Fourchettes à 2050}
+\textbf{(a) Propagation} : quantiles 5 et 95\,\% de $Y$ sur les $2N$ tirages de la famille « incertitude ».
+\textbf{(b) Backtest extrapolé} : banc à origines glissantes (protocole N1 de l'axe~3, $h \in \{1,3,5,8,10\}$),
+erreur relative du total national ; pente $a$ de $|\text{erreur}| \propto h$ (moindres carrés sans constante),
+puis $\pm 1{,}6\,a\,h$. Le facteur 1,6, repris d'un outil de l'équipe pour couvrir environ 8 cas sur 10, est cité,
+non reproduit. Les deux composantes ne sont jamais additionnées.
+
+\section{Résultats}\label{sec:res}
+\subsection{Classement}
+Le tableau~\ref{tab:st} donne l'indice total à 2050. Tous les intervalles bootstrap sont plus étroits que l'indice
+dès que $S_T \ge 0{,}05$\mesure{}.
+
+\begin{table}[h]\centering\small
+\begin{tabular}{p{2.9cm}p{5.8cm}p{5.8cm}}
+\toprule
+Profession & Famille « incertitude » ($S_T$ 2050) & Famille « tout » ($S_T$ 2050) \\
+\midrule
+Sages-femmes & part privée 0,91\mesure{} & part privée 0,66\mesure{} ; quotas 0,24\mesure{} \\
+Dentistes & filière 0,55\mesure{} ; part privée 0,26\mesure{} ; fenêtre 0,13\mesure{} & filière 0,44\mesure{} ; part privée 0,21\mesure{} ; quotas 0,19\mesure{} \\
+Pharmaciens & part privée 0,48\mesure{} ; filière 0,32\mesure{} ; fenêtre 0,15\mesure{} & part privée 0,37\mesure{} ; quotas 0,25\mesure{} ; filière 0,23\mesure{} \\
+Kinésithérapeutes & fenêtre 0,53\mesure{} ; part privée 0,18\mesure{} ; entrées 0,17\mesure{} & quotas 0,61\mesure{} ; fenêtre 0,21\mesure{} \\
+Infirmiers (libéraux) & fenêtre~0,53\mesure{} ; entrées 0,49\mesure{} ; fraction 0,20\mesure{} & quotas 0,53\mesure{} ; entrées 0,27\mesure{} ; fenêtre 0,25\mesure{} \\
+\bottomrule
+\end{tabular}
+\caption{Facteurs dominants à 2050 (indice total de Sobol). Valeurs pour 2030 et 2040 et intervalles :
+\texttt{v2/sensibilite/out/classement.csv}.}\label{tab:st}
+\end{table}
+
+En 2030, la part privée domine pour les quatre professions où elle s'applique ($S_T$ 0,69 à 1,01\mesure{}) ; le
+poids des quotas et de la filière croît avec l'horizon, puisque ces leviers n'agissent qu'après le délai de
+formation. En ordre de grandeur (Morris, $\mu^*$ à 2050, pas de 2/3 de la plage) : quotas 15 à 19\,\%\mesure{},
+filière 24\,\%\mesure{} (dentistes), part privée 23\,\%\mesure{} (sages-femmes), fenêtre et fraction de
+vieillissement 4 à 8\,\%\mesure{}, décalage de la retraite 2 à 4\,\%\mesure{}, cumul $\le 0{,}25$\,\%\mesure{}.
+
+\subsection{Fourchettes à 2050}
+\begin{table}[h]\centering\small
+\begin{tabular}{lrrr}
+\toprule
+Profession & $Y$ tendanciel 2050 & (a) propagation P5--P95 & (b) backtest extrapolé \\
+\midrule
+Sages-femmes & \num{19124}\mesure{} & $-16$ / $+20$\,\%\mesure{} & $\pm 65{,}6$\,\%\derive{} \\
+Dentistes & \num{76397}\mesure{} & $-15$ / $+34$\,\%\mesure{} & $\pm 34{,}6$\,\%\derive{} \\
+Pharmaciens & \num{72309}\mesure{} & $-9$ / $+33$\,\%\mesure{} & $\pm 8{,}7$\,\%\derive{} \\
+Kinésithérapeutes & \num{160783}\mesure{} & $-9$ / $+10$\,\%\mesure{} & $\pm 16{,}4$\,\%\derive{} \\
+Infirmiers (libéraux) & \num{115323}\mesure{} & $-17$ / $+9$\,\%\mesure{} & $\pm 49{,}3$\,\%\derive{} \\
+\bottomrule
+\end{tabular}
+\caption{Fourchettes à 2050. Aucun backtest n'existe à cet horizon : le plus long observé est $h = 10$ ans
+($h = 5$ pour les kinésithérapeutes et les infirmiers).}\label{tab:band}
+\end{table}
+
+L'erreur des sages-femmes est un biais qui croît, pas une dispersion : $+1{,}5$\,\%\mesure{} à $h = 1$,
+$+7{,}8$\,\%\mesure{} à $h = 5$, $+18{,}8$\,\%\mesure{} à $h = 10$.
+
+\subsection{Levier retraite}
+Avant correction, le levier multipliait en permanence la sortie de la tranche ouverte 65+ ; il donnait chez les
+dentistes 1,10, 1,39 et 1,85\mesure{} fois l'effet du correctif $e' = e/(1+\Delta e)$ pour $\Delta = 1, 2, 3$ ans.
+Après correction (code du 2026-11-14), le rapport tombe à 1,08--1,16\mesure{}, écart expliqué par un demi-effet
+appliqué aux 55--59 ans. Tous les indices sont calculés sur le code corrigé.
+
+\section{Validation et menaces à la validité}
+\begin{itemize}
+  \item \textbf{Les plages font les indices.} L'équiprobabilité des fenêtres (2 ans pèse autant que 5) est
+        supposée ; une plage resserrée réduirait l'indice de la fenêtre.
+  \item \textbf{Facteurs sans prise.} Formation (le vivier n'alimente pas l'effectif), régulation (zones
+        communales) et une vingtaine de fiches n'ont pas de point d'entrée dans le jumeau : leur sensibilité est
+        indécidable, pas nulle.
+  \item \textbf{Périmètre infirmier} : libéraux seulement, environ 36\,\%\derive{} du privé.
+  \item \textbf{Extrapolation} : la composante (b) prolonge linéairement des erreurs observées jusqu'à $h = 10$
+        vers $h = 24$--27.
+  \item \textbf{Échelle} : sortie nationale ; au département, le classement peut différer (non mesuré).
+  \item \textbf{Code en mouvement} : le jumeau a changé deux fois pendant l'analyse ; tout a été relancé sur la
+        dernière version.
+\end{itemize}
+
+\section{Reproductibilité}
+Depuis la racine du dépôt (graine \num{20261114}, \num{201276} runs, \SI{815}{\second}\mesure{} sur la machine du
+projet) :
+\begin{verbatim}
+PYTHONPATH=v2:. uv run python -m sensibilite.run --n 2048 --r 30
+PYTHONPATH=v2:. uv run python -m sensibilite.backtest
+PYTHONPATH=v2:. uv run python -m sensibilite.tendance
+PYTHONPATH=v2:. uv run python -m sensibilite.retraite_b1
+PYTHONPATH=v2:. uv run python -m sensibilite.resume
+\end{verbatim}
+Les sorties brutes ($X$, $Y$ de chaque plan) sont dans \texttt{v2/sensibilite/out/Y\_*.npz}. Rapport source :
+\texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md}. Les références ont été vérifiées sur leurs
+métadonnées et leur résumé.
+
+\section{Conclusion}
+Priorités pour la recherche de sources (axe~1), dans l'ordre : (1) la part privée des salariés ambigus,
+sages-femmes et pharmaciens d'abord ($\approx$ 1--2\,h\suppose{}) ; (2) la transmission formation~$\to$~entrées
+(rendement, abandon, évaporation, délai), utile seulement quand l'axe~2 relie le vivier à l'effectif
+($\approx$ 2\,h\suppose{}) ; (3) la distribution des âges dans les tranches ($\approx$ 45\,min\suppose{}) ;
+(4) l'âge de retraite, en faible priorité. Le cumul emploi-retraite ne déplace pas la sortie : inutile de
+l'approfondir. La fenêtre et la variante d'entrées sont des choix d'estimation à trancher par le banc de
+l'axe~3, pas par une source.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}

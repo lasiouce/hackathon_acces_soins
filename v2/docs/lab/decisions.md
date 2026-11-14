@@ -929,7 +929,7 @@ code. Le masque retraite contredisait une décision inscrite.
   registre ; l'article les met en forme.
 - **Défauts retenus sans demande explicite, à confirmer** : la langue
   (français) et les auteurs (« Équipe hackathon-santé » et Claude comme
-  assistant de recherche).
+  assistant de recherche). *Corrigé le 2026-11-14 à la demande de l'utilisateur·rice : Claude n'est plus cité comme auteur, ni dans le gabarit ni dans les six prétirages.*
 - Aucun moteur TeX n'est installé : la compilation attend
   `brew install tectonic` (accord à demander).
 
