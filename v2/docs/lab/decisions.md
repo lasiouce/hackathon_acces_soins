@@ -1829,10 +1829,35 @@ un nouveau protocole.
 **Ce qui le renverserait.** Un nouveau protocole qui passe (bande en √h,
 entrées séparées de la rétention, contrôle synthétique pour N3).
 
+## 2026-11-14 — Tests des boucles de rétroaction : tester le signe avant de modéliser
+
+**Décision.**
+- **Axe 3** : pré-enregistrer (gel SHA-256) puis exécuter deux tests de signe, avec les données
+  communales de l'axe 4.
+  - **B2, densité → installations nettes** : les communes et bassins de vie peu denses
+    attirent-ils plus d'installations des moins de 40 ans, à population et zonage contrôlés,
+    pour IDE, MK et CD, sur 2012-2025 ?
+  - **B1, densité → départs avant 60 ans** : la rétention des 45-59 ans est-elle plus faible
+    là où la densité est faible, par département, avec le RPPS de 2012 à 2026 ?
+  - Pour chacun : effet, intervalle et test placebo, puis un verdict (signe confirmé, nul ou
+    contraire).
+- **Axe 2** : si B2 est confirmé, la densité entre comme covariable estimée du logit
+  d'installation (étape 3). Pas de sigmoïde supposée.
+- **B1 confirmé ou non** : la boucle charge → départs reste un scénario de stress étiqueté
+  « supposé », jamais dans le tendanciel. La charge suppose un module de besoin, toujours en
+  question ouverte.
+- **Contraintes pour toute boucle** : conservation du total national (K-cons), réallocation
+  bornée par le flux d'entrants (≈ 3 %/an, H3), test d'oscillation (K-osc).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « en fait si si », après la revue de l'analyse
+transmise.
+**Ce qui le renverserait.** Un signe nul ou contraire : la boucle n'est alors pas branchée.
+
 ## Open / not yet decided
 - **Boucles de rétroaction non linéaires** (analyse transmise le 2026-11-14 :
   [inputs/2026-11-14-analyse-boucles-retroaction.md](inputs/2026-11-14-analyse-boucles-retroaction.md)).
-  Gardée comme référence ; « pas maintenant ». La conduite proposée est notée dans le fichier :
+  ~~Gardée comme référence ; « pas maintenant ».~~ **Lancée le 2026-11-14** (« en fait si si »),
+  voir l'entrée « Tests des boucles de rétroaction ». La conduite proposée est notée dans le fichier :
   - tester le signe empiriquement d'abord ;
   - estimer la boucle densité → installations dans le logit plutôt que de la supposer ;
   - garder la boucle charge → départs en scénario de stress.

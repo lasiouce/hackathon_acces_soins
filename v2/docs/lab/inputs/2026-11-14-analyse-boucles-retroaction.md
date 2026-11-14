@@ -2,14 +2,13 @@
 type: input
 date: 2026-11-14
 author: utilisateur·rice (analyse transmise), revue par la session v2
-status: référence, non adoptée
+status: tests lancés (2026-11-14)
 tags: [rétroaction, non-linéarité, sensibilité, axe2, axe5]
 ---
 
 # Analyse transmise : stock-flux, Morris/Sobol, dynamiques non linéaires et boucles de rétroaction
 
-**Statut.** Gardée comme référence, à la demande de l'utilisateur·rice (2026-11-14 : « pas
-maintenant »). Rien n'est lancé.
+**Statut.** D'abord gardée comme référence, puis **tests lancés** le 2026-11-14 (« en fait si si ») : voir decisions.md, entrée « Tests des boucles de rétroaction ».
 
 ## Contenu, en résumé
 1. Le stock-flux par composantes comme socle : N(t+1) = max(0, s ⊙ Shift(N) + k(t)(I + p·h)),
