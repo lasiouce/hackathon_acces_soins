@@ -50,7 +50,7 @@ class Etrangers(Module):
               "ER 1319 (IDE) ; variante basse FLUX_BAS : DD76 tableaux 12-13, ER 1075", "2022-2025", "sourcé",
               "Diplômés à l'étranger entrant chaque année. CD sourcé, MK/PH/SF dérivés, IDE confiance faible.",
               (0.0, 1e5)),
-        Param("multiplicateur", 1.0, "× flux observé", "fiche param-age-entree-exercice (plage supposée × [0,5 ; 2])",
+        Param("multiplicateur", 1.0, "× flux observé", "fiche param-age-entree-exercice (plage supposée × [0 ; 2])",
               "—", "supposé", "Reconnaissance des diplômes, procédures d'autorisation d'exercice.", (0.0, 3.0),
               "attirer"),
         Param("age_entree", 28.0, "ans", "DREES, Les Dossiers n° 76 (2021), tableaux 12 et 13 (SF, CD : 28 ans)",

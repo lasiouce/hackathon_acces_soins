@@ -12,7 +12,7 @@ MAX_LISTE = 10
 _LV = {
     "quotas": {"type": "number", "minimum": 0.7, "maximum": 1.5, "description": "Places en formation, multiplicateur (1.2 = +20 %). Effet après la durée des études."},
     "quotas_region": {"type": "boolean", "description": "Hausse des places seulement dans la région du territoire demandé."},
-    "etrangers": {"type": "number", "minimum": 0.5, "maximum": 2.0, "description": "Diplômés hors de France accueillis, multiplicateur."},
+    "etrangers": {"type": "number", "minimum": 0, "maximum": 2.0, "description": "Diplômés hors de France accueillis, multiplicateur."},
     "regul": {"type": "boolean", "description": "Régulation de l'installation : en zone régulée, une entrée seulement pour un départ."},
     "part_zones": {"type": "number", "minimum": 0.0, "maximum": 1.0, "description": "Part des zones régulées retenues, si regul."},
     "dest": {"type": "string", "enum": ["salariat", "sortie", "voisine"], "description": "Destination des entrants bloqués, si regul."},

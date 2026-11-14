@@ -2448,6 +2448,11 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
+  en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
+  de 100 %. Prix : renommage ≈ 10 min ; premières entrées ≈ 2 h.
+- ~~**Carte : afficher la définition des indicateurs, de manière facultative**~~ **Tranchée le 2026-11-14 : encadré
+  dépliable sous la légende** (entrée « Carte : définition des indicateurs dans un encadré facultatif »).
 - ~~**Assistant : objectif chiffré → leviers**~~ **Construit le 2026-11-14** (entrée « Assistant : objectifs → mélanges de leviers… »).
 - ~~**Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement**~~ **Tranchée le 2026-11-14 : ouvert
   au chargement** (entrée « Option 1 : la conversation ouverte au chargement… »). (relevé le 2026-11-14 en fusionnant
@@ -3340,7 +3345,8 @@ fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/cart
   fixes) avec l'habillage de la **direction A** :
   - ~~fond blanc, encre noire, police Atkinson Hyperlegible ;~~ **remplacé le 2026-11-14** par l'habillage DSFR
     (entrée « Carte : habillage DSFR ») ;
-  - gamme bistre ↔ bleu pétrole, jamais rouge ni vert (gardée pour les données).
+  - ~~gamme bistre ↔ bleu pétrole, jamais rouge ni vert (gardée pour les données).~~ **Remplacé le 2026-11-15** pour la
+    carte par la gamme DSFR orange ↔ vert (entrée « Carte : dégradé DSFR orange ↔ vert »).
 - **Trois panneaux dépliables** :
   - **Scénario** à gauche ; replié, il devient une barre de 60 px avec le nombre de leviers
     modifiés ;
@@ -3525,6 +3531,8 @@ ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'�
 
 ## 2026-11-14 — Squelette : la conversation est ouverte au chargement de la carte
 
+**Remplacé le 2026-11-14** par l'entrée « Carte : panneau Résultat à modes de visualisation, assistant en fenêtre modale » : l'assistant s'ouvre dans une fenêtre modale par un bouton sur la carte, fermée au chargement.
+
 **Décision.** Le panneau « Questions » s'ouvre au chargement (ordinateur : à droite ; mobile : en bas), refermable par
 le bouton « Questions » ou la croix. Aucun autre changement de mise en page : la refonte attend l'équipe UX.
 **Pourquoi.** L'utilisateur·rice : « on avait dit que c'était la nouvelle interface principale pour l'utilisateur » ; un
@@ -3544,6 +3552,8 @@ de la page option 1 afficherait « Serveur injoignable. ».
 devient l'interface principale »).
 
 ## 2026-11-14 — Option 1 : la conversation ouverte au chargement, premier onglet, colonne élargie
+
+**Remplacé le 2026-11-14** par l'entrée « Carte : panneau Résultat à modes de visualisation, assistant en fenêtre modale » : l'assistant s'ouvre dans une fenêtre modale par un bouton sur la carte, fermée au chargement.
 
 **Décision.** Dans `index-option1.html`, l'onglet **Questions** est le premier de la colonne de droite et il est ouvert
 au chargement ; quand il est affiché, la colonne passe de 27 rem à `max(27 rem, min(34 rem, 38 vw))`. L'icône sur la
@@ -3873,6 +3883,8 @@ kinés France +20 % : inchangé (places +15 % et étrangers ×1,8).
   - La mise en page de l'option 1 reste : trois colonnes, panneaux dépliables, onglets.
   - La sémiologie des **données** de la direction A reste : gamme bistre ↔ bleu pétrole, jamais rouge ni vert,
     couleurs des professions. Le DSFR habille l'interface, pas la carte choroplèthe.
+    **Remplacé le 2026-11-15** pour la carte choroplèthe : gamme DSFR orange ↔ vert (entrée « Carte : dégradé DSFR
+    orange ↔ vert »). Les courbes des graphiques gardent leurs couleurs.
 - **Même pile, sans build ni React.**
   - Le DSFR est du CSS et du JavaScript sans framework. `react-dsfr` n'est qu'une surcouche.
   - La v1.15.4 est copiée dans `v2/prototype-carte/dsfr/`, servie par `server.py` comme les autres fichiers
@@ -3902,3 +3914,399 @@ d'auteur. Commence le refacto ». L'hébergement par un service de l'État est d
 réserve des entrées « trois directions artistiques » et « Refonte de l'interface de la carte ».
 **Ce qui le renverserait.** Un hébergement hors d'un service de l'État : retour à la direction A (commit
 précédent). Ou une recette (`recette.mjs --option1`) qui régresse sous 39/40 à cause de l'habillage.
+
+## 2026-11-14 — Carte : profession et année en tête du Scénario, leviers en accordéons par famille
+
+**Décision.**
+- **Profession** : une liste déroulante DSFR (`fr-select`) en tête du panneau Scénario, avec une pastille de couleur
+  dans son libellé. Elle remplace les étiquettes de la barre du haut. Les professions absentes y figurent désactivées,
+  avec leur raison.
+  - Options écartées :
+    - contrôle segmenté dans la barre ;
+    - liste seule dans la barre ;
+    - menu dans le titre de la carte (composant maison).
+- **Curseur d'année** déplacé sous la profession, dans le même bloc d'en-tête du Scénario.
+- **Barre d'outils supprimée** : le fil d'Ariane est posé sur la carte, en haut à gauche. La carte gagne la hauteur de
+  la barre.
+- **Mobile** : le bloc profession + année reste visible quand le panneau est replié. Cela tient le P0 « profession hors
+  écran sur mobile » de l'UAT V2.
+- **Leviers regroupés par famille**, une famille par accordéon DSFR : Former, Attirer, Réguler l'installation, Retenir,
+  et Hypothèses de contexte.
+  - Chaque accordéon contient le curseur principal, son délai et sa source, puis les réglages fins de la famille.
+  - Son titre porte l'effet du réglage (« +1 234 en 2050 ») dès qu'un levier de la famille est modifié.
+  - Les accordéons sont **indépendants**, sans groupe, donc plusieurs peuvent être ouverts.
+  - Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.
+  - Cela respecte l'entrée « Carte : curseurs principaux visibles sous la phrase », qui a retiré l'accordéon à une
+    seule famille ouverte.
+- « Plus » ne contient plus que la phrase en langage naturel, le résumé et ses actions, et la liste « Pas encore dans
+  le modèle ». Les réglages fins et les sources sont dans leurs familles.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « réorganiser la sélection des spécialités […] Fais proposition. Déplace
+la barre de sélection temporelle dans la barre de scénario. Regroupe les paramètres par famille dans l'onglet
+scénario ».
+- Choix parmi quatre propositions : « En tête du Scénario » et « Accordéons DSFR ».
+- Conflit signalé avec la décision « curseurs principaux visibles » ; réponse : « Accordéons ouverts ».
+**Ce qui le renverserait.** Une recette par personas où la profession n'est plus trouvée hors de la barre du haut. Ou une
+démo sur grand écran où le panneau Scénario, plus long, oblige à défiler pour atteindre les familles.
+
+## 2026-11-14 — Carte : infobulles des indicateurs, légende alignée, maille Départements / Régions, Territoire et comparaison réunis
+
+**Décision.**
+- **Infobulles DSFR** (`fr-tooltip`) sur les trois boutons d'indicateur, ~~au survol et au focus clavier~~. **Remplacé le
+  2026-11-14** (demande : « N'affiche pas les infobulles au survol. Mets un petit icône informations et déplie la bulle
+  sur le bouton ») : une icône « i » (DSFR `fr-btn--tooltip`, icône `fr--info-line`) suit chaque bouton. Un clic sur
+  l'icône déplie la bulle, sans changer d'indicateur. Chaque bulle donne la définition de l'indicateur, puis la valeur
+  France à l'année affichée. **Retiré le 2026-11-14** (demande : « Remplace "Évolution" avec "Variation de
+  l'effectif". Supprime les infobulles ») : plus d'icône ni de bulle. Une autre façon d'afficher ces définitions, de
+  manière facultative, est à choisir (voir `## Open / not yet decided`). Le bouton « Évolution 2026 → AAAA » devient
+  **« Variation de l'effectif 2026 → AAAA »**, ainsi que le titre de légende lu par les lecteurs d'écran et la colonne
+  « Variation » du tableau Comparer.
+  - **Évolution** : variation de l'effectif libéral depuis 2026, en points d'écart à l'évolution France.
+  - **Écart au tendanciel** : scénario comparé au tendanciel, en %. La carte est uniforme sans levier modifié.
+  - **Densité** : professionnels × activité pour 100 000 habitants (Insee Omphale 2022), en écart à la densité France.
+  - Les mots suivent le lexique : « au-dessus / en dessous de la moyenne nationale ».
+  - La légende reste réduite (entrée « Carte option 1 : ajustements ») : l'explication passe par l'infobulle, pas par
+    un titre visible.
+- **Légende alignée sur la carte.**
+  - Défaut corrigé : la gamme était faite de 7 blocs égaux, alors que la carte interpole en continu de −B à +B. Les
+    graduations étaient réparties avec l'unité comme sixième élément, si bien que « 0 » n'était pas au centre.
+  - La gamme est maintenant un dégradé continu des 7 mêmes couleurs, chaque graduation est posée à sa position exacte
+    (0 au centre), et l'unité (pts ou %) est à droite de la gamme.
+- ~~**Maille de la carte** : un sélecteur DSFR (`fr-segmented`) dans la légende, **Départements** par défaut, ou Régions.
+  Il est gardé dans le lien (`m=reg`).~~ **Remplacé le 2026-11-14** (demande : « Enlève les boutons Départements/Région.
+  Laisse la vue par département ») : le sélecteur est retiré.
+  - La carte est **toujours colorée par département**, à tout zoom, avec des limites nettes.
+  - Un clic ouvre le département sous le curseur, et le survol le nomme.
+  - Une région s'ouvre par le fil d'Ariane ou par la recherche ; elle reste mise en avant quand un de ses départements
+    est ouvert.
+  - Le paramètre de lien `m` n'existe plus.
+  - La vue France par région (retour UAT n° 2) est abandonnée.
+  - Le détail ci-dessous décrit le sélecteur retiré :
+  - Départements : la carte est colorée par département à tout zoom, avec des limites nettes. Un clic ouvre le
+    département, et le survol le nomme.
+  - Régions : c'est le comportement d'avant. Vue France par région ARS ; un clic ouvre la région, puis ses
+    départements. Maj + clic ouvre le département.
+  - **Remplace** le choix par défaut « premier clic = région » et « vue France colorée par région » (ajouts UAT n° 1
+    et 2 de l'entrée « Écran de décision V2 »). La vue régionale reste disponible en un clic.
+- **Panneau droit** : les onglets Territoire et Comparer deviennent un seul onglet, **« Territoire et
+  comparaison »**. La fiche est en haut, puis la section Comparer (territoires comparés, scénarios épinglés).
+  « Ajouter à la comparaison » fait défiler jusqu'à cette section. Les onglets sont maintenant Assistant, Territoire et
+  comparaison, Expert.
+- **Recette** : ~~R04 vérifie les deux mailles~~ R04 vérifie qu'un clic en vue France ouvre le département ; O03 et O05
+  suivent les onglets réunis.
+- **Bascules à choix unique sans coche** (ajout du même jour, demande : « Enlève la checkbox sur les boutons Évolution,
+  Écart au tendanciel etc. »). L'étiquette active est pleine, en bleu France, sans la coche du DSFR. Cela vaut pour
+  l'indicateur, l'échelle de la fiche et le mode expert.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Rajoute des infobulles […] Évolution, Écart au tendanciel, Densité.
+[…] rassemble les panneaux Territoire/Comparer. La légende de la carte n'est pas en adéquation avec l'échelle […]. Le
+clic sur le département amène sur la région, trouve quelque chose de plus ergonomique ».
+- Lecture retenue pour la légende : gamme et graduations décalées par rapport aux couleurs de la carte.
+- Maille par défaut Départements : la demande porte sur le clic sur un département.
+**Ce qui le renverserait.** Une recette par personas où la vue France en départements redevient illisible (retour UAT
+n° 2, « on voit tout ») : la maille Régions repasserait alors par défaut. Ou une autre lecture de « l'échelle en bas à
+gauche » que les graduations de la légende.
+
+## 2026-11-14 — Carte : définition des indicateurs dans un encadré facultatif sous la légende
+
+**Décision.**
+- Sous la gamme de la légende, un lien DSFR « Comment lire cet indicateur ? » déplie un court encadré, puis le replie.
+- L'encadré définit **l'indicateur affiché seulement**, avec la valeur France à l'année affichée. Son texte suit le
+  changement d'indicateur et d'année.
+- Il est **fermé par défaut**. Le dernier choix (ouvert ou fermé) est gardé dans le stockage local du navigateur. C'est un
+  confort de lecture, pas un état du scénario : il n'entre pas dans le lien.
+- Il remplace les infobulles retirées le même jour.
+- Options écartées : fenêtre « Lire la carte » (elle masque la carte pendant la lecture) et ligne de définition
+  masquable (visible par défaut).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « As-tu un autre moyen d'afficher ces informations de manière
+facultative », puis le choix « Encadré sous la légende » parmi trois propositions.
+**Ce qui le renverserait.** Une recette par personas où l'encadré n'est pas trouvé, ou bien où il masque une zone utile
+de la carte une fois ouvert.
+
+## 2026-11-14 — Carte : panneaux repliés mis en évidence ; indicateurs sur une ligne
+
+**Décision.**
+- **Panneau latéral replié** (Scénario à gauche, Territoire à droite) :
+  - barre bleu France clair, avec un filet bleu de 4 px côté carte ;
+  - bouton de dépli plein, en bleu France ;
+  - résumé vertical en bleu ;
+  - **toute la barre déplie le panneau** au clic. Sur mobile, la profession et l'année laissées visibles restent
+    utilisables sans déplier.
+- **Les trois indicateurs de la légende sur une ligne** sur ordinateur. Sur mobile, ils passent encore à la ligne faute
+  de place. La légende s'ajuste à son contenu, dans la limite de 34 rem.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Mets en évidence les panneaux latéraux lorsqu'ils sont repliés. Un
+user test n'a pas vu celui de droite. », puis « Mets les 3 boutons sur une ligne ».
+**Ce qui le renverserait.** Un nouveau test utilisateur où le panneau replié reste inaperçu : il faudrait alors une
+étiquette horizontale (« Territoire › »), voire ne plus permettre de replier le panneau droit.
+
+## 2026-11-14 — Levier « diplômés étrangers » de 0 à 2 ; séries annuelles d'âge, d'entrées et de sorties dans `/api/scenario`
+
+**Décision.**
+- **Levier `etrangers.multiplicateur`** : la plage passe de **[0,5 ; 2] à [0 ; 2]** (pas de 0,1, défaut 1, statut toujours
+  « supposé », source « fiche param-age-entree-exercice (plage supposée × [0 ; 2]) »). 0 signifie qu'aucun diplômé à
+  l'étranger n'est accueilli.
+  - Le paramètre du jumeau acceptait déjà [0 ; 3].
+  - Les endroits suivants lisent la nouvelle borne ou l'ont reçue : serveur, schéma des outils du chatbot, description
+    de l'outil agent.
+  - Endroits laissés à [0,5 ; 2] ou au-dessus de 1, volontairement :
+    - plage Sobol de `v2/sensibilite/leviers.py` ;
+    - bornes de recherche d'objectif de `chatbot/passerelle/requetes.py` ([1 ; 2], hausses seulement) ;
+    - copie figée `chatbot/vendor/`.
+  - Effet à 0, 2050, France : dentistes 40 763 contre 67 616 en tendanciel (−40 %), kinés 115 588 contre 159 951,
+    infirmiers 329 077 contre 334 045. Le flux étranger supposé pèse lourd chez les dentistes (≈ 1 300 par an).
+- **`/api/scenario` renvoie `series` et `series_meta`**, annuels sur `years`, tendanciel (`base`) et scénario (`scn`), pour
+  un département, une région ou la France :
+  - `age_moyen` (ans) : approché aux centres des tranches de 5 ans (< 25 → 22 ; 65+ → 69,5). Observé RPPS en `obs`.
+  - `part_60p` (fraction ; `facteur: 100` pour l'affichage) : tranches 60–64 et 65+, dérivation exacte. Observé en `obs`.
+  - `entrees` et `sorties` (professionnels / an) : parties positives et négatives des flux du registre, hors
+    vieillissement et plancher. La valeur de l'année d'origine est `null`. Il n'y a pas d'observé : le RPPS ne donne que
+    des stocks.
+  - **Cohérence** : Δeffectif − (entrées − sorties) = flux « plancher » du moteur, qui ramène à zéro les cellules
+    négatives. Il vaut 0,06 à 0,13 par an aux petites échelles, et jusqu'à ≈ 93 par an pour les infirmiers France
+    (≈ 1 % des entrées). Il n'est pas compté dans les entrées, pour ne pas fabriquer d'installations.
+  - Latence : + 1 à 4 ms par requête (kinés D63 ≈ 12 ms ; infirmiers France ≈ 48 ms).
+- `v2/jumeau/check.py` n'a pas pu être rejoué : données brutes absentes de la machine.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Borne pour accueil étranger à modifier de 0 à 2 », et un mode graphique
+qui superpose « effectif + âge » et d'autres combinaisons. Les séries sont dérivées de l'état par âge du jumeau, sans
+donnée inventée.
+**Ce qui le renverserait.** Une source qui borne le flux étranger par profession (la plage reste supposée). Ou un
+plancher qui dépasse quelques % des entrées : il faudrait alors l'afficher comme un flux à part.
+
+**Écart relevé, non traité.**
+- L'interface masque le levier pour les pharmaciens (« aucun flux de diplômés étrangers publié »).
+- Pourtant le moteur leur applique un flux étranger d'environ 240 par an : 0 change leur effectif 2050 de −4 424.
+- Il faut décider si ce flux est sourcé ou s'il doit être mis à zéro. Prix : ≈ 30 min d'enquête.
+
+## 2026-11-14 — Carte : panneau Résultat à modes de visualisation, assistant en fenêtre modale
+
+**Décision.**
+- **Panneau droit « Résultat »**, un seul panneau sans onglet. Les onglets Assistant, « Territoire et comparaison » et
+  Expert sont retirés.
+  - En tête : la fiche du territoire (nom, bascule territoire ↔ France entière, trois chiffres clés), avec « Ajouter à la
+    comparaison » et « Exporter la fiche (CSV) ».
+  - Dessous, un sélecteur DSFR (`fr-segmented`) de **cinq modes**, gardé dans le lien (`r=`) :
+    - **Graphique** (par défaut) ;
+    - **Chronologique** ;
+    - **Flux** : barres de décomposition et tableau par année, venus de l'Expert ;
+    - **Comparer** : territoires comparés et scénarios épinglés ;
+    - **Données** : zonage, leviers bruts avec paramètre et source, latence.
+  - Flux et Données suivent l'échelle de la fiche (territoire ou France).
+- **Graphique : courbes superposables.**
+  - Catalogue : Effectif (observé, tendanciel, scénario, fourchette), Densité pour 100 000, Population (Omphale), et, depuis
+    `series`, Âge moyen, Part des 60 ans et plus, Entrées annuelles, Sorties annuelles.
+  - Les courbes se choisissent par cases à cocher et par **8 superpositions proposées** :
+    - Effectif seul ;
+    - Effectif + âge moyen ;
+    - Effectif + part des 60 ans et + ;
+    - Effectif + densité ;
+    - Entrées et sorties ;
+    - Effectif + entrées et sorties ;
+    - Effectif + population ;
+    - Effectif, densité et population.
+  - Une superposition n'est proposée que si toutes ses courbes existent.
+  - **Règle des axes** : un axe par unité. Deux unités donnent un axe à gauche et un à droite, titrés. À partir de trois
+    unités, l'« indice base 100 en 2026 » sur un seul axe est imposé. La base 100 peut aussi être choisie à la main. Le
+    choix est gardé dans le lien (`g=`, `b=1`).
+  - Tracé : tendanciel en tirets, scénario en trait épais, observé en trait fin, fourchette hachurée (effectif
+    seulement), repère à l'année affichée.
+  - La légende donne, pour chaque courbe, la valeur à l'année affichée et la source.
+  - Couleurs de la direction A : jamais rouge ni vert.
+- ~~**Chronologique** : jalons datés.~~ **Retiré le 2026-11-15** (demande : « enlève la chronologie dans les résultats ») ;
+  remplacé par « Pyramide des âges » (entrée « Carte : pyramide des âges, taux d'installation, trois entrées vers
+  l'assistant »).
+  - Jalons : premier observé, décision, premier effet (avec son délai), puis tous les 5 ans. Pour chacun : scénario,
+    fourchette, écart et densité.
+  - Un clic sur un jalon règle le curseur d'année.
+  - Un tableau « Année par année » dépliable complète la vue.
+- **Panneau droit replié** : seulement « Résultat », sans chiffre. Cela remplace le résumé territoire · écart. La mise en
+  évidence en bleu et le clic qui déplie restent.
+- **Assistant hors du panneau.**
+  - Un bouton DSFR principal « Assistant de simulation », avec icône, est placé en haut à gauche de la carte, sous le fil
+    d'Ariane.
+  - Il ouvre une fenêtre modale (`<dialog>`) au-dessus de la colonne de la carte, plein écran sur mobile.
+  - Échap ou un clic à côté la ferme ; le focus revient au bouton.
+  - La fenêtre est **fermée au chargement**. Cela remplace « conversation ouverte au chargement » et « l'assistant
+    d'abord » sur mobile.
+  - « Afficher ce scénario sur la carte » ferme la fenêtre.
+- **Autres changements.**
+  - « Ajouter à la comparaison » bascule sur le mode Comparer.
+  - Les scénarios épinglés montrent leurs leviers sur une seconde ligne, ce qui supprimait un défilement horizontal de
+    115 px.
+  - Correctifs pris en passant : Échap ne remonte plus d'un niveau de territoire quand la fenêtre est ouverte, et « / »
+    tapé dans un champ ne saute plus vers la recherche.
+- **Recette** `--option1` : **42/43** contre le serveur à jour (R25, bouton A+, écart connu).
+  - Contrôles adaptés : R09, R21, R23, R24, R32, O03, O05, O08.
+  - Contrôles ajoutés :
+    - R33 : deux axes, puis base 100 ;
+    - R34 : un jalon règle l'année ;
+    - O09 : le panneau replié ne montre que « Résultat ».
+  - R14 : p95 196 ms.
+- Réalisé par deux agents en parallèle :
+  - données (Sonnet) : borne et séries, voir l'entrée « Levier diplômés étrangers de 0 à 2 » ;
+  - interface (Opus).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Enlève les onglets du menu de droite que tu renommeras Résultat. Définis
+plusieurs toggles […] graphique, chronologique, autres […] superposer plusieurs courbes (effectif + âge…) […]. Enlève
+les stats actuelles de l'onglet lorsqu'il est replié. Sors l'assistant AI du menu Résultat […] bouton bien plus visible
+sur la carte […] une modale dédiée ».
+- Le conflit avec « conversation ouverte au chargement » a été signalé avant le travail. Choix : fenêtre modale fermée
+  au chargement, car une modale ouverte d'office masquerait la carte.
+**Ce qui le renverserait.**
+- Une recette par personas où l'assistant n'est plus trouvé, ou bien est jugé secondaire.
+- Des axes doubles mal lus : il faudrait alors des petits multiples alignés sur l'année plutôt qu'une superposition.
+
+## 2026-11-15 — Carte : dégradé DSFR orange ↔ vert (remplace « jamais rouge ni vert »)
+
+**Décision.**
+- La carte choroplèthe et sa légende passent à une gamme divergente faite de couleurs du DSFR, en 7 points :
+  - warning-425 `#b34000` ;
+  - orange terre battue 850 `#fcc0b0` ;
+  - un intermédiaire ;
+  - neutre `#EEEEEA` ;
+  - un intermédiaire ;
+  - vert émeraude 850 `#6fe49d` ;
+  - success-425 `#18753c`.
+- Bas de l'échelle (en dessous de la moyenne nationale, baisse) : côté orange. Haut de l'échelle : côté vert.
+- Les tons « warning 850 » et « success 850 / 925 » demandés n'existent pas dans les couleurs système du DSFR 1.15
+  (seulement 425, 950, 975). Les tons 850 retenus viennent de la palette illustrative, avec les tons système 425 aux
+  extrémités pour garder du contraste.
+- Les textes qui nomment les couleurs sont mis à jour : « Vert : au-dessus de la moyenne nationale ; orange : en
+  dessous ».
+- **Remplace** la règle « jamais rouge ni vert » pour la carte.
+  - Cette règle venait de la direction A, puis avait été gardée par l'entrée « Carte : habillage DSFR ».
+  - Les mots restent neutres, mais orange ↔ vert peut se lire comme mauvais ↔ bon. L'utilisateur·rice l'a choisi en
+    connaissance de cause.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « Change le dégradé de couleur pour la carte, prends les couleurs du DS, en
+allant de warning 850 jusqu'à succès 925 ou 850 », puis, entre quatre propositions, « Illustratif 850 ».
+- Le conflit avec « jamais rouge ni vert » a été signalé avant le choix, ainsi que l'absence des tons 850/925 dans les
+  couleurs système.
+**Ce qui le renverserait.**
+- Une recette par personas ou une relecture du lexique où la carte est lue comme un jugement (« vert = bien »). Retour
+  possible : bistre ↔ pétrole, ou une gamme DSFR bleu ↔ orange.
+- Un test de daltonisme deutéranope où les deux extrémités se confondent.
+
+## 2026-11-15 — API : pyramide des âges ; diplômés et taux d'installation (infirmiers seulement, hypothèse)
+
+**Décision.**
+- **`pyramide`** dans `/api/scenario`, pour un département, une région ou la France.
+  - Tranches du jumeau : < 25, puis 25–29 à 60–64 par 5 ans, puis 65+.
+  - Effectifs par tranche pour chaque année, tendanciel et scénario, plus l'observé RPPS privé de l'année d'origine.
+  - La somme des tranches égale l'effectif à 0,25 professionnel près (arrondi).
+- **Nouvelles séries** dans `series` : `diplomes`, `installes_diplomes`, `taux_installation` (fraction ; `facteur: 100`).
+  - Les **diplômés n'existent qu'à l'échelle France** : le vivier de formation du jumeau n'a pas d'axe territorial. Pour
+    un département ou une région, la série et le taux sont ceux de la France, signalés dans `note`.
+  - **Niveau des diplômés.** Il est lu dans DREES jeu 491 via `jumeau.vivier.ecoles()` quand `data/raw/` est présent.
+    Sinon, repli sur `DIPLOMES_FICHES` : infirmiers seulement, moyenne 2023–2025 = 25 161, fiche
+    `param-ide-rendement-diplomes`. Ce niveau est tenu constant, multiplié par le levier quotas.
+  - **`installes_diplomes`** = part formée en France des entrées positives du registre, soit (1 − part étrangère, fiche
+    `param-diplomes-etrangers-flux`) × entrées, plus le flux `lien_formation`. C'est approché : les entrées RPPS mêlent
+    premières installations, retours et changements de secteur, donc le taux peut dépasser 100 %.
+  - **Le taux est une hypothèse, pas une observation.** Il est constant dans le temps et insensible au levier quotas,
+    qui multiplie diplômés et installés par le même facteur. Infirmiers France : **36,6 %**.
+  - **Absent, valeurs `null`** : sages-femmes, dentistes, pharmaciens (aucun niveau de diplômés cité dans le dépôt), et
+    kinés sur cette machine (`data/raw/drees/491_*.xlsx` absent ; le code les remplira si le fichier est présent).
+- Latence inchangée, à la variance près : kinés D63 ≈ 13 ms, infirmiers France ≈ 47 ms.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « afficher le % de gens qui s'installent comparé au nb de diplômés »,
+et une autre méthode d'affichage du résultat. La pyramide des âges a été proposée à la place de la chronologie.
+**Ce qui le renverserait.** Une série ouverte de diplômés par profession et par région (DREES 491 complet, ou inscrits
+DREES 990 pour dentistes et pharmaciens) : le taux deviendrait observé et territorial. D'ici là, le taux affiché ne doit
+pas être présenté comme un résultat.
+
+## 2026-11-15 — Carte : pyramide des âges, taux d'installation, trois entrées vers l'assistant
+
+**Décision.**
+- **Résultat.**
+  - « Chronologique » est retiré. Un lien `r=chrono` ouvre le mode Graphique.
+  - Nouveau mode **« Pyramide des âges »** (`r=pyr`), proposé à la place.
+    - Une barre par tranche d'âge à l'année affichée, les plus âgés en haut.
+    - Scénario en barre pleine, tendanciel en contour en tirets, dernière année observée en trait fin.
+    - Effectif et part de chaque tranche affichés ; la pyramide suit le curseur d'année.
+    - Le mode est masqué si l'API ne sert pas `pyramide`.
+- **Taux d'installation des diplômés.**
+  - Trois courbes dans le catalogue du Graphique : diplômés de l'année, diplômés installés en libéral, taux
+    d'installation.
+  - Deux superpositions : « Diplômés et installations » et « Taux d'installation des diplômés ».
+  - Une ligne sous les chiffres clés de la fiche, seulement si la valeur existe.
+  - **Sous l'échelle France, la courbe des diplômés n'est pas proposée** : c'est un chiffre national, qui côtoierait des
+    installés locaux. Cela masque aussi la superposition « Diplômés et installations ».
+  - Données : infirmiers seulement pour l'instant (voir l'entrée API du même jour).
+- **Assistant : trois entrées vers la même fenêtre**, chacune avec son accueil.
+  - **« Aide au scénario »**, à côté du titre Scénario. Accueil « Définir un scénario » : suggestions construites sur la
+    profession, le territoire et l'année.
+  - **« Aide à la lecture »**, à côté du titre Résultat. Accueil « Interpréter le résultat » : rappel de ce qui est
+    affiché et questions d'interprétation.
+  - **Bouton de la carte en bas à droite**, au-dessus de l'attribution, avec l'icône DSFR `question-answer-line`. Accueil
+    général. Il se réduit à son icône quand la légende prend la largeur.
+  - Les boutons des panneaux (icône `chat-3-line`) sont masqués quand leur panneau est replié. Le focus revient au bouton
+    d'ouverture.
+  - Cela remplace l'emplacement en haut à gauche, sous le fil d'Ariane (entrée « Résultat à modes »).
+- **Couleurs.**
+  - Les barres de Flux et le classement de l'assistant prennent les couleurs de la carte : vert positif, orange négatif.
+  - Les courbes des graphiques gardent la palette de la direction A.
+  - Les deux tons intermédiaires de la gamme de la carte sont les 925 du DSFR : `#fddfd8` et `#9ef9be`.
+- Sous 1180 px de large, les trois indicateurs de la légende repassent sur deux lignes : à 1100 px, ils se
+  chevauchaient. C'est une exception à « indicateurs sur une ligne ».
+- **Recette** `--option1` : **45/46** contre le serveur à jour (R25, bouton A+, écart connu).
+  - R34 porte maintenant sur la pyramide et sur `r=chrono`.
+  - Ajouts : R35 (gamme), R36 (trois entrées, trois accueils, focus), R37 (taux d'installation).
+  - Une option `--maquette` remplit des séries fictives quand le serveur ne les sert pas.
+- Réalisé par deux agents en parallèle : données (Sonnet) et interface (Opus).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « enlève la chronologie […] afficher le % de gens qui s'installent comparé
+au nb de diplômés. Propose une autre méthode d'affichage […] rajoute un bouton pour l'ouvrir depuis l'interface
+scénario, à côté du titre […] le même bouton côté résultat […] garder le bouton sur la carte, repositionne-le en bas à
+droite avec une icône adaptée du design system ».
+**Ce qui le renverserait.** Le fichier DREES 491 déposé dans `data/raw/drees/` : le taux s'afficherait alors aussi pour
+les kinés et les sages-femmes. Et une recette par personas où la pyramide n'aide pas à décider.
+
+## 2026-11-15 — Données brutes : DREES 491 téléchargé, 990 déplacé ; taux d'installation des kinés au-dessus de 100 %
+
+**Décision.**
+- **DREES jeu 491**, « La formation aux professions de santé — Séries longues 1966-2025 ».
+  - Téléchargé depuis data.drees.solidarites-sante.gouv.fr (pièce jointe `la_formation_aux_professions_de_sante_series_longues_1966_2025xlsx`), le 2026-11-15.
+  - SHA-256 `aba93c473d19bcbc571ae70e1e735ea301ed9a73f984cdcb84c812f62e4317bd`, 121 774 octets.
+  - Rangé dans `data/raw/drees/491_formation_series_longues_1966_2025.xlsx`, ignoré par git.
+  - `jumeau.vivier.ecoles()` le lit : diplômés 2021–2025 des infirmiers, kinés et sages-femmes. Les infirmiers
+    retrouvent les valeurs de la fiche `param-ide-rendement-diplomes`.
+- **`990_drees_mmop2_f.xlsx`** (fichier fourni à l'équipe) a été déplacé de `chatbot/vendor/…/v2/data/` vers
+  `data/raw/`. C'est le chemin lu par `v2/sante/pipeline.py`, `v2/methodes/c5.py` et `v2/jumeau/check.py`.
+- La note SIES 2025-31 et `fiche_kines_D64.csv` ne sont lus par aucun code. Ils restent dans `chatbot/vendor/`, non
+  ignorés par git : ne pas les ajouter.
+- **Taux d'installation, France, 2035** : infirmiers 36,6 % ; sages-femmes 57,9 % ; **kinés 107 %** (3 152 installés
+  pour 2 947 diplômés). Dentistes et pharmaciens : aucun diplômé dans le jeu 491, taux absent.
+  - Au-dessus de 100 %, le chiffre n'a pas de sens comme taux.
+  - « Installés » compte toutes les entrées RPPS formées en France : premières installations, retours, passages du
+    salariat au libéral. Le taux mesure donc une **entrée en libéral rapportée aux diplômés**, pas un taux
+    d'installation des diplômés de l'année.
+- `v2/jumeau/check.py` échoue toujours : il demande aussi `data/raw/990_drees_mmop2_2526.xlsx`, fichier fourni à l'équipe
+  qui n'est pas sur la machine et qu'on ne télécharge pas.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « Télécharge le fichier manquant et déplace ceux nécessaires ».
+**Ce qui le renverserait.** Une série de premières installations en libéral par année de diplôme, qui permettrait un
+vrai taux. D'ici là : renommer l'indicateur, ou le borner à l'affichage (voir `## Open`).
+
+## 2026-11-15 — Carte : gamme éclaircie, bornes aux tons DSFR 850
+
+**Décision.**
+- La gamme de la carte s'arrête aux tons demandés : **orange terre battue 850 `#fcc0b0`** en bas et **vert émeraude 850
+  `#6fe49d`** en haut. Il n'y a plus de ton système 425 sombre aux extrémités.
+- Les 7 points : `#fcc0b0` · `#fddfd8` (925) · `#fee9e5` (950) · `#f6f6f6` (gris 975) · `#c3fad5` (950) · `#9ef9be`
+  (925) · `#6fe49d`.
+- Pour la borne verte, le 850 est retenu plutôt que le 925 : sa clarté est symétrique de l'orange 850.
+- **Gris hors territoire** : `#F3F3F1` devient le gris DSFR 925 `#E5E5E5`. Sinon il se confondait avec le centre de la
+  gamme, devenu presque blanc.
+- Les barres de Flux et le classement de l'assistant suivent les nouvelles bornes (`--pos`, `--neg`).
+- **Remplace** les extrémités 425 de l'entrée « Carte : dégradé DSFR orange ↔ vert ».
+- Contrepartie : les écarts forts sont moins contrastés. Les valeurs restent lisibles dans l'infobulle de survol, la
+  fiche et la légende.
+- La recette R35 contrôle les nouvelles bornes.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « je veux que les valeurs que je t'ai données soient les bornes […] je veux
+que les couleurs soient plus claires. Ce n'est pas confortable pour les yeux ».
+**Ce qui le renverserait.** Une recette où deux classes voisines ne se distinguent plus à l'œil, notamment au
+vidéoprojecteur. Il faudrait alors des paliers discrets plutôt qu'un dégradé continu.
