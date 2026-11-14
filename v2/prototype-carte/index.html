@@ -437,7 +437,9 @@ function buildPanels(){
   $("#tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(b)showTab(b.dataset.tab);};
   // panneau replié, onglet élargi ou A+ : la carte reprend la place ; vue France tant que l'utilisateur·rice n'a pas déplacé la carte
   new ResizeObserver(()=>{if(!map)return;map.resize();if(!S.terr&&!userMoved)fitFrance(0);}).observe($("#mapwrap"));
-  $("#card").addEventListener("click",e=>{const b=e.target.closest("[data-cs]");if(b&&b.dataset.cs!==CS){CS=b.dataset.cs;loadCard();}});
+  // bascule de la fiche : « France entière » recadre la carte sur la France, sans grisé ; le territoire reste ouvert et la bascule le rouvre
+  $("#card").addEventListener("click",e=>{const b=e.target.closest("[data-cs]");if(!b||b.dataset.cs===CS)return;CS=b.dataset.cs;
+    if(CS=="fr"){setFocus(null);userMoved=false;fitFrance();loadCard();}else select(S.terr,true,false);});
 }
 
 // ---------- carte ----------
@@ -517,7 +519,7 @@ function legend(){
   const B=brk().at(-1),b=[-B,-B/2,0,B/2,B];$("#ticks").innerHTML=b.map(x=>`<span>${(x>0?"+":x<0?"−":"")+Math.abs(Math.round(x*100))}</span>`).join("")+`<span>${S.v=="evo"?"pts":"%"}</span>`;
 }
 // repère du territoire ouvert sur la gamme de la légende
-function mark(){const m=$("#mark"),T=S.terr,d=!T||T=="FR"||!carte?null:T.startsWith("D")?carte.deps[T.slice(1)]:carte.reg?.[T];
+function mark(){const m=$("#mark"),T=cardT(),d=!T||T=="FR"||!carte?null:T.startsWith("D")?carte.deps[T.slice(1)]:carte.reg?.[T];
   if(!d){m.style.display="none";return;}
   const B=brk().at(-1),x=(Math.max(-1,Math.min(1,val(d)/B))+1)/2*100;
   m.style.display="block";m.style.left=Math.max(8,Math.min(92,x))+"%";m.textContent=`${names[T]} ${fmtV(d)}`;}
@@ -545,8 +547,8 @@ function paint(){legend();const R={};
   for(const [id,d] of Object.entries(carte.deps)){const r=regOf["D"+id];if(!r)continue;R[r]??={s26:0,s50:0,b50:0,p26:0,p50:0,sy:0,by:0,py:0};for(const k in R[r])R[r][k]+=d[k];}
   carte.reg=R;
   for(const [id,d] of Object.entries(carte.deps)){const r=R[regOf["D"+id]];
-    // territoire ouvert (région ou département) : tout ce qui est hors de lui passe en gris uni
-    const inSel=!S.terr||S.terr=="FR"?true:S.terr.startsWith("D")?S.terr=="D"+id:regOf["D"+id]==S.terr;
+    // territoire affiché (région ou département) : tout ce qui est hors de lui passe en gris uni ; « France entière » : rien de grisé
+    const T=cardT(),inSel=T=="FR"?true:T.startsWith("D")?T=="D"+id:regOf["D"+id]==T;
     const dim=(!!focusReg&&regOf["D"+id]!=focusReg)||!inSel;
     map.setFeatureState({source:"d",id},{c:dim?DIM:colorOf(val(d)),cr:dim?DIM:r?colorOf(val(r)):colorOf(val(d)),f:!!focusReg&&regOf["D"+id]==focusReg,dim});}
   mark();}

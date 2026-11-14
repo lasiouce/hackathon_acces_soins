@@ -3699,6 +3699,12 @@ que la fiche et l'onglet Comparer ne couvrent pas.
 
   Résultat : 39/40. R25 (A+) échouait déjà avant.
 
+- **Ajout du 2026-11-14.** Cliquer « France entière » recadre aussi la carte sur la France (zoom de vue
+  nationale, couleurs agrégées par région) et ne grise plus aucun territoire. Le repère du territoire disparaît
+  de la légende. Le territoire reste ouvert : le bouton du territoire le recadre et le grise de nouveau.
+  - Recette O08 étendue : zoom 4,26, aucun département grisé côté France, 100 grisés au retour sur le territoire.
+  - Demande : « lorsque je clique sur le bouton France entière, repositionne la map avec les bonnes couleurs sur
+    la France entière ».
 **Pourquoi.** L'utilisateur·rice : « élargie le panneau de gauche […] je suis obligé de scroller
 horizontalement », « en arrivant sur le site centre la position de la carte sur la France », « ajoute une option
 pour avoir les nombres au niveau national ».

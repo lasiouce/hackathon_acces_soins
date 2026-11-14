@@ -270,8 +270,15 @@ if (OPTION1) {
     await step("France sans territoire", `document.querySelector("#card h3")?.textContent==="France"`);
     await ev(`select("D63");return 1`); await idle(); await step("territoire ouvert", `document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"`);
     await ev(`document.querySelector('#card [data-cs="fr"]').click();return 1`); await step("bascule France", `document.querySelector("#card h3")?.textContent==="France"&&F&&F.scn.at(-1)>50000`);
+    // « France entière » : carte recadrée sur la France (zoom de vue nationale), rien de grisé, pas de repère de territoire
+    await ev(`await new Promise(r=>setTimeout(r,1000));return 1`);
+    const fr = await ev(`const c=map.getCenter(),grey=Object.keys(carte.deps).filter(id=>map.getFeatureState({source:"d",id}).dim).length;
+      return {zoom:+map.getZoom().toFixed(2),lon:+c.lng.toFixed(1),lat:+c.lat.toFixed(1),grey,focus:focusReg,mark:getComputedStyle(document.querySelector("#mark")).display}`);
+    if (!(fr.zoom < 6.3 && fr.grey === 0 && fr.focus === null && fr.mark === "none" && fr.lat > 44 && fr.lat < 49)) throw new Error("carte France " + JSON.stringify(fr));
     const keep = await ev(`return S.terr`); await ev(`document.querySelector('#card [data-cs="terr"]').click();return 1`);
-    await step("retour territoire", `document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"`); return keep === "D63" ? "territoire conservé" : false;
+    await step("retour territoire", `document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"&&focusReg==="R84"`);
+    const g = await ev(`return Object.keys(carte.deps).filter(id=>map.getFeatureState({source:"d",id}).dim).length`);
+    return keep === "D63" && g > 0 ? `territoire conservé ; France : zoom ${fr.zoom}, 0 grisé ; retour : ${g} grisés` : false;
   });
   await check("O04", "option 1 : légende avec repère du territoire ouvert", async () => { await ev(`select("D63");return 1`); await idle(); return ev(`const m=document.querySelector("#mark");return getComputedStyle(m).display!=="none"&&m.textContent.includes("Puy-de-Dôme")`); });
   await check("O05", "option 1 : onglets Territoire, Comparer, Expert", async () => {
