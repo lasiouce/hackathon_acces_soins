@@ -2448,7 +2448,8 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
-- **Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement** (relevé le 2026-11-14 en fusionnant
+- ~~**Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement**~~ **Tranchée le 2026-11-14 : ouvert
+  au chargement** (entrée « Option 1 : la conversation ouverte au chargement… »). (relevé le 2026-11-14 en fusionnant
   `main` dans la PR #3). `index-option1.html` ouvre le chat par une icône sur la carte (demande de l'utilisateur·rice) ;
   la décision « Squelette : la conversation est ouverte au chargement de la carte » ouvre le panneau au chargement de
   `index.html`, interface principale. Non reporté sur l'option 1 en attendant l'arbitrage. Prix : ≈ 15 min.
@@ -3537,3 +3538,18 @@ de la page option 1 afficherait « Serveur injoignable. ».
 (`node --check`).
 **Ce qui le renverserait.** La mise en page du chat proposée par les UX designers (décision « L'agent conversationnel
 devient l'interface principale »).
+
+## 2026-11-14 — Option 1 : la conversation ouverte au chargement, premier onglet, colonne élargie
+
+**Décision.** Dans `index-option1.html`, l'onglet **Questions** est le premier de la colonne de droite et il est ouvert
+au chargement ; quand il est affiché, la colonne passe de 27 rem à `max(27 rem, min(34 rem, 38 vw))`. L'icône sur la
+carte reste (elle bascule entre Questions et Territoire). Pas de focus automatique, pour ne pas ouvrir le clavier sur
+mobile. Le reste de la mise en page attend les maquettes de l'équipe UX.
+**Tranche** la question ouverte « Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement ».
+**Pourquoi.** L'utilisateur·rice : « c'est bof » (conversation secondaire alors qu'elle est l'interface principale), puis
+« go ahead » sur cette option (15 min) plutôt qu'une mise en page centrée sur la conversation, qui préempterait l'UX.
+**Vérifié.** Recette `recette.mjs --option1` : 35/37 ; R25 (A+) échoue aussi sur la version d'avant (pas de bouton A+
+dans l'option 1) ; R14 (748 ms) était du bruit : relancé deux fois, 161 et 178 ms. R32 (panneau Questions) et O05
+(onglets) passent.
+**Non vérifié.** Dans le panneau navigateur de l'application, la carte de l'option 1 reste grise, avant comme après ce
+changement (la recette, elle, la voit dessinée) ; non diagnostiqué.

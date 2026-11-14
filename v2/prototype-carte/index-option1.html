@@ -168,6 +168,7 @@ input[type=range]{width:100%;accent-color:var(--sel);margin:0}
 #tabs button[aria-selected=true]{color:var(--ink);font-weight:700;border-bottom-color:var(--sel)}
 #side>header .fold{margin-bottom:.35rem}
 #sidesum{display:none}
+body.askon #side:not(.closed){width:max(var(--rw),min(34rem,38vw))}
 #side.closed{width:4rem}
 #side.closed>header{flex-direction:column;align-items:center;border:0;padding:.6rem .3rem}
 #side.closed #tabs,#side.closed .panel{display:none!important}
@@ -318,7 +319,7 @@ input[type=range]{width:100%;accent-color:var(--sel);margin:0}
 </main>
 
 <aside id="side" aria-label="Territoire, comparaison et mode expert">
-  <header><div id="tabs" role="tablist"><button role="tab" data-tab="terr" aria-selected="true">Territoire</button><button role="tab" data-tab="cmp" aria-selected="false">Comparer</button><button role="tab" data-tab="xp" aria-selected="false">Expert</button></div>
+  <header><div id="tabs" role="tablist"><button role="tab" data-tab="ask" aria-selected="true">Questions</button><button role="tab" data-tab="terr" aria-selected="false">Territoire</button><button role="tab" data-tab="cmp" aria-selected="false">Comparer</button><button role="tab" data-tab="xp" aria-selected="false">Expert</button></div>
     <span id="sidesum"></span>
     <button class="fold" id="cardfold" aria-label="Replier le territoire" aria-expanded="true">›</button></header>
   <div class="panel" id="card" role="tabpanel" aria-live="polite"></div>
@@ -349,7 +350,7 @@ const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 
 const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],lvl:"dep",y:2050};
 let META,GEO,REGL,regOf={},focusReg=null,carte=null,map,bbox={},names={},lat=[];
-let F=null,SC=null,TAB="terr",XT="flux",PIN=[];
+let F=null,SC=null,TAB="ask",XT="flux",PIN=[];
 
 // ---------- état ↔ URL ----------
 function readHash(){const h=new URLSearchParams(location.hash.slice(1));
@@ -371,6 +372,7 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
   if(!META.professions[S.prof]){toast("Lien : profession inconnue, retour aux kinés");S.prof="kines";}
   closeCardContent();
   buildProfs();buildPanels();buildMap();buildSearch();buildLevers();buildAsk();buildYear();
+  showTab("ask");document.activeElement?.blur();   // sans clavier surgi sur mobile ; interface principale (décision du 2026-11-14) : la conversation est ouverte au chargement
   $("#xp nav").onclick=e=>{const t=e.target.closest("button");if(!t)return;XT=t.dataset.t;$("#xp nav").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===t));renderExpert();};
   $("#nlf").onsubmit=e=>{e.preventDefault();const t=$("#nlq").value.trim();if(t)interpret(t);};
   if(innerWidth<=700){foldPanel("#levers","#fold",true);foldPanel("#list","#listfold",true);}   // mobile : la carte d'abord
