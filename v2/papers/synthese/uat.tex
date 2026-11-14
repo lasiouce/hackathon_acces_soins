@@ -98,6 +98,27 @@ carte de France, les leviers ouverts, aucun chiffre avant un clic).
 \end{itemize}
 Ils ont été intégrés au fil de sept itérations.
 
+\section{État de la carte après les tests}
+La page refondue a remplacé l'ancienne après correction des défauts graves (P0) et importants (P1) de la seconde recette :
+fiche reconstruite au changement de profession, rendu mobile, export portant définition, sources, millésimes, leviers et
+version du code, repères 2030 / 2035 / 2040 / 2050, lecture de la régulation par région. Vérification en navigateur sans
+interface (Chromium), pas par une nouvelle recette de personas.
+\begin{itemize}
+  \item \textbf{Une phrase devient un scénario.} Un compilateur déterministe à glossaire traduit une phrase
+        (« augmenter de 20~\% les places de kinés dans le Puy-de-Dôme ») en réglage des leviers, sans jamais calculer.
+        Un écran montre ce qui a été compris, ce qui n'est pas dans le modèle (avec la raison) et ce qui n'a pas été
+        compris ; rien n'est appliqué sans confirmation. Mesuré sur des jeux de 30 phrases écrites à l'aveugle par un
+        agent qui n'a vu ni le glossaire ni le code, chaque jeu noté avant correction : 47, 53, 70, 80, 83 puis 70~\%
+        de phrases entièrement justes (\mesure). Le chiffre à citer est d'environ 77~\% (jeux 5 et 6), avec un écart
+        type d'environ $\pm 8$ points par jeu : le gain par tour a plafonné.
+  \item \textbf{Les curseurs restent visibles} sous la phrase, un par famille ; les réglages secondaires sont repliés.
+  \item \textbf{Mode expert} : écart par flux et par année, chaque levier avec sa valeur, son paramètre, son délai,
+        son statut et sa source, trois scénarios épinglés côte à côte, export JSON.
+  \item \textbf{Densité pour 100\,000 habitants} (Insee, Omphale 2022, trois scénarios de population) : vue de carte,
+        fiche et mode expert. Kinés, France, 2026 : 150,7 pour 100\,000 (\mesure). Une hypothèse d'activité par
+        professionnel (équivalents temps plein) est \suppose{} : aucune série ouverte n'a été vérifiée.
+\end{itemize}
+
 \section{Direction artistique}
 Trois directions ont été proposées : sémiologie graphique (Bertin), gamme de signalisation, et
 topographie en isolignes. La direction « sémiologie graphique » a été prototypée :

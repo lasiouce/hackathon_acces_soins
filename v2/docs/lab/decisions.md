@@ -2473,6 +2473,11 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 - **Leviers de demande (transferts de tâches : vaccination en officine,
   IPA, accès direct au kiné)** : ajouter un module de besoin, ou les
   laisser hors du périmètre ? Question posée le 2026-11-14.
+  *Plan proposé le 2026-11-14 (non construit, accord attendu) :*
+  [derivations/2026-11-14-module-besoin.md](derivations/2026-11-14-module-besoin.md).
+  Besoin = habitants × profil de recours par âge (Open DAMIR) ; indice de couverture
+  indexé à 2026 ; transferts de tâches L23, L25 et L27 comme déplacement d'une part du
+  besoin ; effectifs inchangés. Test d'abandon de ~30 min avant de construire.
 
 ### 2026-11-14 — Accueil de la carte V2 : point d'entrée territorial ou national ?
 Le challenge par les trois personas

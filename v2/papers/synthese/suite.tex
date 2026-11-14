@@ -28,10 +28,10 @@
 
 \paragraph{Axe 2, les méthodes.}
 \begin{itemize}
-  \item \textbf{Étape 2 du programme.} Cohortes par composantes en bayésien hiérarchique
-        (commune $\subset$ département $\subset$ région), avec des entrées probabilistes.
-        Sans elles, la bande de l'étape~1 couvre 50~\% des cas au lieu de 80~\% (\mesure).
-        Coût : environ une journée.
+  \item \textbf{Projection communale : arrêtée en attente des données 2027.} Les modèles communaux K3, K4 et K5,
+        chacun inscrit avant son passage, ont échoué au critère N10 (couverture de 75 à 85~\% dans chaque classe de
+        taille) ou à leur confirmation hors échantillon. L'affichage reste au département ; les dépôts K4, K5 et C1
+        seront notés sur les effectifs 2027.
   \item \textbf{Étape 3} : un logit conditionnel d'installation, qui attend les flux
         communaux de l'axe~4.
   \item \textbf{Étapes 4 et 5} : la réconciliation MinT entre échelles, et la calibration par
@@ -64,6 +64,9 @@
 
 \paragraph{Axe 5, la sensibilité.}
 \begin{itemize}
+  \item \textbf{Amplitude de référence fixée} à celle de la DREES (quotas $\pm 20$~\%) : en 2050, la décision pèse
+        plus que l'incertitude pour les infirmiers (0,89), les kinés (0,81) et les sages-femmes (0,59), à égalité pour
+        les dentistes, moins pour les pharmaciens (0,38 contre 0,61).
   \item \textbf{Étendre les indices de Sobol aux 12 leviers branchés}, pour séparer la part de
         variance qui vient de la décision de celle qui vient de notre ignorance.
   \item \textbf{Cartographier les fourchettes 2050 par département.}
@@ -71,22 +74,21 @@
 \end{itemize}
 
 \section{Pour l'interface}
-Priorités issues des tests utilisateurs :
+Faits depuis les tests : repères 2030 à 2050 dans la fiche, fiche exportable avec sources et hypothèses, densité pour
+100\,000 habitants, phrase en langage naturel, mode expert. Restent :
 \begin{enumerate}
-  \item un \textbf{sélecteur d'horizon} (2030, 2035, 2040, 2050), le manque le plus grave ;
-  \item une \textbf{fiche exportable} avec ses sources, ses millésimes et ses hypothèses (la V2
-        n'exporte qu'un CSV) ;
-  \item la \textbf{densité pour 100\,000 habitants}, à partir de la population Insee et
-        Omphale ;
+  \item une \textbf{recette rejouée sur la carte finale}, un persona par onglet, captures sur disque ;
+  \item la \textbf{densité au grain infra-départemental}, à partir de la population communale ;
   \item l'\textbf{écran d'accueil} « Quel territoire ? », avec les modes simple et expert ;
   \item des \textbf{libellés sans jargon}, et des erreurs réseau signalées ;
-  \item une \textbf{recette rejouée}, un persona à la fois, dans des onglets isolés, avec des
-        captures écrites sur disque ;
   \item les \textbf{tokens W3C}, pour reprendre la direction artistique dans Figma.
 \end{enumerate}
 
 \section{Décisions qui reviennent à l'équipe}
 \begin{itemize}
+  \item \textbf{Compilateur : modèle de langage ou non ?} L'approche à glossaire plafonne vers 77~\% ; la décision
+        prévoit, dans ce cas, un modèle de langage pour l'analyse de la phrase seule (jamais le calcul), évalué sur
+        les mêmes jeux écrits à l'aveugle.
   \item \textbf{Un module de besoin ?} Les leviers de transfert de tâches (vaccination en
         officine, infirmiers en pratique avancée, accès direct au kiné) ne changent pas
         l'effectif. Ils changent le besoin auquel il répond. C'est pourtant l'exemple même du
