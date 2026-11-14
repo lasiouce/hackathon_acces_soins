@@ -222,18 +222,33 @@ class Handler(V1.Handler):
 
 CHATBOT = os.environ.get("CHATBOT_URL", "http://127.0.0.1:8768")
 
-# Modèle servi par la carte (V1.Model : twin_of(StockFlowLocal)) : affiché sous chaque réponse de l'assistant.
+# Modèle servi par la carte (V1.Model : C1 par défaut, A0 par JUMEAU_MODELE=A0) : affiché sous chaque réponse de l'assistant.
 # Même texte que MODELE dans chatbot/passerelle/requetes.py (périmètre du chatbot) ; chiffres cités des articles.
-MODELE = {
-    "nom": "Stock-flux à taux départementaux (A0, axe 2)",
-    "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans",
-    "estimation": "rétention nette et entrées ajustées sur les 5 dernières années observées ; taux départementaux rétrécis vers le national (poids 200 personnes, supposé)",
-    "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
-    "precision": "MAPE 8,68 % par département à 5 ans, secteur privé, contre 9,30 % pour la tendance linéaire (mesuré, article axe 2, tableau 1)",
-    "fourchette": "± pente de l'erreur de backtest × horizon × 1,6, environ 8 cas sur 10 (facteur cité, non reproduit ; article axe 5) ; extrapolée au-delà d'environ 10 ans",
-    "alternative": "C1, cohortes bayésiennes : MAPE 7,73 % au même banc, proposée par défaut (décision axe 2, étape 2), pas encore servie par la carte",
-    "sources": "v2/papers/axe2-methodes/main.pdf ; v2/sante/estimators.py (StockFlowLocal) ; v2/jumeau/ ; v2/prototype/server.py (Model)",
+MODELES = {
+    "C1": {
+        "nom": "Cohortes bayésiennes, entrées comprises (C1, axe 2)",
+        "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans ; rétention nette en âge-période-cohorte, entrées = niveau national (filtre de Kalman) × parts départementales",
+        "estimation": "Bayes empirique, moyenne a posteriori ; fenêtre de 2012 (kinés 2017) à la dernière année ; effets département et région rétrécis ; secteur privé seulement, le salariat public garde les taux de A0",
+        "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués aux taux de C1, au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
+        "precision": "MAPE 7,73 % par département à 5 ans, secteur privé, contre 8,68 % pour A0 et 9,30 % pour la tendance linéaire (mesuré, article axe 2) ; gain plus faible sur les origines récentes (dentistes, pharmaciens)",
+        "fourchette": "± pente de l'erreur nationale de C1 au banc × horizon × 1,6, environ 8 cas sur 10 (même méthode que A0) ; extrapolée au-delà d'environ 10 ans ; la bande probabiliste propre de C1 n'est calibrée qu'au département (77,6 %) et n'est pas publiée au national",
+        "approximation": "rétention de C1 tenue à sa moyenne sur l'horizon : écart de −1,1 à +1,2 % sur le total privé national à 5 ans (mesuré) ; infirmiers : C1 mesuré au banc sur les libéraux, la carte sert la table privée de l'axe 4",
+        "alternative": "A0, stock-flux à taux départementaux (MAPE 8,68 %) : servi si JUMEAU_MODELE=A0",
+        "sources": "v2/papers/axe2-methodes/main.pdf ; v2/methodes/cohortes.py ; v2/methodes/c1_jumeau.py ; v2/jumeau/ ; v2/prototype/server.py (Model)",
+    },
+    "A0": {
+        "nom": "Stock-flux à taux départementaux (A0, axe 2)",
+        "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans",
+        "estimation": "rétention nette et entrées ajustées sur les 5 dernières années observées ; taux départementaux rétrécis vers le national (poids 200 personnes, supposé)",
+        "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
+        "precision": "MAPE 8,68 % par département à 5 ans, secteur privé, contre 9,30 % pour la tendance linéaire (mesuré, article axe 2, tableau 1)",
+        "fourchette": "± pente de l'erreur de backtest × horizon × 1,6, environ 8 cas sur 10 (facteur cité, non reproduit ; article axe 5) ; extrapolée au-delà d'environ 10 ans",
+        "alternative": "C1, cohortes bayésiennes : MAPE 7,73 % au même banc, servi par défaut (JUMEAU_MODELE=C1)",
+        "sources": "v2/papers/axe2-methodes/main.pdf ; v2/sante/estimators.py (StockFlowLocal) ; v2/jumeau/ ; v2/prototype/server.py (Model)",
+    },
 }
+# Modèle servi : même variable que v2/prototype/server.py (MODELE_CHOIX), C1 par défaut.
+MODELE = MODELES[os.environ.get("JUMEAU_MODELE", "C1").upper()]
 
 
 def _scenario_carte(appels: list) -> dict | None:
