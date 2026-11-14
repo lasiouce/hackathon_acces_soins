@@ -237,6 +237,28 @@ def territories():
         for r in regs if r in REGIONS]
 
 
+def parse_levers(q: dict):
+    """Leviers d'une requête (clé -> chaîne) : (dict validé, None) ou (None, message d'erreur)."""
+    lv = {}
+    for k, l in UI.items():
+        raw = q.get(k, l["default"])
+        if l["type"] == "select":
+            if raw not in l["options"]:
+                return None, f"{k} : valeur inconnue {raw!r}"
+            lv[k] = raw
+        elif l["type"] == "toggle":
+            lv[k] = str(raw) in ("1", "true")
+        else:
+            try:
+                v = float(raw)
+            except ValueError:
+                return None, f"{k} : valeur non numérique"
+            if not l["min"] <= v <= l["max"]:
+                return None, f"{l['label']} hors bornes [{l['min']} ; {l['max']}] : {v}"
+            lv[k] = v
+    return lv, None
+
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):
         super().__init__(*a, directory=str(HERE), **k)
@@ -263,20 +285,9 @@ class Handler(SimpleHTTPRequestHandler):
                 prof = q.get("prof", "kines")
                 if prof not in PROFS:
                     return self.send_json({"error": f"profession inconnue {prof!r}"}, 400)
-                lv = {}
-                for k, l in UI.items():
-                    raw = q.get(k, l["default"])
-                    if l["type"] == "select":
-                        if raw not in l["options"]:
-                            return self.send_json({"error": f"{k} : valeur inconnue {raw!r}"}, 400)
-                        lv[k] = raw
-                    elif l["type"] == "toggle":
-                        lv[k] = str(raw) in ("1", "true")
-                    else:
-                        v = float(raw)
-                        if not l["min"] <= v <= l["max"]:
-                            return self.send_json({"error": f"{l['label']} hors bornes [{l['min']} ; {l['max']}] : {v}"}, 400)
-                        lv[k] = v
+                lv, err = parse_levers(q)
+                if err:
+                    return self.send_json({"error": err}, 400)
                 return self.send_json(model(prof).answer(lv, q.get("terr", "FR")))
         except Exception as e:  # le prototype montre l'erreur plutôt que de planter
             return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
