@@ -13,6 +13,17 @@ tags: [prototype, interface, direction-A]
 
 # Prototype de l'écran de décision (direction A)
 
+> **Mise à jour du 2026-11-14 (après les trois revues et le branchement des
+> leviers).** Les chiffres ci-dessous ont été mesurés **avant** les
+> corrections du jumeau.
+> - Kinés, quotas +20 % : le jumeau corrigé donne +19 110 (+11,9 %) en
+>   2050, et non +8 645. L'ancien chiffre combinait les quotas et la
+>   régulation, alors un levier biaisé.
+> - L'écran expose maintenant 9 leviers en 4 familles : voir l'entrée
+>   « Prototype : 9 leviers » de `decisions.md`.
+> - Exemple vérifié : kinés, quotas +20 %, étrangers ×1,5, retraite +1 an
+>   et régulation vers le salariat → +25 007 (+15,6 %).
+
 > **Headline :** l'écran est branché sur le jumeau. Le jumeau recalcule un
 > scénario en 3 à 32 ms, et la page se met à jour en 50 à 120 ms
 > aller-retour (mesuré dans le navigateur, au département). L'écart
