@@ -3341,7 +3341,8 @@ fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/cart
 - **Trois panneaux dépliables** :
   - **Scénario** à gauche ; replié, il devient une barre de 60 px avec le nombre de leviers
     modifiés ;
-  - **Liste classée** sous la carte, avec une bascule **Départements / Régions** ;
+  - ~~**Liste classée** sous la carte, avec une bascule **Départements / Régions** ;~~ **retirée le
+    2026-11-14** (voir « Carte : panneau de classement retiré ») ;
   - **Territoire** à droite, avec les onglets Territoire, Comparer et Expert ; replié, il
     garde le nom et l'écart 2050.
   - Replier un panneau agrandit la carte.
@@ -3644,3 +3645,60 @@ vérification « ok ». Recette : `index.html` 31/32 (R14, latence 659 ms, en é
 l'axe 2 recalcule ; à revoir à machine calme), option 1 36/37 (R25 A+, absent). **Tests du chatbot non rejouables** :
 la modification en cours de l'axe 2 (`v2/prototype/server.py` → `cohortes.py`, `scipy`) empêche la passerelle de
 démarrer dans l'environnement de `chatbot/` ; signalé à l'axe 2.
+
+## 2026-11-14 — Carte : panneau de classement (Départements / Régions) retiré de la maquette
+
+**Décision.** Le panneau sous la carte (liste classée avec bascule Départements / Régions) est retiré
+de la maquette retenue (« Option 1 — direction A (Bertin) · retenue », canevas
+https://claude.ai/artifact/3VNzVPT3qTK3XLPja1dKxg). La carte prend toute la hauteur.
+**Remplace** le point « Liste classée » de l'entrée « Carte : option 1 en direction A (Bertin)
+retenue, trois panneaux dépliables ». Il reste deux panneaux dépliables : Scénario et Territoire.
+**Pourquoi.** L'utilisateur·rice : « J'ai l'impression que ces informations se répètent avec le
+panneau de droite. »
+**Fait le 2026-11-14 dans `v2/prototype-carte/index-option1.html`.**
+- Panneau `#list` et son code retirés.
+- Panneau de droite élargi : `--rw: clamp(30rem, 36vw, 36rem)`, et 26 rem sous 1180 px.
+- Les panneaux ne défilent plus horizontalement, les cellules des tableaux de l'onglet Expert passent à la ligne, et les leviers de l'onglet Expert tiennent sur deux lignes.
+- Recette : le contrôle O03 (liste) est remplacé par « panneau de droite sans défilement horizontal ». Il a d'abord échoué (flux Expert, +81 px), puis il passe.
+- Résultat `recette.mjs --option1` : 36/37. R25 (A+) échouait déjà avant, faute de bouton A+ dans l'option 1.
+**Ce qui le renverserait.** Un besoin d'accessibilité (une alternative textuelle à la choroplèthe)
+que la fiche et l'onglet Comparer ne couvrent pas.
+- **Ajout du 2026-11-14 (maquette)** : le panneau Territoire est élargi.
+  - Largeur `clamp(460px, 36vw, 540px)`, au lieu de 380 à 430 px.
+  - Aucun défilement horizontal dans le panneau.
+  - En-tête et onglets restent fixés en haut quand on fait défiler la fiche.
+  - Dans l'onglet Expert, les leviers passent sur deux lignes : nom et valeur, puis paramètre et statut.
+  - Le Scénario passe à 312 px de large.
+  - Pourquoi : l'utilisateur·rice, « je suis obligé de scroller horizontalement pour afficher les infos ».
+
+## 2026-11-14 — Carte option 1 : panneau de gauche élargi, France centrée à l'arrivée, chiffres nationaux dans la fiche
+
+**Décision** (`v2/prototype-carte/index-option1.html`).
+- **Panneau Scénario élargi.**
+  - Largeur `clamp(22rem, 25vw, 26rem)`, au lieu de 20 rem, et 19 rem sous 1180 px.
+  - Plus de défilement horizontal : les libellés et les sources longues passent à la ligne.
+- **France centrée à l'arrivée.**
+  - La vue France est recadrée à chaque redimensionnement de la colonne de la carte, tant que
+    l'utilisateur·rice n'a ni déplacé ni zoomé la carte, et aussi au retour à la France.
+  - Avant, l'onglet Assistant, ouvert au chargement, élargissait la colonne de droite après le premier
+    cadrage, ce qui décentrait la carte.
+- **Chiffres nationaux.**
+  - Sans territoire ouvert, la fiche montre la France : effectifs, fourchette, trajectoire, repères et flux.
+    Elle n'affiche plus « Aucun territoire ouvert ».
+  - Avec un territoire ouvert, une bascule « [territoire] / France entière » affiche les chiffres nationaux
+    sans fermer le territoire.
+  - « Ajouter à la comparaison » et « Exporter » suivent la fiche affichée.
+  - Ouvrir un autre territoire remet la bascule sur ce territoire.
+- **Défaut corrigé.** `select()` testait `map.isStyleLoaded()`, qui reste faux pendant que MapLibre recalcule
+  ses tuiles. Un territoire ouvert à ce moment-là était ignoré. Le test porte désormais sur la présence de la
+  source `d`, ajoutée une fois au chargement.
+- **Vérifié.** Trois contrôles ajoutés à `recette.mjs --option1` :
+  - O06 : panneau de gauche sans défilement horizontal ;
+  - O07 : France centrée, décalage mesuré de −20 px ;
+  - O08 : bascule territoire ↔ France.
+
+  Résultat : 39/40. R25 (A+) échouait déjà avant.
+
+**Pourquoi.** L'utilisateur·rice : « élargie le panneau de gauche […] je suis obligé de scroller
+horizontalement », « en arrivant sur le site centre la position de la carte sur la France », « ajoute une option
+pour avoir les nombres au niveau national ».

@@ -10,11 +10,12 @@
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <style>
 /* Option 1, direction A « sémiologie graphique » (décision du 2026-11-14) : colonnes fixes, fond blanc, encre noire,
-   une gamme de valeur bistre ↔ pétrole, jamais rouge ni vert ; trois panneaux dépliables (scénario, liste, territoire). */
+   une gamme de valeur bistre ↔ pétrole, jamais rouge ni vert ; deux panneaux dépliables (scénario, territoire).
+   La liste classée sous la carte est retirée (décision du 2026-11-14 : elle répétait le panneau de droite). */
 :root{
   --paper:#FFFFFF; --ink:#111111; --mute:#3A3F44; --faint:#6B7075; --rule:#111111; --hair:#DDDDDA; --wash:#F4F4F2;
   --sel:#0E4D64; --sea:#DCE3E7; --prof:#3D4F9E;
-  --lw:20rem; --rw:27rem;
+  --lw:clamp(22rem,25vw,26rem); --rw:clamp(30rem,36vw,36rem);   /* panneaux élargis : plus de défilement horizontal */
 }
 html{font-size:15px}html.xl{font-size:17.5px}
 *{box-sizing:border-box}
@@ -67,7 +68,8 @@ button,input,select{font:inherit;color:inherit}
 #levers{width:var(--lw);border-right:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
 #levers>header{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem .8rem .6rem 1.1rem;border-bottom:1px solid var(--hair)}
 #levers h2{margin:0;font-size:1.1rem}
-#levers .body{padding:.9rem 1.1rem 1.2rem;display:grid;gap:1rem;overflow-y:auto;overscroll-behavior:contain;flex:1;min-height:0}
+#levers .body{padding:.9rem 1.1rem 1.2rem;display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;flex:1;min-height:0}
+#levers .body *{min-width:0;overflow-wrap:anywhere}   /* sources et libellés longs : à la ligne plutôt que hors du panneau */
 #levsum{display:none}
 #levers.closed{width:4rem}
 #levers.closed>header{flex-direction:column;border:0;padding:.6rem .3rem}
@@ -107,7 +109,7 @@ input[type=range]{width:100%;accent-color:var(--sel);margin:0}
 
 /* ---------- centre : carte, légende, liste ---------- */
 #center{display:flex;flex-direction:column;min-width:0;min-height:0}
-#mapwrap{position:relative;flex:1 1 60%;min-height:12rem;border-bottom:1px solid var(--rule);background:var(--sea)}
+#mapwrap{position:relative;flex:1 1 auto;min-height:12rem;background:var(--sea)}
 #map{position:absolute;inset:0}
 /* légende réduite (demande du 2026-11-14) : bascule d'indicateur et gamme ; le titre reste pour les lecteurs d'écran */
 #legend{position:absolute;left:.8rem;bottom:.8rem;width:min(26rem,calc(100% - 4.6rem));background:var(--paper);border:1px solid var(--rule);padding:.5rem .7rem .45rem;font-size:.87rem;z-index:2}
@@ -141,24 +143,6 @@ input[type=range]{width:100%;accent-color:var(--sel);margin:0}
 #zoom button{width:2.6rem;height:2.6rem;border:0;background:none;cursor:pointer;display:grid;place-items:center}
 #zoom button+button{border-top:1px solid var(--hair)}
 #zoom button:hover{background:var(--wash)}
-#list{flex:0 1 38%;min-height:0;display:flex;flex-direction:column}
-#list>header{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem;padding:.5rem 1.1rem}
-#lvl{display:flex;border:1px solid var(--rule)}
-#lvl button{border:0;background:var(--paper);padding:.25rem .7rem;cursor:pointer;min-height:2.2rem}
-#lvl button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
-#listtitle{font-weight:700}
-#listsort{font-size:.85rem;color:var(--mute)}
-#listrows{overflow:auto;padding:0 1.1rem .8rem;flex:1;min-height:0}
-#listrows button{display:grid;grid-template-columns:minmax(8rem,13rem) minmax(4rem,1fr) 4.6rem 8.5rem 6.5rem;gap:.7rem;align-items:center;width:100%;border:0;border-top:1px solid var(--hair);background:none;padding:.22rem .3rem;cursor:pointer;text-align:left;font-size:.87rem}
-#listrows button:hover{background:var(--wash)}
-#listrows button[aria-current=true]{font-weight:700;outline:2px solid var(--ink);outline-offset:-2px}
-#listrows .bar{position:relative;height:.75rem;background:var(--wash)}
-#listrows .bar i{position:absolute;top:0;bottom:0;outline:1px solid rgba(17,17,17,.25)}
-#listrows .bar:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink)}
-#listrows .r{text-align:right}
-#listrows .m{text-align:right;color:var(--mute)}
-#list.closed{flex:0 0 auto}
-#list.closed #listrows,#list.closed #listsort{display:none}
 
 /* ---------- panneau Territoire (droite) : onglets Territoire, Comparer, Expert ---------- */
 #side{width:var(--rw);border-left:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
@@ -172,7 +156,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #side.closed{width:4rem}
 #side.closed>header{flex-direction:column;align-items:center;border:0;padding:.6rem .3rem}
 #side.closed #tabs,#side.closed .panel{display:none!important}
-.panel{flex:1;min-height:0;overflow:auto;padding:.9rem 1.1rem 1.2rem}
+.panel{flex:1;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;padding:.9rem 1.1rem 1.2rem}
 #card header{display:flex;justify-content:space-between;gap:.5rem}
 #card h3{margin:0;font-size:1.6rem;line-height:1.15;text-wrap:balance}
 #card .sub{color:var(--mute);font-size:.87rem}
@@ -183,6 +167,9 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 .kpis em{display:block;font-style:normal;font-size:.8rem;color:var(--mute)}
 .kpis div:last-child b{color:var(--sel)}
 #card .x{border:0;background:none;cursor:pointer;padding:.2rem;color:var(--mute);align-self:flex-start}
+#card .scope{display:inline-flex;margin-top:.6rem;border:1px solid var(--rule)}
+#card .scope button{border:0;background:var(--paper);padding:.25rem .7rem;cursor:pointer;min-height:2.2rem}
+#card .scope button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
 #chart{width:100%;display:block}
 .flows{display:grid;gap:.35rem}
 .flow{display:grid;grid-template-columns:7rem 1fr auto;align-items:center;gap:.5rem;font-size:.93rem}
@@ -198,6 +185,11 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #cmppanel th,#xbody th{color:var(--mute);font-weight:400;border-top:0}
 #cmppanel th:first-child,#cmppanel td:first-child,#xbody th:first-child,#xbody td:first-child{text-align:left}
 #xbody td.wrap,#pins td.wrap{white-space:normal;text-align:left;min-width:11rem}
+#cmppanel td:first-child,#xbody td{white-space:normal}   /* libellés et fourchettes « a – b » : à la ligne plutôt que hors du panneau (les nombres, à espace insécable, ne se coupent pas) */
+.levs .lv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.1rem .8rem;padding:.55rem 0;border-top:1px solid var(--hair);font-size:.87rem}
+.levs code{font-size:.8rem;color:var(--mute);overflow-wrap:anywhere}
+.levs .v,.levs .st{text-align:right}.levs .st{color:var(--mute)}
+.levs p{grid-column:1/-1;margin:.1rem 0 0;color:var(--mute);font-size:.8rem}
 #cmppanel .x{border:0;background:none;cursor:pointer;padding:.1rem .3rem}
 #pins .row{display:flex;gap:.4rem;flex-wrap:wrap;margin:.6rem 0}
 #pins button,#xp nav button{border:1px solid var(--rule);background:var(--paper);padding:.2rem .6rem;cursor:pointer;min-height:2rem}
@@ -263,8 +255,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 .maplibregl-ctrl-attrib{font-size:.7rem}
 
 /* ---------- écrans moyens ---------- */
-@media (max-width:1180px){:root{--lw:17rem;--rw:23rem}#crumb .mid{display:none}}
-@media (max-width:960px){#search{width:12rem}#listrows button{grid-template-columns:minmax(7rem,1fr) minmax(3rem,1fr) 4.4rem}#listrows .m{display:none}}
+@media (max-width:1180px){:root{--lw:19rem;--rw:26rem}#crumb .mid{display:none}}
+@media (max-width:960px){#search{width:12rem}}
 /* ---------- mobile : une colonne qui défile, la carte d'abord ---------- */
 @media (max-width:700px){
   html,body{overflow-x:hidden;overflow-y:auto;height:auto}
@@ -280,11 +272,9 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
   #levers.closed h2{display:block}
   #levers.closed #levsum,#side.closed #sidesum{writing-mode:horizontal-tb;transform:none;margin:0;flex:1}
   #mapwrap{height:58dvh;flex:none}
-  #list{max-height:60dvh}
   .panel{overflow:visible}
   #asklog{max-height:70vh}
   #app{display:flex;flex-direction:column}#top{order:-2}body.askon #side{order:-1}   /* mobile : l'assistant d'abord */
-  #listrows button{grid-template-columns:minmax(6rem,1fr) minmax(3rem,1fr) 4.2rem}
   #legend{width:calc(100% - 4.6rem)}
   #legend .note{display:none}
 }
@@ -341,14 +331,6 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
       <div id="ticks"></div>
     </div>
   </div>
-  <section id="list" aria-label="Liste classée des territoires">
-    <header>
-      <div id="lvl" role="group" aria-label="Échelle de la liste"><button data-lvl="dep" aria-pressed="true">Départements</button><button data-lvl="reg" aria-pressed="false">Régions</button></div>
-      <span id="listtitle"></span><span class="spacer"></span><span id="listsort">ordonnés selon l'indicateur de la carte</span>
-      <button class="fold" id="listfold" aria-label="Replier la liste" aria-expanded="true">▾</button>
-    </header>
-    <div id="listrows"></div>
-  </section>
 </main>
 
 <aside id="side" aria-label="Territoire, comparaison et mode expert">
@@ -395,7 +377,7 @@ const fmt=n=>Math.round(n).toLocaleString("fr-FR");
 const pct=x=>(x>=0?"+":"−")+Math.abs(x*100).toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";
 const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 
-const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],lvl:"dep",y:2050};
+const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],y:2050};
 let META,GEO,REGL,regOf={},focusReg=null,carte=null,map,bbox={},names={},lat=[];
 let F=null,SC=null,TAB="ask",XT="flux",PIN=[];
 
@@ -422,7 +404,7 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
   showTab("ask");document.activeElement?.blur();   // sans clavier surgi sur mobile ; interface principale (décision du 2026-11-14) : la conversation est ouverte au chargement
   $("#xp nav").onclick=e=>{const t=e.target.closest("button");if(!t)return;XT=t.dataset.t;$("#xp nav").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===t));renderExpert();};
   $("#nlf").onsubmit=e=>{e.preventDefault();const t=$("#nlq").value.trim();if(t)interpret(t);};
-  if(innerWidth<=700){foldPanel("#levers","#fold",true);foldPanel("#list","#listfold",true);}   // mobile : la carte d'abord
+  if(innerWidth<=700)foldPanel("#levers","#fold",true);   // mobile : la carte d'abord
 })();
 
 function fbox(g){let b=[180,90,-180,-90];const w=c=>typeof c[0]=="number"?(b=[Math.min(b[0],c[0]),Math.min(b[1],c[1]),Math.max(b[2],c[0]),Math.max(b[3],c[1])]):c.forEach(w);w(g.coordinates);return b;}
@@ -444,18 +426,18 @@ function applyProf(){document.documentElement.style.setProperty("--prof",PCOL[S.
 
 // ---------- panneaux dépliables et onglets ----------
 function foldPanel(p,b,closed){const el=$(p),bt=$(b),c=closed??!el.classList.contains("closed");el.classList.toggle("closed",c);bt.setAttribute("aria-expanded",!c);
-  const what={"#levers":"le scénario","#list":"la liste","#side":"le territoire"}[p];bt.setAttribute("aria-label",(c?"Déplier ":"Replier ")+what);
-  bt.textContent=p=="#list"?(c?"▸":"▾"):p=="#levers"?(c?"›":"‹"):(c?"‹":"›");}
+  const what={"#levers":"le scénario","#side":"le territoire"}[p];bt.setAttribute("aria-label",(c?"Déplier ":"Replier ")+what);
+  bt.textContent=p=="#levers"?(c?"›":"‹"):(c?"‹":"›");}
 function showTab(t){TAB=t;document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab==t));
   $("#card").hidden=t!="terr";$("#cmppanel").hidden=t!="cmp";$("#xp").hidden=t!="xp";$("#ask").hidden=t!="ask";
   document.body.classList.toggle("xpon",t=="xp");document.body.classList.toggle("askon",t=="ask");$("#askbtn").setAttribute("aria-pressed",t=="ask");
   if($("#side").classList.contains("closed"))foldPanel("#side","#cardfold",false);renderExpert();renderPins();if(t=="ask")askOpen();}
 function buildPanels(){
-  $("#fold").onclick=()=>foldPanel("#levers","#fold");$("#listfold").onclick=()=>foldPanel("#list","#listfold");$("#cardfold").onclick=()=>foldPanel("#side","#cardfold");
+  $("#fold").onclick=()=>foldPanel("#levers","#fold");$("#cardfold").onclick=()=>foldPanel("#side","#cardfold");
   $("#tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(b)showTab(b.dataset.tab);};
-  $("#lvl").onclick=e=>{const b=e.target.closest("[data-lvl]");if(!b)return;S.lvl=b.dataset.lvl;renderList();};
-  $("#listrows").onclick=e=>{const b=e.target.closest("[data-id]");if(b)select(b.dataset.id);};
-  new ResizeObserver(()=>map&&map.resize()).observe($("#mapwrap"));   // panneau replié ou A+ : la carte reprend la place
+  // panneau replié, onglet élargi ou A+ : la carte reprend la place ; vue France tant que l'utilisateur·rice n'a pas déplacé la carte
+  new ResizeObserver(()=>{if(!map)return;map.resize();if(!S.terr&&!userMoved)fitFrance(0);}).observe($("#mapwrap"));
+  $("#card").addEventListener("click",e=>{const b=e.target.closest("[data-cs]");if(b&&b.dataset.cs!==CS){CS=b.dataset.cs;loadCard();}});
 }
 
 // ---------- carte ----------
@@ -464,8 +446,9 @@ function buildMap(){
     style:{version:8,sources:{},layers:[{id:"bg",type:"background",paint:{"background-color":"#DCE3E7"}}]},
     center:[2.4,46.6],zoom:5,dragRotate:false,pitchWithRotate:false});
   map.touchZoomRotate.disableRotation();
+  map.on("dragstart",()=>{userMoved=true;});map.on("zoomstart",e=>{if(e.originalEvent)userMoved=true;});
   map.on("load",()=>{
-    try{map.fitBounds(bbox.FR,{padding:pad(),duration:0});}catch(e){}
+    fitFrance(0);
     map.addSource("d",{type:"geojson",data:GEO,promoteId:"code"});
     map.addLayer({id:"fill",type:"fill",source:"d",paint:{"fill-color":["step",["zoom"],["case",["boolean",["feature-state","f"],false],["coalesce",["feature-state","c"],DIM],["coalesce",["feature-state","cr"],DIM]],6.3,["coalesce",["feature-state","c"],DIM]],
       "fill-color-transition":{duration:300},"fill-opacity":1}});
@@ -492,6 +475,9 @@ function buildMap(){
   });
   $("#zin").onclick=()=>map.zoomIn();$("#zout").onclick=()=>map.zoomOut();$("#zfr").onclick=()=>select("FR");
 }
+// vue France (métropole et encarts DROM) centrée dans la colonne de la carte
+let userMoved=false;
+function fitFrance(ms=800){if(!map)return;try{map.fitBounds(bbox.FR,{padding:pad(),duration:ms});}catch(e){}}
 // la carte n'occupe que la colonne centrale : marges fixes, plus la hauteur de la légende en bas
 function pad(){const l=$("#legend"),h=$("#mapwrap").clientHeight,small=innerWidth<=700;
   return {left:small?12:24,right:small?56:64,top:small?12:24,bottom:Math.min(Math.round(h*.45),(l?l.offsetHeight:0)+(small?16:28))};}
@@ -506,7 +492,7 @@ function derive(c){const i=yIdx(c.years||[2026,2050]);   // valeurs à S.y, par 
   for(const d of Object.values(c.deps)){d.sy=d.s?d.s[i]:d.s50;d.by=d.b?d.b[i]:d.b50;d.py=d.p?d.p[i]:d.p50;}
   const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("sy")/T("s26")-1;c.natD=T("sy")*(c.activite??1)/T("py");}
 function setYear(y){S.y=+y;$("#yrange").value=S.y;document.querySelectorAll(".yl,#yv").forEach(e=>e.textContent=S.y);
-  if(carte){derive(carte);paint();renderCmp();}if(META)levState();if(S.terr&&F&&F.prof===S.prof)renderCard(F);renderExpert();writeHash();}
+  if(carte){derive(carte);paint();renderCmp();}if(META)levState();if(F&&F.prof===S.prof)renderCard(F);renderExpert();writeHash();}
 let yTimer=null;
 function buildYear(){const r=$("#yrange"),b=$("#yplay");r.oninput=()=>setYear(r.value);setYear(S.y);
   b.onclick=()=>{if(yTimer){clearInterval(yTimer);yTimer=null;b.textContent="▶";b.setAttribute("aria-label","Faire défiler les années");return;}
@@ -536,19 +522,6 @@ function mark(){const m=$("#mark"),T=S.terr,d=!T||T=="FR"||!carte?null:T.startsW
   const B=brk().at(-1),x=(Math.max(-1,Math.min(1,val(d)/B))+1)/2*100;
   m.style.display="block";m.style.left=Math.max(8,Math.min(92,x))+"%";m.textContent=`${names[T]} ${fmtV(d)}`;}
 
-// ---------- liste classée : départements (de la région ouverte, sinon tous) ou régions ----------
-function renderList(){if(!carte)return;
-  document.querySelectorAll("#lvl [data-lvl]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lvl==S.lvl));
-  const reg=!S.terr||S.terr=="FR"?null:S.terr.startsWith("R")?S.terr:regOf[S.terr];
-  const rows=S.lvl=="reg"?Object.entries(carte.reg||{})
-    :Object.entries(carte.deps).filter(([id])=>regOf["D"+id]&&(!reg||regOf["D"+id]==reg)).map(([id,d])=>["D"+id,d]);
-  rows.sort((a,b)=>val(b[1])-val(a[1]));
-  $("#listtitle").textContent=(S.lvl=="reg"?`France : ${rows.length} régions`:`${reg?names[reg]:"France"} : ${rows.length} départements`)+`, en ${S.y}`;
-  const B=brk().at(-1);
-  $("#listrows").innerHTML=rows.map(([id,d])=>{const v=val(d),w=Math.min(50,Math.abs(v)/B*50),dn=d.py?Math.round(d.sy*(carte.activite??1)/d.py*1e5):null;
-    return `<button data-id="${id}" aria-current="${id==S.terr}"><span>${names[id]||id}</span><span class="bar"><i style="left:${v<0?50-w:50}%;width:${w}%;background:${colorOf(v)}"></i></span>`+
-      `<span class="r num">${fmtV(d)}</span><span class="m num">${fmt(d.s26)} → ${fmt(d.sy)}</span><span class="m num">${dn!=null?dn+" /100 000":""}</span></button>`}).join("");}
-
 // ---------- recalcul : un seul appel en vol, le dernier état gagne ----------
 let inflight=null,pending=false,tInput=0;
 let REQ=0;
@@ -561,7 +534,7 @@ async function refresh(){
     const [c,f]=await Promise.all([fetch(`/api/carte?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),
       fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json())]);
     if(c.error){toast(c.error);if(!carte){META.levers.forEach(l=>setL(l,l.default));levState();setTimeout(refresh);}return;}
-    derive(c);carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();if(S.terr&&SC&&fresh)renderCard(f);renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
+    derive(c);carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();if(SC&&fresh)loadCard();renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
     // jusqu'à l'image affichée ; borné à 100 ms (onglet en arrière-plan : rAF suspendu, sinon inflight reste bloqué)
     await Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),new Promise(r=>setTimeout(r,100))]);
     if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
@@ -576,7 +549,7 @@ function paint(){legend();const R={};
     const inSel=!S.terr||S.terr=="FR"?true:S.terr.startsWith("D")?S.terr=="D"+id:regOf["D"+id]==S.terr;
     const dim=(!!focusReg&&regOf["D"+id]!=focusReg)||!inSel;
     map.setFeatureState({source:"d",id},{c:dim?DIM:colorOf(val(d)),cr:dim?DIM:r?colorOf(val(r)):colorOf(val(d)),f:!!focusReg&&regOf["D"+id]==focusReg,dim});}
-  mark();renderList();}
+  mark();}
 function setFocus(r){focusReg=r;if(carte)paint();}
 const repaint=()=>{if(carte)paint();};
 function showLat(ms){const s=[...lat].sort((a,b)=>a-b),q=p=>s[Math.min(s.length-1,Math.floor(p*s.length))];
@@ -709,31 +682,42 @@ function buildSearch(){
 let prevSel=null;
 function dropRegional(){if(!S.lv.quotas_region)return;setL(LV("quotas_region"),false);setL(LV("quotas"),1);toast("Hausse régionale des places retirée : rouvrez une région pour la réappliquer");}
 function select(id,fly=true,push=true){if(id=="FR")return backToFrance(push);if(!names[id]){toast("Territoire inconnu : "+id);return backToFrance(false);}
-  if(!map?.isStyleLoaded()){S.terr=id;writeHash();return;}   // carte pas encore prête : le chargement rouvrira S.terr
+  // carte pas encore prête (sources ajoutées au chargement) : le chargement rouvrira S.terr.
+  // Pas isStyleLoaded() : il reste faux tant que des tuiles se recalculent (recadrage, redimensionnement), et l'ouverture était perdue.
+  if(!map?.getSource?.("d")){S.terr=id;writeHash();return;}
   if(push&&id!==S.terr)history.pushState(null,"",location.href);
+  if(id!==S.terr)CS="terr";   // un nouveau territoire ouvert : la fiche montre ses chiffres
   S.terr=id;writeHash();if(META)levState();if(S.lv.quotas_region)refresh();
   if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;
   setFocus(id.startsWith("R")?id:id.startsWith("D")?regOf[id]:null);
   if(id.startsWith("D")){prevSel=id.slice(1);map.setFeatureState({source:"d",id:prevSel},{s:true});}
   // option 1 : les leviers restent ouverts ; c'est la carte qui se cadre dans sa colonne
   if(fly&&bbox[id])try{map.fitBounds(bbox[id],{padding:pad(),maxZoom:S.terr?.startsWith("D")?10:8.5,duration:900,essential:true});}catch(e){}
-  const tk=++REQ;fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${id}`).then(r=>r.json()).then(f=>{if(tk!==REQ)return;if(f.error)return toast(f.error);SC=f;levState();renderCard(f);});
+  const tk=++REQ;fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${id}`).then(r=>r.json()).then(f=>{if(tk!==REQ)return;if(f.error)return toast(f.error);SC=f;levState();loadCard();});
 }
-function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();try{map.fitBounds(bbox.FR,{padding:pad(),duration:800});}catch(e){}}
+function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();userMoved=false;fitFrance();}
 function closeCardContent(){const c=$("#card");c.classList.remove("on");delete c.dataset.t;F=null;
-  c.innerHTML=`<div class="empty"><h3>Aucun territoire ouvert</h3><p>Cliquez une région sur la carte, une ligne de la liste ou cherchez un territoire.</p></div>`;sideSum();}
+  c.innerHTML=`<div class="empty"><h3>France entière</h3><p>Chargement des chiffres nationaux… Cliquez une région sur la carte ou cherchez un territoire pour ses chiffres.</p></div>`;sideSum();}
+// échelle des chiffres de la fiche : le territoire ouvert, ou la France entière (option « chiffres nationaux »)
+let CS="terr",CREQ=0;
+const cardT=()=>CS=="fr"||!S.terr?"FR":S.terr;
+function loadCard(){const T=cardT(),tk=++CREQ;
+  if(T===(S.terr||"FR")&&SC){renderCard(SC);return;}   // SC : scénario du territoire ouvert, ou de la France sans territoire
+  fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${T}`).then(r=>r.json()).then(f=>{if(tk!==CREQ)return;if(f.error)return toast(f.error);renderCard(f);});}
 function closeCard(){closeCardContent();S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
-function sideSum(){const s=$("#sidesum");if(!s)return;if(!(S.terr&&F)){s.textContent="Aucun territoire ouvert";return;}
-  const i=yIdx(F.years);s.textContent=`${names[S.terr]} · ${sg(F.scn[i]-F.base[i])} en ${F.years[i]}`;}
+function sideSum(){const s=$("#sidesum");if(!s)return;if(!F){s.textContent="France entière";return;}
+  const i=yIdx(F.years);s.textContent=`${names[cardT()]} · ${sg(F.scn[i]-F.base[i])} en ${F.years[i]}`;}
 
 function renderCard(f){
-  F=f;const c=$("#card"),y=f.years,i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
+  F=f;const T=cardT(),c=$("#card"),y=f.years,i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
   const s26=f.scn[i26],s50=f.scn[n],b50=f.base[n],k=f.k,lo=s50*(1-k*(Yn-f.origin)),hi=s50*(1+k*(Yn-f.origin));
-  const dep=S.terr?.startsWith("D")?S.terr.slice(1):null,zone=dep&&f.regul_deps.includes(dep);
-  if(!c.classList.contains("on")||c.dataset.t!==S.terr||c.dataset.p!==f.prof){
-    c.dataset.t=S.terr;c.dataset.p=f.prof;
-    c.innerHTML=`<header><div><h3>${names[S.terr]||S.terr}</h3><div class="sub">${f.label} · secteur libéral · origine des données ${f.origin}</div></div>
-      <button class="x" aria-label="Fermer la fiche" onclick="closeCard()"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></header>
+  const dep=T.startsWith("D")?T.slice(1):null,zone=dep&&f.regul_deps.includes(dep);
+  if(!c.classList.contains("on")||c.dataset.t!==T||c.dataset.s!==(S.terr||"")||c.dataset.p!==f.prof){
+    c.dataset.t=T;c.dataset.s=S.terr||"";c.dataset.p=f.prof;
+    // bascule « chiffres nationaux » : visible dès qu'un territoire est ouvert ; sans territoire, la fiche montre la France
+    const scope=S.terr?`<div class="scope" role="group" aria-label="Échelle des chiffres"><button data-cs="terr" aria-pressed="${CS=="terr"}">${names[S.terr]}</button><button data-cs="fr" aria-pressed="${CS=="fr"}">France entière</button></div>`:"";
+    c.innerHTML=`<header><div><h3>${names[T]||T}</h3><div class="sub">${f.label} · secteur libéral · origine des données ${f.origin}${T=="FR"?" · chiffres nationaux":""}</div></div>
+      ${S.terr?`<button class="x" aria-label="Fermer la fiche" onclick="closeCard()"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>`:""}</header>${scope}
       <section class="kpis"><div><span>Effectif ${y[i26]}</span><b class="num" data-k="s26">0</b></div>
         <div><span>Effectif <span class="yl">${Yn}</span></span><b class="num" data-k="s50">0</b><em class="num" data-k="rg"></em></div>
         <div><span>Écart au tendanciel</span><b class="num" data-k="ec">0</b><em class="num" data-k="ecp"></em></div></section>
@@ -753,8 +737,8 @@ function renderCard(f){
   q("flows").innerHTML=fl.length?fl.map(([k,v])=>{const x=v[n],w=Math.abs(x)/mx*50;
     return `<div class="flow"><span>${FLOWLBL[k]||k}</span><div class="bar"><i style="left:${x<0?50-w:50}%;width:${w}%"></i></div><output class="num">${(x>=0?"+":"−")+fmt(Math.abs(x))}</output></div>`}).join("")
     :`<p class="note" style="margin:0">Aucun écart : le scénario est égal au tendanciel (places en formation × 1,00).</p>`;
-  const inReg=id=>S.terr=="FR"||!S.terr?true:S.terr.startsWith("R")?regOf["D"+id]==S.terr:S.terr=="D"+id;
-  const regd=f.regul_deps.filter(inReg),ndep=S.terr&&S.terr.startsWith("R")?(META.territories.find(r=>r.id==S.terr)?.deps||[]).length:null;
+  const inReg=id=>T=="FR"?true:T.startsWith("R")?regOf["D"+id]==T:T=="D"+id;
+  const regd=f.regul_deps.filter(inReg),ndep=T.startsWith("R")?(META.territories.find(r=>r.id==T)?.deps||[]).length:null;
   q("zone").textContent=dep?(zone?"Département régulé : au moins la moitié des communes en « remplacement seul » (zonage actuel).":"Département non régulé : moins de la moitié des communes en « remplacement seul » (zonage actuel). La régulation n'a pas d'effet ici.")
     :`Départements régulés${ndep?` dans la région : ${regd.length} sur ${ndep}`:` : ${regd.length}`}${regd.length?" ("+regd.map(d=>names["D"+d]||d).join(", ")+")":" — la régulation n'a pas d'effet ici"}.`;
   q("rep").innerHTML=[2030,2035,2040,2050].filter(Y=>y.includes(Y)).map(Y=>{const j=y.indexOf(Y),h=k*(Y-f.origin),v=f.scn[j];
@@ -788,7 +772,7 @@ function chart(f,i26,Ysel=2050){
 }
 
 // ---------- comparer / exporter ----------
-function addCmp(){if(!S.cmp.includes(S.terr)){S.cmp=[...S.cmp,S.terr].slice(-4);writeHash();renderCmp();toast("Ajouté à la comparaison (onglet Comparer)");}}
+function addCmp(t=F?cardT():S.terr){if(t&&!S.cmp.includes(t)){S.cmp=[...S.cmp,t].slice(-4);writeHash();renderCmp();toast("Ajouté à la comparaison (onglet Comparer)");}}
 function renderCmp(){
   const tab=$('[data-tab="cmp"]');if(tab)tab.textContent=`Comparer${S.cmp.length?" · "+S.cmp.length:""}`;
   const el=$("#cmp");if(!carte)return;
@@ -799,7 +783,7 @@ function renderCmp(){
       <td><button class="x" aria-label="Retirer" onclick="S.cmp=S.cmp.filter(x=>x!='${id}');writeHash();renderCmp()"><svg aria-hidden="true" width="10" height="10" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></td></tr>`}).join("")+`</table>`;
 }
 function exportCard(){
-  const G=S.terr?F:SC;if(!G)return;const T=S.terr||"FR";
+  const G=F||SC;if(!G)return;const T=F?cardT():S.terr||"FR";   // la fiche affichée : territoire ouvert ou France entière
   const cl=v=>String(v).replace(/[\r\n]+/g," ").replace(/\s*;\s*/g,", ");
   const lev=META.levers.map(l=>`#   - ${LBL[l.k]} : ${phrase(l.k,S.lv[l.k])} (valeur ${typeof S.lv[l.k]=="boolean"?+S.lv[l.k]:S.lv[l.k]}${isDef(l)?", par défaut":", modifié"}) ; statut : effet ${l.status} ; source : ${cl(l.source||"non renseignée")}`);
   const L=[`# Fiche scénario — ${names[T]||T} · ${G.label} · généré le ${new Date().toLocaleString("fr-FR")}`,
@@ -859,9 +843,11 @@ function renderExpert(){if(!document.body.classList.contains("xpon")||!META)retu
       ${row("Fourchette ≈ 8/10",i=>{const h=G.k*(G.years[i]-G.origin);return fmtN(G.scn[i]*(1-h))+" – "+fmtN(G.scn[i]*(1+h))})}
       ${G.pop?row(`Habitants (Omphale, ${phrase("pop_scen",G.pop_scen)})`,i=>fmtN(G.pop[i]))+row("Densité pour 100 000, tendanciel",i=>Math.round(G.dens_base[i]))+row(`Densité pour 100 000, scénario${G.activite!=1?" (× activité "+G.activite+")":""}`,i=>Math.round(G.dens_scn[i])):""}</table>
       <p class="note">Origine des données ${G.origin}, décision ${G.decision}, premier effet d'une hausse des places ${G.first_effect} (délai ${G.lag} ans). Fourchette : pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon, extrapolée au-delà d'environ 10 ans. Version du code ${META.version||"?"}.</p>`;}
-  if(XT=="lev")b.innerHTML=`<table><tr><th>Levier</th><th>Valeur</th><th>Unité</th><th>Paramètre du jumeau</th><th>Délai</th><th>Statut</th><th>Source</th></tr>
-    ${META.levers.map(l=>`<tr><td>${esc(LBL[l.k]||l.label)}${isDef(l)?"":" <b>(modifié)</b>"}</td><td>${esc(typeof S.lv[l.k]=="boolean"?(S.lv[l.k]?"oui":"non"):S.lv[l.k])}</td><td>${esc(l.unit||"")}</td>
-      <td><code>${esc(l.param||"")}</code></td><td class="wrap">${esc(l.delai||"")}</td><td>${esc(l.status||"")}</td><td class="wrap">${esc(l.source||"non renseignée")}</td></tr>`).join("")}</table>
+  // un levier sur deux lignes (nom et valeur, puis paramètre et statut) : tient dans le panneau sans défilement horizontal
+  if(XT=="lev")b.innerHTML=`<div class="levs">${META.levers.map(l=>`<div class="lv"><b>${esc(LBL[l.k]||l.label)}${isDef(l)?"":" (modifié)"}</b>
+      <span class="v num">${esc(typeof S.lv[l.k]=="boolean"?(S.lv[l.k]?"oui":"non"):S.lv[l.k])} ${esc(l.unit||"")}</span>
+      <code>${esc(l.param||"")}</code><span class="st">${esc(l.status||"")}</span>
+      <p>Délai : ${esc(l.delai||"—")} · source : ${esc(l.source||"non renseignée")}</p></div>`).join("")}</div>
     <p class="note">Un seul territoire par levier aujourd'hui : les places peuvent être limitées à la région ouverte ; les autres leviers sont nationaux (régulation : départements zonés). Estimateur : jumeau stock-flux à taux locaux, seul branché sur la carte.</p>`;
 }
 // scénarios épinglés : dans l'onglet Comparer, avec les territoires

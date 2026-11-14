@@ -1,6 +1,7 @@
 // Recette iso-fonctionnelle de la carte : chaque fonction de la page, vérifiée dans Chrome headless.
 // Usage (serveur de la carte lancé) : node v2/prototype-carte/recette.mjs [url] [--option1] [--only=R30,O02] [--captures=dossier]
-//   url par défaut http://localhost:8767/ ; --option1 ajoute les contrôles propres à la refonte (panneaux, liste) ;
+//   url par défaut http://localhost:8767/ ; --option1 ajoute les contrôles propres à la refonte (panneaux, défilement horizontal,
+//   cadrage France, chiffres nationaux) ;
 //   --only ne lance que les contrôles listés ; --captures enregistre deux captures (1440×900 et 390×844, Puy-de-Dôme, places +20 %).
 // Aucune dépendance : Chrome piloté par le protocole DevTools, WebSocket natif de Node ≥ 22.
 import { spawn } from "node:child_process";
@@ -229,19 +230,48 @@ await check("R30","mobile 390 px : rien ne déborde à droite, sélecteur de pro
 if (OPTION1) {
   await open();
   await check("O01", "option 1 : les leviers restent ouverts à l'ouverture d'un territoire", async () => { await ev(`select("D63");return 1`); await idle(); return ev(`return !document.querySelector("#levers").classList.contains("closed")`); });
-  await check("O02", "option 1 : trois panneaux dépliables (scénario, liste, territoire)", async () => {
+  await check("O02", "option 1 : deux panneaux dépliables (scénario, territoire)", async () => {
     const r = [];
-    for (const [b, p] of [["#fold", "#levers"], ["#listfold", "#list"], ["#cardfold", "#side"]]) {
+    for (const [b, p] of [["#fold", "#levers"], ["#cardfold", "#side"]]) {
       await ev(`document.querySelector("${b}").click();return 1`); r.push(await ev(`return document.querySelector("${p}").classList.contains("closed")`));
       await ev(`document.querySelector("${b}").click();return 1`); r.push(!(await ev(`return document.querySelector("${p}").classList.contains("closed")`)));
     }
     if (r.includes(false)) throw new Error(JSON.stringify(r));
   });
-  await check("O03", "option 1 : liste classée Départements (région ouverte) / Régions, clic ouvre le territoire", async () => {
-    await ev(`document.querySelector('[data-lvl="dep"]').click();return 1`); const d = await ev(`return document.querySelectorAll("#listrows [data-id]").length`);
-    await ev(`document.querySelector('[data-lvl="reg"]').click();return 1`); const g = await ev(`return document.querySelectorAll("#listrows [data-id]").length`);
-    await ev(`document.querySelector('#listrows [data-id="R84"]').click();return 1`); await until(`S.terr==="R84"`); await idle();
-    if (d !== 12 || g < 17) throw new Error(`${d} départements, ${g} régions`); return `${d} / ${g}`;
+  // liste classée retirée (décision du 2026-11-14) ; à la place : le panneau de droite ne défile jamais horizontalement
+  await check("O03", "option 1 : panneau de droite sans défilement horizontal (Territoire, Comparer, Expert flux et leviers)", async () => {
+    await ev(`select("D63");return 1`); await idle(); await ev(`addCmp();return 1`);
+    const over = [];
+    for (const [t, sub] of [["terr"], ["cmp"], ["xp", "flux"], ["xp", "lev"]]) {
+      await ev(`document.querySelector('[data-tab="${t}"]').click();${sub ? `document.querySelector('#xp nav [data-t="${sub}"]').click();` : ""}return 1`);
+      await ev(`await new Promise(r=>setTimeout(r,150));return 1`);
+      const o = await ev(`const p=[...document.querySelectorAll("#side .panel")].find(x=>!x.hidden);return p.scrollWidth-p.clientWidth`);
+      if (o > 1) over.push(`${t}${sub ? "/" + sub : ""} +${o}px`);
+    }
+    await ev(`S.cmp=[];writeHash();renderCmp();return 1`);
+    if (over.length) throw new Error(over.join(", ")); return ev(`return "panneau "+Math.round(document.querySelector("#side").getBoundingClientRect().width)+" px"`);
+  });
+  await check("O06", "option 1 : panneau de gauche sans défilement horizontal (réglages fins et sources dépliés)", async () => {
+    await ev(`document.querySelector("#levmore").open=true;document.querySelectorAll("#levers details").forEach(d=>d.open=true);document.querySelectorAll("#levers .srcbox").forEach(s=>s.classList.add("on"));return 1`);
+    const o = await ev(`const b=document.querySelector("#levers .body");return b.scrollWidth-b.clientWidth`);
+    await ev(`document.querySelectorAll("#levers .srcbox").forEach(s=>s.classList.remove("on"));document.querySelector("#levmore").open=false;return 1`);
+    if (o > 1) throw new Error(`+${o}px`); return ev(`return "panneau "+Math.round(document.querySelector("#levers").getBoundingClientRect().width)+" px"`);
+  });
+  await check("O07", "option 1 : à l'arrivée, la France est centrée dans la colonne de la carte", async () => {
+    await open();
+    const r = await ev(`const w=document.querySelector("#mapwrap").getBoundingClientRect(),[x0,y0,x1,y1]=bbox.FR,a=map.project([x0,y1]),b=map.project([x1,y0]);
+      return {dx:Math.round((a.x+b.x)/2-w.width/2),inside:a.x>=-2&&a.y>=-2&&b.x<=w.width+2&&b.y<=w.height+2}`);
+    if (!r.inside || Math.abs(r.dx) > 40) throw new Error(JSON.stringify(r)); return `décalage ${r.dx} px`;
+  });
+  await check("O08", "option 1 : chiffres nationaux — sans territoire la fiche montre la France ; bascule territoire ↔ France", async () => {
+    const st = () => ev(`return JSON.stringify({h3:document.querySelector("#card h3")?.textContent,terr:S.terr,CS,tab:TAB})`);
+    const step = async (name, cond) => { try { await until(cond); } catch { throw new Error(name + " " + await st()); } };
+    await ev(`document.querySelector('[data-tab="terr"]').click();return 1`);
+    await step("France sans territoire", `document.querySelector("#card h3")?.textContent==="France"`);
+    await ev(`select("D63");return 1`); await idle(); await step("territoire ouvert", `document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"`);
+    await ev(`document.querySelector('#card [data-cs="fr"]').click();return 1`); await step("bascule France", `document.querySelector("#card h3")?.textContent==="France"&&F&&F.scn.at(-1)>50000`);
+    const keep = await ev(`return S.terr`); await ev(`document.querySelector('#card [data-cs="terr"]').click();return 1`);
+    await step("retour territoire", `document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"`); return keep === "D63" ? "territoire conservé" : false;
   });
   await check("O04", "option 1 : légende avec repère du territoire ouvert", async () => { await ev(`select("D63");return 1`); await idle(); return ev(`const m=document.querySelector("#mark");return getComputedStyle(m).display!=="none"&&m.textContent.includes("Puy-de-Dôme")`); });
   await check("O05", "option 1 : onglets Territoire, Comparer, Expert", async () => {
