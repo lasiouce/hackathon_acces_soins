@@ -506,9 +506,9 @@ function leverHTML(l,main){const sup=l.status!="sourcé"&&l.status!="mesuré";
     <div class="ic"><span title="Délai avant effet : ${l.delai}">🕒 ${l.delai.split(",")[0]}</span><span class="src" data-k="${l.k}" title="${sup?"Effet supposé":"Effet sourcé"} — cliquer pour la source">${sup?"● supposé":"✓ sourcé"}</span></div>
     <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div><p class="note" id="n-${l.k}"></p></div>`;}
 function buildLevFam(){
-  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>`<details class="q" id="q-${f}"><summary><span class="ttl">${F.q}</span><span class="st" id="st-${f}"></span><span class="ef" id="ef-${f}"></span></summary>`+
-    leverHTML(LV(F.main),true)+(F.more.length?`<details class="more"><summary>Préciser ▸</summary>${F.more.map(k=>leverHTML(LV(k),false)).join("")}</details>`:"")+"</details>").join("");
-  document.querySelectorAll("details.q").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll("details.q").forEach(x=>{if(x!==d)x.open=false;});}));
+  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>`<details class="q" id="q-${f}" open><summary><span class="ttl">${F.q}</span><span class="st" id="st-${f}"></span><span class="ef" id="ef-${f}"></span></summary>`+
+    leverHTML(LV(F.main),true)+(F.more.length?`<details class="more"><summary>Plus de réglages ▸</summary>${F.more.map(k=>leverHTML(LV(k),false)).join("")}</details>`:"")+"</details>").join("");
+  // curseur principal de chaque famille visible d'emblée (retour utilisateur·rice : « les curseurs ont disparu ») ; plus d'accordéon
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
   const H=S.lvHash||{},bad=[];
   // validation du hash : valeur hors bornes ou inconnue → valeur par défaut, signalée

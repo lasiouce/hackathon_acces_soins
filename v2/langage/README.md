@@ -68,9 +68,17 @@ toute modification** ; ses échecs servent ensuite à corriger des *classes* d'e
 | + synonymes, fractions, demi-années, quantité par type de levier | jeu 2 | 16/30 (53 %) | 20/30 | 28/30 | 28/30 |
 | + sens le plus proche de la quantité, racines conjuguées, arrondi au pas, « emploi et retraite » | jeu 3 | 21/30 (70 %) | 25/30 | 30/30 | 24/30 |
 | + gentilés, « remplacer un confrère », « % des territoires », « réservée à la région » (et sa négation), comparatif après la quantité, « doublement » | jeu 4 | 24/30 (80 %) | 25/30 | 30/30 | 30/30 |
-| + « formés hors de France », verbes multiplicateurs conjugués, « diviser par N », internat non modélisé, « facilité », terme qui avalait la quantité | jeu 5 | **25/30 (83 %)** | 26/30 | 30/30 | 29/30 |
+| + « formés hors de France », verbes multiplicateurs conjugués, « diviser par N », internat non modélisé, « facilité », terme qui avalait la quantité | jeu 5 | 25/30 (83 %) | 26/30 | 30/30 | 29/30 |
+| + diplôme obtenu hors de France prioritaire sur les places, sigles de régions, écart entre deux âges, verbes familiers | jeu 6 | 21/30 (70 %) | 22/30 | 30/30 | 29/30 |
 
-**Le chiffre à citer est 83 %** (jeu 5). Simple 12/12, négation 4/4, combinée 5/6, non modélisé 3/4, piège 1/4. Échecs :
+**Le chiffre à citer est d'environ 77 %**, moyenne des jeux 5 et 6 (25 + 21 sur 60) : avec 30 phrases par jeu, l'erreur type
+d'un taux est d'environ ±8 points, et la baisse du jeu 6 est dans ce bruit. **Le gain par tour a plafonné** (80, 83, 70) :
+les échecs du jeu 6 viennent surtout de formes conjuguées de termes multi-mots (« prolonge l'activité » face à « prolonger
+l'activité », « partir à 65 ans » sans terme de retraite, « supprimons 15 % »), de « conditionnée à un départ », de la zone
+voisine comme destination et de propositions combinées. Un glossaire à termes exacts atteint là sa limite ; la suite
+raisonnable est une étape de modèle de langage pour l'analyse seule (décision du compilateur), évaluée sur les jeux 5 et 6.
+
+Tour 5 : 83 % (jeu 5). Simple 12/12, négation 4/4, combinée 5/6, non modélisé 3/4, piège 1/4. Échecs :
 « diplômées européennes » et « se former en Belgique » lus comme des places en formation (**mauvais levier**, même classe
 qu'au tour 4 : tout diplôme obtenu hors de France), « quotas … grimper de 25 % » (« grimper » inconnu), sigle « PACA »,
 « 67 ans au lieu de 65 ans et demi » (écart entre deux âges, lu comme 3 ans), « logements pour les étudiantes » non modélisé.

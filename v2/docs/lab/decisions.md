@@ -3195,3 +3195,25 @@ travail »). Mesure sur le jeu 5, jamais vu : **25/30 (83 %, chiffre à citer)**
 **À signaler :** deux erreurs de mauvais levier subsistent (« diplômées européennes », « se former en Belgique » → places en
 formation) ; l'écran de confirmation les rend visibles.
 **Pourquoi.** L'utilisateur·rice : « Yes, round 5 ».
+
+## 2026-11-14 — Compilateur, tour 6 : 70 % sur le jeu 6 ; plateau d'environ 77 % pour l'approche glossaire
+
+**Décision.** Ajouts par classe : un diplôme obtenu hors de France (Europe comprise) l'emporte sur les places en formation
+dans une même proposition, sigles de régions (PACA, IDF, AURA…), écart entre deux âges (« 67 ans au lieu de 65 et demi »),
+verbes familiers (« grimper », « raboter »). Mesure sur le jeu 6, jamais vu : **21/30 (70 %)**. Jeux 1 à 5 sans régression.
+**Chiffre à citer : environ 77 %**, moyenne des jeux 5 et 6 (46/60) ; erreur type d'un jeu de 30 ≈ ±8 points.
+**Constat.** Le gain par tour a plafonné (80 → 83 → 70) : les échecs restants sont des formes conjuguées de termes multi-mots
+et des propositions combinées, que des termes exacts couvrent mal. Selon la décision du compilateur, l'étape suivante serait
+un modèle de langage pour l'analyse seule (jamais le calcul), évalué sur les jeux 5 et 6 ; non engagé sans accord.
+**Aussi.** « Auvergne » et « Rhône-Alpes » renvoient à Auvergne-Rhône-Alpes : l'exemple du champ de saisie de la carte
+(« former 20 % de kinés en plus en Auvergne ») se compile désormais en places +20 %, kinés, R84 (signalé par une session sœur).
+
+## 2026-11-14 — Carte : curseurs principaux visibles sous la phrase (remplace « tout replié » pour le panneau)
+
+**Décision.** Dans le panneau Leviers, sous « Décrire une politique en une phrase », chaque famille est dépliée et montre son
+curseur principal (places, diplômés étrangers, régulation, retraite) ; les réglages secondaires restent sous « Plus de réglages ».
+L'accordéon (une seule famille ouverte) est retiré. Sur mobile, le panneau reste replié à l'ouverture.
+**Remplace** la règle de la refonte élu·e « leviers repliés » pour l'intérieur du panneau (refonte du 2026-11-14, gardée par ailleurs).
+**Pourquoi.** L'utilisateur·rice, relayé par une session sœur : garder les deux façons de régler une politique, la phrase et
+les curseurs ; repliés, les curseurs semblaient avoir disparu. Vérifié en Chromium headless (1440×900 : 4 familles ouvertes,
+curseur fonctionnel ; 390×844 : panneau replié ; aucune erreur JavaScript).

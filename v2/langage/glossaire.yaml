@@ -31,7 +31,10 @@ leviers:
              formees a l etranger, venus de l etranger, venues de l etranger, etrangers, etrangeres,
              etranger, hors union europeenne, hors ue, recrutement international, recruter a l etranger,
              formes hors de france, formees hors de france, forme hors de france, diplomes hors de france,
-             diplomees hors de france, hors de france, formes hors ue, formes a l international, titres etrangers]
+             diplomees hors de france, hors de france, formes hors ue, formes a l international, titres etrangers,
+             diplomes europeens, diplomees europeennes, diplome europeen, europeens, europeennes, union europeenne,
+             diplomes de l union europeenne, partis se former, se former a l etranger, formes ailleurs en europe,
+             belgique, espagne, roumanie, portugal, italie, allemagne, suisse, maghreb, liban]
     source: "Code de la santé publique, art. L4111-2 (autorisation d'exercice des titulaires de diplômes hors UE, épreuves de vérification des connaissances)"
   regul:
     famille: installer
@@ -110,8 +113,8 @@ directions:
     zero: 0.0
   racines:             # débuts de mots, toutes conjugaisons
     hausse: [augment, hauss, accroi, relev, renforc, allong, prolong, multipli, repouss, recul, retard, encourag, favoris,
-             facilit, assoupl, elarg, etend]
-    baisse: [redui, reduc, baiss, diminu, restrei, raccourc, frein]
+             facilit, assoupl, elarg, etend, grimp, bondi, progress, gonfl, revenir, reviennent]
+    baisse: [redui, reduc, baiss, diminu, restrei, raccourc, frein, chut, degringol, rabot, sabr]
   plafonner: [plafonner, plafond, au maximum]   # reconnu, sans valeur chiffrée : signalé
 unites:
   pourcent: ["%", pour cent, pourcent, points]
@@ -186,6 +189,16 @@ villes:
   brest: "29"
   aurillac: "15"
   gueret: "23"
+
+# Sigles de régions -> code serveur.
+sigles:
+  R93: [paca, region sud]
+  R11: [idf]
+  R84: [ara, aura, auvergne, rhone alpes]
+  R27: [bfc]
+  R32: [hdf]
+  R24: [cvl]
+  R52: [pdl]
 
 # Gentilés (adjectifs de lieu) -> code serveur. Forme de base au masculin singulier ; le compilateur ajoute e, s, es (ne, nes).
 gentiles:
@@ -277,7 +290,7 @@ non_modelises:
     source: null
   aides_installation:
     libelle: Aides ou primes à l'installation
-    termes: [aide au logement, aides au logement, logement, euros, bourse, bourses, allocation, exoneration fiscale,
+    termes: [aide au logement, aides au logement, logement, logements, logement etudiant, euros, bourse, bourses, allocation, exoneration fiscale,
              prime a l installation, primes a l installation, aide a l installation, aides a l installation,
              contrat d aide, incitations financieres, prime, primes, exoneration]
     raison: "Aucune élasticité de l'installation aux aides financières n'est estimée sur données ouvertes ; le jumeau ne relie pas un montant en euros à un flux."

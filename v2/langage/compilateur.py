@@ -76,6 +76,9 @@ def _territoires() -> list[tuple[str, str, bool]]:
         out.append((norm(row.dep_name), "D" + dep, True))
     for ville, dep in G["villes"].items():
         out.append((norm(ville), "D" + dep, False))
+    for code, formes in G.get("sigles", {}).items():
+        for f in formes:
+            out.append((f, code, False))
     for code, formes in G.get("gentiles", {}).items():      # « les kinés lyonnais » -> D69 ; variantes en e, s, es, ne, nes
         for f in formes:
             for v in {f, f + "e", f + "s", f + "es"} | ({f + "ne", f + "nes"} if f.endswith("en") else set()):
@@ -237,7 +240,13 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
     t = re.sub(rf"(?<![a-z0-9])(\d+|{mots_n})\s+ans?\s+et\s+demie?(?![a-z])",
                lambda m: f"{(_nombre(m.group(1)) or 0) + 0.5:g} ans", t)          # « un an et demi » -> « 1.5 ans »
     t = re.sub(r"(?<![a-z0-9])(?:un )?demi an(?:nee)?(?![a-z])", "0.5 ans", t)
-    t = re.sub(r"emploi et (?:la )?retraite", "emploi retraite", t)                       # ne pas couper sur ce « et »
+    t = re.sub(r"emploi et (?:la )?retraite", "emploi retraite", t)
+    # deux âges : « à 67 ans au lieu de 65.5 », « passer de 62 à 64 ans » -> écart en années
+    def _ecart(a, b, m):
+        a, b = _nombre(a), _nombre(b)
+        return f"{a - b:g} ans de plus" if a and b and 50 <= min(a, b) and max(a, b) <= 80 else m.group(0)
+    t = re.sub(rf"(?<![a-z])(?:a|vers) {NUM} ans au lieu de {NUM}(?: ans)?", lambda m: _ecart(m.group(1), m.group(2), m), t)
+    t = re.sub(rf"(?<![a-z])de {NUM} (?:ans )?a {NUM} ans", lambda m: _ecart(m.group(2), m.group(1), m), t)                       # ne pas couper sur ce « et »
     t = re.sub(rf"multipli[a-z]* par {NUM}", lambda m: f"x {m.group(1)}", t)
     res = {"texte": texte, "leviers": {}, "profession": None, "territoire": None, "compris": [],
            "non_modelise": [], "non_compris": [], "reformulations": [], "avertissements": []}
@@ -296,6 +305,8 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
             reste = reste[:s] + " " * (e - s) + reste[e:]
         q = quantite(reste, "facteur") or quantite(reste, "ans")
         leviers_c = list(dict.fromkeys(all_terms[h[2]] for h in hits))
+        if "etrangers" in leviers_c and "quotas" in leviers_c:   # « étudiants formés en Belgique » : le diplôme étranger l'emporte
+            leviers_c.remove("quotas")
         if not leviers_c and q and en_attente:
             leviers_c, en_attente = [en_attente], None
         if _find(c, G["directions"]["plafonner"]) and not q:
