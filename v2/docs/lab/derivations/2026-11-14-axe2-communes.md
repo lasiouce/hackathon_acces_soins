@@ -116,3 +116,36 @@ Pour chaque profession, et pour chaque commune c, tranche a et année τ :
 - **P80 de K** au plus égal à celui du défaut sans oracle dans les classes
   ≥ 11. Grâce à l'âge, il passe sous le défaut avec oracle dans au moins
   une classe.
+
+## K3 (ajout du 2026-11-14, inscrit avant tout passage)
+Le diagnostic de K et K2 a trouvé que **l'erreur du total départemental est
+commune aux communes d'un département et domine dans les grandes
+communes**. Une bande par classe de taille ne la porte pas.
+
+- **Point.** Part communale tenue × total départemental de K. C'est le
+  point de K2.
+- **Distribution prédictive (S = 200 tirages)**, pour la commune c du
+  département d :
+  X_c = (p_c + ½)·exp(ε_d + η_c) − ½, tronqué à 0.
+  - **ε_d**, l'erreur du total départemental : un seul tirage par
+    département et par tirage, donc **commun à ses communes**. Il est
+    rééchantillonné parmi les erreurs log(réel/projeté) des totaux
+    départementaux de K sur des pseudo-prévisions dans la fenêtre (cibles ≤
+    origine).
+  - **η_c**, l'erreur locale : rééchantillonnée, par classe de taille,
+    parmi les erreurs log((réel + ½)/(part tenue × total réel + ½)) des
+    mêmes pseudo-prévisions, total départemental exact compris. On fusionne
+    avec les classes voisines sous 20 erreurs.
+  - Pseudo-origines : o − 5 − ℓ, avec ℓ = 0 à 4, tant que la fenêtre de 6
+    ans tient dans les données.
+- **Grains BV et EPCI.** On somme les tirages communaux, ce qui garde la
+  corrélation départementale. Le point est la somme des points.
+- **Données.** Celles de N10 : `v2/data/processed/commune_stock.parquet`
+  (axe 4, Marseille par arrondissements).
+  - Les lignes « Total (reste …) », sans âge, sont réparties sur les
+    tranches de la commune, au prorata de son stock connu de l'année
+    (supposé).
+- **Critère.** Celui de N10, jugé par l'axe 3 : couverture dans
+  [75 ; 85] % dans chaque classe de taille.
+- **Prédiction (supposée).** La couverture des classes > 50 passe de
+  56–72 % (K2) à plus de 75 %. Les petites classes restent dans la bande.

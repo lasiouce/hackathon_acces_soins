@@ -118,6 +118,42 @@ relative par classe, sur des pseudo-prévisions dans la fenêtre.
 - Il est compatible avec le budget de l'axe 0 : 1,02 s par scénario à la
   commune (C15).
 
+## K3, inscrit avant passage et soumis au jugement N10 de l'axe 3
+- **Modèle.** Point de K2. Bande = erreur du total départemental (un tirage
+  par département, commun à ses communes) + erreur locale par classe de
+  taille, sur 200 tirages. Les grains BV et EPCI s'obtiennent en sommant
+  les tirages ([dérivation, § K3](../derivations/2026-11-14-axe2-communes.md)).
+- **Soumission.** `v2/methodes/out/n10_soumission_k3.parquet` (profession,
+  grain, unit, origin, h, pred, q10, q90).
+  - Origines 2014–2020 pour les IDE, 2015–2020 pour les MK, 2016–2020 pour
+    les CD. Avant, il n'y a pas de pseudo-prévision possible.
+- **Contrôle rapide fait ici, non décisif.**
+  - Il porte sur la couverture de la bande à 80 %.
+  - Il ne retire pas les sauts communaux, contrairement à N10.
+  - Il n'a servi à aucun réglage.
+
+| Classe | IDE commune | IDE EPCI | MK commune | MK EPCI | CD commune | CD EPCI |
+|---|---|---|---|---|---|---|
+| 1–2 | 81,5 % | 61,1 % | 76,1 % | 73,0 % | 69,0 % | 61,6 % |
+| 3–5 | 83,1 % | 82,3 % | 76,8 % | 77,7 % | 77,2 % | 75,3 % |
+| 6–10 | 83,6 % | 84,1 % | 75,7 % | 77,0 % | 75,1 % | 75,5 % |
+| 11–20 | 84,0 % | 87,4 % | 76,2 % | 78,3 % | 71,3 % | 78,8 % |
+| 21–50 | 85,4 % | 87,4 % | 71,8 % | 77,2 % | 70,6 % | 83,7 % |
+| 51–100 | 72,1 % | 83,9 % | 75,7 % | 80,2 % | 66,1 % | 72,9 % |
+| 101–200 | 86,1 % | 82,3 % | 62,4 % | 76,4 % | 75,2 % | 73,2 % |
+| > 200 | 79,1 % | 69,9 % | 57,1 % | 77,9 % | 85,4 % | 83,5 % |
+
+**Lecture provisoire.**
+- **Les grandes classes progressent nettement par rapport à K2**, comme
+  prévu. IDE à la commune : de 67,7 à 86,1 % pour 101–200, de 62,0 à 79,1 %
+  pour > 200.
+- **Les kinés à l'EPCI sont presque calibrés** : 76 à 80 % dans 7 classes
+  sur 8.
+- **Plusieurs classes restent hors bande.** Pour les CD, les classes
+  communales de 11 à 100 sont à 66–71 %. Pour les MK à la commune, les
+  classes de plus de 100 sont à 57–62 %.
+- Le verdict appartient à N10 (axe 3).
+
 ## Ce que ça change (dérivé)
 1. **La bande d'une commune a deux parties.**
    - Une partie **locale** : de type Poisson, indépendante entre communes.
