@@ -176,6 +176,37 @@ relative par classe, sur des pseudo-prévisions dans la fenêtre.
   2014–2020 ne vaudra que s'il est confirmé sur 2021, ou par le dépôt
   2027.
 
+### Verdict de K4 (axe 3, N11, commit 1d9545c) : non confirmé
+- **N10 (2014–2020, h = 5).** Échec à tous les grains, sans progrès sur
+  K3. Couverture globale, commune / BV / EPCI :
+
+| | Commune | BV | EPCI |
+|---|---|---|---|
+| CD | 72,5 % | 73,6 % | 73,5 % |
+| IDE | 83,0 % | 85,1 % | 84,4 % |
+| MK | 76,3 % | 76,8 % | 76,0 % |
+
+  - Pour les kinés à l'EPCI, 3 classes sortent de la bande, contre une
+    seule pour K3.
+- **Confirmation 2021, h = 4.** Échec partout.
+  - Les CD restent trop étroits dans les grandes classes : 51 % à l'EPCI
+    pour 101–200.
+  - Les IDE restent trop larges : 86 à 100 %.
+  - Sur cette période, la tendance naïve calibre 8 classes sur 8 pour les
+    kinés au BV, alors qu'elle échoue N10. 2021 est une période facile
+    pour les kinés.
+- **Prédictions de K4.** Fausses toutes les trois : les IDE ne descendent
+  pas sous 85 %, et les CD ne montent pas au-dessus de 75 %.
+- **Lecture (dérivé).**
+  - Les deux changements (récence, tirage conjoint) déplacent peu la
+    largeur.
+  - L'écart vient d'un **niveau d'erreur propre à chaque profession**,
+    qui ne se reproduit pas d'une période à l'autre. Les erreurs passées
+    des pseudo-origines ne prédisent pas l'erreur future à la bonne
+    échelle.
+  - C'est l'hypothèse « l'erreur passée prédit l'erreur future » qui
+    échoue, pas la structure départementale + locale.
+
 ## Ce que ça change (dérivé)
 1. **La bande d'une commune a deux parties.**
    - Une partie **locale** : de type Poisson, indépendante entre communes.
