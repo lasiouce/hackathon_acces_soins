@@ -249,7 +249,7 @@ body.askon #ask{display:flex}
 .cards button:hover,.cards button:focus-visible{border-color:var(--sel);background:var(--ground)}
 .cards.mini{display:flex;flex-wrap:wrap}.cards.mini button{font-size:12.5px;padding:5px 11px;border-radius:14px}
 #asklog .u{align-self:flex-end;max-width:85%;background:var(--sel);color:#fff;border-radius:14px 14px 4px 14px;padding:8px 12px;white-space:pre-wrap}
-#asklog .a{align-self:flex-start;max-width:95%;background:var(--ground);border-radius:14px 14px 14px 4px;padding:10px 13px;white-space:pre-wrap}
+#asklog .a{align-self:flex-start;max-width:95%;background:var(--ground);border-radius:14px 14px 14px 4px;padding:10px 13px;white-space:normal}
 #asklog .askapply{display:block;margin-top:9px;font:inherit;font-size:13px;font-weight:600;border:1px solid var(--sel);color:var(--sel);background:var(--panel);border-radius:8px;padding:5px 11px;cursor:pointer}
 #asklog .askapply:hover{background:var(--sel);color:#fff}
 #asklog .a .chk{display:block;margin-top:7px;font-size:12px;color:var(--mute)}#asklog .a .chk.warn{color:#8C5A1B}
@@ -263,6 +263,19 @@ body.askon #ask{display:flex}
 #asklog .plan{white-space:normal;font-size:12.5px;border-bottom:1px solid var(--line);padding:0 0 8px;margin-bottom:8px}
 #asklog .plan ol{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:2px}#asklog .plan li span{display:inline-block;min-width:76px;color:var(--faint)}
 #asklog .plan details summary{cursor:pointer}#asklog .plan dl{margin:.4rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .6rem}#asklog .plan dt{color:var(--faint)}#asklog .plan dd{margin:0}
+#asklog .md p{margin:0 0 8px}#asklog .md h4{margin:12px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+#asklog .md ul{margin:0 0 6px;padding-left:18px}#asklog .md li{margin:2px 0}
+#asklog .follow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}#asklog .askfollow{font:inherit;font-size:12.5px;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:4px 10px;cursor:pointer}
+#asklog .askfollow:hover{border-color:var(--sel)}
+.askfig{margin:6px 0 10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.askfig figcaption{font-size:12.5px;font-weight:600}.askfig figcaption small{display:block;font-weight:400;color:var(--mute)}
+.askfig svg{width:100%;height:auto;display:block;margin-top:4px}
+.askfig .band{fill:var(--sel);opacity:.12}.askfig .tend{fill:none;stroke:var(--faint);stroke-width:1.6;stroke-dasharray:4 3}
+.askfig .scn{fill:none;stroke:var(--sel);stroke-width:2.2}.askfig .s1{stroke:#8C5A1B}.askfig .s2{stroke:#2E7D6B}
+.askfig .obs{fill:var(--ink)}.askfig .ax{stroke:var(--line)}.askfig .t{font-size:10.5px;fill:var(--mute)}
+.askfig rect.pos{fill:var(--sel)}.askfig rect.neg{fill:#B88A4E}
+.askfig .leg{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--mute);margin-top:2px}.askfig .lg::before{content:"";display:inline-block;width:14px;height:3px;margin-right:4px;vertical-align:middle;background:var(--sel)}
+.askfig .lg.tend::before{background:var(--faint)}.askfig .lg.band::before{height:8px;opacity:.25}.askfig .lg.obs::before{width:5px;height:5px;border-radius:50%;background:var(--ink)}
 .askfoot{margin:0;padding:0 16px 10px;font-size:11px;color:var(--faint)}
 @media (max-width:700px){#ask{left:8px;right:8px;top:auto;bottom:8px;width:auto;height:78dvh}}
 </style>
@@ -840,6 +853,48 @@ function askModele(){const m=ASK.modele;if(!m)return "jumeau numérique ; aucun 
   return `<details><summary>${askEsc(m.nom)} ; aucun chiffre écrit par l'IA</summary><dl>`+[["Équation",m.equation],["Estimation",m.estimation],
     ["Leviers",m.leviers],["Précision",m.precision],["Fourchette",m.fourchette],["Autre méthode",m.alternative],["Sources",m.sources]]
     .map(([k,v])=>`<dt>${k}</dt><dd>${askEsc(v||"")}</dd>`).join("")+`</dl></details>`;}
+
+// ---------- mise en forme des réponses : Markdown réduit, graphique tiré des résultats du jumeau, pistes cliquables ----------
+const askNf=(x,d=0)=>x==null?"—":Number(x).toLocaleString("fr-FR",{maximumFractionDigits:d,minimumFractionDigits:d});
+function askInline(t){return askEsc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}
+function askBlocks(txt){const out=[],follow=[];let ul=null,para=[];
+  const flushP=()=>{if(para.length){out.push(`<p>${para.map(askInline).join("<br>")}</p>`);para=[];}};
+  const flushU=()=>{if(ul){out.push(`<ul>${ul.map(x=>`<li>${askInline(x)}</li>`).join("")}</ul>`);ul=null;}};
+  for(const raw of (txt||"").split("\n")){const l=raw.trim();
+    if(!l){flushP();flushU();continue;}
+    let m;
+    if((m=l.match(/^#{1,4}\s+(.*)$/))||(m=l.match(/^\*\*([^*]{2,40})\*\*\s*:?$/))){flushP();flushU();out.push(`<h4>${askInline(m[1].replace(/\*\*/g,""))}</h4>`);continue;}
+    if((m=l.match(/^(?:→|->)\s*(.+)$/))){flushP();flushU();follow.push(m[1].replace(/\*\*/g,"").trim());continue;}
+    if((m=l.match(/^[-•*]\s+(.*)$/))){flushP();(ul=ul||[]).push(m[1]);continue;}
+    flushU();para.push(l);}
+  flushP();flushU();return {out,follow};}
+function askChart(g){if(!g)return"";const W=520,H=150,L=46,R=10,T=8,B=20;
+  if(g.type=="classement"){const n=Math.min(8,g.valeurs.length),vs=g.valeurs.slice(0,n),m=Math.max(1,...vs.map(Math.abs)),rh=20,h=n*rh+6;
+    const x0=L+150,w=W-x0-R-46;const neg=vs.some(v=>v<0),mid=neg?x0+w/2:x0,sc=neg?w/2/m:w/m;
+    return `<figure class="askfig"><figcaption>${askEsc(g.titre)}<small>${askEsc(g.sous_titre||"")}</small></figcaption><svg viewBox="0 0 ${W} ${h}" role="img">`
+      +vs.map((v,i)=>{const y=i*rh+4,bw=Math.abs(v)*sc,x=v<0?mid-bw:mid;const lab=String(g.etiquettes[i]).replace(/^[^:]*:\s*/,"").slice(0,30);
+        return `<text x="${x0-6}" y="${y+12}" text-anchor="end" class="t">${askEsc(String(g.etiquettes[i]).split(" : ")[0].slice(0,22))} ${askEsc(lab)}</text><rect x="${x}" y="${y+2}" width="${Math.max(1,bw)}" height="${rh-7}" class="${v<0?"neg":"pos"}"/><text x="${v<0?mid+4:x+bw+4}" y="${y+12}" class="t">${v>0?"+":""}${askNf(v)}</text>`;}).join("")
+      +`<line x1="${mid}" x2="${mid}" y1="0" y2="${h}" class="ax"/></svg></figure>`;}
+  let series=[],band=null,obs=[];
+  if(g.type=="projection"){series=[{n:"tendanciel",ys:g.annees,v:g.tendanciel,c:"tend"},{n:"scénario",ys:g.annees,v:g.scenario,c:"scn"}];band=g.bande;obs=(g.observe||[]).filter(o=>o[0]>=g.annees[0]-6);}   // 6 ans d'observé : l'écart reste lisible
+  else if(g.type=="comparaison"){series=[{n:"tendanciel",ys:g.tendanciel.annees,v:g.tendanciel.valeurs,c:"tend"},...g.scenarios.slice(0,3).map((s,i)=>({n:s.nom,ys:s.annees,v:s.valeurs,c:"scn s"+i}))];}
+  else return"";
+  const yrs=series[0].ys,x0=Math.min(...yrs,...obs.map(o=>o[0])),x1=Math.max(...yrs);
+  const all=[...series.flatMap(s=>s.v),...(band||[]).flat(),...obs.map(o=>o[1])].filter(v=>v!=null);
+  let y0=Math.min(...all),y1=Math.max(...all);const pd=(y1-y0)*.06||1;y0-=pd;y1+=pd;
+  const X=x=>L+(x-x0)/(x1-x0||1)*(W-L-R),Y=v=>T+(1-(v-y0)/(y1-y0))*(H-T-B);
+  const path=(ys,v)=>ys.map((x,i)=>`${i?"L":"M"}${X(x).toFixed(1)},${Y(v[i]).toFixed(1)}`).join("");
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${askEsc(g.titre)}">`;
+  if(band)svg+=`<path class="band" d="${yrs.map((x,i)=>`${i?"L":"M"}${X(x).toFixed(1)},${Y(band[i][1]).toFixed(1)}`).join("")}${[...yrs].reverse().map((x,j)=>{const i=yrs.length-1-j;return `L${X(x).toFixed(1)},${Y(band[i][0]).toFixed(1)}`}).join("")}Z"/>`;
+  svg+=series.map(s=>`<path class="${s.c}" d="${path(s.ys,s.v)}"/>`).join("");
+  svg+=obs.map(o=>`<circle class="obs" cx="${X(o[0]).toFixed(1)}" cy="${Y(o[1]).toFixed(1)}" r="2"/>`).join("");
+  svg+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}"/><text class="t" x="${L}" y="${H-5}">${x0}</text><text class="t" x="${W-R}" y="${H-5}" text-anchor="end">${x1}</text>`
+    +`<text class="t" x="${L-4}" y="${Y(y1-pd)+4}" text-anchor="end">${askNf(y1-pd)}</text><text class="t" x="${L-4}" y="${Y(y0+pd)}" text-anchor="end">${askNf(y0+pd)}</text></svg>`;
+  const leg=series.map(s=>`<span class="lg ${s.c}">${askEsc(s.n)}</span>`).join("")+(band?`<span class="lg band">fourchette du scénario</span>`:"")+(obs.length?`<span class="lg obs">observé</span>`:"");
+  return `<figure class="askfig"><figcaption>${askEsc(g.titre)}<small>${askEsc(g.sous_titre||"")}</small></figcaption>${svg}<div class="leg">${leg}</div></figure>`;}
+function askRender(txt,gs){const {out,follow}=askBlocks(txt);const ch=(gs||[]).map(askChart).join("");
+  if(ch)out.splice(Math.min(1,out.length),0,ch);   // graphique juste après la phrase qui dit l'essentiel
+  return `<div class="md">${out.join("")}</div>`+(follow.length?`<div class="follow">${follow.map(f=>`<button type="button" class="askfollow" data-q="${askEsc(f)}">${askEsc(f)}</button>`).join("")}</div>`:"");}
 async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");$("#askwelcome").hidden=true;
   log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st typing">L'assistant traduit, le jumeau calcule…</div>`);const st=log.lastElementChild;log.scrollTop=log.scrollHeight;
   try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),session:ASK.sid})});
@@ -849,8 +904,9 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
       const chk=(ia?(VERIF[v]||""):"Réponse du glossaire de l'équipe, sans IA")+(lx.ok?"":` · ⚠ hors lexique neutre : ${lx.termes.join(", ")}`);
       const tools=[...new Set((d.appels||[]).map(x=>x.outil))].join(", ");
       const c=d.carte,btn=c?`<button class="askapply">Afficher ce scénario sur la carte</button>`:"";
-      st.outerHTML=`<div class="a">${askPlan(c)}${askMd(d.reponse)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
-      if(c){const el=[...$("#asklog").querySelectorAll(".a")].pop();el.querySelector(".askapply").onclick=()=>askApply(c);}}
+      st.outerHTML=`<div class="a">${askPlan(c)}${askRender(d.reponse,d.graphiques)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
+      const el=[...$("#asklog").querySelectorAll(".a")].pop();if(c)el.querySelector(".askapply").onclick=()=>askApply(c);
+      el.querySelectorAll(".askfollow").forEach(b=>b.onclick=()=>askSend(b.dataset.q));}
   }catch(e){st.textContent="Serveur injoignable.";}
   ASK.busy=false;log.scrollTop=log.scrollHeight;}
 function buildAsk(){

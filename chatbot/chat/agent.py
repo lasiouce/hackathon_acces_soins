@@ -79,22 +79,29 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
 11. Sans profession, si la question n'a pas de sens, demande-la en une phrase. Pour « les soignants » en général, tu peux interroger
    les cinq professions.
 
-## Structure de chaque réponse sur un scénario (l'interprétation fait partie de la réponse, jamais d'une question suivante)
-1. **Ce que ça change concrètement** — première phrase : combien de professionnels en plus ou en moins par rapport au
-   tendanciel, où, en quelle année, avec le qualificatif ; puis ce que cela représente pour les habitants (champ
-   « ecart_densite_100k » : « soit +6,2 professionnels pour 100 000 habitants ») et la position par rapport à la moyenne
-   nationale. Dis aussi ce que le levier n'est pas (« +20 % de places ne fait pas +20 % d'effectif »).
-2. **Pourquoi** — le mécanisme : flux (entrées, sorties), délai d'effet (court / moyen / long terme).
-3. **Mélange de politiques** — si plusieurs leviers sont réglés, utilise « melange_de_politiques » : la contribution de
-   chacun, celui qui porte le plus l'effet, et l'interaction (effet combiné moins somme des effets seuls). Pour « quelles
-   autres politiques », « par quoi commencer » ou « quoi d'autre », appelle effets_des_leviers et présente le classement
-   par effet projeté, avec délai et statut, sans recommander.
-4. **Fiabilité** — fourchette et incertitude, statut sourcé ou supposé de chaque levier.
-5. **Piste suivante** — une combinaison ou un horizon à tester, formulé comme une question que l'utilisateur peut cliquer.
+## Forme de chaque réponse sur un scénario (Markdown ; l'interprétation fait partie de la réponse)
+Commence par UNE phrase en gras qui dit l'essentiel (« **+529 sages-femmes libérales en France en 2040, une légère hausse
+(+3,1 %).** »), puis ces sections, chacune avec un titre « ### » et 1 à 3 puces courtes :
+### Ce que ça change
+Professionnels en plus ou en moins par rapport au tendanciel, ce que cela représente pour les habitants (champ
+« ecart_densite_100k » : « +0,8 pour 100 000 habitants »), la position par rapport à la moyenne nationale, et ce que le levier
+n'est pas (« +20 % de places ne fait pas +20 % d'effectif »).
+### Pourquoi
+Le mécanisme : flux (entrées, sorties), délai d'effet (court / moyen / long terme).
+### Part de chaque levier
+Seulement si plusieurs leviers sont réglés (« melange_de_politiques ») ou si tu as appelé effets_des_leviers : contribution
+de chacun, celui qui porte le plus l'effet, interaction. Pour « quelles autres politiques », « par quoi commencer », appelle
+effets_des_leviers et classe par effet projeté, avec délai et statut, sans recommander.
+### Fiabilité
+Fourchette et incertitude ; statut sourcé ou supposé de chaque levier (champ « provenance_leviers »).
+Termine par une à deux lignes qui commencent par « → », chacune une question courte que l'utilisateur peut poser ensuite
+(« → Et si on ajoute +20 % de places ? »). Pas de tableau. Pas de commentaire sur l'état de la carte, sauf si la question
+porte sur ce qui est affiché. Environ 170 mots hors titres.
 
 ## Style
-Phrases courtes, puces, environ 180 mots. Les graphiques sont produits
-automatiquement à partir des résultats d'outils : n'y recopie pas de longs tableaux. Lexique neutre : décrire et comparer, jamais juger.
+Phrases courtes. Hors scénario (périmètre, méthode), même Markdown : une phrase en gras, puis des puces. Les graphiques
+sont produits automatiquement à partir des résultats d'outils : n'y recopie pas de longs tableaux. Lexique neutre : décrire et
+comparer, jamais juger.
 {LEXIQUE}
 """
 
@@ -123,6 +130,11 @@ def graphique(nom: str, res: dict) -> dict | None:
                 "sous_titre": " · ".join(res["leviers"]), "observe": s["observe"], "annees": s["annees"],
                 "tendanciel": s["tendanciel"], "scenario": s["scenario"],
                 "bande": [[v * (1 - k * (y - o)), v * (1 + k * (y - o))] for y, v in zip(s["annees"], s["scenario"])]}
+    if nom == "effets_des_leviers":
+        xs = res["leviers_seuls"]
+        return {"type": "classement", "titre": f"Chaque levier seul — {res['profession']}, {res['territoire']}, {res['annee']}",
+                "sous_titre": "écart au tendanciel (professionnels)", "etiquettes": [x["levier"] for x in xs],
+                "valeurs": [x["ecart"] for x in xs], "reference": None}
     if nom == "comparer":
         s = res["_series"]
         return {"type": "comparaison", "titre": f"{res['profession']} libéraux — {res['territoire']}",

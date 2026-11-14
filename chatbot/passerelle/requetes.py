@@ -245,8 +245,11 @@ def _provenance(lv: dict, p: str | None = None) -> list[dict]:
         if v == d[k]:
             continue
         ans = S().LAG[p] + 1 if k == "quotas" and p else _DELAI_ANS.get(k, 1)
-        out.append({"levier": k, "reglage": _fmt_levier(k, v), "statut": meta[k]["status"], "source": meta[k]["source"],
-                    "delai": meta[k]["delai"], "delai_ans": ans, "delai_qualificatif": q_delai(ans)})
+        x = {"levier": k, "reglage": _fmt_levier(k, v), "statut": meta[k]["status"], "source": meta[k]["source"],
+             "delai": meta[k]["delai"], "delai_ans": ans, "delai_qualificatif": q_delai(ans)}
+        if k == "retraite" and v:      # montée de 3 mois par an (LEVIERS_UI) : le report complet est atteint après v / 0,25 ans
+            x["effet_complet_apres_ans"] = int(round(v / 0.25))
+        out.append(x)
     return out
 
 
@@ -364,8 +367,9 @@ def comparer(profession_: str, territoire_: str, scenarios: list[dict], annee: i
         rows.append({"nom": s.get("nom") or ", ".join(resume_leviers(lv)) or "tendanciel",
                      "leviers": resume_leviers(lv), **_ligne(r, ys[0], _dens_fr(p, lv, ys[0]))})
         series.append({"nom": rows[-1]["nom"], "annees": r["years"], "valeurs": r["scn"]})
-    return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "annee": annee, "scenarios": rows,
-            "perimetre": PERIMETRE, "_series": {"tendanciel": {"annees": r["years"], "valeurs": r["base"]}, "scenarios": series}}
+    prov = {x["levier"]: x for sc in scenarios for x in _provenance(leviers(sc.get("leviers")), p)}
+    return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t, "annee": annee, "scenarios": rows,
+            "provenance_leviers": list(prov.values()), "perimetre": PERIMETRE, "_series": {"tendanciel": {"annees": r["years"], "valeurs": r["base"]}, "scenarios": series}}
 
 
 def balayer(profession_: str, territoire_: str, levier: str, valeurs: list, annee: int = 2050,

@@ -3622,3 +3622,25 @@ RÉPONSE : … CONCRÈTEMENT L'IMPACT D'UN MÉLANGE DE DIFFÉRENTES POLITIQUES P
 −1 463), tous ensemble +2 097, moins que la somme. Recette `index.html` 31/32 et option 1 35/37 au premier passage ; les
 échecs R14 (latence) et O04 repassent au second essai (180 ms ; ✓), R25 (A+, absent de l'option 1) déjà en échec. Tests du
 chatbot 32/33 (l'échec attendu : copie de travail modifiée). Pas de nouvelle mesure sur les 22 questions.
+
+## 2026-11-14 — Réponses de l'assistant mises en forme ; branchement de C1 confié à l'axe 2
+
+**Décision.**
+- **Forme des réponses** (prompt de `chatbot/chat/agent.py`) : une phrase en gras qui dit l'essentiel, puis des sections
+  « ### Ce que ça change · Pourquoi · Part de chaque levier · Fiabilité », des puces courtes, et une à deux pistes « → »
+  que l'utilisateur peut cliquer ; pas de commentaire sur l'état de la carte sauf si la question le demande.
+- **Rendu** (`index.html`, `index-option1.html`) : Markdown réduit (titres, puces, gras ; rien d'autre n'est interprété,
+  le texte est échappé), **graphique tiré des résultats du jumeau** placé après la phrase-clé (projection : tendanciel,
+  scénario, fourchette, 6 ans d'observé ; `effets_des_leviers` : barres par levier ; comparaison : courbes), pistes « → »
+  en boutons qui envoient la question. Le graphique vient des séries de la passerelle, jamais du texte du modèle de langage.
+- `comparer` renvoie maintenant `provenance_leviers` (délai, statut) ; le report de la cessation d'activité porte
+  `effet_complet_apres_ans` (montée de 3 mois par an : 8 ans pour 2 ans), après une réponse qui disait « pleinement
+  visible au bout d'un an ».
+- **C1 dans le jumeau** : confié à la session de l'axe 2 (« lance sur l'axe 2 ») ; la carte sert A0 en attendant.
+**Pourquoi.** L'utilisateur·rice : « on devrait mieux mettre en forme la réponse du chatbot, ça reste très brut », et
+« fais le deuxième » (brancher C1) puis « lance sur l'axe 2 ».
+**Vérifié.** Réponse sages-femmes, report de 2 ans, 2040 : phrase-clé, 4 sections, graphique, 2 pistes cliquables ;
+vérification « ok ». Recette : `index.html` 31/32 (R14, latence 659 ms, en échec trois passages de suite pendant que
+l'axe 2 recalcule ; à revoir à machine calme), option 1 36/37 (R25 A+, absent). **Tests du chatbot non rejouables** :
+la modification en cours de l'axe 2 (`v2/prototype/server.py` → `cohortes.py`, `scipy`) empêche la passerelle de
+démarrer dans l'environnement de `chatbot/` ; signalé à l'axe 2.

@@ -215,6 +215,7 @@ class Handler(V1.Handler):
         lx = _lexique(r.get("texte", ""))
         return self.send_json({"reponse": r.get("texte", ""), "mode": r.get("mode"), "verification": r.get("verification"),
                                "carte": _scenario_carte(r.get("appels", [])),
+                               "graphiques": (r.get("graphiques") or [])[:2],   # construits par le chatbot à partir des résultats
                                "lexique": lx, "appels": [{"outil": a["outil"], "resume": a.get("resume"), "entree": a.get("entree")} for a in r.get("appels", [])],
                                "secondes": r.get("duree_s")})
 
