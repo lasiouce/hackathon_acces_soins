@@ -68,8 +68,8 @@ année : 4 % (kinés) à 9 % (SF, CD, PH) de l'effectif.
 
 **Contrôle contre un total connu** (`secteur_checks.csv`) : Σ des cellules dép × secteur × mode × âge × sexe =
 total France du fichier, à 0 % près pour SF, CD, PH et kinés ADELI ; 0,22 % au plus pour les kinés RPPS
-(2017–2018), et ≤ 0,009 % pour le BTS. L'écart kinés est **dans le fichier source** : en 2017, Σ des secteurs
-= 84 599 contre 84 521 pour « Ensemble ».
+(maximum en 2026 ; 0,18 % en 2017, 0,08 % en 2018), et ≤ 0,009 % pour le BTS. L'écart kinés est **dans le fichier source** : en 2017, Σ des cellules départementales
+= 84 599 contre 84 449 pour le total France (corrigé d'après l'audit des sources ; 84 521 était la somme départementale à secteur « Ensemble »).
 
 **Recoupement avec l'Ordre des pharmaciens** (chiffres cités par les fiches de l'axe 1, non recalculés) :
 - biologistes privés : Ordre section G 3 750 (2025) ; DREES secteur « Laboratoire » 3 373 (2026). Même ordre

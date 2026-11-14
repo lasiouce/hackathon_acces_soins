@@ -25,7 +25,7 @@ mixtes sont répartis à l'aide du répertoire FINESS. La fourchette des sages-f
 ambiguïté : \num{277788} privés en 2023\mesure{}. Nous livrons aussi un registre de 30 événements datés et
 sourcés, et le zonage conventionnel de \num{34919} géocodes pour quatre professions. Chaque table est contrôlée
 contre un total connu. Le registre est confirmé sur un cas : l'année sans diplômés en kinésithérapie (2018) se
-lit dans le stock, avec \num{-35}\,\% de moins de 25 ans\mesure{}. Le zonage reproduit le périmètre dentaire
+lit dans le stock, avec \num{-34.6}\,\% de moins de 25 ans\mesure{}. Le zonage reproduit le périmètre dentaire
 publié, soit 97 géocodes et 4,8\,\% de la population\mesure{}. Enfin, l'Annuaire Santé rend les cinq
 professions observables à la commune. Mais la médiane des effectifs privés par commune est nulle. Le grain
 projetable est donc le bassin de vie ou l'EPCI pour les infirmiers, et le département pour les dentistes et les
@@ -92,7 +92,7 @@ viennent des avenants aux conventions nationales :
   \citep{ce2014mk} ;
   \item chirurgiens-dentistes \citep{arspaca2025cd}.
 \end{itemize}
-L'Agence du numérique en santé publie chaque jour une extraction en libre accès du RPPS \citep{ans2026annuaire}.
+L'Agence du numérique en santé publie une extraction en libre accès du RPPS, remplacée à chaque mise à jour \citep{ans2026annuaire}.
 Elle donne la commune de chaque activité, mais ni l'âge ni d'archive. L'Insee publie la composition communale
 des bassins de vie 2022 \citep{insee2026bv}.
 Nous n'avons pas trouvé de travail qui exploite le croisement secteur~$\times$~mode du fichier DREES pour isoler
@@ -105,11 +105,11 @@ le secteur privé au sens large.
 \toprule
 Jeu & Producteur, millésime & Grain & Usage \\
 \midrule
-Démographie des PS depuis 2012 \citep{drees2026demo} & DREES, 2026-07-02 & dép.\ $\times$ secteur (9--12) $\times$ mode (4) $\times$ âge (10) $\times$ sexe, 2012--2026 & SF, CD, PH, MK \\
+Démographie des PS depuis 2012 \citep{drees2026demo} & DREES, 2026-07-02 & dép.\ $\times$ secteur (8--12) $\times$ mode (4) $\times$ âge (10) $\times$ sexe, 2012--2026 & SF, CD, PH, MK \\
 Infirmières salariées BTS, libérales SNDS \citep{dreesbts2026} & DREES / Insee, 2026-07-02 & dép.\ $\times$ secteur (6), sans croisement âge ou sexe ; 2013--2023 & IDE \\
 FINESS établissements et entités juridiques \citep{finessEt2026,finessEj2026} & Ministère, au 2026-05-04 & établissement, catégorie, statut juridique & parts privées \\
 CartoSanté \texttt{zonage\_conv} \citep{cartosante2026} & CNAMTS--ARS, extrait 2026-11-14 & commune COG 2026, arrondissements PLM & zonage actuel \\
-Atlasanté c987d0e2 \citep{atlasante2014zonage} & ARS, fiche 2014 & commune (\num{36700}) & zonage 2012 \\
+Atlasanté c987d0e2 \citep{atlasante2014zonage} & ARS Aquitaine, 2014 & commune (\num{36700}) & zonage « 2012 » (déduit : codes région d'avant 2016 ; la fiche ne date pas la génération) \\
 Découpage administratif \citep{geoapi2026} & Etalab, 2026-11-14 & commune, population légale & contrôles \\
 \bottomrule
 \end{tabular}
@@ -123,9 +123,10 @@ Découpage administratif \citep{geoapi2026} & Etalab, 2026-11-14 & commune, popu
   \item La somme des cellules détaillées (dép.~$\times$ secteur $\times$ mode $\times$ âge $\times$ sexe) égale
   le total France du fichier, à 0\,\% près\mesure{} pour les sages-femmes, les dentistes, les pharmaciens et
   ADELI.
-  \item Les kinésithérapeutes RPPS font exception : 0,22\,\% d'écart au plus\mesure{}, en 2017--2018. L'écart est
-  interne au fichier source : en 2017, la somme des secteurs vaut \num{84599} contre \num{84521} pour
-  « Ensemble »\mesure{}.
+  \item Les kinésithérapeutes RPPS font exception : 0,22\,\% d'écart au plus\mesure{}, atteint en 2026 (0,18\,\% en
+  2017, 0,08\,\% en 2018). L'écart est interne au fichier source : en 2017, la somme des cellules départementales
+  vaut \num{84599} contre \num{84449} pour le total France\mesure{} ; la feuille « Lisez-moi » prévient que
+  certains totaux peuvent différer de la somme.
   \item Pour le BTS, l'écart est d'au plus 0,009\,\%\mesure{}.
 \end{itemize}
 
@@ -214,7 +215,7 @@ Infirmiers   & 2023 & \num{607644} & --- & \num{277788} & \num{277788} & \num{27
 \bottomrule
 \end{tabular}
 \caption{Effectif « libéral » (= privé), France entière. Min, max et effectif sont mesurés\mesure{} ; la centrale
-dépend des parts FINESS (mesurées\mesure{}) et de trois parts supposées à 0,5\suppose{}. Pour les infirmiers, le
+dépend des parts FINESS (mesurées\mesure{}) et de deux secteurs supposés à 0,5\suppose{} (« autre secteur » ; « prévention et établissement de santé » des pharmaciens), soit 5 cellules profession $\times$ secteur. Pour les infirmiers, le
 total additionne BTS et SNDS (double compte possible, voir section~\ref{sec:menaces}).}
 \label{tab:fourchettes}
 \end{table}
@@ -277,14 +278,16 @@ dernière année, va de 3,6\,\% de l'effectif (sages-femmes) et 4\,\% (kinésith
 pharmaciens)\mesure{}.
 
 \subsection{Registre d'événements}\label{sec:res-evenements}
-Le registre compte 30 événements entre 2009 et 2028\mesure{} : 23 \texttt{verifie} et 7 \texttt{partiel}.
+Le registre compte 30 événements entre 2009 et 2028\mesure{} : 24 \texttt{verifie} et 6 \texttt{partiel}, après
+l'audit des sources de l'axe~1. Deux lignes, la loi de 2023 et le décret de 2024 sur la maïeutique, décrivent le
+même choc : elles sont marquées pour ne pas être appliquées deux fois.
 \begin{table}[h]
 \centering\small
 \begin{tabular}{@{}lrp{10.5cm}@{}}
 \toprule
 Flux touché & N & Exemples (date d'effet) \\
 \midrule
-Régulation de l'installation & 11 & IDE 18/04/2009, 27/05/2012 \citep{ameliIde} ; MK 14/01/2012, annulée le 17/03/2014 \citep{ce2014mk}, puis 01/07/2018 et avenant~7 (2023) \citep{ameliMk} ; SF 15/09/2012 \citep{ameliSf} ; CD 01/01/2025 \citep{arspaca2025cd} \\
+Régulation de l'installation & 11 & IDE 18/04/2009, 27/05/2012 \citep{ameliIde} ; MK 15/07/2012, annulée le 17/03/2014 \citep{ce2014mk}, puis 01/07/2018 et avenant~7 (2023) \citep{ameliMk} ; SF 15/09/2012 \citep{ameliSf} ; CD 01/01/2025 \citep{arspaca2025cd} \\
 Capacité de formation & 7 & numerus apertus, rentrée 2020 \citep{loiotss2019} ; objectifs pluriannuels 2021--2025 et 2026--2030 ; 8 sites d'odontologie à la rentrée 2022 \\
 Durée des études & 4 & MK : 3 à 4 ans en IFMK, rentrée 2015 \citep{arretemk2015} ; SF : 6 ans, entrée en 2\textsuperscript{e} année à partir de 2024 \\
 Diplômés & 2 & MK : année blanche 2018 \citep{drees2020er1159} ; SF : (quasi) aucune diplômée en 2027-28 (déduit) \\
@@ -318,7 +321,8 @@ Infirmiers & \num{4786} \;(27,6\,\%) & \num{5690} \;(15,3\,\%) & \num{24441} \;(
 \bottomrule
 \end{tabular}
 \caption{Zonage actuel (CartoSanté, extrait le 14/11/2026) : nombre de géocodes et part de la population
-légale\mesure{}. Les géocodes non renseignés sont des communes des DROM. Ils sont comptés avec « autre » dans les
+légale\mesure{}. Les géocodes non renseignés sont des communes des DROM (974 pour les dentistes, 973 pour les
+sages-femmes) et des COM Saint-Barthélemy (977) et Saint-Martin (978). Ils sont comptés avec « autre » dans les
 parts de population.}
 \label{tab:zonage}
 \end{table}
@@ -326,7 +330,7 @@ parts de population.}
 \begin{itemize}
   \item Chez les kinésithérapeutes, deux régimes coexistent : \num{2826} géocodes « non prioritaires » (nouveau
   zonage) et 10 « sur-dotés » (ancien)\mesure{}.
-  \item La génération 2012 (métropole, sans sages-femmes) classe en remplacement seul \num{3135} communes pour
+  \item La génération dite de 2012 (métropole, sans sages-femmes) classe en remplacement seul \num{3135} communes pour
   les infirmiers, 547 pour les kinésithérapeutes et 908 pour les dentistes\mesure{}.
 \end{itemize}
 
@@ -440,8 +444,8 @@ entrées et sorties brutes par commune. La fréquence d'archivage reste à déci
   \item \emph{Stock} : la somme des cellules égale le total publié, avec un écart d'au plus 0,22\,\%\mesure{}.
   Cet écart est interne à la source.
   \item \emph{Événements} : l'année blanche des kinésithérapeutes (2018) doit se voir au 1\textsuperscript{er}
-  janvier 2019. C'est le cas : les moins de 25 ans passent de \num{5637} à \num{3681} (\num{-35}\,\%), puis
-  remontent à \num{5126} en 2026\mesure{}.
+  janvier 2019. C'est le cas : les moins de 25 ans (ligne « Ensemble » du fichier) passent de \num{5634} à \num{3687}
+  (\num{-34.6}\,\%), puis remontent à \num{5137} en 2026\mesure{}.
   \item \emph{Zonage} :
   \begin{itemize}
     \item communes : le COG en compte \num{34969} ; moins 92 communes des COM hors champ, moins les 3 communes
@@ -539,7 +543,7 @@ uv run python v2/data/archive_annuaire.py --local
     \item Le module de régulation lit des géocodes réels.
   \end{itemize}
   \item \textbf{Banc (axe~3).} Le banc se relance sur la valeur centrale, avec min et max en bande. L'expérience
-  naturelle sur le zonage infirmier dispose de la génération 2012 au même format.
+  naturelle sur le zonage infirmier dispose de la génération dite de 2012 au même format.
   \item \textbf{Filière de formation.} L'artefact 2025 doit être corrigé avant toute projection 2030+. Le flux
   des diplômés hors de France a désormais un ordre de grandeur.
   \item \textbf{Axe~2.} Le grain du modèle hiérarchique est fixé par profession.
