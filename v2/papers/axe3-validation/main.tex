@@ -6,7 +6,7 @@
 \usetikzlibrary{babel}   % les deux-points et points-virgules actifs de babel-french cassent TikZ sans cela
 
 \title{Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats :\\
-neuf protocoles pré-enregistrés, et ce qui n'y résiste pas}
+dix protocoles pré-enregistrés, et ce qui n'y résiste pas}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
 \date{Version du \today}
@@ -17,10 +17,10 @@ neuf protocoles pré-enregistrés, et ce qui n'y résiste pas}
 \begin{abstract}
 Un jumeau numérique de l'offre de soins projette l'effectif « libéral » (secteur privé) de cinq
 professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Les données courent de 2012 à
-2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit neuf
+2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit dix
 protocoles, gelés par empreinte SHA-256 avant tout calcul qui les concerne : prévision à dix ans au
 plus, cohérence à 2050, effet causal d'un levier, échelle communale, mondes simulés à vérité connue,
-prévision probabiliste, un addendum daté, une bande d'incertitude en $\sqrt h$ et le signe de deux boucles de rétroaction. Nous les avons appliqués tels quels. La régulation de
+prévision probabiliste, un addendum daté, une bande d'incertitude en $\sqrt h$ et le signe de deux boucles de rétroaction et le grain le plus fin dont la bande est calibrée. Nous les avons appliqués tels quels. La régulation de
 l'installation infirmière en zone sur-dotée a un effet estimé de $\num{-30.3}$\mesure{}~log-points
 au département et de $\num{-32.2}$\mesure{} au sein des bassins de vie. Le test de tendances
 parallèles fixé d'avance échoue pourtant deux fois ($p = \num{0.043}$\mesure{} puis
@@ -172,9 +172,10 @@ N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & lancé \\
 N7 Addendum & 04:37 & \texttt{06ba47b91647} & lancé \\
 N8 Bande en $\sqrt h$ & 08:06 & \texttt{97ef367fd221} & lancé \\
 N9 Boucles & 08:10 & \texttt{96a39bc087bb} & lancé \\
+N10 Grain et couverture & 08:31 & \texttt{d86d27c7a750} & lancé \\
 \bottomrule
 \end{tabular}
-\caption{Protocoles gelés. N5 à N9 ont été ajoutés après le lancement de N3, mais avant tout
+\caption{Protocoles gelés. N5 à N10 ont été ajoutés après le lancement de N3, mais avant tout
 calcul qui les concerne. Ils s'ajoutent aux autres sans les modifier.}\label{tab:sha}
 \end{table}
 
@@ -583,6 +584,22 @@ plus forte va avec une rétention à 5~ans des 45--54~ans plus haute d'environ
 8\derive{}~\% ($2^{0.113} - 1$). Ces relations restent écologiques, mesurées sur des soldes, et la
 densité est elle-même le produit des installations passées : elles ne sont pas causales.
 
+\subsection{N10 : le grain le plus fin dont la bande est calibrée}
+« Fiable » est défini comme \emph{calibré} : la bande à 80~\% doit contenir la valeur observée dans
+environ 80~\% des cas. N10 (gelé à 08:31, empreinte \texttt{d86d27c7a750}) le teste à trois grains
+(commune, bassin de vie, EPCI), pour les IDE, les kinés et les dentistes, sur les origines
+2014--2020. La bande est l'intervalle P10--P90 des erreurs passées du même estimateur, par classe de
+taille. Un grain est fiable si toutes ses classes ont une couverture comprise entre 75 et 85~\%.
+
+\textbf{Aucun grain infra-départemental n'est fiable}, pour aucune des trois professions et aucun des
+quatre estimateurs. En moyenne, la couverture est proche du nominal (81 à 84\mesure{}~\% pour les IDE,
+80 à 81 pour les kinés, 72 à 79 pour les dentistes). Par classe de taille, elle ne l'est pas : la bande
+est trop large pour les très petites communes (94\mesure{}~\% pour les IDE de 1 ou 2
+professionnels) et trop étroite au-delà de 50 à 100 professionnels (22 à 59\mesure{}~\%). La moyenne
+est portée par la masse des petites communes. Le département reste donc le grain d'affichage des
+projections, avec la bande en $\sqrt h$ de N8 ; à la commune, la carte montre l'observé. Le modèle
+hiérarchique de l'axe~2 sera jugé sur ce même protocole.
+
 \section{Validation et menaces à la validité}\label{sec:menaces}
 \subsection{Cas d'étude : des tests vrais par construction}
 Le jumeau a subi deux revues adversariales\footnote{Rapports internes
@@ -682,7 +699,7 @@ shasum -a 256 v2/validation/preregistered/*.md
 \end{itemize}
 
 \section{Conclusion}
-La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en neuf
+La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en dix
 protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous les tests qui pouvaient
 échouer ont échoué, et c'est l'information principale :
 \begin{itemize}

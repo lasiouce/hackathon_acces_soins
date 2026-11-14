@@ -1,0 +1,379 @@
+{
+ "infirmiers": {
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.9193548387096774,
+     "n": 372
+    },
+    {
+     "cls": "1–2",
+     "couv": 0.9400410823062757,
+     "n": 28236
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7054794520547946,
+     "n": 876
+    },
+    {
+     "cls": ">200",
+     "couv": 0.5520833333333334,
+     "n": 96
+    }
+   ],
+   "N_min": {
+    "persistance": 21.0,
+    "tendance": null,
+    "repartition_tendance": 51.0,
+    "repartition_oracle": 21.0
+   }
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.5839285714285715,
+     "n": 560
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7475701943844493,
+     "n": 3704
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7280163599182005,
+     "n": 489
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6389568052159739,
+     "n": 1227
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.747086247086247,
+     "n": 1716
+    },
+    {
+     "cls": ">200",
+     "couv": 0.59375,
+     "n": 416
+    }
+   ],
+   "N_min": {
+    "persistance": 21.0,
+    "tendance": 101.0,
+    "repartition_tendance": 11.0,
+    "repartition_oracle": 11.0
+   }
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.5139275766016713,
+     "n": 718
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7082143989850935,
+     "n": 3153
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.6708860759493671,
+     "n": 158
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7030625832223701,
+     "n": 1502
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.7186206896551725,
+     "n": 725
+    },
+    {
+     "cls": ">200",
+     "couv": 0.5914396887159533,
+     "n": 514
+    }
+   ],
+   "N_min": {
+    "persistance": 21.0,
+    "tendance": null,
+    "repartition_tendance": null,
+    "repartition_oracle": 11.0
+   }
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "kines": {
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.49473684210526314,
+     "n": 285
+    },
+    {
+     "cls": "1–2",
+     "couv": 0.9217573794424928,
+     "n": 21919
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7053249097472925,
+     "n": 2216
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7316239316239316,
+     "n": 585
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.7480336316788717,
+     "n": 7374
+    },
+    {
+     "cls": ">200",
+     "couv": 0.4626865671641791,
+     "n": 67
+    }
+   ],
+   "N_min": {
+    "persistance": 51.0,
+    "tendance": 51.0,
+    "repartition_tendance": 21.0,
+    "repartition_oracle": 51.0
+   }
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.730593607305936,
+     "n": 219
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.7406593406593407,
+     "n": 2730
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7438238453276047,
+     "n": 1862
+    },
+    {
+     "cls": ">200",
+     "couv": 0.5407725321888412,
+     "n": 233
+    }
+   ],
+   "N_min": {
+    "persistance": 51.0,
+    "tendance": 51.0,
+    "repartition_tendance": 21.0,
+    "repartition_oracle": 21.0
+   }
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.6964769647696477,
+     "n": 369
+    },
+    {
+     "cls": "1–2",
+     "couv": 0.694980694980695,
+     "n": 259
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7480798771121352,
+     "n": 651
+    },
+    {
+     "cls": ">200",
+     "couv": 0.6286764705882353,
+     "n": 272
+    }
+   ],
+   "N_min": {
+    "persistance": 51.0,
+    "tendance": 21.0,
+    "repartition_tendance": 21.0,
+    "repartition_oracle": 21.0
+   }
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "dentistes": {
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.3387096774193548,
+     "n": 62
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.6767427513880321,
+     "n": 1621
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.6498545101842871,
+     "n": 1031
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7261112589832313,
+     "n": 7514
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.5068493150684932,
+     "n": 219
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.7446043165467626,
+     "n": 3336
+    }
+   ],
+   "N_min": {
+    "persistance": 21.0,
+    "tendance": 51.0,
+    "repartition_tendance": 21.0,
+    "repartition_oracle": 21.0
+   }
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.48717948717948717,
+     "n": 78
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.7191097467382962,
+     "n": 1303
+    },
+    {
+     "cls": "1–2",
+     "couv": 0.701766304347826,
+     "n": 1472
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7326589595375722,
+     "n": 692
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7371879106438897,
+     "n": 2283
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.5630630630630631,
+     "n": 222
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.706920575940548,
+     "n": 2153
+    },
+    {
+     "cls": ">200",
+     "couv": 0.2222222222222222,
+     "n": 54
+    }
+   ],
+   "N_min": {
+    "persistance": 21.0,
+    "tendance": 21.0,
+    "repartition_tendance": 21.0,
+    "repartition_oracle": 11.0
+   }
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "classes_hors_bande": [
+    {
+     "cls": "101–200",
+     "couv": 0.5095541401273885,
+     "n": 157
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.6982520699172033,
+     "n": 1087
+    },
+    {
+     "cls": "1–2",
+     "couv": 0.6847682119205298,
+     "n": 755
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7267080745341615,
+     "n": 966
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7052631578947368,
+     "n": 1235
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.5726256983240223,
+     "n": 358
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.6909600560616679,
+     "n": 1427
+    },
+    {
+     "cls": ">200",
+     "couv": 0.27450980392156865,
+     "n": 51
+    }
+   ],
+   "N_min": {
+    "persistance": 21.0,
+    "tendance": 21.0,
+    "repartition_tendance": 21.0,
+    "repartition_oracle": 11.0
+   }
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ }
+}
