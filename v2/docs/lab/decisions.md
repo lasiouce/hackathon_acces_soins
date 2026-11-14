@@ -2075,6 +2075,24 @@ soldes), ou un instrument de la densité, qui feraient apparaître un signe.
 **Ce qui le renverserait.** Un test causal (expérience naturelle) qui contredit la
 corrélation.
 
+## 2026-11-14 — Axe 4 : corrections de l'audit des sources (axe 1) reportées ; double compte maïeutique marqué
+
+**Décision.**
+- Le registre `v2/data/events.csv` reprend les corrections de l'audit (lot C1) : 5 dates d'effet (IDE 2018 →
+  20/07/2018 ; MK 2012 → 15/07/2012 ; objectifs 2021–2025 → 18/09/2021, bornes 76 655 – 85 455 ; plafonds →
+  JO du 14/05/2026 ; officines → 31/07/2018) et 3 contenus (IFSI 2019, avenant 6 IDE, vaccination 2019).
+  Registre : 24 lignes vérifiées, 6 partielles.
+- **ev-sf-2023 (loi) et ev-sf-2024 (décret) sont le même choc** : on garde les deux lignes, qui sont deux
+  textes distincts, mais la seconde est marquée « texte d'application, ne pas appliquer deux fois ». Un
+  scénario n'en active qu'une.
+- Article et rapports : chiffres corrigés d'après le lot C2 (moins de 25 ans MK 5 634 → 3 687, 5 137 ; 84 449 ;
+  8 à 12 secteurs ; COM 977 / 978 ; 2 secteurs supposés à 0,5, soit 5 cellules) ; bibliographie (ER 1159 =
+  Croguennec 2020 ; Atlasanté = ARS Aquitaine 2014 ; PS_LibreAcces.zip ; BTS / SNDS). « Génération 2012 » du
+  zonage Atlasanté : présentée comme déduite.
+
+**Pourquoi.** Audit des sources de l'axe 1 (`reports/2026-11-14-audit-sources.md`, lots C1 et C2).
+**Ce qui le renverserait.** Un texte primaire contredisant l'audit sur une date d'effet.
+
 ## Open / not yet decided
 - **Brancher la rétention dépendante de la densité pour les IDE dans le tendanciel ?**
   L'effet est mesuré (N9 : +0,11 [+0,05 ; +0,18]) mais corrélationnel. Question posée le
