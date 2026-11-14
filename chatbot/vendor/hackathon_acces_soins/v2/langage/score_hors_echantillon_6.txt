@@ -1,0 +1,12 @@
+exact 21/30 = 70%
+{'simple': '8/12', 'combine': '3/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '2/4'}
+{'leviers': '22/30', 'profession': '30/30', 'territoire': '29/30', 'non_modelise': '30/30'}
+- ('h6-04', 'simple', "Je voudrais voir l'effet d'une installation des infirmiers libéraux conditionnée à un départ, dans le Rhône.", {'leviers': ({}, {'regul': 1.0})})
+- ('h6-07', 'simple', 'Supprimons 15 % des places de formation en soins infirmiers.', {'leviers': ({}, {'quotas': 0.85})})
+- ('h6-08', 'simple', 'Dans les Hauts-de-France, les infirmières pourraient partir à 65 ans au lieu de 64.', {'leviers': ({}, {'retraite': 1.0})})
+- ('h6-10', 'simple', 'Que donne un doublement des sages-femmes formées hors de France pour la Normandie ?', {'territoire': ('FR', 'R28')})
+- ('h6-15', 'combine', "Si l'on régulait l'installation des kinés dans 60 % des zones, les entrants refusés s'installant dans une zone voisine, combien en Gironde en 2035 ?", {'leviers': ({}, {'regul': 1.0, 'part_zones': 0.6, 'dest': 'voisine'})})
+- ('h6-16', 'combine', "Régulation par remplacement pour les pharmaciens à Strasbourg ; ceux qui ne peuvent pas s'installer quitteraient la profession.", {'leviers': ({'regul': 1.0}, {'regul': 1.0, 'dest': 'sortie'})})
+- ('h6-18', 'combine', "Kinés et infirmiers de Nantes : on prolonge l'activité de deux ans et demi et on encourage le cumul emploi-retraite de 20 %.", {'leviers': ({'cumul': 1.2}, {'retraite': 2.5, 'cumul': 1.2})})
+- ('h6-28', 'piege', 'Que les sages-femmes du Var partent à 67 ans au lieu de 62.', {'leviers': ({}, {'retraite': 3.0})})
+- ('h6-30', 'piege', "Plutôt que de reculer l'âge de la retraite, laisser les infirmiers retraités continuer à exercer, avec 70 % de cumulants en plus, et diviser par quatre les départs avant 60 ans, à Montpellier.", {'leviers': ({'precoces': 0.5}, {'cumul': 1.7, 'precoces': 0.5})})

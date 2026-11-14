@@ -1,0 +1,117 @@
+1/5 dentistes 0s
+2/5 infirmiers-liberaux 1s
+3/5 kines 1s
+4/5 pharmaciens 2s
+5/5 sages-femmes 2s
+{
+ "dentistes": {
+  "origine": 2026,
+  "L1": {
+   "ecart_max": 2.885551361958786e-16,
+   "passe": true
+  },
+  "L2": {
+   "N_T": 66223.367066491,
+   "Q_C": 66288.02142115819,
+   "ecart_QC": -0.0009753550231407226,
+   "N_T_etat_moitie": 66223.36706132385,
+   "dependance_etat_initial": 7.802603008144615e-11,
+   "passe": true
+  },
+  "L3": {
+   "L_p": 6,
+   "ecart_avant": 0.0,
+   "premiere_annee_d_effet": 2033,
+   "attendu": 2033,
+   "passe": true
+  }
+ },
+ "infirmiers-liberaux": {
+  "origine": 2023,
+  "L1": {
+   "ecart_max": 0.0,
+   "passe": true
+  },
+  "L2": {
+   "N_T": 131580.418642962,
+   "Q_C": 131646.39348258454,
+   "ecart_QC": -0.0005011518954467498,
+   "N_T_etat_moitie": 131580.41864295685,
+   "dependance_etat_initial": 3.907985046680551e-14,
+   "passe": true
+  },
+  "L3": {
+   "L_p": 3,
+   "ecart_avant": 0.0,
+   "premiere_annee_d_effet": 2027,
+   "attendu": 2027,
+   "passe": true
+  }
+ },
+ "kines": {
+  "origine": 2026,
+  "L1": {
+   "ecart_max": 3.196076300567579e-16,
+   "passe": true
+  },
+  "L2": {
+   "N_T": 165651.16872174654,
+   "Q_C": 165867.16154778833,
+   "ecart_QC": -0.0013022036672374337,
+   "N_T_etat_moitie": 165651.16872148693,
+   "dependance_etat_initial": 1.567190821560871e-12,
+   "passe": true
+  },
+  "L3": {
+   "L_p": 5,
+   "ecart_avant": 0.0,
+   "premiere_annee_d_effet": 2032,
+   "attendu": 2032,
+   "passe": true
+  }
+ },
+ "pharmaciens": {
+  "origine": 2026,
+  "L1": {
+   "ecart_max": 0.0,
+   "passe": true
+  },
+  "L2": {
+   "N_T": 66042.2861969831,
+   "Q_C": 66163.12289249487,
+   "ecart_QC": -0.0018263451032700662,
+   "N_T_etat_moitie": 66042.28619696037,
+   "dependance_etat_initial": 3.4416913763379853e-13,
+   "passe": true
+  },
+  "L3": {
+   "L_p": 6,
+   "ecart_avant": 0.0,
+   "premiere_annee_d_effet": 2033,
+   "attendu": 2033,
+   "passe": true
+  }
+ },
+ "sages-femmes": {
+  "origine": 2026,
+  "L1": {
+   "ecart_max": 2.2116562568531944e-16,
+   "passe": true
+  },
+  "L2": {
+   "N_T": 20676.19950937025,
+   "Q_C": 20772.059167572457,
+   "ecart_QC": -0.004614836566220415,
+   "N_T_etat_moitie": 20676.19950936621,
+   "dependance_etat_initial": 1.9539925233402755e-13,
+   "passe": true
+  },
+  "L3": {
+   "L_p": 5,
+   "ecart_avant": 0.0,
+   "premiere_annee_d_effet": 2032,
+   "attendu": 2032,
+   "passe": true
+  }
+ }
+}

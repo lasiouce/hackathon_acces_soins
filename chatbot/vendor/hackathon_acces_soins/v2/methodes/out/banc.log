@@ -1,0 +1,18 @@
+
+== périmètre prive (18.7 s) ==
+axe2_ages_interp       MAPE h5   8.77  vs naive_tendance   9.30  Δ -0.53 IC95 [-0.89;-0.17] gagne    | vs A0 +0.09 [+0.01;+0.18] | nat True h1ok True
+axe2_ages_simples      MAPE h5   8.70  vs naive_tendance   9.30  Δ -0.60 IC95 [-0.96;-0.24] gagne    | vs A0 +0.03 [-0.07;+0.11] | nat True h1ok True
+axe2_shrink_hier       MAPE h5   8.57  vs naive_tendance   9.30  Δ -0.74 IC95 [-1.07;-0.40] gagne    | vs A0 -0.11 [-0.21;-0.02] | nat True h1ok True
+axe2_retention60       MAPE h5   9.00  vs naive_tendance   9.30  Δ -0.30 IC95 [-0.67;+0.08] égalité  | vs A0 +0.33 [+0.23;+0.42] | nat True h1ok True
+axe2_combine           MAPE h5   8.74  vs naive_tendance   9.30  Δ -0.56 IC95 [-0.92;-0.21] gagne    | vs A0 +0.06 [-0.07;+0.18] | nat True h1ok True
+jumeau_taux_locaux     MAPE h5   8.68  vs naive_tendance   9.30  Δ -0.63 IC95 [-0.97;-0.27] gagne    | vs A0 +0.00 [+0.00;+0.00] | nat True h1ok True
+axe2_obs_r12           MAPE h5   8.32  vs naive_tendance   9.30  Δ -0.98 IC95 [-1.37;-0.59] gagne    | vs A0 -0.35 [-0.65;-0.08] | nat True h1ok True
+
+== périmètre ancien (23.5 s) ==
+axe2_ages_interp       MAPE h5   8.26  vs naive_tendance   9.14  Δ -0.88 IC95 [-1.23;-0.53] gagne    | vs A0 +0.05 [-0.06;+0.16] | nat True h1ok True
+axe2_ages_simples      MAPE h5   8.18  vs naive_tendance   9.14  Δ -0.96 IC95 [-1.31;-0.61] gagne    | vs A0 -0.03 [-0.15;+0.08] | nat True h1ok True
+axe2_shrink_hier       MAPE h5   8.10  vs naive_tendance   9.14  Δ -1.04 IC95 [-1.39;-0.69] gagne    | vs A0 -0.10 [-0.21;-0.00] | nat True h1ok True
+axe2_retention60       MAPE h5   8.97  vs naive_tendance   9.14  Δ -0.17 IC95 [-0.58;+0.25] égalité  | vs A0 +0.76 [+0.61;+0.91] | nat True h1ok True
+axe2_combine           MAPE h5   8.71  vs naive_tendance   9.14  Δ -0.43 IC95 [-0.78;-0.09] gagne    | vs A0 +0.50 [+0.35;+0.64] | nat True h1ok True
+jumeau_taux_locaux     MAPE h5   8.21  vs naive_tendance   9.14  Δ -0.93 IC95 [-1.30;-0.56] gagne    | vs A0 +0.00 [+0.00;+0.00] | nat True h1ok True
+axe2_obs_r12           MAPE h5   8.74  vs naive_tendance   9.14  Δ -0.40 IC95 [-0.83;-0.02] gagne    | vs A0 +0.53 [+0.15;+0.88] | nat True h1ok True

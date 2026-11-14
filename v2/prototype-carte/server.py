@@ -6,8 +6,8 @@ Réutilise v2/prototype/server.py (Model, leviers par famille, parse_levers : m�
 Ajouts : /geo (contours départementaux, coordonnées arrondies à 1e-3°, gzip) et /api/carte
 (une valeur 2026 / 2050 par département, tendanciel et scénario, en un seul appel), /api/interpret
 (phrase d'un·e élu·e -> réglage des leviers, par le compilateur déterministe de v2/langage),
-/api/agent (POST : question -> réponse de l'agent de v2/agent, qui explique les sorties sans calculer ; la clé
-ANTHROPIC_API_KEY reste côté serveur) et /api/agent/etat.
+/api/agent (POST : question -> relais vers le chatbot de chatbot/, port 8768, qui explique les sorties sans calculer ;
+la clé ANTHROPIC_API_KEY reste dans son processus) et /api/agent/etat.
 """
 import gzip
 import importlib.util
@@ -176,8 +176,12 @@ class Handler(V1.Handler):
             except Exception as e:
                 return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
         if u.path == "/api/agent/etat":
-            ok, msg = _agent().disponible()
-            return self.send_json({"disponible": ok, "message": msg})
+            code, j = _chatbot("GET", "/api/etat")
+            if code != 200:
+                return self.send_json({"disponible": False, "message": "Chatbot non lancé (chatbot/, port 8768) : "
+                                       "la carte reste utilisable. Voir le README, « Chatbot »."})
+            mode = "IA (" + j.get("modele", "?") + ")" if j.get("mode") == "llm" else "sans IA (glossaire de l'équipe)"
+            return self.send_json({"disponible": True, "mode": j.get("mode"), "message": f"Chatbot prêt, mode {mode}."})
         return super().do_GET()
 
     def do_POST(self):
@@ -193,29 +197,58 @@ class Handler(V1.Handler):
             return self.send_json({"error": "JSON invalide"}, 400)
         if not q:
             return self.send_json({"error": "question vide"}, 400)
-        hist = [{"role": m.get("role"), "texte": str(m.get("texte", ""))[:4000]} for m in body.get("historique", [])[-8:]
-                if isinstance(m, dict) and m.get("role") in ("user", "assistant")]
+        ctx = body.get("contexte") or {}
+        sid = str(body.get("session") or "carte")[:64]
+        msg = q
+        if ctx.get("prof"):        # contexte de la carte : rattache « et si… » à ce qui est affiché ; mode IA seulement
+            lv = ", ".join(f"{k}={v}" for k, v in (ctx.get("leviers") or {}).items()) or "aucun (tendanciel)"
+            msg = (f"{q}\n\n[Contexte de la carte, pas une question : profession {ctx['prof']} ; territoire "
+                   f"{ctx.get('territoire') or ctx.get('terr')} ; leviers modifiés : {lv} ; année affichée "
+                   f"{ctx.get('annee') or 2050} ; densités exprimées pour 100 000 habitants.]")
+        code, j = _chatbot("GET", "/api/etat")
+        if code == 200 and j.get("mode") != "llm":
+            msg = q                # le glossaire lit la phrase seule ; il garde profession et territoire d'un tour à l'autre
+        code, r = _chatbot("POST", "/api/chat", {"session": sid, "message": msg})
+        if code != 200 or "erreur" in r:
+            return self.send_json({"error": r.get("erreur") or "Chatbot non lancé (port 8768)."}, 503)
+        lx = _lexique(r.get("texte", ""))
+        return self.send_json({"reponse": r.get("texte", ""), "mode": r.get("mode"), "verification": r.get("verification"),
+                               "lexique": lx, "appels": [{"outil": a["outil"], "resume": a.get("resume"), "entree": a.get("entree")} for a in r.get("appels", [])],
+                               "secondes": r.get("duree_s")})
+
+
+CHATBOT = os.environ.get("CHATBOT_URL", "http://127.0.0.1:8768")
+
+
+def _chatbot(methode: str, chemin: str, corps: dict | None = None) -> tuple[int, dict]:
+    """Relais vers le chatbot de chatbot/ (moteur unique, décision du 2026-11-14) ; la clé reste dans son processus."""
+    from urllib.error import HTTPError, URLError
+    from urllib.request import Request, urlopen
+    data = json.dumps(corps).encode() if corps is not None else None
+    req = Request(CHATBOT + chemin, data=data, method=methode, headers={"Content-Type": "application/json"})
+    try:
+        with urlopen(req, timeout=120) as r:
+            return r.status, json.load(r)
+    except HTTPError as e:
         try:
-            r = _agent().repondre(q, body.get("contexte") or None, hist)
-        except Exception as e:
-            return self.send_json({"error": f"{type(e).__name__}"}, 500)
-        if "erreur" in r:
-            return self.send_json({"error": r["erreur"]}, 503)
-        r["appels"] = [{"outil": a["outil"], "entree": a["entree"]} for a in r["appels"]]   # sorties complètes : côté serveur
-        return self.send_json(r)
+            return e.code, json.load(e)
+        except ValueError:
+            return e.code, {}
+    except (URLError, OSError):
+        return 0, {}
 
 
-_AG = None
+_LX = None
 
 
-def _agent():
-    """Agent de v2/agent, chargé au premier appel (la carte démarre sans lui, et sans clé)."""
-    global _AG
-    if _AG is None:
-        sp = importlib.util.spec_from_file_location("agent", HERE.parent / "agent" / "agent.py")
-        _AG = importlib.util.module_from_spec(sp)
-        sp.loader.exec_module(_AG)
-    return _AG
+def _lexique(texte: str) -> dict:
+    """Contrôle du lexique neutre (v2/agent/garde_fous.py) appliqué à la réponse du chatbot."""
+    global _LX
+    if _LX is None:
+        sp = importlib.util.spec_from_file_location("garde_fous", HERE.parent / "agent" / "garde_fous.py")
+        _LX = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(_LX)
+    return _LX.lexique(texte)
 
 
 if __name__ == "__main__":

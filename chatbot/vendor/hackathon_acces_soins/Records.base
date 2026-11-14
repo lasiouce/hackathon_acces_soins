@@ -1,0 +1,77 @@
+filters:
+  and:
+    - file.inFolder("v2/docs/lab")
+    - file.ext == "md"
+    - type != "decisions"
+    - type != "ledger"
+    - type != "profile"
+    - '!file.name.contains("README")'
+properties:
+  file.name:
+    displayName: Record
+  headline:
+    displayName: Headline
+  professions:
+    displayName: Professions
+views:
+  - type: table
+    name: All records
+    order:
+      - date
+      - type
+      - file.name
+      - headline
+      - author
+      - status
+      - professions
+      - tags
+    sort:
+      - property: date
+        direction: DESC
+  - type: table
+    name: Analyses
+    filters:
+      and:
+        - type == "analysis"
+    order:
+      - date
+      - file.name
+      - headline
+      - question
+      - author
+      - status
+      - professions
+    sort:
+      - property: date
+        direction: DESC
+  - type: table
+    name: Drafts to finish
+    filters:
+      and:
+        - status == "draft"
+    order:
+      - date
+      - type
+      - file.name
+      - author
+  - type: table
+    name: Model & data
+    filters:
+      or:
+        - type == "derivation"
+        - type == "exploration"
+    order:
+      - date
+      - type
+      - file.name
+      - headline
+      - tags
+  - type: table
+    name: Decks
+    filters:
+      and:
+        - type == "deck"
+    order:
+      - date
+      - file.name
+      - audience

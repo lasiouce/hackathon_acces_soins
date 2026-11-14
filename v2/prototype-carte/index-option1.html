@@ -843,25 +843,26 @@ function crumb(){const chain=[];for(let t=S.terr||"FR";t;t=parent(t))chain.unshi
   $("#crumb").innerHTML=chain.map((t,i)=>{const last=i==chain.length-1,mid=i>0&&!last?" mid":"";
     return (i?`<i class="${mid.trim()}">›</i>`:"")+(last?`<b>${names[t]||t}</b>`:`<button class="${mid.trim()}" data-t="${t}">${names[t]||t}</button>`)}).join("");
   $("#crumb").querySelectorAll("button").forEach(b=>b.onclick=()=>b.dataset.t=="FR"?backToFrance():select(b.dataset.t));}
-// ---------- onglet « Questions » (agent, v2/agent) : la clé d'API reste sur le serveur ----------
-const ASK={hist:[],busy:false,checked:false};
+// ---------- chat « Questions » : relais vers le chatbot de chatbot/ (la clé d'API reste dans son processus) ----------
+const ASK={busy:false,checked:false,sid:(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2))};
 function askEsc(t){return t.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]);}
+function askMd(t){return askEsc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}   // gras seulement ; le reste en texte
 function askCtx(){const lv={};for(const l of META.levers)if(!isDef(l))lv[l.k]=S.lv[l.k];return{prof:S.prof,terr:S.terr||"FR",territoire:names[S.terr||"FR"],leviers:lv,annee:S.y};}
+const VERIF={ok:"Contrôle : chaque nombre vient d'un résultat du modèle",corrigee:"Contrôle : corrigée par la vérification automatique",
+  bloquee:"Contrôle : réponse bloquée, des nombres ne venaient d'aucun résultat du modèle"};
 async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");
-  log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st">Recherche dans le modèle…</div>`);const st=log.lastElementChild;
-  try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),historique:ASK.hist})});
+  log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st">Le jumeau calcule…</div>`);const st=log.lastElementChild;
+  try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),session:ASK.sid})});
     const d=await r.json();
     if(d.error){st.textContent=d.error;}
-    else{const a=d.ancrage,lx=d.lexique,ok=a.ok&&lx.ok;
-      const chk=a.ok?`Contrôle : ${a.nombres} nombre${a.nombres>1?"s":""}, tous retrouvés dans les sorties du modèle`:`Contrôle : ${a.non_ancres.length} nombre(s) non retrouvé(s) dans les sorties du modèle : ${a.non_ancres.join(", ")}`;
-      const lxs=lx.ok?"":` · terme(s) hors lexique neutre : ${lx.termes.join(", ")}`;
-      const tools=[...new Set(d.appels.map(x=>x.outil))].join(", ");
-      st.outerHTML=`<div class="a">${askEsc(d.reponse)}<span class="chk${ok?"":" warn"}">${chk}${lxs} · outils : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
-      ASK.hist.push({role:"user",texte:q},{role:"assistant",texte:d.reponse});ASK.hist=ASK.hist.slice(-8);}
+    else{const v=(d.verification||{}).statut,lx=d.lexique||{ok:true},ia=d.mode=="llm";
+      const chk=(ia?(VERIF[v]||""):"Réponse du glossaire de l'équipe, sans IA")+(lx.ok?"":` · terme(s) hors lexique neutre : ${lx.termes.join(", ")}`);
+      const tools=[...new Set((d.appels||[]).map(x=>x.outil))].join(", ");
+      st.outerHTML=`<div class="a">${askMd(d.reponse)}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;}
   }catch(e){st.textContent="Serveur injoignable.";}
   ASK.busy=false;$("#ask").scrollTop=$("#ask").scrollHeight;}
 async function askOpen(){if(!ASK.checked){ASK.checked=true;try{const e=await fetch("/api/agent/etat").then(r=>r.json());
-  if(!e.disponible){$("#askst").textContent=e.message;$("#askf button").disabled=true;}}catch{}}$("#askq").focus();}
+  $("#askst").textContent=(e.disponible?e.message+" ":e.message)+(e.disponible?"Chaque nombre vient du modèle et est vérifié.":"");$("#askf button").disabled=!e.disponible;}catch{}}$("#askq").focus();}
 function buildAsk(){
   // icône de chat sur la carte : ouvre le panneau à droite, un second clic revient à la fiche
   $("#askbtn").onclick=()=>showTab(TAB=="ask"?"terr":"ask");

@@ -72,7 +72,12 @@ INTERDITS = [
 _LEX = re.compile(r"(?<!\w)(" + "|".join(INTERDITS) + r")(?!\w)", re.I)
 
 
+# formules recommandées par le lexique lui-même (« projection sous hypothèses, pas une prévision ») : pas des jugements
+_PERMIS = re.compile(r"(?:pas|ni|non) (?:une |de |d'une )?(?:simple )?pr[ée]visions?(?: exacte)?", re.I)
+
+
 def lexique(reponse: str) -> dict:
+    reponse = _PERMIS.sub(" ", reponse)
     hits = sorted({m.group(0).lower() for m in _LEX.finditer(reponse)})
     return {"termes": hits, "ok": not hits}
 
@@ -82,3 +87,4 @@ if __name__ == "__main__":
     r = "Environ 13 240 kinés (13 200), +3,2 %, 8 cas sur 10.\n1. premier point\nmais 999 inventé"
     print(json.dumps(ancrage(r, out), ensure_ascii=False))
     print(lexique("Ce n'est pas un désert médical ; il faut former. Les abandons en formation."))
+    print(lexique("Projection sous hypothèses, pas une prévision. Le résultat n'est pas une prévision exacte."), lexique("Notre prévision : 300."))

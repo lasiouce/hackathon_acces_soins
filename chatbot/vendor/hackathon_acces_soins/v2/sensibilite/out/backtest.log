@@ -1,0 +1,16 @@
+      profession  annee   h  pente_nat_pct_par_an  pente_dep_pct_par_an  biais_moyen_h5_pct  n_cas  h_max_observe  demi_largeur_nat_pct  demi_largeur_dep_pct
+0      dentistes   2030   4                  0.90                  1.73               -4.59     28             10                  5.77                 11.10
+1      dentistes   2040  14                  0.90                  1.73               -4.59     28             10                 20.20                 38.86
+2      dentistes   2050  24                  0.90                  1.73               -4.59     28             10                 34.62                 66.62
+3     infirmiers   2030   7                  1.14                  1.24                5.79     15              5                 12.77                 13.92
+4     infirmiers   2040  17                  1.14                  1.24                5.79     15              5                 31.01                 33.80
+5     infirmiers   2050  27                  1.14                  1.24                5.79     15              5                 49.25                 53.67
+6          kines   2030   4                  0.43                  1.45               -1.66      9              5                  2.73                  9.27
+7          kines   2040  14                  0.43                  1.45               -1.66      9              5                  9.54                 32.46
+8          kines   2050  24                  0.43                  1.45               -1.66      9              5                 16.35                 55.65
+9    pharmaciens   2030   4                  0.23                  1.01               -0.15     28             10                  1.46                  6.48
+10   pharmaciens   2040  14                  0.23                  1.01               -0.15     28             10                  5.10                 22.66
+11   pharmaciens   2050  24                  0.23                  1.01               -0.15     28             10                  8.73                 38.85
+12  sages-femmes   2030   4                  1.72                  2.91                7.92     28             10                 11.04                 18.65
+13  sages-femmes   2040  14                  1.72                  2.91                7.92     28             10                 38.63                 65.29
+14  sages-femmes   2050  24                  1.72                  2.91                7.92     28             10                 66.22                111.92

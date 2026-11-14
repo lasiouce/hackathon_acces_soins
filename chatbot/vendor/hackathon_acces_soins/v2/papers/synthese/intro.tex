@@ -1,0 +1,133 @@
+% Introduction de la synthèse : la feuille de route (v2/ROADMAP.md), écrite à la main.
+\part{Feuille de route}
+
+\section{Objectif}
+\label{syn-objectif}
+Ce document rassemble le travail de recherche du projet « jumeau numérique de l'offre de soins »
+au 14 novembre 2026. Le projet est né dans un hackathon de 48 heures (10 personnes) et a été
+recadré le même jour en projet de recherche quantitative.
+
+\paragraph{La question.} Simuler des \textbf{politiques publiques nationales}, chacune exprimée
+comme un réglage d'hyperparamètres sourcés, et mesurer leur effet à une date future $t$
+(horizon de référence \textbf{2050}) sur l'effectif \enquote{libéral} de cinq professions :
+\begin{itemize}
+  \item les sages-femmes (maïeutique) ;
+  \item les chirurgiens-dentistes (odontologie) ;
+  \item les pharmaciens ;
+  \item les masseurs-kinésithérapeutes ;
+  \item les infirmiers.
+\end{itemize}
+La médecine générale est hors du périmètre. Les spécialités médicales (cardiologie,
+dermatologie, ophtalmologie) forment une phase~2.
+
+\paragraph{Définitions retenues.}
+\begin{itemize}
+  \item \textbf{« Libéral »} désigne le secteur privé, lucratif ou non. Tout employeur public
+        est exclu : hôpital public, PMI, Éducation nationale, EHPAD publics, centres de santé
+        municipaux. Les pharmaciens adjoints d'officine, les salariés de cliniques privées et
+        l'industrie sont donc inclus. Ce n'est pas le sens des sources (RPPS, ameli), où
+        « libéral » veut dire exercice indépendant ; chaque sortie rappelle la définition.
+  \item \textbf{Échelles} : les modèles tournent à tous les niveaux, de la commune au national,
+        parce que la régulation de l'installation s'applique par commune et que le directeur
+        général d'ARS doit avoir la visibilité maximale.
+  \item \textbf{Horizon} : 2050. Les données allant de 2012 à 2026, aucun backtest n'est
+        possible au-delà d'environ 10 ans. La validation à 2050 passe donc par la
+        reproduction des projections de référence (DREES) et par des limites théoriques
+        (axe~3).
+\end{itemize}
+
+\paragraph{Principes non négociables.}
+\begin{itemize}
+  \item \textbf{Démarche scientifique.} Chaque méthode et chaque résultat est reproductible
+        (commande, données, millésime, version du code) et falsifiable : le test qui peut
+        échouer est écrit avant de le lancer.
+  \item \textbf{Aucune boîte noire.} Chaque paramètre a un sens, une source, une unité et une
+        incertitude, et un statisticien extérieur doit pouvoir vérifier un modèle à partir de
+        son article seul.
+  \item \textbf{Code en briques.} Chaque mécanisme est un module (plug-in) qu'on ajoute,
+        retire ou remplace sans toucher aux autres.
+  \item \textbf{Données ouvertes uniquement}, chacune avec son jeu de données et son
+        millésime.
+  \item \textbf{Lexique neutre} : on décrit et on compare (« accès moindre »), on ne juge pas.
+  \item \textbf{Plusieurs estimateurs comparés}, jamais un chiffre unique présenté comme
+        « la » projection.
+  \item \textbf{Provenance de chaque nombre} : mesuré (\mesure), dérivé (\derive) ou supposé
+        (\suppose).
+\end{itemize}
+
+\section{Modèles de référence et structure}
+Le jumeau reprend les hyperparamètres de trois modèles publics :
+\begin{itemize}
+  \item \textbf{Omphale} (Insee) pour la population : fécondité, espérance de vie, solde
+        migratoire ;
+  \item \textbf{Hippocrate} (DREES) pour les médecins : départs, mortalité, âge à
+        l'installation, entrées formées en France et diplômés étrangers ;
+  \item le \textbf{Dossier DREES n°76} (2021), modèle par composantes avec transitions entre
+        modes d'exercice pour les dentistes, sages-femmes et pharmaciens.
+\end{itemize}
+Chaque politique publique modifie un hyperparamètre nommé.
+
+La structure commune est une identité comptable par cohorte : l'effectif d'une année est celui
+de l'année précédente, plus les entrées, moins les sorties, plus les transitions.
+\begin{itemize}
+  \item \textbf{Ce qui est connu} : le vieillissement, les étudiants déjà inscrits, la
+        population projetée.
+  \item \textbf{Ce qui est estimé} : la rétention, les entrées, la répartition territoriale,
+        le passage du privé au public.
+\end{itemize}
+L'axe~2 cherche de meilleurs estimateurs \emph{sur cette même structure transparente}, au lieu
+de la remplacer.
+
+\section{Six axes de recherche}
+\begin{center}
+\small
+\begin{tabular}{p{0.15\linewidth}p{0.37\linewidth}p{0.38\linewidth}}
+\toprule
+Axe & Question & Livrable \\
+\midrule
+0. Jumeau & Quel socle commun pour brancher méthodes, paramètres et données ? & état, modules de flux, scénarios ; critères d'acceptation capables d'échouer \\
+1. Hyperparamètres & Quelles spécificités par profession, sourcées et mesurables ? & fiches de paramètres ; catalogue de politiques simulables \\
+2. Méthodes & Quels modèles prévoient mieux sans être des boîtes noires ? & estimateurs branchés sur le jumeau, comparés sur un banc \\
+3. Validation & Comment montrer qu'un modèle et un levier sont justes, jusqu'en 2050 ? & protocoles pré-enregistrés et gelés (N1 à N6) \\
+4. Données & Quelles séries et quels événements manquent ? & séparation public / privé, registre d'événements, zonage, grain communal \\
+5. Sensibilité & Quels hyperparamètres déplacent vraiment la sortie, et avec quelle fourchette ? & indices de Morris et de Sobol, fourchettes 2050 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Les axes~1, 3 et~4 produisent des documents et des données, et ont démarré en même temps que le
+jumeau. Les axes~2 et~5 ont démarré une fois son contrat stabilisé.
+
+\section{Comment le travail a été contrôlé}
+\begin{itemize}
+  \item \textbf{Revues adversariales du jumeau.} Trois revues indépendantes, chacune menée par
+        9 agents en lecture seule, ont soumis chaque constat à un agent chargé de le réfuter en
+        exécutant le code.
+        \begin{itemize}
+          \item Première revue : 6 défauts confirmés. Plusieurs critères annoncés étaient vrais
+                par construction.
+          \item Deuxième revue : 4 défauts bloquants, dont un levier retraite qui surestimait
+                son effet de 41~\% à $\Delta = 2$ ans et une régulation qui créait des
+                professionnels.
+          \item Troisième revue : plus de défaut bloquant ; la conservation est vérifiée à
+                0,5 personne près en 2050 (\mesure).
+        \end{itemize}
+        Ces revues sont aussi un cas d'étude pour l'axe~3 : des tests qui passent par
+        construction.
+  \item \textbf{Protocoles gelés avant calcul.} Les empreintes SHA-256 des protocoles de
+        l'axe~3 sont calculées avant tout résultat.
+  \item \textbf{Registre des décisions.} Chaque choix, fait, remplacé ou rejeté, est daté
+        (\texttt{v2/docs/lab/decisions.md}), et chaque question ouverte a un coût
+        (\texttt{v2/docs/lab/open.md}).
+\end{itemize}
+
+\section{Lire ce document}
+Les parties suivantes reprennent \emph{tels quels} les six prétirages d'axe : seuls les renvois
+internes et les clés bibliographiques sont préfixés. Chaque partie s'ouvre sur le résumé de son
+axe. Viennent ensuite :
+\begin{itemize}
+  \item une partie sur l'\textbf{interface et les tests utilisateurs} ;
+  \item une partie sur \textbf{ce qui reste à faire}.
+\end{itemize}
+Le document est régénéré par \texttt{v2/papers/synthese/build.py} à partir des articles
+d'axe : il suit leurs mises à jour.

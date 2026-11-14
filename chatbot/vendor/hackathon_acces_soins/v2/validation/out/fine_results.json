@@ -1,0 +1,167 @@
+{
+ "N_min_par_profession_origine": {
+  "dentistes 2014": 11,
+  "dentistes 2016": 11,
+  "dentistes 2018": 21,
+  "dentistes 2020": 21,
+  "infirmiers-liberaux 2014": 21,
+  "infirmiers-liberaux 2016": 21,
+  "infirmiers-liberaux 2018": 11,
+  "infirmiers-liberaux 2020": 11,
+  "kines 2014": 21,
+  "kines 2016": 21,
+  "kines 2018": 51,
+  "kines 2020": 51
+ },
+ "N_min_regle": 51,
+ "P80_max": 25.0,
+ "couverture_2020_classes_ge_3": [
+  {
+   "profession": "dentistes",
+   "cls": "3–5",
+   "mean": 0.7380471380471381,
+   "size": 1485,
+   "passe": false
+  },
+  {
+   "profession": "dentistes",
+   "cls": "6–10",
+   "mean": 0.7521994134897361,
+   "size": 682,
+   "passe": true
+  },
+  {
+   "profession": "dentistes",
+   "cls": "11–20",
+   "mean": 0.7559523809523809,
+   "size": 336,
+   "passe": true
+  },
+  {
+   "profession": "dentistes",
+   "cls": "21–50",
+   "mean": 0.7230769230769231,
+   "size": 195,
+   "passe": false
+  },
+  {
+   "profession": "dentistes",
+   "cls": "51–100",
+   "mean": 0.7804878048780488,
+   "size": 41,
+   "passe": true
+  },
+  {
+   "profession": "dentistes",
+   "cls": "101–200",
+   "mean": 0.5714285714285714,
+   "size": 14,
+   "passe": false
+  },
+  {
+   "profession": "dentistes",
+   "cls": ">200",
+   "mean": 0.7142857142857143,
+   "size": 7,
+   "passe": false
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": "3–5",
+   "mean": 0.8209374122930115,
+   "size": 3563,
+   "passe": true
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": "6–10",
+   "mean": 0.8241230177799135,
+   "size": 2081,
+   "passe": true
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": "11–20",
+   "mean": 0.8305084745762712,
+   "size": 1121,
+   "passe": true
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": "21–50",
+   "mean": 0.8231939163498099,
+   "size": 526,
+   "passe": true
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": "51–100",
+   "mean": 0.7947019867549668,
+   "size": 151,
+   "passe": true
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": "101–200",
+   "mean": 0.8166666666666667,
+   "size": 60,
+   "passe": true
+  },
+  {
+   "profession": "infirmiers-liberaux",
+   "cls": ">200",
+   "mean": 0.6,
+   "size": 30,
+   "passe": false
+  },
+  {
+   "profession": "kines",
+   "cls": "3–5",
+   "mean": 0.7956945572705117,
+   "size": 2462,
+   "passe": true
+  },
+  {
+   "profession": "kines",
+   "cls": "6–10",
+   "mean": 0.7963800904977375,
+   "size": 1326,
+   "passe": true
+  },
+  {
+   "profession": "kines",
+   "cls": "11–20",
+   "mean": 0.7593659942363112,
+   "size": 694,
+   "passe": true
+  },
+  {
+   "profession": "kines",
+   "cls": "21–50",
+   "mean": 0.7665847665847666,
+   "size": 407,
+   "passe": true
+  },
+  {
+   "profession": "kines",
+   "cls": "51–100",
+   "mean": 0.8144329896907216,
+   "size": 97,
+   "passe": true
+  },
+  {
+   "profession": "kines",
+   "cls": "101–200",
+   "mean": 0.6956521739130435,
+   "size": 46,
+   "passe": false
+  },
+  {
+   "profession": "kines",
+   "cls": ">200",
+   "mean": 0.5555555555555556,
+   "size": 18,
+   "passe": false
+  }
+ ]
+}

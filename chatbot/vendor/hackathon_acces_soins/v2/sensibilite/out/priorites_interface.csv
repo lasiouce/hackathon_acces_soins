@@ -1,0 +1,46 @@
+profession,source,ST_2050,ST_lo,ST_hi,moyen,axe,prix,fraction_reductible,gain
+dentistes,filiere,0.212,0.184,0.245,relier le vivier aux entrées (lien_formation) et le valider au banc,axe 2,~1 h,1.0,0.212
+dentistes,fenetre,0.057,0.044,0.07,trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon),axe 2/3,~30 min machine,1.0,0.057
+dentistes,part_privee,0.078,0.068,0.088,"lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)",axe 4,~1–2 h,0.5,0.039
+dentistes,entrees,0.033,0.027,0.042,"trancher la variante d'entrées au banc N1, avec la fenêtre (interaction)",axe 2/3,~30 min machine,1.0,0.033
+dentistes,flux_etrangers,0.035,0.029,0.044,"flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2)",axe 1/2,~1 h,0.5,0.018
+dentistes,shrink,0.006,0.005,0.007,shrinkage hiérarchique déjà adopté par l'axe 2 (A2),axe 2,fait,1.0,0.006
+dentistes,fraction,0.003,0.002,0.003,"âges fins dans les tranches (A1b de l'axe 2, adopté)",axe 2,~45 min,0.75,0.002
+dentistes,repartition,0.001,0.001,0.001,destination des entrants bloqués : flux d'installation communaux (axe 4),axe 4,~1 h,0.5,0.0
+dentistes,theta,0.0,0.0,0.0,"θ hors IDE : DiD sur le zonage SF/MK/CD (axe 3, N3)",axe 3,~1 h,0.75,0.0
+dentistes,part_cumul,0.0,0.0,0.0,"cumul emploi-retraite par caisse, millésime récent",axe 1,~30 min,0.75,0.0
+dentistes,part_exemptee,0.0,0.0,0.0,part des spécialistes parmi les entrants dentistes (RPPS par spécialité),axe 1,~20 min,0.75,0.0
+infirmiers,fenetre,0.01,0.009,0.012,trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon),axe 2/3,~30 min machine,1.0,0.01
+infirmiers,entrees,0.01,0.008,0.013,"trancher la variante d'entrées au banc N1, avec la fenêtre (interaction)",axe 2/3,~30 min machine,1.0,0.01
+infirmiers,fraction,0.013,0.012,0.015,"âges fins dans les tranches (A1b de l'axe 2, adopté)",axe 2,~45 min,0.75,0.01
+infirmiers,repartition,0.005,0.004,0.006,destination des entrants bloqués : flux d'installation communaux (axe 4),axe 4,~1 h,0.5,0.002
+infirmiers,shrink,0.002,0.002,0.002,shrinkage hiérarchique déjà adopté par l'axe 2 (A2),axe 2,fait,1.0,0.002
+infirmiers,theta,0.001,0.001,0.001,"θ hors IDE : DiD sur le zonage SF/MK/CD (axe 3, N3)",axe 3,~1 h,0.75,0.001
+infirmiers,flux_etrangers,0.001,0.001,0.001,"flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2)",axe 1/2,~1 h,0.5,0.0
+infirmiers,part_cumul,0.0,0.0,0.0,"cumul emploi-retraite par caisse, millésime récent",axe 1,~30 min,0.75,0.0
+kines,fenetre,0.04,0.033,0.049,trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon),axe 2/3,~30 min machine,1.0,0.04
+kines,entrees,0.017,0.012,0.022,"trancher la variante d'entrées au banc N1, avec la fenêtre (interaction)",axe 2/3,~30 min machine,1.0,0.017
+kines,flux_etrangers,0.026,0.022,0.032,"flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2)",axe 1/2,~1 h,0.5,0.013
+kines,shrink,0.013,0.011,0.015,shrinkage hiérarchique déjà adopté par l'axe 2 (A2),axe 2,fait,1.0,0.013
+kines,part_privee,0.013,0.011,0.014,"lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)",axe 4,~1–2 h,0.5,0.006
+kines,fraction,0.005,0.005,0.006,"âges fins dans les tranches (A1b de l'axe 2, adopté)",axe 2,~45 min,0.75,0.004
+kines,repartition,0.007,0.005,0.009,destination des entrants bloqués : flux d'installation communaux (axe 4),axe 4,~1 h,0.5,0.003
+kines,theta,0.001,0.001,0.001,"θ hors IDE : DiD sur le zonage SF/MK/CD (axe 3, N3)",axe 3,~1 h,0.75,0.001
+kines,part_cumul,0.0,0.0,0.0,"cumul emploi-retraite par caisse, millésime récent",axe 1,~30 min,0.75,0.0
+pharmaciens,filiere,0.094,0.08,0.109,relier le vivier aux entrées (lien_formation) et le valider au banc,axe 2,~1 h,1.0,0.094
+pharmaciens,part_privee,0.129,0.113,0.151,"lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)",axe 4,~1–2 h,0.5,0.065
+pharmaciens,fenetre,0.049,0.037,0.061,trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon),axe 2/3,~30 min machine,1.0,0.049
+pharmaciens,entrees,0.03,0.025,0.037,"trancher la variante d'entrées au banc N1, avec la fenêtre (interaction)",axe 2/3,~30 min machine,1.0,0.03
+pharmaciens,shrink,0.012,0.01,0.015,shrinkage hiérarchique déjà adopté par l'axe 2 (A2),axe 2,fait,1.0,0.012
+pharmaciens,fraction,0.008,0.006,0.009,"âges fins dans les tranches (A1b de l'axe 2, adopté)",axe 2,~45 min,0.75,0.006
+pharmaciens,flux_etrangers,0.007,0.006,0.009,"flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2)",axe 1/2,~1 h,0.5,0.004
+pharmaciens,part_cumul,0.0,0.0,0.0,"cumul emploi-retraite par caisse, millésime récent",axe 1,~30 min,0.75,0.0
+sages-femmes,part_privee,0.128,0.111,0.144,"lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)",axe 4,~1–2 h,0.5,0.064
+sages-femmes,fenetre,0.019,0.015,0.026,trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon),axe 2/3,~30 min machine,1.0,0.019
+sages-femmes,shrink,0.016,0.013,0.02,shrinkage hiérarchique déjà adopté par l'axe 2 (A2),axe 2,fait,1.0,0.016
+sages-femmes,entrees,0.011,0.008,0.014,"trancher la variante d'entrées au banc N1, avec la fenêtre (interaction)",axe 2/3,~30 min machine,1.0,0.011
+sages-femmes,fraction,0.01,0.008,0.011,"âges fins dans les tranches (A1b de l'axe 2, adopté)",axe 2,~45 min,0.75,0.007
+sages-femmes,flux_etrangers,0.0,0.0,0.0,"flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2)",axe 1/2,~1 h,0.5,0.0
+sages-femmes,repartition,0.0,0.0,0.0,destination des entrants bloqués : flux d'installation communaux (axe 4),axe 4,~1 h,0.5,0.0
+sages-femmes,theta,0.0,0.0,0.0,"θ hors IDE : DiD sur le zonage SF/MK/CD (axe 3, N3)",axe 3,~1 h,0.75,0.0
+sages-femmes,part_cumul,0.0,0.0,0.0,"cumul emploi-retraite par caisse, millésime récent",axe 1,~30 min,0.75,0.0

@@ -1,0 +1,510 @@
+\documentclass[11pt]{article}
+\input{../template/preamble}
+
+\title{Un jumeau numérique de l'offre de soins à contrat vérifiable :\\
+le stock-flux reproduit à l'écart nul, et des critères d'acceptation qui savent échouer}
+\author[1]{Équipe hackathon-santé}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Version du \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Projeter l'effectif des professions de santé « libérales » (secteur privé) par territoire jusqu'en 2050
+suppose un socle commun. Méthodes, paramètres, données et protocoles de validation doivent pouvoir s'y
+brancher sans se contredire. Nous décrivons ce socle, un jumeau numérique fait de trois objets :
+\begin{itemize}
+  \item un état $N[\text{profession},\text{secteur},\text{territoire},\text{sexe},\text{âge}]$, avec un
+        vivier en formation ;
+  \item des modules de flux en greffons, qui déclarent leurs paramètres sourcés et leurs dépendances ;
+  \item des scénarios validés et sérialisables, faits d'hyperparamètres et d'événements datés.
+\end{itemize}
+Le modèle stock-flux existant, réécrit en trois modules, reproduit l'implémentation de référence avec
+un écart de $0{,}0$\mesure{} personne sur 140\mesure{} comparaisons et sur
+\num{355248}\mesure{} valeurs cellule $\times$ âge $\times$ année jusqu'en 2050. Une première version
+des critères d'acceptation passait par construction. Deux revues adversariales successives l'ont
+montré, avec 6\mesure{} puis 4\mesure{} défauts bloquants confirmés en exécutant le code. Nous avons
+donc réécrit chaque critère pour qu'il puisse échouer, et vérifié qu'il échoue quand on réintroduit
+le défaut (mutation). Une troisième revue ne trouve plus de défaut bloquant ; ses défauts importants
+sont corrigés à leur tour. Douze leviers sont branchés, et le vivier en formation est relié aux
+inscrits réels (DREES). Les 17\mesure{} critères passent. Un scénario se recalcule en 21\mesure{}~ms au
+département. Pour cinq professions à l'échelle de la commune (environ \num{700000} cellules), il
+prend 1,4 à 1,6\mesure{}~s sur une machine peu chargée, mais 2,0 à 4,6\mesure{}~s sous forte charge :
+la cible de 2\suppose{}~s n'est pas établie.
+\end{abstract}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; jumeau numérique ;
+modèle stock-flux ; architecture en greffons ; tests de mutation ; revue adversariale.
+
+\noindent\small Exposants de provenance : \mesure{} mesuré, \derive{} dérivé, \suppose{} supposé.\normalsize
+
+% ---------------------------------------------------------------------------------------------------
+\section{Introduction}
+
+Le projet vise à simuler des politiques publiques nationales, chacune exprimée comme un réglage
+d'hyperparamètres sourcés. On mesure leur effet sur l'effectif « libéral » de cinq professions :
+sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et infirmiers. Les
+échelles vont de la commune au national, et l'horizon de référence est 2050. « Libéral » désigne ici
+le secteur privé, lucratif ou non : tout employeur public est exclu. Le travail est découpé en six axes
+menés en parallèle :
+\begin{itemize}
+  \item paramètres (axe~1) ;
+  \item méthodes (axe~2) ;
+  \item validation (axe~3) ;
+  \item données (axe~4) ;
+  \item sensibilité (axe~5).
+\end{itemize}
+Sans un objet commun, chaque axe recoderait la dynamique à sa façon, et les résultats ne seraient
+pas comparables.
+
+L'axe~0, objet de ce document, fournit cet objet commun. La question est double :
+\begin{enumerate}
+  \item un contrat de modules peut-il porter le modèle existant \emph{à l'identique}, tout en
+        acceptant d'autres méthodes sans modifier aucun fichier ?
+  \item comment s'assurer que les critères d'acceptation d'un tel contrat prouvent ce qu'ils
+        annoncent ?
+\end{enumerate}
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item Un contrat à trois objets (état, modules, scénario). Les flux sont typés, les dépendances
+        déclarées et vérifiées, et le registre des flux est tenu par cellule (section~\ref{sec:methode}).
+  \item La réécriture du modèle stock-flux de référence en modules, avec un écart \emph{nul} à
+        l'implémentation d'origine. La v1 sert d'oracle figé (section~\ref{sec:resultats}).
+  \item Dix-sept critères d'acceptation écrits pour pouvoir échouer. Chacun est accompagné de la valeur
+        mesurée sur le code fautif, et quatre d'entre eux d'une mutation rejouée.
+  \item Le récit de trois revues adversariales : ce qu'elles ont trouvé, et ce que cela dit des tests
+        « vrais par construction » (section~\ref{sec:validation}).
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------
+\section{Travaux existants}
+
+\paragraph{Projections de la DREES.} Les Dossiers de la DREES n\textsuperscript{o}~76
+\citep{drees2021dd76} projettent jusqu'en 2050 les médecins, chirurgiens-dentistes, sages-femmes et
+pharmaciens. Le modèle procède par composantes :
+\begin{itemize}
+  \item il est ventilé par âge, sexe et mode d'exercice ;
+  \item il représente les cessations, les transitions de mode d'exercice, les reprises, les entrées
+        décalées de la durée des études et les diplômés étrangers.
+\end{itemize}
+Nous reprenons la même décomposition en flux. Notre contrat n'impose cependant pas une méthode : il
+fixe une interface que plusieurs méthodes peuvent remplir. La reproduction du tendanciel DD76 en 2050
+est un critère de validation de l'axe~3, pas de l'axe~0.
+
+\paragraph{Implémentation de référence (v1).} Le projet disposait déjà d'un modèle stock-flux par
+composantes, sur des tranches d'âge quinquennales, ajusté par profession $\times$ département $\times$
+sexe. Ses taux de rétention nette sont rapprochés du niveau national quand les effectifs sont faibles
+(poids a priori de 200\suppose{} personnes). Évalué au backtest, il obtient une erreur absolue moyenne
+en pourcentage (MAPE) de 8,08\mesure{}~\% par département, contre 8,68\mesure{}~\% pour une tendance
+linéaire, sur l'ancien périmètre « libéral + mixte ». Cette v1 est figée, et sert d'oracle.
+
+\paragraph{Observatoire de l'équipe.} Un observatoire développé en parallèle par un membre de
+l'équipe\footnote{Dépôt \texttt{Pierreafeu181/Hackathon-Evolution-soin}, commit du 2026-11-14, lu par
+le projet ; voir le rapport interne \texttt{reports/2026-11-14-reprise-observatoire.md}.} fournit la
+forme corrigée du levier retraite, que nous adoptons (B1, section~\ref{sec:methode}).
+
+\paragraph{Ce que nous n'avons pas cité.} L'idée de réintroduire volontairement un défaut pour
+vérifier qu'un test le détecte relève des tests de mutation. Nous n'avons pas pu lire la publication
+fondatrice de ce domaine dans le temps imparti : nous ne la citons donc pas.
+
+% ---------------------------------------------------------------------------------------------------
+\section{Données}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{p{4.2cm}p{3.3cm}p{6.4cm}}
+\toprule
+Jeu & Producteur, millésime & Usage et contrôles \\
+\midrule
+RPPS, dép.\ $\times$ âge $\times$ sexe $\times$ mode, 2012--2026 & DREES, publication 2026-07-02 &
+Historique d'ajustement ; oracle v1 via \texttt{sante.model.stock\_table}. \\
+Secteur d'activité public / privé & axe~4, d'après DREES et FINESS (extraction 2026-05-04) &
+\texttt{history.sector\_table} : les salariés « ambigus » sont répartis par une part privée
+centrale, minimale ou maximale. \\
+CartoSanté par commune, 2025 & CartoSanté (Atlasanté) &
+Test d'agrégation : \num{13147}\mesure{} communes, 3 professions, \num{224339}\mesure{} libéraux. \\
+Inscrits par année d'étude, 2020--2025 & DREES (990\_drees\_mmop2) &
+Vivier en formation (dentistes, pharmaciens). \\
+\bottomrule
+\end{tabular}
+\caption{Données lues par le jumeau. Toutes sont ouvertes, et chacune est citée avec son millésime.}
+\end{table}
+
+\paragraph{Écart externe mesuré.} En 2025, la somme des communes CartoSanté est inférieure au RPPS
+départemental (libéral et mixte) :
+\begin{itemize}
+  \item de 2,8\mesure{}~\% pour les dentistes ;
+  \item de 5,4\mesure{}~\% pour les kinés, dont $-$\num{2084}\mesure{} dans le département~13, où
+        Marseille manque.
+\end{itemize}
+La MAPE par département vaut 4,2\mesure{}~\% et 4,7\mesure{}~\%. Cet écart est publié, pas corrigé.
+
+% ---------------------------------------------------------------------------------------------------
+\section{Méthode}\label{sec:methode}
+
+\subsection{L'état}
+L'état est un tableau $N_{c,a}(t)$. La cellule $c$ est un quadruplet (profession, secteur,
+territoire, sexe), et $a$ une tranche d'âge.
+\begin{itemize}
+  \item \textbf{Le secteur est un axe de l'état, pas un filtre.} Un entrant bloqué, ou une transition
+        privé $\leftrightarrow$ public, change de cellule au lieu de disparaître.
+  \item \textbf{Le territoire a un niveau déclaré} : commune, département, région ou national. Une
+        table de passage agrège vers le haut et refuse toute unité non rattachée, ou rattachée deux
+        fois.
+  \item \textbf{Le vivier en formation est national} : profession $\times$ année d'étude.
+\end{itemize}
+
+\subsection{Les modules}
+Chaque module déclare :
+\begin{itemize}
+  \item un nom et un rang d'application ;
+  \item des paramètres, chacun avec valeur, unité, source, millésime, statut (mesuré, sourcé, supposé
+        ou non mesurable) et bornes ;
+  \item les flux de l'année qu'il lit (\texttt{needs}) et ceux qu'il produit (\texttt{produces}).
+\end{itemize}
+Il ne modifie jamais l'état. Il rend des flux typés :
+\begin{itemize}
+  \item \textbf{Shift} (vieillissement) :
+        $N_a \leftarrow (1-f_a)N_a + f_{a-1}N_{a-1}$, et la tranche ouverte garde tout ;
+  \item \textbf{Rate} : $N \leftarrow s \odot N$, où $(1-s)\odot N$ va dans un compte de sortie ;
+  \item \textbf{Add} : $N \leftarrow N + I$ ;
+  \item \textbf{Move} : transfert d'une cellule à une autre ;
+  \item \textbf{Pool} : mise à jour du vivier, avec des comptes pour les diplômés et les abandons.
+\end{itemize}
+Le moteur applique les flux module par module : c'est une séparation d'opérateurs. Il applique
+ensuite un plancher à 0, et inscrit chaque flux par cellule dans un registre.
+
+À la construction, il vérifie que chaque besoin est produit par un module placé avant, et qu'aucun
+flux n'a deux producteurs. Pendant le run, il refuse toute lecture et tout flux non déclarés. Ajouter
+un module revient à déposer un fichier : aucun autre fichier n'est modifié. Une méthode qui n'est pas
+un stock-flux s'y branche de la même façon, en rendant ses résultats sous forme de flux.
+
+\paragraph{Stock-flux de référence en trois modules.} Notons $b = \text{Shift}(N)$, avec $f = 1/5$
+pour toutes les tranches (convention v1). On a alors
+\begin{equation}
+N(t+1) = \max\!\bigl(0,\; s\odot b + k(t)\,(I + p\,h)\bigr),
+\end{equation}
+où :
+\begin{itemize}
+  \item $s \le 1$ est la rétention nette ajustée ;
+  \item $I$ est l'entrée nette annuelle et $p$ sa pente ;
+  \item $k(t)$ est le multiplicateur de filière ;
+  \item $h = t - t_0$ est l'horizon.
+\end{itemize}
+Les opérations flottantes sont celles de la v1, dans le même ordre, et l'ajustement réutilise sa
+fonction \texttt{fit\_rates}. L'écart nul est donc \emph{construit} : il prouve que le contrat ne
+déforme rien, pas que le modèle est juste.
+
+\paragraph{Levier retraite (B1).} Un report de $\Delta$ ans modifie le taux de sortie $e = 1-s$ :
+\begin{itemize}
+  \item tranches de 65~ans et plus : $e' = e/(1+\lambda e)$. Avec une seule tranche ouverte,
+        $\lambda = \Delta$, et le séjour moyen passe de $1/e$ à $1/e + \Delta$. Avec plusieurs
+        tranches (65--69, 70--74, 75+), $\lambda$ est calculé par cellule. On le choisit pour que le
+        temps espéré en 65+ d'une personne qui entre en 65--69 augmente de $\Delta$ exactement. Ce
+        temps est l'espérance d'une chaîne de Markov dont les transitions sont le vieillissement $f$ et
+        la rétention $s$, dans l'ordre du moteur ;
+  \item 60--64~ans : $e' = e(1-\Delta/5)$ ;
+  \item 55--59~ans : $e' = e(1-\Delta/10)$ ;
+  \item tranches à solde net positif ($e = 0$) : inchangées.
+\end{itemize}
+La montée en charge est de 3\suppose{}~mois par an, à partir de l'année qui suit la décision.
+
+\paragraph{Régulation de l'installation.} Dans une zone en « remplacement seul », les entrées
+privées (positives) d'une année ne peuvent dépasser les sorties de cette année.
+\begin{itemize}
+  \item \textbf{Fuite.} Seule une part $\theta = 0{,}80$\suppose{} de l'excédent est bloquée (axe~3,
+        expérience naturelle sur le zonage infirmier, exploratoire).
+  \item \textbf{Destination des bloqués.} Elle se répartit entre trois issues :
+        \begin{itemize}
+          \item un territoire voisin non régulé, dans le privé (défaut : 100\suppose{}~\%) ;
+          \item le salariat, sous la forme d'un secteur \texttt{bloques} qui suit la démographie du
+                privé par une règle de repli explicite ;
+          \item la sortie, inscrite dans un compte du registre.
+        \end{itemize}
+  \item \textbf{Effet au département.} La part « voisine » y reste dans sa cellule : la régulation par
+        défaut est donc sans effet à ce grain. À la commune, elle exige une table de voisinage.
+  \item \textbf{Exemption.} Les dentistes spécialistes sont exemptés, mais leur part n'est pas
+        mesurée : elle vaut 0 par défaut.
+\end{itemize}
+La destination réelle des entrants bloqués n'est chiffrée par aucune source. L'option « vers le
+public » est publiée comme mesure de sensibilité.
+
+\subsection{Le scénario}
+Un scénario contient :
+\begin{itemize}
+  \item des surcharges \texttt{module.param} ;
+  \item des événements datés (paramètre, début, fin, opération \texttt{set}, \texttt{mul} ou
+        \texttt{add}, sélecteur sur les axes de l'état) ;
+  \item une composition de modules et une graine.
+\end{itemize}
+Il est \emph{posé sur} le scénario de base de l'estimateur : ses paramètres priment, ses événements
+s'ajoutent. Avant le run, il est validé. Sont refusés :
+\begin{itemize}
+  \item les noms de paramètres, opérations et axes inconnus ;
+  \item les valeurs de sélecteur absentes de l'état ;
+  \item les valeurs hors des bornes déclarées.
+\end{itemize}
+Il se sérialise en JSON, avec un numéro de format. Les quotas suivent la convention v1 : un
+multiplicateur décidé à $t_0$ agit à partir de $t_0 + L_p + 1$, où $L_p$ est la durée des études.
+
+% ---------------------------------------------------------------------------------------------------
+\section{Résultats}\label{sec:resultats}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lp{6.3cm}p{5.0cm}}
+\toprule
+\# & Critère et mesure après correction & Valeur sur le code fautif \\
+\midrule
+C1 & Reproduction v1 : écart $0{,}0$\mesure{} sur 140 comparaisons de \texttt{predict} et sur
+\num{355248} valeurs (7 professions, jusqu'en 2050) & non contesté \\
+C2 & Régulation (état réel, 2 secteurs, 100~\% salariat, $\theta = 0{,}8$) : privé des zones
+$-$\num{6709}\mesure{} (kinés) et $-$\num{3470}\mesure{} (dentistes) ; $\Delta$ total sans plancher
+$0{,}0$\mesure{} & effet nul ; puis $\Delta$ total $+254$ et $-474$ \\
+C3 & Module factice déposé hors du paquet, exécuté : flux \num{4040} = attendu & test hors de la
+voie du banc \\
+C4 & Régulation sur le privé seul : $\Delta$ total $-2{,}9\cdot10^{-11}$\mesure{} & $+822$ kinés \\
+C5 & Dépendance manquante, double producteur, lecture non déclarée, Pool lu par erreur : 4 refus
+explicites & résultat faux sans erreur \\
+C6 & Faute de frappe, sélecteur \texttt{'dentiste'} ou \texttt{6}, quotas $\times110$ : refusés ;
+aller-retour JSON : écart $0{,}0$ & ignorés ; $\times110 \to +$\num{5085033} \\
+C7 & Quotas $\times1{,}1$ : écart $4{,}5\cdot10^{-13}$\mesure{} avec la v1. Retraite : séjour en
+65+ $+1{,}000 / +2{,}000 / +5{,}000$\mesure{}~an pour $\Delta = 1/2/5$ & quotas $+226$ ; séjour
+$+1{,}31$ an, infini pour $\Delta \ge 5$ \\
+C8 & Agrégation commune $\to$ national : écart interne 0\mesure{} ; unité inconnue refusée &
+comparaison circulaire \\
+C9 & Aucun état partagé entre deux runs (vivier $\times2 \to$ diplômés $\times2$) & état
+persistant \\
+C10 & Vieillissement à largeurs variables : total conservé & $1/5$ codé en dur \\
+C11 & Scénario posé sur la base (variante filière) : quotas $\times1{,}1 \to +6{,}53$\mesure{}~\% &
+$-15{,}2$~\% \\
+C12 & Paramètres sourcés : $\theta = 0{,}8 \to$ 0,800\mesure{} des bloqués ; exemption 50~\%
+$\to$ 0,500\mesure{} ; défaut 100~\% voisine au département $\to$ écart 0 ; abandon IDE
+0,105\derive{} ; cumul par profession & abandon 0 ; cumul 0,10 partout \\
+C13 & Bornes sur la valeur composée et sur les paramètres ajustés ; JSON + \texttt{over} ;
+règle « entrées $\le$ sorties » : écart $7\cdot10^{-15}$\mesure{} à une formule indépendante ;
+retraite à 3 tranches $\ge 65$ : écart de séjour $10^{-14}$\mesure{} & $\times243 \to +14\,317$~\% ;
+règle non testée ; séjour $\ne +\Delta$ \\
+C14 & 12 leviers en 4 familles : identité au tendanciel (0,0) ; capacité dentistes $\times1{,}2$
+$\to +9{,}1$\mesure{}~\% en 2050 (DD76 : $\pm9$~\% pour $\pm20$~\%) ; quotas régionaux sans effet hors
+région & leviers absents \\
+C15 & 5 professions à la commune (\num{698212} cellules) : 1,35 à 1,57\mesure{}~s ; chemin rapide
+= chemin complet (écart 0) & 3,99\mesure{}~s \\
+C16 & Vivier réel (DREES 491) : diplômés IDE modélisés \num{25385} contre \num{25249} observés
+(2024) ; identité en mode levier & vivier relatif seul \\
+C17 & Diplômés à l'étranger entrés dans la tranche de 28~ans ; total inchangé & répartis sur tous
+les âges \\
+\bottomrule
+\end{tabular}
+\caption{Critères d'acceptation de l'axe~0 (\texttt{jumeau.check}, code de sortie~1 en cas
+d'échec). Colonne de droite : valeur mesurée par les revues adversariales sur le code d'avant.}
+\label{tab:criteres}
+\end{table}
+
+\paragraph{Comparaison aux chiffres publiés.}
+\begin{itemize}
+  \item \textbf{Quotas, dentistes.} Une capacité $\times1{,}2$ donne $+9{,}1$\mesure{}~\% en 2050 avec le
+        flux bas de diplômés à l'étranger (665 par an), contre $\pm9$~\% dans DD76 pour des quotas à
+        $\pm20$~\% \citep{drees2021dd76} : les deux concordent. Avec le flux actuel (\num{1300} par an,
+        Ordre 2022), l'effet tombe à $+6{,}3$\mesure{}~\%, parce que la part formée en France baisse.
+        La concordance dépend donc d'un paramètre mal mesuré.
+  \item \textbf{Abandon en IFSI divisé par deux.} Le jumeau donne $+15{,}6$\mesure{}~\% d'IDE libéraux
+        en 2050 ($+14{,}1$\mesure{}~\% avec 400 IDE diplômés à l'étranger par an). Le chiffre de la DREES repris par l'axe~1 (environ $+14$~\%) porte sur des places ;
+        son équivalent en effectifs est d'environ $+7{,}9$~\% en 2050. Le jumeau donne donc environ deux
+        fois plus : c'est un écart non expliqué, pas une concordance.
+  \item \textbf{Retraite $+1$~an.} Le jumeau donne $+3{,}02$\mesure{}~\% d'IDE libéraux et
+        $+1{,}55$\mesure{}~\% de kinés en 2050. Le repère de la DREES (environ $+1$~\%) n'est pas
+        comparable : il mesure un écart de niveau d'un an chez les plus de 60~ans, tous modes
+        d'exercice, avec un plafond à 67~ans et dès 2020.
+\end{itemize}
+
+\paragraph{Effets des leviers (dentistes, 2050).}
+\begin{itemize}
+  \item Retraite +1~an : $+1{,}60$\mesure{}~\% ; +2~ans : $+3{,}22$\mesure{}~\%.
+  \item Quotas $\times1{,}1$ décidés en 2026 ($L_p = 6$\suppose{}) : $+6{,}53$\mesure{}~\% sur la
+        variante filière.
+\end{itemize}
+Ces chiffres illustrent le contrat. Ce ne sont pas des résultats de politique publique : les plages
+et la sensibilité relèvent de l'axe~5.
+
+\paragraph{Temps de recalcul jusqu'en 2050.}
+\begin{itemize}
+  \item 21\mesure{}~ms pour 7 professions au département (\num{1410} cellules) ;
+  \item 5 professions, 2 secteurs, état ventilé par la population sur \num{35000} communes
+        (\num{698212} cellules), 24 ans : 3,99\mesure{}~s au départ, puis 1,35 à 1,57\mesure{}~s
+        après optimisation, sans que la charge de la machine soit relevée. Remesuré test isolé sur une
+        machine chargée par d'autres calculs (charge moyenne 9 à 14) : 2,0 à 4,6\mesure{}~s en temps réel
+        et 1,9 à 2,6\mesure{}~s en temps CPU. L'objectif de 2~s n'est donc pas établi.
+\end{itemize}
+Le profil mesuré avant tout changement attribuait le temps au registre des flux (1,1~s), aux passes
+d'application (1,0~s), aux sorties recalculées chaque année (0,8~s) et aux entrées (0,5~s). Le chemin
+rapide garde les mêmes opérations flottantes, mais ne tient pas le registre, calcule le vieillissement
+sans copie et met en cache les facteurs constants d'une année à l'autre. Il donne le même état que le
+chemin complet (écart 0).
+
+\paragraph{Vivier réel.} Le vivier part des inscrits en 1re année de la DREES (jeu 491). Les diplômés
+d'infirmiers qu'il reconstitue suivent les observations à 0,5~\% près en 2024 et 2025. Deux mesures en
+limitent la portée :
+\begin{itemize}
+  \item sur les diplômés 2019--2025, avec un abandon calibré sur 2016--2018, la persistance fait mieux
+        que le vivier (MAPE IDE 3,2\mesure{}~\% contre 8,4\mesure{}~\%), parce que l'abandon a
+        augmenté ;
+  \item sur le stock d'IDE libéraux de 2018 à 2023, le mode « vivier » fait un peu mieux que le
+        stock-flux local (7,40\mesure{} contre 7,82\mesure{}~\% de MAPE par département), sur une
+        seule origine, sans pré-enregistrement.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------
+\section{Validation et menaces à la validité}\label{sec:validation}
+
+\subsection{Deux revues adversariales}
+La première version du jumeau annonçait quatre critères remplis. Une revue adversariale a été menée
+par 9 agents en lecture seule, sous trois angles :
+\begin{itemize}
+  \item les tests peuvent-ils échouer ;
+  \item la physique du modèle ;
+  \item le contrat comme socle.
+\end{itemize}
+Les deux constats les plus graves de chaque angle ont été soumis à un agent chargé de les réfuter
+en exécutant le code. La revue a confirmé 6\mesure{} défauts sur 6, dont 4 bloquants :
+\begin{itemize}
+  \item un module ajouté au scénario était ignoré par la voie du banc ;
+  \item le secteur public n'avait pas de sorties ($+822$\mesure{} kinés en 2050) ;
+  \item les dépendances entre modules étaient implicites ;
+  \item le scénario n'était ni validé ni sérialisable.
+\end{itemize}
+Trois critères étaient vrais par construction. Par exemple, la vérification « aucun fichier
+modifié » écrivait le module factice dans un dossier temporaire, si bien qu'elle ne pouvait pas
+échouer.
+
+La seconde revue, menée selon la même méthode sur le code corrigé, a confirmé 4\mesure{} nouveaux
+défauts bloquants :
+\begin{itemize}
+  \item le levier retraite touchait la tranche ouverte 65+ en permanence, ce qui rend le séjour
+        infini pour $\Delta \ge 5$. Le critère de comparaison à la v1 ne pouvait pas le voir, puisque
+        la v1 porte le même défaut ;
+  \item la régulation faisait varier le total ;
+  \item la correction précédente avait introduit un scénario qui écrasait la base ;
+  \item les valeurs de sélecteur n'étaient pas validées.
+\end{itemize}
+
+\paragraph{Leçon.} Comparer un mécanisme à une implémentation qui porte le même défaut ne valide
+rien. Un critère utile se compare à la grandeur que le mécanisme prétend produire, comme le séjour
+attendu, ou à un invariant, comme la conservation des effectifs. Il est accompagné de sa valeur sur
+le code fautif.
+
+\subsection{Mutations rejouées}
+Pour chaque défaut de la seconde revue, nous avons réintroduit le comportement fautif dans le code
+corrigé, puis relancé le critère, qui échoue chaque fois :
+\begin{itemize}
+  \item ancien masque retraite $\to$ C7 échoue (séjour $+2{,}03$\mesure{}, $+5{,}41$\mesure{},
+        infini) ;
+  \item destination publique $\to$ C2 échoue ($\Delta$ total $-474$\mesure{} et $+254$\mesure{}) ;
+  \item scénario qui remplace la base $\to$ C11 échoue (\num{82374}\mesure{} contre
+        \num{102987}\mesure{}) ;
+  \item validation des noms seulement $\to$ C6 échoue.
+\end{itemize}
+Pour la première revue, deux mutations ont été rejouées :
+\begin{itemize}
+  \item un public sans sorties fait échouer C4 ($+838$\mesure{}) ;
+  \item des quotas avancés d'un an font échouer C7.
+\end{itemize}
+
+\subsection{Troisième revue}
+La troisième revue, menée selon la même méthode, ne trouve plus de défaut bloquant dans le jumeau.
+Mesurée sur trois professions, la conservation tient à 0,5\mesure{} personne près en 2050. La revue
+confirme quatre défauts importants :
+\begin{itemize}
+  \item des bornes contournables en empilant des événements ($\times243 \to +14\,317$\mesure{}~\%),
+        et NaN accepté ;
+  \item des bornes non appliquées aux paramètres ajustés (rétention $> 1$) ;
+  \item une composition perdue après un aller-retour JSON ;
+  \item un séjour qui ne vaut pas $+\Delta$ quand il y a plusieurs tranches $\ge 65$ (phase~2).
+\end{itemize}
+Elle relève aussi trois constats non vérifiés. Le plus important est que C2 et C4 ne testaient pas la
+règle « entrées $\le$ sorties » elle-même : une mutation qui bloque toutes les entrées les passait.
+
+Tous ces points sont corrigés et couverts par C13. La règle de régulation est désormais comparée à
+une formule indépendante, sur une année rejouée à la main. Chaque défaut, réintroduit par mutation,
+fait échouer C13 : bornes, JSON, retraite à plusieurs tranches, blocage de toutes les entrées et
+déplacement d'entrées négatives.
+
+\subsection{Menaces à la validité}
+\begin{itemize}
+  \item \textbf{C1 ne valide pas le modèle.} Il prouve seulement que le contrat ne déforme rien. La
+        précision reste celle du backtest v1 (8,08\mesure{}~\% de MAPE par département, ancien
+        périmètre).
+  \item \textbf{La destination \texttt{bloques} est une hypothèse.} Elle conserve le total par
+        construction. Si les entrants bloqués rejoignent le public, l'effet total vaut
+        $-474$\mesure{} kinés ou $+254$\mesure{} dentistes.
+  \item \textbf{La régulation par défaut est sans effet au département} : 100~\% des bloqués vont à
+        un territoire voisin, ce qui est supposé. Son effet n'apparaît qu'avec une autre répartition,
+        ou à la commune avec une table de voisinage.
+  \item \textbf{Le plancher à 0, hérité de la v1, crée des personnes} là où les entrées nettes
+        ajustées sont négatives : de 0,02\mesure{} à 0,43\mesure{}~\% de $N(2050)$ selon la
+        profession.
+  \item \textbf{Le calibrage suppose un vieillissement de 1/5 par an.} Il ne convient pas aux tranches
+        communales de largeurs variables.
+  \item \textbf{La sensibilité à l'ordre des modules n'est pas mesurée.}
+  \item \textbf{Les zones de régulation des tests sont illustratives} (5 départements) : ce ne sont
+        pas les zonages conventionnels réels.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------
+\section{Reproductibilité}
+\begin{itemize}
+  \item \textbf{Code :} \texttt{v2/jumeau/}. La v1 figée, \texttt{sante/}, sert d'oracle.
+  \item \textbf{Commande} (depuis la racine du dépôt) :
+        \texttt{PYTHONPATH=v2 uv run python -m jumeau.check}. Elle dure environ une minute et sort
+        avec le code~1 en cas d'échec.
+  \item \textbf{Sorties :} \texttt{v2/artifacts/a0\_jumeau/results.json}, \texttt{reproduction.csv}
+        et \texttt{check.log}.
+  \item \textbf{Graine :} chaque scénario porte sa graine (\texttt{ctx.rng}). Les critères de l'axe~0
+        sont déterministes.
+  \item \textbf{Données :} \texttt{data/processed/} (v1) et \texttt{v2/data/processed/} (axe~4), avec
+        les millésimes donnés en section~3.
+  \item \textbf{Enregistrements :} rapport \texttt{v2/docs/lab/reports/2026-11-14-jumeau-axe0.md}
+        (version~3) et décisions « Contrat du jumeau », « Corrections du contrat » et « Seconde série
+        de corrections » dans \texttt{v2/docs/lab/decisions.md}.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------
+\section{Conclusion}
+Le jumeau fournit aux autres axes un contrat vérifiable :
+\begin{itemize}
+  \item il reproduit exactement le modèle existant ;
+  \item il exécute les modules que le scénario déclare ;
+  \item il refuse les erreurs au lieu de les avaler ;
+  \item il conserve les effectifs lors des déplacements.
+\end{itemize}
+L'enseignement principal porte sur la validation elle-même. Deux fois, des critères qui passaient
+ne prouvaient rien. La parade adoptée a trois volets : écrire chaque critère contre une grandeur
+attendue ou un invariant, y joindre sa valeur sur le code fautif, et rejouer la mutation.
+
+\paragraph{Questions ouvertes, avec leur coût} (temps de travail estimé, \suppose) :
+\begin{itemize}
+  \item mode « vivier » au banc N1 de l'axe~3, sur plusieurs origines : environ 30~min ;
+  \item abandon en formation projeté plutôt que constant : environ 45~min ;
+  \item état communal réel projetable : environ 1~h ;
+  \item calibrage à fractions par tranche pour les communes : environ 30~min ;
+  \item plancher converti en sortie explicite : environ 20~min.
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+\section{Annexe : interface d'un module}
+\begin{verbatim}
+@register
+class MonModule(Module):
+    name, order = "mon_module", 35
+    needs = ("entrees",)            # flux de l'année lus via ctx.delta
+    params = (Param("x", 1.0, "unité", "source", "millésime", "supposé",
+                    "description", (0.0, 3.0)),)
+    def fit(self, hist): ...        # calibrage sur l'historique <= origine
+    def step(self, state, ctx):     # lit l'état, ne le modifie pas
+        return [Add(self.name, ..., src="mon_compte")]
+\end{verbatim}
+\end{document}

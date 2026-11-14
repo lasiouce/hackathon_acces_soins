@@ -1,0 +1,69 @@
+1/4 APC dentistes 12s
+2/4 APC kines 32s
+3/4 APC pharmaciens 56s
+4/4 APC sages-femmes 65s
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+/Users/jojo/Documents/progdinh/sevel/hackathon-sante/v2/validation/probabilistic.py:97: RuntimeWarning: Mean of empty slice
+  point[m] = np.nanmean(np.nanmean(M, 1))
+                  bande               model  crps_log         best_naive  couv50  couv80     n   delta      lo      hi    issue  calibre
+0   N6 empirique même h    axe2_ages_interp    0.0764  naive_persistance  0.2975  0.5484   279  0.0132  0.0069  0.0197     perd    False
+1   N6 empirique même h   axe2_ages_simples    0.0771  naive_persistance  0.2867  0.5448   279  0.0138  0.0074  0.0204     perd    False
+2   N6 empirique même h            axe2_apc    0.0691  naive_persistance  0.3620  0.6810   279  0.0058  0.0002  0.0119     perd    False
+3   N6 empirique même h  axe2_apc (tirages)    0.0646  naive_persistance  0.2947  0.5447   380  0.0014 -0.0033  0.0068  égalité    False
+4   N6 empirique même h        axe2_combine    0.0755  naive_persistance  0.3082  0.5699   279  0.0122  0.0061  0.0187     perd    False
+5   N6 empirique même h        axe2_obs_r12    0.0631  naive_persistance  0.3871  0.6989   279 -0.0002 -0.0064  0.0063  égalité    False
+6   N6 empirique même h    axe2_retention60    0.0731  naive_persistance  0.3082  0.5842   279  0.0099  0.0039  0.0159     perd    False
+7   N6 empirique même h    axe2_shrink_hier    0.0726  naive_persistance  0.3262  0.5556   279  0.0093  0.0033  0.0156     perd    False
+8   N6 empirique même h  jumeau_taux_locaux    0.0731  naive_persistance  0.3226  0.5663   279  0.0098  0.0037  0.0161     perd    False
+9   N6 empirique même h   naive_persistance    0.0633  naive_persistance  0.3477  0.6595   279     NaN     NaN     NaN      NaN    False
+10  N6 empirique même h      naive_tendance    0.0661  naive_persistance  0.4301  0.7025   279  0.0029 -0.0028  0.0087  égalité    False
+11  N7-C pente d'erreur    axe2_ages_interp    0.0722     naive_tendance  0.7976  0.9570  1581 -0.0061 -0.0077 -0.0045    gagne    False
+12  N7-C pente d'erreur   axe2_ages_simples    0.0724     naive_tendance  0.8020  0.9589  1581 -0.0060 -0.0075 -0.0044    gagne    False
+13  N7-C pente d'erreur            axe2_apc    0.0726     naive_tendance  0.7919  0.9545  1581 -0.0058 -0.0075 -0.0040    gagne    False
+14  N7-C pente d'erreur        axe2_combine    0.0722     naive_tendance  0.7925  0.9551  1581 -0.0062 -0.0078 -0.0045    gagne    False
+15  N7-C pente d'erreur        axe2_obs_r12    0.0708     naive_tendance  0.7774  0.9481  1581 -0.0076 -0.0093 -0.0059    gagne    False
+16  N7-C pente d'erreur    axe2_retention60    0.0738     naive_tendance  0.7875  0.9545  1581 -0.0046 -0.0064 -0.0027    gagne    False
+17  N7-C pente d'erreur    axe2_shrink_hier    0.0716     naive_tendance  0.7970  0.9576  1581 -0.0068 -0.0084 -0.0052    gagne    False
+18  N7-C pente d'erreur  jumeau_taux_locaux    0.0722     naive_tendance  0.7944  0.9570  1581 -0.0061 -0.0078 -0.0044    gagne    False
+19  N7-C pente d'erreur   naive_persistance    0.0789     naive_tendance  0.7660  0.9715  1581  0.0006 -0.0033  0.0045  égalité    False
+20  N7-C pente d'erreur      naive_tendance    0.0784     naive_tendance  0.7881  0.9513  1581     NaN     NaN     NaN      NaN    False
+                  bande               model                                            pit10
+0   N6 empirique même h    axe2_ages_interp            [5, 14, 7, 5, 10, 8, 33, 36, 40, 121]
+1   N6 empirique même h   axe2_ages_simples           [5, 12, 10, 4, 10, 8, 31, 36, 41, 122]
+2   N6 empirique même h            axe2_apc          [11, 13, 15, 6, 18, 14, 38, 33, 53, 78]
+3   N6 empirique même h  axe2_apc (tirages)        [48, 14, 28, 15, 24, 20, 29, 30, 48, 124]
+4   N6 empirique même h        axe2_combine            [5, 11, 7, 8, 12, 7, 27, 54, 33, 115]
+5   N6 empirique même h        axe2_obs_r12           [10, 9, 5, 17, 19, 25, 39, 29, 52, 74]
+6   N6 empirique même h    axe2_retention60            [9, 9, 10, 5, 9, 15, 37, 26, 52, 107]
+7   N6 empirique même h    axe2_shrink_hier           [11, 9, 7, 10, 12, 8, 36, 41, 32, 113]
+8   N6 empirique même h  jumeau_taux_locaux           [9, 11, 8, 5, 12, 14, 38, 25, 45, 112]
+9   N6 empirique même h   naive_persistance         [28, 16, 31, 20, 18, 23, 18, 13, 45, 67]
+10  N6 empirique même h      naive_tendance         [12, 13, 13, 16, 23, 18, 39, 36, 38, 71]
+11  N7-C pente d'erreur    axe2_ages_interp    [58, 97, 170, 256, 333, 287, 232, 97, 41, 10]
+12  N7-C pente d'erreur   axe2_ages_simples   [55, 89, 163, 246, 334, 285, 239, 115, 45, 10]
+13  N7-C pente d'erreur            axe2_apc  [60, 106, 182, 268, 350, 264, 196, 106, 37, 12]
+14  N7-C pente d'erreur        axe2_combine    [61, 96, 181, 258, 353, 299, 190, 94, 39, 10]
+15  N7-C pente d'erreur        axe2_obs_r12   [59, 83, 138, 199, 338, 283, 250, 149, 59, 23]
+16  N7-C pente d'erreur    axe2_retention60    [64, 123, 188, 269, 382, 264, 176, 74, 33, 8]
+17  N7-C pente d'erreur    axe2_shrink_hier   [57, 91, 158, 250, 324, 285, 229, 129, 48, 10]
+18  N7-C pente d'erreur  jumeau_taux_locaux   [58, 98, 157, 251, 354, 277, 220, 116, 40, 10]
+19  N7-C pente d'erreur   naive_persistance   [24, 61, 115, 142, 209, 282, 365, 263, 99, 21]
+20  N7-C pente d'erreur      naive_tendance   [63, 114, 183, 294, 366, 272, 156, 82, 37, 14]
+{"N6": [["dentistes", 2021, 1100], ["kines", 2021, 101], ["pharmaciens", 2021, 1111], ["sages-femmes", 2021, 858]], "N7C": [["dentistes", 2017, 1000], ["dentistes", 2018, 1000], ["dentistes", 2019, 1000], ["dentistes", 2020, 1000], ["dentistes", 2021, 1000], ["infirmiers-liberaux", 2017, 1000], ["infirmiers-liberaux", 2018, 1000], ["pharmaciens", 2017, 1010], ["pharmaciens", 2018, 1010], ["pharmaciens", 2019, 1010], ["pharmaciens", 2020, 1010], ["pharmaciens", 2021, 1010], ["sages-femmes", 2017, 740], ["sages-femmes", 2018, 740], ["sages-femmes", 2019, 740], ["sages-femmes", 2020, 760], ["sage

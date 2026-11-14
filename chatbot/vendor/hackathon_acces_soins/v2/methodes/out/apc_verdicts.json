@@ -1,0 +1,96 @@
+{
+ "axe2_apc": {
+  "best_naive": "naive_tendance",
+  "mape": {
+   "axe2_apc": 8.743532959490798,
+   "axe2_retention60": 9.003415958691818,
+   "jumeau_taux_locaux": 8.677075972486357,
+   "naive_persistance": 9.915830739686857,
+   "naive_tendance": 9.303422137256836
+  },
+  "delta": -0.5598891777660384,
+  "ci": [
+   -0.9145041827964712,
+   -0.2024528152518811
+  ],
+  "issue": "gagne",
+  "precision_nationale": true,
+  "limite_h1_ok": true,
+  "delta_vs_A0": 0.06645698700444136,
+  "ci95_vs_A0": [
+   -0.025650560048097005,
+   0.15648117642157539
+  ]
+ },
+ "jumeau_taux_locaux": {
+  "best_naive": "naive_tendance",
+  "mape": {
+   "axe2_apc": 8.743532959490798,
+   "axe2_retention60": 9.003415958691818,
+   "jumeau_taux_locaux": 8.677075972486357,
+   "naive_persistance": 9.915830739686857,
+   "naive_tendance": 9.303422137256836
+  },
+  "delta": -0.6263461647704798,
+  "ci": [
+   -0.9716440140278575,
+   -0.2700434880930045
+  ],
+  "issue": "gagne",
+  "precision_nationale": true,
+  "limite_h1_ok": true,
+  "delta_vs_A0": 0.0,
+  "ci95_vs_A0": [
+   0.0,
+   0.0
+  ]
+ },
+ "axe2_retention60": {
+  "best_naive": "naive_tendance",
+  "mape": {
+   "axe2_apc": 8.743532959490798,
+   "axe2_retention60": 9.003415958691818,
+   "jumeau_taux_locaux": 8.677075972486357,
+   "naive_persistance": 9.915830739686857,
+   "naive_tendance": 9.303422137256836
+  },
+  "delta": -0.30000617856501854,
+  "ci": [
+   -0.66642166040945,
+   0.08171031629516369
+  ],
+  "issue": "égalité",
+  "precision_nationale": true,
+  "limite_h1_ok": true,
+  "delta_vs_A0": 0.32633998620546123,
+  "ci95_vs_A0": [
+   0.2327180071784743,
+   0.41790472123606687
+  ]
+ },
+ "probabiliste_h5": {
+  "crps_relatif_%": {
+   "axe2_apc": 8.743532959490796,
+   "axe2_retention60": 9.003415958691816,
+   "jumeau_taux_locaux": 8.677075972486357,
+   "naive_persistance": 9.915830739686857,
+   "naive_tendance": 9.303422137256836,
+   "axe2_apc (tirages)": 6.817943968435881
+  },
+  "couverture80": 0.5019455252918288,
+  "couverture90": 0.5977626459143969,
+  "pit_histogramme_10": [
+   594,
+   154,
+   150,
+   107,
+   122,
+   128,
+   117,
+   109,
+   159,
+   416
+  ],
+  "n": 2056
+ }
+}

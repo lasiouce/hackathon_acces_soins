@@ -1,0 +1,42 @@
+                    S_decision  S_connaissance  ST_decision  ST_connaissance  interaction  decision_pese_plus
+profession   annee                                                                                           
+dentistes    2030         0.16            0.89         0.22             0.89        -0.05               False
+             2040         0.57            0.45         0.65             0.48        -0.02                True
+             2050         0.66            0.35         0.73             0.39        -0.01                True
+infirmiers   2030         0.91            0.02         0.97             0.07         0.07                True
+             2040         0.92            0.01         0.97             0.04         0.07                True
+             2050         0.93            0.01         0.96             0.04         0.06                True
+kines        2030         0.54            0.41         0.63             0.48         0.06                True
+             2040         0.81            0.07         0.92             0.14         0.12                True
+             2050         0.83            0.05         0.93             0.10         0.12                True
+pharmaciens  2030         0.05            0.97         0.07             0.95        -0.02               False
+             2040         0.49            0.48         0.59             0.51         0.03                True
+             2050         0.65            0.31         0.74             0.34         0.04                True
+sages-femmes 2030         0.07            0.93         0.07             0.97        -0.01               False
+             2040         0.66            0.28         0.72             0.29         0.06                True
+             2050         0.76            0.16         0.82             0.17         0.08                True
+  profession         source  ST_2050  ST_lo  ST_hi                                                                                     moyen     axe            prix  fraction_reductible  gain
+   dentistes        filiere     0.21   0.18   0.24                       relier le vivier aux entrées (lien_formation) et le valider au banc   axe 2            ~1 h                  1.0  0.21
+   dentistes        fenetre     0.06   0.04   0.07                     trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon) axe 2/3 ~30 min machine                  1.0  0.06
+   dentistes    part_privee     0.08   0.07   0.09           lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)   axe 4          ~1–2 h                  0.5  0.04
+   dentistes        entrees     0.03   0.03   0.04                  trancher la variante d'entrées au banc N1, avec la fenêtre (interaction) axe 2/3 ~30 min machine                  1.0  0.03
+   dentistes flux_etrangers     0.04   0.03   0.04 flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2) axe 1/2            ~1 h                  0.5  0.02
+       kines        fenetre     0.04   0.03   0.05                     trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon) axe 2/3 ~30 min machine                  1.0  0.04
+       kines flux_etrangers     0.03   0.02   0.03 flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2) axe 1/2            ~1 h                  0.5  0.01
+ pharmaciens        filiere     0.09   0.08   0.11                       relier le vivier aux entrées (lien_formation) et le valider au banc   axe 2            ~1 h                  1.0  0.09
+ pharmaciens    part_privee     0.13   0.11   0.15           lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)   axe 4          ~1–2 h                  0.5  0.06
+ pharmaciens        fenetre     0.05   0.04   0.06                     trancher la fenêtre d'ajustement au banc N1 (erreur hors échantillon) axe 2/3 ~30 min machine                  1.0  0.05
+ pharmaciens        entrees     0.03   0.02   0.04                  trancher la variante d'entrées au banc N1, avec la fenêtre (interaction) axe 2/3 ~30 min machine                  1.0  0.03
+sages-femmes    part_privee     0.13   0.11   0.14           lire le secteur des salariés ambigus (FINESS, SAE, Annuaire Santé par personne)   axe 4          ~1–2 h                  0.5  0.06
+
+Leviers, ST à 2050 :
+ profession               dentistes  infirmiers  kines  pharmaciens  sages-femmes
+facteur                                                                         
+abandon                        NaN        0.03    NaN          NaN           NaN
+capacite                      0.13        0.43   0.22         0.38          0.40
+cumul_multiplicateur          0.00        0.00   0.00         0.00          0.00
+decalage_retraite             0.00        0.01   0.00         0.01          0.01
+etrangers                     0.27        0.00   0.25         0.01          0.03
+multiplicateur_precoces       0.01        0.01   0.03         0.02          0.02
+part_zones                    0.00        0.01   0.01          NaN          0.00
+quotas                        0.28        0.46   0.39         0.35          0.37

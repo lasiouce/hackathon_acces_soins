@@ -1,0 +1,27 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "decision",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "python",
+        "v2/prototype/server.py",
+        "8766"
+      ],
+      "port": 8766
+    },
+    {
+      "name": "decision-carte",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "python",
+        "v2/prototype-carte/server.py",
+        "8767"
+      ],
+      "port": 8767
+    }
+  ]
+}

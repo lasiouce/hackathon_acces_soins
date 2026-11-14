@@ -1,0 +1,278 @@
+{
+ "dentistes": {
+  "apparie": 44928,
+  "soumis": 51455,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7254141467262687,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7079849751605477,
+     "n": 16506
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.7156076495990129,
+     "n": 1621
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.6964112512124151,
+     "n": 1031
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6751824817518248,
+     "n": 274
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.7029702970297029,
+     "n": 101
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.735977134690961,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6773097826086957,
+     "n": 1472
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7442196531791907,
+     "n": 692
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6559139784946236,
+     "n": 279
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.632,
+     "n": 125
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7111111111111111,
+     "n": 90
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7350581300147372,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6384105960264901,
+     "n": 755
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7327935222672065,
+     "n": 1235
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.747021723896286,
+     "n": 1427
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6731843575418994,
+     "n": 358
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.6649484536082474,
+     "n": 194
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7411764705882353,
+     "n": 85
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "infirmiers": {
+  "apparie": 98435,
+  "soumis": 120575,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.8299467578898634,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.8512542173976823,
+     "n": 6817
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8825224071702945,
+     "n": 3124
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.8768115942028986,
+     "n": 414
+    },
+    {
+     "cls": ">200",
+     "couv": 0.943502824858757,
+     "n": 177
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 4
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.8507675530576294,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7105263157894737,
+     "n": 38
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.8578088578088578,
+     "n": 1716
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.8705688375927453,
+     "n": 3639
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8620410367170627,
+     "n": 3704
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7237687366167024,
+     "n": 467
+    }
+   ],
+   "N_min": 201.0,
+   "origines_N_min": 4
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.8444495203289173,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.8648079957916885,
+     "n": 1901
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8623533143038377,
+     "n": 3153
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7194492254733219,
+     "n": 581
+    }
+   ],
+   "N_min": 201.0,
+   "origines_N_min": 4
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "kines": {
+  "apparie": 68491,
+  "soumis": 87156,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.762725876933979,
+   "classes_hors_bande": [
+    {
+     "cls": "21–50",
+     "couv": 0.7360108303249098,
+     "n": 2216
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.7492537313432835,
+     "n": 335
+    }
+   ],
+   "N_min": 201.0,
+   "origines_N_min": 3
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7680548750612445,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7288801571709234,
+     "n": 509
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7462295081967213,
+     "n": 1525
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7454545454545455,
+     "n": 275
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7604222340994121,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.694980694980695,
+     "n": 259
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.7231121281464531,
+     "n": 437
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7445482866043613,
+     "n": 321
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ }
+}

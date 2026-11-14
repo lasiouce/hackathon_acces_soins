@@ -1,0 +1,749 @@
+\documentclass[11pt]{article}
+\input{../template/preamble}
+% Ajouts propres à cet article (le préambule commun n'est pas modifié).
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{babel}   % les deux-points et points-virgules actifs de babel-french cassent TikZ sans cela
+
+\title{Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats :\\
+dix protocoles pré-enregistrés, et ce qui n'y résiste pas}
+\author[1]{Équipe hackathon-santé}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Version du \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Un jumeau numérique de l'offre de soins projette l'effectif « libéral » (secteur privé) de cinq
+professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Les données courent de 2012 à
+2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit dix
+protocoles, gelés par empreinte SHA-256 avant tout calcul qui les concerne : prévision à dix ans au
+plus, cohérence à 2050, effet causal d'un levier, échelle communale, mondes simulés à vérité connue,
+prévision probabiliste, un addendum daté, une bande d'incertitude en $\sqrt h$ et le signe de deux boucles de rétroaction et le grain le plus fin dont la bande est calibrée. Nous les avons appliqués tels quels. La régulation de
+l'installation infirmière en zone sur-dotée a un effet estimé de $\num{-30.3}$\mesure{}~log-points
+au département et de $\num{-32.2}$\mesure{} au sein des bassins de vie. Le test de tendances
+parallèles fixé d'avance échoue pourtant deux fois ($p = \num{0.043}$\mesure{} puis
+\num{0.025}\mesure{}) : le levier n'est pas validé. Chez les kinés, la pente remonte après
+l'annulation de la régulation en 2014 (\num{3.1}\mesure{} points par an). Au backtest, la variante
+par défaut ne bat la tendance qu'à l'origine 2021 ; aux origines 2016 et 2018, c'est l'égalité. Dans
+des mondes simulés, le moteur est exact sans bruit mais biaisé par le bruit, qu'il lit comme des
+entrées. Les cas limites analytiques passent, mais la reproduction des projections DREES à 2050
+échoue de 14 à 25\mesure{}~\% : aucun chiffre 2050 n'est citable. Seule une bande dont la largeur
+croît comme $\sqrt h$ est calibrée (couverture de 49 et 76\mesure{}~\% pour 50 et 80~\% nominaux),
+résultat à confirmer sur les prévisions déposées pour 2027. Sous 51\mesure{} professionnels, une
+projection communale ne s'affiche pas sans sa bande. La boucle densité $\to$ installations n'a de signe
+établi pour aucune profession ; la boucle densité $\to$ départs avant 60~ans n'est confirmée que pour les
+infirmiers libéraux. Ces verdicts, obtenus sans retouche des
+protocoles, sont le résultat principal.
+\end{abstract}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; validation ; pré-enregistrement ;
+différence de différences ; zonage conventionnel ; jumeau numérique.
+
+\medskip
+\noindent\textbf{Convention.} Chaque nombre porte sa provenance : \mesure{}~mesuré (par nous, ou par
+la source citée à côté), \derive{}~dérivé (calculé à partir d'autres nombres), \suppose{}~supposé
+(un choix ou une hypothèse). Tous les nombres viennent des rapports de \texttt{v2/docs/lab/reports/}.
+
+\section{Introduction}
+Le projet construit un jumeau numérique de l'offre de soins. Il simule des politiques nationales,
+exprimées comme des réglages d'hyperparamètres sourcés, et en mesure l'effet à 2050 sur l'effectif
+« libéral » des sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et
+infirmiers. Ici, « libéral » désigne le secteur privé, lucratif ou non, tout employeur public
+exclu. Le décideur visé est un directeur général d'agence régionale de santé (ARS), qui veut voir la
+commune.
+
+Trois obstacles rendent la validation difficile. D'abord, les séries du répertoire RPPS couvrent
+2012--2026 \citep{drees2026demo}, soit au plus dix ans de recul pour un backtest. L'horizon de
+référence, 2050, est 24\derive{}~ans après la dernière donnée. Ensuite, un backtest ne valide pas un
+levier : il juge le modèle sur un passé où le paramètre du levier n'a pas bougé. Enfin, le premier
+backtest du projet (K1, version~1) a choisi la meilleure de trois variantes \emph{après} avoir vu les
+résultats, pour un écart de \num{0.1}\mesure{}~point de MAPE. C'est un biais de
+sélection\footnote{Rapport interne \texttt{docs/lab/reports/2026-11-13-k1-backtest.md}, section
+« What could make it wrong ».}.
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item Six protocoles de validation, un par niveau, chacun avec le test qui le falsifierait, gelés
+        par empreinte SHA-256 avant tout calcul (section~\ref{sec:methode}).
+  \item Une différence de différences sur le zonage infirmier, avec trois placebos et un test du
+        mécanisme du module de régulation du jumeau. Le résultat est rapporté tel quel : levier
+        non validé (section~\ref{sec:resultats}).
+  \item Une expérience de marche et d'arrêt chez les kinés, dont la prédiction pré-enregistrée tient.
+  \item Une étude de cas : les deux revues adversariales du jumeau, qui montrent comment des critères
+        d'acceptation peuvent passer par construction (section~\ref{sec:menaces}).
+  \item Un code de validation indépendant de l'intérieur du jumeau, applicable à tout estimateur
+        qui expose \texttt{fit} et \texttt{predict} (section~\ref{sec:repro}).
+\end{itemize}
+
+\section{Travaux existants}
+\paragraph{Projections nationales.} La DREES projette les dentistes, sages-femmes et pharmaciens
+jusqu'en 2050 avec un modèle par composantes (âge $\times$ sexe $\times$ mode d'exercice), sous un
+scénario tendanciel à comportements constants \citep{drees2021dd76}. Les infirmiers ont leur propre
+projection à 2050 \citep{er1319}. Ces travaux sont nationaux et ne publient pas leur propre erreur
+de prévision. Comparée à nos effectifs 2026, la projection de 2021 sous-estimait de 4 à
+7\derive{}~\% en six ans, après correction de l'écart de champ\footnote{Exploration interne
+\texttt{docs/lab/explorations/drees-projections-and-apl.md}.}. Nous l'utilisons comme cible de
+reproduction, pas comme vérité (niveau~2).
+
+\paragraph{Effet du zonage infirmier.} L'IRDES a estimé l'effet des restrictions à l'installation en
+zone sur-dense et des incitations en zone sous-dense, par différence de différences sur le zonage de
+2011 et des données 2006--2016 \citep{irdes270}. Il rapporte un écart de densité de $-\num{25.57}$\mesure{}
+infirmières libérales pour \num{100000}~habitants en zone sur-dense (relevé par la fiche
+\texttt{param-ide-regul-effet-densite} de l'axe~1). Notre niveau~3 reprend ce plan d'expérience sur
+une autre série (CartoSanté 2004--2025), une autre unité (le département $\times$ classe de zone) et
+une autre mesure (l'effectif en logarithme). Il y ajoute un pré-enregistrement et des placebos.
+
+\paragraph{Tendances parallèles.} Rambachan et Roth \citep{rambachan2023} proposent de borner les
+violations des tendances parallèles après traitement par celles observées avant. Leur restriction
+$\Delta^{RM}(\bar M)$ borne chaque variation annuelle de la violation après traitement par
+$\bar M$ fois la plus grande variation annuelle observée avant. Nous l'utilisons seulement à titre
+exploratoire, faute de l'avoir fixée d'avance.
+
+\paragraph{Mondes simulés.} L'observatoire d'un membre de l'équipe (travail interne, non publié)
+valide son modèle sur sept mondes simulés à vérité connue. Son auteur rapporte, sans que nous
+l'ayons reproduit,
+un biais de $+8$ à $+19$~\% sur l'effectif des 60~ans et plus et de $-\num{12.4}$~\% à 15~ans quand
+les entrées croissent de 3~\% par an. Notre niveau~5 reprend l'idée et transforme ces chiffres en
+prédictions.
+
+\paragraph{Prévision probabiliste.} Un score est propre si le prévisionniste maximise son score
+espéré en annonçant sa vraie croyance. Le CRPS est propre, et il généralise l'erreur absolue
+\citep{gneiting2007jasa}. La démarche recommandée consiste à maximiser la netteté des distributions
+prédictives sous contrainte de calibration. La calibration probabiliste revient à l'uniformité des
+valeurs PIT, condition nécessaire mais pas suffisante \citep{gneiting2007jrssb}. Pour un
+algorithme d'inférence, la calibration par simulation (SBC) vérifie que le rang du paramètre vrai
+parmi les tirages a posteriori est uniforme \citep{talts2018sbc}. Ces trois références fondent
+notre niveau~6. Il a été proposé par l'état de l'art de l'axe~2\footnote{Exploration interne
+\texttt{v2/docs/lab/explorations/2026-11-14-etat-de-lart-methodes.md}, \S~3.6.}.
+
+\section{Données}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}p{3.2cm}p{3.6cm}p{2.3cm}p{5.2cm}@{}}
+\toprule
+Jeu & Producteur, millésime & Grain & Contrôles \\
+\midrule
+RPPS \citep{drees2026demo} & DREES, publié le 2026-07-02 & dép.\ $\times$ âge $\times$ sexe $\times$ mode, 2012--2026 & kinés seulement à partir de 2017 (rupture de série) ; infirmiers libéraux jusqu'en 2023 \\
+CartoSanté \citep{cartosante2026} & FNPS/SNDS via ARS, extrait le 2026-11-13 & commune $\times$ tranche d'âge, IDE 2004--2025, MK 2005--2025, CD 2006--2025 & la somme des communes égale le département à 1 près dans \num{99.2}\mesure{}~\% des département-années ; Marseille absente \\
+Zonage \citep{atlasante2014zonage} & ARS / Atlasanté, métadonnées 2014 & commune, classes 1 à 5 et 9 & \num{36700}\mesure{} communes ; codes des anciennes régions, donc antérieur à 2016 \\
+DD76 \citep{drees2021dd76} & DREES, mars 2021 & national, 2030 / 2040 / 2050 & cible du niveau 2 \\
+\bottomrule
+\end{tabular}
+\caption{Données. Toutes sont ouvertes.}
+\end{table}
+
+\paragraph{Codage du zonage.} Les classes vont de 1 (très sous-dotée) à 5 (sur-dotée), 9 signifiant
+« non défini ». Nous avons vérifié le codage sans regarder les effectifs. Montpellier, Toulon, Brest
+et Marseille sont en classe~5 pour les infirmiers ; Paris, Saint-Denis et Lille en classe~3.
+
+\paragraph{Appariement.} Les communes CartoSanté (code géographique 2026) sont appariées au zonage
+(code d'environ 2012) par leur code. En 2008, \num{57366}\mesure{} infirmiers sur
+\num{57369}\mesure{} sont appariés. Le taux est le même pour les dentistes en 2008 et les kinés en
+2011 (plus de \num{99.9}\derive{}~\%).
+
+\section{Méthode}\label{sec:methode}
+\subsection{Règles communes}
+\begin{itemize}
+  \item \textbf{Gel.} Chaque protocole est un rapport écrit avant tout calcul. Une copie immuable est
+        rangée dans \texttt{v2/validation/preregistered/}, et son empreinte SHA-256 est inscrite au
+        journal des décisions (tableau~\ref{tab:sha}). Tout écart ultérieur est une nouvelle entrée
+        datée ; une analyse hors protocole est dite \emph{exploratoire}.
+  \item \textbf{Interface.} Un estimateur expose \texttt{fit(t, fenêtre, origine)} et
+        \texttt{predict(cible)}, qui rend une série indexée par (profession, territoire). Pour le
+        niveau~2, il expose aussi \texttt{trajectory(jusqu'à, scénario)}.
+  \item \textbf{Registre.} Une variante n'est confirmatoire que si elle est inscrite et datée
+        dans le fichier \texttt{registry.py}, avant son premier passage.
+\end{itemize}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Niveau & Gel & SHA-256 (12 car.) & État \\
+\midrule
+Plan & 2026-11-14 02:54 & \texttt{0108455d34aa} & --- \\
+N1 Prévision & 02:54 & \texttt{eb527ecb06a0} & lancé par l'axe 2 \\
+N2 Long terme & 02:54 & \texttt{bc5df3083cc5} & lancé (A affaiblie) \\
+N3 Leviers & 02:54 & \texttt{c37e36457f12} & \textbf{lancé} \\
+N4 Échelle fine & 02:54 & \texttt{91f897cc5071} & lancé \\
+N5 Mondes simulés & 03:46 & \texttt{1046545b17c0} & lancé \\
+N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & lancé \\
+N7 Addendum & 04:37 & \texttt{06ba47b91647} & lancé \\
+N8 Bande en $\sqrt h$ & 08:06 & \texttt{97ef367fd221} & lancé \\
+N9 Boucles & 08:10 & \texttt{96a39bc087bb} & lancé \\
+N10 Grain et couverture & 08:31 & \texttt{d86d27c7a750} & lancé \\
+\bottomrule
+\end{tabular}
+\caption{Protocoles gelés. N5 à N10 ont été ajoutés après le lancement de N3, mais avant tout
+calcul qui les concerne. Ils s'ajoutent aux autres sans les modifier.}\label{tab:sha}
+\end{table}
+
+\subsection{Niveau 1 --- prévision à dix ans au plus}
+Les origines sont glissantes. La fenêtre d'ajustement s'élargit à partir de 2012 (kinés : 2017) et
+compte au moins 5\suppose{}~ans. Les horizons sont $h \in \{1, 3, 5, 8, 10\}$. La \textbf{métrique
+principale}, unique, est la MAPE par département à $h = 5$, sur les départements d'au moins
+30\suppose{}~professionnels à l'origine. Elle est moyennée à poids égal sur les cellules
+profession $\times$ origine. Soit $\Delta$ l'écart de MAPE entre le candidat et la meilleure des deux
+références naïves (persistance, tendance linéaire) :
+\[
+  \Delta = \mathrm{MAPE}(\text{candidat}) - \min\bigl(\mathrm{MAPE}(\text{persistance}),
+  \mathrm{MAPE}(\text{tendance})\bigr).
+\]
+Le candidat \emph{gagne} si la borne haute de l'IC à 95~\% de $\Delta$ est négative. L'IC vient d'un
+bootstrap des départements : 2\,000 tirages, graine \texttt{20261114}, mêmes départements pour
+toutes les cellules. La variante par défaut est le stock-flux à taux locaux. Les prévisions de
+l'origine 2026 vers 2027, 2028 et 2030 sont \emph{déposées}, avec leur empreinte, avant la
+publication du RPPS 2027. C'est le seul test qu'aucune analyse antérieure n'a pu voir.
+
+\subsection{Niveau 2 --- long terme (2050)}
+\paragraph{Reproduction.} On impose au moteur les hypothèses du tendanciel DD76 : origine 2020, taux
+moyens 2016--2020, entrées tenues au niveau 2016--2020. On compare ensuite des ratios
+$g(t) = N(t)/N(2020)$, ce qui neutralise l'écart de champ (+0,8 à +2,5\mesure{}~\% en 2020). La
+tolérance est de $\pm 2$\suppose{}~\% en 2030 et de $\pm 3$\suppose{}~\% en 2040 et 2050. On
+contrôle aussi la forme : un creux pour les pharmaciens, un plateau pour les sages-femmes. La
+tolérance est un choix. Elle reste au moins trois fois plus petite que l'effet publié d'un quota
+de $\pm 20$~\% en 2050 : $\pm 9$ (dentistes), $\pm 12$ (sages-femmes) et $\pm 13$\mesure{}~\%
+(pharmaciens) \citep[p.~3 et 58--59]{drees2021dd76}. Le protocole gelé citait « $\pm 12$ à 13~\% » ;
+la correction, relevée par l'audit des sources de l'axe~1, ne change ni la tolérance ni le verdict.
+
+\paragraph{Cas limites.}
+\begin{itemize}
+  \item \textbf{L1, $h \to 0$} : $\hat N(o) = N(o)$ à $10^{-9}$ près en écart relatif.
+  \item \textbf{L2, $h \to \infty$, scénario stationnaire} : l'effectif tend vers
+        $N^\star = Q \cdot C$, avec $C$ le nombre de personnes-années d'une cohorte d'un entrant. La
+        tolérance est de 1\suppose{}~\%, et deux états initiaux doivent donner le même $N(o+200)$.
+  \item \textbf{L3, $h < L$} : un choc de quota n'a aucun effet avant $t_0 + L_p$.
+  \item \textbf{L4, conservation} : déjà testée par l'axe~0.
+\end{itemize}
+
+\subsection{Niveau 3 --- effet d'un levier par expérience naturelle}
+\paragraph{Expérience E1 (infirmiers).} L'avenant~1 à la convention infirmière (2009) n'autorise le
+conventionnement en zone « sur-dotée » qu'en remplacement d'un départ. Un nouveau zonage s'applique
+à partir de 2012 (avenant~3, arrêté du 25 novembre 2011, et arrêté du 21 décembre 2011 sur la
+méthode)\footnote{Dates relevées dans des sources secondaires (questions écrites à l'Assemblée
+nationale, presse professionnelle) le 2026-11-14 ; textes primaires non relus.}. La cellule est un
+département $d$ $\times$ une classe de zone $z$. On note $Y_{d,z,t}$ la somme des communes appariées
+et on pose
+\[
+  D_{d,t} = \log Y_{d,5,t} - \log Y_{d,3,t}.
+\]
+Un département entre s'il a au moins 10\suppose{}~infirmiers dans chaque cellule en 2008. Avec deux
+classes et des effets fixes département $\times$ année, la différence de différences se réduit à des
+moyennes entre départements :
+\[
+  \beta_k = \overline{D_{\cdot,k} - D_{\cdot,2008}}, \qquad
+  \beta = \overline{\textstyle\frac18\sum_{t=2012}^{2019} D_{\cdot,t}
+           - \frac15\sum_{t=2004}^{2008} D_{\cdot,t}}.
+\]
+La période de transition, 2009--2011, est exclue : elle relève d'un zonage de première génération
+dont nous n'avons pas la carte. L'estimation s'arrête en 2019, avant le rezonage issu de
+l'avenant~6 et la crise sanitaire. Les grappes sont les départements, et l'inférence suit une loi de
+Student à $G-1$ degrés de liberté. Cinq tests sont fixés dans cet ordre :
+\begin{itemize}
+  \item \textbf{T1, tendances parallèles} : $T^2$ de Hotelling sur $(\beta_{2004},\dots,\beta_{2007})$,
+        à passer si $p \ge \num{0.10}$\suppose{} ;
+  \item \textbf{T2, placebo de date} : un faux traitement en 2006 ;
+  \item \textbf{T3, placebo de profession} : les dentistes, dont l'installation n'était pas
+        régulée\suppose{} ;
+  \item \textbf{T4, placebo de retour à la moyenne} : la zone~4 (très dotée, non régulée) contre la
+        zone~3 ;
+  \item \textbf{T5, effet}.
+\end{itemize}
+Un placebo échoue s'il a le même signe que $\beta$ et au moins la moitié\suppose{} de son ampleur.
+
+\paragraph{Test du mécanisme.} Le module \texttt{regulation} du jumeau impose, en zone régulée,
+entrées $\le$ sorties. Un plafond parfaitement contraignant tient la zone~5 à son niveau de 2008,
+tandis que le contre-factuel croît comme la zone~3 du même département. On compare l'effet que
+prédit le module à l'effet observé :
+\[
+  \beta_{\text{mod}} = \overline{\min\bigl(0, -(\log Y_{\cdot,3,t} - \log Y_{\cdot,3,2008})\bigr)},
+  \qquad \theta = \beta_{\text{obs}} / \beta_{\text{mod}} .
+\]
+Si l'IC de $\theta$ contient 1, le plafond strict survit. S'il tombe dans $]0, 1[$, le module devient
+un plafond qui fuit, de paramètre $\theta$. Cette lecture n'est permise que si T1 à T4 passent.
+
+\paragraph{Expérience E2 (kinés).} L'avenant~3 des kinés (arrêté du 10 janvier 2012) instaure la même
+régulation. Le Conseil d'État l'annule le 17 mars 2014, pour incompétence : une telle limite relève
+de la loi \citep{ce2014mk}. La prédiction pré-enregistrée est double. La pente relative de la zone~5
+est négative pendant la régulation (2011--2014). Elle remonte ensuite (2014--2017).
+
+\subsection{Niveau 4 --- échelle fine}
+On mesure l'erreur à 5~ans par classe de taille de commune ($1$--$2$, \dots, $>200$), sur les
+origines 2014, 2016, 2018 et 2020. L'estimateur par défaut multiplie la projection départementale
+par la part communale observée à l'origine. On note $N_{\min}$ la plus petite classe à partir de
+laquelle le 80\textsuperscript{e} centile de l'erreur absolue est d'au plus 25\suppose{}~\%. Sous
+$N_{\min}$, aucune projection communale n'est affichée sans sa bande. Le bruit de Poisson seul
+donne $1{,}28/\sqrt{N} \le 0{,}25$, soit $N \ge 26$\derive{}.
+
+\subsection{Niveau 5 --- mondes simulés à vérité connue}
+Le générateur simule 30 départements en âges simples, agrégés en tranches comme le RPPS, avec
+20 réplications. Il produit sept mondes : équilibre, pyramide non stationnaire, bruit, cohorte
+nombreuse de 55--60 ans, entrées $+3$~\% par an, saut des entrées, report de l'âge de départ.
+Quand un monde respecte les hypothèses de l'estimateur, l'erreur nationale doit rester sous
+1\suppose{}~\% à 15~ans. Quand il les viole, le signe du biais est prédit d'avance, et doit être
+observé dans au moins 16 réplications sur 20. Le générateur ne partage aucun code avec les
+estimateurs (section~\ref{sec:menaces}).
+
+\subsection{Niveau 6 --- prévision probabiliste}
+N1 juge un point. N6 juge une distribution prédictive : celle que donne l'estimateur s'il rend des
+tirages, sinon une distribution empirique construite de la même façon pour tous les estimateurs.
+On multiplie la prédiction par $\exp(e)$, où $e$ est tiré parmi les erreurs logarithmiques passées
+du même estimateur, de la même profession et au même horizon. Seules comptent les origines dont la
+cible ne dépasse pas l'origine courante, avec au moins 20\suppose{} erreurs.
+\begin{itemize}
+  \item \textbf{Score} : $\mathrm{CRPS}(F, y) = \mathbb{E}|X - y| - \tfrac12\,\mathbb{E}|X - X'|$,
+        la forme par échantillon de \citet[éq.~21, au signe près]{gneiting2007jasa}, calculé sur
+        $\log N$, une transformation de la variable qui garde le score propre. Le protocole
+        justifiait ce choix par l'impropreté d'un score divisé par $y$ ; cette propriété ne vient pas
+        de \citet{gneiting2007jasa}, et sa source n'est pas vérifiée ici (question ouverte). Le critère est celui de N1 : bootstrap des départements, borne haute de $\Delta < 0$.
+  \item \textbf{Calibration} : la couverture des intervalles centraux doit être de
+        $[75 ; 85]$\suppose{}~\% à 80~\% et de $[44 ; 56]$\suppose{}~\% à 50~\%. On juge la
+        couverture plutôt qu'un $\chi^2$ sur l'histogramme PIT, parce que les départements d'une
+        même origine ne sont pas indépendants. Une bande qui échoue est affichée avec sa couverture
+        mesurée, jamais sous son niveau nominal.
+  \item \textbf{SBC} : 200 mondes de N5 (monde M3), $L = 99$ tirages a posteriori ou de bootstrap
+        paramétrique. On teste l'uniformité des rangs en 20 classes par un $\chi^2$, avec
+        $p \ge \num{0.01}$\suppose{} et une correction de Bonferroni.
+\end{itemize}
+Conséquence dérivée de la grille : à $h = 5$, seule l'origine 2021 a des erreurs passées (celles de
+l'origine 2016). Les kinés (série depuis 2017) et les infirmiers libéraux (série jusqu'en 2023) en
+sont exclus\derive{}. N6 à $h = 5$ ne jugera donc d'abord que trois professions sur une origine.
+
+\subsection{Addendum N7}
+Gelé à 04:37, après le résultat de N3, il ajoute quatre volets.
+\begin{itemize}
+  \item \textbf{A.} La différence de différences de N3, mais au sein des bassins de vie 2022 (cellule
+        bassin $\times$ zone, $Y \ge 5$\suppose{} en 2008, grappes départementales, variance CR1). Mêmes
+        tests et seuils ; c'est un \emph{second} test du levier, déclaré comme tel.
+  \item \textbf{B.} Le verdict de N1 origine par origine (2016, 2018, 2021), pour tous les estimateurs
+        inscrits ; « stable » si le signe de $\Delta$ est le même aux trois origines.
+  \item \textbf{C.} Une bande « pente d'erreur » à armes égales :
+        $\log N \sim \mathcal N(\log \hat N, (s h)^2)$, $s$ étant la moyenne quadratique des erreurs
+        logarithmiques passées divisées par leur horizon ; CRPS gaussien.
+  \item \textbf{D.} Une cible ajoutée, l'ER~1319 pour les infirmiers libéraux \citep{er1319}, et la
+        réconciliation des dentistes à 2050 par valeurs de Shapley sur trois facteurs (périmètre,
+        origine et fenêtre, niveau des entrées), avec un résidu toléré d'au plus 25\suppose{}~\%.
+\end{itemize}
+
+\subsection{N8 : bande en $\sqrt h$}
+Gelé à 08:06, après avoir vu que la bande linéaire en $h$ était trop large, N8 teste
+$\log N \sim \mathcal N(\log \hat N, s^2 h)$, avec $s^2$ la moyenne de $e^2/h'$ sur les erreurs passées :
+la variance d'une marche aléatoire. Origines, CRPS et seuils de couverture sont ceux de N6 et N7-C.
+L'hypothèse a été suggérée par les données et elle est testée sur les mêmes origines : seul le dépôt
+2027 la confirmera.
+
+\section{Résultats}\label{sec:resultats}
+\subsection{Niveau 3, E1 : régulation infirmière}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccl@{}}
+\toprule
+Test & Estimation (log-points $\times 100$) & Seuil & Verdict \\
+\midrule
+T1 tendances parallèles ($G = 59$) & $F(4, 55) = \num{2.65}$\mesure{}, $p = \num{0.043}$\mesure{} & $p \ge \num{0.10}$ & \textbf{échoue} \\
+T2 placebo de date 2006 & $+\num{1.4}$\mesure{} $[\num{-0.7} ; \num{3.4}]$ & IC contient 0 & passe \\
+T3 placebo dentistes ($G = 43$) & $+\num{1.7}$\mesure{} $[\num{-1.3} ; \num{4.7}]$ & pas même signe & passe \\
+T4 placebo zone~4 ($G = 42$) & $\num{-4.2}$\mesure{} $[\num{-9.6} ; \num{1.3}]$ & $< \frac12|\beta|$ & passe \\
+\textbf{T5 effet} & $\mathbf{\num{-30.3}}$\mesure{} $[\num{-34.1} ; \num{-26.4}]$ & IC $< 0$ & détecté \\
+\midrule
+Pondéré par l'effectif 2008 & $\num{-37.9}$\mesure{} $[\num{-48.9} ; \num{-26.9}]$ & --- & non décisif \\
+Transition 2009--2011 & $\num{-1.1}$\mesure{} $[\num{-3.9} ; \num{1.8}]$ & --- & rapporté \\
+Zone~1 (incitations) contre zone~3 & $+\num{11.3}$\mesure{} $[\num{5.9} ; \num{16.6}]$ & --- & rapporté \\
+\bottomrule
+\end{tabular}
+\caption{E1, infirmiers, zone sur-dotée (5) contre intermédiaire (3). IC à 95~\%. Source :
+\texttt{v2/validation/out/did\_results.json}.}\label{tab:e1}
+\end{table}
+
+\textbf{Verdict du protocole : design invalide, levier non validé.} T1 échoue. Le paramètre
+$\theta$ n'est donc pas interprété au sens du protocole. Pour mémoire, il vaut
+$\num{0.80}$\mesure{} $[\num{0.74} ; \num{0.87}]$ ($\beta_{\text{obs}} = \num{-32.4}$\mesure{},
+$\beta_{\text{mod}} = \num{-40.5}$\mesure{}).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\linewidth, height=6.5cm, xlabel={Année}, ylabel={$\beta_k$ (log-points $\times 100$)},
+  xmin=2003.5, xmax=2019.5, ymin=-56, ymax=8, grid=major, legend pos=south west,
+  xticklabel style={/pgf/number format/1000 sep={}}, legend style={font=\small}]
+\addplot+[mark=*, thick] coordinates {(2004,-3.0) (2005,-2.8) (2006,-2.2) (2007,-2.5) (2008,0) (2009,-1.1)
+  (2010,-2.9) (2011,-5.8) (2012,-10.2) (2013,-18.6) (2014,-24.2) (2015,-31.9) (2016,-36.6) (2017,-41.9)
+  (2018,-45.6) (2019,-50.1)};
+\addlegendentry{IDE, zone 5 contre 3}
+\addplot+[mark=square*, dashed] coordinates {(2004,-3.6) (2005,-3.4) (2006,1.1) (2007,1.0) (2008,0) (2009,-1.0)
+  (2010,0.2) (2011,-0.4) (2012,-1.6) (2013,-2.7) (2014,-3.9) (2015,-4.6) (2016,-5.2) (2017,-7.3) (2018,-7.3)
+  (2019,-8.7)};
+\addlegendentry{IDE, zone 4 contre 3 (placebo)}
+\addplot+[mark=triangle*, dotted] coordinates {(2006,0.0) (2007,-0.1) (2008,0) (2009,2.1) (2010,2.3) (2011,2.4)
+  (2012,1.8) (2013,0.7) (2014,1.7) (2015,1.0) (2016,1.6) (2017,1.9) (2018,1.7) (2019,3.1)};
+\addlegendentry{Dentistes, zone IDE 5 contre 3 (placebo)}
+\draw[gray] (axis cs:2008.5,-56) -- (axis cs:2008.5,8);
+\draw[gray] (axis cs:2011.5,-56) -- (axis cs:2011.5,8);
+\end{axis}
+\end{tikzpicture}
+\caption{Étude d'événement E1, référence 2008\mesure{}. Les traits verticaux encadrent la transition
+2009--2011. Les quatre années d'avant sont au même niveau entre elles ($-2{,}2$ à $-3{,}0$) : c'est
+2008 qui s'en écarte, ce que T1 rejette. Source : \texttt{did\_e1\_event\_study*.csv}.}
+\label{fig:es}
+\end{figure}
+
+\paragraph{Lecture.} L'écart entre les années 2004--2007 est faible : de $-\num{2.2}$ à
+$-\num{3.0}$\mesure{} points par rapport à 2008. Il prend la forme d'un saut en 2008, pas d'une
+tendance. Après 2011, l'écart se creuse de 5 à 8\mesure{}~points par an, sans plateau jusqu'en 2019
+(figure~\ref{fig:es}). Ce profil est compatible avec une régulation qui n'agit qu'au flux des
+entrées, mais le protocole ne permet pas de conclure.
+
+\paragraph{Analyses exploratoires (écrites après avoir vu T1).} Ces analyses ne valident rien.
+\begin{itemize}
+  \item En prolongeant la tendance linéaire des années 2004--2008 (\num{+0.64}\mesure{}~point par
+        an), l'effet devient $\num{-36.4}$\derive{}. Avant 2009, la zone sur-dotée croissait plus vite :
+        la violation joue contre l'effet.
+  \item Avec la restriction $\Delta^{RM}(\bar M = 1)$ \citep{rambachan2023}, chaque variation
+        annuelle de la violation après 2008 est bornée par la plus grande variation annuelle d'avant,
+        \num{2.5}\mesure{}~points. La violation en $t$ vaut donc au plus \num{2.5}\,$(t-2008)$,
+        soit un biais d'au plus \num{18.6}\derive{}~points sur la moyenne 2012--2019. En élargissant l'IC de ce biais, on obtient
+        $[\num{-52.7} ; \num{-7.9}]$\derive{}. Le signe tient. C'est une approximation (borne
+        ajoutée à l'IC), et non l'inférence uniformément valide des auteurs.
+  \item L'IRDES trouve un effet de même signe sur une autre série et une autre période
+        \citep{irdes270}.
+\end{itemize}
+
+\subsection{Niveau 3, E2 : marche et arrêt chez les kinés}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccl@{}}
+\toprule
+Test & Estimation & Prédiction & Verdict \\
+\midrule
+Tendances parallèles 2005--2010 ($G = 26$) & $F(6, 20) = \num{1.47}$\mesure{}, $p = \num{0.24}$\mesure{} & $p \ge \num{0.10}$ & passe \\
+Pente 2011--2014 (pts/an) & $\num{-2.4}$\mesure{} $[\num{-3.5} ; \num{-1.2}]$ & $< 0$ & confirmée \\
+Pente 2014--2017 (pts/an) & $+\num{0.7}$\mesure{} $[\num{-0.7} ; \num{2.1}]$ & --- & --- \\
+\textbf{Écart des pentes} ($G = 29$) & $\mathbf{+\num{3.1}}$\mesure{} $[\num{1.1} ; \num{5.1}]$ & $> 0$ & \textbf{confirmée} \\
+\bottomrule
+\end{tabular}
+\caption{E2, kinés, zone sur-dotée contre intermédiaire, référence 2011.}\label{tab:e2}
+\end{table}
+La zone sur-dotée décroche de 7\mesure{}~points pendant les deux ans et demi de régulation (2014 :
+$\num{-7.0}$\mesure{}). Après l'annulation, elle cesse de décrocher (2017 : $\num{-4.4}$\mesure{}).
+C'est la première prédiction pré-enregistrée sur un levier qui tient. Ce n'est pas encore une
+validation du module, car $\theta$ n'a pas été pré-enregistré pour E2.
+
+\subsection{Niveau 1 : premier passage confirmatoire}
+La session de l'axe~2 a lancé le banc N1 sur le périmètre privé, après avoir inscrit ses
+variantes\footnote{Rapport interne \texttt{v2/docs/lab/reports/2026-11-14-axe2-methodes.md}.}. La
+variante par défaut obtient une MAPE de \num{8.68}\mesure{}~\%, contre \num{9.30}\mesure{}~\% pour la
+tendance et \num{9.92}\mesure{}~\% pour la persistance. Elle gagne donc :
+$\Delta = \num{-0.63}$\mesure{} $[\num{-0.97} ; \num{-0.27}]$. Le seul gain reproduit sur les deux
+périmètres est le rétrécissement hiérarchique : $-\num{0.11}$\mesure{} $[\num{-0.21} ;
+\num{-0.02}]$. La clause d'instabilité du protocole joue pour les dentistes : la variante par défaut
+ne bat la naïve que sur 2\mesure{} origines sur 6. Aucune prévision n'est encore déposée pour 2027.
+
+\subsection{Niveau 3, second test : au sein des bassins de vie (N7-A)}
+Sur 135\mesure{} bassins de vie et 60\mesure{} départements, l'effet est de
+$\num{-32.2}$\mesure{} $[\num{-37.2} ; \num{-27.3}]$. Le test de tendances échoue de nouveau
+($F(4, 56) = \num{3.02}$, $p = \num{0.025}$\mesure{}), ainsi que le placebo de date ($+\num{2.6}$\mesure{}
+$[\num{0.1} ; \num{5.1}]$). Les placebos dentistes ($+\num{0.6}$\mesure{}) et zone~4
+($\num{-10.3}$\mesure{}, sous la moitié de l'effet) passent. Avant 2008, la zone sur-dotée gagnait
+environ 1\mesure{}~point par an sur sa voisine intermédiaire ; après 2011, elle décroche de 6 à
+8\mesure{}~points par an. \textbf{Design invalide : le levier IDE reste non validé.} Chez les kinés,
+l'écart des pentes est de $+\num{3.3}$\mesure{} $[\num{0.8} ; \num{5.8}]$ points par an, mais le test de
+tendances échoue à ce grain ($p = \num{0.059}$\mesure{}).
+
+\subsection{Niveau 1 : stabilité entre origines (N7-B)}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Estimateur (périmètre privé) & 2016 & 2018 & 2021 \\
+\midrule
+Variante par défaut & $+\num{0.10}$ égalité & $\num{-0.22}$ égalité & $\num{-1.22}$ gagne \\
+Rétrécissement hiérarchique & $\num{-0.16}$ égalité & $\num{-0.43}$ égalité & $\num{-1.08}$ gagne \\
+APC des sorties & $\num{-0.06}$ égalité & $\num{-0.16}$ égalité & $\num{-0.96}$ gagne \\
+Rétention 60+ en tendance & $+\num{1.05}$ perd & $+\num{0.17}$ égalité & $\num{-1.25}$ gagne \\
+\bottomrule
+\end{tabular}
+\caption{$\Delta$ MAPE (points) contre la meilleure naïve, $h = 5$, par origine\mesure{}. Extrait.}
+\end{table}
+Au périmètre privé, la victoire poolée de la variante par défaut repose sur l'origine 2021. Le
+classement des estimateurs change presque complètement d'une origine à l'autre (τ de Kendall de
+\num{0.07} à \num{0.29}\mesure{}). Sur l'ancien périmètre, la variante par défaut garde le même signe
+aux trois origines.
+
+\subsection{Niveau 5 : mondes simulés}
+Le moteur est exact dans le monde à l'équilibre (erreur $< 10^{-13}$\mesure{}~\%). Il échoue dans deux
+mondes :
+\begin{itemize}
+  \item \textbf{monde bruité} : 9 réplications sur 20 sous 1~\% d'erreur nationale à 15~ans, et une
+        MAPE départementale de \num{10.2}\mesure{}~\% contre un plancher de Poisson de
+        \num{5.7}\derive{}~\% ;
+  \item \textbf{cohorte nombreuse} : les 60~ans et plus sont \emph{sous}-estimés de
+        \num{34.5}\mesure{}~\% à 5~ans, contre la prédiction reprise de l'observatoire.
+\end{itemize}
+Les mondes à entrées croissantes, à saut d'entrées et à report du départ donnent le signe prédit
+(20 réplications sur 20). Avec des entrées en hausse de 3~\% par an, l'ampleur atteint
+$\num{-19.8}$\mesure{}~\%, au-delà de la tolérance autour de $-\num{12.4}$~\%. Une même cause explique
+les deux échecs : la règle « rétention plafonnée à 1, excédent compté comme entrée » coupe le bruit
+vers le bas et transforme en entrées tout excédent, y compris celui d'une cohorte qui passe.
+
+\subsection{Niveau 6 et N7-C : prévision probabiliste}
+Avec la bande empirique au même horizon (origine 2021 seulement), la persistance a le meilleur CRPS
+(\num{0.0633}\mesure{}) ; la variante par défaut perd ($+\num{0.0098}$ $[\num{0.0037} ; \num{0.0161}]$).
+Toutes les bandes sont trop étroites : l'intervalle « 80~\% » couvre de 56 à 70\mesure{}~\% des cas.
+Avec la bande « pente d'erreur » (origines 2017--2021), tous les modèles battent la tendance
+($\Delta \approx -\num{0.006}$\mesure{}), mais la bande est trop large : l'intervalle « 80~\% »
+couvre environ 96\mesure{}~\%. Les tirages propres de l'APC (100 par cellule, moins que les 200
+prévus par N6) font jeu égal avec la persistance ($+\num{0.0014}$ $[\num{-0.0033} ; \num{0.0068}]$),
+mais leur intervalle « 80~\% » ne couvre que 54\mesure{}~\% des cas. Aucune de ces bandes n'est donc publiable sous son niveau nominal. La SBC passe
+pour les cinq taux de rétention ($p$ de \num{0.14} à \num{0.94}\mesure{}) et échoue pour les entrées
+($p \approx 3 \cdot 10^{-46}$\mesure{}, rang moyen \num{0.22}) : le bruit biaise les entrées vers le
+haut, comme dans le monde bruité.
+
+\subsection{Niveau 2 : DREES à 2050 (N2-A, N7-D)}
+Faute d'une série ouverte des quotas 2016--2020, la reproduction de DD76 a été lancée avec des
+entrées plates (moyenne 2016--2020), version affaiblie du protocole. Elle échoue : en 2050, le ratio
+$N(t)/N(2020)$ est inférieur de \num{14.1} (dentistes), \num{15.0} (pharmaciens) et \num{17.4}\mesure{}~\%
+(sages-femmes) à celui de DD76 ; les formes (creux, plateau) sont respectées. Une variante à entrées
+par la filière dépasse DD76 de 14 à 15\mesure{}~\% (analyse exploratoire, qui utilise des inscrits
+connus après 2020). L'ER~1319 part du même effectif 2021 que nous (\num{98631}\mesure{}) ; en 2050 nous
+sommes \num{25.2}\mesure{}~\% en dessous, mais l'observé 2023 est déjà \num{5.9}\mesure{}~\% sous
+l'ER~1319. Pour les dentistes, notre cible à entrées récentes (\num{81491}\mesure{} en 2050) dépasse
+DD76 (\num{61800}) de \num{19691}. Les valeurs de Shapley attribuent \num{13056}\mesure{} à l'origine et
+à la fenêtre, \num{11658}\mesure{} aux entrées récentes et $-\num{1877}$\mesure{} au périmètre ; le résidu
+(16\derive{}~\%) passe le seuil. La variante par défaut, à entrées moyennes, donne
+\num{61964}\mesure{}, proche de DD76.
+
+\subsection{Niveau 2 : cas limites (N2-B)}
+Sur le jumeau par défaut, au périmètre privé, les trois cas limites passent pour les cinq
+professions. À l'origine, l'état reproduit l'observé (test faible, puisque l'état en est construit).
+À 200 ans, l'effectif égale $Q \cdot C$ à $-\num{0.05}$ à $-\num{0.46}$\mesure{}~\% près ; l'écart vient
+du plancher à zéro. Un état initial divisé par deux ne change rien. Une hausse de capacité de
+formation n'agit qu'à $o + L_p + 1$\mesure{}, comme prévu.
+
+\subsection{Niveau 4 : échelle fine}
+Avec l'estimateur par défaut (total départemental de la cible, oracle, $\times$ part communale tenue),
+le 80\textsuperscript{e} centile de l'erreur à 5~ans passe de 40--58\mesure{}~\% pour 3 à 5
+professionnels à 4--15\mesure{}~\% au-delà de 200. La règle fixée d'avance donne
+$N_{\min} = 51$\mesure{}, imposé par les kinés aux origines 2018 et 2020 ; il serait de 21 pour les
+dentistes et les infirmiers seuls. La prédiction dérivée ($N_{\min} \ge 16$) tient. La bande
+P10--P90 par classe est calibrée dans 14 classes sur 21\mesure{}. L'oracle retire l'erreur
+départementale : l'erreur réelle est plus grande.
+
+\subsection{N8 et dépôt 2027}
+Avec la bande en $\sqrt h$, la variante par défaut couvre \num{49.2}\mesure{}~\% des cas à 50~\% et
+\num{75.9}\mesure{}~\% à 80~\% : elle est calibrée, et elle bat la tendance en CRPS
+($\num{-0.0045}$ $[\num{-0.0070} ; \num{-0.0020}]$\mesure{}). Le PIT reste chargé dans sa première
+classe : les valeurs réelles sous la bande sont plus fréquentes que prévu. Les prévisions de
+l'origine 2026 pour 2027, 2028 et 2030, avec leurs quantiles, sont déposées (empreinte
+\texttt{ca036374d216}) et seront jugées à la publication du RPPS 2027.
+
+\subsection{N9 : signe des boucles de rétroaction}
+Avant qu'une boucle soit modélisée, N9 (gelé à 08:10, empreinte \texttt{96a39bc087bb}) teste son signe.
+\begin{itemize}
+  \item \textbf{B2, densité $\to$ installations nettes des moins de 40~ans}, par bassin de vie $\times$
+        année (2014--2025). Le résultat est le solde d'installations pour \num{100000} habitants ; le
+        régresseur est $\log(1 + D)$, densité décalée de deux ans. Contrôles : population, parts des
+        moins de 15 et des plus de 65~ans, zonages 2012 et actuel ; effets fixes département et
+        année. Signe attendu : $\beta < 0$.
+  \item \textbf{B1, densité $\to$ rétention des 45--54~ans à 5~ans}, par département $\times$ année
+        (RPPS, libéral et mixte). Contrôles : population, effectif de base ; effets fixes région et
+        année. Signe attendu : $\beta > 0$.
+  \item Pour les deux, variance robuste par département et placebo « densité des autres
+        professions » : si le placebo a le même signe et au moins la moitié de l'effet, le verdict
+        devient « non attribuable ».
+\end{itemize}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}llccl@{}}
+\toprule
+Boucle & Profession & $\beta$ [IC 95~\%] & Placebo & Verdict \\
+\midrule
+B2 & Infirmiers & $\num{-1.52}$ $[\num{-4.05} ; \num{1.01}]$ & $\num{-1.72}$ & nul \\
+B2 & Kinés & $\num{-1.66}$ $[\num{-3.43} ; \num{0.11}]$ & $\num{-2.76}$ & nul \\
+B2 & Dentistes & $+\num{0.17}$ $[\num{-0.05} ; \num{0.39}]$ & $\num{-0.45}$ & nul \\
+B1 & Sages-femmes ($G = 15$) & $\num{-0.24}$ $[\num{-0.48} ; \num{0.01}]$ & $+\num{0.02}$ & nul \\
+B1 & Dentistes & $+\num{0.04}$ $[\num{-0.03} ; \num{0.10}]$ & $+\num{0.05}$ & nul \\
+B1 & Pharmaciens & $\num{-0.01}$ $[\num{-0.14} ; \num{0.11}]$ & $+\num{0.05}$ & nul \\
+B1 & Kinés & $\num{-0.02}$ $[\num{-0.08} ; \num{0.03}]$ & $+\num{0.05}$ & nul \\
+B1 & Infirmiers libéraux & $+\num{0.11}$ $[\num{0.05} ; \num{0.18}]$ & $\num{-0.00}$ & \textbf{confirmé} \\
+\bottomrule
+\end{tabular}
+\caption{N9. B2 : installations nettes pour \num{100000} habitants par unité de $\log(1+D)$ (moyenne :
+6,0 pour les IDE, 4,4 pour les kinés, 1,7 pour les dentistes) ; 20\,460 bassins de vie $\times$
+années, 96 départements. B1 : $\log R$ par unité de $\log D$.\mesure{}}\label{tab:n9}
+\end{table}
+
+\textbf{B2 n'est confirmé pour aucune profession.} Pour les IDE et les kinés, le point estimé a le
+signe attendu, mais l'intervalle contient zéro. La densité des \emph{autres} professions pèse
+autant ou plus : ce qui se voit ressemble à une attractivité générale du territoire, pas à une
+saturation propre à la profession. Avec une densité décalée d'un an seulement, l'effet double
+($\num{-2.3}$ et $\num{-2.7}$\mesure{}) : c'est le retour à la moyenne mécanique que le décalage de deux
+ans devait écarter. \textbf{B1 est confirmé pour les seuls infirmiers libéraux} : une densité deux fois
+plus forte va avec une rétention à 5~ans des 45--54~ans plus haute d'environ
+8\derive{}~\% ($2^{0.113} - 1$). Ces relations restent écologiques, mesurées sur des soldes, et la
+densité est elle-même le produit des installations passées : elles ne sont pas causales.
+
+\subsection{N10 : le grain le plus fin dont la bande est calibrée}
+« Fiable » est défini comme \emph{calibré} : la bande à 80~\% doit contenir la valeur observée dans
+environ 80~\% des cas. N10 (gelé à 08:31, empreinte \texttt{d86d27c7a750}) le teste à trois grains
+(commune, bassin de vie, EPCI), pour les IDE, les kinés et les dentistes, sur les origines
+2014--2020. La bande est l'intervalle P10--P90 des erreurs passées du même estimateur, par classe de
+taille. Un grain est fiable si toutes ses classes ont une couverture comprise entre 75 et 85~\%.
+
+\textbf{Aucun grain infra-départemental n'est fiable}, pour aucune des trois professions et aucun des
+quatre estimateurs. En moyenne, la couverture est proche du nominal (81 à 84\mesure{}~\% pour les IDE,
+80 à 81 pour les kinés, 72 à 79 pour les dentistes). Par classe de taille, elle ne l'est pas : la bande
+est trop large pour les très petites communes (94\mesure{}~\% pour les IDE de 1 ou 2
+professionnels) et trop étroite au-delà de 50 à 100 professionnels (22 à 59\mesure{}~\%). La moyenne
+est portée par la masse des petites communes. Le département reste donc le grain d'affichage des
+projections, avec la bande en $\sqrt h$ de N8 ; à la commune, la carte montre l'observé. Le modèle
+hiérarchique de l'axe~2 (K3), jugé sur ce même protocole, corrige l'essentiel de la sous-couverture
+des grandes unités, mais ne passe à aucun grain : les bandes des IDE restent trop larges (85 à
+91\mesure{}~\% dans les classes moyennes), celles des dentistes trop étroites (69 à 73\mesure{}~\%).
+Le cas le plus proche est celui des kinés à l'EPCI, où une seule classe sur huit sort de l'intervalle
+(73,0\mesure{}~\% pour 1 à 2 professionnels). Sa variante K4, inscrite avant passage, a été jugée selon un protocole gelé avant
+qu'elle existe (N11, empreinte \texttt{4bf54ad0587a}) : elle devait passer N10 \emph{et} une origine
+réservée (2021, $h = 4$). Elle échoue aux deux étapes, à tous les grains. Sur l'origine réservée, la simple
+tendance des unités calibre toutes les classes des kinés au bassin de vie, alors qu'elle échoue N10 :
+une seule origine favorable n'aurait rien prouvé. Une troisième variante, K5, jugée selon un protocole gelé avant ouverture de ses fichiers (N12,
+origine réservée 2022, $h = 3$), échoue elle aussi aux deux étapes : ses bandes sont devenues trop
+étroites (59 à 66\mesure{}~\% de couverture pour les infirmiers à l'EPCI et au bassin de vie). Aucune des
+trois variantes n'a calibré un grain plus fin que le département.
+
+\section{Validation et menaces à la validité}\label{sec:menaces}
+\subsection{Cas d'étude : des tests vrais par construction}
+Le jumeau a subi deux revues adversariales\footnote{Rapports internes
+\texttt{2026-11-14-revue-adversariale-axe0.md} et \texttt{-v2.md}.}. Neuf agents en lecture seule
+les ont menées selon trois angles. Pour chaque angle, les deux constats les plus graves ont été
+soumis à un agent chargé de les réfuter en exécutant le code.
+\begin{itemize}
+  \item \textbf{Première revue :} 6\mesure{} constats soumis à réfutation, 6 confirmés, dont
+        4 bloquants. Le critère « plug-in » écrivait le module factice dans un dossier temporaire :
+        son contrôle « aucun fichier modifié » ne pouvait pas échouer. Le critère de conservation
+        comparait le registre des flux à une variation qu'il stockait lui-même, si bien que son
+        résidu de $3 \cdot 10^{-11}$ ne mesurait que l'arrondi. L'agrégation comparait les communes
+        à des regroupements des mêmes lignes ; face au RPPS, l'écart est de
+        $-\num{5.4}$\mesure{}~\% pour les kinés en 2025.
+  \item \textbf{Seconde revue :} 6\mesure{} constats confirmés, soit 4 défauts bloquants
+        distincts. Le test du levier retraite comparait le jumeau à la version~1, qui portait le
+        même masque fautif : il ne pouvait pas voir le défaut (+41\mesure{}~\% d'effet à 2050 pour un
+        report de 2~ans). Une correction en avait aussi introduit un nouveau : un scénario passé à
+        \texttt{trajectory} remplaçait le scénario de base ($-\num{15.2}$\mesure{}~\%).
+\end{itemize}
+\textbf{Leçon pour nos protocoles.} Un test qui compare un objet à une copie de lui-même, ou qui
+mesure une identité, passe par construction. Nos protocoles s'en gardent de quatre façons :
+\begin{itemize}
+  \item N5 interdit au générateur de partager du code ou une hypothèse avec l'estimateur ;
+  \item N2 compare à une source extérieure, DD76, et pas à la version~1 ;
+  \item N3 ajoute des placebos qui \emph{peuvent} échouer ;
+  \item la règle de mutation de l'axe~0 (réintroduire le défaut et vérifier que le test échoue)
+        est la contrepartie, dans le code, du pré-enregistrement.
+\end{itemize}
+
+\subsection{Menaces propres à nos résultats}
+\begin{itemize}
+  \item \textbf{Date du zonage.} Le jeu Atlasanté porte des codes de régions antérieurs à 2016 et
+        des métadonnées de 2014 : il est \emph{probablement} le zonage de 2012. S'il s'agissait
+        d'une révision de 2014 fondée sur des densités postérieures à 2012, le traitement serait en
+        partie choisi sur le résultat. E1 et E2 tomberaient ensemble.
+  \item \textbf{Un verdict qui tient à un seuil.} Le test donne $p = \num{0.043}$ pour un seuil de
+        \num{0.10}. Ce seuil était fixé d'avance, et nous ne le changeons pas. Un second test, par
+        exemple $\Delta^{RM}$ avec $\bar M$ fixé d'avance, devra être pré-enregistré et déclaré
+        comme tel.
+  \item \textbf{Retour à la moyenne.} La zone~4 décroche aussi, de $-\num{4.2}$\mesure{}~points en
+        moyenne. Jusqu'à environ un septième\derive{} de l'effet IDE peut venir de la convergence
+        des zones denses.
+  \item \textbf{Dates d'effet.} Elles viennent de sources secondaires. L'absence de régulation
+        dentaire avant 2025 et la date du rezonage infirmier sont supposées.
+  \item \textbf{Contamination de N1.} Les cibles 2023 et 2026 avaient déjà été vues par K1. Seul le
+        dépôt de 2027 est propre. Le bootstrap par département ignore aussi la corrélation entre
+        origines, si bien que l'IC est probablement trop étroit\suppose{}.
+  \item \textbf{Ordre de gel.} N5 a été gelé après le lancement de N3. Les deux niveaux ne partagent
+        ni données ni seuil.
+  \item \textbf{Seconds tests.} N7-A est un second essai sur le même levier : la protection du
+        pré-enregistrement est entamée. Il échoue de toute façon.
+  \item \textbf{Forme affaiblie de N2.} Faute de série de quotas, les entrées de DD76 ne sont pas
+        reproduites ; l'échec de N2-A mêle l'écart de moteur et l'écart d'hypothèse.
+  \item \textbf{Seuils choisis.} Les seuils de 3~\% (N2), 25~\% (N4) et $p \ge 0{,}10$ (N3) sont des
+        choix argumentés, pas des dérivations.
+\end{itemize}
+
+\section{Reproductibilité}\label{sec:repro}
+Toutes les commandes se lancent depuis la racine du dépôt. \texttt{scipy} est ajouté à la volée,
+sans toucher au \texttt{pyproject.toml} partagé.
+\begin{verbatim}
+# N3, N3 exploratoire, auto-test, N7-A, N7-B, N6 et N7-C, N5 et SBC, N2
+PYTHONPATH=v2 uv run --with scipy python -m validation.did
+PYTHONPATH=v2 uv run --with scipy python -m validation.did_explore
+PYTHONPATH=v2 uv run --with scipy python -m validation.selftest
+PYTHONPATH=v2 uv run --with scipy python -m validation.did_commune
+PYTHONPATH=v2 uv run --with scipy python -m validation.stability prive
+PYTHONPATH=v2 uv run --with scipy python -m validation.probabilistic
+PYTHONPATH=v2 uv run --with scipy python -m validation.worlds all
+PYTHONPATH=v2 uv run --with scipy python -m validation.dd76
+PYTHONPATH=v2 uv run --with scipy python -m validation.limits_twin
+PYTHONPATH=v2 uv run --with scipy python -m validation.fine_scale_run
+PYTHONPATH=v2 uv run --with scipy python -m validation.depot
+PYTHONPATH=v2 uv run --with scipy python -m validation.boucles
+# empreintes des protocoles gelés
+shasum -a 256 v2/validation/preregistered/*.md
+\end{verbatim}
+\begin{itemize}
+  \item \textbf{Graines} : \texttt{20261114} pour tous les bootstraps ; \texttt{20261114}~+~$r$ pour
+        la réplication $r$ des mondes simulés.
+  \item \textbf{Données} :
+        \begin{itemize}
+          \item \texttt{data/processed/stock\_commune.parquet} (CartoSanté, extrait le 2026-11-13) ;
+          \item \texttt{v2/validation/raw/zonage\_conv\_c987.geojson} (Atlasanté, extrait le
+                2026-11-14 ; libre réutilisation en citant la source et la date) ;
+          \item \texttt{data/processed/stock.parquet} (RPPS, publié le 2026-07-02).
+        \end{itemize}
+  \item \textbf{Sorties} : \texttt{v2/validation/out/}.
+  \item \textbf{Code} : les modules Python du dossier \texttt{v2/validation/} (un par niveau,
+        plus le registre des estimateurs).
+  \item \textbf{Autres données} : tables communales de l'axe~4
+        (\texttt{v2/data/processed/}) ; projections DREES des infirmières 2024 (data.drees, export
+        CSV, extrait le 2026-11-14).
+  \item \textbf{Version} : le dépôt n'était pas encore versionné au moment des calculs ; les
+        empreintes des protocoles tiennent lieu de version.
+\end{itemize}
+
+\section{Conclusion}
+La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en dix
+protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous les tests qui pouvaient
+échouer ont échoué, et c'est l'information principale :
+\begin{itemize}
+  \item le levier IDE a un effet grand et constant, mais deux designs fixés d'avance refusent de le
+        valider ;
+  \item la précision par département n'est acquise que sur une origine ;
+  \item le moteur par défaut confond bruit, passage de cohorte et entrées ;
+  \item seule la bande en $\sqrt h$ est calibrée, sous réserve du dépôt 2027 ;
+  \item à 2050, l'hypothèse d'entrées domine tout, de $-15$ à $+15$\mesure{}~\% autour de DD76.
+\end{itemize}
+
+\paragraph{Ce que cela change.}
+\begin{itemize}
+  \item Aucun chiffre 2050 n'est citable. Seule la bande en $\sqrt h$ peut être affichée sous son niveau
+        nominal, et sous 51 professionnels une projection communale ne s'affiche pas sans elle.
+  \item Les axes 0 et 2 doivent séparer les entrées de la rétention.
+  \item L'axe~5 doit vérifier la calibration de sa composante (b), linéaire en $h$.
+  \item La boucle densité $\to$ installations (B2) n'a pas de signe établi : l'axe~2 ne l'ajoute pas comme
+        covariable confirmée. La boucle densité $\to$ départs (B1) n'est confirmée que pour les
+        infirmiers libéraux, au département.
+  \item Le niveau d'entrées de référence (moyenne de fenêtre ou années récentes) est une décision qui
+        revient à l'équipe : il fait passer les dentistes en 2050 de \num{62000} à \num{81000}\mesure{}.
+\end{itemize}
+
+\paragraph{Questions ouvertes, avec leur coût (temps de travail estimé).}
+\begin{itemize}
+  \item Troisième test du levier IDE (contrôle synthétique par bassin de vie) : environ 1~h.
+  \item Série ouverte des quotas 2016--2020 pour une reproduction fidèle de DD76 : environ 45~min.
+  \item Dater le jeu Atlasanté contre un arrêté ARS de 2012 : environ 30~min.
+  \item $N_{\min}$ avec la projection départementale réelle au lieu de l'oracle : environ 15~min.
+  \item Score du dépôt 2027 (juillet 2027) : environ 15~min.
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}

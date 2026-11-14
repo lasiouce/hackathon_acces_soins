@@ -37,17 +37,19 @@ uv run python v2/prototype-carte/server.py
 Puis ouvrir **http://localhost:8767**. Le serveur met une dizaine de secondes à charger les
 5 professions ; il affiche `prêt : http://localhost:8767` quand c'est fait.
 
-**Agent « Questions » (facultatif).** Le bouton « Questions » de la carte ouvre un agent conversationnel
-(`v2/agent/`) qui explique les résultats. Il a besoin d'une clé d'API Anthropic, lue côté serveur et jamais
-envoyée au navigateur, soit dans l'environnement, soit dans un fichier `.env` à la racine (ignoré par git) :
+**Chatbot « Questions » (facultatif).** Le bouton « Questions » de la carte relaie les questions vers le chatbot de
+`chatbot/` (passerelle en lecture seule + agent ; code de Juliette Konop), qui explique les résultats sans rien calculer :
+chaque nombre vient du jumeau et est vérifié. Deux processus en plus de la carte, dans deux terminaux :
 
 ```bash
-echo 'ANTHROPIC_API_KEY=sk-ant-...' >> .env     # ou : export ANTHROPIC_API_KEY=...
-uv run python v2/prototype-carte/server.py
+JUMEAU_REPO=.. uv run --directory chatbot python -m passerelle.server 8770     # interroge le dépôt actuel
+set -a; . ./.env; set +a; CHAT_MODEL=claude-haiku-5-5 CHAT_FALLBACKS=0 uv run --directory chatbot python -m chat.server 8768
 ```
 
-Sans clé, la carte fonctionne et le panneau indique que l'agent est indisponible. Modèle :
-`AGENT_MODEL` (défaut `claude-opus-5-5`) ; effort : `AGENT_EFFORT` (défaut `medium`).
+`.env` (à la racine, ignoré par git) contient `ANTHROPIC_API_KEY=sk-ant-...` ; la clé reste dans le processus du chatbot,
+jamais dans le navigateur. **Sans clé**, le chatbot répond quand même, avec le glossaire de l'équipe (sans IA). Sans le
+chatbot, la carte fonctionne et le panneau l'indique. Le contrôle du lexique neutre (`v2/agent/garde_fous.py`) s'applique
+à chaque réponse. `CHAT_FALLBACKS=0` : Haiku n'a pas de repli serveur.
 
 Déjà cloné ? `git pull` puis `uv sync` suffisent. Si une erreur parle de `data/raw/` ou d'un fichier
 `.parquet` absent :
@@ -103,12 +105,14 @@ indépendant), et chaque sortie le rappelle.
   traduit, il ne calcule jamais. Environ **77 % des phrases** sont entièrement bien traduites, mesuré
   sur des jeux écrits à l'aveugle. Un écran montre toujours ce qui a été compris et ce qui n'est pas dans
   le modèle, et rien n'est appliqué sans confirmation.
-- **Questions en français** (bouton « Questions », facultatif, clé d'API requise) : un agent à outils
-  (`v2/agent/`) explique le résultat affiché : écart décomposé par flux, délai d'effet, fourchette,
-  statut sourcé ou supposé des leviers, limites. Il **ne calcule rien** : chaque nombre vient d'un appel
-  au serveur de la carte, et un contrôle automatique vérifie, sous chaque réponse, que tous les nombres se
-  retrouvent dans les sorties du modèle et qu'aucun terme de jugement du lexique n'est employé. Les taux
-  sur le jeu de 22 questions (`v2/agent/questions.yaml`) ne sont **pas encore mesurés**.
+- **Questions en français** (bouton « Questions », facultatif) : prototype qui relaie vers le chatbot de
+  `chatbot/` (Claude Haiku 5.5 avec une clé, glossaire sans clé), avec le contexte affiché (profession,
+  territoire, leviers, année). Il explique l'écart par flux, le délai d'effet, la fourchette et le statut des
+  leviers ; il **ne calcule rien**, et les nombres non rattachés à un résultat sont corrigés puis bloqués.
+  Mesuré sur 22 questions avec Haiku 5.5 : 21/22 réponses entièrement ancrées (260/261 nombres), hors périmètre
+  signalé 5/5, flux nommés 5/5, médiane 7,4 s (`v2/agent/score_chatbot.txt`). Interface principale ; mise en page
+  en attente de l'équipe UX. `v2/agent/` (premier agent)
+  est gelé ; seul son contrôle du lexique sert.
 - **Hypothèses de contexte** : scénario de population Insee (central, bas, haut) et activité moyenne
   par professionnel (équivalents temps plein, supposée).
 - **Fiche par territoire** : effectif 2026, 2050, écart au tendanciel, repères 2030 / 2035 / 2040 / 2050
@@ -206,7 +210,7 @@ v2/
   sensibilite/         axe 5 : Morris, Sobol, fourchettes à 2050
   data/                axe 4 : scripts de construction, processed/ (commité), manifest.py
   langage/             compilateur phrase -> leviers, glossaire, jeux de test à l'aveugle
-  agent/               agent « Questions » : outils, garde-fous (ancrage, lexique), jeu de 22 questions
+  agent/               premier agent (gelé) : garde-fous (ancrage, lexique), jeu de 22 questions
   prototype/           serveur des leviers et du jumeau (bibliothèque de la carte, port 8766)
   prototype-carte/     carte de décision (port 8767)
   papers/              un article par axe et l'article de synthèse (LaTeX)
@@ -214,6 +218,7 @@ v2/
 data/
   processed/           données de base traitées (commitées, voir MANIFEST.md)
   raw/                 fichiers bruts (non commités)
+chatbot/               chatbot (passerelle lecture seule + agent), relayé par la carte
 docs/lab/profile.md    profil du laboratoire (lu par les skills de .claude/)
 Home.md                page d'accueil du coffre Obsidian
 ```

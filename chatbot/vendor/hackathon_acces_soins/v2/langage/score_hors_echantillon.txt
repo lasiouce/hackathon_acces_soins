@@ -1,0 +1,4 @@
+exact 29/30 = 97%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '3/4'}
+{'leviers': '30/30', 'profession': '29/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+- ('p04', 'piege', "Réguler l'installation des infirmiers et des kinés à Strasbourg.", {'profession': ('infirmiers', None)})

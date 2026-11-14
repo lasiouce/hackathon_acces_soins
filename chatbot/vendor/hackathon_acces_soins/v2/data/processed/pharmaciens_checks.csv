@@ -1,0 +1,11 @@
+,0
+communes_n>=5,2381
+ear_mediane_commune,0.16094276094276097
+ear_p90_commune,0.4554263565891474
+epci_n>=5,1145
+ear_mediane_epci,0.10723662618969472
+ear_p90_epci,0.3274078862314158
+corr_commune,0.982843367779389
+annuaire_officine_total,50664.21111111111
+reconstitue_officine_2026,50196.0
+verdict,échoue

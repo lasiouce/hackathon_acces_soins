@@ -9,6 +9,9 @@ aliases: [Lab profile]
 > on 2026-11-13; edit freely.
 
 ## Recadrage du 2026-11-14 (prime sur les sections ci-dessous quand elles divergent)
+- **2026-11-14, après-midi :** l'agent conversationnel devient l'**interface principale**
+  avec l'utilisateur·rice (plus une couche ultérieure). Mise en page en attente des
+  propositions UX de l'équipe ; d'ici là, squelette fonctionnel (panneau « Questions »).
 - **Projet de recherche quantitative.** Un jumeau numérique : des politiques
   nationales, exprimées comme des hyperparamètres sourcés (Omphale,
   Hippocrate, DREES n°76, plus des spécificités par profession), et leur

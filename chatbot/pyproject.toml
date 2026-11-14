@@ -1,0 +1,28 @@
+[project]
+name = "jumeau-chat"
+version = "0.1.0"
+description = "Chatbot en lecture seule sur le jumeau numérique de l'offre de soins (hackathon_acces_soins, épinglé en sous-module)"
+requires-python = ">=3.12"
+dependencies = [
+    # passerelle : mêmes dépendances que le modèle (vendor/hackathon_acces_soins/pyproject.toml)
+    "numpy>=2.5.4",
+    "pandas>=3.1.1",
+    "pyarrow>=26.0.1",
+    "python-calamine>=0.9.1",
+    "pyyaml>=6.0.3",
+    # chatbot
+    "anthropic>=2.8.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+streamlit = [
+    "streamlit>=1.67.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

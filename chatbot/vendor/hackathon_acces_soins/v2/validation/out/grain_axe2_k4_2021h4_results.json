@@ -1,0 +1,293 @@
+{
+ "dentistes": {
+  "apparie": 8841,
+  "soumis": 10291,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 6,
+   "couverture_globale": 0.7416540848850864,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7337411461687058,
+     "n": 3106
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.711484593837535,
+     "n": 357
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.6872037914691943,
+     "n": 211
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.625,
+     "n": 56
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 6,
+   "couverture_globale": 0.7456508698260348,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6788079470198676,
+     "n": 302
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.748314606741573,
+     "n": 445
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.7481751824817519,
+     "n": 274
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7288135593220338,
+     "n": 59
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.7320692497938994,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6754966887417219,
+     "n": 151
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7114624505928854,
+     "n": 253
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6933333333333334,
+     "n": 75
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.5121951219512195,
+     "n": 41
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "infirmiers": {
+  "apparie": 14539,
+  "soumis": 17225,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.8205991539324873,
+   "classes_hors_bande": [
+    {
+     "cls": "51–100",
+     "couv": 0.8606060606060606,
+     "n": 165
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.9722222222222222,
+     "n": 72
+    },
+    {
+     "cls": ">200",
+     "couv": 1.0,
+     "n": 33
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.8779342723004695,
+   "classes_hors_bande": [
+    {
+     "cls": "6–10",
+     "couv": 0.8592233009708737,
+     "n": 206
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.8762886597938144,
+     "n": 485
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.886986301369863,
+     "n": 584
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.8682926829268293,
+     "n": 205
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.8829787234042553,
+     "n": 94
+    },
+    {
+     "cls": ">200",
+     "couv": 0.9506172839506173,
+     "n": 81
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 6,
+   "couverture_globale": 0.8809904153354633,
+   "classes_hors_bande": [
+    {
+     "cls": "6–10",
+     "couv": 0.8764044943820225,
+     "n": 89
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.9055793991416309,
+     "n": 233
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8668076109936576,
+     "n": 473
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.8931623931623932,
+     "n": 234
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.8660714285714286,
+     "n": 112
+    },
+    {
+     "cls": ">200",
+     "couv": 0.9157894736842105,
+     "n": 95
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "kines": {
+  "apparie": 11865,
+  "soumis": 14526,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.7720439757684541,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.7361111111111112,
+     "n": 720
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7478991596638656,
+     "n": 119
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.6721311475409836,
+     "n": 61
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7654320987654321,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.734375,
+     "n": 64
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7485714285714286,
+     "n": 350
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.6458333333333334,
+     "n": 48
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7142857142857143,
+     "n": 49
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7448,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6585365853658537,
+     "n": 41
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7431192660550459,
+     "n": 109
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7289156626506024,
+     "n": 332
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.6753246753246753,
+     "n": 77
+    },
+    {
+     "cls": ">200",
+     "couv": 0.6,
+     "n": 60
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ }
+}

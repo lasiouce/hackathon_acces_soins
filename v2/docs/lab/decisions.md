@@ -2471,6 +2471,30 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
     - Fonds de carte : SVG simplifiés à partir de `/geo` et `/geo-regions`.
     - Cinq écrans : l'actuel et l'option 1 sur ordinateur et sur mobile, plus l'option 1 en
       direction A.
+- **Interprétation conversationnelle : agent LLM ou réponses déterministes, et un seul moteur** (challenge du 2026-11-14,
+  `lab:challenge-design`). Choix contesté : l'agent LLM `v2/agent/` (décision du 2026-11-14 « Agent conversationnel… »)
+  comme moteur d'interprétation, en parallèle de `julietteknp/AI_interface_acces_soin_hackaton` (`jumeau-chat`, même
+  rôle, dépôt séparé, sous-module figé sur `426422c`).
+  - **Contrainte, en unités.** Ce que la couche sert : part des réponses utiles (chiffre + fourchette + flux quand on
+    demande pourquoi, « pas dans le modèle » quand il faut), part des nombres ancrés (cible 100 %), latence (< 30 s),
+    coût (< 0,20 $ par question), et surtout des **heures-personnes** (budget 480 h) : le profil (recadrage du
+    2026-11-14) range les personas et l'application en couche ultérieure ; la couche ne sert aucun des trois
+    indicateurs principaux (backtest, reproduction DREES, validité des leviers).
+  - **Dérivé de zéro.** Le moins cher qui répond : compilateur à glossaire + phrases à trous sur les sorties du
+    jumeau. Ancrage 100 % par construction, 0 $, sans clé. Il **existe déjà et est testé** : mode déterministe de
+    `jumeau-chat` (projection, objectif « atteindre », hors périmètre, ville → département). Il ne sait pas répondre
+    aux questions libres (« pourquoi », « quelle confiance », comparaison ouverte) ; le compilateur seul plafonne à
+    environ 77 % de phrases bien comprises (décision « tour 6 »).
+  - **Comparaison.** Aucun des deux modes LLM n'est mesuré (pas de clé). Deux moteurs LLM font double emploi.
+    `jumeau-chat` est plus isolé et testé et a plus d'outils ; `v2/agent` a la vérification à la précision affichée
+    (la tolérance ±6 % de `jumeau-chat` accepte tout entier entre ≈ 12 450 et 20 000 pour kinés ARA 2035, dérivé),
+    le contrôle du lexique et le contexte de la carte.
+  - **Verdict : indécidable sans mesure** sur LLM contre déterministe. Mesure : les 22 questions de
+    `v2/agent/questions.yaml` dans les deux modes, notées sur l'utilité (grille ci-dessus) avec la règle d'ancrage
+    stricte. Prix : ~30 min Claude + ~10 min machine + ~3 $, une clé d'API, l'accord pour lancer `jumeau-chat`.
+    Issues : déterministe à 10 points ou moins du LLM en utilité → la carte branche le déterministe, pas de LLM ;
+    LLM nettement meilleur → un seul moteur LLM (`jumeau-chat` + règle stricte + lexique), `v2/agent` réduit au panneau.
+  - **En attendant :** aucun travail nouveau sur le moteur de `v2/agent` ; quelle que soit l'issue, un seul moteur.
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
   Les points :
@@ -3431,3 +3455,74 @@ de l'utilisateur·rice (« Commit sans mesure »). Vérifié sans clé : `/api/a
 curseur », puis les demandes d'ajustement ci-dessus.
 
 **Ce qui le renverserait.** La recette relancée trouve un contrôle en échec sur la page ajustée.
+
+## 2026-11-14 — Chatbot intégré à la carte (prototype) : relais vers `chatbot/`, Claude Haiku 5.5, glossaire sans clé
+
+**Décision.**
+- Le panneau « Questions » de la carte relaie vers le chatbot de `chatbot/` (passerelle en lecture seule, port 8770, et
+  agent, port 8768 ; code de Juliette Konop, poussé dans le dépôt le 2026-11-14). **Un seul moteur** : `v2/agent/` est
+  gelé, la carte ne l'appelle plus ; seul son contrôle du lexique (`garde_fous.lexique`) est appliqué aux réponses.
+- La passerelle interroge **le dépôt actuel** (`JUMEAU_REPO=..`), pas la copie figée `chatbot/vendor/` (`426422c`).
+- **Modèle : `claude-haiku-5-5`** (choix de l'utilisateur·rice), `CHAT_FALLBACKS=0` (pas de repli serveur pour Haiku).
+  Sans clé : mode glossaire (sans IA) du chatbot.
+- Contexte de la carte (profession, territoire, leviers modifiés, année, « densités pour 100 000 habitants ») ajouté à la
+  question en mode IA seulement ; le glossaire lit la phrase seule.
+- Lexique : « pas une prévision » et ses variantes ne sont plus signalés (formule recommandée par le lexique).
+**Pourquoi.** L'utilisateur·rice : « commençons un premier prototype de chatbot intégré », puis « on utilisera haiku5.5 ».
+Le challenge du même jour (§ Open) demandait un seul moteur ; celui de `chatbot/` est le plus isolé et testé.
+**Vérifié.** Sans clé : kinés ARA 2035 +20 % → « environ 17 100, entre 15 300 et 18 900 » (glossaire, 0,1 s). Avec clé
+(Haiku 5.5) : même question en 12,7 s ; depuis la carte, « Pourquoi ce résultat ? » rattaché au scénario affiché, 6,9 s,
+écart par flux (+525 entrées, −2 sorties), délai (2032), statut « supposé » et sources ; vérification « ok » ; ordinateur
+et mobile, sans erreur JavaScript. Trois questions, pas une mesure.
+**Non fait.** Taux sur les 22 questions (`open.md`) ; nettoyage de `chatbot/vendor/` (77 Mo) et du `.bundle`, à voir avec
+Juliette ; la tolérance ±6 % de `chatbot/chat/verif.py` reste en place.
+**Remplace** l'usage de `v2/agent/` par la carte (décision « Agent conversationnel… » du 2026-11-14).
+
+## 2026-11-14 — L'agent conversationnel devient l'interface principale ; squelette fonctionnel en attendant l'UX
+
+**Décision.** L'agent conversationnel (chatbot de `chatbot/`, relayé par la carte) est l'**interface principale** avec
+l'utilisateur·rice. La mise en page (conversation au centre, à côté, ou seule) **attend les propositions des UX designers
+de l'équipe** ; d'ici là, le panneau « Questions » de la carte reste le squelette fonctionnel, sans refonte.
+**Remplace** « personas et application : couche ultérieure » (recadrage du 2026-11-14, `docs/lab/profile.md`, annoté) et
+la ligne « En attendant : aucun travail nouveau sur le moteur » du challenge (§ Open) : la qualité des réponses compte
+désormais pour l'usage. La question « LLM ou glossaire » reste mesurable (§ Open), mais le mode IA est le mode par défaut.
+**Pourquoi.** L'utilisateur·rice : « maintenant l'agent conversationnel est l'interface avec l'utilisateur principale »,
+puis « on va attendre les propositions des ux designers de la team, on va juste avoir pour l'instant un squelette
+fonctionnel ».
+
+## 2026-11-14 — Chatbot intégré : première mesure sur les 22 questions (Claude Haiku 5.5)
+
+**Mesure** (`v2/agent/evaluer_chatbot.py`, relais de la carte → `chatbot/`, mode IA, une session par question ;
+`v2/agent/score_chatbot.txt`, réponses dans `reponses_chatbot.jsonl`) :
+| Critère | Résultat |
+|---|---|
+| Réponses entièrement ancrées, règle stricte (précision affichée) | **21/22** ; nombres ancrés 260/261 (99,6 %) |
+| Non bloquées par la vérification du chatbot (±6 %) | 22/22 (12 « ok », 10 « corrigée ») |
+| Sans terme du lexique interdit | 18/22 ; les 4 occurrences sont des négations ou des refus (« pas des « déserts médicaux » », « non des prévisions », « ne peut pas dire si … un manque », « pas d'avis sur ce qu'il faut faire ») : **0 jugement** à la relecture |
+| Hors périmètre signalé quand attendu | 5/5 |
+| Flux nommés quand attendu | 5/5 |
+| Latence | médiane 7,4 s, max 15,6 s |
+Le seul nombre non ancré : « 2040 » dans un exemple de question suggéré (q20).
+**Premier passage** (16:55, même jeu) : 13/22 ancrées. Les écarts venaient de la mesure, pas des réponses : « 100 000 »
+(unité « pour 100 000 habitants ») et les nombres du périmètre (prompt système du chatbot) n'étaient pas comptés comme
+sources. Corrigé dans `evaluer_chatbot.py` avant le second passage ; lexique : « non (d')une prévision » ajouté aux
+formules permises.
+**Défaut observé.** Sans contexte de la carte, la vérification du chatbot (±6 %) retire « 100 000 » des réponses et la
+densité devient « 201,4 kinés par habitant rapporté à la population » (q01, premier passage). Le relais de la carte
+ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'évite dans la carte ; correctif durable dans
+`chatbot/chat/verif.py` (unité de référence), à voir avec Juliette.
+**Limites.** Un seul passage par configuration, sur un jeu écrit par l'auteur de l'agent ; la justesse qualitative
+(phrases) n'est pas mesurée, seulement relue pour le lexique ; coût non mesuré (le chatbot ne renvoie pas l'usage).
+
+## 2026-11-14 — Carte option 1 : chat relayé vers `chatbot/`, comme `index.html` (fusion de `main`)
+
+**Décision.** `index-option1.html` reprend le relais du panneau « Questions » vers le chatbot de `chatbot/` (décision
+« Chatbot intégré à la carte (prototype) » du même jour) : session par onglet au lieu de l'historique, statut de
+vérification (`ok`, `corrigee`, `bloquee`), mode glossaire sans IA, gras rendu. Le libellé garde le style de la page
+(« Contrôle : … », sans pictogramme). L'accès par l'icône sur la carte ne change pas.
+**Pourquoi.** Résolution des conflits de la PR #3 : `/api/agent` ne renvoie plus `ancrage` ; sans ce report, le chat
+de la page option 1 afficherait « Serveur injoignable. ».
+**Non mesuré.** Recette non relancée (demande de l'utilisateur·rice) ; seule la syntaxe JavaScript est vérifiée
+(`node --check`).
+**Ce qui le renverserait.** La mise en page du chat proposée par les UX designers (décision « L'agent conversationnel
+devient l'interface principale »).

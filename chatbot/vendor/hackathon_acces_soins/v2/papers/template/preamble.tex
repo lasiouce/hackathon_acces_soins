@@ -1,0 +1,18 @@
+% Préambule commun des prétirages v2 (format arXiv : source TeX autonome, pdfLaTeX).
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern,microtype}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx,booktabs,siunitx}
+\usepackage{authblk}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{csquotes}
+\sisetup{locale=FR,group-minimum-digits=4}
+\renewcommand\Affilfont{\small}
+% Étiquette de provenance obligatoire sur chaque nombre (règle du projet) :
+\newcommand{\mesure}{\textsuperscript{\textsc{m}}}   % mesuré
+\newcommand{\derive}{\textsuperscript{\textsc{d}}}   % dérivé
+\newcommand{\suppose}{\textsuperscript{\textsc{s}}}  % supposé

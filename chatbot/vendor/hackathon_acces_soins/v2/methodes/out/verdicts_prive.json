@@ -1,0 +1,447 @@
+{
+ "perimetre": "prive",
+ "secondes_banc": 18.7,
+ "candidats": {
+  "axe2_ages_interp": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.5317708536067514,
+   "ci": [
+    -0.8888483063319307,
+    -0.16597273564703133
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -0.8888483063319323,
+    -0.1659727356470296
+   ],
+   "ci99_bonferroni": [
+    -0.9800449128187237,
+    -0.06259960438420838
+   ],
+   "delta_vs_A0": 0.09457531116372841,
+   "ci95_vs_A0": [
+    0.010405277307590843,
+    0.17926738050999863
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "3/6",
+    "infirmiers-liberaux": "3/3",
+    "kines": "1/1",
+    "pharmaciens": "5/6",
+    "sages-femmes": "4/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 9.09,
+    "infirmiers-liberaux": 5.96,
+    "kines": 6.38,
+    "pharmaciens": 5.05,
+    "sages-femmes": 13.98
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -4.38,
+    "infirmiers-liberaux": 5.92,
+    "kines": -1.37,
+    "pharmaciens": 0.2,
+    "sages-femmes": 7.74
+   },
+   "mape_par_h": {
+    "1": 2.73,
+    "3": 5.63,
+    "5": 8.77,
+    "8": 14.88,
+    "10": 18.45
+   }
+  },
+  "axe2_ages_simples": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.599757613770926,
+   "ci": [
+    -0.9587318516996857,
+    -0.23698650588523199
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -0.958731851699684,
+    -0.236986505885232
+   ],
+   "ci99_bonferroni": [
+    -1.048045659698314,
+    -0.12783038134155764
+   ],
+   "delta_vs_A0": 0.026588550999553817,
+   "ci95_vs_A0": [
+    -0.06681970318298074,
+    0.11100715181394305
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "3/6",
+    "infirmiers-liberaux": "3/3",
+    "kines": "1/1",
+    "pharmaciens": "5/6",
+    "sages-femmes": "4/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 9.05,
+    "infirmiers-liberaux": 5.84,
+    "kines": 6.46,
+    "pharmaciens": 4.95,
+    "sages-femmes": 13.91
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -4.77,
+    "infirmiers-liberaux": 5.74,
+    "kines": -1.67,
+    "pharmaciens": -0.23,
+    "sages-femmes": 7.59
+   },
+   "mape_par_h": {
+    "1": 2.73,
+    "3": 5.62,
+    "5": 8.7,
+    "8": 14.58,
+    "10": 17.94
+   }
+  },
+  "axe2_shrink_hier": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.7362863552805283,
+   "ci": [
+    -1.0686641255969525,
+    -0.39883221494743115
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -1.0686641255969525,
+    -0.39883221494743115
+   ],
+   "ci99_bonferroni": [
+    -1.1530692790154804,
+    -0.2994917463466095
+   ],
+   "delta_vs_A0": -0.10994019051004855,
+   "ci95_vs_A0": [
+    -0.20657660590088606,
+    -0.016181560811268626
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "3/6",
+    "infirmiers-liberaux": "3/3",
+    "kines": "1/1",
+    "pharmaciens": "5/6",
+    "sages-femmes": "4/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 8.66,
+    "infirmiers-liberaux": 5.72,
+    "kines": 6.62,
+    "pharmaciens": 5.06,
+    "sages-femmes": 13.73
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -4.95,
+    "infirmiers-liberaux": 5.6,
+    "kines": -2.15,
+    "pharmaciens": -0.37,
+    "sages-femmes": 7.47
+   },
+   "mape_par_h": {
+    "1": 2.72,
+    "3": 5.57,
+    "5": 8.57,
+    "8": 14.28,
+    "10": 17.59
+   }
+  },
+  "axe2_retention60": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.30000617856501854,
+   "ci": [
+    -0.66642166040945,
+    0.08171031629516369
+   ],
+   "issue": "égalité",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -0.66642166040945,
+    0.08171031629516547
+   ],
+   "ci99_bonferroni": [
+    -0.7607040538686891,
+    0.20953216531065436
+   ],
+   "delta_vs_A0": 0.32633998620546123,
+   "ci95_vs_A0": [
+    0.2327180071784743,
+    0.41790472123606687
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "2/6",
+    "infirmiers-liberaux": "2/3",
+    "kines": "1/1",
+    "pharmaciens": "4/6",
+    "sages-femmes": "5/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 8.92,
+    "infirmiers-liberaux": 7.27,
+    "kines": 7.09,
+    "pharmaciens": 5.83,
+    "sages-femmes": 13.44
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -4.1,
+    "infirmiers-liberaux": 7.72,
+    "kines": -3.12,
+    "pharmaciens": 2.28,
+    "sages-femmes": 7.04
+   },
+   "mape_par_h": {
+    "1": 2.75,
+    "3": 5.76,
+    "5": 9.0,
+    "8": 14.71,
+    "10": 18.58
+   }
+  },
+  "axe2_combine": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.5642706111247868,
+   "ci": [
+    -0.9218574463470253,
+    -0.2109114264347606
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -0.9218574463470287,
+    -0.21091142643475877
+   ],
+   "ci99_bonferroni": [
+    -1.012446773399531,
+    -0.09981184298502374
+   ],
+   "delta_vs_A0": 0.06207555364569295,
+   "ci95_vs_A0": [
+    -0.06533037279703868,
+    0.1809291742375058
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "3/6",
+    "infirmiers-liberaux": "3/3",
+    "kines": "1/1",
+    "pharmaciens": "5/6",
+    "sages-femmes": "5/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 8.75,
+    "infirmiers-liberaux": 6.6,
+    "kines": 7.41,
+    "pharmaciens": 5.57,
+    "sages-femmes": 13.19
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -4.68,
+    "infirmiers-liberaux": 7.02,
+    "kines": -3.71,
+    "pharmaciens": 1.63,
+    "sages-femmes": 6.58
+   },
+   "mape_par_h": {
+    "1": 2.71,
+    "3": 5.62,
+    "5": 8.74,
+    "8": 14.51,
+    "10": 18.47
+   }
+  },
+  "jumeau_taux_locaux": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.6263461647704798,
+   "ci": [
+    -0.9716440140278575,
+    -0.2700434880930045
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -0.9716440140278593,
+    -0.27004348809300277
+   ],
+   "ci99_bonferroni": [
+    -1.0615667649847826,
+    -0.18847650164166116
+   ],
+   "delta_vs_A0": 0.0,
+   "ci95_vs_A0": [
+    0.0,
+    0.0
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "2/6",
+    "infirmiers-liberaux": "3/3",
+    "kines": "1/1",
+    "pharmaciens": "5/6",
+    "sages-femmes": "4/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 8.95,
+    "infirmiers-liberaux": 5.89,
+    "kines": 6.47,
+    "pharmaciens": 4.99,
+    "sages-femmes": 13.85
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -4.58,
+    "infirmiers-liberaux": 5.79,
+    "kines": -1.66,
+    "pharmaciens": -0.15,
+    "sages-femmes": 7.64
+   },
+   "mape_par_h": {
+    "1": 2.74,
+    "3": 5.63,
+    "5": 8.68,
+    "8": 14.48,
+    "10": 17.81
+   }
+  },
+  "axe2_obs_r12": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_ages_interp": 8.771651283650085,
+    "axe2_ages_simples": 8.70366452348591,
+    "axe2_combine": 8.73915152613205,
+    "axe2_obs_r12": 8.324624339808251,
+    "axe2_retention60": 9.003415958691818,
+    "axe2_shrink_hier": 8.567135781976308,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.9787977974485855,
+   "ci": [
+    -1.3721624031122464,
+    -0.5854234810918364
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "ci_boot_vectorise_95": [
+    -1.3721624031122448,
+    -0.5854234810918397
+   ],
+   "ci99_bonferroni": [
+    -1.524130898325384,
+    -0.47930703924723456
+   ],
+   "delta_vs_A0": -0.35245163267810575,
+   "ci95_vs_A0": [
+    -0.6513614349973036,
+    -0.08004465866894506
+   ],
+   "origines_gagnees_par_profession": {
+    "dentistes": "6/6",
+    "infirmiers-liberaux": "2/3",
+    "kines": "1/1",
+    "pharmaciens": "5/6",
+    "sages-femmes": "5/6"
+   },
+   "mape_h5_par_profession": {
+    "dentistes": 8.0,
+    "infirmiers-liberaux": 7.54,
+    "kines": 7.5,
+    "pharmaciens": 4.68,
+    "sages-femmes": 12.82
+   },
+   "biais_nat_h5_par_profession": {
+    "dentistes": -5.53,
+    "infirmiers-liberaux": 8.23,
+    "kines": -3.19,
+    "pharmaciens": -1.26,
+    "sages-femmes": 6.6
+   },
+   "mape_par_h": {
+    "1": 2.7,
+    "3": 5.46,
+    "5": 8.32,
+    "8": 13.34,
+    "10": 16.91
+   }
+  }
+ }
+}

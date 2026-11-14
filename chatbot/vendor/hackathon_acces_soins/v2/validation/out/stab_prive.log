@@ -1,0 +1,49 @@
+1/10 naive_persistance 0s
+2/10 naive_tendance 0s
+3/10 jumeau_taux_locaux 1s
+4/10 axe2_ages_interp 2s
+5/10 axe2_ages_simples 2s
+6/10 axe2_shrink_hier 4s
+7/10 axe2_retention60 5s
+8/10 axe2_combine 6s
+9/10 axe2_obs_r12 7s
+10/10 axe2_apc 80s
+    origine          estimateur         statut                                             professions   mape         best_naive  mape_naive  delta     lo     hi    issue
+0      2016  jumeau_taux_locaux  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  8.601     naive_tendance       8.499  0.102 -0.348  0.574  égalité
+1      2016    axe2_ages_interp  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.029     naive_tendance       8.499  0.530  0.014  1.075     perd
+2      2016   axe2_ages_simples  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  8.858     naive_tendance       8.499  0.359 -0.188  0.939  égalité
+3      2016    axe2_shrink_hier  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  8.335     naive_tendance       8.499 -0.164 -0.602  0.301  égalité
+4      2016    axe2_retention60  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.549     naive_tendance       8.499  1.050  0.552  1.566     perd
+5      2016        axe2_combine  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.288     naive_tendance       8.499  0.788  0.264  1.292     perd
+6      2016        axe2_obs_r12     diagnostic  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  7.950     naive_tendance       8.499 -0.549 -1.031 -0.071    gagne
+7      2016            axe2_apc  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  8.443     naive_tendance       8.499 -0.056 -0.504  0.395  égalité
+8      2018  jumeau_taux_locaux  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.282  naive_persistance       9.507 -0.224 -1.399  0.944  égalité
+9      2018    axe2_ages_interp  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.297  naive_persistance       9.507 -0.209 -1.368  0.995  égalité
+10     2018   axe2_ages_simples  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.169  naive_persistance       9.507 -0.338 -1.496  0.887  égalité
+11     2018    axe2_shrink_hier  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.078  naive_persistance       9.507 -0.429 -1.603  0.679  égalité
+12     2018    axe2_retention60  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.673  naive_persistance       9.507  0.166 -1.038  1.299  égalité
+13     2018        axe2_combine  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.044  naive_persistance       9.507 -0.463 -1.594  0.625  égalité
+14     2018        axe2_obs_r12     diagnostic  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.029  naive_persistance       9.507 -0.477 -1.735  0.760  égalité
+15     2018            axe2_apc  confirmatoire  dentistes,infirmiers-liberaux,pharmaciens,sages-femmes  9.351  naive_persistance       9.507 -0.155 -1.316  1.010  égalité
+16     2021  jumeau_taux_locaux  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  7.880     naive_tendance       9.101 -1.221 -1.845 -0.594    gagne
+17     2021    axe2_ages_interp  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  7.786     naive_tendance       9.101 -1.315 -1.929 -0.752    gagne
+18     2021   axe2_ages_simples  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  7.888     naive_tendance       9.101 -1.213 -1.809 -0.647    gagne
+19     2021    axe2_shrink_hier  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  8.016     naive_tendance       9.101 -1.084 -1.718 -0.540    gagne
+20     2021    axe2_retention60  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  7.855     naive_tendance       9.101 -1.245 -1.818 -0.723    gagne
+21     2021        axe2_combine  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  7.954     naive_tendance       9.101 -1.146 -1.731 -0.639    gagne
+22     2021        axe2_obs_r12     diagnostic                dentistes,kines,pharmaciens,sages-femmes  7.826     naive_tendance       9.101 -1.274 -1.948 -0.638    gagne
+23     2021            axe2_apc  confirmatoire                dentistes,kines,pharmaciens,sages-femmes  8.144     naive_tendance       9.101 -0.957 -1.569 -0.370    gagne
+                     2016   2018   2021     signe
+estimateur                                       
+axe2_ages_interp    0.530 -0.209 -1.315  instable
+axe2_ages_simples   0.359 -0.338 -1.213  instable
+axe2_apc           -0.056 -0.155 -0.957    stable
+axe2_combine        0.788 -0.463 -1.146  instable
+axe2_obs_r12       -0.549 -0.477 -1.274    stable
+axe2_retention60    1.050  0.166 -1.245  instable
+axe2_shrink_hier   -0.164 -0.429 -1.084    stable
+jumeau_taux_locaux  0.102 -0.224 -1.221  instable
+       paire    tau
+0  2016-2018  0.289
+1  2016-2021  0.067
+2  2018-2021  0.244

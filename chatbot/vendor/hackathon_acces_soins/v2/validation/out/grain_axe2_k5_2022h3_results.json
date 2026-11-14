@@ -1,0 +1,238 @@
+{
+ "dentistes": {
+  "apparie": 8774,
+  "soumis": 10291,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 6,
+   "couverture_globale": 0.7609359104781281,
+   "classes_hors_bande": [
+    {
+     "cls": "6–10",
+     "couv": 0.7217391304347827,
+     "n": 690
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.6786703601108033,
+     "n": 361
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.6712962962962963,
+     "n": 216
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7457627118644068,
+     "n": 59
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 6,
+   "couverture_globale": 0.7717717717717718,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7422680412371134,
+     "n": 291
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.737037037037037,
+     "n": 270
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7482517482517482,
+     "n": 143
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.7687861271676301,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.7438423645320197,
+     "n": 203
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7319587628865979,
+     "n": 194
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.7380952380952381,
+     "n": 42
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "infirmiers": {
+  "apparie": 14605,
+  "soumis": 17225,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.8391554373015192,
+   "classes_hors_bande": [
+    {
+     "cls": "3–5",
+     "couv": 0.8613119143239625,
+     "n": 3735
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.8539534883720931,
+     "n": 2150
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.9090909090909091,
+     "n": 77
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.7992957746478874,
+   "classes_hors_bande": [
+    {
+     "cls": "3–5",
+     "couv": 0.9047619047619048,
+     "n": 42
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.8769230769230769,
+     "n": 195
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7121951219512195,
+     "n": 205
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.696969696969697,
+     "n": 99
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7215189873417721,
+     "n": 79
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 6,
+   "couverture_globale": 0.7784,
+   "classes_hors_bande": [
+    {
+     "cls": "6–10",
+     "couv": 0.9213483146067416,
+     "n": 89
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7459016393442623,
+     "n": 244
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.6403508771929824,
+     "n": 114
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7216494845360825,
+     "n": 97
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "kines": {
+  "apparie": 12037,
+  "soumis": 14526,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.7831444603366707,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.7468706536856745,
+     "n": 719
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6639344262295082,
+     "n": 122
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.7142857142857143,
+     "n": 63
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7917647058823529,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7121212121212122,
+     "n": 66
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7948717948717948,
+   "classes_hors_bande": [
+    {
+     "cls": "3–5",
+     "couv": 0.8673469387755102,
+     "n": 98
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7076923076923077,
+     "n": 130
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 0
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ }
+}
