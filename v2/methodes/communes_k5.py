@@ -60,13 +60,13 @@ def fit_params(N, years, geo, o, h):
     return {"b": med, "sD": sD, "phi": float(phi), "kap": float(kap)}
 
 
-def run(origins, h, path):
+def run(origins, h, path, future=False):
     t0, out, data = time.time(), [], {p: load_v2(p) for p in PROFS}
     for o in origins:
         par = {}
         for p in PROFS:
             N, years, geo = data[p]
-            if o + h <= years[-1] and (pp := fit_params(N, years, geo, o, h)):
+            if (future or o + h <= years[-1]) and (pp := fit_params(N, years, geo, o, h)):
                 par[p] = pp
         if not par:
             continue
@@ -97,6 +97,21 @@ def run(origins, h, path):
     d = pd.concat(out, ignore_index=True)
     d.to_parquet(path, index=False)
     print(path, d.groupby(["profession", "grain"]).origin.agg(["min", "max", "size"]).to_string(), flush=True)
+
+
+def depot():
+    """Dépôt communal de K5 (accord de l'axe 3, N12) : origine 2025 (dernière année CartoSanté), cibles 2027 et 2028."""
+    import hashlib
+    path = Path("v2/validation/depot/axe2_k5_communes_2026-11-14.parquet")
+    parts = []
+    for h in (2, 3):
+        tmp = OUT / f"_depot_k5_h{h}.parquet"
+        run([2025], h, tmp, future=True)
+        parts.append(pd.read_parquet(tmp).assign(cible=2025 + h))
+        tmp.unlink()
+    d = pd.concat(parts, ignore_index=True)
+    d.to_parquet(path, index=False)
+    print(path, len(d), hashlib.sha256(path.read_bytes()).hexdigest()[:12], flush=True)
 
 
 if __name__ == "__main__":
