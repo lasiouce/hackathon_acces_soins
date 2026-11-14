@@ -92,6 +92,9 @@ indépendant), et chaque sortie le rappelle.
 - **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Recalcul après chaque réglage en
   environ 50 ms (mesuré).
+- **Curseur d'année** (2026 → 2050, pas annuel, 2050 par défaut, bouton ▶ pour faire défiler) : carte,
+  légende, résumé, fiche et comparaison suivent l'année choisie. Toutes les années arrivent en un seul
+  appel (environ 100 ms) : bouger le curseur ne relance pas le calcul. L'année est gardée dans le lien.
 - **9 leviers en 4 familles** (former, attirer, installer, retenir), chacun avec son délai d'effet et
   son niveau de preuve (sourcé ou supposé). Le curseur principal de chaque famille est visible ; les
   réglages fins sont sous « Plus de réglages ».
