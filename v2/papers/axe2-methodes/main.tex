@@ -371,6 +371,14 @@ et celle à 50\,\% 45,9\,\%\mesure{} (cible $[44\,;\,56]$). Sur toutes les origi
 elle couvre 77,6 et 50,0\,\%\mesure{} et son histogramme PIT est presque plat. Propager $\theta$ (C2)
 ne change rien : la dispersion vient des innovations futures, pas des hyperparamètres.
 
+\paragraph{Calibration par simulation.} Sur le plan d'observation réel, 200 jeux par profession
+$\times$ sexe avec $\theta$ ré-estimé (2\,000 jeux) : les quantités de l'APC (période des 60 ans et
+plus, écart départemental, $\eta$ à $h=5$) passent dans les 30 tests\mesure ; le niveau national des
+entrées $L_T$ échoue dans les 10 cellules\mesure{} (rangs en U : loi a posteriori trop étroite
+sachant $\hat\sigma_u, \hat\sigma_v$), et l'écart régional des parts dans 3 petites cellules\mesure{}
+où $\hat\tau_r \approx 0$. Seule la bande départementale est donc utilisable, avec sa couverture
+mesurée ; le traitement bayésien complet de ces variances est la prochaine étape.
+
 \paragraph{Par profession.} En MAPE, C1 bat A0 pour les dentistes, les infirmiers libéraux et les
 sages-femmes, et fait jeu égal pour les kinés (une seule origine) et les pharmaciens\mesure.
 
@@ -482,7 +490,9 @@ prévision probabiliste, correctement codée (calibration par simulation réussi
 composantes où les entrées sont aussi probabilistes battent le stock-flux (7,73 contre
 8,68\,\%\mesure) et donnent une bande presque calibrée. Étapes suivantes :
 \begin{enumerate}
-  \item dépôt des prévisions 2027--2030, seul test hors échantillon propre ; niveau local amorti
+  \item traitement bayésien complet des variances du niveau national et des écarts régionaux, que la
+        calibration par simulation met en défaut ; prévisions 2027--2030 déposées (score à la
+        publication du RPPS 2027) ; niveau local amorti
         pour les entrées qui se retournent ; grain infra-départemental sous le protocole N4 ;
   \item logit conditionnel de l'installation, la régulation devenant un ensemble de choix restreint ;
   \item réconciliation des prévisions entre échelles ;

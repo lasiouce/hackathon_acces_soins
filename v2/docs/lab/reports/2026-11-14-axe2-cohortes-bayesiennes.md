@@ -3,8 +3,8 @@ type: analysis
 date: 2026-11-14
 author: axe 2
 question: Des cohortes par composantes en bayésien hiérarchique, entrées comprises, prévoient-elles mieux que le stock-flux à taux locaux, avec une bande calibrée ?
-headline: "Cohortes bayésiennes (APC des sorties + entrées en niveau local × parts hiérarchiques) : MAPE dép. h=5 7,73 % contre 8,68 % (Δ −0,95 pt, IC 95 % [−1,51 ; −0,47]) ; bande à 80 % couvrant 77,6 % sur toutes les origines (73,5 % sur la cellule N6, juste sous [75 ; 85]) ; CRPS à égalité avec la naïve probabiliste ; propager θ (Laplace) n'apporte rien"
-status: fait (étape 2 du programme de l'axe 2) ; calibration par simulation 5 × 2 × 200 en cours au moment de la rédaction, voir § SBC
+headline: "Cohortes bayésiennes (APC des sorties + entrées en niveau local × parts hiérarchiques) : MAPE dép. h=5 7,73 % contre 8,68 % (Δ −0,95 pt, IC 95 % [−1,51 ; −0,47]) ; bande à 80 % couvrant 77,6 % sur toutes les origines (73,5 % sur la cellule N6, juste sous [75 ; 85]) ; CRPS à égalité avec la naïve probabiliste ; propager θ (Laplace) n'apporte rien ; calibration par simulation : rétention 30/30, niveau national des entrées 0/10 (loi a posteriori trop étroite)"
+status: fait (étape 2 du programme de l'axe 2), calibration par simulation comprise
 professions: [sages-femmes, dentistes, pharmaciens, kines, infirmiers]
 hypothesis: axe 2, étape 2
 sources: [DREES RPPS 2012–2026 × secteur (axe 4, périmètre privé), data/processed/stock.parquet (2026-07-02)]
@@ -125,15 +125,44 @@ origine sur 22**.
 | \|Δ MAPE(C, A0)\| < 0,3 pt | −0,95 | **non** (gain bien plus grand) |
 | C bat la naïve probabiliste en CRPS chez ≥ 2 professions sur 3 | 0 sur 3 (2 égalités, 1 échec) | **non** |
 
-### Calibration par simulation (5 professions × 2 sexes × 200 jeux, θ ré-estimé)
-- **En cours** au moment de la rédaction : 1 300 jeux sur 2 000 vers 08:00.
-- Le résultat est dans `v2/methodes/out/coh_sbc.json`, et la
-  [section mise à jour](#mise-à-jour-sbc) plus bas l'ajoute.
-- Le pilote (2 jeux × 10 cellules) n'a montré aucun échec, ce qui ne
-  prouve rien à cette taille.
-- Les mondes N5 de l'axe 3 n'existent pas encore (`worlds.py` absent). La
-  calibration par simulation se fait donc sur le plan d'observation réel,
-  avec des effets tirés dans l'a priori.
+### Calibration par simulation (5 professions × 2 sexes × 200 jeux, θ ré-estimé) {#mise-à-jour-sbc}
+- **Plan.** On garde le plan d'observation réel (origine 2021), on tire les
+  effets dans l'a priori(θ̂), on simule les données, on ré-estime θ, puis on
+  relève le rang de la vérité parmi 99 tirages.
+  - Critère N6 : χ² à 19 ddl, p ≥ 0,01/6 (Bonferroni).
+  - 2 000 jeux, environ 3 h 30 machine.
+
+| Quantité | Échecs (cellules profession × sexe) |
+|---|---|
+| π(≥ 60 ans, dernière année), APC | **0 / 10** |
+| w (département médian), APC | **0 / 10** |
+| η à h = 5, APC | **0 / 10** |
+| ζ (part du département médian) | 1 / 10 (kinés H) |
+| δ (écart régional de la part) | 3 / 10 (kinés H, pharmaciens H, SF H) |
+| **L_T, niveau national des entrées** | **10 / 10**, rangs en U |
+
+**Lecture.**
+- **Les sorties (APC) sont correctement inférées**, même avec θ
+  ré-estimé.
+- **Le niveau national des entrées ne l'est pas.** Sa loi a posteriori,
+  conditionnelle à σ̂_u et σ̂_v estimés sur une série de 9 à 14 points, est
+  trop étroite.
+  - Le test est plus dur que la production : une seule série au lieu de
+    la mise en commun par profession. Le défaut est réel quand même.
+- **Les écarts régionaux échouent dans les petites cellules** (hommes
+  SF, MK, PH). Le Bayes empirique y estime τ_r ≈ 0 avec 13 régions, et la
+  loi a posteriori s'effondre. C'est le défaut connu de l'estimation par
+  maximum de vraisemblance des composantes de variance.
+- **Conséquence.**
+  - La bande départementale proche du nominal (77,6 %) ne vient pas d'une
+    inférence correcte de chaque composante : le bruit annuel par
+    département y domine.
+  - **Une bande nationale de C1 n'est pas publiable** en l'état.
+  - La règle pré-écrite s'applique (dérivation, « Ansätze ») : la
+    calibration par simulation échoue, donc le **traitement bayésien
+    complet de σ_u, σ_v et τ_r est rouvert**, avec des a priori
+    demi-normaux écrits et un MCMC ou une intégration sur grille.
+- Mondes N5 : non disponibles au moment du calcul.
 
 ## Ce qui produit le gain (dérivé, puis mesuré sur le biais)
 1. **Le niveau national des entrées suit les années récentes** : niveau
@@ -169,6 +198,9 @@ origine sur 22**.
   avec retard.
 - **N6 est très mince.** Une seule origine, trois professions. La
   couverture « toutes origines » est hors protocole.
+- **Calibration par simulation.** Le niveau national des entrées échoue (10/10)
+  et les écarts régionaux échouent dans 3 petites cellules. Seule la bande
+  départementale est utilisable, avec sa couverture mesurée.
 - **Corrélation entre origines.** Le bootstrap par département l'ignore :
   l'IC est probablement trop étroit (⚑ de N1).
 - **Kinés.** Une seule origine, IC [−1,39 ; +1,19] : rien n'est établi.
@@ -186,7 +218,8 @@ origine sur 22**.
 ## ? Next
 | Item | Cost |
 |---|---|
-| Dépôt de prévisions 2027–2030 de C1 et A0 (seul test non contaminé) | ~15 min Claude |
+| ~~Dépôt de prévisions 2027–2030 de C1 et A0~~ fait (`v2/validation/depot/`, empreintes dans decisions.md) | — |
+| Traitement bayésien complet de σ_u, σ_v, τ_r (a priori demi-normaux, grille ou MCMC) puis nouvelle calibration par simulation | ~2 h Claude + ~4 h machine |
 | Niveau local amorti (tendance amortie) pour corriger le retard sur les entrées qui se retournent, à inscrire avant | ~1 h |
 | Grain EPCI ou bassin de vie pour IDE, MK et PH, protocole N4 (π_commune dans le département) | ~3 h |
 | Générateur N5 (axe 3) puis calibration par simulation sur les mondes M3 | ~1 h axe 3 + ~1 h |
