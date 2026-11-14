@@ -1,15 +1,14 @@
 \documentclass[11pt]{article}
-\PassOptionsToPackage{english}{babel} % le résumé anglais (otherlanguage) exige la langue english ; le français reste la langue principale
 \input{../template/preamble}
 \usepackage{pgfplots}
 \usepgfplotslibrary{fillbetween}
 \usepackage{xurl} % coupe les longues URL de la bibliographie
 \pgfplotsset{compat=1.16}
 
-\title{Le secteur public était déjà dans les fichiers : séparer public et privé, dater les réformes, coder le zonage et fixer le grain communal d'un jumeau numérique de l'offre de soins}
+\title{Le secteur public était déjà dans les fichiers : séparer public et privé, dater les réformes, coder le zonage, fixer le grain communal et observer les flux d'un jumeau numérique de l'offre de soins}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}, axe~4 (données)}
-\date{Prétirage, version du 14 novembre 2026 --- non relu par des pairs}
+\date{Version du \today}
 
 \begin{document}
 \maketitle
@@ -22,7 +21,7 @@ ne séparait pas public et privé chez les salariés. La sortie 2026 n'était do
 \num{12475} à \num{26428} sages-femmes. Nous montrons que la séparation est déjà dans les fichiers ouverts de la
 DREES : ils croisent département, secteur d'activité, mode d'exercice, âge et sexe. Les salariés des secteurs
 mixtes sont répartis à l'aide du répertoire FINESS. La fourchette des sages-femmes devient
-\num{12059}--\num{14660}\mesure{} : sa largeur baisse de 81\,\%\derive{}. Les infirmiers sont séparés sans
+\num{12059}--\num{13331}\mesure{} : sa largeur baisse de 91\,\%\derive{}. Les infirmiers sont séparés sans
 ambiguïté : \num{277788} privés en 2023\mesure{}. Nous livrons aussi un registre de 30 événements datés et
 sourcés, et le zonage conventionnel de \num{34919} géocodes pour quatre professions. Chaque table est contrôlée
 contre un total connu. Le registre est confirmé sur un cas : l'année sans diplômés en kinésithérapie (2018) se
@@ -31,29 +30,11 @@ publié, soit 97 géocodes et 4,8\,\% de la population\mesure{}. Enfin, l'Annuai
 professions observables à la commune. Mais la médiane des effectifs privés par commune est nulle. Le grain
 projetable est donc le bassin de vie ou l'EPCI pour les infirmiers, et le département pour les dentistes et les
 sages-femmes. Ce même fichier montre que 24\,\% des dentistes et 32\,\% des kinésithérapeutes actifs n'ont pas
-de diplôme d'État français\mesure{}. Limite : les infirmiers n'entrent dans le jumeau que sous l'hypothèse d'un
+de diplôme d'État français\mesure{}. Pour le modèle de choix d'installation, nous construisons un substitut
+d'installations nettes par commune (2012--2025), l'historique des officines (2004--2025 ; 20\,083 en 2025) et une
+table d'attributs communaux ; le substitut ne voit qu'une fraction de l'année blanche des kinésithérapeutes. Limite : les infirmiers n'entrent dans le jumeau que sous l'hypothèse d'un
 secteur indépendant de l'âge et du sexe, testée sur le sexe seulement.
 \end{abstract}
-\begin{otherlanguage}{english}
-\begin{abstract}
-The digital twin of French healthcare supply projects, to 2050, the ``liberal'' headcount of five professions:
-midwives, dentists, pharmacists, physiotherapists and nurses. Here ``liberal'' means the private sector, for-profit
-or not, with every public employer excluded. The DREES stock used so far did not separate public from private
-employers among salaried staff, so the 2026 output was only known as a range: 12,475 to 26,428 midwives. We show
-that the split is already present in the open DREES files, which cross département, activity sector, practice
-mode, age and sex. Salaried staff in mixed sectors are apportioned using the FINESS register. The midwife range
-narrows to 12,059--14,660 (measured), 81\,\% narrower. Nurses separate without ambiguity: 277,788 in the private
-sector in 2023. We also release a register of 30 dated, sourced events and the conventional zoning of 34,919
-geocodes for four professions. Each table is checked against a known total. One event is confirmed in the
-data: the 2018 year without physiotherapy graduates appears in the stock, with 35\,\% fewer under-25s. The
-zoning reproduces the published dental perimeter: 97 geocodes and 4.8\,\% of the population. Finally, the public
-Annuaire Santé register makes all five professions observable by municipality. The median private headcount per
-municipality is zero, however. The projectable grain is therefore the living area or inter-municipal body
-for nurses, and the département for dentists and midwives. The same register shows that 24\,\% of active dentists
-and 32\,\% of active physiotherapists hold no French state diploma. Limitation: nurses enter the twin only under
-the assumption that sector is independent of age and sex, which is tested on sex only.
-\end{abstract}
-\end{otherlanguage}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; secteur public et privé ; RPPS ; FINESS ;
 zonage conventionnel ; régulation de l'installation ; données ouvertes ; jumeau numérique.
 
@@ -88,6 +69,9 @@ Trois lacunes de données bloquaient ce cadrage :
   \item Un inventaire des sources ouvertes à la commune. Il comble quatre trous : Marseille, sages-femmes,
   pharmaciens et infirmiers par âge et sexe. Il donne aussi le grain projetable par profession
   (section~\ref{sec:res-grain}).
+  \item Des flux communaux pour le modèle de choix d'installation : un substitut d'installations nettes, les
+  ouvertures et fermetures d'officines, une table d'attributs communaux et l'archivage de l'Annuaire Santé
+  (section~\ref{sec:res-flux}).
 \end{itemize}
 
 \section{Travaux existants}
@@ -181,7 +165,9 @@ Les catégories retenues sont :
   \item handicap médicalisé (182, 183, 186, 190, 255, 437, 448).
 \end{itemize}
 « Autre secteur », et « prévention et établissement de santé » chez les pharmaciens, n'ont pas de proxy :
-$\hat\pi = 0{,}5$\suppose{}.
+$\hat\pi = 0{,}5$\suppose{}. Une exception est mesurée : les sages-femmes salariées en « prévention » sont
+classées publiques, car la DREES compte \num{1423} sages-femmes en PMI au 31/12/2024 pour \num{1383} en
+« prévention » au RPPS 2026\mesure{}.
 
 \paragraph{Infirmiers.} Le BTS sépare déjà public et privé en trois paires : hôpital, médico-social, autre. Les
 libéraux SNDS sont privés. Aucune ambiguïté n'est donc introduite. Le BTS ne croise pas le secteur avec l'âge ou
@@ -220,7 +206,7 @@ Le référentiel \texttt{arm2026} remplace Paris, Lyon et Marseille par leurs 45
 Profession & Année & Effectif & Ancienne & Min & Centrale & Max \\
  & & & fourchette & & & \\
 \midrule
-Sages-femmes & 2026 & \num{26428} & \num{12475}--\num{26428} & \num{12059} & \num{12912} & \num{14660} \\
+Sages-femmes & 2026 & \num{26428} & \num{12475}--\num{26428} & \num{12059} & \num{12819} & \num{13331} \\
 Pharmaciens  & 2026 & \num{75335} & \num{65344}--\num{75335} & \num{60005} & \num{63612} & \num{67219} \\
 Dentistes    & 2026 & \num{48690} & \num{48143}--\num{48690} & \num{40784} & \num{47349} & \num{47894} \\
 Kinés        & 2026 & \num{111141} & \num{98348}--\num{111237} & \num{98828} & \num{101951} & \num{103986} \\
@@ -233,8 +219,13 @@ total additionne BTS et SNDS (double compte possible, voir section~\ref{sec:mena
 \label{tab:fourchettes}
 \end{table}
 
-La largeur de la fourchette baisse de 81\,\% pour les sages-femmes (de \num{13953} à \num{2601}), de 60\,\% pour
+La largeur de la fourchette baisse de 91\,\% pour les sages-femmes (de \num{13953} à \num{1272}), de 60\,\% pour
 les kinésithérapeutes et de 28\,\% pour les pharmaciens\derive{}.
+
+\paragraph{Pharmaciens hospitaliers.} Le RPPS place 16,6\,\% des pharmaciens salariés hospitaliers dans le privé
+(19,8\,\% au plus)\mesure{}. La SAE en compte 29,4\,\% et l'Ordre 28,6\,\% (mesures de l'axe~1). Nous gardons
+la centrale du RPPS, qui est croisée par département, âge et sexe. La variante SAE ajoute \num{1116} pharmaciens
+privés\derive{} (\num{63612} $\rightarrow$ \num{64728}), dans la fourchette. L'écart n'est pas réconcilié.
 
 \paragraph{Les anciennes bornes basses n'étaient pas des minima.} Elles comptaient tout « autre salarié » comme
 privé, PMI et centres municipaux compris. C'est pourquoi le minimum baisse pour les sages-femmes et les
@@ -253,7 +244,6 @@ Pharmaciens & Prévention et étab.\ de santé & \num{1409} & 0,50\suppose & ---
 Dentistes & Centre de santé & \num{6694} & 0,963\mesure & FINESS, \num{1299} centres \\
 Kinés & Étab.\ sanitaire et social & \num{2200} & 0,696\mesure & FINESS, \num{13407} étab. \\
 Kinés & Autre secteur & \num{2524} & 0,50\suppose & --- \\
-Sages-femmes & Prévention (PMI\ldots) & \num{1329} & 0,070\mesure & FINESS, \num{1435} étab. \\
 Sages-femmes & Autre secteur & \num{796} & 0,50\suppose & --- \\
 \bottomrule
 \end{tabular}
@@ -269,11 +259,11 @@ Sages-femmes & Autre secteur & \num{796} & 0,50\suppose & --- \\
   x tick label style={/pgf/number format/1000 sep=},
   y tick label style={/pgf/number format/1000 sep={\,}},
   legend pos=north west,legend style={font=\small}]
-\addplot[name path=max,draw=none,forget plot] coordinates {(2012,8337) (2013,9015) (2014,9568) (2015,10184) (2016,10864) (2017,11296) (2018,11614) (2019,11898) (2020,12254) (2021,12692) (2022,13047) (2023,13400) (2024,13878) (2025,14214) (2026,14660)};
+\addplot[name path=max,draw=none,forget plot] coordinates {(2012,7472) (2013,8064) (2014,8548) (2015,9097) (2016,9728) (2017,10140) (2018,10425) (2019,10685) (2020,11031) (2021,11452) (2022,11767) (2023,12122) (2024,12572) (2025,12885) (2026,13331)};
 \addplot[name path=min,draw=none,forget plot] coordinates {(2012,6839) (2013,7675) (2014,8127) (2015,8704) (2016,9338) (2017,9760) (2018,10024) (2019,10255) (2020,10524) (2021,10707) (2022,10962) (2023,11238) (2024,11510) (2025,11706) (2026,12059)};
 \addplot[gray!30] fill between[of=max and min];
 \addlegendentry{min--max (secteurs mixtes)}
-\addplot[thick,black,mark=*,mark size=1.2pt] coordinates {(2012,7309) (2013,7980) (2014,8459) (2015,9020) (2016,9656) (2017,10075) (2018,10356) (2019,10607) (2020,10929) (2021,11239) (2022,11527) (2023,11857) (2024,12233) (2025,12500) (2026,12912)};
+\addplot[thick,black,mark=*,mark size=1.2pt] coordinates {(2012,7249) (2013,7914) (2014,8388) (2015,8945) (2016,9577) (2017,9994) (2018,10273) (2019,10522) (2020,10843) (2021,11152) (2022,11438) (2023,11768) (2024,12142) (2025,12407) (2026,12819)};
 \addlegendentry{centrale (FINESS)}
 \end{axis}
 \end{tikzpicture}
@@ -283,7 +273,8 @@ Sages-femmes & Autre secteur & \num{796} & 0,50\suppose & --- \\
 \end{figure}
 
 Les séries existent pour chaque année et chaque département. La largeur médiane de la fourchette par département,
-dernière année, va de 4\,\% de l'effectif (kinésithérapeutes) à 9\,\% (sages-femmes, dentistes, pharmaciens)\mesure{}.
+dernière année, va de 3,6\,\% de l'effectif (sages-femmes) et 4\,\% (kinésithérapeutes) à 9\,\% (dentistes,
+pharmaciens)\mesure{}.
 
 \subsection{Registre d'événements}\label{sec:res-evenements}
 Le registre compte 30 événements entre 2009 et 2028\mesure{} : 23 \texttt{verifie} et 7 \texttt{partiel}.
@@ -405,6 +396,44 @@ par commune. Le meilleur substitut est la variation du stock des moins de 40 ans
 dentistes et 32,5\,\% des kinésithérapeutes, contre 9,7\,\% (sages-femmes), 3,5\,\% (pharmaciens) et
 2,6\,\% (infirmiers). Ce sont surtout des diplômes de l'UE.
 
+\subsection{Flux communaux pour le choix d'installation}\label{sec:res-flux}
+\paragraph{Substitut d'installations nettes.} Pour une commune $c$ et une année $t$ :
+\begin{equation}
+I^{\mathrm{net}}_{c,t} = N^{<40}_{c,t} - N^{<40}_{c,t-1} + a_{d,t-1}\, N^{<40}_{c,t-1},
+\end{equation}
+où $N^{<40}$ compte les libéraux de moins de 40 ans (CartoSanté) et $a_{d,t-1}$ la part des moins de 40 ans qui
+passent 40 ans dans l'année, prise dans la pyramide du département. C'est un solde, pas un flux brut. Deux tests
+ont été fixés avant le calcul :
+\begin{itemize}
+  \item la somme des communes doit égaler la même formule appliquée au département. C'est le cas à
+  0,28\,\% (dentistes), 0,34\,\% (kinésithérapeutes) et 1,69\,\% (infirmiers) près de 2012 à 2025\mesure{},
+  mais pas avant 2012 ;
+  \item l'année sans diplômés kinésithérapeutes (2018) doit faire tomber le niveau national sous 0,8 fois la
+  référence. Il ne tombe qu'à 0,90\mesure{} : \textbf{le test échoue}. Le substitut sert donc à répartir les
+  installations entre communes, pas à mesurer leur niveau.
+\end{itemize}
+
+\paragraph{Officines.} L'historique FINESS (état au 31 décembre, 2004--2025) donne \num{23241} officines en
+2004 et \num{20083} en 2025\mesure{}, avec 251 fermetures pour 10 ouvertures en 2025. Fin 2024, il en compte
+\num{20324}, contre \num{20242} pour l'Ordre au 1\textsuperscript{er} janvier 2025\citep{ordre2025demo}, soit
++0,4\,\%\mesure{}. Les codes communes anciens sont ramenés au COG 2026 par le fichier Insee des événements
+\citep{insee2026cog} : 99,9\,\% des officines sont rattachées chaque année, contre 96 à 97\,\% sans
+conversion\mesure{}.
+
+\paragraph{Attributs.} Une table de \num{35011} géocodes sur 2012--2025 réunit les covariables du modèle.
+\begin{itemize}
+  \item Population et structure par âge (Insee, recensements 2012, 2017 et 2023, interpolés). La population
+  2023 totale égale la population légale à l'unité près (\num{68094280})\mesure{}.
+  \item Grille de densité, aire d'attraction et distance au pôle le plus proche.
+  \item Officines, maisons et centres de santé, zonage, offre libérale et substitut d'installations.
+\end{itemize}
+Paris, Lyon et Marseille y sont découpées en arrondissements. Contrôle : la table égale la version précédente plus
+exactement l'écart du département 13\mesure{}.
+
+\paragraph{Archivage.} L'Annuaire Santé est republié sans archive. Un premier instantané daté et anonymisé a été
+gardé le 13 novembre 2026 (\num{752993} personnes)\mesure{}. À partir de deux instantanés, on calculera des
+entrées et sorties brutes par commune. La fréquence d'archivage reste à décider.
+
 \section{Validation et menaces à la validité}\label{sec:menaces}
 \paragraph{Contrôles contre des totaux connus.}
 \begin{itemize}
@@ -455,6 +484,8 @@ dentistes et 32,5\,\% des kinésithérapeutes, contre 9,7\,\% (sages-femmes), 3,
     activités dentaires n'y ont pas de commune.
     \item Le seuil de 30 est une convention, que seul le banc peut remplacer.
   \end{itemize}
+  \item \textbf{Flux communaux.} Le substitut d'installations est un solde. Il compte les déménagements entre
+  communes et ne voit pas le salariat. Son niveau national ne suit pas les promotions françaises.
   \item \textbf{Registre.}
   \begin{itemize}
     \item 7 lignes sont partielles.
@@ -472,6 +503,10 @@ uv run python v2/data/build_zonage.py    # ~2 s
 uv run python v2/data/build_annuaire.py  # ~15 s
 uv run python v2/data/build_commune.py   # ~3 s
 uv run python v2/data/build_infirmiers.py # ~2 s
+uv run python v2/data/build_finess_histo.py # ~15 s
+uv run python v2/data/build_flux.py      # ~20 s
+uv run python v2/data/build_attributs.py # ~1 min
+uv run python v2/data/archive_annuaire.py --local
 \end{verbatim}
 \begin{itemize}
   \item \textbf{Entrées.}
