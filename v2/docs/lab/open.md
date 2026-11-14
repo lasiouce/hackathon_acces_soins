@@ -174,3 +174,6 @@ restent valables : on les reprend ici au moment où on les traite.
 
 | Chatbot : la vérification ±6 % de `chatbot/chat/verif.py` retire « 100 000 » (unité) des réponses sans contexte ; ajouter l'unité aux références et resserrer la tolérance à la précision affichée — avec Juliette | ~20 min + tests | mesure chatbot | 2026-11-14 | open |
 | Chatbot : deuxième jeu de questions écrit par quelqu'un d'autre que l'auteur de l'agent, et relecture qualitative des réponses (justesse des phrases, pas seulement des nombres) | ~30 min humain + ~4 min machine | mesure chatbot | 2026-11-14 | open |
+| Axe 0 : point d'injection officiel des taux de base (aujourd'hui C1 passe par un cache de `History`, détail interne du jumeau) | ~30 min axe 0 | C1 servi par la carte | 2026-11-14 | open |
+| Axe 2 : banc N1 de C1 sur la table privée des infirmiers de l'axe 4 (la carte la sert ; C1 n'a été mesuré que sur les libéraux RPPS) | ~20 min machine | C1 servi par la carte | 2026-11-14 | open |
+| Axe 2 : rétention de C1 variable avec l'horizon dans le jumeau (aujourd'hui tenue à sa moyenne, ±1,2 % à 5 ans) | ~1 h | C1 servi par la carte | 2026-11-14 | open |

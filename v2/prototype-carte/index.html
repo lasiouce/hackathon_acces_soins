@@ -894,12 +894,21 @@ function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof
   // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
   if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();toast("Scénario du chatbot affiché sur la carte");}
 // la démarche, rendue visible : ce que l'assistant a compris (leviers, horizon, territoire), lu dans le calcul lancé
-function askPlan(c){if(!c)return"";const lv=Object.entries(c.leviers||{}).map(([k,v])=>{const l=LV(k);if(!l)return null;
+function askPlan(c,o){if(o)return askObj(o);if(!c)return"";const lv=Object.entries(c.leviers||{}).map(([k,v])=>{const l=LV(k);if(!l)return null;
     let t;try{t=phrase(k,v);}catch{t=null;}
     if(l.type=="toggle")return v?askEsc(l.label.replace(/^…\s*/,"").replace(/^./,c=>c.toUpperCase()))+(l.status?` <i>(${askEsc(l.status)})</i>`:""):null;
     return askEsc(`${l.label} : ${t||v}`)+(l.status?` <i>(${askEsc(l.status)})</i>`:"");}).filter(Boolean);
   return `<div class="plan"><b>Ce que l'assistant a compris</b><ol><li><span>Leviers</span>${lv.length?lv.join(" · "):"aucun : tendance sans nouvelle politique"}</li>`
     +`<li><span>Horizon</span>${c.annee}</li><li><span>Territoire</span>${askEsc(names[c.terr]||c.terr)} · ${askEsc(META.professions[c.prof]||c.prof)}</li>`
+    +`<li><span>Calcul</span>${askModele()}</li></ol></div>`;}
+// question d'objectif : la cible comprise (et non un réglage de leviers)
+function askObj(o){const prof=META.professions[o.prof]||o.prof,terr=names[o.terr]||o.terr,dens=o.grandeur=="densite";
+  const cible=o.valeur_cible!=null?`${askNf(o.valeur_cible,dens?1:0)} ${dens?"pour 100 000 habitants":"professionnels"}`
+    :`+${askNf(o.hausse_pct,1)} % ${dens?"de densité":"d'effectif"}`;
+  const ref=o.valeur_cible!=null?"valeur absolue":o.reference=="origine"?"par rapport à aujourd'hui":"par rapport à la tendance (et lecture « aujourd'hui » donnée aussi)";
+  return `<div class="plan"><b>Ce que l'assistant a compris : un objectif</b><ol><li><span>Cible</span>${askEsc(cible)}</li>`
+    +`<li><span>Référence</span>${askEsc(ref)}</li><li><span>Horizon</span>${o.annee||"—"}</li><li><span>Territoire</span>${askEsc(terr)} · ${askEsc(prof)}</li>`
+    +(o.exclus&&o.exclus.length?`<li><span>Exclus</span>${askEsc(o.exclus.map(k=>(LV(k)||{label:k}).label).join(", "))}</li>`:"")
     +`<li><span>Calcul</span>${askModele()}</li></ol></div>`;}
 function askModele(){const m=ASK.modele;if(!m)return "jumeau numérique ; aucun chiffre écrit par l'IA";
   return `<details><summary>${askEsc(m.nom)} ; aucun chiffre écrit par l'IA</summary><dl>`+[["Équation",m.equation],["Estimation",m.estimation],
@@ -956,7 +965,7 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
       const chk=(ia?(VERIF[v]||""):"Réponse du glossaire de l'équipe, sans IA")+(lx.ok?"":` · terme(s) hors lexique neutre : ${lx.termes.join(", ")}`);
       const tools=[...new Set((d.appels||[]).map(x=>x.outil))].join(", ");
       const c=d.carte,btn=c?`<button class="askapply">Afficher ce scénario sur la carte</button>`:"";
-      st.outerHTML=`<div class="a">${askPlan(c)}${askRender(d.reponse,d.graphiques)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
+      st.outerHTML=`<div class="a">${askPlan(c,d.objectif)}${askRender(d.reponse,d.graphiques)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
       const el=[...$("#asklog").querySelectorAll(".a")].pop();if(c)el.querySelector(".askapply").onclick=()=>askApply(c);
       el.querySelectorAll(".askfollow").forEach(b=>b.onclick=()=>askSend(b.dataset.q));}
   }catch(e){st.textContent="Serveur injoignable.";}

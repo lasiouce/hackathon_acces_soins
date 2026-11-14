@@ -491,29 +491,214 @@ HORS_PERIMETRE = [
 # Modèle servi (v2/prototype/server.py, Model : C1 par défaut, A0 par JUMEAU_MODELE=A0) ; chiffres mesurés, cités des articles.
 MODELES = {
     "C1": {
-        "nom": "Cohortes bayésiennes, entrées comprises (C1, axe 2)",
+        "nom": "Modèle bayésien hiérarchique (cohortes, entrées comprises ; C1, axe 2)",
         "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans ; rétention nette en âge-période-cohorte, entrées = niveau national (filtre de Kalman) × parts départementales",
         "estimation": "Bayes empirique, moyenne a posteriori ; fenêtre de 2012 (kinés 2017) à la dernière année ; effets département et région rétrécis ; secteur privé seulement, le salariat public garde les taux de A0",
         "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués aux taux de C1, au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
-        "precision": "MAPE 7,73 % par département à 5 ans, secteur privé, contre 8,68 % pour A0 et 9,30 % pour la tendance linéaire (mesuré, article axe 2) ; gain plus faible sur les origines récentes (dentistes, pharmaciens)",
+        "precision": "MAPE 7,73 % par département à 5 ans, secteur privé, contre 8,68 % pour le modèle stock-flux multi-échelle (A0) et 9,30 % pour la tendance linéaire (mesuré, article axe 2) ; gain plus faible sur les origines récentes (dentistes, pharmaciens)",
         "fourchette": "± pente de l'erreur nationale de C1 au banc × horizon × 1,6, environ 8 cas sur 10 (même méthode que A0) ; extrapolée au-delà d'environ 10 ans ; la bande probabiliste propre de C1 n'est calibrée qu'au département (77,6 %) et n'est pas publiée au national",
         "approximation": "rétention de C1 tenue à sa moyenne sur l'horizon : écart de −1,1 à +1,2 % sur le total privé national à 5 ans (mesuré) ; infirmiers : C1 mesuré au banc sur les libéraux, la carte sert la table privée de l'axe 4",
-        "alternative": "A0, stock-flux à taux départementaux (MAPE 8,68 %) : servi si JUMEAU_MODELE=A0",
+        "alternative": "Modèle stock-flux multi-échelle (A0, MAPE 8,68 %) : servi si JUMEAU_MODELE=A0",
         "sources": "v2/papers/axe2-methodes/main.pdf ; v2/methodes/cohortes.py ; v2/methodes/c1_jumeau.py ; v2/jumeau/ ; v2/prototype/server.py (Model)",
     },
     "A0": {
-        "nom": "Stock-flux à taux départementaux (A0, axe 2)",
+        "nom": "Modèle stock-flux multi-échelle (taux départementaux rétrécis vers le national ; A0, axe 2)",
         "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans",
         "estimation": "rétention nette et entrées ajustées sur les 5 dernières années observées ; taux départementaux rétrécis vers le national (poids 200 personnes, supposé)",
         "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
         "precision": "MAPE 8,68 % par département à 5 ans, secteur privé, contre 9,30 % pour la tendance linéaire (mesuré, article axe 2, tableau 1)",
         "fourchette": "± pente de l'erreur de backtest × horizon × 1,6, environ 8 cas sur 10 (facteur cité, non reproduit ; article axe 5) ; extrapolée au-delà d'environ 10 ans",
-        "alternative": "C1, cohortes bayésiennes : MAPE 7,73 % au même banc, servi par défaut (JUMEAU_MODELE=C1)",
+        "alternative": "Modèle bayésien hiérarchique (C1, MAPE 7,73 % au même banc) : servi par défaut (JUMEAU_MODELE=C1)",
         "sources": "v2/papers/axe2-methodes/main.pdf ; v2/sante/estimators.py (StockFlowLocal) ; v2/jumeau/ ; v2/prototype/server.py (Model)",
     },
 }
 # Modèle servi : même variable que v2/prototype/server.py (MODELE_CHOIX), C1 par défaut.
 MODELE = MODELES[os.environ.get("JUMEAU_MODELE", "C1").upper()]
+
+
+# ------------------------------------------------------------------ planifier : objectif chiffré -> mélanges de leviers datés
+# Recherche dans les bornes du modèle (curseurs de la carte). Seuls les leviers qui peuvent augmenter l'effectif sont
+# cherchés (la régulation déplace ou retire des entrées). Kill test d'additivité (2026-11-14) : écart médian 0,2 %, 1 mélange
+# sur 20 au-delà de 10 % (avec régulation) : la somme des effets seuls sert à chercher, le jumeau recalcule chaque mélange montré.
+# Zones plausibles retirées le 2026-11-14 (demande de l'utilisateur·rice) : le critère « le plus simple » préfère déjà les
+# petits réglages.
+_BORNES = {"quotas": (1.0, 1.5, 0.05), "etrangers": (1.0, 2.0, 0.1), "retraite": (0.0, 3.0, 0.5), "cumul": (1.0, 2.0, 0.1),
+           "precoces": (1.0, 0.5, -0.1)}
+
+
+def _grille(a, b, pas):
+    n = int(round((b - a) / pas))
+    return [round(a + i * pas, 2) for i in range(n + 1)]
+
+
+def planifier(profession_: str, territoire_: str = "FR", annee: int = 2040, grandeur: str = "effectif",
+              hausse_pct: float | None = None, valeur_cible: float | None = None, reference: str = "tendanciel",
+              leviers_exclus: list | None = None, n_max_leviers: int = 3) -> dict:
+    """Objectif chiffré à un horizon -> mélanges de leviers qui l'atteignent, recalculés par le jumeau, avec délais."""
+    import itertools
+    p, t = profession(profession_), territoire(territoire_)
+    cle = "densite_100k_scenario" if grandeur == "densite" else "scenario"
+    base = _answer(p, leviers({}), t)
+    y = _annees([annee], base)[0]
+    lb = _ligne(base, y, _dens_fr(p, leviers({}), y))
+    o = base["origin"]
+    v_tend = lb["densite_100k_tendanciel"] if grandeur == "densite" else lb["tendanciel"]
+    v_orig = _r1(base["dens_base"][0]) if grandeur == "densite" else round(base["base"][0])
+    if valeur_cible is not None:
+        cible, ref, objectif = float(valeur_cible), None, f"{valeur_cible:g} {'pour 100 000 habitants' if grandeur == 'densite' else 'professionnels'} en {y}"
+    elif hausse_pct is not None:
+        ref = v_tend if reference == "tendanciel" else v_orig
+        cible = ref * (1 + hausse_pct / 100)
+        objectif = (f"+{hausse_pct:g} % {'de densité' if grandeur == 'densite' else "d'effectif"} par rapport "
+                    + (f"au tendanciel {y}" if reference == "tendanciel" else f"à {o} (aujourd'hui)"))
+    else:
+        raise ErreurOutil("donner hausse_pct (avec reference) ou valeur_cible")
+    tete = {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t, "annee": y,
+            "grandeur": grandeur, "objectif": objectif, "cible": round(cible, 1),
+            "ecart_cible_moins_tendanciel": _r1(cible - v_tend) if grandeur == "densite" else round(cible - v_tend),
+            "aujourd_hui": {"annee": o, "valeur": v_orig},
+            "tendanciel_annee": {"valeur": v_tend, "evolution_depuis_aujourd_hui_pct": round((v_tend / v_orig - 1) * 100, 1) if v_orig else None,
+                                 "fourchette_effectif": lb["fourchette_scenario"]},
+            "annee_decision_du_modele": S().DECISION}
+    if hausse_pct is not None:     # les deux lectures de « +X % » : par rapport à aujourd'hui et par rapport à la tendance
+        tete["lectures"] = {
+            "par_rapport_a_aujourd_hui": {"cible": round(v_orig * (1 + hausse_pct / 100), 1),
+                                          "ecart_cible_moins_tendanciel": round(v_orig * (1 + hausse_pct / 100) - v_tend, 1),
+                                          "deja_atteint_sans_politique": v_tend >= v_orig * (1 + hausse_pct / 100)},
+            "par_rapport_a_la_tendance": {"cible": round(v_tend * (1 + hausse_pct / 100), 1),
+                                          "ecart_cible_moins_tendanciel": round(v_tend * hausse_pct / 100, 1),
+                                          "deja_atteint_sans_politique": False}}
+    if v_tend >= cible:
+        return {**tete, "deja_atteint_sans_politique": True, "melanges": [],
+                "lecture": "la tendance, sans nouvelle politique, atteint déjà la cible : aucun levier n'est nécessaire"}
+    exclus = set(leviers_exclus or [])
+    ks = [k for k in _BORNES if k not in exclus]
+    meta = {m["k"]: m for m in S().lever_meta()}
+    val = lambda r: (r["dens_scn"] if grandeur == "densite" else r["scn"])[r["years"].index(y)]
+    v0 = val(base)
+    demi = lb["fourchette_demi_largeur_pct"] / 100
+
+    def courbe(k, grille):        # effet de chaque levier seul, sur sa grille (jumeau)
+        return {g: val(_answer(p, leviers({k: g}), t)) - v0 for g in grille}
+
+    def delai(k):
+        return S().LAG[p] + 1 if k == "quotas" else _DELAI_ANS.get(k, 1)
+
+    def chercher(zones):
+        grilles = {k: _grille(*zones[k]) for k in ks}
+        eff = {k: courbe(k, grilles[k]) for k in ks}
+        neutre = {k: grilles[k][0] for k in ks}
+        cands = []
+        for combo in itertools.product(*[grilles[k] for k in ks]):
+            ch = {k: g for k, g in zip(ks, combo) if g != neutre[k]}
+            if not ch or len(ch) > n_max_leviers:
+                continue
+            gain = sum(eff[k][g] for k, g in ch.items())
+            if v0 + gain < cible:
+                continue
+            depl = sum(abs(g - neutre[k]) / abs(_BORNES[k][1] - _BORNES[k][0]) for k, g in ch.items())
+            cands.append((ch, gain, depl, max(delai(k) for k in ch)))
+        return cands, eff, grilles
+
+    def verifier(ch):
+        r = _answer(p, leviers(ch), t)
+        v = val(r)
+        li = _ligne(r, y)
+        return v, li
+
+    cands, eff, grilles = chercher(_BORNES)
+    criteres = [("le plus simple", lambda c: (len(c[0]), c[2])), ("effet le plus tôt", lambda c: (c[3], len(c[0]), c[2])),
+                ("prudent (cible atteinte au bas de la fourchette)", lambda c: (len(c[0]), c[2]))]
+    out, vus = [], set()
+    for nom, cle_tri in criteres:
+        prudent = nom.startswith("prudent")
+        for ch, gain, depl, dmax in sorted(cands, key=cle_tri)[:40]:
+            if prudent and (v0 + gain) * (1 - demi) < cible:
+                continue
+            key = tuple(sorted(ch.items()))
+            v, li = verifier(ch)
+            if v < cible or (prudent and v * (1 - demi) < cible):
+                continue                      # l'interaction fait manquer la cible : candidat suivant
+            if key in vus:
+                break
+            vus.add(key)
+            lev = []
+            for k, g in ch.items():
+                d = delai(k)
+                lev.append({"levier": _fmt_levier(k, g), "delai_ans": d, "delai_qualificatif": q_delai(d),
+                            "decision_dans_le_modele": S().DECISION, "premier_effet": S().DECISION + d,
+                            "dernier_moment_pour_un_premier_effet_avant_l_horizon": y - d,
+                            "statut": meta[k]["status"], "source": meta[k]["source"]})
+            out.append({"critere": nom, "leviers": lev, "reglage_carte": ch,
+                        "valeur_obtenue": _r1(v) if grandeur == "densite" else round(v),
+                        "ecart_au_tendanciel": _r1(v - v_tend) if grandeur == "densite" else round(v - v_tend),
+                        "qualificatif": q_variation((v / v_tend - 1) * 100 if v_tend else None),
+                        "fourchette_effectif": li["fourchette_scenario"],
+                        "atteint_au_bas_de_la_fourchette": v * (1 - demi) >= cible})
+            break
+    if not out:
+        tout = {k: grilles[k][-1] for k in ks}
+        v, li = verifier(tout)
+        return {**tete, "deja_atteint_sans_politique": False, "atteignable": False, "melanges": [],
+                "meilleur_atteignable": {"leviers": resume_leviers(leviers(tout)), "valeur": _r1(v) if grandeur == "densite" else round(v),
+                                         "ecart_a_la_cible_pct": round((v / cible - 1) * 100, 1)},
+                "lecture": "cible hors d'atteinte avec les leviers du modèle, même aux bornes : horizon trop court ou objectif trop haut",
+                "methode": _METHODE_PLAN}
+    return {**tete, "deja_atteint_sans_politique": False, "atteignable": True, "melanges": out,
+            "methode": _METHODE_PLAN}
+
+
+# ------------------------------------------------------------------ politique hors modèle -> leviers (traduction supposée)
+_ESSAIS = {"precoces": (0.9, 0.8), "cumul": (1.2, 1.5), "etrangers": (1.2, 1.5), "quotas": (1.1, 1.2), "retraite": (0.5, 1.0)}
+
+
+@lru_cache(maxsize=1)
+def _correspondances() -> dict:
+    import yaml
+    return yaml.safe_load((Path(__file__).resolve().parent / "correspondances.yaml").read_text())
+
+
+def traduire_politique(politique: str, profession_: str, territoire_: str = "FR", annee: int = 2040) -> dict:
+    """Politique non modélisée -> leviers du même mécanisme (SUPPOSÉ), essayés à deux ampleurs d'essai (supposées) : une
+    fourchette de traduction, pas une estimation de la politique."""
+    G = NL().glossaire()["non_modelises"]
+    C = _correspondances()
+    if politique not in G or politique not in C:
+        raise ErreurOutil(f"politique inconnue {politique!r} ; valeurs : {', '.join(C)}")
+    g, c = G[politique], C[politique]
+    tete = {"politique": g["libelle"], "pourquoi_hors_modele": g["raison"], "traduction": c["traduction"],
+            "statut": "supposé (aucune élasticité estimée sur données ouvertes)", "limite": c.get("limite")}
+    if c["traduction"] == "aucune":
+        return {**tete, "lecture": "pas dans le modèle : aucun levier du jumeau ne porte ce mécanisme"}
+    p, t = profession(profession_), territoire(territoire_)
+    base = _answer(p, leviers({}), t)
+    y = _annees([annee], base)[0]
+    i = base["years"].index(y)
+    b = base["base"][i]
+    essais = []
+    for niveau, j in (("ampleur basse", 0), ("ampleur haute", 1)):
+        reg = {}
+        for l in c["leviers"]:
+            reg.update(l.get("reglage") or {l["levier"]: _ESSAIS[l["levier"]][j]})
+        lv = leviers(reg)
+        e = _answer(p, lv, t)["scn"][i] - b
+        essais.append({"niveau": niveau, "reglage": resume_leviers(lv), "reglage_carte": reg, "ecart_au_tendanciel": round(e),
+                       "ecart_pct": round(e / b * 100, 2) if b else None, "qualificatif": q_variation(e / b * 100 if b else None)})
+    if any(l["levier"] == "regul" for l in c["leviers"]) and all(abs(e["ecart_au_tendanciel"]) < 1 for e in essais):
+        tete["note_effet_nul"] = ("effet nul ici parce qu'aucun département de ce territoire n'est en zone « remplacement seul » "
+                                  "(zonage actuel) : le jumeau ne peut pas représenter la politique ici, ce n'est pas une "
+                                  "absence d'effet de la politique")
+    return {**tete, "profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t, "annee": y,
+            "tendanciel": round(b),
+            "leviers_du_meme_mecanisme": [{k: l[k] for k in ("levier", "sens", "mecanisme")} for l in c["leviers"]],
+            "essais": essais,
+            "lecture": "traduction supposée : l'ampleur réelle de la politique est inconnue ; les deux essais encadrent un effet "
+                       "possible si la politique agit par ce mécanisme, à ces deux ampleurs d'essai (supposées)"}
+
+
+_METHODE_PLAN = ("effet de chaque levier seul calculé par le jumeau sur sa grille, dans les bornes du modèle ; mélanges "
+                 "cherchés sur la somme des effets (additivité vérifiée : écart médian 0,2 % sur 20 mélanges), chaque mélange "
+                 "montré recalculé par le jumeau ; décision en 2026 dans le modèle")
 
 
 def perimetre() -> dict:
@@ -565,6 +750,12 @@ def atteindre(profession_: str, territoire_: str, hausse_pct: float, annee: int 
     if ref is None:
         raise ErreurOutil("densité indisponible pour ce territoire (population manquante)")
     cible = ref * (1 + hausse_pct / 100)
+    if lb[cle] is not None and lb[cle] >= cible:
+        return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t, "annee": y,
+                "objectif": f"+{hausse_pct:g} % par rapport {'au tendanciel ' + str(y) if reference == 'tendanciel' else 'à ' + str(base['origin'])}",
+                "reference": ref, "cible": round(cible, 1), "deja_atteint_sans_politique": True,
+                "tendanciel_annee": {"effectif": lb["tendanciel"], "densite_100k": lb["densite_100k_tendanciel"]},
+                "lecture": "la tendance, sans nouvelle politique, atteint déjà la cible : aucun levier n'est nécessaire"}
 
     def valeur(lv):
         r = _answer(p, leviers(lv), t)
