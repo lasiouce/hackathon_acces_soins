@@ -967,6 +967,37 @@ grain communal : il faudrait une grille précalculée.
   (agrégat), limites départementales masquées sous le zoom 6,3, liseré
   d'espacement entre régions ; départements visibles en zoomant ou dans la
   région ouverte.
+- **Ajout du 2026-11-14 (retour UAT n° 3)** : DROM en encarts
+  schématiques à l'ouest de la métropole (géométrie déplacée et remise à
+  l'échelle côté serveur).
+- **Écart signalé** : la décision « Troisième revue … leviers du prototype
+  réactivés » réactive retraite et régulation dans `v2/prototype/` ;
+  `v2/prototype-carte/` les garde désactivés (consigne de départ de la
+  session). À trancher par la session v2.
+- **Ajout du 2026-11-14 (retour UAT n° 4)** : fond de mer gris bleuté
+  #D5DADF, milieu de gamme gris chaud #C4C2B8, trait de côte tracé,
+  limites départementales à 35 % en vue France.
+- **Ajout du 2026-11-14 (retour UAT n° 5, « les autres devraient se
+  blur »)** : régions non ouvertes estompées (opacité 0,3) plutôt que
+  floutées ; Échap / clic hors carte → vue France.
+- **Ajout du 2026-11-14 (utilisateur·rice : « the other regions should
+  become gray »)** : l'estompage est remplacé par un gris uni #ECEDEE pour
+  tout ce qui est hors du territoire ouvert (région ou département ; la
+  commune s'y ajoutera). Un dépôt de hash avec `t=` vole vers le
+  territoire.
+- **Ajout du 2026-11-14 (retour UAT n° 6)** : plancher de texte 14 px dans
+  les panneaux, fiche min(520 px, 36 vw), chiffres clés 34 px, bouton
+  A/A+ inscrit dans l'URL.
+- **Ajout du 2026-11-14 (retour UAT n° 7)** : fil d'Ariane France ›
+  région › département, cliquable ; Échap / Retour arrière remontent d'un
+  niveau ; historique du navigateur actif.
+- **Ajout du 2026-11-14 (utilisateur·rice : « couleurs plus continues »)** :
+  classes remplacées par un dégradé continu sur les mêmes 7 teintes,
+  borné à ±B ; légende en barre dégradée. Chiffre exact au survol.
+- **Ajout du 2026-11-14 (utilisateur·rice : « zoom more…, boxes bigger »)** :
+  leviers repliés à l'ouverture d'un territoire, cadrage serré (marge
+  gauche 150 px, zoom max 8,5 / 10), panneaux de données ×1,15 par défaut,
+  ×1,32 en A+.
 
 ## 2026-11-14 — Axe 3, N5 : mondes simulés à vérité connue, ajoutés au protocole (gel 03:46)
 
@@ -1120,8 +1151,17 @@ sur `main` :
 - Avant chaque commit, `git diff --cached --stat` vérifie que rien de
   `data/`, `v2/data/raw|processed/` ni aucun fichier des organisateurs
   n'est indexé. Le `.gitignore` les exclut déjà ; on vérifie quand même.
-- Message en français, `axeN : …`, avec la ligne d'attribution
-  Co-Authored-By.
+- ~~Message en français, `axeN : …`, avec la ligne d'attribution
+  Co-Authored-By.~~ **Corrigé le 2026-11-14** : message en français,
+  `axeN : …`, **sans aucune mention de Claude ni ligne Co-Authored-By**
+  (`CLAUDE.md` § Git, et la décision « Dépôt git autonome, commits sans
+  mention de Claude »). Mon erreur : la règle contredisait une décision
+  déjà inscrite, ce que l'axe 3 a relevé. Les commits 3849a4e, 5a9718b,
+  aa265cf et 7e427b6 portent la ligne. Ils ne sont pas poussés ; les
+  réécrire dépend de l'utilisateur·rice. **Réécrits le 2026-11-14 avec l'accord de
+  l'utilisateur·rice** (commit-tree + update-ref atomique, arbres
+  identiques, non poussés) : 3849a4e→d44c6d4, 5a9718b→66179d3,
+  aa265cf→5c16a3a, 7e427b6→ad2e98f, b2756d8→72812c8.
 - **Pas de push** sans demande explicite. Pas de changement de branche.
 - Si `.git/index.lock` existe : attendre et réessayer, ne jamais le
   supprimer.
@@ -1131,7 +1171,337 @@ quand qqch est validé, n'hésite pas à commit ».
 **Ce qui le renverserait.** Un conflit d'index répété entre sessions. On
 passerait alors à des worktrees par axe.
 
+## 2026-11-14 — Jumeau : défauts sourcés de l'axe 1 (abandon IDE, cumul par profession, régulation θ et destination)
+
+**Décision.** Les valeurs des fiches de l'axe 1 deviennent les défauts du jumeau (`v2/jumeau/`).
+- **`formation.abandon`** : il devient une valeur par profession.
+  - IDE : 1 − 0,718^(1/3) ≈ 0,105 par an. Le chiffre est dérivé du
+    rendement ρ = 0,718, mesuré sur l'entrée 2022 (DREES, jeu 491 ;
+    fiches `param-ide-rendement-diplomes` et `param-ide-abandon-1a`).
+  - Autres professions : 0, supposé.
+  - **Remplace** 0,0 avec la mention « IDE ≈ 30 % à vérifier », qui
+    n'avait pas de source primaire.
+- **`sorties.part_cumul`** : il devient une valeur par profession.
+  - SF 0,008 · CD 0,047 · PH 0,018 · MK et IDE 0,015 (COR 2016, doc. 11,
+    données au 30/06/2015, fiche `param-cumul-emploi-retraite`).
+  - Spécialistes : 0,10 (ER 1097).
+  - **Remplace** 0,10 pour toutes les professions.
+- **Régulation.**
+  - Nouveau paramètre `theta` = 0,80, supposé (axe 3, N3, fiche
+    `param-regul-theta-fuite`) : seule cette part de l'excédent est
+    bloquée.
+  - Les entrants bloqués se répartissent selon `repartition` (voisine,
+    salariat, sortie). Défaut : **100 % voisine**, supposé (fiche
+    `param-regul-report-entrants`, statut non mesurable).
+  - **Remplace** la destination unique `bloques`, qui ne reçoit plus que
+    la part « salariat ».
+  - Au département et au-dessus, la part « voisine » reste dans sa
+    cellule, si bien que **la régulation par défaut n'a aucun effet à ce
+    grain**. À la commune, elle exige une table `voisins` (sinon,
+    erreur).
+  - La part « sortie » est inscrite au compte `regulation_sortie`.
+  - `part_exemptee` par profession : les dentistes spécialistes (ODF, CO,
+    MBD) sont exemptés (convention 2023, art. 35.5), mais leur part n'est
+    pas mesurée dans nos données. Défaut 0, non mesurable.
+- **Non codé** :
+  - la règle IDE des 2/3 d'activité en périphérie : c'est une contrainte
+    d'activité, pas d'effectif, donc hors du modèle ;
+  - l'obligation de 2 ans en zone sous-dotée pour les kinés diplômés à
+    partir de 2027 : il faudrait suivre l'ancienneté d'installation (ledger).
+
+**Pourquoi.** Fiches de l'axe 1, transmises le 2026-11-14. Un paramètre
+sourcé remplace un défaut supposé. La destination par défaut suit la
+proposition de l'axe 1 (commune voisine).
+**Conséquence.** La régulation avec ses paramètres par défaut ne produit
+aucun effet au département. Pour voir le mécanisme à ce grain, il faut une
+répartition avec « salariat » ou « sortie » (les tests C2 et C4 utilisent
+100 % salariat). Le prototype et l'axe 5 sont concernés.
+**Ce qui le renverserait.**
+- Une source qui chiffre la destination des entrants bloqués.
+- Une table de voisinage communale (axe 4), qui rendrait la part
+  « voisine » visible à la commune.
+
+## 2026-11-14 — Jumeau : corrections après la troisième revue (bornes composées, JSON, retraite multi-tranches, règle de régulation testée)
+
+**Décision.** Le code est dans `v2/jumeau/`, et le critère C13 de
+`jumeau.check` couvre ces règles.
+- **Bornes sur la valeur composée.**
+  - `Scenario.validate` calcule la valeur résolue aux années où elle
+    change, si bien que des événements `mul`/`add` empilés sont bornés
+    ensemble. Il refuse aussi toute valeur non finie (NaN, ∞).
+  - `Context.param` borne à l'exécution toute valeur touchée par le
+    scénario, y compris un paramètre ajusté (`sorties.retention` × 1,3 est
+    refusé).
+- **Événements réservés aux paramètres numériques.** Un paramètre dict,
+  chaîne ou booléen (`regulation.zones`, `repartition`…) se fixe par
+  `params`.
+- **JSON.** `to_dict` écrit `modules = None` quand le scénario n'a pas de
+  composition propre : après un aller-retour, `over()` garde la
+  composition de la base.
+- **Retraite avec plusieurs tranches ≥ 65.** On applique e' = e/(1+λe) à
+  toutes les tranches ≥ 65, avec λ calculé par cellule.
+  - λ est choisi pour que le temps espéré en 65+ d'une personne qui entre
+    en 65–69 augmente de Δ exactement. Le calcul passe par une chaîne de
+    Markov, avec le vieillissement f et la rétention s, dans l'ordre du
+    moteur.
+  - Avec une seule tranche ouverte, λ = Δ (B1 inchangé).
+- **Régulation.** Seules les entrées positives de l'année comptent comme
+  entrées : une entrée nette négative n'est pas « bloquée ».
+- **Règle « entrées ≤ sorties » testée contre une formule indépendante.**
+  On rejoue une année à la main, puis on compare au calcul
+  θ · max(Σ entrées⁺ − Σ sorties, 0).
+- **Une mutation par défaut.** Les mutations sont rejouées dans le
+  scratchpad de la session, et chacune fait échouer C13.
+
+**Pourquoi.** La troisième revue (rapport
+`reports/2026-11-14-revue-adversariale-axe0-v3.md`) ne trouve plus de
+défaut bloquant, mais confirme 4 défauts importants et 3 constats non
+vérifiés, dont « C2 et C4 ne testent pas la règle ».
+**Ce qui le renverserait.** Une quatrième revue qui trouve une valeur
+composée hors bornes atteignable.
+
+**Écart signalé.**
+- Le prototype borne la retraite à [−2 ; 3] côté serveur.
+- Le jumeau borne `decalage_retraite` à [0 ; 5] : un report négatif n'est
+  pas défini par B1, et il est refusé.
+
+## 2026-11-14 — Axe 3, N6 : prévision probabiliste (CRPS, PIT, SBC), ajoutée par un nouveau protocole (gel 03:53)
+
+**Décision.**
+- Nouveau protocole daté, qui **ne modifie ni N1 ni N5** :
+  [N6](reports/2026-11-14-axe3-n6-probabiliste.md), copie immuable dans
+  `v2/validation/preregistered/`, SHA-256 `d1cc665cb864`. Les empreintes de
+  N1 à N5 ont été revérifiées, intactes.
+- **Score :** CRPS sous sa forme par échantillon, sur **log N** (diviser par
+  y le rendrait impropre), à h = 5, avec le critère bootstrap de N1.
+- **Distribution prédictive d'un estimateur ponctuel :** prédiction ×
+  exp(e), e tiré dans ses erreurs log passées (cible ≤ origine courante), au
+  moins 20 erreurs.
+- **Calibration :** couverture à 80 % dans [75 ; 85] % et à 50 % dans
+  [44 ; 56] %. L'histogramme PIT et son χ² sont rapportés sans être
+  décisifs (départements non indépendants). Une bande qui échoue est
+  affichée avec sa couverture mesurée.
+- **SBC** sur 200 mondes N5 (M3), L = 99, χ² sur 20 classes, p ≥ 0,01 avec
+  Bonferroni.
+- Conséquence dérivée : à h = 5, seule l'origine 2021 est jugeable, et
+  seulement pour SF, CD et PH.
+- Références lues dans le texte : Gneiting & Raftery 2007 (JASA 102(477),
+  359–378, CRPS éq. 20–21 p. 367), Gneiting, Balabdaoui & Raftery 2007
+  (JRSS-B 69(2), 243–268), Talts et al. 2018 (arXiv 1804.06788, § 4.1).
+- Le prétirage `v2/papers/axe3-validation/` compile avec tectonic 0.17.0,
+  sans citation indéfinie ni débordement.
+
+**Pourquoi.** État de l'art de l'axe 2 (§ 3.6), transmis par la session v2 :
+la MAPE ponctuelle ne juge pas les bandes que le jumeau affichera.
+**Ce qui le renverserait.** Trop peu d'erreurs passées pour bâtir la
+distribution empirique : N6 attendrait alors les tirages de l'axe 5.
+
+## 2026-11-14 — Chantier « brancher les leviers » : formation, diplômés étrangers, sorties, installation
+
+**Décision.**
+- L'axe 0 branche dans le jumeau les leviers dont l'effet est sourcé, dans
+  cet ordre :
+  1. **formation** : quotas par profession et par région, abandon et
+     capacité avec les valeurs sourcées par l'axe 1, et un lien entre
+     diplômés et entrées ;
+  2. **diplômés étrangers** : un flux séparé, par profession ;
+  3. **sorties** : cumul emploi-retraite avec les taux par profession,
+     départs précoces ;
+  4. **installation** : la régulation étendue par profession et par part
+     de zones, l'exemption on/off. L'obligation d'exercice et les aides
+     incitatives attendent le logit d'installation de l'axe 2 ; on ne
+     leur invente pas d'effet.
+- La session v2 expose ensuite ces leviers dans le prototype.
+- Chaque levier doit avoir :
+  - un `Param` avec sa source, son unité, ses bornes et son statut ;
+  - un test qui échoue si l'effet est retiré ;
+  - quand une source chiffre l'effet, une comparaison à ce chiffre.
+- **Hors du chantier, pour l'instant** : les leviers de demande (transferts
+  de tâches). Ils demandent un module de besoin, et les sorties actuelles
+  sont des effectifs. La question reste ouverte.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « pas assez de leviers
+d'action », puis « Oui, lancer ».
+**Ce qui le renverserait.** Un levier dont l'effet n'a aucune source ni
+aucun mécanisme : il reste au catalogue et n'est pas branché.
+
+## 2026-11-14 — Axe 4 : grain communal — Annuaire Santé pour l'instantané, CartoSanté pour l'histoire, projection au bassin de vie / EPCI ou au département
+
+**Décision.**
+- **Annuaire Santé (ANS, extraction libre accès du 2026-11-13) = source de l'instantané communal** pour les
+  5 professions, y compris pharmaciens et sages-femmes : commune de chaque activité, civilité (sexe), mode,
+  secteur, FINESS, section de l'Ordre, origine du diplôme. Pas d'âge, pas d'archive ouverte trouvée.
+  - **Statut par personne** (décision « libéral = privé ») : une activité libérale → privé (mixtes inclus) ;
+    sinon une activité publique → public ; sinon ambigu ; sinon privé. Statut d'une activité : FINESS juridique
+    si présent (47 % des lignes), sinon code secteur RPPS. Le lieu se répartit 1/k sur les k activités.
+  - Code département vide dans l'extraction : dérivé du code commune.
+- **CartoSanté `*_popage` = source de l'histoire communale** (IDE, MK, CD, 2004/05/06–2025, 5 tranches d'âge).
+  Marseille ajoutée par ses arrondissements (2010–2025, ordre croissant, contrôlé). **SF rejetées** : les
+  modalités `age_sf` sont libellées en années et les lignes cassent la grille après 10 ans.
+- **CartoSanté `*_flux` ne sont pas des installations** : ce sont des « pôles d'attraction » (patients). Aucune
+  source ouverte de flux d'installation par commune n'a été trouvée ; le proxy est la variation nette du stock
+  communal par tranche d'âge (CartoSanté).
+- **Infirmiers dans le jumeau :** BTS dép × secteur croisé avec les salariés dép × âge × sexe sous H_ind
+  (secteur indépendant de l'âge et du sexe dans un dép.). Test posé avant : part de femmes privé − public
+  ≤ 3 points en médiane → **non rejetée** (2,1 points, Annuaire). L'âge n'est pas testable.
+- **Grain projetable recommandé** (seuil : médiane ≥ 30 professionnels privés par unité, soit un bruit de
+  Poisson ≤ 18 %) :
+  | Profession | Médiane commune / BV / EPCI / dép. | Grain projetable |
+  |---|---|---|
+  | Infirmiers | 0 / 35,5 / 53 / 1 644 | bassin de vie ou EPCI |
+  | Kinés | 0 / 17 / 23 / 615 | EPCI avec emprunt de force (hiérarchique) ; sinon dép. |
+  | Pharmaciens | 0 / 11 / 16,5 / 444 | dép. ; EPCI seulement en hiérarchique |
+  | Dentistes | 0 / 6 / 8 / 261 | dép. |
+  | Sages-femmes | 0 / 1,5 / 2,5 / 78 | dép. |
+  La commune reste un grain **d'observation et de répartition** (part du dép. ou de l'EPCI), avec bande.
+
+**Pourquoi.** Mesuré : 30,6 % (IDE) à 69,8 % (SF) des professionnels privés exercent dans une commune de moins
+de 30 confrères ; au bassin de vie, 5,8 % (IDE) à 38,6 % (SF). Contrôles : CartoSanté Σ communes vs RPPS
+libéral + mixte, même année, kinés −3,2 % et dentistes −0,8 % en 2025, infirmiers vs SNDS +4,7 % en 2023 ;
+Annuaire privé vs centrale DREES 2026 par dép., écart médian −3,2 % (PH) à −14,6 % (IDE, BTS 2023).
+
+**Rejeté :** projeter à la commune sans modèle hiérarchique ; lire SF dans CartoSanté par position.
+**Ce qui le renverserait.** Un modèle hiérarchique (axe 2) dont l'erreur par commune, sur le banc, reste
+sous celle du dép. réparti ; une archive datée de l'Annuaire (flux individuels).
+
+## 2026-11-14 — Jumeau : leviers branchés (former, attirer, installer, retenir)
+
+**Décision.** Ce qui est livré dans `v2/jumeau/`, couvert par le critère
+C14 et par une mutation par levier.
+- **Greffons qui ajoutent un écart au tendanciel.** `entrees` n'est pas
+  réécrit. Les nouveaux leviers ajoutent l'écart qu'ils produisent :
+  ils valent l'identité exacte à leur défaut (composition `LEVIERS`,
+  écart 0,0 mesuré), et C1 est intact.
+- **Former.**
+  - `formation.capacite` : places en 1re année, avec un sélecteur
+    `profession`.
+  - `formation.abandon` : par profession ; IDE 1 − 0,718^(1/3) par an.
+  - `lien_formation` (nouveau module) ajoute
+    (1 − part étrangère) · entrées⁺ · (k − 1), où k = diplômés /
+    diplômés d'un vivier de référence suivi en parallèle, ce qui donne
+    k = 1 au tendanciel.
+  - Le vivier est relatif et stationnaire quand l'état n'en fournit pas
+    (L_p de la v1, supposé).
+  - Quotas régionaux : `entrees.multiplicateur` avec
+    `selecteur_region(code)`. Le délai suit la convention v1 :
+    origine + L_p + 1.
+- **Attirer.** `etrangers` (nouveau module) isole la part étrangère des
+  entrées positives :
+  - part = flux cité / Σ I⁺ (SF 70, CD 665, MK 1 175 par an ; PH et IDE
+    non publiés, donc 0) ;
+  - le module multiplie cette part, et `lien_formation` ne touche que le
+    reste. Il n'y a donc pas de double compte.
+- **Retenir.**
+  - `sorties.multiplicateur_precoces` : e[âge < 60] × m (supposé) ;
+  - `decalage_retraite` et `cumul_multiplicateur` reçoivent leur famille.
+- **Installer.**
+  - `regulation.part_zones` : part des zones listées, prises dans l'ordre
+    de priorité de la liste ; 0 retire la régulation.
+  - `regulation.part_exemptee` : 0 à 1, à la place d'un interrupteur, car
+    la part des dentistes spécialistes n'est pas mesurée.
+  - La régulation plafonne aussi les entrées ajoutées par `lien_formation`
+    et `etrangers` (flux optionnels, nouveau champ `Module.optional`).
+- **Pas branchés, faute d'effet sourcé :**
+  - l'obligation d'exercice ;
+  - les aides incitatives, qui attendent le logit d'installation de
+    l'axe 2 ;
+  - les filières en pharmacie et les postes de DES, faute de module.
+- **Métadonnée.** `Param.famille` ∈ {former, attirer, installer, retenir}
+  (provisoire, à confirmer par l'utilisateur·rice).
+
+**Comparaisons aux chiffres cités** (C14 ; « cité » = repris de l'axe 1,
+non relu ici) :
+- capacité dentistes × 1,2 décidée en 2026 : 0 jusqu'en 2032, puis +9,1 %
+  en 2050 (mesuré). DD76 cite ±12-13 % pour ±20 % de quotas. Notre effet
+  est plus faible parce que l'exposition est plus courte : 17 ans
+  d'entrants supplémentaires contre environ 25.
+- IFSI, perte divisée par deux : diplômés × 1,196 (mesuré), soit
+  +15,6 % d'IDE libéraux en 2050. ER 1319 cite environ +14 % de places :
+  un rendement de base de 0,77 au lieu de 0,718 donnerait +14,9 %.
+- retraite + 1 an en 2050 : kinés +1,55 %, IDE libéraux +3,02 %
+  (mesuré). Le repère DREES cite environ +1 % ; l'écart pour les IDE est
+  à expliquer (ledger).
+
+**Pourquoi.** Décision « Chantier brancher les leviers ».
+**Ce qui le renverserait.**
+- Une source qui chiffre l'effet des départs précoces ou de l'exemption.
+- Un logit d'installation de l'axe 2, qui remplacerait la répartition
+  supposée des entrants bloqués.
+
+## 2026-11-14 — Axe 5 : calcul sur un instantané figé du jumeau ; S1 sur Y centré ; levier retraite non marqué « biaisé »
+
+**Décision.**
+- **Instantané figé.** L'analyse de sensibilité tourne sur un instantané de
+  `v2/jumeau/` pris à 04:14.
+  - Empreinte SHA-256 des `.py` concaténés dans l'ordre trié :
+    `c2dc760126b34239`.
+  - Les critères C1–C14 de `jumeau.check` passent sur cet instantané.
+  - L'instantané est placé en tête de `PYTHONPATH`.
+  - **Remplace** l'exécution sur le dossier vivant : un calcul a planté le
+    2026-11-14 à 04:14, car `module.py` changeait pendant le run.
+  - Le jumeau avait déjà changé deux fois pendant l'analyse.
+- **S1 est calculé sur Y centré.** Sur Y brut, l'estimateur S1 de Saltelli
+  2010 donnait des valeurs de −0,34 à 1,78 (mesuré). ST (Jansen) est
+  invariant par translation : il ne change pas.
+- **Le levier retraite n'est plus marqué « biaisé ».** Après le correctif
+  de l'axe 0, l'effet vaut 1,08 à 1,16 fois la variante B1 (mesuré),
+  l'écart venant du demi-effet sur 55–59 ans. La troisième revue ne trouve
+  plus de défaut bloquant. Avant le correctif, le rapport allait de 0,7 à
+  1,85.
+
+**Pourquoi.** Reproductibilité : un chiffre doit pouvoir être relancé sur
+le même code. Consigne de la session v2 (2026-11-14) sur l'étiquette
+retraite.
+**Ce qui le renverserait.** Un correctif de l'axe 0 postérieur à 04:14 qui
+touche `sorties`, `entrees` ou `vieillissement`. Il faudrait alors relancer
+(≈ 15–25 min de machine).
+
+## 2026-11-14 — Prototype : 9 leviers du jumeau exposés, rangés en 4 familles
+
+**Décision.**
+- `v2/prototype/` expose les leviers branchés par l'axe 0 (commit 063c192),
+  rangés en **4 familles repliables** : Former, Attirer, Installer,
+  Retenir. C'est la proposition faite à l'utilisateur·rice, et la même
+  étiquette `Param.famille` existe dans le jumeau.
+  - **Former** : places en formation, avec une option limitée à la région
+    affichée.
+  - **Attirer** : diplômés étrangers (sans effet pour les pharmaciens).
+  - **Installer** : régulation, part des zones, destination des entrants
+    bloqués.
+  - **Retenir** : report de la cessation, cumul emploi-retraite, départs
+    avant 60 ans.
+- Chaque levier affiche deux badges : son délai d'effet, et sa preuve
+  (sourcé ou supposé, lue dans le statut du `Param`).
+- Les bornes sont validées par le serveur.
+- Vérifié dans le navigateur : kinés, quotas +20 %, étrangers ×1,5,
+  retraite +1 an, régulation vers le salariat → +25 007 en 2050 (+15,6 %),
+  décomposé en entrées +20 665, étrangers +14 765, régulation −10 773,
+  sorties +339. Recalcul : 77 ms aller-retour.
+- **Limites affichées.** La destination « zone voisine » n'a aucun effet
+  au département. Une part de zones qui arrondit à 0 zone revient à ne pas
+  réguler : c'est le même arrondi que le jumeau, qui, lui, lève une erreur
+  si la part est non nulle (défaut mineur signalé à l'axe 0).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Oui, lancer » (« … puis
+expose-les dans le prototype ») et « devrait-on catégoriser les leviers
+pour simplifier l'UX ? ».
+**Ce qui le renverserait.** Un autre découpage choisi par
+l'utilisateur·rice ; la question reste ouverte de son côté.
+
 ## Open / not yet decided
+- **Leviers de demande (transferts de tâches : vaccination en officine,
+  IPA, accès direct au kiné)** : ajouter un module de besoin, ou les
+  laisser hors du périmètre ? Question posée le 2026-11-14.
+
+### 2026-11-14 — Accueil de la carte V2 : point d'entrée territorial ou national ?
+Le challenge par les trois personas
+([rapport](reports/2026-11-14-accueil-personas.md)) converge sur quatre
+points : un chiffre-phrase dès l'ouverture, les leviers repliés, la
+fourchette toujours visible, le périmètre dit en clair. Il diverge sur le
+point d'entrée. La synthèse proposée est un champ « Quel territoire ? » au
+centre et « ou voir la France » en dessous, avec un mode Simple par défaut
+et un mode Expert. À valider par l'utilisateur·rice avant de construire
+(~30 à 45 min de Claude).
 - ~~**Programme méthodologique « boîte blanche »**~~ *décidé le 2026-11-14, voir l'entrée « Programme de l'axe 2 ».* (proposé le 2026-11-14,
   [état de l'art](explorations/2026-11-14-etat-de-lart-methodes.md)).**
   Même structure par cohortes, mais estimée en bayésien hiérarchique :
@@ -1322,3 +1692,64 @@ viennent de la [dérivation](derivations/2026-11-14-axe2-methodes.md).
 - Pour B4 : N2 (DD76 à 2050) favorable à B4.
 - Pour C5 : une série d'inscrits par université avant 2020 qui prédit les
   *variations* d'entrées.
+
+## 2026-11-14 — Axe 2, étape 1 : sorties en APC gaussien sur la rétention nette (pas de Poisson) ; inscrit avant le banc
+
+**Décision.**
+- **Vraisemblance : gaussienne sur y = log(rétention nette de cohorte).**
+  - La variance vaut σ_e²/B + ω², avec B l'effectif exposé.
+  - Le Poisson sur des sorties reconstruites est rejeté. Le RPPS ne donne
+    que des stocks, et la sortie nette est négative dans 27 à 47 % des
+    cellules de 35 ans et plus (mesuré). Un Poisson inventerait des
+    cessations qu'on n'observe pas.
+- **Structure.** η = μ_âge + π_{groupe d'âge, période} + γ_cohorte +
+  v_{région×âge} + w_{dép×âge}.
+  - π et γ sont des marches aléatoires d'ordre 1 ; v et w sont i.i.d.
+    normaux.
+  - Hyperparamètres : maximum de la vraisemblance marginale (Bayes
+    empirique). La loi a posteriori est exacte et gaussienne sachant θ̂,
+    sans MCMC (numpy et scipy, installables par uv).
+- **Projection.** Les marches d'ordre 1 sont prolongées à plat.
+  L'ordre 2, qui prolongerait la pente, est rejeté a priori parce qu'A3 a
+  échoué au banc.
+- **Identification déclarée.** Âge, période et cohorte sont liés
+  linéairement : seules les courbures sont identifiées.
+  - L'effet cohorte est faiblement contraint : écart-type a posteriori /
+    a priori = 0,98 (médiane, dentistes, origine 2021, mesuré).
+- **Levier :** `apc_sorties.periode_60plus`, un choc additif sur le log de
+  la rétention des 60 ans et plus.
+- **Inscription.** `axe2_apc` a été inscrit dans `v2/validation/registry.py`
+  à 03:58, avant tout passage.
+  - Dérivation : SHA-256 `a933da1958e2`.
+  - Périmètre privé.
+  - CRPS, PIT et couverture à h = 5 en secondaire.
+- Le code est dans `v2/methodes/apc.py` (module `apc_sorties`).
+
+**Pourquoi.** Programme de l'axe 2, étape 1 ; consigne du 2026-11-14 :
+choisir entre gaussien et Poisson « honnêtement ».
+**Ce qui le renverserait.**
+- La calibration par simulation, si elle échoue avec θ connu.
+- Une source qui sépare cessations et reprises (RPPS individuel), qui
+  rendrait le Poisson possible.
+
+## 2026-11-14 — Axe 2, étape 1 : l'APC égale le stock-flux en ponctuel ; adopté pour l'incertitude des sorties, il remplace A3
+
+**Décision.**
+- **Le modèle APC des sorties (`axe2_apc`) est adopté** quand on veut une
+  incertitude sur les sorties. A0 reste le défaut ponctuel.
+- **A3 est remplacé** par l'APC et son levier de période
+  `apc_sorties.periode_60plus` ; il ne garde plus de pente prolongée.
+- La bande prédictive de l'APC **n'est pas publiable telle quelle** :
+  couverture de 50 % pour 80 % nominal, PIT en U. Elle ne porte pas
+  l'incertitude des entrées.
+
+**Pourquoi.** Banc N1 au privé ([rapport](reports/2026-11-14-axe2-apc-sorties.md)) :
+- MAPE dép. h = 5 de 8,74 % contre 8,68 % : Δ +0,07, IC [−0,03 ; +0,16],
+  égalité ;
+- A3 est à 9,00 % ;
+- le CRPS relatif des tirages est de 6,82 % ;
+- la calibration par simulation réussit (KS p de 0,20 à 0,80), et la
+  couverture dans l'échantillon est de 91 %.
+
+**Ce qui le renverserait.** Une version avec des entrées probabilistes
+(étape 2) dont la bande est calibrée et qui bat A0 en MAPE.

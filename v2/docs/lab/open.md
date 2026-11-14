@@ -94,4 +94,23 @@ restent valables : on les reprend ici au moment où on les traite.
 | UAT : fiche exportable (V2 n'a qu'un CSV, sans sources ni hypothèses) | ~45 min | rapport UAT | 2026-11-14 | open |
 | UAT : densité pour 100 000 habitants (population Insee/Omphale), avant ou après la démo ? | ~45–90 min + décision | rapport UAT | 2026-11-14 | open |
 | UAT : délai d'effet affiché 2032 ou 2033 selon le testeur, pour le même scénario (V1), à expliquer | ~10 min | rapport UAT | 2026-11-14 | open |
-| Retour utilisateur carte : zoom région puis département, cases plus grandes, limites ARS séparées, DROM en encarts | transmis à proto-carte | retour direct | 2026-11-14 | open |
+| Retour utilisateur carte : zoom région puis département, cases plus grandes, limites ARS séparées, DROM en encarts, milieu de l'échelle de couleur (blanc) qui se confond avec le fond gris | transmis à proto-carte | retour direct | 2026-11-14 | open |
+| Table de voisinage communale (commune régulée → commune voisine non régulée) pour la part « voisine » de `regulation.repartition` | ~30 min (axe 4) | défauts axe 1 | 2026-11-14 | open |
+| MK : obligation d'exercer 2 ans en zone sous-dotée pour les diplômés à partir de 2027 ; demande de suivre l'ancienneté d'installation des cohortes dans l'état | ~1 h | fiche param-mk-regul-regle | 2026-11-14 | open |
+| Part des dentistes spécialistes (ODF, CO, MBD) parmi les entrants, pour `regulation.part_exemptee` (Ordre, RPPS par spécialité) | ~20 min (axe 1) | fiche param-cd-regul-regle | 2026-11-14 | open |
+| Axe 3 N6 : écrire `v2/validation/probabilistic.py` (CRPS sur log N, PIT, couverture) et lancer sur la variante par défaut et les naïfs (h = 5 : origine 2021, SF/CD/PH seulement) | ~40 min Claude + ~1 min machine | axe 3 N6 | 2026-11-14 | open |
+| Axe 3 N6 : SBC des taux de rétention et des entrées sur 200 mondes N5 (après le générateur N5) | ~45 min Claude + ~5 min machine | axe 3 N6 | 2026-11-14 | open |
+| Kinés quotas +20 % en 2050 : le jumeau donne maintenant +19 110 (+11,9 %), le rapport du prototype cite +8 645 (+5,4 %) mesuré avant les corrections ; mettre à jour ce rapport et expliquer l'écart (doublement de l'effet) | ~20 min | pitch animé | 2026-11-14 | open |
+| Axe 2, étape 2 : cohortes par composantes bayésiennes, avec des entrées probabilistes (sans elles, la bande APC couvre 50 % au lieu de 80 %) | ~1 j | axe 2, étape 1 | 2026-11-14 | open |
+| Axe 2 / axe 3 : référence naïve probabiliste (pente d'erreur par horizon) pour comparer les CRPS à armes égales (APC 6,82 % contre 8,68 % pour A0 ponctuel) | ~30 min | axe 2, étape 1 | 2026-11-14 | open |
+| Axe 2 : propager l'incertitude des hyperparamètres θ de l'APC (Laplace sur log θ) et mesurer le gain de couverture | ~45 min | axe 2, étape 1 | 2026-11-14 | open |
+| Axe 2 : calibration par simulation de l'APC sur 5 professions × 2 sexes, 200 jeux, θ ré-estimé (aujourd'hui : 1 plan, 40 jeux) | ~40 min machine | axe 2, étape 1 | 2026-11-14 | open |
+| Archiver l'Annuaire Santé chaque mois (seule voie ouverte vers des flux d'installation individuels par commune, pour le logit de l'axe 2) | ~30 min + temps du monde | axe 4, grain communal | 2026-11-14 | open |
+| Proxy du logit : installations nettes des moins de 40 ans par commune et année (CartoSanté, IDE / MK / CD, 2004–2025) | ~45 min | axe 4, grain communal | 2026-11-14 | open |
+| Pharmacies par commune 2004–2025 (FINESS historique, 195 Mo, cat. 620) : ouvertures et fermetures d'officines | ~1 h | axe 4, grain communal | 2026-11-14 | open |
+| Sages-femmes : aucune histoire communale ouverte (CartoSanté `sf_popage` illisible) ; signaler l'erreur de métadonnées à Atlasanté | 15 min + attente | axe 4, grain communal | 2026-11-14 | open |
+| H_ind infirmiers non testable sur l'âge (BTS sans croisement secteur × âge) : chercher une source (SAE par âge ?) | ~45 min, issue incertaine | axe 4, grain communal | 2026-11-14 | open |
+| Intégrer le flux « diplômés hors France » à la filière : 24,4 % des dentistes et 32,5 % des kinés actifs sans DE français (stock) ; il faut un flux annuel (Ordre, ONDPS) | ~1 h | axe 4 → axe 1 | 2026-11-14 | open |
+| Retraite + 1 an : +3,02 % d'IDE libéraux en 2050 contre ≈ +1 % cité par la DREES (via l'axe 1) ; vérifier la source et la structure par âge des IDE (SNDS) | ~30 min | leviers axe 0 | 2026-11-14 | open |
+| Vivier réel par profession (inscrits IFSI, MK, SF ; jeu DREES 491) à la place du vivier relatif stationnaire de `formation` | ~45 min (axe 4 + axe 0) | leviers axe 0 | 2026-11-14 | open |
+| Âge d'entrée des diplômés à l'étranger (28 ans, DD76) au lieu de la répartition des entrées ajustées | ~20 min | leviers axe 0 | 2026-11-14 | open |

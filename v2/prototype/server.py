@@ -31,8 +31,10 @@ os.chdir(ROOT)
 from sante import estimators as V1  # noqa: E402
 from jumeau.estimators import twin_of  # noqa: E402
 from jumeau.history import sector_table  # noqa: E402
-from jumeau.modules.entrees import evenement_quotas  # noqa: E402
-from jumeau.scenario import Event, Scenario  # noqa: E402
+from jumeau.module import REGISTRY, discover  # noqa: E402
+from jumeau.modules.entrees import evenement_quotas, selecteur_region  # noqa: E402
+from jumeau.modules.sorties import evenement_retraite  # noqa: E402
+from jumeau.scenario import FAMILLES, LEVIERS, Scenario  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 PROFS = {"sages-femmes": "Sages-femmes", "dentistes": "Chirurgiens-dentistes", "pharmaciens": "Pharmaciens",
@@ -47,9 +49,42 @@ DECISION = 2026
 # Réactivés après la troisième revue (2026-11-14) : plus de défaut bloquant dans le jumeau ; conservation
 # vérifiée (total tous secteurs scénario − tendanciel ≤ 0,5 personne en 2050 pour CD, MK, SF).
 SUSPENDUS: dict = {}
-BORNES = {"quotas": (0.7, 1.5), "retraite": (-2.0, 3.0)}
 H = 2050
-REG = ("vieillissement", "sorties", "entrees", "regulation")
+REG = LEVIERS          # composition « leviers » du jumeau (commit 063c192) : tendanciel identique à l'écart 0,0
+# Leviers exposés, par famille (décision du 2026-11-14). `param` renvoie au Param du jumeau : son statut
+# (sourcé / supposé), sa source et son unité sont lus dans le registre, pas recopiés ici.
+LEVIERS_UI = [
+    dict(k="quotas", famille="former", type="range", param="entrees.multiplicateur", label="Places en formation",
+         min=0.7, max=1.5, step=0.05, default=1.0, fmt="pct", delai="lent : après la durée des études"),
+    dict(k="quotas_region", famille="former", type="toggle", param="entrees.multiplicateur", default=0,
+         label="… seulement dans la région affichée", delai="lent"),
+    dict(k="etrangers", famille="attirer", type="range", param="etrangers.multiplicateur", label="Diplômés étrangers accueillis",
+         min=0.5, max=2.0, step=0.1, default=1.0, fmt="x", delai="moyen : 1 à 3 ans"),
+    dict(k="regul", famille="installer", type="toggle", param="regulation.zones", default=0,
+         label="Installation régulée (remplacement d'un départ seulement)", delai="rapide"),
+    dict(k="part_zones", famille="installer", type="range", param="regulation.part_zones", label="Part des zones régulées",
+         min=0.0, max=1.0, step=0.1, default=1.0, fmt="pct0", delai="rapide"),
+    dict(k="dest", famille="installer", type="select", param="regulation.repartition", label="Les entrants bloqués vont…",
+         options={"salariat": "vers le salariat", "sortie": "hors de la profession", "voisine": "dans une zone voisine"},
+         default="salariat", delai="rapide"),
+    dict(k="retraite", famille="retenir", type="range", param="sorties.decalage_retraite", label="Report de la cessation d'activité",
+         min=0.0, max=3.0, step=0.5, default=0.0, fmt="ans", delai="rapide, montée de 3 mois par an"),
+    dict(k="cumul", famille="retenir", type="range", param="sorties.cumul_multiplicateur", label="Cumul emploi-retraite",
+         min=0.5, max=2.0, step=0.1, default=1.0, fmt="x", delai="rapide"),
+    dict(k="precoces", famille="retenir", type="range", param="sorties.multiplicateur_precoces", label="Départs avant 60 ans",
+         min=0.5, max=1.5, step=0.1, default=1.0, fmt="x", delai="rapide"),
+]
+UI = {l["k"]: l for l in LEVIERS_UI}
+
+
+def lever_meta():
+    reg = discover()
+    params = {f"{n}.{p.name}": p for n, c in reg.items() for p in c.params}
+    out = []
+    for l in LEVIERS_UI:
+        p = params.get(l["param"])
+        out.append({**l, "status": p.status if p else "?", "source": p.source if p else "", "unit": p.unit if p else ""})
+    return out
 REGIONS = {"11": "Île-de-France", "24": "Centre-Val de Loire", "27": "Bourgogne-Franche-Comté", "28": "Normandie",
            "32": "Hauts-de-France", "44": "Grand Est", "52": "Pays de la Loire", "53": "Bretagne",
            "75": "Nouvelle-Aquitaine", "76": "Occitanie", "84": "Auvergne-Rhône-Alpes",
@@ -70,7 +105,8 @@ def zones() -> dict:
     z = z[z.millesime.str.startswith("actuel")]
     z = z.assign(dep=np.where(z.com.str.startswith("97"), z.com.str[:3], z.com.str[:2]))
     share = z.assign(rs=z.statut == "remplacement_seul").groupby(["profession", "dep"]).rs.mean()
-    return {p: sorted(s[s >= 0.5].index) for p, s in share.groupby(level=0)
+    # ordre de priorité : la part de communes en « remplacement seul » décroissante (regulation.part_zones l'utilise)
+    return {p: list(s[s >= 0.5].sort_values(ascending=False).index) for p, s in share.groupby(level=0)
             for s in [s.droplevel(0)]}
 
 
@@ -101,19 +137,36 @@ class Model:
         h, e = np.array(hs, float), np.array(es)
         return float(1.6 * (h * e).sum() / (h ** 2).sum()) if len(h) else float("nan")
 
-    def scenario(self, quotas: float, retraite: float, regul: bool) -> Scenario:
+    def scenario(self, lv: dict, terr: str = "FR") -> Scenario:
         d = max(self.o, DECISION)
-        ev = []
-        if quotas != 1:
-            ev.append(evenement_quotas(quotas, d, LAG[self.prof], source="prototype : levier quotas"))
-        if retraite:
-            ev.append(Event("sorties.decalage_retraite", d + 1, retraite, "set", source="prototype : levier retraite"))
-        params = {"regulation.zones": {self.prof: zones().get(self.prof, [])}} if regul and zones().get(self.prof) else {}
+        ev, params = [], {}
+        if lv["quotas"] != 1:
+            sel = None
+            if lv["quotas_region"]:
+                g = geo()
+                reg = terr[1:] if terr.startswith("R") else g.loc[terr[1:], "region"] if terr.startswith("D") else None
+                if reg is None:
+                    raise ValueError("quotas régionaux : choisir une région ou un département")
+                sel = selecteur_region(reg, self.est.state.cells, self.prof)
+            ev.append(evenement_quotas(lv["quotas"], d, LAG[self.prof], selector=sel, source="prototype : quotas"))
+        if lv["etrangers"] != 1:
+            params["etrangers.multiplicateur"] = lv["etrangers"]
+        if lv["retraite"]:
+            ev += evenement_retraite(lv["retraite"], d, source="prototype : report de la cessation")
+        if lv["cumul"] != 1:
+            params["sorties.cumul_multiplicateur"] = lv["cumul"]
+        if lv["precoces"] != 1:
+            params["sorties.multiplicateur_precoces"] = lv["precoces"]
+        # même arrondi que le jumeau (regulation.py : round(part × n)) ; 0 zone retenue = pas de régulation
+        if lv["regul"] and zones().get(self.prof) and int(round(lv["part_zones"] * len(zones()[self.prof]))) > 0:
+            params["regulation.zones"] = {self.prof: zones()[self.prof]}
+            params["regulation.part_zones"] = {self.prof: lv["part_zones"], "*": 1}
+            params["regulation.repartition"] = {k: float(k == lv["dest"]) for k in ("voisine", "salariat", "sortie")}
         return Scenario("prototype", params=params, events=ev, modules=REG)
 
-    def answer(self, quotas, retraite, regul, terr):
+    def answer(self, lv, terr):
         t0 = time.perf_counter()
-        scn = self.est.trajectory(H, self.scenario(quotas, retraite, regul))
+        scn = self.est.trajectory(H, self.scenario(lv, terr))
         ms = (time.perf_counter() - t0) * 1000
         g = geo()
         # identifiants préfixés : « 84 » est à la fois une région (ARA) et un département (Vaucluse)
@@ -140,7 +193,10 @@ class Model:
             for y, f, _, v in tr.ledger:
                 if f == "vieillissement":
                     continue
-                flows.setdefault(f, np.zeros(len(years)))[y - self.o] += sign * float(np.asarray(v)[masks[id(tr)]].sum())
+                v = np.asarray(v)
+                if v.ndim != 1 or len(v) != len(masks[id(tr)]):
+                    continue        # comptes du vivier national (formation : diplômés, abandons) : pas des cellules
+                flows.setdefault(f, np.zeros(len(years)))[y - self.o] += sign * float(v[masks[id(tr)]].sum())
         flows = {f: np.cumsum(v).round(1).tolist() for f, v in flows.items() if np.abs(v).sum() > 1e-6}
         # matrice : départements du territoire (ou tous) × années, écart relatif et niveau
         my = [y for y in years if (y - self.o) % 3 == 0 or y == H]
@@ -201,20 +257,27 @@ class Handler(SimpleHTTPRequestHandler):
         q = {k: v[0] for k, v in parse_qs(u.query).items()}
         try:
             if u.path == "/api/meta":
-                return self.send_json({"professions": PROFS, "missing": MISSING, "suspended": SUSPENDUS, "territories": territories()})
+                return self.send_json({"professions": PROFS, "missing": MISSING, "territories": territories(),
+                                       "levers": lever_meta(), "familles": FAMILLES})
             if u.path == "/api/scenario":
                 prof = q.get("prof", "kines")
                 if prof not in PROFS:
                     return self.send_json({"error": f"profession inconnue {prof!r}"}, 400)
-                quotas = float(q.get("quotas", 1))
-                lo, hi = BORNES["quotas"]
-                if not lo <= quotas <= hi:
-                    return self.send_json({"error": f"quotas hors bornes [{lo} ; {hi}] : {quotas}"}, 400)
-                retraite = float(q.get("retraite", 0))
-                lo, hi = BORNES["retraite"]
-                if not lo <= retraite <= hi:
-                    return self.send_json({"error": f"retraite hors bornes [{lo} ; {hi}] : {retraite}"}, 400)
-                return self.send_json(model(prof).answer(quotas, retraite, q.get("regul", "0") == "1", q.get("terr", "FR")))
+                lv = {}
+                for k, l in UI.items():
+                    raw = q.get(k, l["default"])
+                    if l["type"] == "select":
+                        if raw not in l["options"]:
+                            return self.send_json({"error": f"{k} : valeur inconnue {raw!r}"}, 400)
+                        lv[k] = raw
+                    elif l["type"] == "toggle":
+                        lv[k] = str(raw) in ("1", "true")
+                    else:
+                        v = float(raw)
+                        if not l["min"] <= v <= l["max"]:
+                            return self.send_json({"error": f"{l['label']} hors bornes [{l['min']} ; {l['max']}] : {v}"}, 400)
+                        lv[k] = v
+                return self.send_json(model(prof).answer(lv, q.get("terr", "FR")))
         except Exception as e:  # le prototype montre l'erreur plutôt que de planter
             return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
         return super().do_GET()
