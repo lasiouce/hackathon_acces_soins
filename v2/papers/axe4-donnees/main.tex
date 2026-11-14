@@ -3,9 +3,10 @@
 \input{../template/preamble}
 \usepackage{pgfplots}
 \usepgfplotslibrary{fillbetween}
+\usepackage{xurl} % coupe les longues URL de la bibliographie
 \pgfplotsset{compat=1.16}
 
-\title{Le secteur public était déjà dans les fichiers : séparer public et privé, dater les réformes et coder le zonage par commune pour un jumeau numérique de l'offre de soins}
+\title{Le secteur public était déjà dans les fichiers : séparer public et privé, dater les réformes, coder le zonage et fixer le grain communal d'un jumeau numérique de l'offre de soins}
 \author[1]{Équipe hackathon-santé}
 \author[1]{Claude (Anthropic), assistant de recherche}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}, axe~4 (données)}
@@ -27,8 +28,12 @@ ambiguïté : \num{277788} privés en 2023\mesure{}. Nous livrons aussi un regis
 sourcés, et le zonage conventionnel de \num{34919} géocodes pour quatre professions. Chaque table est contrôlée
 contre un total connu. Le registre est confirmé sur un cas : l'année sans diplômés en kinésithérapie (2018) se
 lit dans le stock, avec \num{-35}\,\% de moins de 25 ans\mesure{}. Le zonage reproduit le périmètre dentaire
-publié, soit 97 géocodes et 4,8\,\% de la population\mesure{}. Principale limite : la table public / privé des
-infirmiers n'a ni âge ni sexe, ce qui les exclut pour l'instant du jumeau.
+publié, soit 97 géocodes et 4,8\,\% de la population\mesure{}. Enfin, l'Annuaire Santé rend les cinq
+professions observables à la commune. Mais la médiane des effectifs privés par commune est nulle. Le grain
+projetable est donc le bassin de vie ou l'EPCI pour les infirmiers, et le département pour les dentistes et les
+sages-femmes. Ce même fichier montre que 24\,\% des dentistes et 32\,\% des kinésithérapeutes actifs n'ont pas
+de diplôme d'État français\mesure{}. Limite : les infirmiers n'entrent dans le jumeau que sous l'hypothèse d'un
+secteur indépendant de l'âge et du sexe, testée sur le sexe seulement.
 \end{abstract}
 \begin{otherlanguage}{english}
 \begin{abstract}
@@ -42,8 +47,12 @@ narrows to 12,059--14,660 (measured), 81\,\% narrower. Nurses separate without a
 sector in 2023. We also release a register of 30 dated, sourced events and the conventional zoning of 34,919
 geocodes for four professions. Each table is checked against a known total. One event is confirmed in the
 data: the 2018 year without physiotherapy graduates appears in the stock, with 35\,\% fewer under-25s. The
-zoning reproduces the published dental perimeter: 97 geocodes and 4.8\,\% of the population. The main limitation
-is that the nurse public/private table has no age or sex breakdown, which currently keeps nurses out of the twin.
+zoning reproduces the published dental perimeter: 97 geocodes and 4.8\,\% of the population. Finally, the public
+Annuaire Santé register makes all five professions observable by municipality. The median private headcount per
+municipality is zero, however. The projectable grain is therefore the living area or inter-municipal body
+for nurses, and the département for dentists and midwives. The same register shows that 24\,\% of active dentists
+and 32\,\% of active physiotherapists hold no French state diploma. Limitation: nurses enter the twin only under
+the assumption that sector is independent of age and sex, which is tested on sex only.
 \end{abstract}
 \end{otherlanguage}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; secteur public et privé ; RPPS ; FINESS ;
@@ -77,6 +86,9 @@ Trois lacunes de données bloquaient ce cadrage :
   dont un artefact de fichier qui passait pour une réforme (section~\ref{sec:res-evenements}).
   \item Le zonage conventionnel de \num{34919} géocodes pour quatre professions, sur deux millésimes, avec le
   statut lu par le module de régulation (section~\ref{sec:res-zonage}).
+  \item Un inventaire des sources ouvertes à la commune. Il comble quatre trous : Marseille, sages-femmes,
+  pharmaciens et infirmiers par âge et sexe. Il donne aussi le grain projetable par profession
+  (section~\ref{sec:res-grain}).
 \end{itemize}
 
 \section{Travaux existants}
@@ -97,6 +109,9 @@ viennent des avenants aux conventions nationales :
   \citep{ce2014mk} ;
   \item chirurgiens-dentistes \citep{arspaca2025cd}.
 \end{itemize}
+L'Agence du numérique en santé publie chaque jour une extraction en libre accès du RPPS \citep{ans2026annuaire}.
+Elle donne la commune de chaque activité, mais ni l'âge ni d'archive. L'Insee publie la composition communale
+des bassins de vie 2022 \citep{insee2026bv}.
 Nous n'avons pas trouvé de travail qui exploite le croisement secteur~$\times$~mode du fichier DREES pour isoler
 le secteur privé au sens large.
 
@@ -325,6 +340,72 @@ parts de population.}
   les infirmiers, 547 pour les kinésithérapeutes et 908 pour les dentistes\mesure{}.
 \end{itemize}
 
+\subsection{Grain communal}\label{sec:res-grain}
+\paragraph{Inventaire.} Trois sources ouvertes descendent à la commune.
+\begin{itemize}
+  \item L'Annuaire Santé couvre les cinq professions : un instantané du 13 novembre 2026, avec la civilité, le mode,
+  le secteur, le FINESS et l'origine du diplôme, mais sans âge \citep{ans2026annuaire}.
+  \item CartoSanté donne l'histoire des libéraux par tranche d'âge : infirmiers 2004--2025, kinésithérapeutes
+  2005--2025, dentistes 2006--2025 \citep{cartosante2026}.
+  \item FINESS décrit les structures.
+\end{itemize}
+Deux pistes ont été écartées :
+\begin{itemize}
+  \item les séries « flux » de CartoSanté ne sont pas des installations, mais des pôles d'attraction des patients ;
+  \item la série des sages-femmes y est illisible : les modalités d'âge sont libellées en années.
+\end{itemize}
+
+\paragraph{Trous comblés.}
+\begin{itemize}
+  \item \textbf{Marseille.} Ses 16 arrondissements couvrent 2010--2025. Pour les infirmiers, leur somme reproduit
+  l'écart du département 13 à l'unité près, chaque année\mesure{}.
+  \item \textbf{Pharmaciens et sages-femmes.} L'Annuaire donne leur instantané communal : \num{61882}
+  pharmaciens et \num{11612} sages-femmes privés\mesure{}. Le premier chiffre tombe dans la fourchette DREES
+  2026 (table~\ref{tab:fourchettes}).
+  \item \textbf{Infirmiers.} Ils sont ventilés par secteur, âge et sexe sous l'hypothèse $H_{\mathrm{ind}}$
+  (secteur indépendant de l'âge et du sexe dans un département). Le test, fixé avant de voir le résultat,
+  compare la part de femmes du privé et du public. L'écart médian est de 2,1 points par département, sous le
+  seuil de 3 points : l'hypothèse n'est pas rejetée\mesure{}.
+\end{itemize}
+
+\paragraph{Contrôles.} La somme des communes CartoSanté est rapprochée du RPPS libéral et mixte de la même année.
+En 2025, l'écart est de \num{-3.2}\,\% pour les kinésithérapeutes et de \num{-0.8}\,\% pour les dentistes\mesure{}.
+Pour les infirmiers, l'écart au SNDS est de +4,7\,\% en 2023\mesure{}.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Profession & Commune & Bassin de vie & EPCI & Département & Pros dans une commune $<30$ \\
+\midrule
+Infirmiers & 0 & 35,5 & 53 & \num{1644} & 30,6\,\% \\
+Kinés & 0 & 17 & 23 & 615 & 49,8\,\% \\
+Pharmaciens & 0 & 11 & 16,5 & 444 & 57,5\,\% \\
+Dentistes & 0 & 6 & 8 & 261 & 53,4\,\% \\
+Sages-femmes & 0 & 1,5 & 2,5 & 78 & 69,8\,\% \\
+\bottomrule
+\end{tabular}
+\caption{Médiane des effectifs privés par unité (Annuaire Santé, 13/11/2026)\mesure{}. Unités : \num{34917}
+communes (arrondissements PLM), \num{1707} bassins de vie \citep{insee2026bv}, \num{1255} EPCI
+\citep{geoapi2026}, 101 départements.}
+\label{tab:grain}
+\end{table}
+
+\paragraph{Grain projetable.} La règle retenue est conventionnelle : une médiane d'au moins 30 professionnels
+privés par unité, soit un bruit de Poisson d'au plus 18\,\%\derive{}. Elle donne :
+\begin{itemize}
+  \item infirmiers : bassin de vie ou EPCI ;
+  \item kinésithérapeutes et pharmaciens : EPCI, avec un modèle hiérarchique qui emprunte de la force au
+  département ;
+  \item dentistes et sages-femmes : département.
+\end{itemize}
+La commune reste un grain d'observation et de répartition. Aucune source ouverte ne donne de flux d'installation
+par commune. Le meilleur substitut est la variation du stock des moins de 40 ans dans CartoSanté.
+
+\paragraph{Diplômés hors de France.} Part des actifs sans diplôme d'État français\mesure{} : 24,4\,\% des
+dentistes et 32,5\,\% des kinésithérapeutes, contre 9,7\,\% (sages-femmes), 3,5\,\% (pharmaciens) et
+2,6\,\% (infirmiers). Ce sont surtout des diplômes de l'UE.
+
 \section{Validation et menaces à la validité}\label{sec:menaces}
 \paragraph{Contrôles contre des totaux connus.}
 \begin{itemize}
@@ -359,15 +440,21 @@ parts de population.}
   \begin{itemize}
     \item Un double compte est possible entre le SNDS et le BTS.
     \item Le BTS a une rupture de série en 2022.
-    \item \emph{Surtout, la table public / privé des infirmiers n'a ni âge ni sexe} : le BTS ne croise pas le
-    secteur avec eux. Or l'état du jumeau est indexé par âge et sexe. Les infirmiers en sont donc exclus tant
-    qu'un ratissage (secteur indépendant de l'âge et du sexe, hypothèse à tester) n'est pas fait.
+    \item \emph{Surtout, le BTS ne croise pas le secteur avec l'âge ni le sexe.} Les infirmiers n'entrent
+    donc dans le jumeau que sous $H_{\mathrm{ind}}$. L'hypothèse a été testée sur le sexe (non rejetée), pas sur
+    l'âge : des jeunes plus souvent à l'hôpital public la fausseraient.
   \end{itemize}
   \item \textbf{Zonage.}
   \begin{itemize}
     \item Le millésime actuel n'est pas daté : CartoSanté ne sert pas la date des arrêtés.
     \item L'historique n'a qu'une génération (2012).
     \item L'« obligation d'exercice » prévue pour les kinésithérapeutes (avenant~7) n'est pas une classe de zonage.
+  \end{itemize}
+  \item \textbf{Grain communal.}
+  \begin{itemize}
+    \item L'Annuaire est un instantané de novembre, la DREES compte au 1\textsuperscript{er} janvier. 11,5\,\% des
+    activités dentaires n'y ont pas de commune.
+    \item Le seuil de 30 est une convention, que seul le banc peut remplacer.
   \end{itemize}
   \item \textbf{Registre.}
   \begin{itemize}
@@ -383,6 +470,9 @@ python-calamine) :
 \begin{verbatim}
 uv run python v2/data/build_secteur.py   # ~12 s
 uv run python v2/data/build_zonage.py    # ~2 s
+uv run python v2/data/build_annuaire.py  # ~15 s
+uv run python v2/data/build_commune.py   # ~3 s
+uv run python v2/data/build_infirmiers.py # ~2 s
 \end{verbatim}
 \begin{itemize}
   \item \textbf{Entrées.}
@@ -416,14 +506,17 @@ uv run python v2/data/build_zonage.py    # ~2 s
   \end{itemize}
   \item \textbf{Banc (axe~3).} Le banc se relance sur la valeur centrale, avec min et max en bande. L'expérience
   naturelle sur le zonage infirmier dispose de la génération 2012 au même format.
-  \item \textbf{Filière de formation.} L'artefact 2025 doit être corrigé avant toute projection 2030+.
+  \item \textbf{Filière de formation.} L'artefact 2025 doit être corrigé avant toute projection 2030+. Le flux
+  des diplômés hors de France a désormais un ordre de grandeur.
+  \item \textbf{Axe~2.} Le grain du modèle hiérarchique est fixé par profession.
 \end{itemize}
 
 \paragraph{Questions ouvertes, avec leur coût} (registre \texttt{v2/docs/lab/open.md}) :
 \begin{itemize}
   \item ventiler l'« autre secteur » des pharmaciens à l'aide des sections de l'Ordre (\(\approx\)1~h) ;
   \item pondérer les parts FINESS par les effectifs salariés (\(\approx\)1~h~30) ;
-  \item ventiler les infirmiers par âge et sexe à l'intérieur du secteur (\(\approx\)20~min) ;
+  \item archiver l'Annuaire chaque mois, seule voie vers des flux d'installation individuels (\(\approx\)30~min,
+  puis temps du monde) ;
   \item dater le zonage par région (\(\approx\)1~h) ;
   \item ouvrir les textes primaires des 12 événements à source secondaire (\(\approx\)45~min).
 \end{itemize}
