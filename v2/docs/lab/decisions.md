@@ -2829,3 +2829,22 @@ et une bande par classe ne la porte pas.
 domine dans les grandes communes. N10 montre la même forme sur les
 estimateurs de référence.
 **Ce qui le renverserait.** Le verdict de N10.
+
+## 2026-11-14 — Carte : bascule de `index.html` sur la refonte, après correction des P0 et P1 de l'UAT
+
+**Décision.** La page refondue (`index-refonte.html`) remplace `index.html` ; le fichier à part est retiré.
+Avant la bascule, les défauts confirmés de l'UAT agentique (rapport `2026-11-14-uat-agentique-carte.md`) sont corrigés :
+- **P0** : la fiche est reconstruite quand la profession change, et une réponse périmée (autre territoire ouvert entre-temps) est ignorée ;
+  mobile (≤ 700 px) : barre des professions défilante, leviers repliés à l'ouverture, fiche en panneau bas ;
+  l'export marche aussi au niveau France et porte la définition de « libéral », les sources et millésimes, la version du code
+  (`/api/meta` → `version`), les leviers modifiés en phrases avec leur statut et leur source, la méthode de la fourchette et les limites.
+- **P1** : panneau des leviers défilant ; fiche raccourcie quand le bandeau de comparaison est affiché ; la fiche de région dit combien
+  de ses départements sont régulés (« 0 sur 12 — la régulation n'a pas d'effet ici ») ; repères 2030 / 2035 / 2040 / 2050 dans la fiche ;
+  axes du graphique élargis ; en-tête au-dessus de la carte pour les suggestions de recherche ; lien invalide → profession par défaut et
+  leviers remis à zéro avec un message ; retour à la France avec des quotas régionaux → hausse retirée, avec un message.
+
+**Pourquoi.** L'UAT est terminée (décision du 2026-11-14 : « on bascule une fois l'UAT terminée ») et l'utilisateur·rice a demandé
+« Oui, corriger » puis la bascule. Vérifié en Chromium headless (1440×900 et 390×844) : changement de profession, fiche de région,
+export régional et France, lien invalide, rendu mobile ; aucune erreur JavaScript.
+**Non vérifié.** Pas de nouvelle recette par personas ; la légende des couleurs est masquée sur mobile.
+**Ce qui le renverserait.** Une recette rejouée qui trouve un P0 sur la page basculée.

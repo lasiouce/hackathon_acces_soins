@@ -42,6 +42,11 @@ PROFS = {"sages-femmes": "Sages-femmes", "dentistes": "Chirurgiens-dentistes", "
 # Infirmiers : table axe 4 par secteur × âge × sexe (SNDS libéraux + BTS salariés, 2013-2023), branchée dans
 # jumeau.history.sector_table ; totaux vérifiés contre les sources (critère C18 du jumeau).
 MISSING = {}
+try:   # version du code, pour la traçabilité des fiches exportées
+    import subprocess
+    VERSION = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=ROOT).stdout.strip() or "?"
+except Exception:
+    VERSION = "?"
 LAG = {"pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}   # app/levers.py (supposé)
 DECISION = 2026
 # Leviers suspendus tant que les défauts de la seconde revue du jumeau sont ouverts
@@ -279,7 +284,7 @@ class Handler(SimpleHTTPRequestHandler):
         q = {k: v[0] for k, v in parse_qs(u.query).items()}
         try:
             if u.path == "/api/meta":
-                return self.send_json({"professions": PROFS, "missing": MISSING, "territories": territories(),
+                return self.send_json({"professions": PROFS, "missing": MISSING, "territories": territories(), "version": VERSION,
                                        "levers": lever_meta(), "familles": FAMILLES})
             if u.path == "/api/scenario":
                 prof = q.get("prof", "kines")
