@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offre libérale — carte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+:root{
+  --ground:#F4F5F2; --sea:#D5DADF; --panel:#FFFFFF; --ink:#16181A; --mute:#5C6166; --faint:#8A8F94;
+  --line:#DCDED8; --sel:#1B3A8C;
+  /* une couleur fixe par profession (ni rouge ni vert) */
+  --p-sages-femmes:#7A4E8C; --p-dentistes:#2F6A8A; --p-pharmaciens:#8A6A1E; --p-kines:#3D4F9E;
+  --prof:var(--p-kines);
+  --r:10px; --sh:0 1px 2px rgba(22,24,26,.06),0 8px 24px -6px rgba(22,24,26,.16);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--ground);color:var(--ink);
+  font:15px/1.45 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:color-mix(in srgb,var(--prof) 22%,transparent)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+#map{position:fixed;inset:0}
+.float{position:fixed;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+
+/* barre du haut */
+#top{top:16px;left:16px;right:16px;display:flex;gap:10px;align-items:center;pointer-events:none}
+#top>*{pointer-events:auto}
+#brand{display:flex;align-items:center;gap:10px;padding:0 14px;height:48px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+#brand i{width:10px;height:10px;border-radius:2px;background:var(--prof);transition:background .4s var(--ease)}
+#search{position:relative;width:min(320px,26vw);min-width:240px;flex-shrink:0}
+#profs{min-width:0;overflow:hidden}
+#search input{width:100%;height:48px;border:0;background:transparent;padding:0 14px 0 38px;outline:none}
+#search svg{position:absolute;left:13px;top:16px;color:var(--faint)}
+#results{position:absolute;top:52px;left:0;right:0;padding:4px;max-height:50vh;overflow:auto;display:none}
+#results.on{display:block}
+#results button{display:flex;justify-content:space-between;width:100%;border:0;background:none;padding:8px 10px;border-radius:6px;text-align:left;cursor:pointer}
+#results button[aria-selected=true],#results button:hover{background:var(--ground)}
+#results small{color:var(--faint)}
+#profs{display:flex;padding:4px;gap:2px;height:48px}
+#profs button{border:0;background:none;padding:0 12px;border-radius:6px;cursor:pointer;color:var(--mute);display:flex;align-items:center;gap:7px;white-space:nowrap;transition:background .2s,color .2s}
+#profs button i{width:8px;height:8px;border-radius:50%}
+#profs button[aria-pressed=true]{background:var(--ground);color:var(--ink);font-weight:500}
+#profs button[disabled]{opacity:.45;cursor:not-allowed}
+.spacer{flex:1}
+#actions{display:flex;gap:6px}
+.btn{height:48px;padding:0 14px;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);cursor:pointer;box-shadow:var(--sh);display:flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .15s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn svg{color:var(--mute)}
+
+/* leviers */
+#scen{background:var(--ground);border-radius:8px;padding:10px 12px;font-size:13px}
+#scen b{font-size:14px}
+#scen .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#scen .acts button,.preset{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer}
+.q{border-top:1px solid var(--line);padding:10px 0 4px}
+.q>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline}
+.q>summary::-webkit-details-marker{display:none}
+.q>summary .ttl{font-weight:600}
+.q>summary .st{grid-column:1;color:var(--mute);font-size:13px}
+.q>summary .ef{grid-row:1 / span 2;grid-column:2;font-family:"IBM Plex Mono",monospace;font-size:13px}
+.q[open]>summary .st{color:var(--ink)}
+.q .main{margin:10px 0 4px}
+.q .main .val{font-size:14px;margin-bottom:4px}
+.q .more{margin-top:6px}
+.q .more>summary{cursor:pointer;color:var(--mute);font-size:12px;list-style:none}
+.q .more>summary::-webkit-details-marker{display:none}
+.q .more .lev{margin:8px 0}
+.ic{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:var(--mute);margin-top:4px}
+.ic span{cursor:help}.ic .src{cursor:pointer}
+.srcbox{display:none;font-size:12px;color:var(--mute);margin-top:4px}.srcbox.on{display:block}
+.nm{font-size:12px;color:var(--mute);border-top:1px solid var(--line);padding-top:8px;margin:6px 0 0}
+.fam{border-top:1px solid var(--line);padding-top:10px}
+.fam>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;font-weight:600;padding:2px 0 8px}
+.fam>summary::-webkit-details-marker{display:none}
+.fam>summary small{font-weight:400;color:var(--mute);font-size:12px}
+.fam>summary .on{font-size:11px;color:#fff;background:var(--ink);border-radius:9px;padding:1px 7px;margin-left:6px}
+.fam .lev{margin:4px 0 14px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.badge{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--mute)}
+.badge.sup{border-style:dashed}
+.lev select{width:100%;font:inherit;padding:4px 6px;margin-top:4px}
+.lev .sw{display:flex;gap:8px;align-items:center;font-size:13px}
+#levers{top:80px;left:16px;width:336px;padding:0;overflow:hidden;transition:width .35s var(--ease)}
+#levers header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+#levers h2{font-size:13px;margin:0;font-weight:600}
+#levers .body{padding:16px;display:grid;gap:20px;transition:opacity .2s}
+#levers.closed{width:112px}
+#levers.closed .body{display:none}
+#levers.closed header{border:0}
+.icon{border:0;background:none;padding:4px;border-radius:6px;cursor:pointer;color:var(--mute);display:grid;place-items:center}
+.icon:hover{background:var(--ground)}
+.lev label{display:flex;justify-content:space-between;font-weight:500;margin-bottom:6px}
+.lev label output{font-family:"IBM Plex Mono",monospace;font-size:13px}
+.lev p{margin:6px 0 0;color:var(--mute);font-size:13px}
+.lev.off{opacity:.6}
+.lev.off .why{color:var(--ink);background:var(--ground);border-radius:6px;padding:6px 8px;margin-top:6px;font-size:12px}
+input[type=range]{width:100%;accent-color:var(--prof);margin:0}
+.seg{display:flex;background:var(--ground);border-radius:7px;padding:3px}
+.seg button{flex:1;border:0;background:none;border-radius:5px;padding:5px 6px;cursor:pointer;font-size:12px;color:var(--mute)}
+.seg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* légende + latence */
+#legend{left:16px;bottom:16px;padding:12px 14px;width:336px}
+#legend .t{font-size:12px;color:var(--mute);margin-bottom:6px}
+#legend .ramp{display:flex;height:8px;border-radius:2px;overflow:hidden}
+#legend .ramp span{flex:1}
+#legend .ticks{display:flex;justify-content:space-between;font:11px "IBM Plex Mono",monospace;color:var(--faint);margin-top:4px}
+#lat{margin-top:8px;font:11px "IBM Plex Mono",monospace;color:var(--faint)}
+
+/* zoom */
+#zoom{right:16px;bottom:16px;display:flex;flex-direction:column;padding:3px}
+#zoom button{width:40px;height:40px}
+
+/* survol */
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;border-radius:7px;padding:8px 11px;font-size:13px;opacity:0;transition:opacity .12s;z-index:5;white-space:nowrap}
+#tip b{font-weight:500}
+
+/* fiche */
+#card{top:80px;right:16px;width:432px;max-height:calc(100vh - 96px);overflow:auto;padding:0;
+  transform:translateX(calc(100% + 24px));opacity:0;transition:transform .45s var(--ease),opacity .3s}
+#card.on{transform:none;opacity:1}
+#card header{padding:14px 16px 10px;display:flex;justify-content:space-between;gap:8px;position:sticky;top:0;background:var(--panel);z-index:1}
+#card h3{margin:0;font-size:21px;letter-spacing:-.015em;text-wrap:balance}
+#card .sub{color:var(--mute);font-size:12px}
+#card section{padding:12px 16px;border-top:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.kpis div span{display:block;font-size:12px;color:var(--mute)}
+.kpis div b{font-size:24px;font-weight:600;letter-spacing:-.02em}
+.kpis div em{display:block;font-style:normal;font-size:11px;color:var(--faint)}
+#chart{width:100%;height:180px;display:block}
+.flows{display:grid;gap:6px}
+.flow{display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:8px;font-size:13px}
+.flow .bar{height:8px;background:var(--ground);position:relative;border-radius:2px}
+.flow .bar i{position:absolute;top:0;bottom:0;background:var(--prof);border-radius:2px;transition:all .35s var(--ease)}
+.flow .bar:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--faint)}
+.flow output{text-align:right;font-family:"IBM Plex Mono",monospace}
+.note{font-size:13px;color:var(--mute);margin:6px 0 0}
+.cardact{display:flex;gap:6px}
+.cardact .btn{height:34px;box-shadow:none;font-size:13px}
+.h4{font-size:12px;font-weight:600;margin:0 0 8px;color:var(--ink)}
+
+/* comparaison */
+#cmp{left:50%;bottom:16px;transform:translate(-50%,140%);transition:transform .4s var(--ease);padding:8px;display:flex;gap:6px;max-width:calc(100vw - 760px)}
+#cmp.on{transform:translate(-50%,0)}
+#cmp .c{padding:6px 10px;border-radius:7px;background:var(--ground);min-width:150px;position:relative}
+#cmp .c b{display:block;font-size:12px;font-weight:600;padding-right:16px}
+#cmp .c span{font-size:12px;color:var(--mute)}
+#cmp .c button{position:absolute;right:4px;top:4px;padding:2px}
+#toast{left:50%;top:76px;transform:translate(-50%,-10px);opacity:0;padding:8px 14px;transition:all .3s var(--ease);pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#err{color:var(--ink);background:#FFF4D6;border-color:#E2C779}
+.maplibregl-ctrl-attrib{font-size:10px}
+
+/* retour UAT : encarts de données plus grands, aucun texte sous 14 px */
+#card{width:min(520px,36vw);min-width:400px}
+.kpis div b{font-size:34px}
+#card .sub,.note,.kpis div span,.kpis div em,.flow,.h4,.lev p,.seg button,#legend .t,#results small,#cmp .c span,#cmp .c b{font-size:14px}
+#legend .ticks,#lat{font-size:13px}
+#chart{height:250px}
+#tip{font-size:15px;padding:10px 14px}
+#levers{width:380px}#legend{width:380px}
+#cmp .c{min-width:190px}
+.flow{grid-template-columns:120px 1fr 80px}
+/* A+ : agrandit tous les panneaux flottants */
+#card,#legend,#levers,#cmp,#tip{zoom:1.15}
+html.xl #card,html.xl #legend,html.xl #levers,html.xl #cmp,html.xl #tip{zoom:1.32}
+#card{width:min(540px,32vw);max-height:calc((100vh - 110px)/1.15)}
+html.xl #card{max-height:calc((100vh - 110px)/1.32)}
+#crumb{top:80px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:2px;padding:4px 6px;font-size:15px;white-space:nowrap;max-width:calc(100vw - 900px)}
+#crumb button{border:0;background:none;padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--sel)}
+#crumb button:hover{background:var(--ground)}
+#crumb b{padding:6px 8px;font-weight:600}
+#crumb i{color:var(--faint);font-style:normal}
+@media (max-width:1200px){#crumb{left:410px;transform:none;max-width:calc(100vw - 440px)}#crumb .mid{display:none}#crumb .ell{display:inline}}
+#crumb .ell{display:none}
+@media (max-width:900px){#profs span{display:none}#levers{width:260px}#card{width:calc(100vw - 32px)}#cmp{max-width:calc(100vw - 32px)}#legend{width:240px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="map" aria-label="Carte des départements"></div>
+
+<div id="top" class="" style="position:fixed">
+  <div id="brand" class="float" style="position:static"><i></i>Offre libérale 2050</div>
+  <div id="search" class="float" style="position:relative">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+    <input id="q" placeholder="Commune, département ou région" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="results">
+    <div id="results" class="float" style="position:absolute" role="listbox"></div>
+  </div>
+  <div id="profs" class="float" style="position:static" role="group" aria-label="Profession"></div>
+  <div class="spacer"></div>
+  <div id="actions"><button class="btn" id="txt" title="Taille du texte" aria-pressed="false">A+</button>
+    <button class="btn" id="save" title="Copie un lien qui restaure ce scénario"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2L8 3.8"/><path d="M9.5 6.5a3 3 0 0 0-4.2 0L2.7 9.1a3 3 0 0 0 4.2 4.2L8 12.2"/></svg>Enregistrer le scénario</button>
+  </div>
+</div>
+
+<nav id="crumb" class="float" aria-label="Fil d'Ariane"></nav>
+<aside id="levers" class="float">
+  <header><h2>Simuler une politique</h2>
+    <button class="icon" id="fold" aria-label="Replier les leviers" aria-expanded="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m10 4-4 4 4 4"/></svg></button></header>
+  <div class="body">
+    <div id="scen"></div>
+    <div id="levfam"></div>
+    <p class="nm" id="nonmod"></p>
+  </div>
+</aside>
+
+<div id="legend" class="float"><div class="seg" id="var" style="margin-bottom:8px"><button data-v="evo" aria-pressed="true">Évolution 2026 → 2050</button><button data-v="ecart" aria-pressed="false">Écart au tendanciel</button></div><div class="t" id="lt"></div><div class="ramp" id="ramp"></div><div class="ticks" id="ticks"></div><p class="note" style="margin:8px 0 0">Vue France : régions. Clic : la région s'ouvre en départements, puis clic sur un département. Maj + clic : le département directement.</p><div id="lat">—</div></div>
+
+<div id="zoom" class="float">
+  <button class="icon" id="zin" aria-label="Zoomer"><svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg></button>
+  <button class="icon" id="zout" aria-label="Dézoomer"><svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10"/></svg></button>
+  <button class="icon" id="zfr" aria-label="Vue France entière"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
+</div>
+
+<aside id="card" class="float" aria-live="polite"></aside>
+<div id="cmp" class="float"></div>
+<div id="toast" class="float"></div>
+<div id="tip"></div>
+
+<script>
+const PCOL={"sages-femmes":"#7A4E8C",dentistes:"#2F6A8A",pharmaciens:"#8A6A1E",kines:"#3D4F9E"};
+// gamme divergente neutre : ocre (baisse) ↔ bleu encre (hausse), jamais rouge ni vert
+const RAMP=["#8C5A1B","#B88A4E","#DCC39C","#C4C2B8","#A9B6D6","#6A80B8","#1B3A8C"];
+const BREAKS={evo:[-.30,-.15,-.05,.05,.15,.30],ecart:[-.08,-.03,-.01,.01,.03,.08]};
+const FLOWLBL={entrees:"Entrées",sorties:"Sorties",regulation:"Régulation",formation:"Formation",installations:"Installations"};
+const $=s=>document.querySelector(s);
+const fmt=n=>Math.round(n).toLocaleString("fr-FR");
+const pct=x=>(x>=0?"+":"−")+Math.abs(x*100).toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+
+const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[]};
+let META,GEO,REGL,regOf={},focusReg=null,carte=null,map,bbox={},names={},lat=[];
+
+// ---------- état ↔ URL ----------
+function readHash(){const h=new URLSearchParams(location.hash.slice(1));
+  if(h.get("p"))S.prof=h.get("p");if(h.get("l"))try{S.lvHash=Object.fromEntries(h.get("l").split(",").map(x=>x.split(":")));}catch{}if(h.get("v"))S.v=h.get("v");
+  if(h.get("t"))S.terr=h.get("t");if(h.get("z"))S.xl=h.get("z")=="1";if(h.get("c"))S.cmp=h.get("c").split(",").filter(Boolean);}
+function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv).map(([k,v])=>k+":"+(typeof v=="boolean"?+v:v)).join(","),v:S.v});
+  if(S.terr)h.set("t",S.terr);if(S.xl)h.set("z","1");if(S.cmp.length)h.set("c",S.cmp.join(","));history.replaceState(null,"","#"+h);if(META)crumb();}
+
+// ---------- démarrage ----------
+(async()=>{
+  readHash();
+  [META,GEO,REGL]=await Promise.all([fetch("/api/meta").then(r=>r.json()),fetch("/geo?v=c3").then(r=>r.json()),fetch("/geo-regions?v=c3").then(r=>r.json())]);
+  for(const r of META.territories.slice(1))for(const d of r.deps)regOf[d.id]=r.id;
+  for(const f of GEO.features){names["D"+f.properties.code]=f.properties.nom;bbox["D"+f.properties.code]=fbox(f.geometry);}
+  for(const r of META.territories.slice(1)){names[r.id]=r.name;
+    bbox[r.id]=r.deps.map(d=>bbox[d.id]).filter(Boolean).reduce((a,b)=>[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[2],b[2]),Math.max(a[3],b[3])]);}
+  names.FR="France";bbox.FR=[-7.8,41.3,9.6,51.1];   // inclut les encarts DROM à l'ouest
+  buildProfs();buildMap();buildSearch();buildLevers();
+})();
+
+function fbox(g){let b=[180,90,-180,-90];const w=c=>typeof c[0]=="number"?(b=[Math.min(b[0],c[0]),Math.min(b[1],c[1]),Math.max(b[2],c[0]),Math.max(b[3],c[1])]):c.forEach(w);w(g.coordinates);return b;}
+
+function buildProfs(){
+  const el=$("#profs");
+  for(const [k,l] of Object.entries(META.professions)){
+    const b=document.createElement("button");b.innerHTML=`<i style="background:${PCOL[k]}"></i><span>${l}</span>`;
+    b.dataset.p=k;b.onclick=()=>{S.prof=k;applyProf();refresh();};el.append(b);}
+  for(const [k,why] of Object.entries(META.missing)){
+    const b=document.createElement("button");b.disabled=true;b.title="Absent : "+why;b.innerHTML=`<i style="background:var(--line)"></i><span>Infirmiers</span>`;el.append(b);}
+  applyProf();
+}
+function applyProf(){document.documentElement.style.setProperty("--prof",PCOL[S.prof]);
+  document.querySelectorAll("#profs button[data-p]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p==S.prof));}
+
+// ---------- carte ----------
+function buildMap(){
+  map=new maplibregl.Map({container:"map",attributionControl:{compact:true,customAttribution:"Contours : IGN / Etalab · Données : jumeau v2"},
+    style:{version:8,sources:{},layers:[{id:"bg",type:"background",paint:{"background-color":"#D5DADF"}}]},
+    center:[2.4,46.6],zoom:5,dragRotate:false,pitchWithRotate:false});
+  map.touchZoomRotate.disableRotation();
+  map.on("load",()=>{
+    try{map.fitBounds(bbox.FR,{padding:pad(false),duration:0});}catch(e){}
+    map.addSource("d",{type:"geojson",data:GEO,promoteId:"code"});
+    map.addLayer({id:"fill",type:"fill",source:"d",paint:{"fill-color":["step",["zoom"],["case",["boolean",["feature-state","f"],false],["coalesce",["feature-state","c"],"#F4F5F2"],["coalesce",["feature-state","cr"],"#F4F5F2"]],6.3,["coalesce",["feature-state","c"],"#F4F5F2"]],
+      "fill-color-transition":{duration:300},
+            "fill-opacity":1}});
+    map.addLayer({id:"line",type:"line",source:"d",paint:{"line-color":"#FFFFFF","line-width":["interpolate",["linear"],["zoom"],4,.6,8,1.2],"line-opacity":["step",["zoom"],["case",["boolean",["feature-state","f"],false],1,.35],6.3,1]}});
+    map.addSource("r",{type:"geojson",data:REGL,tolerance:0});
+    map.addLayer({id:"regcase",type:"line",source:"r",filter:["!",["has","cote"]],paint:{"line-color":"#F4F5F2","line-width":["interpolate",["linear"],["zoom"],4,5,8,7]}});
+    map.addLayer({id:"reg",type:"line",source:"r",paint:{"line-color":["case",["has","cote"],"#5C6166","#16181A"],"line-opacity":.9,
+      "line-width":["interpolate",["linear"],["zoom"],4,["case",["has","cote"],.8,1.4],8,["case",["has","cote"],1.2,2.4]]}});
+    map.addLayer({id:"hover",type:"line",source:"d",paint:{"line-color":"#16181A","line-width":1.5,
+      "line-opacity":["case",["boolean",["feature-state","h"],false],1,0]}});
+    map.addLayer({id:"sel",type:"line",source:"d",paint:{"line-color":"#1B3A8C","line-width":2.5,
+      "line-opacity":["case",["boolean",["feature-state","s"],false],1,0]}});
+    let hov=null;const tip=$("#tip");
+    map.on("mousemove","fill",e=>{const f=e.features[0],id=f.properties.code;map.getCanvas().style.cursor="pointer";
+      if(hov!==id){if(hov)map.setFeatureState({source:"d",id:hov},{h:false});hov=id;map.setFeatureState({source:"d",id},{h:true});}
+      const d=carte?.deps[id];
+      const rid=regOf["D"+id],rg=carte?.reg?.[rid];
+      tip.innerHTML=map.getZoom()<6.3&&rid!==focusReg&&rg?`<b>${names[rid]}</b><br>${fmt(rg.s50)} en 2050 · ${pct(raw(rg))}`
+        :`<b>${f.properties.nom}</b> <span style="opacity:.65">${names[rid]||""}</span><br>${d?fmt(d.s50)+" en 2050 · "+pct(raw(d)):"donnée absente"}`;
+      tip.style.left=e.originalEvent.clientX+14+"px";tip.style.top=e.originalEvent.clientY+14+"px";tip.style.opacity=1;});
+    map.on("mouseleave","fill",()=>{if(hov)map.setFeatureState({source:"d",id:hov},{h:false});hov=null;tip.style.opacity=0;map.getCanvas().style.cursor="";});
+    map.on("click","fill",e=>{const id="D"+e.features[0].properties.code,r=regOf[id];
+      if(r&&focusReg!==r&&map.getZoom()<6.3&&!e.originalEvent.shiftKey){select(r);}else select(id);});
+    map.on("click",e=>{if(!map.queryRenderedFeatures(e.point,{layers:["fill"]}).length){backToFrance();}});
+    refresh().then(()=>{if(S.terr)select(S.terr);renderCmp();});
+  });
+  $("#zin").onclick=()=>map.zoomIn();$("#zout").onclick=()=>map.zoomOut();$("#zfr").onclick=()=>select("FR");
+}
+function pad(card){const w=innerWidth,h=innerHeight,wide=w>=1100,z=parseFloat(getComputedStyle($("#card")).zoom)||1;
+  // le panneau des leviers se replie à l'ouverture d'un territoire : seule une marge étroite reste à gauche
+  const left=!wide?16:card&&$("#levers").classList.contains("closed")?150:(card?150:$("#levers").offsetWidth*z+30);
+  const right=wide&&card?$("#card").offsetWidth*z+28:16;
+  return {left,right,top:Math.min(130,h*.14),bottom:24};}
+// évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
+const raw=d=>S.v=="evo"?d.s50/d.s26-1:d.s50/d.b50-1;
+const val=d=>S.v=="evo"&&carte?raw(d)-carte.nat:raw(d);
+// paliers de l'écart au tendanciel : fixés tant que l'écart est faible, élargis par paliers ronds sinon
+function brk(){if(S.v=="evo"||!carte)return BREAKS[S.v];const m=Math.max(...Object.values(carte.deps).map(d=>Math.abs(raw(d))));
+  const top=[.08,.15,.3,.5,1].find(t=>m<=t)??1;return [-1,-.4,-.12,.12,.4,1].map(x=>Math.round(x*top*100)/100);}
+// dégradé continu : 7 couleurs réparties de −B à +B (B = dernier palier), interpolées en RVB, bornées aux extrêmes
+const hex=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
+function colorOf(x){const B=brk().at(-1),t=Math.max(0,Math.min(1,(x/B+1)/2))*(RAMP.length-1),i=Math.min(RAMP.length-2,Math.floor(t)),f=t-i;
+  const a=hex(RAMP[i]),b=hex(RAMP[i+1]);return "#"+a.map((v,k)=>Math.round(v+(b[k]-v)*f).toString(16).padStart(2,"0")).join("");}
+
+function legend(){
+  $("#lt").textContent=S.v=="evo"?`Évolution 2026 → 2050, en points d'écart à la France (${pct(carte.nat)})`:"Effectif libéral 2050, écart scénario − tendanciel";
+  $("#ramp").innerHTML=`<span style="background:linear-gradient(90deg,${RAMP.join(",")})"></span>`;
+  const B=brk().at(-1),b=[-B,-B/2,0,B/2,B];$("#ticks").innerHTML=b.map(x=>`<span>${(x>0?"+":"")+Math.round(x*100)}</span>`).join("")+`<span>${S.v=="evo"?"pts":"%"}</span>`;
+}
+
+// ---------- recalcul : un seul appel en vol, le dernier état gagne ----------
+let inflight=null,pending=false,tInput=0;
+async function refresh(){
+  if(inflight){pending=true;return inflight;}
+  writeHash();
+  const q=`prof=${S.prof}&${LQ()}`;
+  inflight=(async()=>{
+    const [c,f]=await Promise.all([fetch(`/api/carte?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),
+      fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json())]);
+    if(c.error){toast(c.error);return;}
+    const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("s50")/T("s26")-1;carte=c;SC=f&&!f.error?f:null;levState();paint();if(S.terr&&SC)renderCard(f);renderCmp();
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));   // jusqu'à l'image affichée
+    if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
+  })();
+  try{await inflight}finally{inflight=null;if(pending){pending=false;refresh();}}
+}
+function paint(){legend();const R={};
+  for(const [id,d] of Object.entries(carte.deps)){const r=regOf["D"+id];if(!r)continue;R[r]??={s26:0,s50:0,b50:0};for(const k in R[r])R[r][k]+=d[k];}
+  carte.reg=R;
+  for(const [id,d] of Object.entries(carte.deps)){const r=R[regOf["D"+id]];
+    // région ouverte : les autres passent en gris uni (retour utilisateur·rice : l'estompage gênait la lecture)
+    // territoire ouvert (région, ou département ; demain la commune) : tout ce qui est hors de lui passe en gris
+    const inSel=!S.terr||S.terr=="FR"?true:S.terr.startsWith("D")?S.terr=="D"+id:regOf["D"+id]==S.terr;
+    const dim=(!!focusReg&&regOf["D"+id]!=focusReg)||!inSel,G="#ECEDEE";
+    map.setFeatureState({source:"d",id},{c:dim?G:colorOf(val(d)),cr:dim?G:r?colorOf(val(r)):colorOf(val(d)),f:!!focusReg&&regOf["D"+id]==focusReg,dim});}}
+function setFocus(r){focusReg=r;if(carte)paint();}
+const repaint=()=>{if(carte)paint();};
+function showLat(ms){const s=[...lat].sort((a,b)=>a-b),q=p=>s[Math.min(s.length-1,Math.floor(p*s.length))];
+  $("#lat").textContent=`réponse perçue p50 ${Math.round(q(.5))} ms · p95 ${Math.round(q(.95))} ms (n=${s.length}) · jumeau ${ms} ms`;window.__lat=s;}
+
+// ---------- leviers ----------
+function buildLevers(){
+  buildLevFam();
+  $("#fold").onclick=()=>{const c=$("#levers").classList.toggle("closed");$("#fold").setAttribute("aria-expanded",!c);
+    $("#fold").style.transform=c?"rotate(180deg)":"";};
+  document.querySelectorAll("#var button").forEach(b=>{b.setAttribute("aria-pressed",b.dataset.v==S.v);
+    b.onclick=()=>{S.v=b.dataset.v;document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x===b));writeHash();if(carte){paint();renderCmp();}};});
+  const xl=()=>{document.documentElement.classList.toggle("xl",!!S.xl);$("#txt").setAttribute("aria-pressed",!!S.xl);$("#txt").textContent=S.xl?"A":"A+";};xl();
+  $("#txt").onclick=()=>{S.xl=!S.xl;xl();writeHash();};
+  $("#save").onclick=async()=>{writeHash();try{await navigator.clipboard.writeText(location.href);toast("Lien du scénario copié");}catch{toast("Lien dans la barre d'adresse");}};
+}
+// leviers par famille (former, attirer, installer, retenir), métadonnées lues dans /api/meta
+// Leviers, refonte « élu·e » (2026-11-14, retour UAT) : une question par famille, valeurs en phrase,
+// trois niveaux (fermé : état + effet ; ouvert : levier principal ; « Préciser » : réglages avancés), résumé en tête.
+let SC=null;
+const FAM={former:{q:"Former plus ?",main:"quotas",more:["quotas_region"],flows:["entrees","lien_formation"],ic:"lent : 3 à 6 ans, le temps des études"},
+  attirer:{q:"Attirer des diplômés étrangers ?",main:"etrangers",more:[],flows:["etrangers"],ic:"1 à 3 ans"},
+  installer:{q:"Réguler l'installation ?",main:"regul",more:["part_zones","dest"],flows:["regulation","regulation_sortie"],ic:"rapide ; déplace plus qu'il ne crée"},
+  retenir:{q:"Retenir plus longtemps ?",main:"retraite",more:["cumul","precoces"],flows:["sorties"],ic:"rapide, montée de 3 mois par an"}};
+const LBL={quotas:"Places en formation",quotas_region:"Seulement dans la région affichée",etrangers:"Diplômés étrangers accueillis",regul:"Conventionner seulement en remplacement d'un départ",
+  part_zones:"Part des zones concernées",dest:"Les professionnels bloqués…",retraite:"Partir à la retraite plus tard",cumul:"Cumul emploi-retraite",precoces:"Départs avant 60 ans"};
+const NOCOUNT=["dest","part_zones","quotas_region"];
+const LV=k=>META.levers.find(l=>l.k==k);
+const isDef=l=>S.lv[l.k]===(l.type=="toggle"?!!l.default:l.default);
+function LQ(){return Object.entries(S.lv).map(([k,v])=>k+"="+(typeof v=="boolean"?+v:v)).join("&");}
+const pc=v=>Math.abs(Math.round((v-1)*100));
+function phrase(k,v){switch(k){
+  case"quotas":return v==1?"autant de places qu'aujourd'hui":`${v>1?"+":"−"}${pc(v)} % de places en formation`;
+  case"quotas_region":return v?"dans la région affichée seulement":"partout en France";
+  case"etrangers":return v==1?"autant qu'aujourd'hui":`${pc(v)} % de diplômés étrangers ${v>1?"en plus":"en moins"}`;
+  case"regul":return v?"oui, dans les zones les mieux dotées":"non";
+  case"part_zones":return `${Math.round(v*100)} % des zones listées`;
+  case"dest":return {salariat:"vont vers le salariat",sortie:"quittent la profession",voisine:"s'installent dans une zone voisine"}[v];
+  case"retraite":return v==0?"au même âge qu'aujourd'hui":`${String(v).replace(".",",")} an${v>1?"s":""} plus tard`;
+  case"cumul":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"}`;
+  case"precoces":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"}`;}}
+function setL(l,v){const e=document.querySelector("#lv-"+l.k);
+  if(l.type=="toggle"){S.lv[l.k]=v===true||v==="1"||v===1;if(e)e.checked=S.lv[l.k];}else if(l.type=="select"){S.lv[l.k]=v;if(e)e.value=v;}else{S.lv[l.k]=+v;if(e)e.value=v;}
+  const o=document.querySelector("#o-"+l.k);if(o)o.textContent=phrase(l.k,S.lv[l.k]);}
+const fmtN=n=>Math.round(n).toLocaleString("fr-FR"),sg=n=>(n>=0?"+":"−")+fmtN(Math.abs(n));
+function unavailable(f){const nz=(carte?.regul_deps||[]).length;
+  if(f=="attirer"&&S.prof=="pharmaciens")return"aucun flux de diplômés étrangers publié pour les pharmaciens";
+  if(f=="installer"&&carte&&!nz)return"aucun zonage conventionnel pour cette profession";return null;}
+function levState(){
+  const terrName=S.terr&&S.terr!="FR"?names[S.terr]:"France";
+  const changed=META.levers.filter(l=>!NOCOUNT.includes(l.k)&&!isDef(l)).length;
+  let html="";
+  if(SC){const i=SC.years.length-1,b=SC.base[i],s=SC.scn[i],k=SC.k*(2050-SC.origin);
+    html=changed?`<b>Scénario : ${changed} levier${changed>1?"s":""} modifié${changed>1?"s":""}</b><br>${terrName}, 2050 : ${sg(s-b)} par rapport à la tendance (${fmtN(s)}, probablement entre ${fmtN(s*(1-k))} et ${fmtN(s*(1+k))}).`
+      :`<b>Tendance, sans nouvelle politique</b><br>${terrName}, 2050 : environ ${fmtN(b)}, probablement entre ${fmtN(b*(1-k))} et ${fmtN(b*(1+k))}.`;}
+  html+=`<div class="acts"><button id="reset">Revenir à la tendance</button><button id="keep">Garder ce scénario</button>
+    <button class="preset" data-p="former">Former 20 % de plus</button><button class="preset" data-p="installer">Réguler l'installation</button><button class="preset" data-p="retenir">Partir 2 ans plus tard</button></div>`;
+  $("#scen").innerHTML=html;
+  $("#reset").onclick=()=>{META.levers.forEach(l=>setL(l,l.default));levState();refresh();};
+  $("#keep").onclick=()=>$("#save").click();
+  $("#scen").querySelectorAll(".preset").forEach(b=>b.onclick=()=>{const p=b.dataset.p;
+    if(p=="former")setL(LV("quotas"),1.2);if(p=="installer")setL(LV("regul"),true);if(p=="retenir")setL(LV("retraite"),2);levState();refresh();});
+  const off=[];
+  for(const [f,F] of Object.entries(FAM)){const d=$("#q-"+f);if(!d)continue;const why=unavailable(f);
+    d.style.display=why?"none":"";if(why)off.push(`${FAM[f].q.replace(" ?","")} : ${why}`);
+    const ls=[F.main,...F.more].map(LV),mod=ls.filter(l=>!NOCOUNT.includes(l.k)&&!isDef(l));
+    $("#st-"+f).textContent=mod.length?phrase(F.main,S.lv[F.main])+(F.more.filter(k=>!NOCOUNT.includes(k)&&!isDef(LV(k))).length?" (et réglages précisés)":""):"rien de changé";
+    const ef=SC?F.flows.reduce((a,k)=>a+(SC.flows[k]?SC.flows[k].at(-1):0),0):0;
+    $("#ef-"+f).textContent=mod.length&&SC?sg(ef)+" en 2050":"";}
+  const qr=$("#lv-quotas_region");if(qr){qr.disabled=!S.terr||S.terr=="FR";$("#n-quotas_region").textContent=qr.disabled?"Ouvrez une région ou un département pour l'activer.":"";}
+  ["part_zones","dest"].forEach(k=>{const e=$("#lv-"+k);if(e)e.disabled=!S.lv.regul;});
+  $("#n-dest").textContent=S.lv.dest=="voisine"?"Sans effet visible au département : le report reste dans le département.":"";
+  $("#nonmod").innerHTML=(off.length?`<b>Sans effet pour cette profession</b> — ${off.join(" ; ")}.<br>`:"")+
+    "<b>Pas encore dans le modèle</b> — obligation d'exercer en zone sous-dotée, aides à l'installation, transferts de tâches (vaccination en officine, infirmiers en pratique avancée).";}
+function leverHTML(l,main){const sup=l.status!="sourcé"&&l.status!="mesuré";
+  const inp=l.type=="range"?`<input type="range" id="lv-${l.k}" min="${l.min}" max="${l.max}" step="${l.step}" aria-label="${LBL[l.k]}">`:l.type=="toggle"?`<label class="sw"><input type="checkbox" id="lv-${l.k}">${LBL[l.k]}</label>`:
+    `<select id="lv-${l.k}" aria-label="${LBL[l.k]}">${Object.entries(l.options).map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</select>`;
+  return `<div class="${main?"main":"lev"}">${l.type=="toggle"?"":`<div class="val">${LBL[l.k]} : <output id="o-${l.k}"></output></div>`}${inp}
+    <div class="ic"><span title="Délai avant effet : ${l.delai}">🕒 ${l.delai.split(",")[0]}</span><span class="src" data-k="${l.k}" title="${sup?"Effet supposé":"Effet sourcé"} — cliquer pour la source">${sup?"● supposé":"✓ sourcé"}</span></div>
+    <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div><p class="note" id="n-${l.k}"></p></div>`;}
+function buildLevFam(){
+  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>`<details class="q" id="q-${f}"><summary><span class="ttl">${F.q}</span><span class="st" id="st-${f}"></span><span class="ef" id="ef-${f}"></span></summary>`+
+    leverHTML(LV(F.main),true)+(F.more.length?`<details class="more"><summary>Préciser ▸</summary>${F.more.map(k=>leverHTML(LV(k),false)).join("")}</details>`:"")+"</details>").join("");
+  document.querySelectorAll("details.q").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll("details.q").forEach(x=>{if(x!==d)x.open=false;});}));
+  document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
+  const H=S.lvHash||{};
+  META.levers.forEach(l=>{setL(l,H[l.k]!==undefined?(l.type=="range"?+H[l.k]:H[l.k]):l.default);const e=$("#lv-"+l.k);
+    e.addEventListener(l.type=="range"?"input":"change",()=>{setL(l,l.type=="toggle"?e.checked:e.value);levState();tInput=performance.now();refresh();});});
+  levState();}
+
+// ---------- recherche ----------
+function buildSearch(){
+  const items=[{id:"FR",name:"France",lvl:"National"}];
+  for(const r of META.territories.slice(1)){items.push({id:r.id,name:r.name,lvl:"Région"});
+    for(const d of r.deps)items.push({id:d.id,name:d.name,lvl:"Département "+d.id.slice(1)});}
+  const q=$("#q"),res=$("#results");let hits=[],k=0;
+  const draw=()=>{res.innerHTML=hits.map((h,i)=>`<button role="option" aria-selected="${i==k}" data-i="${i}">${h.name}<small>${h.lvl}</small></button>`).join("");
+    res.classList.toggle("on",hits.length>0);q.setAttribute("aria-expanded",hits.length>0);};
+  q.addEventListener("input",()=>{const s=norm(q.value.trim());k=0;
+    hits=!s?[]:items.filter(i=>norm(i.name).includes(s)||i.id.slice(1)==s).sort((a,b)=>norm(a.name).indexOf(s)-norm(b.name).indexOf(s)).slice(0,8);
+    if(s&&!hits.length)hits=[{id:null,name:"Aucun territoire trouvé",lvl:"Grain communal : à venir"}];draw();});
+  q.addEventListener("keydown",e=>{if(e.key=="ArrowDown"){k=Math.min(k+1,hits.length-1);draw();e.preventDefault();}
+    if(e.key=="ArrowUp"){k=Math.max(k-1,0);draw();e.preventDefault();}
+    if(e.key=="Enter"&&hits[k]?.id)go(hits[k]);if(e.key=="Escape"){hits=[];draw();q.blur();}});
+  res.addEventListener("mousedown",e=>{const b=e.target.closest("button");if(b&&hits[b.dataset.i].id)go(hits[b.dataset.i]);});
+  q.addEventListener("blur",()=>setTimeout(()=>{hits=[];draw();},120));
+  const go=h=>{q.value=h.name;hits=[];draw();q.blur();select(h.id);};
+  addEventListener("keydown",e=>{if(e.key=="/"&&document.activeElement!==q){e.preventDefault();q.focus();}const typing=/INPUT|TEXTAREA/.test(document.activeElement?.tagName)&&document.activeElement.type!="range";
+    if(e.key=="Escape"||(e.key=="Backspace"&&!typing)){const p=parent(S.terr);if(S.terr&&S.terr!="FR"){e.preventDefault();p=="FR"?backToFrance():select(p);}}});
+}
+
+// ---------- fiche ----------
+let prevSel=null;
+function select(id,fly=true,push=true){if(push&&id!==S.terr)history.pushState(null,"",location.href);
+  S.terr=id;writeHash();if(META)levState();if(S.lv.quotas_region)refresh();
+  if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;
+  S.terr=id;setFocus(id.startsWith("R")?id:id.startsWith("D")?regOf[id]:null);
+  if(id.startsWith("D")){prevSel=id.slice(1);map.setFeatureState({source:"d",id:prevSel},{s:true});}
+  if(id!=="FR"&&!$("#levers").classList.contains("closed"))$("#fold").click();
+  if(fly&&bbox[id])try{map.fitBounds(bbox[id],{padding:pad(true),maxZoom:S.terr?.startsWith("D")?10:8.5,duration:900,essential:true});}catch(e){}
+  fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${id}`).then(r=>r.json()).then(f=>{if(f.error)return toast(f.error);SC=f;levState();renderCard(f);});
+}
+function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();try{map.fitBounds(bbox.FR,{padding:pad(false),duration:800});}catch(e){}}
+function closeCard(){$("#card").classList.remove("on");S.terr=null;setTimeout(refresh);if(S.lv.quotas_region){const l=META.levers.find(x=>x.k=="quotas_region");setL(l,false);refresh();}if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
+
+let F=null;
+function renderCard(f){
+  F=f;const c=$("#card"),y=f.years,i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=y.length-1;
+  const s26=f.scn[i26],s50=f.scn[n],b50=f.base[n],k=f.k,lo=s50*(1-k*(2050-f.origin)),hi=s50*(1+k*(2050-f.origin));
+  const dep=S.terr?.startsWith("D")?S.terr.slice(1):null,zone=dep&&f.regul_deps.includes(dep);
+  if(!c.classList.contains("on")||c.dataset.t!==S.terr){
+    c.dataset.t=S.terr;
+    c.innerHTML=`<header><div><h3>${names[S.terr]||S.terr}</h3><div class="sub">${f.label} · secteur libéral · origine des données ${f.origin}</div></div>
+      <button class="icon" aria-label="Fermer la fiche" onclick="closeCard()"><svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></header>
+      <section class="kpis"><div><span>Effectif ${y[i26]}</span><b class="num" data-k="s26">0</b></div>
+        <div><span>Effectif 2050</span><b class="num" data-k="s50">0</b><em class="num" data-k="rg"></em></div>
+        <div><span>Écart au tendanciel</span><b class="num" data-k="ec">0</b><em class="num" data-k="ecp"></em></div></section>
+      <section><p class="h4">Trajectoire</p><svg id="chart" viewBox="0 0 460 250" role="img"></svg>
+        <p class="note" data-k="band"></p></section>
+      <section><p class="h4">Écart en 2050, décomposé par flux</p><div class="flows" data-k="flows"></div></section>
+      <section><p class="h4">Zonage</p><p class="note" data-k="zone" style="margin:0"></p></section>
+      <section class="cardact"><button class="btn" onclick="addCmp()">Comparer</button><button class="btn" onclick="exportCard()">Exporter la fiche</button></section>`;
+    requestAnimationFrame(()=>c.classList.add("on"));
+  }
+  const q=s=>c.querySelector(`[data-k=${s}]`);
+  tween(q("s26"),s26,fmt);tween(q("s50"),s50,fmt);tween(q("ec"),s50-b50,v=>(v>=0?"+":"−")+fmt(Math.abs(v)));
+  q("ecp").textContent=b50?pct(s50/b50-1):"";q("rg").textContent=`fourchette ${fmt(lo)} – ${fmt(hi)}`;
+  q("band").textContent=`Hachures : fourchette indicative ≈ 8 cas sur 10, pente d'erreur de backtest ${(k*100).toLocaleString("fr-FR",{maximumFractionDigits:2})} %/an × horizon. Aucun backtest n'existe à 2050 : extrapolation.`;
+  const fl=Object.entries(f.flows),mx=Math.max(1,...fl.map(([,v])=>Math.abs(v[n])));
+  q("flows").innerHTML=fl.length?fl.map(([k,v])=>{const x=v[n],w=Math.abs(x)/mx*50;
+    return `<div class="flow"><span>${FLOWLBL[k]||k}</span><div class="bar"><i style="left:${x<0?50-w:50}%;width:${w}%"></i></div><output>${(x>=0?"+":"−")+fmt(Math.abs(x))}</output></div>`}).join("")
+    :`<p class="note" style="margin:0">Aucun écart : le scénario est égal au tendanciel (places en formation × 1,00).</p>`;
+  q("zone").textContent=!dep?"Le zonage se lit au département : sélectionner un département."
+    :zone?"Au moins la moitié des communes sont en zone « remplacement seul » (zonage actuel). Le levier régulation est désactivé.":"Moins de la moitié des communes en zone « remplacement seul » (zonage actuel).";
+  chart(f,i26);
+}
+const tw=new WeakMap();
+function tween(el,to,f){const from=tw.get(el)??to*.96,t0=performance.now();tw.set(el,to);
+  const step=t=>{const p=Math.min(1,(t-t0)/280),e=1-Math.pow(1-p,3);el.textContent=f(from+(to-from)*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+
+function chart(f,i26){
+  const W=460,H=250,P={l:40,r:8,t:8,b:20},y0=Math.min(f.obs[0]?.[0]??f.origin,f.origin),y1=2050;
+  const lo=f.scn.map((v,i)=>v*(1-f.k*(f.years[i]-f.origin))),hi=f.scn.map((v,i)=>v*(1+f.k*(f.years[i]-f.origin)));
+  const all=[...lo,...hi,...f.base,...f.obs.map(o=>o[1])],mn=Math.min(...all)*.97,mxv=Math.max(...all)*1.02;
+  const X=y=>P.l+(y-y0)/(y1-y0)*(W-P.l-P.r),Y=v=>P.t+(1-(v-mn)/(mxv-mn))*(H-P.t-P.b);
+  const path=(ys,vs)=>vs.map((v,i)=>(i?"L":"M")+X(ys[i]).toFixed(1)+" "+Y(v).toFixed(1)).join("");
+  const band=path(f.years,hi)+f.years.slice().reverse().map((y,i)=>"L"+X(y).toFixed(1)+" "+Y(lo[lo.length-1-i]).toFixed(1)).join("")+"Z";
+  const ticks=[mn,(mn+mxv)/2,mxv].map(v=>`<text x="${P.l-6}" y="${Y(v)+3}" text-anchor="end">${fmt(v)}</text>`).join("");
+  const xt=[y0,f.origin,2035,2050].filter((v,i,a)=>a.indexOf(v)==i&&v>=y0).map(y=>`<text x="${X(y)}" y="${H-4}" text-anchor="middle">${y}</text>`).join("");
+  $("#chart").innerHTML=`<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line y2="5" stroke="${PCOL[S.prof]}" stroke-opacity=".35" stroke-width="1.4"/></pattern></defs>
+    <style>text{font:12px "IBM Plex Mono",monospace;fill:#8A8F94}</style>${ticks}${xt}
+    <line x1="${X(2026)}" x2="${X(2026)}" y1="${P.t}" y2="${H-P.b}" stroke="#DCDED8" stroke-dasharray="2 3"/>
+    <path d="${band}" fill="url(#hatch)"/>
+    <path d="${path(f.obs.map(o=>o[0]),f.obs.map(o=>o[1]))}" fill="none" stroke="#16181A" stroke-width="1.6"/>
+    <path d="${path(f.years,f.base)}" fill="none" stroke="#5C6166" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <path d="${path(f.years,f.scn)}" fill="none" stroke="${PCOL[S.prof]}" stroke-width="2"/>
+    <text x="${W-P.r}" y="${Y(f.scn.at(-1))-6}" text-anchor="end" style="fill:${PCOL[S.prof]}">scénario</text>
+    <text x="${W-P.r}" y="${Y(f.base.at(-1))+12}" text-anchor="end">tendanciel</text>`;
+}
+
+// ---------- comparer / exporter ----------
+function addCmp(){if(!S.cmp.includes(S.terr)){S.cmp=[...S.cmp,S.terr].slice(-4);writeHash();renderCmp();toast("Ajouté à la comparaison");}}
+function renderCmp(){
+  const el=$("#cmp");el.classList.toggle("on",S.cmp.length>0);if(!carte)return;
+  el.innerHTML=S.cmp.map(id=>{const ds=id=="FR"?Object.keys(carte.deps):id.startsWith("R")?(META.territories.find(r=>r.id==id)?.deps||[]).map(d=>d.id.slice(1)):[id.slice(1)];
+    const a=ds.map(d=>carte.deps[d]).filter(Boolean),sum=k=>a.reduce((s,d)=>s+d[k],0),agg={s26:sum("s26"),s50:sum("s50"),b50:sum("b50")};
+    return `<div class="c"><b>${names[id]||id}</b><span class="num">${fmt(agg.s26)} → ${fmt(agg.s50)} · ${pct(raw(agg))}</span>
+      <button class="icon" aria-label="Retirer" onclick="S.cmp=S.cmp.filter(x=>x!='${id}');writeHash();renderCmp()"><svg width="10" height="10" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>`}).join("");
+}
+function exportCard(){
+  if(!F)return;const L=[`# ${names[S.terr]} · ${F.label} · libéral · leviers ${LQ().replace(/&/g,' ')} · origine ${F.origin}`,"annee;tendanciel;scenario;bas;haut"];
+  F.years.forEach((y,i)=>{const h=F.k*(y-F.origin);L.push([y,F.base[i],F.scn[i],F.scn[i]*(1-h),F.scn[i]*(1+h)].map(v=>typeof v=="number"&&v%1?v.toFixed(1):v).join(";"));});
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([L.join("\n")],{type:"text/csv"}));
+  a.download=`fiche_${S.prof}_${S.terr}.csv`;a.click();
+}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200);}
+// fil d'Ariane : France › région › département (› commune, à venir)
+function parent(id){return !id||id=="FR"?null:id.startsWith("D")?regOf[id]||"FR":"FR";}
+function crumb(){const chain=[];for(let t=S.terr||"FR";t;t=parent(t))chain.unshift(t);
+  $("#crumb").innerHTML=chain.map((t,i)=>{const last=i==chain.length-1,mid=i>0&&!last?" mid":"";
+    return (i?`<i class="${mid.trim()}">›</i>`:"")+(last?`<b>${names[t]||t}</b>`:`<button class="${mid.trim()}" data-t="${t}">${names[t]||t}</button>`)}).join("")
+    +(chain.length>2?'<i class="ell">› …</i>':"");
+  $("#crumb").querySelectorAll("button").forEach(b=>b.onclick=()=>b.dataset.t=="FR"?backToFrance():select(b.dataset.t));}
+// précédent / suivant du navigateur
+addEventListener("popstate",()=>{const t=new URLSearchParams(location.hash.slice(1)).get("t");if(t&&t!==S.terr)select(t,true,false);else if(!t&&S.terr)backToFrance(false);});
+</script>
+</body>
+</html>

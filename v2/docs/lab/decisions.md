@@ -2255,6 +2255,72 @@ données qui ont changé depuis.
 **Ce qui le renverserait.** Un nouveau changement du jumeau ou des données
 `secteur_stock`. Relancer coûte environ 1 h 30 de machine.
 
+## 2026-11-14 — Langage naturel pour l'élu·e : un compilateur déterministe à glossaire, qui traduit sans jamais calculer
+
+**Décision.**
+- `v2/langage/` contient :
+  - un glossaire contrôlé (termes politiques et juridiques → leviers, neutralisation du
+    lexique, politiques non modélisées avec leur raison) ;
+  - un compilateur **déterministe**, texte → scénario validé par `parse_levers` ;
+  - au moins 30 cas de test écrits avant le code, avec un taux de correspondance mesuré ;
+  - des gabarits de phrases de sortie remplis par le jumeau.
+- **Pas de modèle de langage pour l'instant**, et c'est voulu : aucune clé d'API n'est
+  disponible, et un glossaire relisible reste en boîte blanche. Un modèle de langage
+  pourra plus tard remplacer l'étape d'analyse, jamais le calcul. Il passerait alors par le
+  même jeu de test (question Mistral toujours ouverte).
+- L'écran de confirmation (« ce que j'ai compris / ce qui n'est pas modélisé ») est ajouté
+  à la carte **après l'UAT en cours**.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « oui fais ça », après la proposition
+glossaire → compilateur → phrases.
+**Ce qui le renverserait.** Un taux de correspondance trop bas sur les cas de test. Dans ce
+cas, on ajoute une étape de modèle de langage, évaluée sur le même jeu de test.
+
+## 2026-11-14 — Axe 3 : K3 (axe 2) jugé sur N10 — aucun grain ne passe, kinés à l'EPCI à une classe près
+
+**Décision.**
+- K3 (inscrit à 08:41, soumission a042415) est jugé sur N10 sans
+  modification du protocole : **aucun grain ne passe**, pour aucune
+  profession. **L'affichage reste au département** pour IDE, MK et CD.
+- K3 corrige la sous-couverture des grandes unités (référence : 22 à 59 %
+  au-delà de 100). Défauts restants : IDE trop larges (85–91 % dans les
+  classes moyennes), CD trop étroits (69–73 %).
+- Cas le plus proche : **kinés à l'EPCI**, une seule classe hors bande
+  (1–2 professionnels : 73,0 %, 259 EPCI).
+- Une variante corrigée (K4) doit être inscrite avant passage ; comme ce
+  jugement montre la cible, un succès devra être confirmé hors des origines
+  2014–2020 (origines 2021+ ou dépôt 2027).
+
+**Pourquoi.** Rapport [N10](reports/2026-11-14-axe3-n10-grain-couverture.md),
+section « Jugement du modèle K3 ».
+**Ce qui le renverserait.** Une variante inscrite avant passage qui passe
+N10 et le confirme hors échantillon.
+
+## 2026-11-14 — Refonte « élu·e » du panneau Leviers : faite dans une page à part, bascule après l'UAT
+
+**Décision.**
+- Périmètre confirmé, priorités 1, 2 et 5, plus 4 et 6 au passage :
+  - une question par famille, avec les valeurs en phrase ;
+  - trois niveaux (fermé : état et effet 2050 ; ouvert : le levier principal ;
+    « Préciser » : les réglages avancés), une seule famille ouverte à la fois ;
+  - un résumé du scénario en tête, avec trois préréglages ;
+  - les leviers sans effet pour la profession masqués et listés, plus « Pas encore dans le
+    modèle » ;
+  - la couleur de la carte dans la légende.
+- **Commencée sans attendre la fin de l'UAT**, dans `v2/prototype-carte/index-refonte.html`,
+  servie par le même serveur. La page testée par l'UAT (`index.html`) n'est pas touchée. On
+  bascule une fois l'UAT terminée.
+- Vérifié dans un onglet séparé :
+  - le préréglage « Former 20 % de plus » donne +19 110 en France en 2050, dont la famille
+    Former +20 665 ;
+  - pharmaciens : la famille Attirer est masquée et expliquée.
+- Le mode Expert (décideur technique) est cadré à part. Il viendra après, sur le même modèle.
+
+**Pourquoi.** La session UAT : « confirme le périmètre (priorités 1, 2, 5) et indique si
+elle peut commencer sans attendre la fin de l'UAT », relayé par l'utilisateur·rice.
+**Ce qui le renverserait.** L'UAT en cours demande des changements incompatibles avec la
+refonte.
+
 ## Open / not yet decided
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
@@ -2704,3 +2770,44 @@ porteur.
 - la mécanique de cohortes, trop bruitée sous 10 personnes.
 
 **Ce qui le renverserait.** Le banc de K2.
+
+## 2026-11-14 — Projection communale : K2 rejeté aussi ; règle d'affichage provisoire ; pas de branchement sur le jumeau
+
+**Décision.**
+- **K2 est rejeté**, selon son critère pré-écrit : plus de 2 classes sur 7
+  hors de [75 ; 85] % pour chaque profession.
+  - Il calibre les IDE de 1 à 50 professionnels (81 à 83 % ; 75 à 85 %
+    sur l'origine 2020).
+  - Il est trop étroit au-dessus de 50 et pour les CD (68 à 73 %).
+- **Règle d'affichage provisoire.**
+  - IDE : projection communale avec la bande K2 pour les communes de 1 à
+    50 professionnels ; au-dessus, l'échelon EPCI ou le département.
+  - MK et CD : pas de projection communale calibrée. On affiche l'observé
+    à la commune et la projection du département, en le disant.
+- **Aucun branchement sur le jumeau.** L'axe 0 garde sa répartition
+  communale (C15).
+- **Prochaine variante, K3 (à inscrire avant).** La bande additionne une
+  partie locale (K2) et la part × les tirages du total départemental de
+  C1, avec un passage RPPS privé → CartoSanté libéral.
+
+**Pourquoi.** Banc N4 ([rapport](reports/2026-11-14-axe2-communes.md)) :
+l'erreur commune à tout le département domine dans les grandes communes,
+et une bande par classe ne la porte pas.
+**Ce qui le renverserait.** K3 calibré dans toutes les classes.
+
+## 2026-11-14 — Projection communale : K3 inscrit avant tout passage (08:41), soumis au jugement N10 de l'axe 3
+
+**Décision.**
+- K3 est inscrit avant tout passage. Sa bande combine deux erreurs :
+  - l'erreur du total départemental, tirée une fois par département et
+    commune à ses communes ;
+  - l'erreur locale, tirée par classe de taille.
+  - Dérivation [communes, § K3](derivations/2026-11-14-axe2-communes.md),
+    SHA-256 `1a4d308d7402`.
+- La soumission à N10 porte sur les grains commune, bv2022 et EPCI, sur les
+  origines 2014 à 2020 à h = 5. C'est l'axe 3 qui juge.
+
+**Pourquoi.** K et K2 ont été rejetés : l'erreur du total départemental
+domine dans les grandes communes. N10 montre la même forme sur les
+estimateurs de référence.
+**Ce qui le renverserait.** Le verdict de N10.
