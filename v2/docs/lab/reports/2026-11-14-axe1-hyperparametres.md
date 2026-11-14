@@ -134,6 +134,46 @@ for t in sorted(ins):
         print(f'{t},{ins[t]},{dip[t+3]},{r:.3f},{1-r:.1%}')
 ```
 
+## Panel de politiques jouables (pour l'interface du décideur)
+
+Objectif fixé par l'utilisateur·rice le 2026-11-14 : le décideur doit pouvoir
+jouer, dans l'interface, sur un grand panel de politiques applicables.
+
+**Lecture du tableau.**
+- Chaque ligne est une politique, exprimée comme le réglage d'un
+  hyperparamètre du catalogue.
+- La colonne « Jouable aujourd'hui » se lit dans le code de `v2/jumeau/`
+  (lecture seule) et dans les décisions du 2026-11-14 : leviers retraite et
+  régulation suspendus dans le prototype.
+
+| # | Politique | Hyperparamètre (fiche) → paramètre du jumeau | Statu quo | Plage jouable proposée | Preuve de l'effet | Jouable aujourd'hui |
+|---|---|---|---|---|---|---|
+| 1 | Réguler l'installation des infirmiers (activer, retirer, étendre les zones) | [[param-ide-regul-regle]], [[param-regul-theta-fuite]], [[param-regul-report-entrants]] → `regulation.zones`, `.destination` | 27,4 % de la population en zone sur-dotée | de 0 à 100 % des communes ; θ ∈ [0,5 ; 1] (supposé) | IRDES, DiD | module présent, levier suspendu (2e revue) |
+| 2 | Idem, sages-femmes | [[param-sf-regul-regle]] | 12,2 % | idem | direction seulement | idem |
+| 3 | Idem, kinés | [[param-mk-regul-regle]] | 26,5 % | idem | aucune | idem |
+| 4 | Idem, dentistes ; étendre ou non aux spécialistes | [[param-cd-regul-regle]] | 4,8 % ; spécialistes exemptés | idem ; exemption on/off | aucune | idem ; exemption non codée |
+| 5 | Règle des deux tiers d'activité en périphérie (IDE) | [[param-ide-regul-regle]] | en vigueur | on/off | aucune | non (pas de module) |
+| 6 | Obligation d'exercice en zone sous-dotée (MK ; extension à IDE, SF, CD) | [[param-mk-obligation-exercice]] | MK, 2 ans, à partir de 2027 | 0 à 3 ans, par profession | aucune avant 2028 | non (pas de module d'installation communale) |
+| 7 | Réduire l'abandon en IFSI | [[param-ide-rendement-diplomes]] → `formation.abandon` | ≈ 0,105 par an (ρ = 0,72, dérivé) | 0,056 à 0,105 par an (niveaux 2009-2018 à 2022) | ER 1319 : diviser la perte par 2 ≈ +14 % de places | oui (défaut à corriger, actuellement 0) |
+| 8 | Places en formation (IFSI, MK, SF, odontologie, pharmacie) | `formation.capacite`, `entrees.multiplicateur` | 1 | × [0,8 ; 1,2] (DD76 ±20 %) | DD76 : ±12-13 % d'effectif à 2050 | oui (quotas bornés à [0,7 ; 1,5] dans le prototype) |
+| 9 | Postes d'internat en pharmacie (biologie, pharmacie hospitalière) | [[param-ph-internat-postes]], [[param-ph-filiere-primo-inscrits]] | 746 postes | ±20 % (supposé) | mécanique (postes) | non (pas de module filières) |
+| 10 | Postes de DES en odontologie | [[param-cd-specialisation-des]] | 121 postes | 100-160 (supposé ; 140 annoncés pour 2026-27) | mécanique | non |
+| 11 | Retenir les diplômés en pharmacie (inscription à l'Ordre) | [[param-ph-taux-inscription-diplomes]] | 32,8 % de non-inscrits (2015) | 20-35 % (2006-2015 observé) | aucune | non |
+| 12 | Cumul emploi-retraite (plafonner, inciter) | [[param-cumul-emploi-retraite]] → `sorties.part_cumul`, `.cumul_multiplicateur` | SF 0,8 · CD 4,7 · PH 1,8 · MK-IDE 1,5 % | × [0,5 ; 2] (plan de l'axe 5) | aucune propre | oui (défaut 0,10 « médecins » à corriger) |
+| 13 | Report de l'âge de départ | [[param-mk-age-retraite]], [[param-cessation-par-age]] → `sorties.decalage_retraite` | 0 | 0 à 2 ans | DREES : +1 % d'effectif par an de décalage (IDE, MK) | module présent, levier suspendu |
+| 14 | Diplômés étrangers (reconnaissance, EVC) | [[param-age-entree-exercice]] (flux : SF 70, CD 665, MK 1 175 par an) | flux observés | × [0,5 ; 2] (supposé) | DD76, variante | partiel (`entrees.multiplicateur` global, pas de flux séparé) |
+
+**Ce que cela dit.**
+- **Huit politiques sur quatorze ont un point d'entrée dans le code**
+  (lignes 1-4, 7, 8, 12, 13).
+- **Trois sont jouables dès maintenant** (7, 8, 12), dont deux avec un défaut
+  à corriger. Les valeurs ont été envoyées à l'axe 0 le 2026-11-14.
+- **Les six autres demandent un module** (installation communale, filières)
+  ou un flux séparé.
+- **Le panel « grand » existe donc sur le papier**, avec ses sources. Le
+  goulot est le code (axe 0) et la levée de la suspension sur la régulation
+  et la retraite, pas la documentation.
+
 ## ⚑ What could make it wrong
 - **Filières pharmacie.**
   - φ décrit la *section d'inscription*, pas l'employeur. Une partie de
