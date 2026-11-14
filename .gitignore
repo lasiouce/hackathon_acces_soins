@@ -32,3 +32,6 @@ v2/validation/out/*.parquet
 
 # clé d'API de l'agent (v2/agent), locale seulement
 .env
+
+# skill vidéo tiers volumineux (54 Mo), réinstallable : npx skills add Vincentwei1021/video-shotcraft
+.claude/skills/video-shotcraft/
