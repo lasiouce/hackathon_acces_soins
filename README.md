@@ -121,6 +121,22 @@ indépendant), et chaque sortie le rappelle.
 - **Mode expert** : écart par flux et par année, chaque levier avec sa valeur, son paramètre, son délai,
   son statut et sa source, trois scénarios épinglés côte à côte, export JSON.
 
+**La refonte de la carte, en cours** (`v2/prototype-carte/index-option1.html`, http://localhost:8767/index-option1.html) :
+mêmes fonctions, dans trois colonnes fixes et l'habillage « sémiologie graphique » (fond blanc, gamme bistre ↔ pétrole).
+- **Colonnes** : le scénario à gauche, simplifié à un curseur par paramètre ; la carte au centre ; la fiche à droite, avec
+  les onglets Territoire, Comparer et Expert.
+- **Trois panneaux dépliables** ; une liste classée sous la carte, par département ou par région.
+- **Accès au chat** par une icône sur la carte.
+- **Statut** : la page actuelle reste `index.html` jusqu'à la bascule.
+
+La recette iso-fonctionnelle vérifie chaque fonction dans Chrome headless, sans dépendance. Elle a besoin de Node 22 ou
+plus et d'un serveur lancé sur une version à jour :
+
+```bash
+node v2/prototype-carte/recette.mjs                                                   # page actuelle
+node v2/prototype-carte/recette.mjs http://localhost:8767/index-option1.html --option1 # refonte
+```
+
 **Le jumeau** (`v2/jumeau/`), sur lequel la carte est branchée :
 
 - **Un état, des flux, des scénarios.** Chaque année, des modules (vieillissement, sorties, entrées,

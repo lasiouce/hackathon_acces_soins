@@ -2448,6 +2448,33 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement** (relevé le 2026-11-14 en fusionnant
+  `main` dans la PR #3). `index-option1.html` ouvre le chat par une icône sur la carte (demande de l'utilisateur·rice) ;
+  la décision « Squelette : la conversation est ouverte au chargement de la carte » ouvre le panneau au chargement de
+  `index.html`, interface principale. Non reporté sur l'option 1 en attendant l'arbitrage. Prix : ≈ 15 min.
+- ~~**Refonte de l'interface de la carte, à fonctions égales**~~ **Tranchée le 2026-11-14** : option 1,
+  direction A (voir l'entrée « Carte : option 1 en direction A (Bertin) retenue »). (Question posée le 2026-11-14 :
+  « proposer d'autres solutions capables de reprendre iso fonctionnel l'existant avec des
+  améliorations UI »). Options proposées, aucune choisie :
+  - **1. Même pile (HTML + MapLibre, sans build), coque ancrée** : leviers à gauche, carte au
+    centre, un panneau droit à onglets (Territoire, Comparer, Expert). Recommandée (≈ 4 à 6 h).
+  - **2. Svelte 5 + Vite + MapLibre** : même contrat, composants testables ; utile pour la
+    couche personas, risqué avant H-6 (≈ 1,5 à 2 jours).
+  - **Habillage**, au choix sur 1 ou 2 : l'actuel, ou la direction A (Bertin) du
+    2026-11-14. Le DSFR reste réservé à un hébergement par un service de l'État.
+  - **Écartées** : Dash ou Panel (aller-retour serveur à chaque réglage ; Streamlit déjà
+    supprimé) et deck.gl (utile seulement au grain communal, que l'affichage n'a pas encore).
+  - Le curseur d'année sur la carte n'est pas iso-fonctionnel : `/api/carte` ne rend que 2026
+    et 2050. Il demande une extension de l'API.
+  - **Maquettes, 2026-11-14** : faites dans Claude Design (canevas privé
+    https://claude.ai/artifact/3VNzVPT3qTK3XLPja1dKxg), à la demande de l'utilisateur·rice
+    (« oui, lance les maquettes dans Claude Design »).
+    - Sans système de design : ceux du compte (Deviseur, Vroomly) sont des chartes d'entreprise.
+    - Chiffres réels du jumeau (version e127749), pas d'exemple : kinés, préréglage « Former
+      20 % de plus », Puy-de-Dôme ouvert.
+    - Fonds de carte : SVG simplifiés à partir de `/geo` et `/geo-regions`.
+    - Cinq écrans : l'actuel et l'option 1 sur ordinateur et sur mobile, plus l'option 1 en
+      direction A.
 - **Interprétation conversationnelle : agent LLM ou réponses déterministes, et un seul moteur** (challenge du 2026-11-14,
   `lab:challenge-design`). Choix contesté : l'agent LLM `v2/agent/` (décision du 2026-11-14 « Agent conversationnel… »)
   comme moteur d'interprétation, en parallèle de `julietteknp/AI_interface_acces_soin_hackaton` (`jumeau-chat`, même
@@ -3303,6 +3330,35 @@ fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/cart
 `/api/interpret`, page et contours répondent ; `manifest.py --check` OK.
 **Remplace** « La v1 (`sante/`, `app/`, `docs/lab/`) est figée et se consulte en lecture seule ».
 
+## 2026-11-14 — Carte : option 1 en direction A (Bertin) retenue, trois panneaux dépliables
+
+**Décision.**
+- La refonte de la carte suit l'**option 1** (même pile HTML + MapLibre, sans build, colonnes
+  fixes) avec l'habillage de la **direction A** :
+  - fond blanc, encre noire, police Atkinson Hyperlegible ;
+  - gamme bistre ↔ bleu pétrole, jamais rouge ni vert.
+- **Trois panneaux dépliables** :
+  - **Scénario** à gauche ; replié, il devient une barre de 60 px avec le nombre de leviers
+    modifiés ;
+  - **Liste classée** sous la carte, avec une bascule **Départements / Régions** ;
+  - **Territoire** à droite, avec les onglets Territoire, Comparer et Expert ; replié, il
+    garde le nom et l'écart 2050.
+  - Replier un panneau agrandit la carte.
+- Mêmes fonctions que la page actuelle, aucune perdue. ~~Le curseur d'année reste hors périmètre.~~
+  **Remplacé le 2026-11-14** : le curseur d'année a été livré par l'équipe (entrée « Curseur d'année sur la carte ») ;
+  il est repris dans la refonte, comme le panneau « Questions » (entrée « Carte option 1 : ajustements »).
+- Maquette de référence : écran « Option 1 — direction A (Bertin) · retenue » du canevas
+  https://claude.ai/artifact/3VNzVPT3qTK3XLPja1dKxg.
+- Remplace l'entrée « Refonte de l'interface de la carte, à fonctions égales » de la section
+  Open.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Option 1 A Bertin. Avec menu Scénario,
+Département/Région, territoire dépliable ».
+**Interprétation à confirmer.** « Département/Région » est lu comme la bascule d'échelle de la
+liste classée, et non comme un quatrième panneau.
+**Ce qui le renverserait.** La recette iso-fonctionnelle montre qu'une fonction de la page
+actuelle n'a pas de place dans les trois panneaux.
+
 ## 2026-11-14 — Agent conversationnel qui interprète les sorties du jumeau (v2/agent), branché dans la carte
 
 **Décision.**
@@ -3373,6 +3429,37 @@ de l'utilisateur·rice (« Commit sans mesure »). Vérifié sans clé : `/api/a
 
 **Ce qui le renverserait.** Un passage au grain communal (le volume × 25 années imposerait une grille précalculée), ou un retour UAT montrant que le curseur fait lire les années lointaines comme plus sûres que les proches.
 
+## 2026-11-14 — Carte option 1 : recette iso-fonctionnelle, page `index-option1.html`, ajustements
+
+**Décision.**
+- **Recette** `v2/prototype-carte/recette.mjs` : Node pilote Chrome headless, sans dépendance, avec WebGL logiciel
+  (SwiftShader).
+  - 30 contrôles portent sur la page actuelle, plus R31 (curseur d'année) et R32 (panneau Questions).
+  - 5 contrôles O01–O05 sont propres à la refonte : leviers ouverts, 3 panneaux, liste Dép./Rég., repère, onglets.
+- **Page** `index-option1.html` : option 1 en direction A. La logique et les identifiants de `index.html` sont repris,
+  y compris le curseur d'année et l'agent ajoutés par la PR #2. `server.py` n'est pas touché. `index.html` reste la
+  page servie jusqu'à la bascule.
+- **Ajustements demandés par l'utilisateur·rice**, le 2026-11-14 :
+  - titre « Offre de soins libérale » retiré ;
+  - bouton A+ retiré ;
+  - chat accessible par une icône sur la carte, à gauche des boutons de zoom (le panneau « Questions » n'est plus un
+    onglet) ;
+  - panneau Scénario réduit à un curseur par paramètre ;
+  - légende réduite aux boutons d'indicateur et à la gamme, le titre restant lisible par les lecteurs d'écran.
+- **Choix pris sans demande explicite.** Le panneau simplifié ne supprime rien : phrase, résumé et préréglages,
+  réglages fins, hypothèses et sources sont repliés dans « Plus ». La recette garde ainsi toutes ses fonctions.
+
+**Mesures.**
+- Page actuelle : 30/30 (avant la PR #2), recalcul p95 160 ms.
+- Refonte avant le curseur d'année et les ajustements : 35/35, recalcul p95 83 ms.
+- **Non mesuré** après le report du curseur, de l'agent et des ajustements : l'utilisateur·rice a demandé de ne pas
+  relancer la recette. Seule la syntaxe JavaScript est vérifiée (`node --check`).
+
+**Pourquoi.** « oui, écris la recette puis code l'option 1 », « Prends en compte les changements liés à la feature du
+curseur », puis les demandes d'ajustement ci-dessus.
+
+**Ce qui le renverserait.** La recette relancée trouve un contrôle en échec sur la page ajustée.
+
 ## 2026-11-14 — Chatbot intégré à la carte (prototype) : relais vers `chatbot/`, Claude Haiku 5.5, glossaire sans clé
 
 **Décision.**
@@ -3437,3 +3524,16 @@ ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'�
 le bouton « Questions » ou la croix. Aucun autre changement de mise en page : la refonte attend l'équipe UX.
 **Pourquoi.** L'utilisateur·rice : « on avait dit que c'était la nouvelle interface principale pour l'utilisateur » ; un
 panneau fermé par défaut contredisait la décision précédente. Vérifié dans le navigateur (ordinateur et mobile).
+
+## 2026-11-14 — Carte option 1 : chat relayé vers `chatbot/`, comme `index.html` (fusion de `main`)
+
+**Décision.** `index-option1.html` reprend le relais du panneau « Questions » vers le chatbot de `chatbot/` (décision
+« Chatbot intégré à la carte (prototype) » du même jour) : session par onglet au lieu de l'historique, statut de
+vérification (`ok`, `corrigee`, `bloquee`), mode glossaire sans IA, gras rendu. Le libellé garde le style de la page
+(« Contrôle : … », sans pictogramme). L'accès par l'icône sur la carte ne change pas.
+**Pourquoi.** Résolution des conflits de la PR #3 : `/api/agent` ne renvoie plus `ancrage` ; sans ce report, le chat
+de la page option 1 afficherait « Serveur injoignable. ».
+**Non mesuré.** Recette non relancée (demande de l'utilisateur·rice) ; seule la syntaxe JavaScript est vérifiée
+(`node --check`).
+**Ce qui le renverserait.** La mise en page du chat proposée par les UX designers (décision « L'agent conversationnel
+devient l'interface principale »).
