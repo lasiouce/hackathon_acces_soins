@@ -187,13 +187,35 @@ body.cmpon #card{max-height:calc((100vh - 190px)/1.15)}
   #top{flex-wrap:wrap;gap:6px;left:8px;right:8px;top:8px}
   #brand{display:none}#search{width:100%;min-width:0;order:1}
   #profs{order:2;width:100%;overflow-x:auto;justify-content:flex-start}#profs span{display:inline}
-  #actions{order:3;position:fixed;right:8px;bottom:8px}#actions .btn{height:40px;padding:0 10px}#save{font-size:0;gap:0}#save svg{width:18px;height:18px}
+  #actions{order:3;position:fixed;right:8px;bottom:72px}#actions .btn{height:40px;padding:0 10px}#save{font-size:0;gap:0}#save svg{width:18px;height:18px}
   .spacer{display:none}#crumb{display:none}
   #levers{top:auto;bottom:8px;left:8px;right:8px;width:auto!important;zoom:1!important;max-height:55vh}
   #levers .body{max-height:calc(55vh - 50px)}
   #legend{display:none}#zoom{display:none}
   #card{left:8px;right:8px;width:auto!important;min-width:0!important;top:auto;bottom:8px;max-height:70vh!important;zoom:1!important}
   #cmp{display:none}
+}
+#nlf{margin-bottom:10px}#nlf .h4{display:block;margin-bottom:4px}
+.nlrow{display:flex;gap:6px}.nlrow input{flex:1;min-width:0;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+.nlrow button,#nl .acts button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 10px;cursor:pointer}
+#nl{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(540px,calc(100vw - 32px));max-height:80vh;overflow-y:auto;z-index:40;padding:16px 18px;font-size:13px}
+#nl.on{display:block}#nl h3{font-size:15px;margin:0 0 6px}#nl h4{font-size:13px;margin:12px 0 4px}#nl ul{margin:0;padding-left:18px}#nl li{margin:2px 0}
+#nl .said{color:var(--mute);font-style:italic;margin:0 0 8px}#nl .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}#nl .acts .go{background:var(--ink,#1d1d1f);color:#fff;border-color:transparent}
+/* retour UAT carte V2 : panneau Leviers défilant, légende masquée tant qu'il est ouvert */
+#levers{display:flex;flex-direction:column;max-height:calc((100dvh - 96px)/1.15)}
+html.xl #levers{max-height:calc((100dvh - 96px)/1.32)}
+#levers header{flex:none}
+#levers .body{max-height:none;min-height:0;flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain}
+body.levopen #legend{display:none}
+@media (min-width:701px){body.levopen #legend{display:block;left:auto;right:72px}body.levopen.cardon #legend{display:none}}   /* bureau : la légende passe à droite au lieu de disparaître */
+@media (max-width:700px){#levers{max-height:calc(100dvh - 140px)}body.levopen #actions{display:none}}
+#profsel{display:none}
+@media (max-width:600px){
+  #profs{overflow:visible;padding:0}#profs button{display:none}
+  #profsel{display:block;width:100%;height:44px;border:0;background:transparent;padding:0 12px;font:inherit;font-size:16px;color:var(--ink)}
+  #card{left:0;right:0;bottom:0;width:100vw!important;max-width:100vw;border-radius:var(--r) var(--r) 0 0;max-height:60dvh!important;transform:translateY(100%)}
+  #card.on{transform:none}
+  body.cardon #levers,body.cardon #actions{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -220,6 +242,8 @@ body.cmpon #card{max-height:calc((100vh - 190px)/1.15)}
   <header><h2>Simuler une politique</h2>
     <button class="icon" id="fold" aria-label="Replier les leviers" aria-expanded="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m10 4-4 4 4 4"/></svg></button></header>
   <div class="body">
+    <form id="nlf" autocomplete="off"><label for="nlq" class="h4">Décrire une politique en une phrase</label>
+      <div class="nlrow"><input id="nlq" placeholder="ex. former 20 % de kinés en plus en Auvergne" maxlength="500"><button>Traduire</button></div></form>
     <div id="scen"></div>
     <div id="levfam"></div>
     <p class="nm" id="nonmod"></p>
@@ -237,6 +261,7 @@ body.cmpon #card{max-height:calc((100vh - 190px)/1.15)}
 <aside id="card" class="float" aria-live="polite"></aside>
 <div id="cmp" class="float"></div>
 <div id="toast" class="float"></div>
+<div id="nl" class="float" role="dialog" aria-modal="true" aria-labelledby="nlh"></div>
 <div id="tip"></div>
 
 <script>
@@ -271,7 +296,9 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
   names.FR="France";bbox.FR=[-7.8,41.3,9.6,51.1];   // inclut les encarts DROM à l'ouest
   if(!META.professions[S.prof]){toast("Lien : profession inconnue, retour aux kinés");S.prof="kines";}
   buildProfs();buildMap();buildSearch();buildLevers();
-  if(innerWidth<=700){$("#levers").classList.add("closed");$("#fold").setAttribute("aria-expanded",false);}   // mobile : la carte d'abord
+  $("#nlf").onsubmit=e=>{e.preventDefault();const t=$("#nlq").value.trim();if(t)interpret(t);};
+  if(innerWidth<=700){$("#levers").classList.add("closed");$("#fold").setAttribute("aria-expanded",false);$("#fold").setAttribute("aria-label","Déplier les leviers");$("#fold").style.transform="rotate(180deg)";}   // mobile : la carte d'abord
+  document.body.classList.toggle("levopen",!$("#levers").classList.contains("closed"));
 })();
 
 function fbox(g){let b=[180,90,-180,-90];const w=c=>typeof c[0]=="number"?(b=[Math.min(b[0],c[0]),Math.min(b[1],c[1]),Math.max(b[2],c[0]),Math.max(b[3],c[1])]):c.forEach(w);w(g.coordinates);return b;}
@@ -283,10 +310,14 @@ function buildProfs(){
     b.dataset.p=k;b.onclick=()=>{S.prof=k;applyProf();refresh();};el.append(b);}
   for(const [k,why] of Object.entries(META.missing)){
     const b=document.createElement("button");b.disabled=true;b.title="Absent : "+why;b.innerHTML=`<i style="background:var(--line)"></i><span>Infirmiers</span>`;el.append(b);}
+  // sous 600 px : un sélecteur natif, toujours visible (retour UAT : boutons hors écran)
+  const sel=document.createElement("select");sel.id="profsel";sel.setAttribute("aria-label","Profession");
+  sel.innerHTML=Object.entries(META.professions).map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
+  sel.onchange=()=>{S.prof=sel.value;applyProf();refresh();};el.append(sel);
   applyProf();
 }
 function applyProf(){document.documentElement.style.setProperty("--prof",PCOL[S.prof]);
-  document.querySelectorAll("#profs button[data-p]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p==S.prof));}
+  document.querySelectorAll("#profs button[data-p]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p==S.prof));const ps=$("#profsel");if(ps)ps.value=S.prof;}
 
 // ---------- carte ----------
 function buildMap(){
@@ -329,7 +360,8 @@ function pad(card){const w=innerWidth,h=innerHeight,wide=w>=1100,z=parseFloat(ge
   // le panneau des leviers se replie à l'ouverture d'un territoire : seule une marge étroite reste à gauche
   const left=!wide?16:card&&$("#levers").classList.contains("closed")?150:(card?150:$("#levers").offsetWidth*z+30);
   const right=wide&&card?$("#card").offsetWidth*z+28:16;
-  return {left,right,top:Math.min(130,h*.14),bottom:24};}
+  const sheet=card&&w<=600;   // feuille du bas : la carte se cadre au-dessus
+  return {left,right,top:sheet?120:Math.min(130,h*.14),bottom:sheet?Math.round(h*.6)+12:24};}
 // évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
 const raw=d=>S.v=="evo"?d.s50/d.s26-1:d.s50/d.b50-1;
 const val=d=>S.v=="evo"&&carte?raw(d)-carte.nat:raw(d);
@@ -355,14 +387,15 @@ async function refresh(){
   writeHash();
   const q=`prof=${S.prof}&${LQ()}`;
   const tok=++REQ,t0=S.terr;
-  inflight=(async()=>{
+  inflight=(async()=>{try{
     const [c,f]=await Promise.all([fetch(`/api/carte?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),
       fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json())]);
     if(c.error){toast(c.error);if(!carte){META.levers.forEach(l=>setL(l,l.default));levState();setTimeout(refresh);}return;}
     const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("s50")/T("s26")-1;carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();if(S.terr&&SC&&fresh)renderCard(f);renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
-    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));   // jusqu'à l'image affichée
+    // jusqu'à l'image affichée ; borné à 100 ms (onglet en arrière-plan : rAF suspendu, sinon inflight reste bloqué)
+    await Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),new Promise(r=>setTimeout(r,100))]);
     if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
-  })();
+  }catch(e){toast("Recalcul interrompu : "+e.message);}})();
   try{await inflight}finally{inflight=null;if(pending){pending=false;refresh();}}
 }
 function paint(){legend();const R={};
@@ -383,7 +416,8 @@ function showLat(ms){const s=[...lat].sort((a,b)=>a-b),q=p=>s[Math.min(s.length-
 function buildLevers(){
   buildLevFam();
   $("#fold").onclick=()=>{const c=$("#levers").classList.toggle("closed");$("#fold").setAttribute("aria-expanded",!c);
-    $("#fold").style.transform=c?"rotate(180deg)":"";};
+    $("#fold").setAttribute("aria-label",c?"Déplier les leviers":"Replier les leviers");
+    $("#fold").style.transform=c?"rotate(180deg)":"";document.body.classList.toggle("levopen",!c);};
   document.querySelectorAll("#var button").forEach(b=>{b.setAttribute("aria-pressed",b.dataset.v==S.v);
     b.onclick=()=>{S.v=b.dataset.v;document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x===b));writeHash();if(carte){paint();renderCmp();}};});
   const xl=()=>{document.documentElement.classList.toggle("xl",!!S.xl);$("#txt").setAttribute("aria-pressed",!!S.xl);$("#txt").textContent=S.xl?"A":"A+";};xl();
@@ -459,9 +493,16 @@ function buildLevFam(){
     leverHTML(LV(F.main),true)+(F.more.length?`<details class="more"><summary>Préciser ▸</summary>${F.more.map(k=>leverHTML(LV(k),false)).join("")}</details>`:"")+"</details>").join("");
   document.querySelectorAll("details.q").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll("details.q").forEach(x=>{if(x!==d)x.open=false;});}));
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
-  const H=S.lvHash||{};
-  META.levers.forEach(l=>{setL(l,H[l.k]!==undefined?(l.type=="range"?+H[l.k]:H[l.k]):l.default);const e=$("#lv-"+l.k);
+  const H=S.lvHash||{},bad=[];
+  // validation du hash : valeur hors bornes ou inconnue → valeur par défaut, signalée
+  const ok=(l,v)=>l.type=="range"?v!==""&&isFinite(+v)&&+v>=l.min-1e-9&&+v<=l.max+1e-9:l.type=="toggle"?v=="0"||v=="1":v in l.options;
+  for(const k of Object.keys(H))if(!LV(k))bad.push(k);
+  if(H.quotas_region=="1"&&(!S.terr||S.terr=="FR"||!names[S.terr])){H.quotas_region="0";bad.push("quotas_region (sans région ouverte)");}
+  META.levers.forEach(l=>{if(H[l.k]!==undefined&&!ok(l,H[l.k])){bad.push(LBL[l.k]+" = "+H[l.k]);delete H[l.k];}
+    setL(l,H[l.k]!==undefined?(l.type=="range"?+H[l.k]:H[l.k]):l.default);const e=$("#lv-"+l.k);
     e.addEventListener(l.type=="range"?"input":"change",()=>{setL(l,l.type=="toggle"?e.checked:e.value);levState();tInput=performance.now();refresh();});});
+  if(S.terr&&S.terr!="FR"&&!names[S.terr]){bad.push("territoire "+S.terr);S.terr=null;}
+  if(bad.length)setTimeout(()=>toast("Lien : valeurs ignorées, remises par défaut — "+bad.join(" ; "),6000),300);
   levState();}
 
 // ---------- recherche ----------
@@ -487,7 +528,10 @@ function buildSearch(){
 
 // ---------- fiche ----------
 let prevSel=null;
-function select(id,fly=true,push=true){if(push&&id!==S.terr)history.pushState(null,"",location.href);
+function dropRegional(){if(!S.lv.quotas_region)return;setL(LV("quotas_region"),false);setL(LV("quotas"),1);toast("Hausse régionale des places retirée : rouvrez une région pour la réappliquer");}
+function select(id,fly=true,push=true){if(id=="FR")return backToFrance(push);if(!names[id]){toast("Territoire inconnu : "+id);return backToFrance(false);}
+  if(!map?.isStyleLoaded()){S.terr=id;writeHash();return;}   // carte pas encore prête : le chargement rouvrira S.terr
+  if(push&&id!==S.terr)history.pushState(null,"",location.href);
   S.terr=id;writeHash();if(META)levState();if(S.lv.quotas_region)refresh();
   if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;
   S.terr=id;setFocus(id.startsWith("R")?id:id.startsWith("D")?regOf[id]:null);
@@ -497,7 +541,7 @@ function select(id,fly=true,push=true){if(push&&id!==S.terr)history.pushState(nu
   const tk=++REQ;fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${id}`).then(r=>r.json()).then(f=>{if(tk!==REQ)return;if(f.error)return toast(f.error);SC=f;levState();renderCard(f);});
 }
 function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();try{map.fitBounds(bbox.FR,{padding:pad(false),duration:800});}catch(e){}}
-function closeCard(){$("#card").classList.remove("on");S.terr=null;setTimeout(refresh);if(S.lv.quotas_region){setL(LV("quotas_region"),false);setL(LV("quotas"),1);toast("Hausse régionale des places retirée : rouvrez une région pour la réappliquer");}if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
+function closeCard(){$("#card").classList.remove("on");document.body.classList.remove("cardon");S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
 
 let F=null;
 function renderCard(f){
@@ -517,7 +561,7 @@ function renderCard(f){
       <section><p class="h4">Écart en 2050, décomposé par flux</p><div class="flows" data-k="flows"></div></section>
       <section><p class="h4">Zonage</p><p class="note" data-k="zone" style="margin:0"></p></section>
       <section class="cardact"><button class="btn" onclick="addCmp()">Comparer</button><button class="btn" onclick="exportCard()">Exporter la fiche</button></section>`;
-    requestAnimationFrame(()=>c.classList.add("on"));
+    requestAnimationFrame(()=>c.classList.add("on"));setTimeout(()=>c.classList.add("on"),120);document.body.classList.add("cardon");
   }
   const q=s=>c.querySelector(`[data-k=${s}]`);
   tween(q("s26"),s26,fmt);tween(q("s50"),s50,fmt);tween(q("ec"),s50-b50,v=>(v>=0?"+":"−")+fmt(Math.abs(v)));
@@ -570,13 +614,15 @@ function renderCmp(){
 }
 function exportCard(){
   const G=S.terr?F:SC;if(!G)return;const T=S.terr||"FR";
-  const lev=META.levers.filter(l=>!isDef(l)).map(l=>`#   - ${LBL[l.k]} : ${phrase(l.k,S.lv[l.k])} [effet ${l.status}] source : ${l.source||"non renseignée"}`);
+  const cl=v=>String(v).replace(/[\r\n]+/g," ").replace(/\s*;\s*/g,", ");
+  const lev=META.levers.map(l=>`#   - ${LBL[l.k]} : ${phrase(l.k,S.lv[l.k])} (valeur ${typeof S.lv[l.k]=="boolean"?+S.lv[l.k]:S.lv[l.k]}${isDef(l)?", par défaut":", modifié"}) ; statut : effet ${l.status} ; source : ${cl(l.source||"non renseignée")}`);
   const L=[`# Fiche scénario — ${names[T]||T} · ${G.label} · généré le ${new Date().toLocaleString("fr-FR")}`,
     `# Définition : « libéral » = secteur privé, lucratif ou non ; tout employeur public exclu (décision du 2026-11-14).`,
     `# Sources : DREES, RPPS 2012–2026 × secteur d'activité (v2/data/processed/secteur_stock.parquet) ; zonage conventionnel CartoSanté (extrait 2026-11-14) ; données de formation DREES.`,
     `# Modèle : jumeau v2, stock-flux à taux locaux ; version du code ${META.version||"?"} ; origine des données ${G.origin} ; décision ${G.decision}.`,
-    `# Leviers modifiés :`,...(lev.length?lev:["#   (aucun : tendanciel)"]),
-    `# Fourchette : ≈ 8 cas sur 10, pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon ; aucun backtest au-delà d'environ 10 ans : extrapolation.`,
+    `# Millésimes : RPPS observé jusqu'en ${G.origin} (origine de la projection) ; zonage CartoSanté extrait le 2026-11-14 ; horizon ${G.years.at(-1)}.`,
+    `# Leviers (tous, avec valeur, statut et source) :`,...lev,
+    `# Fourchette : ≈ 8 cas sur 10, pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon ; aucun backtest au-delà d'environ 10 ans : fourchette extrapolée au-delà d'environ 10 ans.`,
     `# Limites : grain départemental (aucun grain infra-départemental fiable, protocole N10) ; régulation approchée au département ; obligation d'exercice, aides et transferts de tâches non modélisés.`,
     "annee;tendanciel;scenario;bas;haut"];
   const F0=G;
@@ -584,7 +630,36 @@ function exportCard(){
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([L.join("\n")],{type:"text/csv"}));
   a.download=`fiche_${S.prof}_${T}.csv`;a.click();
 }
-let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200);}
+// Langage naturel (v2/langage) : le serveur traduit la phrase en leviers ; rien n'est appliqué avant confirmation
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const codes=s=>s.replace(/\b(FR|[RD][0-9AB]{2,3})\b/g,m=>names[m]||m).replace(/\b(sages-femmes|dentistes|pharmaciens|kines|infirmiers)\b/g,m=>(META.professions[m]||m).toLowerCase());
+let NLR=null;
+async function interpret(t){
+  const terr=S.terr&&S.terr!="FR"?`&terr=${S.terr}`:"";
+  const r=await fetch(`/api/interpret?q=${encodeURIComponent(t)}&prof=${S.prof}${terr}`).then(r=>r.json()).catch(()=>({error:"Serveur injoignable"}));
+  if(r.error)return toast(r.error);
+  NLR=r;const n=Object.keys(r.leviers).length,li=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  let h=`<h3 id="nlh">Ce que j'ai compris</h3><p class="said">« ${esc(r.texte)} »</p>`;
+  h+=n?li(r.compris.map(x=>esc(codes(x)))):"<p>Aucun levier du modèle reconnu dans cette phrase.</p>"+li(r.compris.map(x=>esc(codes(x))));
+  if(r.non_modelise.length)h+=`<h4>Pas encore dans le modèle</h4>`+li(r.non_modelise.map(x=>`<b>${esc(x.libelle)}</b> : ${esc(x.raison)}${x.source?` (source : ${esc(x.source)})`:""}`));
+  if(r.non_compris.length)h+=`<h4>Pas compris</h4>`+li(r.non_compris.map(x=>esc(typeof x=="string"?x:x.texte||JSON.stringify(x))));
+  if(r.avertissements.length)h+=`<h4>À noter</h4>`+li(r.avertissements.map(x=>esc(codes(x))));
+  const cur=META.levers.filter(l=>!isDef(l)).length;
+  if(n&&cur)h+=`<h4>À noter</h4><ul><li>Ce scénario remplace les ${cur} levier${cur>1?"s":""} déjà réglé${cur>1?"s":""} : une phrase décrit un scénario complet.</li></ul>`;
+  if(r.reformulations.length)h+=`<h4>Formulation</h4>`+li(r.reformulations.map(x=>`« ${esc(x.terme)} » est décrit ici comme « ${esc(x.neutre)} ».`));
+  h+=`<div class="acts"><button id="nlno">Annuler</button>${n?`<button class="go" id="nlok">Appliquer ce scénario</button>`:""}</div>`;
+  const d=$("#nl");d.innerHTML=h;d.classList.add("on");($("#nlok")||$("#nlno")).focus();
+  $("#nlno").onclick=closeNL;if(n)$("#nlok").onclick=applyNL;
+}
+function closeNL(){$("#nl").classList.remove("on");$("#nlq").focus();}
+function applyNL(){const r=NLR;if(!r)return;$("#nl").classList.remove("on");
+  META.levers.forEach(l=>{if(l.k in r.leviers_valides)setL(l,r.leviers_valides[l.k]);});
+  if(r.profession&&r.profession!==S.prof){S.prof=r.profession;applyProf();}
+  levState();refresh();
+  if(r.territoire&&r.territoire!=="FR"&&r.territoire!==S.terr)select(r.territoire);else if(r.territoire=="FR"&&S.terr)closeCard();
+  toast("Scénario appliqué : les leviers sont modifiables ci-dessous");}
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("#nl").classList.contains("on"))closeNL();});
+let tt;function toast(m,ms=2200){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),ms);}
 // fil d'Ariane : France › région › département (› commune, à venir)
 function parent(id){return !id||id=="FR"?null:id.startsWith("D")?regOf[id]||"FR":"FR";}
 function crumb(){const chain=[];for(let t=S.terr||"FR";t;t=parent(t))chain.unshift(t);
@@ -593,7 +668,7 @@ function crumb(){const chain=[];for(let t=S.terr||"FR";t;t=parent(t))chain.unshi
     +(chain.length>2?'<i class="ell">› …</i>':"");
   $("#crumb").querySelectorAll("button").forEach(b=>b.onclick=()=>b.dataset.t=="FR"?backToFrance():select(b.dataset.t));}
 // précédent / suivant du navigateur
-addEventListener("popstate",()=>{const t=new URLSearchParams(location.hash.slice(1)).get("t");if(t&&t!==S.terr)select(t,true,false);else if(!t&&S.terr)backToFrance(false);});
+addEventListener("popstate",()=>{const t=new URLSearchParams(location.hash.slice(1)).get("t");if(t&&t!=="FR"&&t!==S.terr)select(t,true,false);else if(!t&&S.terr)backToFrance(false);});
 </script>
 </body>
 </html>

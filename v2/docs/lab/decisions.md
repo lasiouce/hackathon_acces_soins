@@ -3070,3 +3070,16 @@ export régional et France, lien invalide, rendu mobile ; aucune erreur JavaScri
 un contresens qui doit être impossible avant la démo.
 **Ce qui le renverserait.** Un jeu de cas écrit par une autre personne avec un taux trop bas : ajouter une étape de modèle de
 langage évaluée sur ce jeu (décision du 2026-11-14 sur le compilateur).
+
+## 2026-11-14 — Carte : corrections UAT en double (session v2 et fork v2-fork-6) fusionnées dans `index.html`
+
+**Décision.** Les deux séries de corrections des P0/P1 de l'UAT sont gardées ensemble ; celles du fork priment là où elles
+font mieux : sélecteur natif de profession sous 600 px, attente d'image bornée à 100 ms (rAF suspendu en arrière-plan),
+validation complète du lien (leviers hors bornes, territoire inconnu, quotas régionaux sans région), `dropRegional()`,
+panneau Leviers en colonne défilante, fiche en feuille du bas sous 600 px, export listant tous les leviers avec millésimes.
+**Exception :** le fork masquait la légende tant que le panneau est ouvert, donc toujours sur ordinateur. Sur ordinateur, la
+légende passe à droite (masquée seulement quand la fiche occupe ce côté) ; elle reste masquée sous 700 px.
+**Pourquoi.** Le fork a signalé le doublon et rendu la main sur le fichier. Mesuré en Chromium headless : légende et panneau
+se chevauchaient à 1280×720, 1440×900 et 1920×1080 ; plus aucun chevauchement après déplacement. Tests de non-régression
+(profession, région, export France, lien invalide, mobile, phrases) : aucune erreur JavaScript.
+**Limite.** À 1280×720, la légende à droite couvre le sud-est et la Corse.
