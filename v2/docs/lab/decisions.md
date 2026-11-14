@@ -2339,6 +2339,69 @@ refonte.
 **Pourquoi.** Le protocole N10 et la règle de pré-enregistrement de l'axe 3.
 **Ce qui le renverserait.** K4 passe N10 et sa confirmation hors échantillon.
 
+## 2026-11-14 — Axe 3 : K4 (axe 2) non confirmé — échoue N10 et l'origine réservée 2021
+
+**Décision.**
+- Protocole [N11](reports/2026-11-14-axe3-n11-confirmation-k4.md), gelé à
+  08:50 (SHA-256 `4bf54ad0587a`) avant que K4 existe.
+- **K4 échoue l'étape 1** (N10, 2014–2020) à tous les grains, sans faire
+  mieux que K3 (kinés EPCI : 3 classes hors bande contre 1), **et l'étape
+  2** (origine réservée 2021, h = 4) à tous les grains. **K4 n'est confirmé
+  nulle part.**
+- Sur 2021/h4, la tendance naïve des unités calibre 8 classes sur 8 pour les
+  kinés au bassin de vie, alors qu'elle échoue N10 : la période 2021 → 2025
+  est facile pour les kinés, d'où l'exigence de deux étapes.
+- **Affichage au département maintenu** (IDE, MK, CD). Défaut de forme
+  persistant : IDE trop larges, CD trop étroits dans les grandes unités.
+
+**Pourquoi.** Décision « Chantier projection communale fiable » ; N11.
+**Ce qui le renverserait.** Une variante inscrite avant passage qui passe
+N10 et une origine réservée, puis le dépôt 2027.
+
+## 2026-11-14 — Dépôt 2027 : collision de nom entre l'axe 2 et l'axe 3, dépôt A0 de l'axe 2 restauré
+
+**Décision.**
+- Le dépôt A0 de l'axe 2 (`jumeau_taux_locaux_2026-11-14.parquet`, 08:07,
+  SHA-256 `4f7400845340`, commit 470acf1) a été **écrasé** une minute plus
+  tard par le dépôt de l'axe 3 au même chemin (08:08, SHA-256
+  `ca036374d216`, commit 03a67d8). Les deux sessions écrivaient sans se
+  voir.
+- **Restauration** : le fichier de l'axe 2 est repris tel quel de 470acf1
+  sous `v2/validation/depot/axe2_a0_jumeau_taux_locaux_2026-11-14.parquet` ;
+  son empreinte est inchangée (`4f7400845340`, vérifiée). Le chemin
+  `jumeau_taux_locaux_2026-11-14.parquet` désigne désormais le dépôt de
+  l'axe 3 (`ca036374d216`, avec bande √h).
+- Les deux dépôts portent sur la même variante (A0) ; ils sont scorés
+  séparément, chacun selon son empreinte. L'entrée « Axe 2 : dépôt des
+  prévisions 2027–2030 de A0 et C1 » est à lire avec le nouveau chemin.
+- Règle : un dépôt porte le préfixe de l'axe qui le fait (`axe2_…`,
+  `axe3_…`) ; l'axe 2 prévient avant d'écrire dans `v2/validation/depot/`.
+
+**Pourquoi.** Deux empreintes différentes pour un même chemin rendaient l'un
+des deux dépôts invérifiable.
+**Ce qui le renverserait.** Rien : un dépôt ne se modifie pas.
+
+## 2026-11-14 — Axe 3 : K5 (axe 2) non confirmé — moins bien calibré que K3 et K4
+
+**Décision.**
+- Protocole [N12](reports/2026-11-14-axe3-n12-confirmation-k5.md), gelé à
+  09:05 (SHA-256 `ad08357a48fe`) avant d'ouvrir les fichiers ; origine
+  réservée 2022, h = 3 (proposée par l'axe 2, confirmation partielle).
+- **K5 échoue l'étape 1** (N10) à tous les grains, plus nettement que K3 et K4 :
+  bandes trop étroites (IDE au BV 65,9 %, à l'EPCI 59,1 %) ; **et l'étape 2**
+  à tous les grains (le plus proche : kinés au BV, une classe sur 8 hors
+  bande). **Non confirmé.**
+- Sur 2022/h3, la tendance naïve calibre 8 classes sur 8 pour les IDE à la
+  commune : période facile, comme 2021.
+- Dépôt communal de K5 écrit avant le verdict : `axe2_k5_communes_2026-11-14.parquet`,
+  SHA-256 `0169b97d4fac`.
+- **Affichage au département maintenu** pour IDE, MK et CD. Bilan : K3, K4 et
+  K5 n'ont calibré aucun grain fin ; K3 reste le moins mal calibré.
+
+**Pourquoi.** Décision « Chantier projection communale fiable » ; N12.
+**Ce qui le renverserait.** Une variante qui passe N10 et une origine
+réservée, puis son dépôt.
+
 ## Open / not yet decided
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
@@ -2666,7 +2729,7 @@ corrigée ensuite (dérivation § Écart).
 
 **Décision.**
 - Deux fichiers sont déposés, avant toute donnée 2027 :
-  - `v2/validation/depot/jumeau_taux_locaux_2026-11-14.parquet`, SHA-256
+  - `v2/validation/depot/axe2_a0_jumeau_taux_locaux_2026-11-14.parquet` (chemin corrigé le 2026-11-14 après la collision de nom, voir « Dépôt 2027 : collision de nom » ; l'ancien chemin désigne le dépôt de l'axe 3), SHA-256
     `4f7400845340` ;
   - `v2/validation/depot/axe2_cohortes_c1_2026-11-14.parquet`, SHA-256
     `689b230b5b50`.
@@ -2829,6 +2892,146 @@ et une bande par classe ne la porte pas.
 domine dans les grandes communes. N10 montre la même forme sur les
 estimateurs de référence.
 **Ce qui le renverserait.** Le verdict de N10.
+
+## 2026-11-14 — Projection communale : K4 inscrit avant tout passage (08:50), avec une confirmation réservée (origine 2021, h = 4)
+
+**Décision.**
+- K4 = K3 avec deux changements de mécanisme, sans facteur réglé sur N10 :
+  - les erreurs viennent des 2 pseudo-origines les plus récentes ;
+  - l'erreur départementale et l'erreur locale sont tirées conjointement,
+    dans la même pseudo-origine.
+  - Dérivation [communes, § K4](derivations/2026-11-14-axe2-communes.md),
+    SHA-256 `1e801a5a9cdd`.
+- **Soumissions.**
+  - `n10_soumission_k4.parquet` : 2014–2020, h = 5.
+  - `n10_confirmation_k4_2021h4.parquet` : origine 2021, h = 4, réservée.
+    Elle n'est pas regardée par l'axe 2 ; seul l'axe 3 la juge.
+- **Règle.** Un passage sur 2014–2020 ne vaut que s'il est confirmé sur
+  2021 (h = 4) ou par le dépôt 2027.
+
+**Pourquoi.** Le jugement N10 de K3 (axe 3) montre la cible. Il faut
+contenir le sur-ajustement (consigne v2 du 2026-11-14).
+**Ce qui le renverserait.** Les jugements N10 et de confirmation.
+
+## 2026-11-14 — Projection communale : dépôt de K4 (origine 2025 → 2027, 2028), confirmation définitive selon N11
+
+**Décision.**
+- **Dépôt.** `v2/validation/depot/k4_communes_2026-11-14.parquet`,
+  SHA-256 `039d21878b7a`, 84 084 lignes. Code : `communes_k4.depot()`.
+  - Grains : commune, bv2022, EPCI.
+  - Professions : IDE, MK, CD.
+  - Colonnes : pred, q10, q90.
+  - L'origine est **2025**, et non 2026 : c'est la dernière année
+    CartoSanté.
+- **Règle N11** (axe 3, SHA `4bf54ad0587a`). K4 n'est « confirmé » à un
+  grain que s'il passe N10 (2014–2020) et 2021/h4. La confirmation
+  définitive viendra de ce dépôt, quand les données 2027 et 2028 seront
+  publiées.
+
+**Pourquoi.** L'axe 3 a noté que 2025 a déjà été vue comme cible de
+l'origine 2020 : la confirmation 2021/h4 n'est donc que partielle.
+**Ce qui le renverserait.** Rien : un dépôt ne se modifie pas.
+
+## 2026-11-14 — Projection communale : K4 non confirmé (N11) ; l'affichage reste au département ; pas de K5 sans décision
+
+**Décision.**
+- **K4 n'est pas confirmé.**
+  - N10 échoue à tous les grains, sans progrès sur K3.
+  - 2021/h4 échoue partout.
+- **L'affichage reste au département** pour IDE, MK et CD. Il suit la
+  règle du chantier : l'observé à la commune, avec la projection du
+  département, et on le dit.
+- **Pas de K5 sans décision de l'utilisateur·rice.** Quatre variantes ont
+  été jugées. Chaque nouvelle variante qui voit le jugement précédent
+  augmente le risque de sur-ajustement.
+  - Une K5 devrait modéliser la largeur par profession × taille avec une
+    loi explicite, et non par rééchantillonnage d'erreurs passées.
+  - Elle ne compterait que par le dépôt 2027.
+
+**Pourquoi.** Verdict N11 de l'axe 3 (commit 1d9545c). Les erreurs passées
+ne prédisent pas l'échelle de l'erreur future, par profession.
+**Ce qui le renverserait.** Le dépôt K4 (2027, 2028) calibré, ou une
+décision de l'utilisateur·rice de lancer K5.
+
+## 2026-11-14 — Correction : le dépôt communal de K4 mesure la couverture hors échantillon, il ne peut plus confirmer K4
+
+**Décision.** Ceci corrige l'entrée « dépôt de K4 … confirmation définitive
+selon N11 ».
+- K4 a échoué aux étapes 1 et 2 de N11. Le dépôt
+  (`039d21878b7a`, enregistré dans N11, commit cfc3b95) **mesurera la
+  couverture hors échantillon** à la publication de CartoSanté 2027. Il ne
+  peut plus confirmer K4.
+- L'écart sur l'origine (2025 au lieu de 2026) est accepté par l'axe 3.
+- **Règle de partage.** `v2/validation/depot/` appartient à l'axe 3. L'axe 2
+  le prévient avant d'y écrire un dépôt.
+  - Les dépôts A0 et C1 du 2026-11-14 y ont été écrits sans préavis, comme
+    celui de K4.
+
+**Pourquoi.** Message de l'axe 3, 2026-11-14.
+
+## 2026-11-14 — Projection communale : K5 inscrit avant tout passage (09:01), à la demande de l'utilisateur·rice
+
+**Décision.**
+- **K5 donne une loi explicite à la largeur.** L'erreur relative suit une
+  loi log-normale. Sa variance additionne trois termes :
+  - le carré de l'écart-type départemental (terme commun au département) ;
+  - φ/(n0 + ½), un terme de type Poisson ;
+  - un plancher κ.
+- Ces paramètres sont estimés dans la fenêtre, puis **rétrécis de moitié
+  vers la moyenne des trois professions** (log σ_D, log φ, log κ).
+- Dérivation [communes, § K5](derivations/2026-11-14-axe2-communes.md),
+  SHA-256 `835537655204`.
+- **Jugement.**
+  - N10.
+  - Puis l'origine réservée 2022, h = 3, proposée à l'axe 3 ; l'axe 2 ne
+    la regarde pas.
+  - Puis un dépôt préfixé `axe2_`, avec préavis à l'axe 3.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Lancer K5 ». Les
+jugements de K3 et K4 montrent un niveau d'erreur propre à la profession,
+instable d'une période à l'autre.
+**Ce qui le renverserait.** Les jugements de l'axe 3.
+- *Écart avant passage (même jour).* Dans K5, σ_D devient un écart-type
+  robuste (1,4826 × MAD) et b la médiane. Le diagnostic des paramètres
+  avait montré σ_D = 1,74 pour les CD en 2018, à cause de départements à
+  très petit total. Aucune couverture n'a été regardée avant l'écart.
+  Dérivation avec l'écart : SHA-256 `0b87c9809dc6`.
+
+## 2026-11-14 — Projection communale : dépôt de K5 écrit avant son verdict (accord de l'axe 3, N12)
+
+**Décision.**
+- **Dépôt.** `v2/validation/depot/axe2_k5_communes_2026-11-14.parquet`,
+  SHA-256 `0169b97d4fac`, 84 084 lignes. Code : `communes_k5.depot()`.
+  - L'origine est 2025 (dernière année CartoSanté), les cibles sont 2027 et
+    2028.
+  - Il couvre les grains commune, bv2022 et EPCI, pour les IDE, MK et CD.
+- **Il est écrit avant le jugement de K5 par l'axe 3**, pour ne pas
+  dépendre du résultat.
+- La confirmation partielle se fait sur 2022, h = 3 (N12, SHA
+  `ad08357a48fe`).
+
+**Pourquoi.** Demande de l'axe 3, 2026-11-14 ; le dossier de dépôt lui
+appartient.
+**Ce qui le renverserait.** Rien : un dépôt ne se modifie pas.
+
+## 2026-11-14 — Projection communale : K5 non confirmé (N12) ; fin des variantes ; affichage au département jusqu'au score des dépôts 2027
+
+**Décision.**
+- **K5 n'est pas confirmé.** Ses bandes sont trop étroites : l'écart-type
+  robuste sous-estime une erreur départementale à queues lourdes.
+- **Fin des variantes communales K à K5.** Aucun grain fin n'est
+  calibré, et K3 reste le moins mal calibré.
+- **L'affichage reste au département** pour IDE, MK et CD.
+- **Les dépôts K4, K5 et C1 seront scorés en 2027**, comme mesure hors
+  échantillon.
+- **Une K6 n'est envisagée qu'avec une source nouvelle** : des flux
+  d'installation par commune, ou une série plus longue.
+
+**Pourquoi.** Verdicts N10, N11 et N12 de l'axe 3 (commits 1d9545c et
+1e1f4c6). Chaque nouvelle variante qui a vu le verdict précédent augmente
+le risque de sur-ajustement.
+**Ce qui le renverserait.** Un dépôt 2027 calibré, ou une nouvelle source
+de données communales.
 
 ## 2026-11-14 — Carte : bascule de `index.html` sur la refonte, après correction des P0 et P1 de l'UAT
 
