@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-14 | [Vidéo de présentation V2](v2/video/README.md) | 60 s, un cas d'usage : +20 % de places de kinés (France), lu dans la Manche : 2036 808 (713–902), +34 ; 2046 1 033, +98 ; 2050 1 105 (794–1 416), +121, 246 pour 100 000 hab. | équipe |
 | 2026-11-14 | [Curseur d'année sur la carte](v2/docs/lab/reports/2026-11-14-curseur-annee.md) | 2026 → 2050 année par année, sans recalcul au déplacement ; /api/carte ≈ 100 ms pour 25 années ; 2050 inchangé | équipe |
 | 2026-11-14 | [Vidéo de présentation](v2/video/README.md) | 57 s, voix off IA : explorer un territoire (Puy-de-Dôme, kinés 1 071 → 1 731), simuler une politique (+19 110 kinés en 2050 avec 20 % de places en plus), phrase → scénario confirmé | équipe |
 | 2026-11-14 | [Projection communale, axe 2](v2/docs/lab/reports/2026-11-14-axe2-communes.md) | K (cohortes commune ⊂ EPCI ⊂ dép ⊂ région) et K2 (part tenue + bande empirique) rejetés au banc N4 ; K2 calibré pour les IDE de 1 à 50 (81–83 %) ; l'erreur du total départemental domine les grandes communes | équipe |

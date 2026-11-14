@@ -3726,3 +3726,39 @@ pour avoir les nombres au niveau national ».
 **Ce qui le renverserait.** Une recette rejouée par personas qui trouve un défaut bloquant sur la page
 basculée, ou une session qui modifiait encore l'ancien `index.html` (les deux pages étaient maintenues en
 parallèle jusqu'au commit 17842ea).
+
+## 2026-11-14 — Vidéo V2 : un cas d'usage (kinés, +20 % de places, national, lu dans la Manche), sans voix ni musique
+
+**Décision.**
+- Vidéo motion de 60 s, en 16:9, `v2/video/out/pitch-v2.mp4`. Elle reprend le projet Remotion de la V1 et ses tokens ; la V1 (`out/pitch.mp4`) est conservée.
+- **Un seul cas d'usage** (Lou) : « En tant que conseiller ministériel, je veux voir l'impact d'une évolution de 20 % du nombre de places en formation de kinés dans 10, 20 et 30 ans, au niveau national. »
+- **Levier national** : « Places en formation » à +20 %, partout en France (pas l'option « Seulement dans la région affichée »).
+- **Lecture** : rappel de l'effet France, puis zoom sur la Normandie, puis sur la Manche. On lit la fiche de l'onglet Territoire de la Manche à trois horizons.
+- **Horizons : 2036, 2046, 2050.** Le modèle s'arrête en 2050 : « 30 ans » donnerait 2056. On montre 2050 (24 ans) et l'écran le dit.
+- Pour chaque horizon : effectif du scénario, écart au tendanciel, densité pour 100 000 habitants et fourchette, jamais un chiffre seul.
+- **Mouvement** : un mouvement de caméra par idée. On passe d'un horizon à l'autre en animant le curseur d'année, caméra fixe.
+- **Pas de voix off, pas de musique.** Le récit passe par des sous-titres et des textes animés, minutés à la main dans `SHOTS`.
+
+**Pourquoi.** Brief de l'utilisateur·rice et réponses du 2026-11-14 :
+- « connexion voix ElevenLabs non nécessaire » ;
+- au niveau national, « Garde les résultats de l'onglet Territoire. Fais un zoom sur la région Normande puis le département de la Manche » ;
+- horizon 2036 · 2046 · 2050, pas de voix off, sans musique, lecture sur la Manche avec un rappel France.
+
+**Réalisation.**
+- Composition `PitchV2` (`src/PitchV2.tsx`), captures `capture/capture-v2.mjs`.
+- Les vols France → Normandie → Manche sont de vraies images MapLibre : 48 images par vol, zoom autour d'un point fixe.
+- Le levier et le curseur d'année fondent deux états capturés voisins, pour éviter les sauts de teinte.
+- Chiffres de la Manche (`/api/scenario`, kinés, `quotas=1.2`) :
+  - 2036 : 808 (713 – 902), +34 (+4,4 %), 171 pour 100 000 hab. ;
+  - 2046 : 1 033 (791 – 1 275), +98 (+10,5 %), 226 ;
+  - 2050 : 1 105 (794 – 1 416), +121 (+12,3 %), 246.
+- Mots de grandeur repris du lexique : légère hausse, hausse marquée ; incertitude modérée, élevée, extrapolée.
+- Les séquences d'images (64 Mo) ne sont pas commitées. Elles se régénèrent avec `npm run capture:v2` ; les états fixes, eux, sont commités.
+- Relecture indépendante (video-shotcraft), quatre défauts corrigés :
+  - encart vidé entre deux horizons : les valeurs se fondent désormais sur place ;
+  - zoom avant, arrière puis avant à la transition levier → territoire : passage par le fond ;
+  - sauts de couleur de la carte : fondus entre états ;
+  - horizons trop courts : ≈ 5 s chacun, temps pris sur l'accroche, la promesse, le levier et la clôture.
+- Rendu : 60,05 s, 1920×1080.
+
+**Ce qui le renverserait.** Des chiffres de la carte qui changent : il faut alors recapturer et mettre à jour les encarts. Ou un horizon du modèle étendu au-delà de 2050.

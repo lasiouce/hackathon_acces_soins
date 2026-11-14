@@ -63,11 +63,14 @@ Ne lancez **pas** `sante.load` ni les `v2/data/build_*.py` pour démarrer : ils 
 [reconstruire les données](#reconstruire-les-données) à partir des fichiers bruts (≈ 3,6 Go, non
 commités).
 
-**Vidéo de présentation** (57 s, voix off IA) : [`v2/video/out/pitch.mp4`](v2/video/out/pitch.mp4), commitée.
-Pour la refaire (Remotion, voir `v2/video/README.md`) :
+**Vidéos de présentation** (Remotion, voir `v2/video/README.md`), commitées :
+- **V2** (60 s, sans voix ni musique) : [`v2/video/out/pitch-v2.mp4`](v2/video/out/pitch-v2.mp4). Elle suit un seul cas d'usage : un conseiller ministériel règle +20 % de places en formation de kinés en France, puis lit l'effet dans la Manche à 2036, 2046 et 2050. Chaque horizon donne l'effectif, l'écart au tendanciel, la densité et la fourchette.
+- **V1** (57 s, voix off IA) : [`v2/video/out/pitch.mp4`](v2/video/out/pitch.mp4).
 
 ```bash
-cd v2/video && npm install && npm run render    # -> v2/video/out/pitch.mp4
+cd v2/video && npm install
+npm run capture:v2 && npm run render:v2    # -> v2/video/out/pitch-v2.mp4 (la carte doit tourner, port 8767)
+npm run render                             # V1 -> v2/video/out/pitch.mp4
 ```
 
 ## Le problème
