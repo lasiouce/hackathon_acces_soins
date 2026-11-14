@@ -2321,6 +2321,24 @@ elle peut commencer sans attendre la fin de l'UAT », relayé par l'utilisateur�
 **Ce qui le renverserait.** L'UAT en cours demande des changements incompatibles avec la
 refonte.
 
+## 2026-11-14 — N10 sur K3 (axe 2) : aucun grain infra-départemental ne passe ; K4 sous deux conditions
+
+**Décision.**
+- **K3** (erreur départementale commune + erreur locale) jugé sur N10 (commit 7b8c8d6) :
+  **aucun grain ne passe**, pour aucune profession. L'affichage reste au département.
+- **Couverture** commune / bassin de vie / EPCI :
+  - CD : 72 / 75 / 76 % ;
+  - IDE : 83 / 85 / 85 %, trop larges dans les classes moyennes (85-91 %) ;
+  - MK : 76 / 78 / 78 %. C'est le plus proche : à l'EPCI, seule la classe 1–2
+    professionnels sort de la bande (73,0 %, 259 EPCI).
+- **K4** est autorisé à deux conditions :
+  1. il est inscrit avant passage ;
+  2. son succès est confirmé hors des origines 2014–2020, car le jugement de K3 a révélé
+     la cible (risque de sur-ajustement au juge).
+
+**Pourquoi.** Le protocole N10 et la règle de pré-enregistrement de l'axe 3.
+**Ce qui le renverserait.** K4 passe N10 et sa confirmation hors échantillon.
+
 ## Open / not yet decided
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
