@@ -1354,6 +1354,10 @@ aucun mécanisme : il reste au catalogue et n'est pas branché.
   | Dentistes | 0 / 6 / 8 / 261 | dép. |
   | Sages-femmes | 0 / 1,5 / 2,5 / 78 | dép. |
   La commune reste un grain **d'observation et de répartition** (part du dép. ou de l'EPCI), avec bande.
+  - **Remplacé le 2026-11-14 par N10 (axe 3)** pour l'affichage : aucun grain infra-départemental n'est fiable
+    avec les estimateurs actuels ; projection au département, observé seulement à la commune. Les médianes
+    ci-dessus restent valides comme description des petits effectifs ; le grain « projetable » n'est plus
+    qu'une condition nécessaire, que le modèle hiérarchique doit confirmer par N10.
 
 **Pourquoi.** Mesuré : 30,6 % (IDE) à 69,8 % (SF) des professionnels privés exercent dans une commune de moins
 de 30 confrères ; au bassin de vie, 5,8 % (IDE) à 38,6 % (SF). Contrôles : CartoSanté Σ communes vs RPPS
@@ -2189,7 +2193,81 @@ calibrée, pas étroite.
 (calibrée).
 **Ce qui le renverserait.** Le modèle de l'axe 2 passe N10 à un grain infra-départemental.
 
+## 2026-11-14 — Axe 4 : données de la projection communale (pharmaciens reconstitués, SF non disponible, passage COG 2026)
+
+**Décision.**
+- **Pharmaciens par commune 2012–2026, reconstitués** (`v2/data/build_pharmaciens.py`) :
+  - officine = officines FINESS (31/12/t−1) × ratio départemental DREES (pharmaciens d'officine / officines),
+    Σ communes = DREES dép. par construction ;
+  - hors officine = DREES dép. par statut × parts communales de l'Annuaire 2026, **tenues fixes** (supposé) ;
+    repli sur les parts tous statuts quand un statut manque dans le dép.
+  - Test posé avant : erreur absolue relative médiane ≤ 25 % (communes ≥ 5) et ≤ 10 % (EPCI) contre les
+    pharmaciens d'officine de l'Annuaire. Mesuré : **16,1 % à la commune (passe), 10,7 % à l'EPCI (échoue de
+    peu)** ; corrélation 0,98 ; total officine 50 196 contre 50 664 (−0,9 %). Verdict : **échec tel que
+    pré-enregistré** ; utilisable avec une bande de ±11 % à l'EPCI (p90 33 %).
+  - Mayotte 2012–2013 : pas d'officines FINESS, composante officine manquante (−62 à −71 % du dép.).
+- **Sages-femmes : historique communal non disponible** en données ouvertes. Routes testées : CartoSanté
+  `sf_popage` (métadonnées erronées), `sf_datcom.actifs` (sommes par position 6 896–7 549, incompatibles avec
+  ameli 5 773 → 8 490 sur 2017–2025), `offre_ps.dens_sf` (lignes sans ordre, même pour les kinés), ameli
+  (département seulement), Annuaire (instantané seul). Coût de la recherche : ~40 min. Repli : parts communales
+  de l'Annuaire 2026 × série départementale, **modélisé, non observé**.
+- **Table de passage** (`v2/data/build_passage.py`) : tout code commune (34 966 communes 2026, 45 arrondissements,
+  4 213 anciens codes) → géocode du jumeau → EPCI → bassin de vie 2022 → dép. → région. Sans EPCI : COM hors champ
+  et 4 communes insulaires sans EPCI (22, 29, 85).
+
+**Pourquoi.** Chantier « projection communale fiable » (decisions.md) : l'axe 4 fournit les données à l'axe 2.
+**Ce qui le renverserait.** Une archive datée de l'Annuaire ou une source SF communale datée.
+
+## 2026-11-14 — Axe 5 : relance sur le jumeau b64ce56 et les données de 08:08 ; flux étranger en facteur « connaissance » ; IDE à partir de 2013
+
+**Décision.**
+- **Les deux phases sont relancées sur le jumeau `b64ce56`** (`git
+  archive`, 19 critères au vert) et sur les données de 08:08.
+  - Empreintes SHA-256 tronquées : `secteur_stock` `c784b1a8`,
+    `infirmiers_secteur_age_sexe` `43ad2c58`, `zonage_commune`
+    `4e5da69f`.
+  - Elles remplacent les calculs sur `c2dc7601` (phase 1) et `a8cb2750`
+    (phase 2).
+  - Raison, mesurée : depuis `4721268`, l'effet du levier « étrangers × 2 »
+    à 2050 a doublé (dentistes +19 → +38 %, MK +16 → +29 %). Le tendanciel
+    SF passe de 19 124 à 21 176, et les SF de PMI sont classées publiques
+    par l'axe 4.
+  - Les anciens résultats sont gardés dans `out/avant_b64ce56/`.
+- **Flux de diplômés à l'étranger : nouveau facteur « connaissance »**,
+  {bas, haut}, avec les valeurs `FLUX_BAS` et `FLUX` du jumeau (CD 665 ou
+  1 300 par an). Le levier « étrangers » s'applique désormais aux 5
+  professions.
+- **Infirmiers privés : années à partir de 2013.** En 2012, la table ne
+  contient que les libéraux, d'où un saut fictif de +190 %. C'est la cause
+  de la bande backtest départementale de ±460 %. Le défaut était dans
+  `leviers.table`, pas dans `sector_table` du jumeau, qui commence en
+  2013.
+- **Amplitude des leviers : les deux variantes sont calculées**, pour
+  éclairer la décision ouverte sans la prendre.
+  - « dd76 » : quotas et capacité × [0,8 ; 1,2], retraite [0, 2] ans.
+  - « interface » : quotas et capacité × [0,7 ; 1,5], retraite [0, 3] ans
+    (`v2/prototype/server.py`).
+  - Le choix reste à l'utilisateur·rice (open.md).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « lance ce qui te semble
+circonspect ». Les résultats publiés reposaient sur un code et des
+données qui ont changé depuis.
+**Ce qui le renverserait.** Un nouveau changement du jumeau ou des données
+`secteur_stock`. Relancer coûte environ 1 h 30 de machine.
+
 ## Open / not yet decided
+- **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
+  dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
+  Les points :
+  - partir de la question, et lire les valeurs en phrase ;
+  - trois niveaux d'affichage ;
+  - des badges discrets ;
+  - les leviers indisponibles regroupés ;
+  - un résumé du scénario en tête ;
+  - la couleur de la carte déplacée dans la légende.
+
+  En file : elle sera appliquée **après la fin de l'UAT agentique en cours**, pour ne pas
+  fausser la recette (leçon de l'UAT précédente). Priorités : 1, 2, 5.
 - **Brancher la rétention dépendante de la densité pour les IDE dans le tendanciel ?**
   L'effet est mesuré (N9 : +0,11 [+0,05 ; +0,18]) mais corrélationnel. Question posée le
   2026-11-14.
@@ -2578,3 +2656,51 @@ de code donne un nouveau dépôt daté, et l'ancien reste.
 **Ce qui le renverserait.** Un panel individuel ouvert (au moins 3
 instantanés de l'Annuaire Santé, ou un RPPS individuel daté), qui
 rendrait les règles d'agents estimables.
+
+## 2026-11-14 — Projection communale : modèle K inscrit avant le banc N4 (08:35)
+
+**Décision.**
+- Le modèle K est inscrit avant tout passage sur le banc N4 :
+  - cohortes communales ;
+  - rétention rétrécie nat → région → dép → EPCI → commune (k = 200) ;
+  - entrées en niveau local départemental × part communale hiérarchique
+    (k_q = 20) ;
+  - variance prédictive α_h·μ + β_h·μ², mesurée dans la fenêtre par
+    pseudo-prévisions.
+  - Dérivation [communes](derivations/2026-11-14-axe2-communes.md), SHA-256
+    `0240e9fb2311`.
+- **Banc.** `v2/methodes/banc_communes.py` : IDE, MK, CD ; origines 2014 à
+  2020 ; h = 5. Fonctions de `validation.fine_scale`, inchangées.
+- **Critère.** Couverture de la bande à 80 % dans [75 ; 85] % par classe
+  (≥ 3–5). Le modèle meurt si plus de 2 classes sur 7 échouent pour une
+  profession.
+- Le pilote n'a regardé aucune cible du banc : origine 2010 seulement, pour
+  le temps de calcul.
+
+**Pourquoi.** Chantier « projection communale fiable », dont l'axe 2 est le
+porteur.
+**Ce qui le renverserait.** Le banc N4.
+
+## 2026-11-14 — Projection communale : K rejeté au banc N4 ; repli K2 inscrit avant son passage (08:38)
+
+**Décision.**
+- **K est rejeté**, selon son critère pré-écrit.
+  - Sa bande est trop large : couverture à 80 % de 90 à 100 % chez les
+    IDE (8 classes sur 8 hors de [75 ; 85]) et de 92 à 95 % chez les CD
+    (7 sur 8). Les MK passent dans 5 classes sur 8.
+  - Son point est moins bon que la part tenue dans les petites classes :
+    P80 de 84 % contre 43 % pour les IDE de 1–2.
+- **K2 est inscrit avant son passage**, comme variante unique de repli. On
+  s'arrête à son résultat.
+  - Point : part communale tenue × total départemental projeté par K.
+  - Bande : quantiles 10 et 90 % de log((réel + ½)/(prédit + ½)) par classe
+    de taille, sur des pseudo-prévisions de K2 dans la fenêtre (cibles ≤
+    origine).
+  - Critère identique à celui de K.
+
+**Pourquoi.** Le diagnostic de K a trouvé deux causes :
+- la variance en moments (NNLS), dominée par quelques communes extrêmes
+  (β = 1 chez les CD) ;
+- la mécanique de cohortes, trop bruitée sous 10 personnes.
+
+**Ce qui le renverserait.** Le banc de K2.
