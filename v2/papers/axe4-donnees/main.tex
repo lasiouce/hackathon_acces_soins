@@ -1,0 +1,433 @@
+\documentclass[11pt]{article}
+\PassOptionsToPackage{english}{babel} % le résumé anglais (otherlanguage) exige la langue english ; le français reste la langue principale
+\input{../template/preamble}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=1.16}
+
+\title{Le secteur public était déjà dans les fichiers : séparer public et privé, dater les réformes et coder le zonage par commune pour un jumeau numérique de l'offre de soins}
+\author[1]{Équipe hackathon-santé}
+\author[1]{Claude (Anthropic), assistant de recherche}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}, axe~4 (données)}
+\date{Prétirage, version du 14 novembre 2026 --- non relu par des pairs}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Le jumeau numérique de l'offre de soins projette jusqu'en 2050 l'effectif « libéral » de cinq professions
+(sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes, infirmiers). Ici, « libéral »
+désigne le secteur privé, lucratif ou non : tout employeur public est exclu. Or le stock DREES utilisé jusqu'ici
+ne séparait pas public et privé chez les salariés. La sortie 2026 n'était donc connue qu'en fourchette, de
+\num{12475} à \num{26428} sages-femmes. Nous montrons que la séparation est déjà dans les fichiers ouverts de la
+DREES : ils croisent département, secteur d'activité, mode d'exercice, âge et sexe. Les salariés des secteurs
+mixtes sont répartis à l'aide du répertoire FINESS. La fourchette des sages-femmes devient
+\num{12059}--\num{14660}\mesure{} : sa largeur baisse de 81\,\%\derive{}. Les infirmiers sont séparés sans
+ambiguïté : \num{277788} privés en 2023\mesure{}. Nous livrons aussi un registre de 30 événements datés et
+sourcés, et le zonage conventionnel de \num{34919} géocodes pour quatre professions. Chaque table est contrôlée
+contre un total connu. Le registre est confirmé sur un cas : l'année sans diplômés en kinésithérapie (2018) se
+lit dans le stock, avec \num{-35}\,\% de moins de 25 ans\mesure{}. Le zonage reproduit le périmètre dentaire
+publié, soit 97 géocodes et 4,8\,\% de la population\mesure{}. Principale limite : la table public / privé des
+infirmiers n'a ni âge ni sexe, ce qui les exclut pour l'instant du jumeau.
+\end{abstract}
+\begin{otherlanguage}{english}
+\begin{abstract}
+The digital twin of French healthcare supply projects, to 2050, the ``liberal'' headcount of five professions:
+midwives, dentists, pharmacists, physiotherapists and nurses. Here ``liberal'' means the private sector, for-profit
+or not, with every public employer excluded. The DREES stock used so far did not separate public from private
+employers among salaried staff, so the 2026 output was only known as a range: 12,475 to 26,428 midwives. We show
+that the split is already present in the open DREES files, which cross département, activity sector, practice
+mode, age and sex. Salaried staff in mixed sectors are apportioned using the FINESS register. The midwife range
+narrows to 12,059--14,660 (measured), 81\,\% narrower. Nurses separate without ambiguity: 277,788 in the private
+sector in 2023. We also release a register of 30 dated, sourced events and the conventional zoning of 34,919
+geocodes for four professions. Each table is checked against a known total. One event is confirmed in the
+data: the 2018 year without physiotherapy graduates appears in the stock, with 35\,\% fewer under-25s. The
+zoning reproduces the published dental perimeter: 97 geocodes and 4.8\,\% of the population. The main limitation
+is that the nurse public/private table has no age or sex breakdown, which currently keeps nurses out of the twin.
+\end{abstract}
+\end{otherlanguage}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; secteur public et privé ; RPPS ; FINESS ;
+zonage conventionnel ; régulation de l'installation ; données ouvertes ; jumeau numérique.
+
+\noindent\textbf{Provenance des nombres :} \mesure{}~mesuré sur les données, \derive{}~dérivé par un calcul
+explicite, \suppose{}~supposé.
+
+\section{Introduction}
+Le projet simule des politiques nationales sur un jumeau de l'offre de soins. Chaque politique y est un
+réglage d'hyperparamètres sourcés. La sortie est l'effectif « libéral » de cinq professions, à toute échelle
+jusqu'à la commune. Il s'agit de la définition du projet, qui diffère de celle des sources : le secteur privé,
+lucratif ou non, y compris les pharmaciens adjoints d'officine, les salariés des cliniques et l'industrie. Tout
+employeur public en est exclu : hôpital public, PMI, Éducation nationale, EHPAD publics, centres municipaux.
+
+Trois lacunes de données bloquaient ce cadrage :
+\begin{enumerate}
+  \item le stock ne séparait pas public et privé dans « salarié hospitalier » et « autre salarié ». La sortie
+  2026 n'était donc connue qu'en fourchette : \num{12475}--\num{26428} sages-femmes et
+  \num{65344}--\num{75335} pharmaciens\mesure{} ;
+  \item les ruptures des séries (formation, diplômés, installation) n'étaient rattachées à aucune réforme datée ;
+  \item la régulation de l'installation, qui s'applique par commune, n'existait dans le jumeau que sous forme de
+  zones illustratives.
+\end{enumerate}
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item Une séparation public / privé par profession, mode, département, âge, sexe et année (2012--2026). Elle
+  donne pour chaque sortie une fourchette resserrée et une valeur centrale (section~\ref{sec:res-secteur}).
+  \item Un registre de 30 événements datés, chacun avec sa source ouverte. Il comprend deux ruptures de données,
+  dont un artefact de fichier qui passait pour une réforme (section~\ref{sec:res-evenements}).
+  \item Le zonage conventionnel de \num{34919} géocodes pour quatre professions, sur deux millésimes, avec le
+  statut lu par le module de régulation (section~\ref{sec:res-zonage}).
+\end{itemize}
+
+\section{Travaux existants}
+La DREES publie chaque année les effectifs au 1\textsuperscript{er} janvier, à partir du RPPS
+\citep{drees2026demo}. La feuille « Lisez-moi » documente le croisement par département, secteur d'activité,
+mode d'exercice, âge et sexe. Les kinésithérapeutes y sont comptés au RPPS depuis 2017, et à partir d'ADELI
+avant cette date \citep{drees2020er1159}. Pour les infirmiers, la DREES croise deux sources : la Base Tous Salariés
+(Insee) pour les salariés, le SNDS pour les libéraux \citep{dreesbts2026}. Le répertoire FINESS décrit les
+établissements et le statut juridique de leurs gestionnaires \citep{finessEt2026,finessEj2026}.
+
+Le zonage conventionnel est arrêté par les ARS et diffusé par CartoSanté \citep{cartosante2026}. Une génération
+antérieure est publiée par le catalogue Atlasanté \citep{atlasante2014zonage}. Les règles qui s'y attachent
+viennent des avenants aux conventions nationales :
+\begin{itemize}
+  \item infirmiers \citep{ameliIde} ;
+  \item sages-femmes \citep{ameliSf} ;
+  \item kinésithérapeutes \citep{ameliMk}, dont la régulation a été annulée en 2014 par le Conseil d'État
+  \citep{ce2014mk} ;
+  \item chirurgiens-dentistes \citep{arspaca2025cd}.
+\end{itemize}
+Nous n'avons pas trouvé de travail qui exploite le croisement secteur~$\times$~mode du fichier DREES pour isoler
+le secteur privé au sens large.
+
+\section{Données}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}p{4.2cm}p{3.1cm}p{4.3cm}p{3.2cm}@{}}
+\toprule
+Jeu & Producteur, millésime & Grain & Usage \\
+\midrule
+Démographie des PS depuis 2012 \citep{drees2026demo} & DREES, 2026-07-02 & dép.\ $\times$ secteur (9--12) $\times$ mode (4) $\times$ âge (10) $\times$ sexe, 2012--2026 & SF, CD, PH, MK \\
+Infirmières salariées BTS, libérales SNDS \citep{dreesbts2026} & DREES / Insee, 2026-07-02 & dép.\ $\times$ secteur (6), sans croisement âge ou sexe ; 2013--2023 & IDE \\
+FINESS établissements et entités juridiques \citep{finessEt2026,finessEj2026} & Ministère, au 2026-05-04 & établissement, catégorie, statut juridique & parts privées \\
+CartoSanté \texttt{zonage\_conv} \citep{cartosante2026} & CNAMTS--ARS, extrait 2026-11-14 & commune COG 2026, arrondissements PLM & zonage actuel \\
+Atlasanté c987d0e2 \citep{atlasante2014zonage} & ARS, fiche 2014 & commune (\num{36700}) & zonage 2012 \\
+Découpage administratif \citep{geoapi2026} & Etalab, 2026-11-14 & commune, population légale & contrôles \\
+\bottomrule
+\end{tabular}
+\caption{Jeux de données. Tous sont ouverts. Les fichiers FINESS pèsent \SI{35.8}{\mega\byte} et
+\SI{11.9}{\mega\byte}\mesure{}, le zonage environ \SI{1.6}{\mega\byte} par profession\mesure{}.}
+\label{tab:donnees}
+\end{table}
+
+\paragraph{Contrôles d'entrée.}
+\begin{itemize}
+  \item La somme des cellules détaillées (dép.~$\times$ secteur $\times$ mode $\times$ âge $\times$ sexe) égale
+  le total France du fichier, à 0\,\% près\mesure{} pour les sages-femmes, les dentistes, les pharmaciens et
+  ADELI.
+  \item Les kinésithérapeutes RPPS font exception : 0,22\,\% d'écart au plus\mesure{}, en 2017--2018. L'écart est
+  interne au fichier source : en 2017, la somme des secteurs vaut \num{84599} contre \num{84521} pour
+  « Ensemble »\mesure{}.
+  \item Pour le BTS, l'écart est d'au plus 0,009\,\%\mesure{}.
+\end{itemize}
+
+\section{Méthode}
+\subsection{Classement public / privé}
+Soit $N_{p,s,m,d,a,x,t}$ l'effectif de la profession $p$ dans le secteur $s$, le mode $m$, le département $d$,
+l'âge $a$, le sexe $x$ et l'année $t$. Chaque cellule reçoit une part privée $\pi \in [0,1]$ :
+\begin{itemize}
+  \item libéral ou mixte : $\pi = 1$, quel que soit le secteur. C'est la définition du projet, dans laquelle
+  les mixtes sont inclus.
+  \item Salarié dont le secteur est sans ambiguïté : $\pi = 0$ pour l'hôpital public ; $\pi = 1$ pour les
+  établissements ESPIC et privés lucratifs, l'officine, les laboratoires, le médicament et les cabinets.
+  \item Salarié d'un secteur mixte (centre de santé, prévention, médico-social, « autre ») : $\pi$ est inconnu.
+  Il est borné par $[0,1]$ et prend une valeur centrale $\hat\pi$.
+\end{itemize}
+La sortie privée est alors encadrée et centrée :
+\begin{equation}
+N^{\min}_{p,t} = \sum_{\text{sûr privé}} N, \qquad
+N^{\max}_{p,t} = N^{\min}_{p,t} + \sum_{\text{ambigu}} N, \qquad
+\hat N_{p,t} = \sum \hat\pi\, N .
+\end{equation}
+
+\subsection{Parts centrales par FINESS}
+La valeur $\hat\pi$ est la part d'établissements de la catégorie FINESS correspondante dont l'entité juridique est
+privée :
+\begin{itemize}
+  \item statuts juridiques 47 à 99 : privé (mutuelles, associations, fondations, sociétés) ;
+  \item statuts 1 à 39 : public ;
+  \item statuts 40 à 46, organismes de sécurité sociale : comptés publics, comme administrations de sécurité
+  sociale.
+\end{itemize}
+Les catégories retenues sont :
+\begin{itemize}
+  \item centres de santé (124) ; pour les dentistes, les centres dont la raison sociale contient « DENT » ;
+  \item PMI et planification (223, 228) ;
+  \item EHPAD (500) ;
+  \item handicap médicalisé (182, 183, 186, 190, 255, 437, 448).
+\end{itemize}
+« Autre secteur », et « prévention et établissement de santé » chez les pharmaciens, n'ont pas de proxy :
+$\hat\pi = 0{,}5$\suppose{}.
+
+\paragraph{Infirmiers.} Le BTS sépare déjà public et privé en trois paires : hôpital, médico-social, autre. Les
+libéraux SNDS sont privés. Aucune ambiguïté n'est donc introduite. Le BTS ne croise pas le secteur avec l'âge ou
+le sexe, et la table infirmiers n'a que le grain département~$\times$ secteur.
+
+\subsection{Registre d'événements}
+Chaque ligne de \texttt{v2/data/events.csv} est un texte ou un fait observé. Elle porte ces champs :
+\texttt{id}, \texttt{date\_effet}, \texttt{profession}, \texttt{flux\_touche} (capacité de formation, durée des
+études, diplômés, installation, régulation, compétences, autre), \texttt{type}, \texttt{description},
+\texttt{source}, \texttt{millesime} et \texttt{confiance}.
+\begin{itemize}
+  \item Chaque URL a été ouverte, et le fait lu sur la page.
+  \item \texttt{verifie} : date et fait lus sur la source. \texttt{partiel} : une partie de la date ou du chiffre
+  est déduite, et la description le dit.
+  \item Quand seule l'année est connue, la date retenue est la rentrée (1\textsuperscript{er} septembre) ou la fin
+  d'année universitaire.
+\end{itemize}
+
+\subsection{Zonage et statut}
+Le statut lu par le module de régulation se déduit de la classe ARS :
+\begin{itemize}
+  \item Statut \texttt{remplacement\_seul} : classes « sur-dotée » (ancien zonage) et « non prioritaire »
+  (nouveau zonage). Le conventionnement n'y est possible qu'en remplacement d'un départ.
+  \item Très sous-dotée ou sous-dotée : \texttt{incitation}.
+  \item Les autres classes : \texttt{autre}.
+\end{itemize}
+Le référentiel \texttt{arm2026} remplace Paris, Lyon et Marseille par leurs 45 arrondissements, zonés à ce niveau.
+
+\section{Résultats}
+\subsection{Séparation public / privé}\label{sec:res-secteur}
+\begin{table}[h]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Profession & Année & Effectif & Ancienne & Min & Centrale & Max \\
+ & & & fourchette & & & \\
+\midrule
+Sages-femmes & 2026 & \num{26428} & \num{12475}--\num{26428} & \num{12059} & \num{12912} & \num{14660} \\
+Pharmaciens  & 2026 & \num{75335} & \num{65344}--\num{75335} & \num{60005} & \num{63612} & \num{67219} \\
+Dentistes    & 2026 & \num{48690} & \num{48143}--\num{48690} & \num{40784} & \num{47349} & \num{47894} \\
+Kinés        & 2026 & \num{111141} & \num{98348}--\num{111237} & \num{98828} & \num{101951} & \num{103986} \\
+Infirmiers   & 2023 & \num{607644} & --- & \num{277788} & \num{277788} & \num{277788} \\
+\bottomrule
+\end{tabular}
+\caption{Effectif « libéral » (= privé), France entière. Min, max et effectif sont mesurés\mesure{} ; la centrale
+dépend des parts FINESS (mesurées\mesure{}) et de trois parts supposées à 0,5\suppose{}. Pour les infirmiers, le
+total additionne BTS et SNDS (double compte possible, voir section~\ref{sec:menaces}).}
+\label{tab:fourchettes}
+\end{table}
+
+La largeur de la fourchette baisse de 81\,\% pour les sages-femmes (de \num{13953} à \num{2601}), de 60\,\% pour
+les kinésithérapeutes et de 28\,\% pour les pharmaciens\derive{}.
+
+\paragraph{Les anciennes bornes basses n'étaient pas des minima.} Elles comptaient tout « autre salarié » comme
+privé, PMI et centres municipaux compris. C'est pourquoi le minimum baisse pour les sages-femmes et les
+pharmaciens. Pour les dentistes, la fourchette s'élargit. Les \num{6694} dentistes salariés des centres de santé
+sont désormais ambigus\mesure{}, mais leur part centrale est de 0,963\mesure{} : 96\,\% des \num{1299} centres
+« dentaires » ont un gestionnaire privé.
+
+\begin{table}[h]
+\centering\footnotesize
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Profession & Secteur & Effectif 2026 & $\hat\pi$ & Source de $\hat\pi$ \\
+\midrule
+Pharmaciens & Autre secteur & \num{5805} & 0,50\suppose & --- \\
+Pharmaciens & Prévention et étab.\ de santé & \num{1409} & 0,50\suppose & --- \\
+Dentistes & Centre de santé & \num{6694} & 0,963\mesure & FINESS, \num{1299} centres \\
+Kinés & Étab.\ sanitaire et social & \num{2200} & 0,696\mesure & FINESS, \num{13407} étab. \\
+Kinés & Autre secteur & \num{2524} & 0,50\suppose & --- \\
+Sages-femmes & Prévention (PMI\ldots) & \num{1329} & 0,070\mesure & FINESS, \num{1435} étab. \\
+Sages-femmes & Autre secteur & \num{796} & 0,50\suppose & --- \\
+\bottomrule
+\end{tabular}
+\caption{Origine de l'ambiguïté restante : salariés des secteurs mixtes, 2026 (lignes de plus de 500 personnes).}
+\label{tab:ambigu}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.85\textwidth,height=6cm,xlabel={Année (au 1\textsuperscript{er} janvier)},
+  ylabel={Sages-femmes « libérales » (privé)},xmin=2012,xmax=2026,
+  x tick label style={/pgf/number format/1000 sep=},
+  y tick label style={/pgf/number format/1000 sep={\,}},
+  legend pos=north west,legend style={font=\small}]
+\addplot[name path=max,draw=none,forget plot] coordinates {(2012,8337) (2013,9015) (2014,9568) (2015,10184) (2016,10864) (2017,11296) (2018,11614) (2019,11898) (2020,12254) (2021,12692) (2022,13047) (2023,13400) (2024,13878) (2025,14214) (2026,14660)};
+\addplot[name path=min,draw=none,forget plot] coordinates {(2012,6839) (2013,7675) (2014,8127) (2015,8704) (2016,9338) (2017,9760) (2018,10024) (2019,10255) (2020,10524) (2021,10707) (2022,10962) (2023,11238) (2024,11510) (2025,11706) (2026,12059)};
+\addplot[gray!30] fill between[of=max and min];
+\addlegendentry{min--max (secteurs mixtes)}
+\addplot[thick,black,mark=*,mark size=1.2pt] coordinates {(2012,7309) (2013,7980) (2014,8459) (2015,9020) (2016,9656) (2017,10075) (2018,10356) (2019,10607) (2020,10929) (2021,11239) (2022,11527) (2023,11857) (2024,12233) (2025,12500) (2026,12912)};
+\addlegendentry{centrale (FINESS)}
+\end{axis}
+\end{tikzpicture}
+\caption{Sages-femmes du secteur privé, France entière, 2012--2026\mesure{}. L'ancienne fourchette 2026
+(\num{12475}--\num{26428}) dépasserait le haut du graphique.}
+\label{fig:sf}
+\end{figure}
+
+Les séries existent pour chaque année et chaque département. La largeur médiane de la fourchette par département,
+dernière année, va de 4\,\% de l'effectif (kinésithérapeutes) à 9\,\% (sages-femmes, dentistes, pharmaciens)\mesure{}.
+
+\subsection{Registre d'événements}\label{sec:res-evenements}
+Le registre compte 30 événements entre 2009 et 2028\mesure{} : 23 \texttt{verifie} et 7 \texttt{partiel}.
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lrp{10.5cm}@{}}
+\toprule
+Flux touché & N & Exemples (date d'effet) \\
+\midrule
+Régulation de l'installation & 11 & IDE 18/04/2009, 27/05/2012 \citep{ameliIde} ; MK 14/01/2012, annulée le 17/03/2014 \citep{ce2014mk}, puis 01/07/2018 et avenant~7 (2023) \citep{ameliMk} ; SF 15/09/2012 \citep{ameliSf} ; CD 01/01/2025 \citep{arspaca2025cd} \\
+Capacité de formation & 7 & numerus apertus, rentrée 2020 \citep{loiotss2019} ; objectifs pluriannuels 2021--2025 et 2026--2030 ; 8 sites d'odontologie à la rentrée 2022 \\
+Durée des études & 4 & MK : 3 à 4 ans en IFMK, rentrée 2015 \citep{arretemk2015} ; SF : 6 ans, entrée en 2\textsuperscript{e} année à partir de 2024 \\
+Diplômés & 2 & MK : année blanche 2018 \citep{drees2020er1159} ; SF : (quasi) aucune diplômée en 2027-28 (déduit) \\
+Compétences & 3 & IPA (2018) ; vaccination en officine (2019, 2023) \\
+Installation (officines) & 1 & seuils de population (ordonnance 2018-3) \\
+Données & 2 & passage ADELI $\rightarrow$ RPPS des MK en 2017 \citep{drees2020er1159} ; artefact des inscrits 2025-26 \\
+\bottomrule
+\end{tabular}
+\caption{Événements par flux touché. Liste complète, sources et fiches : \texttt{v2/data/events.csv},
+\texttt{v2/docs/lab/fiches/data-ev-*.md}.}
+\label{tab:evenements}
+\end{table}
+
+\paragraph{Le saut d'inscrits 2025 est un artefact.} Le fichier des inscrits 2025-26 compte \num{2083} étudiants
+en 2\textsuperscript{e} année d'odontologie\mesure{}, contre environ \num{1550} les années précédentes. Une seule
+ligne explique le saut : l'Université Paris Cité, avec 683 inscrits\mesure{}, contre 188 à 215 entre 2020 et 2024
+et 193 en 3\textsuperscript{e} année. Le fichier compilé de l'équipe donne \num{1588} au national, dans la tendance
+(\num{1546} en 2024). Le registre enregistre donc ce saut comme une rupture de données, pas comme une réforme.
+
+\subsection{Zonage par commune}\label{sec:res-zonage}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Profession & Remplacement seul & Incitation & Autre & Non renseigné \\
+\midrule
+Sages-femmes & \num{1471} \;(12,3\,\%) & \num{11862} \;(17,4\,\%) & \num{21562} \;(70,3\,\%) & 24 \\
+Dentistes & 97 \;(4,8\,\%) & \num{26769} \;(44,4\,\%) & \num{8027} \;(50,8\,\%) & 26 \\
+Kinés & \num{2836} \;(27,4\,\%) & \num{18840} \;(29,8\,\%) & \num{13241} \;(42,8\,\%) & 2 \\
+Infirmiers & \num{4786} \;(27,6\,\%) & \num{5690} \;(15,3\,\%) & \num{24441} \;(57,0\,\%) & 2 \\
+\bottomrule
+\end{tabular}
+\caption{Zonage actuel (CartoSanté, extrait le 14/11/2026) : nombre de géocodes et part de la population
+légale\mesure{}. Les géocodes non renseignés sont des communes des DROM. Ils sont comptés avec « autre » dans les
+parts de population.}
+\label{tab:zonage}
+\end{table}
+
+\begin{itemize}
+  \item Chez les kinésithérapeutes, deux régimes coexistent : \num{2826} géocodes « non prioritaires » (nouveau
+  zonage) et 10 « sur-dotés » (ancien)\mesure{}.
+  \item La génération 2012 (métropole, sans sages-femmes) classe en remplacement seul \num{3135} communes pour
+  les infirmiers, 547 pour les kinésithérapeutes et 908 pour les dentistes\mesure{}.
+\end{itemize}
+
+\section{Validation et menaces à la validité}\label{sec:menaces}
+\paragraph{Contrôles contre des totaux connus.}
+\begin{itemize}
+  \item \emph{Stock} : la somme des cellules égale le total publié, avec un écart d'au plus 0,22\,\%\mesure{}.
+  Cet écart est interne à la source.
+  \item \emph{Événements} : l'année blanche des kinésithérapeutes (2018) doit se voir au 1\textsuperscript{er}
+  janvier 2019. C'est le cas : les moins de 25 ans passent de \num{5637} à \num{3681} (\num{-35}\,\%), puis
+  remontent à \num{5126} en 2026\mesure{}.
+  \item \emph{Zonage} :
+  \begin{itemize}
+    \item communes : le COG en compte \num{34969} ; moins 92 communes des COM hors champ, moins les 3 communes
+    PLM, plus 45 arrondissements, on obtient \num{34919} géocodes, comme dans la table\mesure{} ;
+    \item périmètre dentaire : la table donne 97 géocodes et 4,8\,\% de la population\mesure{}. Les sources
+    publiées citent 5\,\% de la population \citep{arspaca2025cd} et 97 communes\footnote{Mémoire EHESP 2025,
+    § 3.3.2, déposé dans le dépôt du projet et lu par la session de l'axe~1.}.
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Ce qui pourrait rendre les résultats faux.}
+\begin{itemize}
+  \item \textbf{Secteur de l'activité la plus récente.} La DREES classe chaque professionnel selon son activité la
+  plus récente, et non selon son activité principale \citep{drees2026demo}. Un salarié public qui prend un second
+  poste privé est donc compté privé.
+  \item \textbf{Parts en établissements.} Les parts FINESS comptent des établissements, pas des salariés. Un grand
+  EHPAD public pèse autant qu'un petit EHPAD privé. L'écart n'est pas mesuré.
+  \item \textbf{Trois parts supposées.} Elles portent l'essentiel de l'incertitude des pharmaciens : \num{7214}
+  salariés de secteurs mixtes, soit 9,6\,\% de l'effectif\derive{}.
+  \item \textbf{Recoupement avec l'Ordre.} Parmi les pharmaciens hospitaliers, la part privée vaut 17\,\% selon la
+  DREES et 28,6\,\% selon l'Ordre (inscriptions en section H). Ce chiffre est repris des fiches de l'axe~1, et
+  l'écart n'est pas réconcilié.
+  \item \textbf{Infirmiers.}
+  \begin{itemize}
+    \item Un double compte est possible entre le SNDS et le BTS.
+    \item Le BTS a une rupture de série en 2022.
+    \item \emph{Surtout, la table public / privé des infirmiers n'a ni âge ni sexe} : le BTS ne croise pas le
+    secteur avec eux. Or l'état du jumeau est indexé par âge et sexe. Les infirmiers en sont donc exclus tant
+    qu'un ratissage (secteur indépendant de l'âge et du sexe, hypothèse à tester) n'est pas fait.
+  \end{itemize}
+  \item \textbf{Zonage.}
+  \begin{itemize}
+    \item Le millésime actuel n'est pas daté : CartoSanté ne sert pas la date des arrêtés.
+    \item L'historique n'a qu'une génération (2012).
+    \item L'« obligation d'exercice » prévue pour les kinésithérapeutes (avenant~7) n'est pas une classe de zonage.
+  \end{itemize}
+  \item \textbf{Registre.}
+  \begin{itemize}
+    \item 7 lignes sont partielles.
+    \item L'année sans diplômées SF 2027-28 est déduite du calendrier des études.
+    \item L'avenant~7 des kinésithérapeutes prend effet à des dates différentes selon les ARS.
+  \end{itemize}
+\end{itemize}
+
+\section{Reproductibilité}
+Depuis la racine du dépôt, avec l'environnement \texttt{uv} du projet (Python~3.13, pandas, pyarrow,
+python-calamine) :
+\begin{verbatim}
+uv run python v2/data/build_secteur.py   # ~12 s
+uv run python v2/data/build_zonage.py    # ~2 s
+\end{verbatim}
+\begin{itemize}
+  \item \textbf{Entrées.}
+  \begin{itemize}
+    \item Fichiers DREES dans \texttt{data/raw/drees/} (publication du 2 juillet 2026).
+    \item FINESS dans \texttt{v2/data/raw/finess/} (\texttt{etalab-cs1100502} et \texttt{-cs1100501}, au
+    2026-05-04).
+    \item Zonage dans \texttt{v2/data/raw/zonage/} : réponses TJS \texttt{GetData} du 14 novembre 2026 et GeoJSON
+    Atlasanté.
+  \end{itemize}
+  \item \textbf{Sorties} (\texttt{v2/data/processed/}) :
+  \begin{itemize}
+    \item \texttt{secteur\_stock.parquet} (\num{899250} lignes) ;
+    \item \texttt{secteur\_split.parquet} ;
+    \item \texttt{secteur\_checks.csv} et \texttt{secteur\_finess\_shares.csv} ;
+    \item \texttt{zonage\_commune.parquet}.
+  \end{itemize}
+  \item Le registre \texttt{v2/data/events.csv} est versionné tel quel.
+  \item Aucun tirage aléatoire n'intervient.
+  \item Les rapports détaillés sont dans \texttt{v2/docs/lab/reports/2026-11-14-axe4-*.md}.
+\end{itemize}
+
+\section{Conclusion}
+\paragraph{Ce que ça change pour les autres axes.}
+\begin{itemize}
+  \item \textbf{Jumeau (axe~0).} Les données couvrent les deux cas suivants.
+  \begin{itemize}
+    \item L'état peut porter le secteur public observé (2012--2026) pour quatre professions, au lieu du
+    substitut « libéral + mixte ».
+    \item Le module de régulation lit des géocodes réels.
+  \end{itemize}
+  \item \textbf{Banc (axe~3).} Le banc se relance sur la valeur centrale, avec min et max en bande. L'expérience
+  naturelle sur le zonage infirmier dispose de la génération 2012 au même format.
+  \item \textbf{Filière de formation.} L'artefact 2025 doit être corrigé avant toute projection 2030+.
+\end{itemize}
+
+\paragraph{Questions ouvertes, avec leur coût} (registre \texttt{v2/docs/lab/open.md}) :
+\begin{itemize}
+  \item ventiler l'« autre secteur » des pharmaciens à l'aide des sections de l'Ordre (\(\approx\)1~h) ;
+  \item pondérer les parts FINESS par les effectifs salariés (\(\approx\)1~h~30) ;
+  \item ventiler les infirmiers par âge et sexe à l'intérieur du secteur (\(\approx\)20~min) ;
+  \item dater le zonage par région (\(\approx\)1~h) ;
+  \item ouvrir les textes primaires des 12 événements à source secondaire (\(\approx\)45~min).
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}
