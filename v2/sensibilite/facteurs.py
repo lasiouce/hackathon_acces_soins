@@ -119,5 +119,6 @@ class Model:
         if v.get("quotas", 1.0) != 1.0:
             ev = [evenement_quotas(v["quotas"], self.o, LAG[self.prof])]
         tr = est.trajectory(max(YEARS), Scenario(name="axe5", params=params, events=ev))
+        est._traj.clear()                  # le jumeau met chaque trajectoire en cache : sans ça, la mémoire croît par run
         self.runs += 1
         return np.array([tr.states[y].N.sum() for y in YEARS])

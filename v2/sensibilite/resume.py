@@ -34,9 +34,9 @@ def main():
         x = c[c.famille == fam]
         keep = x.groupby(["profession", "facteur"]).ST.transform("max") >= SEUIL
         x = x[keep].assign(v=lambda z: z.apply(lambda r: f"{r.ST:.2f} [{r.ST_lo:.2f}–{r.ST_hi:.2f}]", axis=1))
-        print(md(x.pivot_table(index=["profession", "facteur"], columns="annee", values="v", aggfunc="first"))
+        print(md(x.pivot_table(index=["profession", "facteur"], columns="annee", values="v", aggfunc="first")))
         print("\nS1 (premier ordre) :")
-        print(md(x.pivot_table(index=["profession", "facteur"], columns="annee", values="S1").round(2))
+        print(md(x.pivot_table(index=["profession", "facteur"], columns="annee", values="S1").round(2)))
         print("\nMorris μ* (% de Y réf., pas de 2/3 de la plage) :")
         y = c[c.famille == fam].pivot_table(index=["profession", "facteur"], columns="annee", values="mu_star_pct").round(2)
         print(md(y))

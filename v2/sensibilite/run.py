@@ -7,12 +7,18 @@ Run (racine) : PYTHONPATH=v2:. uv run python -m sensibilite.run [--n 2048] [--r 
 import argparse
 import sys
 import time
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+import jumeau.modules.entrees as _entrees
 from sensibilite.facteurs import PROFS, SEED, YEARS, Model
+
+# Mémoïsation de sante.pipeline.scale, appelée une fois par cellule et par an quand `filiere` est actif
+# (≈ 45 ms par run chez les dentistes au lieu de ≈ 3 ms). Même résultat : la fonction est pure.
+_entrees.scale = lru_cache(maxsize=None)(_entrees.scale)
 from sensibilite.methodes import bootstrap, morris_design, morris_effects, sobol_design, sobol_indices
 
 OUT = Path("v2/sensibilite/out")
@@ -51,6 +57,7 @@ def run_prof(prof, family, n, r, rng):
     # Sobol
     X = sobol_design(k, n, rng)
     Y = evaluate(m, X, f"{prof}/{family}/sobol")
+    np.savez_compressed(OUT / f"Y_{prof}_{family}.npz", X=X, Y=Y, names=np.array(names))
     rows, dist = [], []
     for yi, y in enumerate(YEARS):
         S1, ST = sobol_indices(Y[:, :, yi])

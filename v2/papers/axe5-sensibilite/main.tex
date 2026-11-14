@@ -161,6 +161,10 @@ formation. En ordre de grandeur (Morris, $\mu^*$ à 2050, pas de 2/3 de la plage
 filière 24\,\%\mesure{} (dentistes), part privée 23\,\%\mesure{} (sages-femmes), fenêtre et fraction de
 vieillissement 4 à 8\,\%\mesure{}, décalage de la retraite 2 à 4\,\%\mesure{}, cumul $\le 0{,}25$\,\%\mesure{}.
 
+Le premier ordre $S_i$, calculé sur $Y$ centré, reste dans $[-0{,}001 ; 1{,}008]$\mesure{}. L'écart
+$S_T - S_i$ révèle des interactions fortes entre fenêtre et entrées chez les infirmiers (fenêtre $S_i$ 0,28 contre
+$S_T$ 0,53\mesure{}) et les kinésithérapeutes : ces deux choix d'estimation doivent être faits ensemble.
+
 \subsection{Fourchettes à 2050}
 \begin{table}[h]\centering\small
 \begin{tabular}{lrrr}
@@ -184,7 +188,7 @@ $+7{,}8$\,\%\mesure{} à $h = 5$, $+18{,}8$\,\%\mesure{} à $h = 10$.
 \subsection{Levier retraite}
 Avant correction, le levier multipliait en permanence la sortie de la tranche ouverte 65+ ; il donnait chez les
 dentistes 1,10, 1,39 et 1,85\mesure{} fois l'effet du correctif $e' = e/(1+\Delta e)$ pour $\Delta = 1, 2, 3$ ans.
-Après correction (code du 2026-11-14), le rapport tombe à 1,08--1,16\mesure{}, écart expliqué par un demi-effet
+Après correction (code du 2026-11-14), le rapport tombe à 1,05--1,16\mesure{}, écart expliqué par un demi-effet
 appliqué aux 55--59 ans. Tous les indices sont calculés sur le code corrigé.
 
 \section{Validation et menaces à la validité}
@@ -203,8 +207,7 @@ appliqué aux 55--59 ans. Tous les indices sont calculés sur le code corrigé.
 \end{itemize}
 
 \section{Reproductibilité}
-Depuis la racine du dépôt (graine \num{20261114}, \num{201276} runs, \SI{815}{\second}\mesure{} sur la machine du
-projet) :
+Depuis la racine du dépôt (graine \num{20261114}, \num{201276} runs, \SI{1187}{\second}\mesure{} sur une machine chargée) :
 \begin{verbatim}
 PYTHONPATH=v2:. uv run python -m sensibilite.run --n 2048 --r 30
 PYTHONPATH=v2:. uv run python -m sensibilite.backtest
@@ -212,8 +215,7 @@ PYTHONPATH=v2:. uv run python -m sensibilite.tendance
 PYTHONPATH=v2:. uv run python -m sensibilite.retraite_b1
 PYTHONPATH=v2:. uv run python -m sensibilite.resume
 \end{verbatim}
-Les sorties brutes ($X$, $Y$ de chaque plan) sont dans \texttt{v2/sensibilite/out/Y\_*.npz}. Rapport source :
-\texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md}. Les références ont été vérifiées sur leurs
+Le jumeau est figé dans un instantané (empreinte SHA-256 tronquée \texttt{c2dc7601} des sources triées ; critères C1--C14 au vert). Les sorties brutes ($X$, $Y$ de chaque plan) sont dans \url{v2/sensibilite/out/Y_*.npz}. Le rapport source est \url{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md}. Les références ont été vérifiées sur leurs
 métadonnées et leur résumé.
 
 \section{Conclusion}

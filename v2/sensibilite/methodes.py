@@ -3,7 +3,7 @@
 Facteurs tirés dans [0, 1)^k ; le modèle traduit chaque coordonnée (continu ou discret).
   morris(model, k, r, rng)       r trajectoires à p = 4 niveaux, pas Δ = 2/3 ; EE = Y(x + Δe_i) − Y(x)
   sobol_design(k, n, rng)        matrices A, B et AB_i (Saltelli 2010)
-  sobol_indices(yA, yB, yAB)     S1 (Saltelli 2010) et ST (Jansen 1999)
+  sobol_indices(yA, yB, yAB)     S1 (Saltelli 2010, sur Y centré) et ST (Jansen 1999)
   bootstrap(...)                 intervalle à 95 % par rééchantillonnage des lignes
 """
 import numpy as np
@@ -54,6 +54,7 @@ def sobol_design(k: int, n: int, rng) -> np.ndarray:
 
 def sobol_indices(Y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Y [n, k + 2] -> (S1 [k], ST [k])."""
+    Y = Y - Y[:, :2].mean()          # centrage : S1 de Saltelli 2010 n'est pas invariant par translation (ST l'est)
     yA, yB, yAB = Y[:, 0], Y[:, 1], Y[:, 2:]
     V = np.var(np.concatenate([yA, yB]))
     if V == 0:
