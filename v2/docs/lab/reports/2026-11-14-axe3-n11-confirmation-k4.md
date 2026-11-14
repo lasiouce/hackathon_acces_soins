@@ -98,3 +98,12 @@ les kinés** : un passage sur cette seule origine n'aurait rien prouvé.
   forme : la largeur doit dépendre de la profession **et** de la taille
   (IDE trop larges, CD trop étroits dans les grandes unités), pas d'un
   facteur unique.
+
+### Dépôt communal de K4 (étape 3 de N11)
+`v2/validation/depot/k4_communes_2026-11-14.parquet`, SHA-256
+`039d21878b7a` (vérifié), déposé par l'axe 2. **Écart au protocole,
+accepté** : origine **2025** (dernière année CartoSanté) au lieu de 2026 ;
+cibles 2027 et 2028, trois grains. Il sera scoré quand CartoSanté publiera
+2027, avec les critères de N10. K4 ayant échoué aux étapes 1 et 2, ce dépôt
+ne peut plus le « confirmer » ; il mesurera seulement sa couverture hors
+échantillon.
