@@ -55,6 +55,9 @@ DECISION = 2026
 # vérifiée (total tous secteurs scénario − tendanciel ≤ 0,5 personne en 2050 pour CD, MK, SF).
 SUSPENDUS: dict = {}
 H = 2050
+# Modèle servi : C1 (cohortes bayésiennes, axe 2 étape 2 : taux de base surchargés, v2/methodes/c1_jumeau.py) par
+# défaut ; A0 (stock-flux à taux locaux) par JUMEAU_MODELE=A0. Décision « C1 servi par la carte » (2026-11-14).
+MODELE_CHOIX = os.environ.get("JUMEAU_MODELE", "C1").upper()
 REG = LEVIERS          # composition « leviers » du jumeau (commit 063c192) : tendanciel identique à l'écart 0,0
 # Leviers exposés, par famille (décision du 2026-11-14). `param` renvoie au Param du jumeau : son statut
 # (sourcé / supposé), sa source et son unité sont lus dans le registre, pas recopiés ici.
@@ -145,10 +148,14 @@ class Model:
         self.prof, self.o = prof, int(t.year.max())
         self.t = t
         self.est = twin_of(V1.StockFlowLocal, Scenario(modules=REG), sectors=("public",))().fit(t, (self.o - 5, self.o), self.o)
+        if MODELE_CHOIX == "C1":
+            from methodes.c1_jumeau import install, pente
+            install(self.est, prof, H)
+        self.modele = MODELE_CHOIX
         self.base = self.est.trajectory(H, Scenario(modules=REG))
         self.cells = self.base.states[H].cells.reset_index(drop=True)
         self.obs = t[t.sector == "prive"].groupby(["dep", "year"]).n.sum()
-        self.k = self.error_slope()
+        self.k = pente(prof) if MODELE_CHOIX == "C1" else self.error_slope()
 
     def error_slope(self) -> float:
         """Pente |erreur| / horizon du total national privé, origines o−9 … o−3, × 1,6 (≈ 8 cas sur 10)."""
@@ -240,7 +247,7 @@ class Model:
         return {"prof": self.prof, "label": PROFS[self.prof], "origin": self.o, "decision": max(self.o, DECISION),
                 "lag": LAG[self.prof], "first_effect": max(self.o, DECISION) + LAG[self.prof] + 1,
                 "years": years, "base": base, "scn": sc, "obs": [[int(y), float(n)] for y, n in hist],
-                "flows": flows, "k": self.k, "matrix": {"years": my, "rows": rows},
+                "flows": flows, "k": self.k, "modele": self.modele, "matrix": {"years": my, "rows": rows},
                 "regul_deps": zones().get(self.prof, []), "ms": round(ms, 1),
                 # contexte : habitants (scénario Omphale choisi) et densité pour 100 000 ; activité appliquée au scénario seul
                 "pop": (pop := pop_series(lv["pop_scen"], deps, years)), "pop_scen": lv["pop_scen"], "activite": lv["activite"],
