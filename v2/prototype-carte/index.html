@@ -540,7 +540,7 @@ async function refresh(){
     // jusqu'à l'image affichée ; borné à 100 ms (onglet en arrière-plan : rAF suspendu, sinon inflight reste bloqué)
     await Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),new Promise(r=>setTimeout(r,100))]);
     if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
-  }catch(e){toast("Recalcul interrompu : "+e.message);}})();
+  }catch(e){if(!carte){setTimeout(refresh,400);return;}toast("Recalcul interrompu : "+e.message);}})();   // requête annulée au chargement (vu en Chrome headless) : sans premier résultat, on relance
   try{await inflight}finally{inflight=null;if(pending){pending=false;refresh();}}
 }
 function paint(){legend();const R={};
