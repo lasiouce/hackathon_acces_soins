@@ -61,6 +61,13 @@ Ne lancez **pas** `sante.load` ni les `v2/data/build_*.py` pour démarrer : ils 
 [reconstruire les données](#reconstruire-les-données) à partir des fichiers bruts (≈ 3,6 Go, non
 commités).
 
+**Vidéo de présentation** (57 s, voix off IA) : [`v2/video/out/pitch.mp4`](v2/video/out/pitch.mp4), commitée.
+Pour la refaire (Remotion, voir `v2/video/README.md`) :
+
+```bash
+cd v2/video && npm install && npm run render    # -> v2/video/out/pitch.mp4
+```
+
 ## Le problème
 
 Former un professionnel de santé prend de 3 à 10 ans. Une décision prise aujourd'hui (quotas,
@@ -85,6 +92,9 @@ indépendant), et chaque sortie le rappelle.
 - **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Recalcul après chaque réglage en
   environ 50 ms (mesuré).
+- **Curseur d'année** (2026 → 2050, pas annuel, 2050 par défaut, bouton ▶ pour faire défiler) : carte,
+  légende, résumé, fiche et comparaison suivent l'année choisie. Toutes les années arrivent en un seul
+  appel (environ 100 ms) : bouger le curseur ne relance pas le calcul. L'année est gardée dans le lien.
 - **9 leviers en 4 familles** (former, attirer, installer, retenir), chacun avec son délai d'effet et
   son niveau de preuve (sourcé ou supposé). Le curseur principal de chaque famille est visible ; les
   réglages fins sont sous « Plus de réglages ».

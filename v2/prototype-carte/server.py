@@ -126,10 +126,16 @@ def carte(prof: str, lv: dict, terr: str = "FR") -> dict:
     b50, s50 = agg(m.base, V1.H), agg(scn, V1.H)
     P = V1.population().loc[lv["pop_scen"]]          # habitants, Insee Omphale 2022, scénario choisi
     pp = lambda d, y: float(P.loc[y, d]) if d in P.columns else 0.0
+    # séries annuelles y26..H pour le curseur d'année (le moteur garde déjà chaque année)
+    years = list(range(y26, V1.H + 1))
+    B = np.column_stack([b26 if y == y26 else agg(m.base, y) for y in years])
+    S_ = np.column_stack([s26 if y == y26 else agg(scn, y) for y in years])
+    r = lambda v: round(float(v), 1)
     out = {d: {"o": float(obs[i]), "b26": float(b26[i]), "s26": float(s26[i]), "b50": float(b50[i]), "s50": float(s50[i]),
-               "p26": pp(d, y26), "p50": pp(d, V1.H)}
+               "p26": pp(d, y26), "p50": pp(d, V1.H),
+               "b": [r(v) for v in B[i]], "s": [r(v) for v in S_[i]], "p": [round(pp(d, y)) for y in years]}
            for i, d in enumerate(codes)}
-    return {"prof": prof, "origin": m.o, "y26": y26, "k": m.k, "deps": out, "activite": lv["activite"], "pop_scen": lv["pop_scen"],
+    return {"prof": prof, "origin": m.o, "y26": y26, "years": years, "k": m.k, "deps": out, "activite": lv["activite"], "pop_scen": lv["pop_scen"],
             "regul_deps": V1.zones().get(prof, []), "ms": round((time.perf_counter() - t0) * 1000, 1)}
 
 

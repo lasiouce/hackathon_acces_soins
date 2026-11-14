@@ -3306,3 +3306,45 @@ déterministe pour tous les chiffres.
 de l'utilisateur·rice (« Commit sans mesure »). Vérifié sans clé : `/api/agent/etat` et `POST /api/agent` répondent
 « indisponible », panneau ouvert sur ordinateur et mobile, aucune erreur JavaScript ; test unitaire des garde-fous
 (`uv run python v2/agent/garde_fous.py`). Mesure ouverte dans `open.md`.
+
+## 2026-11-14 — Vidéo de présentation : Remotion + video-shotcraft, 3 fonctions, voix off IA
+
+**Décision.**
+- Vidéo motion de 57 s pour le jury, en 16:9, dans `v2/video/` (projet Remotion, rendu local).
+- Elle montre trois fonctions de la carte :
+  1. explorer un territoire (France → Auvergne-Rhône-Alpes → Puy-de-Dôme, fiche kinés : 1 071 en 2026, 1 731 en 2050, fourchette de 1 244 à 2 219) ;
+  2. simuler une politique (préréglage « Former 20 % de plus » : +19 110 kinés en France en 2050 par rapport à la tendance) ;
+  3. décrire une politique en une phrase (« Ce que j'ai compris », puis confirmation).
+- Le backtest et le mode expert ne sont pas montrés.
+- Images : de vraies captures de la carte en 2x (`v2/video/capture/capture.mjs`, Puppeteer) animées par une caméra 2D, plus des scènes de typographie et une carte des départements tracée (contours IGN/Etalab simplifiés).
+- Habillage : les tokens de la carte (IBM Plex Sans/Mono, fond `#F4F5F2`, encre `#16181A`, sélection `#1B3A8C`, couleurs des professions).
+- Voix off IA française : ElevenLabs, voix « Perle », modèle eleven_v4, via le connecteur. Le minutage des scènes et les sous-titres viennent de la transcription mot à mot (Scribe, `src/voix-words.json`).
+- Musique : une piste Mixkit (licence libre, sans attribution), en sourdine. Une version sans musique est aussi rendue.
+- Skills installés : `remotion-dev/skills` (commités) et `video-shotcraft`, en mode autonome. Shotcraft pèse 54 Mo : il est ignoré par git et se réinstalle avec `npx skills add Vincentwei1021/video-shotcraft`.
+
+**Pourquoi.** L'utilisateur·rice a choisi : jury, 60 à 75 s au plus, voix off IA, Remotion + shotcraft, visuels mixtes, et ces trois fonctions.
+- La voix dit « plus dix-neuf mille » (arrondi), l'écran affiche +19 110.
+- La styleframe HTML de shotcraft n'a pas été faite : la carte a déjà un système visuel figé (direction A, « sémiologie graphique »), repris tel quel.
+
+**Non fait.**
+- Pas de bruitages Freesound.
+- Pas de vraie capture vidéo du vol de caméra MapLibre : il est simulé par des fondus et des zooms entre captures.
+
+**Ce qui le renverserait.** Des chiffres de la carte qui changent (recapturer et mettre à jour les encarts), ou une durée imposée différente.
+
+## 2026-11-14 — Curseur d'année sur la carte : 2026 à 2050, pas annuel, défaut 2050
+
+**Décision.**
+- La carte a un curseur d'année (barre du haut, 2026 → 2050, pas de 1 an, repères 2030 · 2035 · 2040 · 2045 · 2050) et un bouton ▶ qui fait défiler les années.
+- **Valeur par défaut : 2050.** Sans toucher au curseur, l'écran est identique à avant.
+- L'année pilote la coloration, la légende, l'infobulle, le résumé « Tendance / Scénario », l'effet par famille de leviers, la fiche territoire (effectif, fourchette, écart et flux à l'année) et la comparaison. Le graphique garde l'axe jusqu'en 2050 et marque l'année d'un trait vertical.
+- `/api/carte` renvoie toutes les années en un appel : par département, des séries `b[]`, `s[]`, `p[]` sur `years` = 2026…2050. Les anciennes clés (`b26`, `s26`, `b50`, `s50`, `p26`, `p50`) sont conservées. Bouger le curseur ne refait aucun appel au serveur.
+- Les bornes de couleur de « Écart au tendanciel » sont calculées sur 2050 : les teintes restent comparables d'une année à l'autre.
+- L'année entre dans le lien partagé (`y=`, omis à 2050) et dans le contexte envoyé à l'agent. L'outil `carte` de l'agent prend un paramètre `annee` (défaut 2050).
+- Infirmiers (origine 2023) : la légende précise « observé jusqu'en 2023, 2026 déjà projeté ».
+
+**Pourquoi.** Demande de l'utilisateur·rice : lire 2030, 2035, 2045… et pas seulement 2050. Le jumeau calcule déjà chaque année (`engine.run` garde tous les états) : seul `/api/carte` réduisait à deux dates. Les années proches sont aussi les plus défendables : le backtest couvre environ 10 ans (décision « horizon de référence 2050 »).
+
+**Mesures.** `carte()` passe à environ 100 ms (kinés 106 ms, infirmiers 98 ms, toutes années), réponse 78 ko. Sous le seuil de 150 ms de la décision « écran carte ». Valeur 2050 inchangée (Puy-de-Dôme, kinés : 1 731).
+
+**Ce qui le renverserait.** Un passage au grain communal (le volume × 25 années imposerait une grille précalculée), ou un retour UAT montrant que le curseur fait lire les années lointaines comme plus sûres que les proches.

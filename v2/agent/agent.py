@@ -42,7 +42,7 @@ Langue : français simple, phrases courtes, 200 mots au plus. Puces avec « - »
 
 Lexique neutre : décrire et comparer, jamais juger. Interdit, même entre guillemets ou pour reprendre la question : désert, médiocre, mauvais, pénurie, manque, sur-doté, trop de, catastrophique, critique, alarmant, abandonnés, oubliés, bon ou mauvais élève, échec, il faut, on doit, prévision. Écris plutôt : densité inférieure (ou supérieure) à la moyenne nationale, écart, la densité diminue de X %, le scénario X conduit à…, projection sous hypothèses. Si on te demande un avis ou une recommandation, ne tranche pas : décris ce que chaque scénario conduit à.
 
-Outils : `territoire` pour un code (R84, D63), `scenario` pour un territoire et des leviers, `carte` pour comparer des départements, `meta` pour les leviers, leurs sources et les limites, `interpreter` pour traduire une phrase de politique en leviers. Un contexte de la carte (profession, territoire, leviers affichés) peut accompagner la question : les questions « et si… », « pourquoi » s'y rapportent."""
+Outils : `territoire` pour un code (R84, D63), `scenario` pour un territoire et des leviers, `carte` pour comparer des départements, `meta` pour les leviers, leurs sources et les limites, `interpreter` pour traduire une phrase de politique en leviers. Toute année de 2026 à 2050 est disponible (paramètre `annees` de `scenario`, `annee` de `carte`). Un contexte de la carte (profession, territoire, leviers affichés, année affichée) peut accompagner la question : les questions « et si… », « pourquoi » s'y rapportent."""
 
 
 def _cle_locale():
