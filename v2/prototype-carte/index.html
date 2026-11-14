@@ -1,63 +1,67 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-fr-scheme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Offre libérale — carte</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="format-detection" content="telephone=no">
+<title>Offre de soins libérale — carte</title>
+<!-- Système de design de l'État (DSFR 1.15.4, copie locale dans dsfr/ ; décision du 2026-11-14 « Carte : habillage DSFR ») -->
+<link rel="stylesheet" href="dsfr/dsfr.min.css">
+<link rel="icon" href="dsfr/favicon/favicon.svg" type="image/svg+xml">
+<link rel="shortcut icon" href="dsfr/favicon/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="dsfr/favicon/apple-touch-icon.png">
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <style>
-/* Option 1, direction A « sémiologie graphique » (décision du 2026-11-14) : colonnes fixes, fond blanc, encre noire,
-   une gamme de valeur bistre ↔ pétrole, jamais rouge ni vert ; deux panneaux dépliables (scénario, territoire).
-   La liste classée sous la carte est retirée (décision du 2026-11-14 : elle répétait le panneau de droite). */
+/* Option 1 (décision du 2026-11-14) : colonnes fixes, deux panneaux dépliables (scénario, territoire).
+   Habillage DSFR (décision du 2026-11-14) : l'interface prend les composants et les couleurs du DSFR ;
+   les données gardent la sémiologie de la direction A (gamme bistre ↔ pétrole, jamais rouge ni vert). */
 :root{
-  --paper:#FFFFFF; --ink:#111111; --mute:#3A3F44; --faint:#6B7075; --rule:#111111; --hair:#DDDDDA; --wash:#F4F4F2;
-  --sel:#0E4D64; --sea:#DCE3E7; --prof:#3D4F9E;
+  --paper:var(--background-default-grey); --ink:var(--text-title-grey); --mute:var(--text-mention-grey); --faint:var(--text-mention-grey);
+  --rule:var(--border-default-grey); --hair:var(--border-default-grey); --wash:var(--background-alt-grey);
+  --sel:var(--text-action-high-blue-france); --act:var(--background-action-high-blue-france); --sea:#DCE3E7; --prof:#3D4F9E;
   --lw:clamp(22rem,25vw,26rem); --rw:clamp(30rem,36vw,36rem);   /* panneaux élargis : plus de défilement horizontal */
 }
-html{font-size:15px}html.xl{font-size:17.5px}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);
-  font:1rem/1.45 "Atkinson Hyperlegible",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-button,input,select{font:inherit;color:inherit}
+html.xl{font-size:18.75px}   /* racine du DSFR (16 px) : ses images à taille fixe (interrupteur, coche) tombent juste */
+html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--text-default-grey)}
 [hidden]{display:none!important}
-:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+/* le DSFR ne pose pas de box-sizing global : les blocs de la page et la liste déroulante comptent bordure et marge intérieure */
+#app,#levers,#side,.panel,#legend,#top,#yr,#nl,#toast,#tip,#askf,#asklog,.chathead,.fr-select{box-sizing:border-box}
 .num{font-variant-numeric:tabular-nums}
-.btn{border:1px solid var(--rule);background:var(--paper);padding:.3rem .7rem;cursor:pointer;min-height:2.2rem;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
-.btn:hover{background:var(--wash)}
-.fold{width:2.6rem;height:2.6rem;flex:none;border:1px solid var(--rule);background:var(--paper);cursor:pointer;font-size:1.1rem;line-height:1;display:grid;place-items:center}
+p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses marges elle-même */
+.fold{width:2.5rem;height:2.5rem;flex:none;border:0;box-shadow:inset 0 0 0 1px var(--border-default-grey);background:var(--paper);color:var(--sel);cursor:pointer;font-size:1.1rem;line-height:1;display:grid;place-items:center}
 .fold:hover{background:var(--wash)}
-.h4{font-weight:700;margin:0 0 .4rem}
+.h4{font-weight:700;margin:0 0 .4rem;color:var(--ink)}
 .note{font-size:.87rem;color:var(--mute);margin:.4rem 0 0}
 
 /* ---------- grille ---------- */
-#app{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);height:100dvh}
-#top{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.1rem;padding:.6rem 1.1rem .5rem;border-bottom:2px solid var(--rule);z-index:20}
-#brand{font-weight:700;font-size:1.1rem;white-space:nowrap;display:flex;align-items:center;gap:.5rem}
-#brand i{width:.6rem;height:.6rem;background:var(--prof)}
-#profs{display:flex;flex-wrap:wrap;gap:.1rem .8rem}
-#profs button{border:0;background:none;padding:.25rem 0;cursor:pointer;color:var(--mute);border-bottom:2px solid transparent;display:flex;align-items:center;gap:.35rem}
-#profs button i{width:.5rem;height:.5rem;border-radius:50%}
-#profs button[aria-pressed=true]{color:var(--ink);font-weight:700;border-bottom-color:var(--sel)}
-#profs button[disabled]{opacity:.45;cursor:not-allowed}
+#app{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto auto minmax(0,1fr);height:100dvh}
+#app>.fr-header{grid-column:1/-1;z-index:25}
+.fr-header__service-title{font-size:1.15rem}
+#app>.fr-header .fr-header__body-row{padding:.25rem 0}
+#app>.fr-header .fr-header__tools{display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:.6rem}
+#app>.fr-header #save{margin:0}
+.fr-header__service-tagline{font-size:.87rem}
+#top{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.1rem;padding:.55rem 1.1rem;border-bottom:1px solid var(--rule);background:var(--paper);z-index:20}
+#profs{display:flex;flex-wrap:wrap;gap:.3rem .4rem;align-items:center}
+#profs .fr-tag{margin:0}
+#profs .fr-tag i{width:.55rem;height:.55rem;border-radius:50%;margin-right:.4rem;flex:none}
 #profsel{display:none}
 /* curseur d'année (décision du 2026-11-14) : toutes les années sont déjà dans /api/carte, bouger ne refait aucun appel */
-#yr{display:flex;align-items:center;gap:.5rem;border:1px solid var(--rule);padding:.15rem .5rem .15rem .2rem}
-#yr button{border:0;background:none;width:2rem;height:2rem;cursor:pointer;font-size:.85rem}
+#yr{display:flex;align-items:center;gap:.5rem;box-shadow:inset 0 0 0 1px var(--border-default-grey);padding:.15rem .6rem .15rem .2rem}
+#yr button{border:0;background:none;width:2rem;height:2rem;cursor:pointer;font-size:.85rem;color:var(--sel)}
 #yr button:hover{background:var(--wash)}
-#yr input{width:11rem;accent-color:var(--sel)}
-#yr b{font-size:1.15rem;min-width:2.8rem;text-align:right}
-#crumb{display:flex;align-items:center;gap:.2rem;white-space:nowrap;color:var(--mute);min-width:0;overflow:hidden}
-#crumb button{border:0;background:none;padding:.2rem .3rem;cursor:pointer;color:var(--sel);text-decoration:underline;text-underline-offset:2px}
-#crumb b{padding:.2rem .3rem;color:var(--ink)}
+#yr input{width:11rem;accent-color:var(--act)}
+#yr b{font-size:1.15rem;min-width:2.8rem;text-align:right;color:var(--ink)}
+#crumb{display:flex;align-items:center;gap:.2rem;white-space:nowrap;color:var(--mute);min-width:0;overflow:hidden;font-size:.87rem}
+#crumb button{border:0;background:none;padding:.2rem .3rem;cursor:pointer;color:var(--text-default-grey);text-decoration:underline;text-underline-offset:2px}
+#crumb b{padding:.2rem .3rem;color:var(--sel);font-weight:400}
 #crumb i{font-style:normal}
 .spacer{flex:1}
 #search{position:relative;width:17rem}
-#search label{display:flex;align-items:center;gap:.4rem;border-bottom:1px solid var(--rule);padding:.15rem 0}
-#search input{border:0;outline:none;background:transparent;flex:1;min-width:0;padding:.2rem 0}
-#search kbd{font:inherit;font-size:.8rem;color:var(--faint);border:1px solid var(--hair);padding:0 .3rem}
+#search label{display:flex;align-items:center;gap:.4rem;margin:0}
+#search .fr-input{flex:1;min-width:0;margin:0}
+#search kbd{font:inherit;font-size:.8rem;color:var(--faint);box-shadow:inset 0 0 0 1px var(--border-default-grey);padding:0 .3rem}
 #results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--paper);border:1px solid var(--rule);padding:.2rem;max-height:50vh;overflow:auto;display:none;z-index:30}
 #results.on{display:block}
 #results button{display:flex;justify-content:space-between;gap:.6rem;width:100%;border:0;background:none;padding:.4rem .5rem;text-align:left;cursor:pointer}
@@ -67,7 +71,7 @@ button,input,select{font:inherit;color:inherit}
 /* ---------- panneau Scénario (gauche) ---------- */
 #levers{width:var(--lw);border-right:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
 #levers>header{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem .8rem .6rem 1.1rem;border-bottom:1px solid var(--hair)}
-#levers h2{margin:0;font-size:1.1rem}
+#levers h2{margin:0;font-size:1.25rem;line-height:1.5rem}
 #levers .body{padding:.9rem 1.1rem 1.2rem;display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;flex:1;min-height:0}
 #levers .body *{min-width:0;overflow-wrap:anywhere}   /* sources et libellés longs : à la ligne plutôt que hors du panneau */
 #levsum{display:none}
@@ -75,15 +79,14 @@ button,input,select{font:inherit;color:inherit}
 #levers.closed>header{flex-direction:column;border:0;padding:.6rem .3rem}
 #levers.closed h2,#levers.closed .body{display:none}
 #levers.closed #levsum,#side.closed #sidesum{display:block;writing-mode:vertical-rl;transform:rotate(180deg);font-weight:700;white-space:nowrap;margin:.8rem auto}
-#nlf .nlrow{display:flex;gap:.4rem}
-#nlf input{flex:1;min-width:0;border:1px solid var(--rule);padding:.4rem .5rem}
-#nlf button{border:1px solid var(--rule);background:var(--ink);color:var(--paper);padding:0 .7rem;cursor:pointer}
-#scen{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:.6rem 0;font-size:.93rem}
+#nlf .nlrow{display:flex;gap:.4rem;align-items:flex-end}
+#nlf .fr-input{flex:1;min-width:0;margin:0}
+#nlf .fr-label{margin-bottom:.4rem}
+#scen{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:.8rem 0;font-size:.93rem}
 #scen b{font-size:1rem}
-#scen .acts{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
-#scen .acts button{font-size:.85rem;border:1px solid var(--rule);background:var(--paper);padding:.2rem .5rem;cursor:pointer;min-height:2rem}
-#scen .acts button:hover{background:var(--wash)}
-#scen .acts .preset{background:#EEF4F6}
+#scen .acts{margin-top:.8rem}
+#scen .acts .fr-btns-group{margin-bottom:0}
+#scen .fr-tags-group{margin-top:.2rem}
 .q{border-top:1px solid var(--hair);padding:.7rem 0 .2rem}
 .q>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:.1rem .5rem;align-items:baseline}
 .q>summary::-webkit-details-marker{display:none}
@@ -96,14 +99,21 @@ button,input,select{font:inherit;color:inherit}
 .q .more>summary{cursor:pointer;color:var(--mute);font-size:.87rem}
 .q .more .lev{margin:.5rem 0}
 .ic{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;font-size:.8rem;color:var(--mute);margin-top:.3rem}
-.ic span{border:1px solid var(--hair);padding:0 .35rem}
-.ic .src{font:inherit;font-size:.8rem;background:none;cursor:pointer;padding:0 .35rem;border:1px solid var(--mute);color:var(--mute)}
-.ic .src.sup{border-style:dashed}
+.ic .fr-badge{margin:0}
+.ic .src{margin:0}
+.ic .src.sup{box-shadow:inset 0 0 0 1px var(--border-default-grey);background:var(--paper)}
 .srcbox{display:none;font-size:.85rem;color:var(--mute);margin-top:.3rem;border-left:2px solid var(--hair);padding-left:.5rem}.srcbox.on{display:block}
-.lev select{width:100%;padding:.25rem .3rem;margin-top:.25rem;border:1px solid var(--rule);background:var(--paper)}
-.lev .sw,.main .sw{display:flex;gap:.5rem;align-items:center;font-size:.93rem}
-.lev p:empty,.main p:empty{display:none}
-input[type=range]{width:100%;accent-color:var(--sel);margin:0}
+.lev .fr-select{margin-top:.25rem}
+.fr-toggle .fr-toggle__label{font-size:.93rem;font-weight:700;color:var(--ink)}
+.lev .fr-toggle .fr-toggle__label{font-weight:400}
+.lev p:empty,.main p:empty,.pm p:empty{display:none}
+.fr-range-group{margin:0}
+/* la valeur est dite en phrase au-dessus du curseur : sortie et bornes chiffrées du DSFR masquées (multiplicateurs bruts) ;
+   la sortie garde sa hauteur, la piste du DSFR est placée en dessous d'elle */
+.fr-range .fr-range__output{visibility:hidden!important;height:.4rem}
+.fr-range[data-fr-js-range]:before,.fr-range[data-fr-js-range]:after{top:calc(.4rem + .375rem)}
+.fr-range.fr-range--sm[data-fr-js-range]:before,.fr-range.fr-range--sm[data-fr-js-range]:after{top:calc(.4rem + .5rem)}
+.fr-range .fr-range__min,.fr-range .fr-range__max{display:none}
 .nm{font-size:.85rem;color:var(--mute);border-top:1px solid var(--rule);padding-top:.6rem;margin:0}
 .nm b{color:var(--ink)}
 
@@ -112,22 +122,21 @@ input[type=range]{width:100%;accent-color:var(--sel);margin:0}
 #mapwrap{position:relative;flex:1 1 auto;min-height:12rem;background:var(--sea)}
 #map{position:absolute;inset:0}
 /* légende réduite (demande du 2026-11-14) : bascule d'indicateur et gamme ; le titre reste pour les lecteurs d'écran */
-#legend{position:absolute;left:.8rem;bottom:.8rem;width:min(26rem,calc(100% - 4.6rem));background:var(--paper);border:1px solid var(--rule);padding:.5rem .7rem .45rem;font-size:.87rem;z-index:2}
-#var{display:flex;gap:.9rem;margin-bottom:1.5rem;flex-wrap:wrap}
+#legend{position:absolute;left:.8rem;bottom:.8rem;width:min(28rem,calc(100% - 4.6rem));background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
+#var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:wrap}
+#var .fr-tag{margin:0}
 #lt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#var button{border:0;background:none;padding:.1rem 0;cursor:pointer;color:var(--mute);border-bottom:2px solid transparent}
-#var button[aria-pressed=true]{color:var(--ink);font-weight:700;border-bottom-color:var(--sel)}
 #rampbox{position:relative}
 #ramp{display:flex;height:.65rem}
 #ramp span{flex:1}
 #mark{position:absolute;top:-1.25rem;transform:translateX(-50%);font-size:.8rem;font-weight:700;white-space:nowrap;display:none}
-#mark:after{content:"";position:absolute;left:50%;top:1.15rem;width:2px;height:1.1rem;background:var(--ink)}
+#mark:after{content:"";position:absolute;left:50%;top:1.15rem;width:2px;height:1.1rem;background:var(--text-title-grey)}
 #ticks{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mute);margin-top:.2rem}
 #legend .note{font-size:.8rem}
 /* accès au chat : icône à gauche des boutons de zoom */
-#askbtn{position:absolute;right:4rem;top:.8rem;width:2.6rem;height:2.6rem;background:var(--paper);border:1px solid var(--rule);cursor:pointer;display:grid;place-items:center;z-index:2}
+#askbtn{position:absolute;right:4rem;top:.8rem;width:2.5rem;height:2.5rem;background:var(--paper);color:var(--sel);border:0;box-shadow:0 2px 6px 0 rgba(0,0,18,.16);cursor:pointer;display:grid;place-items:center;z-index:2}
 #askbtn:hover{background:var(--wash)}
-#askbtn[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+#askbtn[aria-pressed=true]{background:var(--act);color:var(--text-inverted-blue-france)}
 /* panneau Scénario simplifié : nom du paramètre, valeur, curseur */
 .pm{padding:.55rem 0;border-top:1px solid var(--hair)}
 .pm:first-child{border-top:0;padding-top:0}
@@ -139,17 +148,18 @@ input[type=range]{width:100%;accent-color:var(--sel);margin:0}
 #levmore[open]>summary{margin-bottom:.8rem}
 #levmore>*+*{margin-top:1rem}
 #levfine .fam{border-top:1px solid var(--hair);padding-top:.6rem}
-#zoom{position:absolute;right:.8rem;top:.8rem;display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--rule);z-index:2}
-#zoom button{width:2.6rem;height:2.6rem;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+#zoom{position:absolute;right:.8rem;top:.8rem;display:flex;flex-direction:column;background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);z-index:2}
+#zoom button{width:2.5rem;height:2.5rem;border:0;background:none;cursor:pointer;display:grid;place-items:center;color:var(--sel)}
 #zoom button+button{border-top:1px solid var(--hair)}
 #zoom button:hover{background:var(--wash)}
 
 /* ---------- panneau Territoire (droite) : onglets Territoire, Comparer, Expert ---------- */
 #side{width:var(--rw);border-left:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
 #side>header{display:flex;align-items:flex-end;gap:.6rem;padding:.5rem .8rem 0;border-bottom:1px solid var(--rule)}
-#tabs{display:flex;gap:1rem;flex:1}
-#tabs button{border:0;background:none;padding:.35rem 0 .45rem;cursor:pointer;color:var(--mute);border-bottom:3px solid transparent}
-#tabs button[aria-selected=true]{color:var(--ink);font-weight:700;border-bottom-color:var(--sel)}
+#tabs{display:flex;gap:.25rem;flex:1;flex-wrap:wrap}
+#tabs button{border:0;background:var(--background-action-low-blue-france);padding:.45rem .8rem;cursor:pointer;color:var(--text-title-grey);font-weight:700;font-size:.93rem;box-shadow:inset 0 -1px 0 var(--border-default-grey)}
+#tabs button:hover{background:var(--background-action-low-blue-france-hover)}
+#tabs button[aria-selected=true]{background:var(--paper);color:var(--sel);box-shadow:inset 0 2px 0 var(--border-active-blue-france),inset 1px 0 0 var(--border-default-grey),inset -1px 0 0 var(--border-default-grey)}
 #side>header .fold{margin-bottom:.35rem}
 #sidesum{display:none}
 body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
@@ -161,23 +171,22 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #card h3{margin:0;font-size:1.6rem;line-height:1.15;text-wrap:balance}
 #card .sub{color:var(--mute);font-size:.87rem}
 #card section{padding:.7rem 0;border-top:1px solid var(--hair)}
-#card .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;border-top:2px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:.8rem}
+#card .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;border-top:2px solid var(--border-plain-blue-france);border-bottom:1px solid var(--rule);margin-top:.8rem}
 .kpis span{display:block;font-size:.85rem;color:var(--mute)}
-.kpis b{font-size:1.85rem;font-weight:700;letter-spacing:-.01em}
+.kpis b{font-size:1.85rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
 .kpis em{display:block;font-style:normal;font-size:.8rem;color:var(--mute)}
 .kpis div:last-child b{color:var(--sel)}
-#card .x{border:0;background:none;cursor:pointer;padding:.2rem;color:var(--mute);align-self:flex-start}
-#card .scope{display:inline-flex;margin-top:.6rem;border:1px solid var(--rule)}
-#card .scope button{border:0;background:var(--paper);padding:.25rem .7rem;cursor:pointer;min-height:2.2rem}
-#card .scope button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+#card .x{border:0;background:none;cursor:pointer;padding:.2rem;color:var(--sel);align-self:flex-start}
+#card .scope{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+#card .scope .fr-tag{margin:0}
 #chart{width:100%;display:block}
 .flows{display:grid;gap:.35rem}
 .flow{display:grid;grid-template-columns:7rem 1fr auto;align-items:center;gap:.5rem;font-size:.93rem}
 .flow .bar{height:.55rem;background:var(--wash);position:relative}
 .flow .bar i{position:absolute;top:0;bottom:0;background:var(--sel)}
-.flow .bar:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink)}
+.flow .bar:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--text-title-grey)}
 .flow output{text-align:right}
-.cardact{display:flex;gap:.5rem;flex-wrap:wrap}
+.cardact .fr-btns-group{margin:0}
 .empty h3{margin:.2rem 0 .4rem;font-size:1.2rem}
 .empty p{color:var(--mute);margin:0}
 #cmppanel table,#xbody table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.87rem}
@@ -190,68 +199,60 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 .levs code{font-size:.8rem;color:var(--mute);overflow-wrap:anywhere}
 .levs .v,.levs .st{text-align:right}.levs .st{color:var(--mute)}
 .levs p{grid-column:1/-1;margin:.1rem 0 0;color:var(--mute);font-size:.8rem}
-#cmppanel .x{border:0;background:none;cursor:pointer;padding:.1rem .3rem}
-#pins .row{display:flex;gap:.4rem;flex-wrap:wrap;margin:.6rem 0}
-#pins button,#xp nav button{border:1px solid var(--rule);background:var(--paper);padding:.2rem .6rem;cursor:pointer;min-height:2rem}
-#pins button[disabled]{opacity:.45;cursor:not-allowed}
-#xp nav{display:flex;gap:.4rem;margin-bottom:.6rem}
-#xp nav button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+#cmppanel .x,#pins [data-rm]{border:0;background:none;cursor:pointer;padding:.1rem .3rem;color:var(--sel)}
+#pins .row{margin:.6rem 0}
+#pins .fr-btns-group{margin:0}
+#xp nav{display:flex;gap:.4rem;margin-bottom:.8rem}
+#xp nav .fr-tag{margin:0}
 #lat{margin-top:.8rem;font-size:.8rem;color:var(--mute)}
 /* assistant de simulation (interface de chatbot) : il traduit une politique en leviers et explique ; il ne calcule rien */
 #ask.panel{display:flex;flex-direction:column;padding:0;overflow:hidden}
 #ask[hidden]{display:none!important}
 .chathead{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.1rem;border-bottom:1px solid var(--hair)}.chathead b{flex:1;font-size:1rem}
-#asknew{font:inherit;font-size:.8rem;border:1px solid var(--rule);background:var(--paper);padding:.2rem .6rem;cursor:pointer}
 #asklog{flex:1;min-height:0;overflow:auto;padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:1rem;font-size:.95rem}
-#askwelcome .wt{font-size:1.45rem;font-weight:700;line-height:1.2;margin:.3rem 0 .4rem}
+#askwelcome .wt{font-size:1.5rem;font-weight:700;line-height:1.25;margin:.3rem 0 .4rem;color:var(--ink)}
 #askwelcome .wh{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin:1.2rem 0 .45rem}
 #askwelcome .st{color:var(--mute);font-size:.9rem;margin:0}
 .cards{display:grid;gap:.45rem}
-.cards button{text-align:left;font:inherit;font-size:.92rem;line-height:1.35;border:1px solid var(--hair);background:var(--paper);padding:.6rem .8rem;cursor:pointer}
-.cards button:hover,.cards button:focus-visible{border-color:var(--ink);background:var(--wash)}
-.cards.mini{display:flex;flex-wrap:wrap}.cards.mini button{font-size:.84rem;padding:.3rem .65rem}
-#asklog .u{align-self:flex-end;max-width:85%;background:var(--ink);color:var(--paper);padding:.5rem .8rem;white-space:pre-wrap}
-#asklog .a{align-self:stretch;white-space:normal;border-left:3px solid var(--sel);padding:.1rem 0 .1rem .85rem}
-#asklog .askapply{display:block;margin-top:.6rem;font:inherit;font-size:.86rem;font-weight:700;border:1px solid var(--ink);background:var(--paper);padding:.35rem .75rem;cursor:pointer}
-#asklog .askapply:hover{background:var(--ink);color:var(--paper)}
-#asklog .a .chk{display:block;margin-top:.45rem;font-size:.78rem;color:var(--mute)}#asklog .a .chk.warn{color:#6E5A36}
+.cards button{text-align:left;font:inherit;font-size:.92rem;line-height:1.35;border:0;box-shadow:inset 0 0 0 1px var(--border-default-grey),inset 0 -4px 0 var(--border-plain-blue-france);background:var(--paper);color:var(--text-title-grey);padding:.65rem .9rem .8rem;cursor:pointer}
+.cards button:hover{background:var(--background-default-grey-hover)}
+.cards.mini{display:flex;flex-wrap:wrap}.cards.mini .fr-tag{margin:0}
+#asklog .u{align-self:flex-end;max-width:85%;background:var(--background-action-low-blue-france);color:var(--text-title-grey);padding:.5rem .8rem;white-space:pre-wrap}
+#asklog .a{align-self:stretch;white-space:normal;border-left:3px solid var(--border-plain-blue-france);padding:.1rem 0 .1rem .85rem}
+#asklog .askapply{margin-top:.6rem}
+#asklog .a .chk{display:block;margin-top:.45rem;font-size:.78rem;color:var(--mute)}#asklog .a .chk.warn{color:var(--text-default-warning)}
 #asklog .st{color:var(--mute);font-size:.87rem;margin:0}
 #asklog .typing::after{content:"";display:inline-block;width:1.2em;text-align:left;animation:dots 1.2s steps(4) infinite}
 @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
 #askf{display:flex;gap:.5rem;align-items:flex-end;padding:.7rem 1.1rem .4rem;border-top:1px solid var(--hair)}
-#askf textarea{flex:1;min-width:0;resize:none;font:inherit;line-height:1.35;border:1px solid var(--rule);padding:.55rem .7rem;max-height:140px}
-#askf button{height:2.6rem;border:1px solid var(--rule);background:var(--ink);color:var(--paper);padding:0 .9rem;cursor:pointer}
-#askf button[disabled]{opacity:.45;cursor:not-allowed}
+#askf textarea{flex:1;min-width:0;resize:none;margin:0;max-height:140px}
 #asklog .plan{white-space:normal;font-size:.84rem;border:1px solid var(--hair);background:var(--wash);padding:.5rem .7rem;margin-bottom:.6rem}
 #asklog .plan ol{list-style:none;margin:.3rem 0 0;padding:0;display:grid;gap:.15rem}#asklog .plan li span{display:inline-block;min-width:5.2rem;color:var(--faint)}
 #asklog .plan details summary{cursor:pointer}#asklog .plan dl{margin:.4rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .6rem}#asklog .plan dt{color:var(--faint)}#asklog .plan dd{margin:0}
 #asklog .md p{margin:0 0 8px}#asklog .md h4{margin:12px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
 #asklog .md ul{margin:0 0 6px;padding-left:18px}#asklog .md li{margin:2px 0}
-#asklog .follow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}#asklog .askfollow{font:inherit;font-size:12.5px;text-align:left;border:1px solid var(--hair);background:var(--paper);padding:4px 10px;cursor:pointer}
-#asklog .askfollow:hover{border-color:var(--sel)}
+#asklog .follow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}#asklog .askfollow{margin:0;text-align:left}
 .askfig{margin:6px 0 10px;background:var(--paper);border:1px solid var(--hair);padding:8px 10px}
 .askfig figcaption{font-size:12.5px;font-weight:600}.askfig figcaption small{display:block;font-weight:400;color:var(--mute)}
 .askfig svg{width:100%;height:auto;display:block;margin-top:4px}
 .askfig .band{fill:var(--sel);opacity:.12}.askfig .tend{fill:none;stroke:var(--faint);stroke-width:1.6;stroke-dasharray:4 3}
 .askfig .scn{fill:none;stroke:var(--sel);stroke-width:2.2}.askfig .s1{stroke:#8C5A1B}.askfig .s2{stroke:#2E7D6B}
-.askfig .obs{fill:var(--ink)}.askfig .ax{stroke:var(--hair)}.askfig .t{font-size:10.5px;fill:var(--mute)}
+.askfig .obs{fill:var(--text-title-grey)}.askfig .ax{stroke:var(--hair)}.askfig .t{font-size:10.5px;fill:var(--mute)}
 .askfig rect.pos{fill:var(--sel)}.askfig rect.neg{fill:#B88A4E}
 .askfig .leg{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--mute);margin-top:2px}.askfig .lg::before{content:"";display:inline-block;width:14px;height:3px;margin-right:4px;vertical-align:middle;background:var(--sel)}
-.askfig .lg.tend::before{background:var(--faint)}.askfig .lg.band::before{height:8px;opacity:.25}.askfig .lg.obs::before{width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.askfig .lg.tend::before{background:var(--faint)}.askfig .lg.band::before{height:8px;opacity:.25}.askfig .lg.obs::before{width:5px;height:5px;border-radius:50%;background:var(--text-title-grey)}
 .askfoot{margin:0;padding:0 1.1rem .6rem;font-size:.72rem;color:var(--faint)}
 
 /* ---------- survol, message, dialogue ---------- */
-#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);padding:.45rem .7rem;font-size:.93rem;opacity:0;transition:opacity .12s;z-index:50;white-space:nowrap}
+#tip{position:fixed;pointer-events:none;background:var(--background-contrast-grey);color:var(--text-title-grey);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.45rem .7rem;font-size:.93rem;opacity:0;transition:opacity .12s;z-index:50;white-space:nowrap}
 #tip b{font-weight:700}
-#toast{position:fixed;left:50%;top:4.2rem;transform:translate(-50%,-6px);opacity:0;background:var(--paper);border:1px solid var(--rule);padding:.45rem .8rem;transition:all .25s;pointer-events:none;z-index:60;max-width:calc(100vw - 2rem)}
+#toast{position:fixed;left:50%;top:8rem;transform:translate(-50%,-6px);opacity:0;background:var(--background-contrast-info);color:var(--text-default-info);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.55rem .9rem;transition:all .25s;pointer-events:none;z-index:60;max-width:calc(100vw - 2rem)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-#nl{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(36rem,calc(100vw - 2rem));max-height:80vh;overflow-y:auto;z-index:70;padding:1rem 1.2rem;font-size:.93rem;background:var(--paper);border:2px solid var(--rule);box-shadow:0 10px 40px -10px rgba(0,0,0,.35)}
+#nl{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(36rem,calc(100vw - 2rem));max-height:80vh;overflow-y:auto;z-index:70;padding:1.5rem 1.5rem 1.2rem;font-size:.93rem;background:var(--paper);box-shadow:0 6px 18px 0 rgba(0,0,18,.16)}
 #nl.on{display:block}
-#nl h3{font-size:1.1rem;margin:0 0 .4rem}#nl h4{font-size:.93rem;margin:.8rem 0 .25rem}#nl ul{margin:0;padding-left:1.1rem}#nl li{margin:.15rem 0}
+#nl h3{font-size:1.4rem;margin:0 0 .6rem}#nl h4{font-size:.93rem;margin:.8rem 0 .25rem}#nl ul{margin:0;padding-left:1.1rem}#nl li{margin:.15rem 0}
 #nl .said{color:var(--mute);font-style:italic;margin:0 0 .5rem}
-#nl .acts{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
-#nl .acts button{border:1px solid var(--rule);background:var(--paper);padding:.35rem .8rem;cursor:pointer}
-#nl .acts .go{background:var(--ink);color:var(--paper)}
+#nl .acts{margin-top:1.2rem}#nl .acts .fr-btns-group{margin:0}
 .maplibregl-ctrl-attrib{font-size:.7rem}
 
 /* ---------- écrans moyens ---------- */
@@ -262,11 +263,12 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
   html,body{overflow-x:hidden;overflow-y:auto;height:auto}
   #app{display:block;height:auto}
   #top{position:sticky;top:0;background:var(--paper);gap:.4rem .6rem;padding:.5rem .6rem}
-  #brand,#crumb,.spacer,#save span{display:none}
+  #crumb,#save span{display:none}
+  #app>.fr-header .fr-header__body-row{flex-wrap:wrap}#app>.fr-header .fr-header__tools{flex:1 1 100%;padding-bottom:.4rem}
   #yr{order:5;flex:1 1 100%}#yr input{flex:1;width:auto}
-  #search{width:auto;flex:1 1 10rem}
-  #profs{flex:0 0 auto}#profs button{display:none}
-  #profsel{display:block;height:2.75rem;border:1px solid var(--rule);background:var(--paper);padding:0 .5rem;max-width:11rem}
+  #search{width:auto;flex:1 1 10rem}#search kbd{display:none}
+  #profs{flex:0 0 auto}#profs .fr-tag{display:none}
+  #profsel{display:block;max-width:12rem;margin:0}
   #levers,#side{width:auto!important;border:0;border-bottom:1px solid var(--rule)}
   #levers.closed>header,#side.closed>header{flex-direction:row;padding:.5rem .8rem}
   #levers.closed h2{display:block}
@@ -274,7 +276,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
   #mapwrap{height:58dvh;flex:none}
   .panel{overflow:visible}
   #asklog{max-height:70vh}
-  #app{display:flex;flex-direction:column}#top{order:-2}body.askon #side{order:-1}   /* mobile : l'assistant d'abord */
+  #app{display:flex;flex-direction:column}#app>.fr-header{order:-3}#top{order:-2}body.askon #side{order:-1}   /* mobile : l'assistant d'abord */
   #legend{width:calc(100% - 4.6rem)}
   #legend .note{display:none}
 }
@@ -283,7 +285,25 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 </head>
 <body>
 <div id="app">
-<header id="top">
+<header role="banner" class="fr-header">
+  <div class="fr-header__body"><div class="fr-container--fluid" style="padding:0 1.1rem"><div class="fr-header__body-row">
+    <div class="fr-header__brand fr-enlarge-link">
+      <div class="fr-header__brand-top"><div class="fr-header__logo"><p class="fr-logo">République<br>Française</p></div></div>
+      <div class="fr-header__service">
+        <a href="/" title="Accueil — Offre de soins libérale"><p class="fr-header__service-title">Offre de soins libérale</p></a>
+        <p class="fr-header__service-tagline">Projection des professionnels de santé libéraux, 2026–2050, de la région au département</p>
+      </div>
+    </div>
+    <div class="fr-header__tools" id="tools">
+      <div id="search">
+        <label><input id="q" class="fr-input" type="search" placeholder="Département, région…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="results" aria-label="Rechercher un territoire"><kbd>/</kbd></label>
+        <div id="results" role="listbox"></div>
+      </div>
+      <button class="fr-btn fr-btn--secondary fr-btn--sm" id="save" title="Copie un lien qui restaure ce scénario"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" style="margin-right:.4rem"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2L8 3.8"/><path d="M9.5 6.5a3 3 0 0 0-4.2 0L2.7 9.1a3 3 0 0 0 4.2 4.2L8 12.2"/></svg><span>Lien du scénario</span></button>
+    </div>
+  </div></div></div>
+</header>
+<div id="top">
   <div id="profs" role="group" aria-label="Profession"></div>
   <div id="yr" title="Année affichée sur la carte, la liste, la fiche et le résumé">
     <button id="yplay" aria-label="Faire défiler les années">▶</button>
@@ -291,13 +311,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
     <datalist id="yticks"><option value="2030"></option><option value="2035"></option><option value="2040"></option><option value="2045"></option><option value="2050"></option></datalist>
     <b id="yv" class="num">2050</b></div>
   <nav id="crumb" aria-label="Fil d'Ariane"></nav>
-  <div class="spacer"></div>
-  <div id="search">
-    <label><input id="q" placeholder="Rechercher une commune, un département, une région" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="results" aria-label="Rechercher un territoire"><kbd>/</kbd></label>
-    <div id="results" role="listbox"></div>
-  </div>
-  <button class="btn" id="save" title="Copie un lien qui restaure ce scénario"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2L8 3.8"/><path d="M9.5 6.5a3 3 0 0 0-4.2 0L2.7 9.1a3 3 0 0 0 4.2 4.2L8 12.2"/></svg><span>Lien du scénario</span></button>
-</header>
+</div>
 
 <aside id="levers" aria-label="Scénario">
   <header><h2>Scénario</h2><span id="levsum"></span>
@@ -306,8 +320,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
     <div id="levfam"></div>
     <!-- panneau simplifié (demande du 2026-11-14) : par défaut, seuls les paramètres et leurs curseurs ; le reste est replié ici -->
     <details id="levmore"><summary>Plus : phrase, résumé, réglages fins, sources</summary>
-      <form id="nlf" autocomplete="off"><label for="nlq" class="h4" style="display:block">Décrire une politique en une phrase</label>
-        <div class="nlrow"><input id="nlq" placeholder="ex. former 20 % de kinés en plus en Auvergne" maxlength="500"><button>Traduire</button></div></form>
+      <form id="nlf" autocomplete="off"><label for="nlq" class="fr-label">Décrire une politique en une phrase</label>
+        <div class="nlrow"><input id="nlq" class="fr-input" placeholder="ex. former 20 % de kinés en plus en Auvergne" maxlength="500"><button class="fr-btn">Traduire</button></div></form>
       <div id="scen"></div>
       <div id="levfine"></div>
       <p class="nm" id="nonmod"></p>
@@ -325,7 +339,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button data-v="evo" aria-pressed="true">Évolution 2026 → <span class="yl">2050</span></button><button data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button data-v="dens" aria-pressed="false">Densité <span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Évolution 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button></div>
       <div id="lt"></div>
       <div id="rampbox"><div id="mark"></div><div id="ramp"></div></div>
       <div id="ticks"></div>
@@ -339,9 +353,9 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
     <button class="fold" id="cardfold" aria-label="Replier le territoire" aria-expanded="true">›</button></header>
   <div class="panel" id="card" role="tabpanel" aria-live="polite"></div>
   <div class="panel" id="cmppanel" role="tabpanel" hidden><p class="h4">Territoires comparés, même scénario</p><div id="cmp"></div><div id="pins"></div></div>
-  <div class="panel" id="xp" role="tabpanel" hidden aria-label="Mode expert"><nav><button data-t="flux" aria-pressed="true">Flux</button><button data-t="lev" aria-pressed="false">Leviers</button></nav><div id="xbody"></div><div id="lat">—</div></div>
+  <div class="panel" id="xp" role="tabpanel" hidden aria-label="Mode expert"><nav><button class="fr-tag fr-tag--sm" data-t="flux" aria-pressed="true">Flux</button><button class="fr-tag fr-tag--sm" data-t="lev" aria-pressed="false">Leviers</button></nav><div id="xbody"></div><div id="lat">—</div></div>
   <div class="panel" id="ask" role="region" hidden aria-label="Assistant de simulation">
-  <div class="chathead"><b>Assistant de simulation</b><button type="button" id="asknew">Nouvelle conversation</button></div>
+  <div class="chathead"><b>Assistant de simulation</b><button type="button" id="asknew" class="fr-btn fr-btn--tertiary fr-btn--sm">Nouvelle conversation</button></div>
   <div id="asklog" aria-live="polite"><div id="askwelcome">
     <p class="wt">Que voulez-vous simuler ?</p>
     <p class="st" id="askst" data-d="Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.">Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.</p>
@@ -355,9 +369,9 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
       <button type="button">Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?</button>
     </div>
     <p class="wh">Comprendre la carte affichée</p>
-    <div class="cards mini"><button type="button">Pourquoi ce résultat ?</button><button type="button">Quelle confiance accorder à ce chiffre ?</button><button type="button">Quels départements ont la densité la plus faible en 2050 ?</button><button type="button">Comment le jumeau calcule-t-il ?</button></div>
+    <div class="cards mini"><button type="button" class="fr-tag">Pourquoi ce résultat ?</button><button type="button" class="fr-tag">Quelle confiance accorder à ce chiffre ?</button><button type="button" class="fr-tag">Quels départements ont la densité la plus faible en 2050 ?</button><button type="button" class="fr-tag">Comment le jumeau calcule-t-il ?</button></div>
   </div></div>
-  <form id="askf" autocomplete="off"><textarea id="askq" rows="1" maxlength="1000" placeholder="Décrivez une politique ou posez une question…" aria-label="Votre message"></textarea><button aria-label="Envoyer">Envoyer</button></form>
+  <form id="askf" autocomplete="off"><textarea id="askq" class="fr-input" rows="1" maxlength="1000" placeholder="Décrivez une politique ou posez une question…" aria-label="Votre message"></textarea><button class="fr-btn" aria-label="Envoyer">Envoyer</button></form>
   <p class="askfoot">Projection sous hypothèses · chaque nombre vient du jumeau et est vérifié · mots de grandeur fixés par le lexique</p></div>
 </aside>
 </div>
@@ -365,6 +379,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 <div id="nl" role="dialog" aria-modal="true" aria-labelledby="nlh"></div>
 <div id="tip"></div>
 
+<script type="module" src="dsfr/dsfr.module.min.js"></script>
+<script nomodule src="dsfr/dsfr.nomodule.min.js"></script>
 <script>
 const PCOL={"sages-femmes":"#7A4E8C",dentistes:"#2F6A8A",pharmaciens:"#8A6A1E",kines:"#3D4F9E",infirmiers:"#2E7D6B"};
 // gamme divergente de la direction A : bistre (baisse) ↔ bleu pétrole (hausse), jamais rouge ni vert
@@ -412,11 +428,13 @@ function fbox(g){let b=[180,90,-180,-90];const w=c=>typeof c[0]=="number"?(b=[Ma
 function buildProfs(){
   const el=$("#profs");
   for(const [k,l] of Object.entries(META.professions)){
-    const b=document.createElement("button");b.innerHTML=`<i style="background:${PCOL[k]}"></i><span>${l}</span>`;
-    b.dataset.p=k;b.onclick=()=>{S.prof=k;applyProf();refresh();};el.append(b);}
+    const b=document.createElement("button");b.className="fr-tag fr-tag--sm";b.setAttribute("aria-pressed","false");b.innerHTML=`<i style="background:${PCOL[k]}"></i><span>${l}</span>`;
+    b.dataset.p=k;el.append(b);}
   for(const [k,why] of Object.entries(META.missing)){
-    const b=document.createElement("button");b.disabled=true;b.title="Absent : "+why;b.innerHTML=`<i style="background:var(--hair)"></i><span>${k}</span>`;el.append(b);}
-  const sel=document.createElement("select");sel.id="profsel";sel.setAttribute("aria-label","Profession");
+    const b=document.createElement("button");b.className="fr-tag fr-tag--sm";b.disabled=true;b.title="Absent : "+why;b.innerHTML=`<i style="background:var(--hair)"></i><span>${k}</span>`;el.append(b);}
+  // sélection exclusive : écoutée sur le conteneur, donc après la bascule du JS DSFR sur l'étiquette ; applyProf réécrit l'état
+  el.addEventListener("click",e=>{const b=e.target.closest("button[data-p]");if(!b)return;if(b.dataset.p===S.prof){applyProf();return;}S.prof=b.dataset.p;applyProf();refresh();});
+  const sel=document.createElement("select");sel.id="profsel";sel.className="fr-select";sel.setAttribute("aria-label","Profession");
   sel.innerHTML=Object.entries(META.professions).map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
   sel.onchange=()=>{S.prof=sel.value;applyProf();refresh();};el.append(sel);
   applyProf();
@@ -438,7 +456,7 @@ function buildPanels(){
   // panneau replié, onglet élargi ou A+ : la carte reprend la place ; vue France tant que l'utilisateur·rice n'a pas déplacé la carte
   new ResizeObserver(()=>{if(!map)return;map.resize();if(!S.terr&&!userMoved)fitFrance(0);}).observe($("#mapwrap"));
   // bascule de la fiche : « France entière » recadre la carte sur la France, sans grisé ; le territoire reste ouvert et la bascule le rouvre
-  $("#card").addEventListener("click",e=>{const b=e.target.closest("[data-cs]");if(!b||b.dataset.cs===CS)return;CS=b.dataset.cs;
+  $("#card").addEventListener("click",e=>{const b=e.target.closest("[data-cs]");if(!b)return;if(b.dataset.cs===CS){b.setAttribute("aria-pressed","true");return;}CS=b.dataset.cs;
     if(CS=="fr"){setFocus(null);userMoved=false;fitFrance();loadCard();}else select(S.terr,true,false);});
 }
 
@@ -560,8 +578,9 @@ function showLat(ms){const s=[...lat].sort((a,b)=>a-b),q=p=>s[Math.min(s.length-
 // ---------- leviers ----------
 function buildLevers(){
   buildLevFam();
-  document.querySelectorAll("#var button").forEach(b=>{b.setAttribute("aria-pressed",b.dataset.v==S.v);
-    b.onclick=()=>{S.v=b.dataset.v;document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x===b));writeHash();if(carte){paint();renderCmp();}};});
+  document.querySelectorAll("#var button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v==S.v));
+  $("#var").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;   // après la bascule DSFR : l'état final est réécrit ici
+    S.v=b.dataset.v;document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x===b));writeHash();if(carte){paint();renderCmp();}});
   $("#save").onclick=async()=>{writeHash();try{await navigator.clipboard.writeText(location.href);toast("Lien du scénario copié");}catch{toast("Lien dans la barre d'adresse");}};
 }
 // une question par famille, valeurs en phrase ; le curseur principal visible, les réglages fins sous « Plus de réglages »
@@ -590,8 +609,10 @@ function phrase(k,v){switch(k){
   case"pop_scen":return {central:"scénario central",pop_basse:"population basse",pop_haute:"population haute"}[v];
   case"activite":return v==1?"comme aujourd'hui":`${pc(v)} % ${v>1?"de plus":"de moins"} par professionnel (équivalents temps plein)`;}}
 function setL(l,v){const e=document.querySelector("#lv-"+l.k);
-  if(l.type=="toggle"){S.lv[l.k]=v===true||v==="1"||v===1;if(e)e.checked=S.lv[l.k];}else if(l.type=="select"){S.lv[l.k]=v;if(e)e.value=v;}else{S.lv[l.k]=+v;if(e)e.value=v;}
+  if(l.type=="toggle"){S.lv[l.k]=v===true||v==="1"||v===1;if(e)e.checked=S.lv[l.k];}else if(l.type=="select"){S.lv[l.k]=v;if(e)e.value=v;}else{S.lv[l.k]=+v;if(e){e.value=v;dsfrRange(e,+v);}}
   const o=document.querySelector("#o-"+l.k);if(o)o.textContent=phrase(l.k,S.lv[l.k]);}
+// curseur DSFR : sa jauge ne suit que les saisies ; une valeur posée par le code (lien, préréglage, retour à la tendance) passe par son API
+function dsfrRange(e,v){try{const r=window.dsfr?.(e)?.rangeInput;if(r)r.value=v;}catch{}}
 const fmtN=n=>Math.round(n).toLocaleString("fr-FR"),sg=n=>(n>=0?"+":"−")+fmtN(Math.abs(n));
 function unavailable(f){const nz=(carte?.regul_deps||[]).length;
   if(f=="attirer"&&S.prof=="pharmaciens")return"aucun flux de diplômés étrangers publié pour les pharmaciens";
@@ -607,8 +628,8 @@ function levState(){
     if(SC.dens_scn)html+=` Soit ${Math.round(SC.dens_scn[i])} pour 100 000 habitants (${Math.round(SC.dens_base[0])} en ${SC.origin}).`;
     const hyp=["pop_scen","activite"].map(LV).filter(l=>l&&!isDef(l)).map(l=>phrase(l.k,S.lv[l.k]));
     if(hyp.length)html+=`<br><i>Hypothèses : ${hyp.join(" ; ")}.</i>`;}
-  html+=`<div class="acts"><button id="reset">Revenir à la tendance</button><button id="keep">Garder ce scénario</button><button id="exp">Exporter la fiche</button>
-    <button class="preset" data-p="former">Former 20 % de plus</button><button class="preset" data-p="installer">Réguler l'installation</button><button class="preset" data-p="retenir">Partir 2 ans plus tard</button></div>`;
+  html+=`<div class="acts"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" id="reset">Revenir à la tendance</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" id="keep">Garder ce scénario</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" id="exp">Exporter la fiche</button></li></ul>
+    <p class="fr-text--xs" style="margin:.2rem 0 .3rem;color:var(--mute)">Scénarios types</p><ul class="fr-tags-group"><li><button class="fr-tag fr-tag--sm preset" data-p="former">Former 20 % de plus</button></li><li><button class="fr-tag fr-tag--sm preset" data-p="installer">Réguler l'installation</button></li><li><button class="fr-tag fr-tag--sm preset" data-p="retenir">Partir 2 ans plus tard</button></li></ul></div>`;
   $("#scen").innerHTML=html;
   $("#reset").onclick=()=>{META.levers.forEach(l=>setL(l,l.default));levState();refresh();};
   $("#keep").onclick=()=>$("#save").click();$("#exp").onclick=exportCard;
@@ -626,19 +647,22 @@ function levState(){
   $("#n-dest").textContent=S.lv.dest=="voisine"?"Sans effet visible au département : le report reste dans le département.":"";
   $("#nonmod").innerHTML=(off.length?`<b>Sans effet pour cette profession</b> : ${off.join(" ; ")}.<br>`:"")+
     "<b>Pas encore dans le modèle</b> : obligation d'exercer en zone sous-dotée, aides à l'installation, transferts de tâches (vaccination en officine, infirmiers en pratique avancée).";}
+// composants DSFR : curseur fr-range (bornes dites en clair), interrupteur fr-toggle, liste fr-select
+const lim=(k,v)=>k=="retraite"?`${String(v).replace(".",",")} an${v>1?"s":""}`:k=="part_zones"?`${Math.round(v*100)} %`:v==1?"0 %":`${v>1?"+":"−"}${pc(v)} %`;
+const rangeHTML=l=>`<div class="fr-range fr-range--sm"><span class="fr-range__output"></span><input type="range" id="lv-${l.k}" min="${l.min}" max="${l.max}" step="${l.step}" value="${l.default}" aria-label="${LBL[l.k]}"><span class="fr-range__min" aria-hidden="true">${lim(l.k,l.min)}</span><span class="fr-range__max" aria-hidden="true">${lim(l.k,l.max)}</span></div>`;
+const toggleHTML=l=>`<div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-${l.k}"><label class="fr-toggle__label" for="lv-${l.k}" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">${LBL[l.k]}</label></div>`;
 function leverHTML(l,main){const sup=l.status!="sourcé"&&l.status!="mesuré";
-  const inp=l.type=="range"?`<input type="range" id="lv-${l.k}" min="${l.min}" max="${l.max}" step="${l.step}" aria-label="${LBL[l.k]}">`:l.type=="toggle"?`<label class="sw"><input type="checkbox" id="lv-${l.k}">${LBL[l.k]}</label>`:
-    `<select id="lv-${l.k}" aria-label="${LBL[l.k]}">${Object.entries(l.options).map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</select>`;
+  const inp=l.type=="range"?rangeHTML(l):l.type=="toggle"?toggleHTML(l):
+    `<select class="fr-select" id="lv-${l.k}" aria-label="${LBL[l.k]}">${Object.entries(l.options).map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</select>`;
   return `<div class="${main?"main":"lev"}">${l.type=="toggle"?"":`<div class="val">${LBL[l.k]} : <output id="o-${l.k}"></output></div>`}${inp}
-    <div class="ic"><span title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</span><button type="button" class="src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
+    <div class="ic"><p class="fr-badge fr-badge--sm fr-badge--no-icon" title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</p><button type="button" class="fr-tag fr-tag--sm src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
     <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div><p class="note" id="n-${l.k}"></p></div>`;}
 // curseur principal seul : nom du paramètre, valeur en phrase, jauge (délai et source sont dans « Plus »)
-function mainHTML(l){const inp=l.type=="range"?`<input type="range" id="lv-${l.k}" min="${l.min}" max="${l.max}" step="${l.step}" aria-label="${LBL[l.k]}">`
-  :`<label class="sw"><input type="checkbox" id="lv-${l.k}">${LBL[l.k]}</label>`;
+function mainHTML(l){const inp=l.type=="range"?rangeHTML(l):toggleHTML(l);
   return (l.type=="toggle"?"":`<div class="val">${LBL[l.k]} <output id="o-${l.k}"></output></div>`)+inp+`<p class="note" id="n-${l.k}"></p>`;}
 // délai et source d'un curseur principal, sans second curseur
 function srcHTML(l){const sup=l.status!="sourcé"&&l.status!="mesuré";
-  return `<div class="lev"><div class="val">${LBL[l.k]}</div><div class="ic"><span title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</span><button type="button" class="src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
+  return `<div class="lev"><div class="val">${LBL[l.k]}</div><div class="ic"><p class="fr-badge fr-badge--sm fr-badge--no-icon" title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</p><button type="button" class="fr-tag fr-tag--sm src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
     <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div></div>`;}
 function buildLevFam(){
   // par défaut : une jauge par famille (places, diplômés étrangers, régulation, retraite)
@@ -717,7 +741,7 @@ function renderCard(f){
   if(!c.classList.contains("on")||c.dataset.t!==T||c.dataset.s!==(S.terr||"")||c.dataset.p!==f.prof){
     c.dataset.t=T;c.dataset.s=S.terr||"";c.dataset.p=f.prof;
     // bascule « chiffres nationaux » : visible dès qu'un territoire est ouvert ; sans territoire, la fiche montre la France
-    const scope=S.terr?`<div class="scope" role="group" aria-label="Échelle des chiffres"><button data-cs="terr" aria-pressed="${CS=="terr"}">${names[S.terr]}</button><button data-cs="fr" aria-pressed="${CS=="fr"}">France entière</button></div>`:"";
+    const scope=S.terr?`<div class="scope" role="group" aria-label="Échelle des chiffres"><button class="fr-tag fr-tag--sm" data-cs="terr" aria-pressed="${CS=="terr"}">${names[S.terr]}</button><button class="fr-tag fr-tag--sm" data-cs="fr" aria-pressed="${CS=="fr"}">France entière</button></div>`:"";
     c.innerHTML=`<header><div><h3>${names[T]||T}</h3><div class="sub">${f.label} · secteur libéral · origine des données ${f.origin}${T=="FR"?" · chiffres nationaux":""}</div></div>
       ${S.terr?`<button class="x" aria-label="Fermer la fiche" onclick="closeCard()"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>`:""}</header>${scope}
       <section class="kpis"><div><span>Effectif ${y[i26]}</span><b class="num" data-k="s26">0</b></div>
@@ -728,7 +752,7 @@ function renderCard(f){
       <section><p class="h4">Repères</p><div class="flows" data-k="rep"></div></section>
       <section><p class="h4">Écart en <span class="yl">${Yn}</span>, décomposé par flux</p><div class="flows" data-k="flows"></div></section>
       <section><p class="h4">Zonage</p><p class="note" data-k="zone" style="margin:0"></p></section>
-      <section class="cardact"><button class="btn" onclick="addCmp()">Ajouter à la comparaison</button><button class="btn" onclick="exportCard()">Exporter la fiche (CSV)</button></section>`;
+      <section class="cardact"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" onclick="addCmp()">Ajouter à la comparaison</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" onclick="exportCard()">Exporter la fiche (CSV)</button></li></ul></section>`;
     c.classList.add("on");
   }
   const q=s=>c.querySelector(`[data-k=${s}]`);
@@ -761,7 +785,7 @@ function chart(f,i26,Ysel=2050){
   const ticks=[mn,(mn+mxv)/2,mxv].map(v=>`<text x="${P.l-6}" y="${Y(v)+3}" text-anchor="end">${fmt(v)}</text>`).join("");
   const xt=[y0,f.origin,2035,2050].filter((v,i,a)=>a.indexOf(v)==i&&v>=y0).map(y=>`<text x="${X(y)}" y="${H-4}" text-anchor="middle">${y}</text>`).join("");
   $("#chart").innerHTML=`<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line y2="5" stroke="${SCN}" stroke-opacity=".45" stroke-width="1.2"/></pattern></defs>
-    <style>text{font:12px "Atkinson Hyperlegible",sans-serif;fill:#3A3F44}</style>${ticks}${xt}
+    <style>text{font:12px Marianne,arial,sans-serif;fill:#666}</style>${ticks}${xt}
     <line x1="${P.l}" x2="${W-P.r}" y1="${H-P.b}" y2="${H-P.b}" stroke="${INK}"/>
     <line x1="${X(2026)}" x2="${X(2026)}" y1="${P.t}" y2="${H-P.b}" stroke="#DDDDDA" stroke-dasharray="2 3"/>
     <path d="${band}" fill="url(#hatch)"/>
@@ -818,7 +842,7 @@ async function interpret(t){
   const cur=META.levers.filter(l=>!isDef(l)).length;
   if(n&&cur)h+=`<h4>À noter</h4><ul><li>Ce scénario remplace les ${cur} levier${cur>1?"s":""} déjà réglé${cur>1?"s":""} : une phrase décrit un scénario complet.</li></ul>`;
   if(r.reformulations.length)h+=`<h4>Formulation</h4>`+li(r.reformulations.map(x=>`« ${esc(x.terme)} » est décrit ici comme « ${esc(x.neutre)} ».`));
-  h+=`<div class="acts"><button id="nlno">Annuler</button>${n?`<button class="go" id="nlok">Appliquer ce scénario</button>`:""}</div>`;
+  h+=`<div class="acts"><ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-sm">${n?`<li><button class="fr-btn" id="nlok">Appliquer ce scénario</button></li>`:""}<li><button class="fr-btn fr-btn--secondary" id="nlno">Annuler</button></li></ul></div>`;
   const d=$("#nl");d.innerHTML=h;d.classList.add("on");($("#nlok")||$("#nlno")).focus();
   $("#nlno").onclick=closeNL;if(n)$("#nlok").onclick=applyNL;
 }
@@ -854,7 +878,7 @@ function renderExpert(){if(!document.body.classList.contains("xpon")||!META)retu
 }
 // scénarios épinglés : dans l'onglet Comparer, avec les territoires
 function renderPins(){const b=$("#pins");if(!b||!META)return;const G=SC;
-  b.innerHTML=`<p class="h4" style="margin-top:1.2rem">Scénarios épinglés</p><div class="row"><button id="xpin" ${!G||PIN.length>=3?"disabled":""}>Épingler le scénario affiché</button><button id="xjson" ${!G?"disabled":""}>Exporter en JSON</button>${PIN.length?`<button id="xclr">Tout retirer</button>`:""}</div>
+  b.innerHTML=`<p class="h4" style="margin-top:1.2rem">Scénarios épinglés</p><div class="row"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" id="xpin" ${!G||PIN.length>=3?"disabled":""}>Épingler le scénario affiché</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" id="xjson" ${!G?"disabled":""}>Exporter en JSON</button></li>${PIN.length?`<li><button class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" id="xclr">Tout retirer</button></li>`:""}</ul></div>
     ${PIN.length?`<table><tr><th>Scénario</th><th>Territoire</th><th>2035</th><th>2050</th><th>Écart 2050</th><th>Leviers</th><th></th></tr>
     ${PIN.map((p,i)=>`<tr><td>${i+1}. ${esc(p.label)}</td><td>${esc(p.terrName)}</td><td>${fmtN(p.v2035)}</td><td>${fmtN(p.v2050)}</td><td>${sg(p.d2050)}</td><td class="wrap">${esc(p.lev||"tendanciel")}</td><td><button data-rm="${i}" aria-label="Retirer le scénario ${i+1}">×</button></td></tr>`).join("")}</table>`
     :"<p class='note' style='margin:0'>Aucun scénario épinglé. Jusqu'à 3, pour les comparer côte à côte (même ou autre profession, même ou autre territoire).</p>"}
@@ -955,7 +979,7 @@ function askChart(g){if(!g)return"";const W=520,H=150,L=46,R=10,T=8,B=20;
   return `<figure class="askfig"><figcaption>${askEsc(g.titre)}<small>${askEsc(g.sous_titre||"")}</small></figcaption>${svg}<div class="leg">${leg}</div></figure>`;}
 function askRender(txt,gs){const {out,follow}=askBlocks(txt);const ch=(gs||[]).map(askChart).join("");
   if(ch)out.splice(Math.min(1,out.length),0,ch);   // graphique juste après la phrase qui dit l'essentiel
-  return `<div class="md">${out.join("")}</div>`+(follow.length?`<div class="follow">${follow.map(f=>`<button type="button" class="askfollow" data-q="${askEsc(f)}">${askEsc(f)}</button>`).join("")}</div>`:"");}
+  return `<div class="md">${out.join("")}</div>`+(follow.length?`<div class="follow">${follow.map(f=>`<button type="button" class="fr-tag fr-tag--sm askfollow" data-q="${askEsc(f)}">${askEsc(f)}</button>`).join("")}</div>`:"");}
 async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");$("#askwelcome").hidden=true;
   log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st typing">L'assistant traduit, le jumeau calcule…</div>`);const st=log.lastElementChild;
   try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),session:ASK.sid})});
@@ -964,7 +988,7 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
     else{const v=(d.verification||{}).statut,lx=d.lexique||{ok:true},ia=d.mode=="llm";
       const chk=(ia?(VERIF[v]||""):"Réponse du glossaire de l'équipe, sans IA")+(lx.ok?"":` · terme(s) hors lexique neutre : ${lx.termes.join(", ")}`);
       const tools=[...new Set((d.appels||[]).map(x=>x.outil))].join(", ");
-      const c=d.carte,btn=c?`<button class="askapply">Afficher ce scénario sur la carte</button>`:"";
+      const c=d.carte,btn=c?`<button class="fr-btn fr-btn--secondary fr-btn--sm askapply">Afficher ce scénario sur la carte</button>`:"";
       st.outerHTML=`<div class="a">${askPlan(c,d.objectif)}${askRender(d.reponse,d.graphiques)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
       const el=[...$("#asklog").querySelectorAll(".a")].pop();if(c)el.querySelector(".askapply").onclick=()=>askApply(c);
       el.querySelectorAll(".askfollow").forEach(b=>b.onclick=()=>askSend(b.dataset.q));}
