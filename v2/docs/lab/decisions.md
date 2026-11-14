@@ -3316,7 +3316,9 @@ fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/cart
   - **Territoire** à droite, avec les onglets Territoire, Comparer et Expert ; replié, il
     garde le nom et l'écart 2050.
   - Replier un panneau agrandit la carte.
-- Mêmes fonctions que la page actuelle, aucune perdue. Le curseur d'année reste hors périmètre.
+- Mêmes fonctions que la page actuelle, aucune perdue. ~~Le curseur d'année reste hors périmètre.~~
+  **Remplacé le 2026-11-14** : le curseur d'année a été livré par l'équipe (entrée « Curseur d'année sur la carte ») ;
+  il est repris dans la refonte, comme le panneau « Questions » (entrée « Carte option 1 : ajustements »).
 - Maquette de référence : écran « Option 1 — direction A (Bertin) · retenue » du canevas
   https://claude.ai/artifact/3VNzVPT3qTK3XLPja1dKxg.
 - Remplace l'entrée « Refonte de l'interface de la carte, à fonctions égales » de la section
@@ -3398,3 +3400,34 @@ de l'utilisateur·rice (« Commit sans mesure »). Vérifié sans clé : `/api/a
 **Mesures.** `carte()` passe à environ 100 ms (kinés 106 ms, infirmiers 98 ms, toutes années), réponse 78 ko. Sous le seuil de 150 ms de la décision « écran carte ». Valeur 2050 inchangée (Puy-de-Dôme, kinés : 1 731).
 
 **Ce qui le renverserait.** Un passage au grain communal (le volume × 25 années imposerait une grille précalculée), ou un retour UAT montrant que le curseur fait lire les années lointaines comme plus sûres que les proches.
+
+## 2026-11-14 — Carte option 1 : recette iso-fonctionnelle, page `index-option1.html`, ajustements
+
+**Décision.**
+- **Recette** `v2/prototype-carte/recette.mjs` : Node pilote Chrome headless, sans dépendance, avec WebGL logiciel
+  (SwiftShader).
+  - 30 contrôles portent sur la page actuelle, plus R31 (curseur d'année) et R32 (panneau Questions).
+  - 5 contrôles O01–O05 sont propres à la refonte : leviers ouverts, 3 panneaux, liste Dép./Rég., repère, onglets.
+- **Page** `index-option1.html` : option 1 en direction A. La logique et les identifiants de `index.html` sont repris,
+  y compris le curseur d'année et l'agent ajoutés par la PR #2. `server.py` n'est pas touché. `index.html` reste la
+  page servie jusqu'à la bascule.
+- **Ajustements demandés par l'utilisateur·rice**, le 2026-11-14 :
+  - titre « Offre de soins libérale » retiré ;
+  - bouton A+ retiré ;
+  - chat accessible par une icône sur la carte, à gauche des boutons de zoom (le panneau « Questions » n'est plus un
+    onglet) ;
+  - panneau Scénario réduit à un curseur par paramètre ;
+  - légende réduite aux boutons d'indicateur et à la gamme, le titre restant lisible par les lecteurs d'écran.
+- **Choix pris sans demande explicite.** Le panneau simplifié ne supprime rien : phrase, résumé et préréglages,
+  réglages fins, hypothèses et sources sont repliés dans « Plus ». La recette garde ainsi toutes ses fonctions.
+
+**Mesures.**
+- Page actuelle : 30/30 (avant la PR #2), recalcul p95 160 ms.
+- Refonte avant le curseur d'année et les ajustements : 35/35, recalcul p95 83 ms.
+- **Non mesuré** après le report du curseur, de l'agent et des ajustements : l'utilisateur·rice a demandé de ne pas
+  relancer la recette. Seule la syntaxe JavaScript est vérifiée (`node --check`).
+
+**Pourquoi.** « oui, écris la recette puis code l'option 1 », « Prends en compte les changements liés à la feature du
+curseur », puis les demandes d'ajustement ci-dessus.
+
+**Ce qui le renverserait.** La recette relancée trouve un contrôle en échec sur la page ajustée.
