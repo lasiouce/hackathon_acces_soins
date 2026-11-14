@@ -70,6 +70,41 @@ def marseille(ds: str, prof: str, sc: pd.DataFrame) -> tuple[pd.DataFrame, pd.Da
     return m.assign(profession=prof), chk
 
 
+def paris_lyon(ds: str, prof: str, sc: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Paris (751xx) et Lyon (6938x) : la table v1 les porte en commune (75056, 69123) ; on les remplace par leurs
+    arrondissements (séries complètes, ordre croissant jusqu'en 2025). Les arrondissements à série partielle
+    reçoivent le reste « commune − arrondissements complets », en total seulement."""
+    years, ages, titles = axes(ds)
+    tot_code, nb = ages[0], len(ages)
+    t = (RAW / "cartosante" / f"GetData_arm2026_{ds}.xml").read_text()
+    out, chk = [], []
+    for prefix, parent in (("751", "75056"), ("6938", "69123")):
+        a = pd.DataFrame(re.findall(rf"<Row><K>({prefix}\d+)</K><V>([^<]*)</V></Row>", t), columns=["com", "n"])
+        a["n"] = pd.to_numeric(a["n"], errors="coerce")
+        a["i"] = a.groupby("com").cumcount()
+        per = a.groupby("com").size()
+        ny = per.max() // nb
+        arr_years = list(range(2026 - ny, 2026))
+        full = per[per == ny * nb].index
+        a = a[a["com"].isin(full)].copy()
+        a["year"] = [arr_years[i // nb] for i in a["i"]]
+        a["age"] = [ages[i % nb] for i in a["i"]]
+        bands = a[a["age"] != tot_code].assign(age_band=lambda x: x["age"].map(titles))
+        sum_full = a[a["age"] == tot_code].groupby("year")["n"].sum()
+        target = sc[(sc["profession"] == V1[prof]) & (sc["com"] == parent)].groupby("year")["n"].sum()
+        out.append(bands[["com", "year", "age_band", "n"]].assign(estime=False))
+        resid = (target.reindex(arr_years) - sum_full).rename("n")
+        partial = per.index.difference(full)
+        for com in partial:
+            out.append((resid / len(partial)).reset_index().assign(com=com, age_band=f"Total (reste de {parent})",
+                                                                   estime=True))
+        chk.append(pd.DataFrame({"commune": target.reindex(arr_years), "somme_arr_complets": sum_full,
+                                 "arr_partiels": len(partial)}).assign(profession=prof, ville=parent))
+    m = pd.concat(out, ignore_index=True)
+    m["dep"] = m["com"].str[:2]
+    return m.assign(profession=prof), pd.concat(chk)
+
+
 def geography() -> pd.DataFrame:
     c = pd.DataFrame(json.loads((RAW / "insee" / "geoapi_communes.json").read_text()))
     arm = pd.DataFrame(json.loads((RAW / "insee" / "geoapi_arm.json").read_text()))
@@ -94,11 +129,27 @@ def main():
     for ds, prof in DS.items():
         m, c = marseille(ds, prof, sc)
         parts.append(m), mchk.append(c)
-    base = sc.assign(profession=sc["profession"].map({v: k for k, v in V1.items()}), estime=False)
+    pl, plchk = [], []
+    for ds, prof in DS.items():
+        m, c = paris_lyon(ds, prof, sc)
+        pl.append(m), plchk.append(c)
+    base = sc[~sc["com"].isin(["75056", "69123"])]
+    base = base.assign(profession=base["profession"].map({v: k for k, v in V1.items()}), estime=False)
     mar = pd.concat(parts, ignore_index=True)
     mar["dep"] = "13"
-    stock = pd.concat([base[["profession", "year", "com", "dep", "age_band", "n", "estime"]],
-                       mar[["profession", "year", "com", "dep", "age_band", "n", "estime"]]], ignore_index=True)
+    pl = pd.concat(pl, ignore_index=True)
+    # années où Paris / Lyon existent en commune mais pas encore en arrondissements : on garde la ligne commune
+    city = {"751": "75056", "693": "69123"}
+    first_arr = pl.groupby(["profession", pl["com"].str[:3].map(city)])["year"].min()
+    early = sc[sc["com"].isin(["75056", "69123"])].assign(
+        profession=lambda x: x["profession"].map({v: k for k, v in V1.items()}), estime=False)
+    early = early[early["year"] < [first_arr.get((p, c), 9999) for p, c in zip(early["profession"], early["com"])]]
+    cols = ["profession", "year", "com", "dep", "age_band", "n", "estime"]
+    stock = pd.concat([base[cols], mar[cols], pl[cols], early[cols]], ignore_index=True)
+    plchk = pd.concat(plchk)
+    d = (plchk["commune"] - plchk["somme_arr_complets"])
+    print("Paris / Lyon : commune − Σ arrondissements complets (min, max)")
+    print(d.groupby([plchk["profession"], plchk["ville"]]).agg(["min", "max"]))
     stock["source"] = "CartoSanté *_popage (FNPS/SNDS, actifs au 31/12), extraits 2026-11-13 et 2026-11-14"
     OUT.mkdir(parents=True, exist_ok=True)
     stock.to_parquet(OUT / "commune_stock.parquet", index=False)

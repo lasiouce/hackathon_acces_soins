@@ -13,6 +13,9 @@ Flux d'officines entre deux états successifs, par numéro FINESS d'établisseme
   transfert  = présent les deux années, commune changée (compté −1 / +1 sur les communes).
 Une officine transférée sous un nouveau numéro apparaît comme fermeture + ouverture (biais documenté).
 
+Les codes commune anciens (fusions, communes nouvelles, changements de code) sont ramenés au COG 2026 par le
+fichier Insee des événements survenus aux communes depuis 1943 (v_mvt_commune_2026.csv), appliqué transitivement.
+
 Sorties (v2/data/processed/) : finess_commune_annee.parquet (com, year, categorie, n),
 officines_flux_commune.parquet (com, year, ouvertures, fermetures, transferts_entrants, transferts_sortants),
 finess_histo_checks.csv
@@ -25,6 +28,22 @@ ROOT = Path(__file__).resolve().parents[2]
 DIR = ROOT / "v2" / "data" / "raw" / "finess" / "historique" / "etalab-stock-et-historique-2004-2024"
 OUT = ROOT / "v2" / "data" / "processed"
 CATS = {"620": "officine", "603": "maison_de_sante", "124": "centre_de_sante"}
+
+
+def cog2026() -> dict[str, str]:
+    """Ancien code commune → code COG 2026 (fermeture transitive des événements Insee, commune → commune)."""
+    m = pd.read_csv(ROOT / "v2" / "data" / "raw" / "insee" / "v_mvt_commune_2026.csv", dtype=str)
+    m = m[(m["TYPECOM_AV"] == "COM") & (m["TYPECOM_AP"] == "COM") & (m["COM_AV"] != m["COM_AP"])]
+    m = m.sort_values("DATE_EFF")
+    nxt = dict(zip(m["COM_AV"], m["COM_AP"]))
+    out = {}
+    for c in nxt:
+        seen, cur = set(), c
+        while cur in nxt and cur not in seen:
+            seen.add(cur)
+            cur = nxt[cur]
+        out[c] = cur
+    return out
 
 
 def read(year: int) -> pd.DataFrame:
@@ -45,6 +64,14 @@ def read(year: int) -> pd.DataFrame:
 def main():
     years = list(range(2004, 2026))
     frames = {y: read(y) for y in years}
+    remap = cog2026()
+    for y, f in frames.items():
+        f["cog_brut"] = f["cog"]
+        # FINESS code les DROM 9A…9F (971…976) : on revient au code Insee avant l'appariement
+        # (« 9A101 » → « 97101 » : la lettre remplace le chiffre « 7 », les 3 derniers caractères sont 1 + n° de commune)
+        drom = {"9A", "9B", "9C", "9D", "9F"}
+        f["cog"] = f["cog"].map(lambda c: "97" + c[2:] if isinstance(c, str) and c[:2] in drom else c)
+        f["cog"] = f["cog"].map(lambda c: remap.get(c, c))
     allf = pd.concat(frames.values(), ignore_index=True)
     stock = allf.groupby(["cog", "year", "categorie"]).size().rename("n").reset_index().rename(columns={"cog": "com"})
     OUT.mkdir(parents=True, exist_ok=True)
