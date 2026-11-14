@@ -2448,6 +2448,29 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- ~~**Refonte de l'interface de la carte, à fonctions égales**~~ **Tranchée le 2026-11-14** : option 1,
+  direction A (voir l'entrée « Carte : option 1 en direction A (Bertin) retenue »). (Question posée le 2026-11-14 :
+  « proposer d'autres solutions capables de reprendre iso fonctionnel l'existant avec des
+  améliorations UI »). Options proposées, aucune choisie :
+  - **1. Même pile (HTML + MapLibre, sans build), coque ancrée** : leviers à gauche, carte au
+    centre, un panneau droit à onglets (Territoire, Comparer, Expert). Recommandée (≈ 4 à 6 h).
+  - **2. Svelte 5 + Vite + MapLibre** : même contrat, composants testables ; utile pour la
+    couche personas, risqué avant H-6 (≈ 1,5 à 2 jours).
+  - **Habillage**, au choix sur 1 ou 2 : l'actuel, ou la direction A (Bertin) du
+    2026-11-14. Le DSFR reste réservé à un hébergement par un service de l'État.
+  - **Écartées** : Dash ou Panel (aller-retour serveur à chaque réglage ; Streamlit déjà
+    supprimé) et deck.gl (utile seulement au grain communal, que l'affichage n'a pas encore).
+  - Le curseur d'année sur la carte n'est pas iso-fonctionnel : `/api/carte` ne rend que 2026
+    et 2050. Il demande une extension de l'API.
+  - **Maquettes, 2026-11-14** : faites dans Claude Design (canevas privé
+    https://claude.ai/artifact/3VNzVPT3qTK3XLPja1dKxg), à la demande de l'utilisateur·rice
+    (« oui, lance les maquettes dans Claude Design »).
+    - Sans système de design : ceux du compte (Deviseur, Vroomly) sont des chartes d'entreprise.
+    - Chiffres réels du jumeau (version e127749), pas d'exemple : kinés, préréglage « Former
+      20 % de plus », Puy-de-Dôme ouvert.
+    - Fonds de carte : SVG simplifiés à partir de `/geo` et `/geo-regions`.
+    - Cinq écrans : l'actuel et l'option 1 sur ordinateur et sur mobile, plus l'option 1 en
+      direction A.
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
   Les points :
@@ -3278,6 +3301,33 @@ après des erreurs de lancement chez des coéquipiers (fichiers de `data/raw/` a
 fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/carte`, `/api/scenario` (densité),
 `/api/interpret`, page et contours répondent ; `manifest.py --check` OK.
 **Remplace** « La v1 (`sante/`, `app/`, `docs/lab/`) est figée et se consulte en lecture seule ».
+
+## 2026-11-14 — Carte : option 1 en direction A (Bertin) retenue, trois panneaux dépliables
+
+**Décision.**
+- La refonte de la carte suit l'**option 1** (même pile HTML + MapLibre, sans build, colonnes
+  fixes) avec l'habillage de la **direction A** :
+  - fond blanc, encre noire, police Atkinson Hyperlegible ;
+  - gamme bistre ↔ bleu pétrole, jamais rouge ni vert.
+- **Trois panneaux dépliables** :
+  - **Scénario** à gauche ; replié, il devient une barre de 60 px avec le nombre de leviers
+    modifiés ;
+  - **Liste classée** sous la carte, avec une bascule **Départements / Régions** ;
+  - **Territoire** à droite, avec les onglets Territoire, Comparer et Expert ; replié, il
+    garde le nom et l'écart 2050.
+  - Replier un panneau agrandit la carte.
+- Mêmes fonctions que la page actuelle, aucune perdue. Le curseur d'année reste hors périmètre.
+- Maquette de référence : écran « Option 1 — direction A (Bertin) · retenue » du canevas
+  https://claude.ai/artifact/3VNzVPT3qTK3XLPja1dKxg.
+- Remplace l'entrée « Refonte de l'interface de la carte, à fonctions égales » de la section
+  Open.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Option 1 A Bertin. Avec menu Scénario,
+Département/Région, territoire dépliable ».
+**Interprétation à confirmer.** « Département/Région » est lu comme la bascule d'échelle de la
+liste classée, et non comme un quatrième panneau.
+**Ce qui le renverserait.** La recette iso-fonctionnelle montre qu'une fonction de la page
+actuelle n'a pas de place dans les trois panneaux.
 
 ## 2026-11-14 — Agent conversationnel qui interprète les sorties du jumeau (v2/agent), branché dans la carte
 
