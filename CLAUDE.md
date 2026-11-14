@@ -108,6 +108,11 @@ installed path.
 - **Les messages de commit ne mentionnent pas Claude** : pas de ligne
   `Co-Authored-By: Claude …`, ni d'autre attribution à une IA.
 - Des commits petits et thématiques (un sujet par commit).
+- **À chaque changement majeur, mettre à jour `README.md` dans le même
+  commit ou juste après.** Par changement majeur, on entend un nouvel axe ou
+  un axe terminé, un changement de périmètre ou de définition, une nouvelle
+  source de données, une nouvelle commande de lancement, ou un résultat
+  chiffré qui remplace celui du README.
 - Jamais de données brutes ni de fichiers d'organisateurs sous accord de
   confidentialité (voir `.gitignore`).
 
