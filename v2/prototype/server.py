@@ -142,6 +142,12 @@ def zones() -> dict:
             for s in [s.droplevel(0)]}
 
 
+# Diplômés annuels France entière quand data/raw (non versionné) est absent : seules valeurs publiées dans le dépôt.
+# Infirmiers : DREES, enquête Écoles, jeu 491, diplômés t+3 des entrées 2020-2022 (fiche param-ide-rendement-diplomes,
+# mise à jour 29/10/2026). Aucune valeur citée dans le dépôt pour les autres professions.
+DIPLOMES_FICHES = {"infirmiers": [(2023, 24215), (2024, 25249), (2025, 26020)]}
+
+
 class Model:
     def __init__(self, prof: str):
         t = sector_table([prof])
@@ -244,11 +250,12 @@ class Model:
             s_ = [float(scn.states[y].N[m2].sum()) if y > self.o else b[i] for i, y in enumerate(my)]
             rows.append({"dep": dep, "id": "D" + dep, "name": g.loc[dep, "dep_name"], "base": b, "scn": s_})
         series, series_meta = self.series(scn, masks, deps, years)
+        pyramide = self.pyramide(scn, masks, deps, years)
         hist = sorted(self.obs[self.obs.index.get_level_values(0).isin(deps)].groupby(level=1).sum().items())
         return {"prof": self.prof, "label": PROFS[self.prof], "origin": self.o, "decision": max(self.o, DECISION),
                 "lag": LAG[self.prof], "first_effect": max(self.o, DECISION) + LAG[self.prof] + 1,
                 "years": years, "base": base, "scn": sc, "obs": [[int(y), float(n)] for y, n in hist],
-                "flows": flows, "series": series, "series_meta": series_meta, "k": self.k, "modele": self.modele, "matrix": {"years": my, "rows": rows},
+                "flows": flows, "series": series, "series_meta": series_meta, "pyramide": pyramide, "k": self.k, "modele": self.modele, "matrix": {"years": my, "rows": rows},
                 "regul_deps": zones().get(self.prof, []), "ms": round(ms, 1),
                 # contexte : habitants (scénario Omphale choisi) et densité pour 100 000 ; activité appliquée au scénario seul
                 "pop": (pop := pop_series(lv["pop_scen"], deps, years)), "pop_scen": lv["pop_scen"], "activite": lv["activite"],
@@ -301,7 +308,115 @@ class Model:
                             "source": src + "formés en France, diplômés étrangers et autres entrées nettes du registre des flux (hors vieillissement)"},
                 "sorties": {"label": "Sorties de l'effectif libéral", "unit": "professionnels / an",
                             "source": src + "cessations, retraites et autres sorties nettes du registre des flux (hors vieillissement)"}}
+        self.diplomes(scn, masks, years, out, meta, deps)
         return out, meta
+
+    def _diplomes_ref(self):
+        """Diplômés annuels de référence, France entière (niveau, source, observé [[année, n]]). Le vivier du jumeau est relatif
+        (stationnaire) : seul le niveau observé donne des professionnels / an. None si aucune série n'existe."""
+        if getattr(self, "_dref", None) is not None:
+            return self._dref
+        ref = (None, None, [])
+        try:
+            from jumeau.vivier import LIGNES, ecoles
+            if self.prof in LIGNES:
+                e = ecoles()[lambda x: x.profession == self.prof].dropna(subset=["diplomes"])
+                obs = [[int(y), float(n)] for y, n in zip(e.year, e.diplomes)]
+                last = [n for y, n in obs if y > obs[-1][0] - 3]
+                ref = (float(np.mean(last)), "DREES, enquête Écoles, jeu 491 (séries longues 1966-2025), diplômés : moyenne %d–%d"
+                       % (obs[-1][0] - 2, obs[-1][0]), obs)
+        except Exception:
+            pass          # fichier brut absent (data/raw n'est pas versionné) : repli sur les valeurs citées dans les fiches
+        if ref[0] is None and self.prof in DIPLOMES_FICHES:
+            obs = DIPLOMES_FICHES[self.prof]
+            ref = (float(np.mean([n for _, n in obs[-3:]])),
+                   "DREES, enquête Écoles, jeu 491, diplômés %d, %d et %d (valeurs de la fiche param-ide-rendement-diplomes), moyenne"
+                   % tuple(y for y, _ in obs[-3:]), [[y, float(n)] for y, n in obs])
+        self._dref = ref
+        return ref
+
+    def diplomes(self, scn, masks, years, out, meta, deps):
+        """diplomes, installes_diplomes, taux_installation. Les diplômés n'existent qu'à l'échelle France (vivier national du jumeau) :
+        les trois séries sont France entière pour 'diplomes' et le taux ; 'installes_diplomes' suit le territoire."""
+        o, st0 = self.o, self.est.state
+        d0, dsrc, dobs = self._diplomes_ref()
+        from jumeau.modules.etrangers import Etrangers, part_etrangere
+        if not hasattr(self, "_share"):
+            sh = part_etrangere(self.est.hist, st0, Etrangers.param("flux").value)
+            self._share = dict(zip(st0.cells.profession, sh))
+        share = self._share
+        n = len(years)
+        res = {}
+        for key, tr in (("base", self.base), ("scn", scn)):
+            cells = tr.states[H].cells
+            mk = masks[id(tr)]
+            fr = ((cells.sector == "prive")).to_numpy()
+            sh = cells.profession.map(share).fillna(0.0).to_numpy()
+            ins_t, ins_f = np.zeros(n), np.zeros(n)
+            e_nat = np.zeros(n)
+            g = np.ones(n)
+            gg, g0 = {}, {}
+            for y, f, a, v in tr.ledger:
+                if f == "formation" and a in ("diplomes", "diplomes_reference"):
+                    (gg if a == "diplomes" else g0)[y] = float(np.asarray(v).sum())
+                    continue
+                if (f, a) not in (("entrees", "entrees"), ("lien_formation", "diplomes_france")):
+                    continue
+                v = np.asarray(v)
+                if v.ndim != 1 or len(v) != len(mk):
+                    continue
+                w = np.clip(v, 0, None) * (1 - sh) if f == "entrees" else v
+                ins_t[y - o] += w[mk].sum()
+                ins_f[y - o] += w[fr].sum()
+                if f == "entrees":
+                    e_nat[y - o] += np.clip(v, 0, None)[fr].sum()
+            for y in gg:
+                if g0.get(y):
+                    g[y - o] = gg[y] / g0[y]
+            res[key] = (ins_t, ins_f, e_nat, g)
+        q = np.where(res["base"][2] > 0, res["scn"][2] / np.where(res["base"][2] > 0, res["base"][2], 1), 1.0)
+        dip = {"base": d0 * np.ones(n) if d0 else None, "scn": d0 * q * res["scn"][3] if d0 else None}
+        national = len(deps) >= len(set(st0.cells.territory))
+        for key in ("base", "scn"):
+            d = dip[key]
+            ins_t, ins_f = res[key][0], res[key][1]
+            ok = d is not None
+            out.setdefault("diplomes", {})[key] = [None if (y == o or not ok) else round(float(d[i]), 1) for i, y in enumerate(years)]
+            out.setdefault("installes_diplomes", {})[key] = [None if y == o else round(float(ins_t[i]), 1) for i, y in enumerate(years)]
+            out.setdefault("taux_installation", {})[key] = [None if (y == o or not ok or d[i] <= 0) else round(float(ins_f[i] / d[i]), 4)
+                                                            for i, y in enumerate(years)]
+        if dobs and national:
+            out["diplomes"]["obs"] = dobs
+        sc = {"base": "tendanciel", "scn": "scénario"}
+        meta["diplomes"] = {"label": "Diplômés par an", "unit": "professionnels / an",
+                            "source": (dsrc or "aucune série de diplômés pour cette profession")
+                            + " ; niveau tenu constant (vivier relatif du jumeau), × effet des quotas sur les entrées et du levier de capacité",
+                            "note": "France entière : le vivier de formation du jumeau est national, les diplômés ne sont pas répartis par territoire."}
+        meta["installes_diplomes"] = {"label": "Diplômés s'installant en libéral", "unit": "professionnels / an",
+                                      "source": "jumeau v2 : part formée en France (1 − part des diplômés à l'étranger, fiche param-diplomes-etrangers-flux) "
+                                                "des entrées positives du registre des flux, secteur privé du territoire",
+                                      "note": "Approché : les entrées du RPPS mêlent premières installations, retours et arrivées d'autres secteurs ou territoires, "
+                                              "non séparés dans les données ; le taux peut donc dépasser 100 %."}
+        meta["taux_installation"] = {"label": "Taux d'installation des diplômés", "unit": "%", "facteur": 100,
+                                     "source": "installés / diplômés, France entière, secteur privé : rapport de deux séries, paramètre du jumeau "
+                                               "et non une observation (part étrangère fixe, entrées ajustées sur la fenêtre RPPS)",
+                                     "note": ("taux de la France entière" if not national else "France entière")
+                                             + " : les diplômés ne sont connus qu'à cette échelle ; les quotas multiplient installés et diplômés "
+                                               "dans la même proportion, le taux ne bouge pas"}
+
+    def pyramide(self, scn, masks, deps, years):
+        """Pyramide des âges du stock libéral : effectif par tranche d'âge et par année (mêmes territoire, années et définition
+        que base / scn) ; observé = dernière année du RPPS, secteur privé."""
+        o, ages, st0 = self.o, self.est.state.ages, self.est.state
+        m0 = ((st0.cells.sector == "prive") & st0.cells.territory.isin(deps)).to_numpy()
+        lab = ["<%d" % ages[1]] + ["%d–%d" % (a, ages[i + 2] - 1) for i, a in enumerate(ages[1:-1])] + ["%d+" % ages[-1]]
+        res = {"tranches": lab}
+        for key, tr in (("base", self.base), ("scn", scn)):
+            mk = masks[id(tr)]
+            res[key] = [[round(float(x), 1) for x in (st0.N[m0] if y == o else tr.states[y].N[mk]).sum(axis=0)] for y in years]
+        res["obs"] = {str(o): [round(float(x), 1) for x in st0.N[m0].sum(axis=0)]}
+        res["source"] = "RPPS 2012–2026 (DREES / ANS), secteur privé, jumeau v2 : effectif par tranche d'âge de l'état N[cellule, tranche]"
+        return res
 
     def obs_total(self, deps, y) -> float:
         o = self.obs
