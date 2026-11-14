@@ -28,7 +28,7 @@ leviers:
     famille: installer
     unite: bascule
     termes: [regulation a l installation, regulation de l installation, reguler l installation, regulation,
-             reguler, regulees, regules, conventionnement selectif, conventionnement, zonage,
+             reguler, regulant, regule, regulee, regulees, regules, regulera, conventionnement selectif, conventionnement, zonage,
              un depart pour une arrivee, une arrivee pour un depart, remplacement d un depart,
              installation regulee, installation conditionnee]
     source: null    # avenants conventionnels par profession (infirmiers, kinés, sages-femmes, dentistes) : références non vérifiées ici
@@ -178,6 +178,11 @@ non_modelises:
     termes: [obligation d exercer, obligation d exercice, obligation d installation, zone sous dotee,
              zones sous dotees, exercer en zone, affectation obligatoire]
     raison: "Le jumeau n'a pas de flux d'affectation contrainte des jeunes diplômés ; la régulation « un départ pour une arrivée » est le seul levier d'installation modélisé."
+    source: null
+  exercice_coordonne:
+    libelle: Maisons et centres de santé, exercice coordonné
+    termes: [maison de sante, maisons de sante, msp, centre de sante, centres de sante, exercice coordonne, cpts]
+    raison: "Le jumeau ne distingue pas le mode d'exercice coordonné et n'a pas d'effet estimé d'une maison de santé sur l'installation ou le départ des professionnels."
     source: null
   aides_installation:
     libelle: Aides ou primes à l'installation

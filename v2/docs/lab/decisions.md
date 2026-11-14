@@ -3051,3 +3051,22 @@ Avant la bascule, les défauts confirmés de l'UAT agentique (rapport `2026-11-1
 export régional et France, lien invalide, rendu mobile ; aucune erreur JavaScript.
 **Non vérifié.** Pas de nouvelle recette par personas ; la légende des couleurs est masquée sur mobile.
 **Ce qui le renverserait.** Une recette rejouée qui trouve un P0 sur la page basculée.
+
+## 2026-11-14 — Langage naturel branché dans la carte : une phrase = un scénario complet, rien sans confirmation
+
+**Décision.**
+- `GET /api/interpret` dans `v2/prototype-carte/server.py` appelle le compilateur de `v2/langage` sur le jumeau déjà chargé
+  (pas de second chargement). La profession et le territoire affichés servent de défaut.
+- La carte ajoute « Décrire une politique en une phrase » en tête du panneau Leviers et un écran de confirmation : ce que j'ai
+  compris, pas encore dans le modèle (avec la raison), pas compris, à noter, formulation neutre. **Rien n'est appliqué avant
+  « Appliquer ce scénario ».**
+- **Une phrase décrit un scénario complet** : elle remplace les leviers déjà réglés, et l'écran le dit. Les leviers restent
+  réglables à la main ensuite.
+- Glossaire étendu après un essai hors échantillon : formes verbales de « réguler », marqueurs de négation (« ne pas »,
+  « supprimer », « renoncer à »…), entrée non modélisée `exercice_coordonne` (maisons et centres de santé, CPTS). Cas de test
+  inchangés : 35/36 (en échantillon).
+
+**Pourquoi.** L'utilisateur·rice : « continue the compiler for the politician ». « Ne pas réguler » activait la régulation :
+un contresens qui doit être impossible avant la démo.
+**Ce qui le renverserait.** Un jeu de cas écrit par une autre personne avec un taux trop bas : ajouter une étape de modèle de
+langage évaluée sur ce jeu (décision du 2026-11-14 sur le compilateur).

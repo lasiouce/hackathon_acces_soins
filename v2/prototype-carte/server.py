@@ -4,7 +4,8 @@ Run (racine du dépôt) : uv run python v2/prototype-carte/server.py [port]   ->
 
 Réutilise v2/prototype/server.py (Model, leviers par famille, parse_levers : mêmes bornes que /api/scenario).
 Ajouts : /geo (contours départementaux, coordonnées arrondies à 1e-3°, gzip) et /api/carte
-(une valeur 2026 / 2050 par département, tendanciel et scénario, en un seul appel).
+(une valeur 2026 / 2050 par département, tendanciel et scénario, en un seul appel), /api/interpret
+(phrase d'un·e élu·e -> réglage des leviers, par le compilateur déterministe de v2/langage).
 """
 import gzip
 import importlib.util
@@ -21,6 +22,12 @@ HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("proto_v1", HERE.parent / "prototype" / "server.py")
 V1 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(V1)   # fait le chdir vers la racine et charge le jumeau
+
+# Compilateur langage naturel (v2/langage) : il réutilise le module V1 déjà chargé, pas de second jumeau
+spec = importlib.util.spec_from_file_location("compilateur", HERE.parent / "langage" / "compilateur.py")
+NL = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(NL)
+NL.serveur = lambda: V1
 
 GEO = Path("app/assets/departements-avec-outre-mer.geojson")
 
@@ -145,6 +152,15 @@ class Handler(V1.Handler):
                 return self.send_json({"error": err}, 400)
             try:
                 return self.send_json(carte(prof, lv, q.get("terr", "FR")))
+            except Exception as e:
+                return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
+        if u.path == "/api/interpret":     # texte -> leviers ; traduit, ne calcule rien (v2/langage/README.md)
+            q = {k: v[0] for k, v in parse_qs(u.query).items()}
+            texte = q.get("q", "").strip()[:500]
+            if not texte:
+                return self.send_json({"error": "texte vide"}, 400)
+            try:
+                return self.send_json(NL.compile(texte, q.get("prof"), q.get("terr")))
             except Exception as e:
                 return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
         return super().do_GET()

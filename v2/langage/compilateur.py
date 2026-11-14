@@ -254,7 +254,7 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
         for k in leviers_c:
             l = UI[k]
             if l["type"] == "toggle":
-                if re.search(r"(?:^|\s)(?:pas de|pas d|sans|aucune?|ni)\s", c):
+                if re.search(r"(?:^|\s)(?:pas de|pas d|ne pas|n est pas|plus de|sans|aucune?|ni|renoncer a|abandonner|supprimer)\s", c):
                     res["compris"].append(f"{l['label']} : explicitement écarté (reste au défaut).")
                     continue
                 brut[k] = 1

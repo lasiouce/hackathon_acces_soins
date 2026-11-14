@@ -45,6 +45,14 @@ personne, dans la même session ; c'est un taux *en échantillon*. Un essai hors
 phrases nouvelles a révélé 4 défauts génériques (décimale « 1,5 » coupée, « pas de régulation »
 activait la régulation, « dans les » non reconnu, « plafonner » ignoré en silence), corrigés sans
 toucher aux cas. Il faut un jeu de cas écrit par quelqu'un d'autre pour un chiffre honnête.
+Second essai hors échantillon (branchement dans la carte, 2026-11-14) : « en régulant » non reconnu, « ne pas
+réguler » / « supprimer la régulation » **activaient** la régulation, « maisons de santé » tombait en « pas compris ».
+Corrigés (formes verbales, marqueurs de négation, entrée `exercice_coordonne`) ; cas de test inchangés, toujours 35/36.
+
+## Dans la carte
+`v2/prototype-carte/server.py` expose `GET /api/interpret?q=…&prof=…&terr=…` (profession et territoire affichés
+servent de défaut). La carte montre « Ce que j'ai compris / Pas encore dans le modèle / Pas compris / À noter » et
+n'applique rien avant « Appliquer ce scénario » ; les leviers restent ensuite réglables à la main.
 
 ## Limites connues
 - Une seule profession et un seul territoire par scénario (le premier cité, avec avertissement).
