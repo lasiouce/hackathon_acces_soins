@@ -79,3 +79,48 @@ def non_rattaches(texte: str, refs: set[float]) -> list[str]:
             vus.add(brut)
             out.append(brut)
     return out
+
+
+# ------------------------------------------------------------------ qualificatifs (vocabulaire de v2/docs/lab/lexicon.md)
+# Les mots de grandeur sont calculés par la passerelle ; la réponse ne peut employer que ceux des résultats reçus.
+_VOCAB = sorted([
+    "nettement inférieure à la moyenne nationale", "inférieure à la moyenne nationale", "proche de la moyenne nationale",
+    "nettement supérieure à la moyenne nationale", "supérieure à la moyenne nationale",
+    "forte hausse", "forte baisse", "hausse marquée", "baisse marquée", "légère hausse", "légère baisse", "stable",
+    "incertitude faible", "incertitude modérée", "incertitude élevée", "court terme", "moyen terme", "long terme",
+], key=len, reverse=True)
+_HORS_VOCAB = re.compile(r"\b(modestes?|significati(?:f|ve|fs|ves)|considérables?|spectaculaires?|massi(?:f|ve|fs|ves)|"
+                         r"sensibles?|sensiblement|nettes? (?:hausse|baisse)s?|importantes? (?:hausse|baisse)s?|"
+                         r"faibles? (?:hausse|baisse)s?)\b", re.I)
+
+
+def qualificatifs(objet) -> set[str]:
+    """Tous les qualificatifs (champs « qualificatifs » et « delai_qualificatif ») d'un résultat de la passerelle."""
+    out: set[str] = set()
+
+    def walk(x):
+        if isinstance(x, dict):
+            for k, v in x.items():
+                if k == "qualificatifs" and isinstance(v, dict):
+                    out.update(str(t).replace(" (extrapolée)", "") for t in v.values() if t)
+                elif k == "delai_qualificatif" and v:
+                    out.add(str(v))
+                else:
+                    walk(v)
+        elif isinstance(x, (list, tuple)):
+            for v in x:
+                walk(v)
+    walk(objet)
+    return out
+
+
+def qualifs_non_rattaches(texte: str, permis: set[str]) -> list[str]:
+    """Qualificatifs du vocabulaire absents des résultats reçus, et adjectifs de grandeur hors vocabulaire."""
+    t, out = (texte or "").lower(), []
+    for mot in _VOCAB:                      # du plus long au plus court : « nettement inférieure… » avant « inférieure… »
+        if mot in t:
+            if mot not in permis:
+                out.append(f"« {mot} »")
+            t = t.replace(mot, " ")
+    out += [f"« {m.group(0)} » (hors vocabulaire)" for m in _HORS_VOCAB.finditer(t)]
+    return list(dict.fromkeys(out))

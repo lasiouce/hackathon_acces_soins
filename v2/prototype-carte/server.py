@@ -213,11 +213,35 @@ class Handler(V1.Handler):
             return self.send_json({"error": r.get("erreur") or "Chatbot non lancé (port 8768)."}, 503)
         lx = _lexique(r.get("texte", ""))
         return self.send_json({"reponse": r.get("texte", ""), "mode": r.get("mode"), "verification": r.get("verification"),
+                               "carte": _scenario_carte(r.get("appels", [])),
                                "lexique": lx, "appels": [{"outil": a["outil"], "resume": a.get("resume"), "entree": a.get("entree")} for a in r.get("appels", [])],
                                "secondes": r.get("duree_s")})
 
 
 CHATBOT = os.environ.get("CHATBOT_URL", "http://127.0.0.1:8768")
+
+
+def _scenario_carte(appels: list) -> dict | None:
+    """Scénario simulé par le chatbot, au format de la carte (profession, territoire, leviers, année) : le panneau propose
+    de l'afficher, rien n'est appliqué sans clic. Parmi les calculs réussis, on préfère ceux qui ont des leviers, puis
+    un territoire plus fin que la France (les appels « France » servent souvent de référence), puis le dernier."""
+    cands = []
+    for i, a in enumerate(appels):
+        e = a.get("entree") or {}
+        if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer") or not a.get("code_territoire"):
+            continue
+        lv = dict(e.get("leviers") or {})
+        if a["outil"] == "comparer":       # le dernier scénario comparé
+            sc = e.get("scenarios") or []
+            lv = dict((sc[-1] or {}).get("leviers") or {}) if sc else {}
+        if a["outil"] == "balayer":
+            lv = dict(e.get("autres_leviers") or {})
+        ans = e.get("annees") or ([e["annee"]] if e.get("annee") else [])
+        if e.get("profession") not in V1.PROFS:
+            continue
+        c = {"prof": e["profession"], "terr": a["code_territoire"], "leviers": lv, "annee": max(ans) if ans else 2050}
+        cands.append(((bool(lv), c["terr"] != "FR", i), c))
+    return max(cands, key=lambda x: x[0])[1] if cands else None
 
 
 def _chatbot(methode: str, chemin: str, corps: dict | None = None) -> tuple[int, dict]:

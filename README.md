@@ -109,10 +109,13 @@ indépendant), et chaque sortie le rappelle.
   `chatbot/` (Claude Haiku 5.5 avec une clé, glossaire sans clé), avec le contexte affiché (profession,
   territoire, leviers, année). Il explique l'écart par flux, le délai d'effet, la fourchette et le statut des
   leviers ; il **ne calcule rien**, et les nombres non rattachés à un résultat sont corrigés puis bloqués.
-  Mesuré sur 22 questions avec Haiku 5.5 : 21/22 réponses entièrement ancrées (260/261 nombres), hors périmètre
-  signalé 5/5, flux nommés 5/5, médiane 7,4 s (`v2/agent/score_chatbot.txt`). Interface principale ; mise en page
-  en attente de l'équipe UX. `v2/agent/` (premier agent)
-  est gelé ; seul son contrôle du lexique sert.
+  On peut aussi y proposer une politique (« former 20 % de kinés en plus en Auvergne d'ici 2035 ») : le bouton
+  « Afficher ce scénario sur la carte » règle profession, territoire, leviers et année. Les grandeurs sont dites dans un
+  **vocabulaire fixe calculé par le code** (« légère hausse », « incertitude modérée », « moyen terme », « proche de la
+  moyenne nationale » ; seuils dans `v2/docs/lab/lexicon.md`), vérifié comme les nombres. Mesuré sur 22 questions avec
+  Haiku 5.5 : 54 qualificatifs, 0 non conforme ; 21/22 réponses entièrement ancrées ; hors périmètre 5/5 ; médiane 8 s
+  (`v2/agent/score_chatbot.txt`). Interface principale ; mise en page en attente de l'équipe UX. `v2/agent/` (premier
+  agent) est gelé ; seuls son contrôle du lexique et ses scripts de mesure servent.
 - **Hypothèses de contexte** : scénario de population Insee (central, bas, haut) et activité moyenne
   par professionnel (équivalents temps plein, supposée).
 - **Fiche par territoire** : effectif 2026, 2050, écart au tendanciel, repères 2030 / 2035 / 2040 / 2050

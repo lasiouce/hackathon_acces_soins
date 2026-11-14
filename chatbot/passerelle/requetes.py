@@ -163,26 +163,90 @@ def _annees(annees, r) -> list[int]:
     return ys
 
 
-def _ligne(r: dict, y: int) -> dict:
+# ------------------------------------------------------------------ vocabulaire des grandeurs (v2/docs/lab/lexicon.md)
+# Un mot par plage, calculé ici et jamais par le modèle de langage ; seuils supposés, à changer avec lexicon.md.
+
+def q_variation(pct: float | None) -> str | None:
+    if pct is None:
+        return None
+    a, sens = abs(pct), ("hausse" if pct > 0 else "baisse")
+    if a < 1:
+        return "stable"
+    return f"légère {sens}" if a < 5 else f"{sens} marquée" if a < 15 else f"forte {sens}"
+
+
+def q_densite(pct: float | None) -> str | None:
+    if pct is None:
+        return None
+    if pct < -25:
+        return "nettement inférieure à la moyenne nationale"
+    if pct < -10:
+        return "inférieure à la moyenne nationale"
+    if pct <= 10:
+        return "proche de la moyenne nationale"
+    return "supérieure à la moyenne nationale" if pct <= 25 else "nettement supérieure à la moyenne nationale"
+
+
+def q_incertitude(demi_pct: float, horizon: int) -> str:
+    m = "incertitude faible" if demi_pct < 5 else "incertitude modérée" if demi_pct <= 15 else "incertitude élevée"
+    return m + (" (extrapolée)" if horizon > 10 else "")
+
+
+def q_delai(ans: int) -> str:
+    return "court terme" if ans < 3 else "moyen terme" if ans <= 6 else "long terme"
+
+
+def _ligne(r: dict, y: int, dens_fr: float | None = None) -> dict:
     i = r["years"].index(y)
     v, lo, hi = PH().fourchette(r, y)
     b = r["base"][i]
-    return {"annee": y, "tendanciel": round(b), "scenario": round(r["scn"][i]),
-            "ecart": round(r["scn"][i] - b), "ecart_pct": round((r["scn"][i] / b - 1) * 100, 2) if b else None,
-            "fourchette_scenario": [round(lo), round(hi)],
-            "densite_100k_tendanciel": _r1(r["dens_base"][i]), "densite_100k_scenario": _r1(r["dens_scn"][i]),
-            "population": round(r["pop"][i]) if r["pop"][i] == r["pop"][i] else None}
+    ecart_pct = round((r["scn"][i] / b - 1) * 100, 2) if b else None
+    evo = round((r["scn"][i] / r["scn"][0] - 1) * 100, 1) if r["scn"][0] else None
+    demi = round((hi - lo) / 2 / v * 100, 1) if v else 0.0
+    q = {"evolution_depuis_origine": q_variation(evo), "ecart_au_tendanciel": q_variation(ecart_pct),
+         "incertitude": q_incertitude(demi, y - r["origin"])}
+    out = {"annee": y, "tendanciel": round(b), "scenario": round(r["scn"][i]),
+           "ecart": round(r["scn"][i] - b), "ecart_pct": ecart_pct, "evolution_pct_depuis_origine": evo,
+           "fourchette_scenario": [round(lo), round(hi)], "fourchette_demi_largeur_pct": demi,
+           "densite_100k_tendanciel": _r1(r["dens_base"][i]), "densite_100k_scenario": _r1(r["dens_scn"][i]),
+           "population": round(r["pop"][i]) if r["pop"][i] == r["pop"][i] else None}
+    d = r["dens_scn"][i]
+    if dens_fr and d and d == d:
+        out["densite_100k_france_scenario"] = _r1(dens_fr)
+        out["densite_ecart_a_la_france_pct"] = round((d / dens_fr - 1) * 100, 1)
+        q["densite"] = q_densite(out["densite_ecart_a_la_france_pct"])
+    out["qualificatifs"] = q
+    return out
+
+
+def _dens_fr(p: str, lv: dict, y: int) -> float | None:
+    """Densité France au même réglage ; une hausse des places limitée à une région n'a pas de sens au niveau national :
+    la référence nationale est alors calculée sans elle."""
+    if lv.get("quotas_region"):
+        lv = {**lv, "quotas_region": False, "quotas": 1.0}
+    r = _answer(p, lv, "FR")
+    x = r["dens_scn"][r["years"].index(y)]
+    return x if x and x == x else None
 
 
 def _r1(x):
     return None if x is None or x != x else round(x, 1)
 
 
-def _provenance(lv: dict) -> list[dict]:
+_DELAI_ANS = {"etrangers": 2}   # « moyen : 1 à 3 ans » (LEVIERS_UI) ; quotas : durée des études + 1 ; autres : « rapide », 1 an
+
+
+def _provenance(lv: dict, p: str | None = None) -> list[dict]:
     meta = {m["k"]: m for m in S().lever_meta()}
     d = {l["k"]: l["default"] for l in S().LEVIERS_UI}
-    return [{"levier": k, "reglage": _fmt_levier(k, v), "statut": meta[k]["status"], "source": meta[k]["source"],
-             "delai": meta[k]["delai"]} for k, v in lv.items() if v != d[k]]
+    out = []
+    for k, v in lv.items():
+        if v == d[k]:
+            continue
+        ans = S().LAG[p] + 1 if k == "quotas" and p else _DELAI_ANS.get(k, 1)
+        out.append({"levier": k, "reglage": _fmt_levier(k, v), "statut": meta[k]["status"], "source": meta[k]["source"],
+                    "delai": meta[k]["delai"], "delai_ans": ans, "delai_qualificatif": q_delai(ans)})
+    return out
 
 
 PERIMETRE = ("Effectif « libéral » = secteur privé (lucratif ou non), tout employeur public exclu. Grain : département. "
@@ -208,9 +272,9 @@ def projeter(profession_: str, territoire_: str = "FR", leviers_: dict | None = 
         "origine": r["origin"], "observe_origine": round(r["base"][0]),
         "leviers": resume_leviers(lv) or ["aucun levier : scénario tendanciel"],
         "premier_effet": r["first_effect"] if lv["quotas"] != 1 else None,
-        "annees": [_ligne(r, y) for y in ys],
+        "annees": [_ligne(r, y, _dens_fr(p, lv, y)) for y in ys],
         f"ecart_par_flux_cumule_{ys[-1]}": flux,
-        "provenance_leviers": _provenance(lv), **extra,
+        "provenance_leviers": _provenance(lv, p), **extra,
         "fourchette_methode": f"scénario × (1 ± {r['k']:.4f} × années depuis {r['origin']}) : erreur de backtest extrapolée, ~8 cas sur 10",
         "perimetre": PERIMETRE, "calcul_ms": round((time.perf_counter() - t0) * 1000, 1),
         "_serie": {"annees": r["years"], "tendanciel": r["base"], "scenario": r["scn"], "k": r["k"],
@@ -228,7 +292,7 @@ def comparer(profession_: str, territoire_: str, scenarios: list[dict], annee: i
         r = _answer(p, lv, t)
         ys = _annees([annee], r)
         rows.append({"nom": s.get("nom") or ", ".join(resume_leviers(lv)) or "tendanciel",
-                     "leviers": resume_leviers(lv), **_ligne(r, ys[0])})
+                     "leviers": resume_leviers(lv), **_ligne(r, ys[0], _dens_fr(p, lv, ys[0]))})
         series.append({"nom": rows[-1]["nom"], "annees": r["years"], "valeurs": r["scn"]})
     return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "annee": annee, "scenarios": rows,
             "perimetre": PERIMETRE, "_series": {"tendanciel": {"annees": r["years"], "valeurs": r["base"]}, "scenarios": series}}
@@ -245,7 +309,8 @@ def balayer(profession_: str, territoire_: str, levier: str, valeurs: list, anne
     for v in valeurs:
         lv = leviers({**(autres_leviers or {}), levier: v})
         r = _answer(p, lv, t)
-        out.append({"valeur": v, "reglage": _fmt_levier(levier, lv[levier]), **_ligne(r, _annees([annee], r)[0])})
+        y = _annees([annee], r)[0]
+        out.append({"valeur": v, "reglage": _fmt_levier(levier, lv[levier]), **_ligne(r, y, _dens_fr(p, lv, y))})
     return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "levier": S().UI[levier]["label"],
             "annee": annee, "points": out, "perimetre": PERIMETRE}
 
@@ -260,6 +325,7 @@ def classer(profession_: str, region: str | None = None, leviers_: dict | None =
         terr = "R" + g.loc[terr[1:], "region"]
     deps = list(g.index) if terr == "FR" else list(g.index[g.region == terr[1:]])
     rows = []
+    dfr = _dens_fr(p, lv, annee)
     for d in deps:
         try:
             r = _answer(p, lv, "D" + d)
@@ -267,8 +333,7 @@ def classer(profession_: str, region: str | None = None, leviers_: dict | None =
             continue
         if annee not in r["years"]:
             raise ErreurOutil(f"année hors projection : {annee}")
-        x = _ligne(r, annee)
-        x["evolution_pct_depuis_origine"] = round((x["scenario"] / r["base"][0] - 1) * 100, 1) if r["base"][0] else None
+        x = _ligne(r, annee, dfr)
         rows.append({"departement": str(g.loc[d, "dep_name"]), "code": d, **x})
     if critere not in ("densite_100k_scenario", "ecart_pct", "evolution_pct_depuis_origine", "scenario"):
         raise ErreurOutil("critère : densite_100k_scenario, ecart_pct, evolution_pct_depuis_origine ou scenario")
@@ -276,7 +341,8 @@ def classer(profession_: str, region: str | None = None, leviers_: dict | None =
     rows.sort(key=lambda r: r[critere], reverse=(ordre == "decroissant"))
     return {"profession": srv.PROFS[p], "perimetre_classement": nom_territoire(terr), "annee": annee, "critere": critere,
             "leviers": resume_leviers(lv) or ["tendanciel"], "nb_departements": len(rows), "departements": rows[:max(1, min(n, 30))],
-            "moyenne_densite_scenario": _r1(float(np.mean([r["densite_100k_scenario"] for r in rows if r["densite_100k_scenario"]]))) if rows else None,
+            "moyenne_simple_des_departements_densite": _r1(float(np.mean([r["densite_100k_scenario"] for r in rows if r["densite_100k_scenario"]]))) if rows else None,
+            "densite_100k_france_scenario": _r1(dfr),
             "perimetre": PERIMETRE}
 
 

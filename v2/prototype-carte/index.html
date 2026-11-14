@@ -240,7 +240,7 @@ body.askon #ask{display:flex}
 #ask header{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}#ask header b{flex:1}
 #asklog{overflow:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px;min-height:80px}
 #asklog .u{align-self:flex-end;background:var(--ground);border-radius:8px;padding:6px 10px;max-width:85%}
-#asklog .a{white-space:pre-wrap}#asklog .a .chk{display:block;margin-top:6px;font-size:12px;color:var(--mute)}
+#asklog .a{white-space:pre-wrap}#asklog .askapply{display:block;margin-top:.5rem;font:inherit;font-size:.85rem;border:1px solid currentColor;background:none;padding:.25rem .6rem;cursor:pointer}#asklog .a .chk{display:block;margin-top:6px;font-size:12px;color:var(--mute)}
 #asklog .a .chk.warn{color:#8C5A1B}#asklog .st{color:var(--mute);font-size:13px}
 #askchips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}#askchips button{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;cursor:pointer}
 #askf{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--line)}#askf input{flex:1;min-width:0;height:38px;border:1px solid var(--line);border-radius:8px;padding:0 10px}
@@ -787,6 +787,12 @@ function askMd(t){return askEsc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}   // 
 function askCtx(){const lv={};for(const l of META.levers)if(!isDef(l))lv[l.k]=S.lv[l.k];return{prof:S.prof,terr:S.terr||"FR",territoire:names[S.terr||"FR"],leviers:lv,annee:S.y};}
 const VERIF={ok:"✓ Chaque nombre vient d'un résultat du modèle",corrigee:"✓ Corrigée par la vérification automatique",
   bloquee:"⚠ Réponse bloquée : des nombres ne venaient d'aucun résultat du modèle"};
+// scénario simulé par le chatbot -> carte : profession, leviers (les autres à leur défaut), année, territoire ; sur clic seulement
+function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof;applyProf();}
+  for(const l of META.levers)if(!["pop_scen","activite"].includes(l.k)||l.k in c.leviers)setL(l,l.k in c.leviers?c.leviers[l.k]:l.default);
+  if(c.annee>=2026&&c.annee<=2050)setYear(c.annee);levState();
+  // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
+  if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();toast("Scénario du chatbot affiché sur la carte");}
 async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");
   log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st">Le jumeau calcule…</div>`);const st=log.lastElementChild;log.scrollTop=log.scrollHeight;
   try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),session:ASK.sid})});
@@ -795,7 +801,9 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
     else{const v=(d.verification||{}).statut,lx=d.lexique||{ok:true},ia=d.mode=="llm";
       const chk=(ia?(VERIF[v]||""):"Réponse du glossaire de l'équipe, sans IA")+(lx.ok?"":` · ⚠ hors lexique neutre : ${lx.termes.join(", ")}`);
       const tools=[...new Set((d.appels||[]).map(x=>x.outil))].join(", ");
-      st.outerHTML=`<div class="a">${askMd(d.reponse)}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;}
+      const c=d.carte,btn=c?`<button class="askapply">Afficher ce scénario sur la carte</button>`:"";
+      st.outerHTML=`<div class="a">${askMd(d.reponse)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
+      if(c){const el=[...$("#asklog").querySelectorAll(".a")].pop();el.querySelector(".askapply").onclick=()=>askApply(c);}}
   }catch(e){st.textContent="Serveur injoignable.";}
   ASK.busy=false;log.scrollTop=log.scrollHeight;}
 function buildAsk(){

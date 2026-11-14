@@ -56,7 +56,8 @@ async function open(hash = "", w = 1440, h = 900) {
 // adaptateurs : la seule différence de structure tolérée entre la page actuelle et la refonte
 const A = {
   expert: `(document.querySelector('[data-tab="xp"]')||document.querySelector('#xbtn')).click();return 1`,
-  ask: `(document.querySelector('[data-tab="ask"]')||document.querySelector('#askbtn')).click();return 1`,
+  // la conversation est ouverte au chargement (interface principale, 2026-11-14) : ne cliquer que si elle est fermée
+  ask: `const q=document.querySelector('#askq');if(!(q&&q.offsetParent))(document.querySelector('[data-tab="ask"]')||document.querySelector('#askbtn')).click();return 1`,
   pins: `const t=document.querySelector('[data-tab="cmp"]');if(t)t.click();else{XT="cmp";renderExpert();}return 1`,
 };
 

@@ -65,7 +65,14 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    qu'aux requêtes de projection en lecture seule, sans autre commentaire.
 8. Une question d'objectif (« comment atteindre +20 % », « que faudrait-il pour ») se traite avec l'outil atteindre ; précise
    toujours la référence (tendanciel de la même année ou aujourd'hui) et, si la question est ambiguë, donne les deux.
-9. Sans profession, si la question n'a pas de sens, demande-la en une phrase. Pour « les soignants » en général, tu peux interroger
+9. **Vocabulaire des grandeurs imposé.** Pour qualifier une évolution, un écart, une densité comparée à la France, une
+   incertitude ou un délai, tu emploies UNIQUEMENT le mot donné dans le champ « qualificatifs » (ou « delai_qualificatif »)
+   du résultat d'outil correspondant, tel quel : stable, légère hausse, hausse marquée, forte hausse (et baisse), proche
+   de la moyenne nationale, inférieure / nettement inférieure / supérieure / nettement supérieure à la moyenne nationale,
+   incertitude faible / modérée / élevée, court / moyen / long terme. Jamais d'autre adjectif de grandeur (modeste,
+   significatif, considérable, sensible, net, important…). Le mot accompagne le nombre : « légère hausse (+3,2 %) ».
+   Une vérification automatique compare chaque qualificatif de ta réponse aux résultats.
+10. Sans profession, si la question n'a pas de sens, demande-la en une phrase. Pour « les soignants » en général, tu peux interroger
    les cinq professions.
 
 ## Style
@@ -121,7 +128,7 @@ def graphique(nom: str, res: dict) -> dict | None:
                "evolution_pct_depuis_origine": "% d'évolution depuis l'origine", "scenario": "professionnels"}[c]
         return {"type": "classement", "titre": f"{res['profession']} — {res['perimetre_classement']}, {res['annee']}", "sous_titre": lib,
                 "etiquettes": [d["departement"] for d in res["departements"]], "valeurs": [d[c] for d in res["departements"]],
-                "reference": res.get("moyenne_densite_scenario") if c.startswith("densite") else None}
+                "reference": res.get("densite_100k_france_scenario") if c.startswith("densite") else None}
     return None
 
 
@@ -149,6 +156,7 @@ class Conversation:
         self.mode = mode or ("llm" if cle_disponible() else "deterministe")
         self.messages: list = []
         self.refs: set[float] = set()          # nombres vus par le modèle de langage (résultats, arguments, questions)
+        self.qualifs: set[str] = set()         # qualificatifs calculés par la passerelle (vocabulaire de lexicon.md)
         self.defaut = {"profession": None, "territoire": "FR"}
 
     def envoyer(self, texte: str) -> dict:
@@ -169,6 +177,9 @@ class Conversation:
             return err, True, None
         vu = pour_modele(res)
         self.refs |= V.references(vu)
+        self.qualifs |= V.qualificatifs(vu)
+        if nom in ("projeter", "comparer", "balayer", "atteindre"):   # dernier scénario simulé : la carte peut l'afficher
+            appels[-1]["code_territoire"] = res.get("code_territoire")
         if g := graphique(nom, res):
             graphiques.append(g)
         return json.dumps(vu, ensure_ascii=False), False, res
@@ -214,7 +225,7 @@ class Conversation:
                 self.messages.append({"role": "user", "content": resultats})
                 continue
             txt = "\n\n".join(b.text for b in rep.content if b.type == "text").strip()
-            bad = V.non_rattaches(txt, self.refs)
+            bad = V.non_rattaches(txt, self.refs) + V.qualifs_non_rattaches(txt, self.qualifs)
             if not bad:
                 if verif["statut"] == "a_corriger":
                     verif["statut"] = "corrigee"
@@ -222,8 +233,9 @@ class Conversation:
             if verif["statut"] == "ok":       # une seule correction
                 verif = {"statut": "a_corriger", "non_rattaches": bad}
                 self.messages.append({"role": "user", "content": (
-                    "[Vérification automatique du système, pas l'utilisateur·rice] Ces nombres de ta réponse ne figurent dans aucun "
-                    f"résultat d'outil : {', '.join(bad)}. Réécris ta réponse complète : obtiens-les par un outil, ou retire-les. "
+                    "[Vérification automatique du système, pas l'utilisateur·rice] Ces nombres ou qualificatifs de ta réponse ne "
+                    f"figurent dans aucun résultat d'outil : {', '.join(bad)}. Réécris ta réponse complète : obtiens-les par un outil, "
+                    "remplace chaque qualificatif par celui du champ « qualificatifs » du résultat, ou retire-les. "
                     f"Si la question sort du périmètre, commence par « {HORS} : ».")})
                 continue
             verif = {"statut": "bloquee", "non_rattaches": bad}

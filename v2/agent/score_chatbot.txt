@@ -1,14 +1,15 @@
-Chatbot intégré (relais carte -> chatbot/) — 2026-11-14 16:02 — mode(s) llm
+Chatbot intégré (relais carte -> chatbot/) — 2026-11-14 16:46 — mode(s) llm
 questions : 22 (erreurs : 0)
 réponses entièrement ancrées (règle stricte, précision affichée) : 21/22 (95 %)
+réponses dont tous les qualificatifs viennent des résultats (vocabulaire imposé) : 22/22 (100 %)
 réponses non bloquées par la vérification du chatbot (±6 %) : 22/22 (100 %)
-réponses sans terme de jugement : 18/22 (82 %)
+réponses sans terme de jugement : 21/22 (95 %)
 hors périmètre signalé quand attendu : 5/5 (100 %)
 flux nommés quand attendu : 5/5 (100 %)
-statuts du chatbot : ok 12, corrigee 10, bloquee 0
-nombres ancrés (strict) : 260/261 (99.6 %)
-latence (chatbot) : médiane 7.4 s, max 15.6 s
-  q08 : lexique  ['déserts', 'prévisions']
-  q09 : lexique  ['manque']
-  q17 : lexique  ['manque']
-  q20 : ancrage, lexique ['2040'] ['il faut']
+statuts du chatbot : ok 13, corrigee 9, bloquee 0
+nombres ancrés (strict) : 311/313 (99.4 %)
+qualificatifs du vocabulaire employés : 54 ; non conformes ou hors vocabulaire : 0 (100 % conformes)
+réponses avec un scénario affichable sur la carte : 13/22
+latence (chatbot) : médiane 8.0 s, max 15.3 s
+  q18 : lexique   ['prévisions']
+  q20 : ancrage ['2035', '2040']

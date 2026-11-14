@@ -25,6 +25,20 @@ import yaml
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import garde_fous  # noqa: E402
+import importlib.util  # noqa: E402
+
+_sp = importlib.util.spec_from_file_location("verif_chatbot", HERE.parents[1] / "chatbot" / "chat" / "verif.py")
+VQ = importlib.util.module_from_spec(_sp)
+_sp.loader.exec_module(VQ)          # qualificatifs : vocabulaire de v2/docs/lab/lexicon.md
+
+
+def qualifs(txt: str, sorties: list) -> tuple[int, list]:
+    """(nombre de qualificatifs du vocabulaire dans la réponse, liste des non conformes ou hors vocabulaire)."""
+    t, n = txt.lower(), 0
+    for mot in VQ._VOCAB:
+        n += t.count(mot)
+        t = t.replace(mot, " ")
+    return n, VQ.qualifs_non_rattaches(txt, VQ.qualificatifs(sorties))
 
 CARTE, PASSERELLE = "http://127.0.0.1:8767", "http://127.0.0.1:8770"
 FLUX = ("entrée", "sortie", "installation", "départ", "cessation", "diplômé", "flux")
@@ -66,13 +80,15 @@ def main():
             sorties = [rejouer(a) for a in d["appels"]] + [rejouer({"outil": "perimetre"}), "pour 100 000 habitants"]
             txt = d["reponse"]
             anc = garde_fous.ancrage(txt, sorties, q["q"], ctx)
-            chk = {"ancrage": anc["ok"], "lexique": d["lexique"]["ok"], "verif_chatbot": d["verification"]["statut"] != "bloquee"}
+            nq, badq = qualifs(txt, sorties)
+            chk = {"ancrage": anc["ok"], "qualificatifs": not badq, "lexique": d["lexique"]["ok"], "verif_chatbot": d["verification"]["statut"] != "bloquee"}
             if q.get("hors_modele"):
                 chk["hors_modele"] = any(h in txt.lower() for h in HORS)
             if q.get("flux"):
                 chk["flux"] = any(w in txt.lower() for w in FLUX)
             row = {"id": q["id"], "q": q["q"], "mode": d["mode"], **chk, "statut_chatbot": d["verification"]["statut"],
-                   "nombres": anc["nombres"], "non_ancres": anc["non_ancres"], "termes": d["lexique"]["termes"],
+                   "nombres": anc["nombres"], "non_ancres": anc["non_ancres"], "nb_qualifs": nq, "qualifs_non_conformes": badq,
+                   "carte": d.get("carte"), "termes": d["lexique"]["termes"],
                    "outils": [a["outil"] for a in d["appels"]], "appels": d["appels"], "secondes": d["secondes"],
                    "secondes_relais": round(time.perf_counter() - t0, 1), "reponse": txt}
             rows.append(row)
@@ -86,7 +102,9 @@ def main():
     modes = sorted({r["mode"] for r in ok})
     lines = [f"Chatbot intégré (relais carte -> chatbot/) — {time.strftime('%Y-%m-%d %H:%M')} — mode(s) {', '.join(modes)}",
              f"questions : {len(rows)} (erreurs : {len(rows) - len(ok)})"]
+    nqt, nqb = sum(r["nb_qualifs"] for r in ok), sum(len(r["qualifs_non_conformes"]) for r in ok)
     for k, lab in (("ancrage", "réponses entièrement ancrées (règle stricte, précision affichée)"),
+                   ("qualificatifs", "réponses dont tous les qualificatifs viennent des résultats (vocabulaire imposé)"),
                    ("verif_chatbot", "réponses non bloquées par la vérification du chatbot (±6 %)"),
                    ("lexique", "réponses sans terme de jugement"),
                    ("hors_modele", "hors périmètre signalé quand attendu"), ("flux", "flux nommés quand attendu")):
@@ -96,13 +114,17 @@ def main():
                                                     for s in ("ok", "corrigee", "bloquee")))
     if nb:
         lines.append(f"nombres ancrés (strict) : {nb - nn}/{nb} ({100 * (nb - nn) / nb:.1f} %)")
+    lines.append(f"qualificatifs du vocabulaire employés : {nqt} ; non conformes ou hors vocabulaire : {nqb}"
+                 + (f" ({100 * (nqt - min(nqb, nqt)) / nqt:.0f} % conformes)" if nqt else ""))
+    lines.append(f"réponses avec un scénario affichable sur la carte : {sum(1 for r in ok if r.get('carte'))}/{len(ok)}")
     if ok:
         s = sorted(r["secondes"] for r in ok)
         lines.append(f"latence (chatbot) : médiane {statistics.median(s):.1f} s, max {s[-1]:.1f} s")
     for r in ok:
-        bad = [k for k in ("ancrage", "verif_chatbot", "lexique", "hors_modele", "flux") if k in r and not r[k]]
+        bad = [k for k in ("ancrage", "qualificatifs", "verif_chatbot", "lexique", "hors_modele", "flux") if k in r and not r[k]]
         if bad:
-            lines.append(f"  {r['id']} : {', '.join(bad)} {r['non_ancres'] or ''} {r['termes'] or ''}".rstrip())
+            lines.append(f"  {r['id']} : {', '.join(bad)} {r['non_ancres'] or ''} {r['qualifs_non_conformes'] or ''} "
+                         f"{r['termes'] or ''}".rstrip())
     out = "\n".join(lines)
     (HERE / "score_chatbot.txt").write_text(out + "\n")
     print("\n" + out)

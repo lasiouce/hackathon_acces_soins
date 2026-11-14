@@ -3553,3 +3553,39 @@ dans l'option 1) ; R14 (748 ms) était du bruit : relancé deux fois, 161 et 178
 (onglets) passent.
 **Non vérifié.** Dans le panneau navigateur de l'application, la carte de l'option 1 reste grise, avant comme après ce
 changement (la recette, elle, la voit dessinée) ; non diagnostiqué.
+
+## 2026-11-14 — Conversation pilote : vocabulaire des grandeurs calculé par le code, scénario affichable sur la carte
+
+**Décision.**
+- **Vocabulaire des grandeurs** (`v2/docs/lab/lexicon.md`, nouvelle section) : évolution et écart (stable · légère ·
+  marquée · forte hausse / baisse), densité comparée à la France (nettement inférieure · inférieure · proche ·
+  supérieure · nettement supérieure à la moyenne nationale), incertitude (faible · modérée · élevée, « extrapolée »
+  au-delà de 10 ans), délai d'effet (court · moyen · long terme). Seuils **supposés**, à valider par l'équipe.
+- Les mots sont **calculés par la passerelle** (`chatbot/passerelle/requetes.py` : champ `qualificatifs` de chaque
+  ligne, `delai_qualificatif` de chaque levier), jamais choisis par le modèle de langage. Le prompt
+  (`chatbot/chat/agent.py`, règle 9) impose ces mots ; `chatbot/chat/verif.py` (`qualifs_non_rattaches`) refuse un
+  qualificatif absent des résultats et une liste d'adjectifs hors vocabulaire (modeste, significatif, considérable…),
+  dans la même boucle « correction puis blocage » que les nombres.
+- **Densité France** jointe aux résultats (`densite_100k_france_scenario`, `densite_ecart_a_la_france_pct`) ; dans
+  `classer`, la moyenne simple des départements est renommée `moyenne_simple_des_departements_densite` (elle n'est pas la
+  densité nationale). Une hausse de places limitée à une région est retirée du calcul de la référence nationale.
+- **La carte suit la conversation, sur clic** : le relais renvoie le scénario simulé (profession, territoire, leviers,
+  année ; préférence aux appels avec leviers, puis à un territoire plus fin que la France), et le panneau propose
+  « Afficher ce scénario sur la carte » (`index.html` et `index-option1.html`). Le territoire est ouvert avant le recalcul
+  (un levier régional n'a pas de sens sur la France).
+**Remplace** « L'agent ne modifie pas les leviers de la carte » (décision « Agent conversationnel… » du 2026-11-14) :
+il les modifie désormais, mais seulement sur clic, comme l'écran de confirmation de la phrase.
+**Pourquoi.** L'utilisateur·rice : le chatbot sert aussi à proposer une politique (leviers, scénarios, horizon), de façon
+fluide pour un néophyte, avec une « interprétabilité des résultats quantitatifs en un vocabulaire sémantique précis » ;
+« go » sur le plan.
+**Mesure** (Haiku 5.5, 22 questions, `v2/agent/score_chatbot.txt`) : qualificatifs du vocabulaire employés 54, **0 non
+conforme ni hors vocabulaire** ; réponses entièrement ancrées 21/22 (311/313 nombres ; les 2 non ancrés sont des années
+d'exemple, q20) ; hors périmètre 5/5 ; flux 5/5 ; lexique 21/22 (« pas des prévisions », formule permise ajoutée
+ensuite) ; scénario affichable 13/22 (les 9 autres : hors périmètre ou questions sans simulation) ; médiane 8,0 s, max
+15,3 s. Kinés ARA +20 % 2035 : « légère hausse (+3,2 %) », « incertitude modérée », « moyen terme (6 ans) », « proche de la
+moyenne nationale ».
+**Recette** : `index.html` 32/32 ; `index-option1.html` 36/37 (R25 A+, absent de l'option 1, déjà en échec). R32 de
+`recette.mjs` ne clique plus si la conversation est déjà ouverte. Tests du chatbot 32/33 : l'échec est
+`test_aucun_fichier_du_modele_modifie`, attendu quand la passerelle pointe sur une copie de travail modifiée.
+**Limites.** Le contrôle vérifie qu'un qualificatif figure dans les résultats, pas qu'il qualifie la bonne grandeur ;
+jeu écrit par l'auteur de l'agent ; seuils non validés. Code de Juliette Konop modifié (`chatbot/`) : à lui signaler.

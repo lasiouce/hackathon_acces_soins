@@ -73,7 +73,7 @@ _LEX = re.compile(r"(?<!\w)(" + "|".join(INTERDITS) + r")(?!\w)", re.I)
 
 
 # formules recommandées par le lexique lui-même (« projection sous hypothèses, pas une prévision ») : pas des jugements
-_PERMIS = re.compile(r"(?:pas|ni|non) (?:une |de |d'une )?(?:simple )?pr[ée]visions?(?: exacte)?", re.I)
+_PERMIS = re.compile(r"(?:pas|ni|non) (?:une |de |d'une |des )?(?:simple )?pr[ée]visions?(?: exacte)?", re.I)
 
 
 def lexique(reponse: str) -> dict:
