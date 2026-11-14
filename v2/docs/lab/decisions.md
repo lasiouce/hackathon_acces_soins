@@ -1545,6 +1545,171 @@ work », « then push everything to github », « in the aggregated paper, tell 
 needs to be done next, and also the work on UAT ».
 **Ce qui le renverserait.** —
 
+## 2026-11-14 — Jumeau : chemin rapide à la commune (5 professions en ≤ 2 s)
+
+**Décision.**
+- `run(..., ledger=False, keep=…)` est le chemin rapide : il ne tient
+  pas le registre des flux et garde les seules années demandées. Les ΔN
+  ne sont calculés que pour les flux qu'un module lit (needs, optional).
+  Le chemin complet reste celui par défaut, pour les tests.
+- **Mêmes opérations flottantes, moins de passes :**
+  - le vieillissement se fait sans `np.roll` ;
+  - le facteur de sortie est mis en cache quand la rétention est
+    l'objet ajusté et que les leviers ne changent pas ;
+  - les entrées constantes sont calculées une seule fois.
+- **Banc** `v2/jumeau/bench_commune.py`.
+  - État communal ventilé par la population Insee, pour la mesure de
+    temps uniquement : 5 professions, 2 secteurs, 698 212 cellules,
+    24 ans, scénario retraite + quotas.
+  - Mesure : **3,99 s avant, 1,35 à 1,57 s après** (médianes de 3 runs,
+    sur une machine partagée avec d'autres sessions). Chemin rapide et
+    chemin complet donnent le même état (écart 0). Critère C15.
+- **Rejeté :**
+  - passer en float32 : C1 perdrait l'écart nul ;
+  - une grille précalculée : inutile sous 2 s.
+
+**Pourquoi.** Chantier de nuit (session v2), objectif ≤ 2 s mesurées.
+Profil mesuré avant tout changement (perf-investigation) :
+- registre des flux, différences et sommes : 1,1 s ;
+- passes `apply` : 1,0 s ;
+- sorties recalculées : 0,8 s ;
+- entrées : 0,5 s.
+
+**Ce qui le renverserait.**
+- Un état communal réel plus grand, par exemple avec des tranches d'âge
+  fines.
+- Une machine plus lente que 2 s. La marge est faible : un run isolé a
+  pris 1,98 s.
+
+## 2026-11-14 — Axe 5, partie 2 : Sobol sur les leviers branchés, part « décision » contre part « connaissance »
+
+**Décision.**
+- **Code.** Composition `LEVIERS` du jumeau, instantané tiré de `git
+  archive` à HEAD, avec `v2/jumeau` au commit 4721268 (empreinte
+  `a8cb275013495f8e`).
+- **Groupes de facteurs.** Les indices de Sobol sont calculés par groupe,
+  avec un plan A_B^(G) par groupe.
+  - **Décision.** Facteurs que le décideur règle :
+    - quotas × [0,8 ; 1,2] après L_p ;
+    - `formation.capacite` × [0,8 ; 1,2] ;
+    - `decalage_retraite` [0, 2] ans ;
+    - `cumul_multiplicateur` [0,5 ; 2] ;
+    - `multiplicateur_precoces` [0,5 ; 1,5] ;
+    - abandon IFSI [0,056 ; 0,105] (IDE) ;
+    - diplômés étrangers × [0,5 ; 2] (SF, CD, MK) ;
+    - `part_zones` [0, 1] (0 = pas de régulation).
+  - **Connaissance.** Facteurs de la partie 1, plus la réponse des acteurs
+    à la régulation :
+    - θ [0,5 ; 1] ;
+    - destination des entrants bloqués {voisine, salariat, sortie},
+      équiprobable ;
+    - part exemptée [0 ; 0,06] (CD).
+  - **Quotas et capacité** sont deux mécanismes d'une même politique
+    (entrées × m contre vivier → entrées). On les garde tous les deux,
+    séparés, et c'est signalé dans le rapport.
+  - **Abandon IFSI** : il est classé « décision » (politique contre le
+    décrochage). Sa plage vient pourtant de la donnée 2009–2022.
+- **Zones de régulation au département** : départements où au moins 50 %
+  des communes sont en « remplacement seul » (zonage actuel), même règle
+  que `v2/prototype/server.py`. Pharmaciens : pas de zones, donc pas de
+  facteur de régulation.
+- **Statu quo** : `part_zones` = 0, ce qui correspond au tendanciel du
+  jumeau.
+- **Infirmiers.** Le périmètre passe au privé complet : table de l'axe 4
+  `infirmiers_secteur_age_sexe.parquet`, statut privé, sous l'hypothèse
+  H_ind. Il remplace, pour la partie 2, les libéraux seuls de la partie 1.
+- **Taille.**
+  - N = 512 : un run coûte 0,12 à 0,28 s (mesuré), dominé par le vivier
+    en pandas du module `formation`.
+  - 5 processus en parallèle, graine 20261114.
+  - Fourchettes départementales : 500 tirages Monte-Carlo de la
+    connaissance seule, décisions au statu quo.
+- **Critère de convergence.** N suffit si, à 2050, chaque facteur de ST
+  ≥ 0,05 vérifie deux conditions : son IC à 95 % est plus étroit que ST, et
+  l'écart à la valeur à N max est inférieur à 0,05.
+  - Partie 1 : le critère est atteint à N = 1024 partout (écart max 0,021,
+    mesuré).
+  - À N = 512, il échoue pour les IDE « incertitude » (écart 0,097).
+  - Si la partie 2 échoue, on prolonge le plan par un second lot de lignes
+    indépendantes.
+
+**Pourquoi.** Consigne de la session v2 (2026-11-14), pour le chantier de
+nuit : séparer la variance qui vient de la décision de celle qui vient de
+la connaissance, puis prioriser la recherche.
+**Ce qui le renverserait.**
+- Des plages de leviers fixées autrement par le prototype ou l'axe 1, par
+  exemple des quotas de 0,7 à 1,5 dans l'interface : la part « décision »
+  dépend de l'amplitude jouable.
+- Un module formation vectorisé, qui permettrait N = 2048.
+
+## 2026-11-14 — Jumeau : vivier réel (DREES 491) et âge d'entrée des diplômés à l'étranger
+
+**Décision.**
+- **Source.** Le jeu DREES 491 (enquête Écoles, séries longues
+  1966-2025 : inscrits en 1re année et diplômés) est téléchargé dans
+  `data/raw/drees/491_formation_series_longues_1966_2025.xlsx`
+  (121 774 octets, data.drees, données ouvertes). Le loader est
+  `v2/jumeau/vivier.py`.
+- **Durées en école :** IDE 3 ans, MK 4, SF 4 (réglementation).
+- **Abandon annuel dérivé** du rendement ρ = diplômés(t) / inscrits 1re
+  année(t − L), diplômés 2023-2025 :
+  - IDE 0,101 par an, cohérent avec le 0,105 sourcé par l'axe 1, qui
+    reste le défaut ;
+  - **MK 0,016 et SF 0,033 par an**, nouveaux défauts (dérivés),
+    remplaçant 0 (supposé).
+- **`formation.vivier`** = `relatif` (défaut) | `reel`.
+  - `reel` part des inscrits observés : 491 pour IDE, MK et SF, 990
+    pour CD et PH.
+  - Mesure : le modèle donne 25 385 diplômés IDE en 2024 (observé
+    25 249) et 26 005 en 2025 (observé 26 020).
+- **`lien_formation.mode`** = `levier` (défaut, identité au tendanciel)
+  | `vivier`.
+  - En mode `vivier`, k = diplômés du vivier / diplômés observés en
+    moyenne sur la fenêtre d'ajustement, pour IDE, MK et SF.
+  - Ce mode est une **variante d'estimateur, pas le défaut**. IDE
+    libéraux en 2050 : +5,9 % par rapport au tendanciel.
+- **Diplômés à l'étranger.** L'ajout entre dans la tranche qui contient
+  `etrangers.age_entree` = 28 ans (DD76). Le total par cellule est
+  inchangé.
+
+**Mesures qui limitent la portée** (C16, exploratoire, non
+pré-enregistré) :
+- **Diplômés 2019-2025, abandon calibré sur 2016-2018 :** la
+  persistance fait mieux que le vivier (MAPE IDE 3,2 % contre 8,4 % ;
+  MK 3,1 % contre 5,9 % ; SF 4,1 % contre 4,4 %). L'abandon IDE a
+  augmenté après 2018, et le vivier projette un rendement constant.
+- **Stock d'IDE libéraux, 2018 → 2023 :** le mode `vivier` fait un peu
+  mieux que le stock-flux local (MAPE par département 7,40 % contre
+  7,82 %). Ce résultat repose sur une seule origine et n'a pas été
+  pré-enregistré : il n'est pas encore une preuve. Il est à mettre au
+  banc N1 de l'axe 3.
+
+**Pourquoi.** Chantier de nuit (session v2). Le vivier relatif ne
+servait qu'aux leviers. Les cohortes réelles sont l'information
+publique la plus directe sur les entrées des 3 à 5 années suivantes.
+**Ce qui le renverserait.** Le banc N1 (axe 3) départageant `vivier` et
+le stock-flux local sur plusieurs origines.
+
+## 2026-11-14 — Les « prétirages » sont des récapitulatifs scientifiques complets, sans les codes arXiv
+
+**Décision.**
+- Les articles d'axe et la synthèse gardent la forme d'un article (plan, équations, résultats
+  étiquetés, bibliographie vérifiée). On retire :
+  - le résumé anglais ;
+  - la mention « prétirage » ;
+  - la mention « non relu par des pairs ».
+
+  La date devient « Version du … ». Cela remplace la partie « en français avec un résumé anglais »
+  de la décision « Chaque axe de recherche produit un prétirage au format arXiv ».
+- Gabarit et synthèse modifiés ici. Chaque axe applique le changement à son `main.tex` à sa
+  prochaine mise à jour : les sessions travaillent en ce moment sur ces fichiers, et une
+  modification croisée écraserait leur travail.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « quand je dis "comme un preprint", pas besoin
+d'un abstract en anglais, ni de relu par les pairs etc, juste c'est un recap scientifique
+complet de ce qui a été fait ».
+**Ce qui le renverserait.** Une soumission réelle à arXiv ou à une revue.
+
 ## Open / not yet decided
 - **Leviers de demande (transferts de tâches : vaccination en officine,
   IPA, accès direct au kiné)** : ajouter un module de besoin, ou les
