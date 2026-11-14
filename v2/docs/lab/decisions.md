@@ -3255,3 +3255,26 @@ Toutes les sources sont ouvertes (DREES, Insee, ameli, CartoSanté, Annuaire San
 **Remplace** l'exclusion de `data/processed/` et `v2/data/processed/` du `.gitignore` du premier commit.
 **Ce qui le renverserait.** Un fichier traité dérivé d'une donnée non ouverte, ou une taille qui dépasserait les limites de
 GitHub (100 Mo par fichier).
+
+## 2026-11-14 — La v1 est absorbée dans v2 ; README réécrit autour du démarrage sans données brutes
+
+**Décision.**
+- **Code** : `sante/` → `v2/sante/` (chargeurs, modèle, estimateurs ; 21 fichiers v2 l'importent) ; `app/levers.py` →
+  `v2/sante/levers_v1.py` (référence du critère C7) ; contours `app/assets/…geojson` → `v2/prototype-carte/assets/`.
+  L'application Streamlit `app/` est **supprimée**, avec les dépendances `streamlit` et `plotly`.
+- **Registre v1** (décisions, ledger, rapports, dérivations, explorations, présentations, figures, ROADMAP v1, artifacts,
+  scripts) → `v2/docs/lab/archive-v1/`, en lecture seule ; lexique → `v2/docs/lab/lexicon.md` ; catalogue des leviers →
+  `v2/docs/lab/levers-catalogue-v1.md` ; modèles Obsidian → `v2/docs/templates/`. Les liens relatifs sont recalculés.
+- **Restent à la racine**, et c'est voulu : `data/` (données de base, 38 fichiers y lisent `data/processed` ou `data/raw`,
+  et chaque poste y garde ses fichiers bruts) et `docs/lab/profile.md` (chemin lu par les skills de `.claude/`).
+- **Protocoles gelés non touchés** : `v2/validation/preregistered/` garde ses liens (certains étaient déjà cassés) ; le
+  gel par SHA-256 prime.
+- **README réécrit** : « Démarrer en 5 minutes » en tête (clone, `uv sync`, serveur de la carte), sans données brutes ;
+  état des axes à jour ; reconstruction des données à part. `CLAUDE.md`, `Home.md`, le profil, le crochet de cohérence,
+  `.claude/launch.json` (entrées v1 et chemins absolus retirés) et `Records.base` suivent.
+**Pourquoi.** L'utilisateur·rice : « enlève la v1, mets à jour toute la readme », option « absorber la v1 dans v2 »,
+après des erreurs de lancement chez des coéquipiers (fichiers de `data/raw/` absents).
+**Vérifié.** Critères du jumeau 18/18 ; carte relancée (5 professions, 101 départements, contours) ; **copie des seuls
+fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/carte`, `/api/scenario` (densité),
+`/api/interpret`, page et contours répondent ; `manifest.py --check` OK.
+**Remplace** « La v1 (`sante/`, `app/`, `docs/lab/`) est figée et se consulte en lecture seule ».

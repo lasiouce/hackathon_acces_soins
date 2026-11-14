@@ -6,7 +6,7 @@ Deux composantes, jamais additionnées :
       twin_of(StockFlowLocal), table privée de leviers.table), × 1,6 × h(2050), en demi-largeur
 Seuil « assez sûr pour décider » (dérivé) : la largeur (a) est plus petite que deux fois l'effet national à 2050
 de quotas × 1,2 (mesuré ici, par profession). Le levier le plus fort se distingue alors de la bande de connaissance.
-Carte : fond départemental v1 (app/assets/departements-avec-outre-mer.geojson), hexagone seulement ; SVG pour le
+Carte : fond départemental v1 (v2/prototype-carte/assets/departements-avec-outre-mer.geojson), hexagone seulement ; SVG pour le
 rapport, TikZ pour le prétirage (pdfLaTeX n'inclut pas de SVG).
 
 Run (racine) : PYTHONPATH=<instantané>:v2:. uv run python -m sensibilite.carte backtest   # pentes par département
@@ -67,7 +67,7 @@ def classe(w, seuil):
 
 
 def geometries():
-    g = json.load(open("app/assets/departements-avec-outre-mer.geojson"))
+    g = json.load(open("v2/prototype-carte/assets/departements-avec-outre-mer.geojson"))
     out = {}
     for f in g["features"]:
         code = f["properties"]["code"]

@@ -29,7 +29,7 @@ falsifier ?
 ### Cible (citée, pas recalculée)
 DREES, Dossiers n°76, mars 2021, p. 46 ; effectifs actifs < 70 ans, France
 entière, au 1er janvier
-([exploration](../../../../docs/lab/explorations/drees-projections-and-apl.md)).
+([exploration](../archive-v1/explorations/drees-projections-and-apl.md)).
 
 | Profession | 2020 | 2030 | 2040 | 2050 | Forme |
 |---|---|---|---|---|---|
@@ -71,14 +71,14 @@ entière, au 1er janvier
 
 ### Repère connu
 DD76 a sous-estimé les effectifs 2026 de 4 à 7 % en 6 ans
-([exploration](../../../../docs/lab/explorations/drees-projections-and-apl.md), §
+([exploration](../archive-v1/explorations/drees-projections-and-apl.md), §
 contrôle). La reproduction n'est donc pas une précision : c'est la preuve
 que notre moteur et celui de la DREES disent la même chose sous les mêmes
 hypothèses.
 
 ## Partie B — cas limites analytiques
 Ils viennent de la
-[dérivation](../../../../docs/lab/derivations/workforce-projection-model.md),
+[dérivation](../archive-v1/derivations/workforce-projection-model.md),
 § Limiting cases. Ils ne dépendent d'aucune donnée future.
 
 | # | Cas | Test | Tolérance |

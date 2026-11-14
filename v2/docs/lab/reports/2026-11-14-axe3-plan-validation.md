@@ -37,7 +37,7 @@ Le coût est du temps Claude et machine (minutes), pas d'argent.
 - **La validation est un test d'hypothèse, pas une mesure.** Le risque
   principal est le *jardin des chemins qui bifurquent* : K1 v1 a choisi la
   meilleure de 3 variantes après avoir vu les résultats
-  ([K1, section correction](../../../../docs/lab/reports/2026-11-13-k1-backtest.md)).
+  ([K1, section correction](../archive-v1/reports/2026-11-13-k1-backtest.md)).
   D'où : une variante par défaut, une métrique principale, un horizon
   principal, un seuil, fixés ici et gelés par empreinte.
 - **Ce qui est connu et ce qui est appris.** L'identité comptable et le
@@ -82,5 +82,5 @@ Celle de `sante/estimators.py`, reprise par `jumeau.estimators.TwinEstimator` :
 - `predict(target) -> Series` indexée par (profession, territoire) ;
 - facultatif, pour le niveau 2 : `trajectory(until, scenario)`.
 
-Le code de validation est dans [`v2/validation/`](../../../validation/) et ne
+Le code de validation est dans [`v2/validation/`](../../../validation) et ne
 dépend pas de l'intérieur du jumeau.

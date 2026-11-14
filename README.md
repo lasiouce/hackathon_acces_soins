@@ -5,21 +5,49 @@
 Un projet de recherche quantitative. On simule des **politiques publiques nationales** et on mesure
 leur effet sur le nombre de professionnels de santé **libéraux** (hors médecine générale) jusqu'en
 **2050**, à toutes les échelles, de la commune au national. Chaque politique est un réglage
-d'hyperparamètres **sourcés** : quotas de formation, âge de départ, diplômés à l'étranger, régulation
+d'hyperparamètres **sourcés** : places en formation, âge de départ, diplômés à l'étranger, régulation
 de l'installation, etc. Chaque résultat est **reproductible, falsifiable et interprétable**, sans
 boîte noire.
 
 ## Sommaire
 
+- [Démarrer en 5 minutes](#démarrer-en-5-minutes)
 - [Le problème](#le-problème)
-- [Notre réponse](#notre-réponse)
-- [Ce que fait le jumeau](#ce-que-fait-le-jumeau)
+- [Ce que fait l'outil](#ce-que-fait-loutil)
+- [État des travaux](#état-des-travaux)
 - [Données et méthode](#données-et-méthode)
-- [Démarrage rapide](#démarrage-rapide)
 - [Architecture](#architecture)
+- [Reconstruire les données](#reconstruire-les-données)
 - [Confidentialité des données](#confidentialité-des-données)
 - [Limites connues](#limites-connues)
 - [Feuille de route](#feuille-de-route)
+
+## Démarrer en 5 minutes
+
+Prérequis : Python 3.12+ et [uv](https://docs.astral.sh/uv/). **Aucune donnée à télécharger** : les
+données traitées (données ouvertes, ≈ 37 Mo) sont dans le dépôt.
+
+```bash
+git clone https://github.com/progdinh/hackathon_acces_soins.git
+cd hackathon_acces_soins
+uv sync
+uv run python v2/prototype-carte/server.py
+```
+
+Puis ouvrir **http://localhost:8767**. Le serveur met une dizaine de secondes à charger les
+5 professions ; il affiche `prêt : http://localhost:8767` quand c'est fait.
+
+Déjà cloné ? `git pull` puis `uv sync` suffisent. Si une erreur parle de `data/raw/` ou d'un fichier
+`.parquet` absent :
+
+```bash
+git pull                                        # les données traitées sont commitées depuis le 2026-11-14
+uv run python v2/data/manifest.py --check       # doit afficher « OK »
+```
+
+Ne lancez **pas** `sante.load` ni les `v2/data/build_*.py` pour démarrer : ils servent seulement à
+[reconstruire les données](#reconstruire-les-données) à partir des fichiers bruts (≈ 3,6 Go, non
+commités).
 
 ## Le problème
 
@@ -29,48 +57,68 @@ ailleurs que là où on l'attendait. Les projections publiées (DREES, Insee) so
 tendancielles. Il manque un outil qui dise, **pour un territoire donné**, ce qu'une politique change
 et avec quelle incertitude.
 
-## Notre réponse
+Professions couvertes : **sages-femmes, chirurgiens-dentistes, pharmaciens,
+masseurs-kinésithérapeutes, infirmiers**. Les spécialités médicales (cardiologie, dermatologie,
+ophtalmologie) forment une phase 2.
+
+**« Libéral » au sens large.** Ici, « libéral » désigne **tout le secteur privé**, lucratif ou non :
+libéraux et mixtes, pharmaciens adjoints d'officine, salariés de cliniques privées, industrie. Tout
+employeur public est exclu. C'est plus large que le sens habituel du RPPS ou d'ameli (exercice
+indépendant), et chaque sortie le rappelle.
+
+## Ce que fait l'outil
+
+**La carte de décision** (`v2/prototype-carte/`, http://localhost:8767) :
+
+- **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,
+  ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Recalcul après chaque réglage en
+  environ 50 ms (mesuré).
+- **9 leviers en 4 familles** (former, attirer, installer, retenir), chacun avec son délai d'effet et
+  son niveau de preuve (sourcé ou supposé). Le curseur principal de chaque famille est visible ; les
+  réglages fins sont sous « Plus de réglages ».
+- **Une phrase en langage naturel** (« augmenter de 20 % les places de kinés dans le Puy-de-Dôme »)
+  devient un réglage des leviers. Le compilateur est déterministe et à glossaire (`v2/langage/`) : il
+  traduit, il ne calcule jamais. Environ **77 % des phrases** sont entièrement bien traduites, mesuré
+  sur des jeux écrits à l'aveugle. Un écran montre toujours ce qui a été compris et ce qui n'est pas dans
+  le modèle, et rien n'est appliqué sans confirmation.
+- **Hypothèses de contexte** : scénario de population Insee (central, bas, haut) et activité moyenne
+  par professionnel (équivalents temps plein, supposée).
+- **Fiche par territoire** : effectif 2026, 2050, écart au tendanciel, repères 2030 / 2035 / 2040 / 2050
+  avec fourchette et densité, écart décomposé par flux, export CSV avec sources, millésimes, hypothèses et
+  version du code.
+- **Mode expert** : écart par flux et par année, chaque levier avec sa valeur, son paramètre, son délai,
+  son statut et sa source, trois scénarios épinglés côte à côte, export JSON.
+
+**Le jumeau** (`v2/jumeau/`), sur lequel la carte est branchée :
+
+- **Un état, des flux, des scénarios.** Chaque année, des modules (vieillissement, sorties, entrées,
+  formation, diplômés étrangers, régulation…) lisent l'état et écrivent des flux. Un registre garde
+  chaque flux, si bien que tout écart s'explique par ses composantes.
+- **Les leviers sont des événements datés** : « places × 1,2 à partir de l'année de décision + durée
+  des études », « régulation activée dans telle liste de géocodes ». Un scénario se sérialise en JSON
+  et se rejoue à l'identique.
+- **Régulation par géocodes.** En zone « remplacement d'un départ seulement », les entrées ne peuvent
+  pas dépasser les sorties. L'excédent est déplacé (vers le salariat, une zone voisine ou hors de la
+  profession), jamais perdu ni créé.
+- **18 critères d'acceptation**, chacun capable d'échouer sur le code d'avant correction, après trois
+  revues adversariales : `PYTHONPATH=v2 uv run python -m jumeau.check`.
+- **Rapide** : 15 ms par scénario au département, 1,1 s pour 5 professions à la commune (mesuré).
+
+## État des travaux
 
 | Axe | Contenu | État |
 |---|---|---|
-| 0. Jumeau | État unique (profession × secteur × âge × sexe × territoire × année), modules de flux en plug-ins, scénarios | ✅ 10 critères d'acceptation sur 10, revue adversariale passée puis corrigée |
-| 1. Hyperparamètres | Fiches sourcées : régulation conventionnelle, filières en pharmacie, spécialisation en odontologie, abandon en IFSI… | ✅ 27 fiches |
-| 2. Méthodes | Battre le stock-flux sans boîte noire (âges fins, shrinkage hiérarchique, choix d'installation…) | 🔄 en cours |
-| 3. Validation | Protocoles pré-enregistrés (gelés par SHA-256) : prévision, long terme, effet des leviers (différence de différences), échelle fine | ✅ protocoles écrits, en partie exécutés |
-| 4. Données | Séparation public / privé, registre de 30 événements datés, zonage par commune | ✅ |
-| 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent vraiment l'effectif en 2050 ? | 🔄 en cours |
+| 0. Jumeau | État unique (profession × secteur × territoire × sexe × âge), modules de flux en plug-ins, scénarios datés | ✅ 18 critères sur 18, 3 revues adversariales |
+| 1. Hyperparamètres | Fiches sourcées : régulation conventionnelle, filières en pharmacie, spécialisation en odontologie, abandon en IFSI… | ✅ fiches, sources à relire en texte intégral |
+| 2. Méthodes | Battre le stock-flux sans boîte noire | ✅ cohortes bayésiennes : MAPE dép. 7,73 % contre 8,68 % ; projection communale (K3 à K5) non confirmée, affichage au département |
+| 3. Validation | Protocoles pré-enregistrés, gelés par SHA-256 (N1 à N12) | ✅ exécutés en grande partie ; dépôts à noter sur les données 2027 |
+| 4. Données | Public / privé, registre de 30 événements datés, zonage par commune, grain communal | ✅ |
+| 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
+| Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | à venir |
 
-Professions couvertes : **sages-femmes, chirurgiens-dentistes, pharmaciens,
-masseurs-kinésithérapeutes, infirmiers**.
-
-**Pourquoi « libéral » au sens large ?** Ici, « libéral » désigne **tout le secteur privé**,
-lucratif ou non : libéraux et mixtes, pharmaciens adjoints d'officine, salariés de cliniques privées,
-industrie. Tout employeur public est exclu. C'est plus large que le sens habituel du RPPS ou
-d'ameli (exercice indépendant), et chaque sortie le rappelle.
-
-### Utilisateurs visés (couche ultérieure)
-
-| Persona | Niveau | Usage |
-|---|---|---|
-| ARS / directeur général | commune → groupes de communes → département → région | hebdomadaire, visibilité maximale |
-| Administration | France / régions | quotidien, tous les paramètres |
-| Décideur politique | France | occasionnel, mode simple |
-
-## Ce que fait le jumeau
-
-- **Un état, des flux, des scénarios.** Chaque année, les modules (vieillissement, sorties,
-  entrées, formation, régulation…) lisent l'état et écrivent des flux. Un registre garde chaque
-  flux, si bien que tout écart s'explique par ses composantes.
-- **Les leviers sont des événements datés** : « quotas × 1,2 à partir de l'année de décision +
-  durée des études », « régulation activée dans telle liste de géocodes ». Un scénario se sérialise
-  en JSON et se rejoue à l'identique.
-- **Régulation par géocodes.** En zone « remplacement d'un départ seulement », les entrées ne
-  peuvent pas dépasser les sorties. L'excédent est déplacé (par défaut vers le secteur public),
-  jamais perdu.
-- **Plusieurs estimateurs, pas un chiffre unique.** Persistance, tendance et variantes du
-  stock-flux sont comparés sur le même banc.
-- **Rapide.** Un scénario se recalcule en 17 ms au département (mesuré).
+Article de synthèse (feuille de route, six axes, interface, suite) : `v2/papers/synthese/`
+(`python3 build.py && tectonic main.tex`).
 
 ## Données et méthode
 
@@ -78,121 +126,115 @@ d'ameli (exercice indépendant), et chaque sortie le rappelle.
 |---|---|---|---|
 | Démographie des professionnels de santé (RPPS), département × âge × sexe × mode × secteur | DREES | 2012-2026 (kinés : 2017-2026) | stock et taux |
 | Infirmières libérales (SNDS), infirmières salariées (BTS) | DREES / Insee | 2012-2023 | stock IDE |
-| Projections de population Omphale (département × âge × sexe) | Insee | 2018-2070 | population, densités |
+| Projections de population Omphale 2022 (département × âge × sexe), 3 scénarios | Insee | 2018-2070 | densités |
 | Effectifs libéraux, 23 spécialités | ameli (Assurance Maladie) | 2010-2025 | contrôle croisé |
 | Effectifs par commune et zonage conventionnel | CartoSanté / Atlasanté | 2004-2025 | échelle communale, régulation |
-| Établissements (FINESS) | Ministère de la Santé | 2026 | séparation public / privé |
+| Annuaire Santé (RPPS en libre accès) | ANS | nov. 2026 | grain communal, public / privé |
+| Établissements (FINESS), historique | Ministère de la Santé | 2004-2025 | public / privé, officines |
+| Diplômés et inscrits en formation (séries longues) | DREES | 1966-2025 | vivier de formation |
 | Projections DREES (Dossier n°76, ER 1319) | DREES | 2021-2050 | comparaison à long terme |
-| Inscriptions en santé par université | DREES (SISE) | 2020-2025 | vivier, **fichiers organisateurs non versionnés** |
+| Inscriptions en santé par université | DREES (fichiers des organisateurs) | 2020-2025 | vivier, **jamais versionnés** |
 
 Points de méthode :
 
-- **Modèle de départ : stock-flux par cohortes**, en tranches d'âge de 5 ans. Taux de rétention
-  ajustés par territoire, avec un shrinkage vers le national. Les entrées sont un flux absolu
-  (pas de rétention supérieure à 1, pour éviter le double comptage relevé lors du backtest K1).
-- **Backtest contre des références naïves.** Par département, à 5-8 ans : 8,08 % de MAPE pour
-  le stock-flux à taux locaux, contre 8,68 % pour la tendance (mesuré sur l'ancien périmètre
-  libéral + mixte).
-- **2050 ne se backteste pas.** Les données vont de 2012 à 2026, donc on valide au plus
-  sur environ 10 ans. Au-delà, on s'appuie sur la reproduction des projections DREES, les cas
-  limites du modèle et des fourchettes extrapolées, toujours affichées comme telles.
-- **Chaque nombre dit s'il est mesuré, sourcé, dérivé ou supposé.** Chaque entrée cite son jeu de
-  données et son millésime. Le vocabulaire reste neutre : on décrit et on compare, on ne juge
-  pas (« accès moindre », jamais « désert »).
-
-## Démarrage rapide
-
-Prérequis : Python 3.12+ et [uv](https://docs.astral.sh/uv/).
-
-**Les données traitées sont dans le dépôt** (`data/processed/` et `v2/data/processed/`, environ 37 Mo, données ouvertes
-seulement) : après `uv sync`, la carte et le jumeau tournent sans rien télécharger. Chaque dossier a un `MANIFEST.md`
-(source, script, commande, empreinte). `uv run python v2/data/manifest.py --check` vérifie qu'ils sont à jour et
-qu'aucun fichier des organisateurs n'y entre. Les commandes ci-dessous ne servent qu'à **reconstruire** ces fichiers,
-à partir des données brutes (≈ 3,6 Go, non commitées) :
-
-```bash
-uv sync
-uv run python -m sante.load                                 # données ouvertes -> data/processed/
-uv run python v2/data/build_secteur.py                      # séparation public / privé (≈ 30 s)
-uv run python v2/data/build_zonage.py                       # zonage par commune
-PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
-uv run python -m sante.backtest                             # banc de comparaison des estimateurs
-PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : nouvelles méthodes
-PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
-```
-
-Carte de décision v2 (MapLibre, branchée sur le jumeau) :
-
-```bash
-uv run python v2/prototype-carte/server.py    # http://localhost:8767
-```
-
-Elle montre, par département et par région, l'effectif libéral, l'écart au tendanciel et la **densité 2050 pour
-100 000 habitants** (Insee Omphale 2022, scénario de population au choix). Elle offre 9 leviers en 4 familles, une phrase en
-langage naturel (compilateur déterministe de `v2/langage/`, environ 77 % de phrases bien traduites sur des jeux écrits à
-l'aveugle, toujours confirmées avant application), une hypothèse d'activité par professionnel (équivalents temps plein,
-supposée), un mode expert (flux, paramètres, 3 scénarios, export JSON) et un export de fiche avec sources.
-
-Application de démonstration v1 (Streamlit) :
-
-```bash
-uv run --directory app streamlit run main.py
-```
-
-Les fichiers des organisateurs (inscriptions par université) sont à copier à la main dans
-`data/raw/`. Ils ne sont jamais commités.
+- **Stock-flux par cohortes**, en tranches d'âge de 5 ans, taux ajustés par territoire. Les entrées sont
+  un flux absolu, pour éviter le double comptage relevé lors du premier backtest.
+- **Backtest contre des références naïves.** Par département, à 5 ans : 8,68 % de MAPE pour le
+  stock-flux à taux locaux, 7,73 % pour les cohortes bayésiennes de l'axe 2, contre 9,30 % pour la
+  tendance (mesuré, secteur privé).
+- **2050 ne se backteste pas.** Les données vont de 2012 à 2026, donc on valide au plus sur environ
+  10 ans. Au-delà, on s'appuie sur la reproduction des projections DREES, les cas limites du modèle et
+  des fourchettes extrapolées, toujours affichées comme telles.
+- **Plusieurs estimateurs, jamais un chiffre unique** présenté comme « la » projection.
+- **Chaque nombre dit s'il est mesuré, sourcé, dérivé ou supposé**, et chaque entrée cite son jeu de
+  données et son millésime. Le vocabulaire reste neutre : on décrit et on compare (« accès moindre »),
+  on ne juge pas ([lexique](v2/docs/lab/lexicon.md)).
 
 ## Architecture
 
 ```
-v2/                        travail actuel (le recadrage du 2026-11-14 prime)
-  ROADMAP.md               objectif, axes de recherche, ordre de travail
-  jumeau/                  état, moteur, scénarios, modules de flux (plug-ins), critères
-  methodes/                axe 2 : estimateurs et modules candidats, banc
-  validation/              axe 3 : protocoles pré-enregistrés, prévision, DiD, échelle fine
-  sensibilite/             axe 5 : Morris, Sobol, fourchettes à 2050
-  data/                    axe 4 : scripts public/privé, zonage, events.csv
-  prototype/               écran de décision (en cours)
-  docs/lab/                décisions, questions ouvertes, rapports, fiches, design
-sante/                     v1 (figée) : chargeurs, estimateurs, backtest
-app/                       v1 (figée) : application Streamlit
-docs/lab/                  v1 (figée) : registre de laboratoire
-Home.md                    page d'accueil du coffre Obsidian
+v2/
+  ROADMAP.md           objectif, axes de recherche, ordre de travail
+  jumeau/              axe 0 : état, moteur, scénarios, modules de flux (plug-ins), critères
+  sante/               chargeurs des données de base, modèle stock-flux et estimateurs de référence
+  methodes/            axe 2 : estimateurs candidats, banc de comparaison
+  validation/          axe 3 : protocoles pré-enregistrés (preregistered/, gelés), prévision, DiD
+  sensibilite/         axe 5 : Morris, Sobol, fourchettes à 2050
+  data/                axe 4 : scripts de construction, processed/ (commité), manifest.py
+  langage/             compilateur phrase -> leviers, glossaire, jeux de test à l'aveugle
+  prototype/           serveur des leviers et du jumeau (bibliothèque de la carte, port 8766)
+  prototype-carte/     carte de décision (port 8767)
+  papers/              un article par axe et l'article de synthèse (LaTeX)
+  docs/lab/            décisions, questions ouvertes, rapports, fiches, lexique ; archive-v1/
+data/
+  processed/           données de base traitées (commitées, voir MANIFEST.md)
+  raw/                 fichiers bruts (non commités)
+docs/lab/profile.md    profil du laboratoire (lu par les skills de .claude/)
+Home.md                page d'accueil du coffre Obsidian
 ```
 
 Le dépôt est aussi un **coffre Obsidian** : ouvrez la racine dans Obsidian et commencez par
-`Home.md`. Chaque décision est datée dans `v2/docs/lab/decisions.md`, et chaque question ouverte
-a un prix dans `v2/docs/lab/open.md`.
+`Home.md`. Chaque décision est datée dans `v2/docs/lab/decisions.md`, et chaque question ouverte a
+un prix dans `v2/docs/lab/open.md`. L'ancienne v1 (application Streamlit, premier registre du
+13 novembre) a été absorbée le 2026-11-14 : son code utile est dans `v2/sante/`, son registre est
+archivé dans `v2/docs/lab/archive-v1/`.
+
+## Reconstruire les données
+
+Seulement pour régénérer `data/processed/` ou `v2/data/processed/`, après avoir placé les fichiers
+bruts dans `data/raw/` et `v2/data/raw/` (sources et millésimes : `MANIFEST.md` de chaque dossier, et
+l'en-tête de chaque script) :
+
+```bash
+PYTHONPATH=v2 uv run python -m sante.load          # DREES RPPS + Insee Omphale -> data/processed/
+uv run python v2/data/build_secteur.py             # séparation public / privé (≈ 30 s)
+uv run python v2/data/build_zonage.py              # zonage par commune
+uv run python v2/data/manifest.py                  # réécrit les manifestes ; --check pour vérifier
+```
+
+Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier de formation DREES) :
+
+```bash
+PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
+PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
+PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
+uv run python v2/langage/evaluer_hors_echantillon.py cas_test_hors_echantillon_6.yaml   # compilateur
+```
 
 ## Confidentialité des données
 
 Le dépôt est **privé**, réservé à l'équipe.
 
-- `data/raw/`, `data/processed/`, `v2/data/raw/` et `v2/data/processed/` sont exclus par
-  `.gitignore`. Ils se régénèrent avec les commandes ci-dessus.
-- Les fichiers fournis par les organisateurs sont couverts par un accord de confidentialité et ne
-  sont **jamais** versionnés, ni bruts ni dérivés à la maille université.
+- `data/processed/` et `v2/data/processed/` sont **commités** : ils ne contiennent que des données
+  ouvertes (DREES, Insee, ameli, CartoSanté, Annuaire Santé, FINESS, zonage data.gouv).
+  `v2/data/manifest.py --check` échoue si un script de construction lit un fichier des organisateurs.
+- `data/raw/` et `v2/data/raw/` restent exclus par `.gitignore`.
+- Les fichiers fournis par les organisateurs (inscriptions par université) sont couverts par un accord
+  de confidentialité et ne sont **jamais** versionnés, ni bruts ni dérivés. Ils restent dans `data/raw/`
+  sur les postes qui les ont reçus ; seuls des réglages optionnels du jumeau les lisent.
 - Les documents tiers (mémoire EHESP) restent en local.
 
 ## Limites connues
 
 - **Le public et le privé ne sont séparés que par estimation.** Les fichiers DREES regroupent les
   salariés hospitaliers. La sortie 2026 est donc une fourchette (sages-femmes : 12 059 à 14 660).
-- Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche, ce qui conduit à
-  surestimer les seniors (biais connu, traité par l'axe 2).
-- Le levier « âge de départ » s'applique encore de façon permanente à la tranche ouverte 65+ et
-  surestime donc son effet (correctif identifié, à intégrer).
-- À la commune, le recalcul prend environ 3 s (extrapolé). Il faudra précalculer pour une
-  interface fluide.
-- Les effectifs sont comptés en têtes, pas en équivalents temps plein.
+- **Pas de projection fiable sous le département.** Les modèles communaux testés (K3 à K5) n'ont pas
+  passé la validation pré-enregistrée ; la carte affiche les projections au département.
+- **Pas de module de besoin.** Les transferts de tâches (vaccination en officine, IPA, accès direct au
+  kiné) n'ont aucun effet dans le jumeau ; ils sont signalés « pas encore dans le modèle ». Un plan
+  existe : `v2/docs/lab/derivations/2026-11-14-module-besoin.md`.
+- Les effectifs sont comptés en têtes. L'activité par professionnel (équivalents temps plein) n'est
+  qu'une hypothèse supposée, sans série ouverte vérifiée.
+- Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les
+  seniors).
+- Le compilateur de phrases bien traduit environ 77 % des phrases : l'écran de confirmation reste
+  indispensable.
 
 ## Feuille de route
 
-- Terminer les axes 2 (méthodes) et 5 (sensibilité), puis une seconde revue adversariale du jumeau.
-- Prototype de l'écran de décision : écart au tendanciel expliqué par flux, délai d'effet,
-  fourchette. Direction artistique « sémiologie graphique », tokens modifiables dans Figma.
-- Phase 2 : cardiologie, dermatologie, ophtalmologie (appui : rapport HCAAM sur les dépassements
-  d'honoraires).
-- Couche personas et restitution, en s'appuyant sur l'observatoire de l'équipe.
+- Rejouer la recette par personas sur la carte finale.
+- Module de besoin (population × recours par âge, transferts de tâches), après son test d'abandon.
+- Phase 2 : cardiologie, dermatologie, ophtalmologie.
+- Noter les dépôts pré-enregistrés sur les effectifs 2027.
 
 Détail : [`v2/ROADMAP.md`](v2/ROADMAP.md).

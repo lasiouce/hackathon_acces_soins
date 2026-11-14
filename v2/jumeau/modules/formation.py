@@ -24,7 +24,7 @@ from jumeau.module import Add, Module, Param, Pool, par_profession, register
 # Kinés, sages-femmes : 1 − ρ^(1/L), ρ moyen des diplômés 2023-2025 rapportés aux inscrits en 1re année L ans plus tôt
 # (DREES 491, jumeau.vivier.abandon_annuel, L = 4) : dérivé de mesures. Autres professions : 0, supposé.
 ABANDON = {"infirmiers": 1 - 0.718 ** (1 / 3), "kines": 0.0158, "sages-femmes": 0.0331, "*": 0.0}
-# Durée des études L_p (années) : délais de app/levers.LAG (v1), supposés.
+# Durée des études L_p (années) : délais de v2/sante/levers_v1.LAG (v1), supposés.
 DUREE = {"specialistes": 10, "pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}
 
 
@@ -44,7 +44,7 @@ class Formation(Module):
         Param("capacite", 1.0, "× première année du début du run", "arrêtés d'objectifs 2021 et 2026 ; DD76 (±20 %)",
               "2026", "supposé", "Places en 1re année. Événements datés avec sélecteur `profession` seulement.",
               (0.0, 3.0), "former"),
-        Param("duree", DUREE, "années, par profession", "app/levers.LAG (v1)", "—", "supposé",
+        Param("duree", DUREE, "années, par profession", "v2/sante/levers_v1.LAG (v1)", "—", "supposé",
               "Durée des études du vivier relatif.", (1.0, 15.0)),
         Param("vivier", "relatif", "relatif | reel", "DREES jeu 491 (IDE, MK, SF) ; DREES 990 (CD, PH)",
               "2008-2025", "mesuré",

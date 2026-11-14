@@ -61,7 +61,7 @@ s'applique par commune, et le DG d'ARS doit avoir la visibilité maximale.
 - **Repris de l'existant :**
   - données ouvertes uniquement, chaque entrée cite son jeu de données et
     son millésime ;
-  - lexique neutre ([lexicon.md](../docs/lab/lexicon.md)) ;
+  - lexique neutre ([lexicon.md](docs/lab/lexicon.md)) ;
   - plusieurs estimateurs comparés plutôt qu'un chiffre unique.
 
 ## 2. Modèles de référence dont on reprend les hyperparamètres
@@ -70,14 +70,14 @@ s'applique par commune, et le DG d'ARS doit avoir la visibilité maximale.
 |---|---|---|
 | **Omphale** (Insee) | la population | fécondité · espérance de vie à la naissance · solde migratoire |
 | **Hippocrate** (DREES) | les médecins | départs à la retraite · mortalité · âge à l'installation · entrées nationales annuelles, elles-mêmes = formés en France (décalés de la durée des études, dont 3–4 ans d'internat) + diplômés étrangers |
-| **DREES, Dossiers n°76 (2021)** | dentistes, sages-femmes, pharmaciens, jusqu'en 2050 | modèle par composantes (âge × sexe × mode d'exercice) : cessation, transition de mode d'exercice, reprise, entrées décalées, diplômés étrangers. Voir [l'exploration](../docs/lab/explorations/drees-projections-and-apl.md) |
+| **DREES, Dossiers n°76 (2021)** | dentistes, sages-femmes, pharmaciens, jusqu'en 2050 | modèle par composantes (âge × sexe × mode d'exercice) : cessation, transition de mode d'exercice, reprise, entrées décalées, diplômés étrangers. Voir [l'exploration](docs/lab/archive-v1/explorations/drees-projections-and-apl.md) |
 
 - **Communs à toutes les cohortes :** mortalité, retraite, âge à
   l'installation (publiés par les ordres).
   - ⚑ La retraite n'est **pas stationnaire** dans nos données. Une partie
     de l'écart vient des professionnels qui exercent après 65 ans :
     +1 527 pharmaciens en 2026, mesuré dans le [rapport sur les
-    entrées](../docs/lab/reports/2026-11-13-pipeline-entries.md).
+    entrées](docs/lab/archive-v1/reports/2026-11-13-pipeline-entries.md).
   - Elle reste donc un hyperparamètre, avec une tendance possible.
 - **Propres à chaque profession :** capacité de formation, schéma d'études
   (durée, abandon, filières), régulation de l'installation.
@@ -192,7 +192,7 @@ le mesurer. Chaque axe a un critère d'acceptation vérifiable.
   4. **Abandon en études infirmières** : il pourrait approcher 30 % par an,
      à vérifier. Source : enquête annuelle auprès des écoles de formation
      aux professions de santé (DREES), séries depuis les années 1980.
-- **Point de départ.** [levers.md](../docs/lab/levers.md) (32 leviers) et les
+- **Point de départ.** [levers.md](docs/lab/levers-catalogue-v1.md) (32 leviers) et les
   questions chiffrées de [open.md](docs/lab/open.md).
 - **Fait quand :** chaque piste a une fiche avec une valeur, une source
   primaire, un millésime et une incertitude. Une piste sans source mesurable
@@ -202,7 +202,7 @@ le mesurer. Chaque axe a un critère d'acceptation vérifiable.
 - **Question.** Quelles méthodes prévoient mieux tout en restant
   interprétables ? Le stock-flux n'est pas imposé : c'est le modèle de
   départ à battre.
-- **Base mesurée sur le banc** ([K1](../docs/lab/reports/2026-11-13-k1-backtest.md)),
+- **Base mesurée sur le banc** ([K1](docs/lab/archive-v1/reports/2026-11-13-k1-backtest.md)),
   sur l'ancien périmètre :
   - par département, 8,08 % de MAPE pour le stock-flux à taux locaux,
     contre 8,68 % pour la tendance ;
@@ -221,7 +221,7 @@ le mesurer. Chaque axe a un critère d'acceptation vérifiable.
     communes). C'est le mécanisme explicite derrière la répartition
     territoriale, qui domine l'erreur par département d'après K1.
   - **Dynamique des systèmes avec rétroaction** (H3 de la
-    [dérivation](../docs/lab/derivations/stress-tests-and-feedback.md)).
+    [dérivation](docs/lab/archive-v1/derivations/stress-tests-and-feedback.md)).
   - **Modèles additifs (GAM) et modèles spatiaux (CAR)** pour les taux,
     avec des effets lisibles.
   - **Pistes déjà identifiées dans le stock-flux :** rétention après

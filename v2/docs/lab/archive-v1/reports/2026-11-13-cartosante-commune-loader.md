@@ -52,7 +52,7 @@ both orderings give a jagged national series (1,445 → 2,338) against ameli's
   attribute `eft` (liberal professionals active at 31/12, FNPS/SNDS),
   extracted 2026-11-13. Raw XML (~420 MB) is cached in `data/raw/cartosante/`
   (gitignored).
-- **Method:** [sante/cartosante.py](../../../sante/cartosante.py). Year and
+- **Method:** [sante/cartosante.py](../../../../sante/cartosante.py). Year and
   band come from row position, with years ascending × bands in DescribeData
   order. Age bounds are parsed from the band titles. Two checks:
   - the bands add up to the total in each cell;

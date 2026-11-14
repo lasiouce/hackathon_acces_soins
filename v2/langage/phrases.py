@@ -2,7 +2,7 @@
 
 Aucun nombre n'est calculé hors de la réponse, sauf l'arrondi d'affichage et la fourchette, qui
 reprend exactement la règle de v2/prototype/index.html : scn × (1 ± k × (année − origine)).
-Le vocabulaire suit docs/lab/lexicon.md : « projection », fourchette, pas de jugement.
+Le vocabulaire suit v2/docs/lab/lexicon.md : « projection », fourchette, pas de jugement.
 """
 from __future__ import annotations
 

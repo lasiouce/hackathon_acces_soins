@@ -25,7 +25,7 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "v2"))   # paquet sante (ex-v1)
 from sante.cartosante import axes, get_data  # noqa: E402  (v1, lecture seule)
 
 OUT = ROOT / "v2" / "data" / "processed"

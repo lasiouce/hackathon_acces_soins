@@ -33,7 +33,7 @@ privé : Δ −0,63 pt, IC 95 % [−0,97 ; −0,27], contre 9,30 % pour la
 tendance.
 
 ## Question
-L'axe 2 ([ROADMAP](../../ROADMAP.md)) cherche une méthode qui prévoit
+L'axe 2 ([ROADMAP](../../../ROADMAP.md)) cherche une méthode qui prévoit
 mieux que le stock-flux, sans boîte noire. Les règles :
 - chaque méthode est un module branché sur le jumeau ;
 - elle nomme le paramètre qu'un levier modifie ;

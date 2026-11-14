@@ -29,7 +29,7 @@ NL = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(NL)
 NL.serveur = lambda: V1
 
-GEO = Path("app/assets/departements-avec-outre-mer.geojson")
+GEO = HERE / "assets" / "departements-avec-outre-mer.geojson"
 
 
 def _round(c):

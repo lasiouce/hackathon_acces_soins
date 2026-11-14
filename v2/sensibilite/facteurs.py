@@ -24,7 +24,7 @@ from jumeau.scenario import Scenario
 PROFS = ("sages-femmes", "dentistes", "pharmaciens", "kines", "infirmiers")
 YEARS = (2030, 2040, 2050)
 SEED = 20261114
-# délai de formation L_p (app/levers.LAG, v1 : supposé)
+# délai de formation L_p (v2/sante/levers_v1.LAG, v1 : supposé)
 LAG = {"pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}
 # part des libéraux en cumul emploi-retraite (fiche param-cumul-emploi-retraite, COR 2016, données 2015 : sourcé)
 CUMUL = {"sages-femmes": 0.008, "dentistes": 0.047, "pharmaciens": 0.018, "kines": 0.015, "infirmiers": 0.015}

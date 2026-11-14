@@ -23,12 +23,12 @@ tags: [validation, axe3, backtest, pre-registration]
 ## Question
 Le jumeau (axe 0) ou une méthode de l'axe 2 prévoit-il mieux que les
 références naïves ? C'est le critère « Fait quand » de l'axe 2
-([ROADMAP](../../ROADMAP.md)).
+([ROADMAP](../../../ROADMAP.md)).
 
 ## Pourquoi un protocole gelé
 K1 v1 a retenu, *après* avoir vu les résultats, la meilleure de trois
 variantes H1, pour un écart de 0,1 point
-([K1](../../../../docs/lab/reports/2026-11-13-k1-backtest.md), « What could
+([K1](../archive-v1/reports/2026-11-13-k1-backtest.md), « What could
 make it wrong »). Chaque degré de liberté ci-dessous est donc fixé avant
 tout calcul. Tout ce qui n'est pas listé ici est **exploratoire** et ne
 peut pas fonder d'affirmation de précision.

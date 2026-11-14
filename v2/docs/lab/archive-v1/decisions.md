@@ -264,7 +264,7 @@ Flow levers have no output-multiplier fallback. Moving to
 - **Démarche.** Mode de recherche quantitative : reproductible,
   falsifiable, interprétable, sans boîte noire. Code en briques (plug-ins
   par flux).
-- **Feuille de route et axes de recherche** : [ROADMAP.md](../../ROADMAP.md).
+- **Feuille de route et axes de recherche** : [ROADMAP.md](ROADMAP-v1.md).
 
 **Pourquoi.** L'utilisateur·rice, 2026-11-14.
 **Ce qui le renverserait.** Un nouveau cadrage du jury ou de l'équipe.
@@ -348,7 +348,7 @@ grain ».
   Par exemple : microsimulation, modèles bayésiens hiérarchiques ou
   espace-état, choix discret de l'installation, dynamique des systèmes,
   GAM, modèles spatiaux.
-- C'est l'axe 2 de [ROADMAP.md](../../ROADMAP.md).
+- C'est l'axe 2 de [ROADMAP.md](ROADMAP-v1.md).
 
 **Pourquoi.** L'utilisateur·rice, 2026-11-14.
 **Ce qui le renverserait.** Aucun.
@@ -409,7 +409,7 @@ fiche différent. Dans ce cas, on convertit les fiches, qui sont du texte.
 ## 2026-11-14 — La suite est dans v2
 
 **Décision.** Les décisions à partir de maintenant vont dans
-[v2/docs/lab/decisions.md](../../v2/docs/lab/decisions.md). Ce journal (v1)
+[v2/docs/lab/decisions.md](../decisions.md). Ce journal (v1)
 est figé. Les entrées du 2026-11-14 ci-dessus y sont recopiées.
 
 ## Open / not yet decided

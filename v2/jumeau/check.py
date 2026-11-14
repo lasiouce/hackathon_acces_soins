@@ -11,7 +11,7 @@ sur le code d'avant (`avant`), quand elle existe : c'est la preuve que le test s
   C4 démographie    régulation vers un public vide, mêmes taux : le total ne bouge pas (déplacement pur)
   C5 dépendances    composition sans le flux lu, lecture non déclarée, double producteur : refusés
   C6 scénario       clé mal orthographiée, opération ou axe inconnus : refusés ; aller-retour JSON identique
-  C7 leviers        quotas × 1,1 contre le vrai chemin v1 (app/levers.project_flow) ; retraite contre le
+  C7 leviers        quotas × 1,1 contre le vrai chemin v1 (v2/sante/levers_v1.project_flow) ; retraite contre le
                     séjour attendu (B1 : + Δ ans en 65+, 60–64 × (1 − Δ/5), 55–59 × (1 − Δ/10), montée 3 mois/an)
   C8 agrégation     commune -> dep -> rég -> national exact ; unité non rattachée refusée ; écart au RPPS mesuré
   C9 reproductible  deux runs sur les mêmes instances ne partagent pas d'état (formation)
@@ -285,8 +285,7 @@ def c6_scenario():
 
 def c7_levers():
     """Quotas : contre le vrai chemin v1. Retraite : contre le séjour attendu (B1), pas contre la v1, qui porte le défaut."""
-    sys.path.insert(0, "app")
-    import levers as LV
+    from sante import levers_v1 as LV         # chemin v1 de référence (ex-v2/sante/levers_v1.py)
     t = stock_table(["dentistes"])
     _, fit, o, _ = latest_design("dentistes", t)
     v1 = V1.StockFlowLocal().fit(t, fit, o)

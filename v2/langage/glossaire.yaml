@@ -236,7 +236,7 @@ gentiles:
   R27: [bourguignon, franc comtois]
   R52: [ligerien]
 
-# Neutralisation du lexique (docs/lab/lexicon.md) : terme jugeant -> formulation neutre.
+# Neutralisation du lexique (v2/docs/lab/lexicon.md) : terme jugeant -> formulation neutre.
 neutralisation:
   - {terme: desert medical, neutre: territoire à accès moindre (densité inférieure à la moyenne)}
   - {terme: deserts medicaux, neutre: territoires à accès moindre (densité inférieure à la moyenne)}

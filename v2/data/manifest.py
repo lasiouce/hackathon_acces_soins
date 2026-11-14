@@ -22,15 +22,15 @@ DIRS = [ROOT / "data" / "processed", ROOT / "v2" / "data" / "processed"]
 INTERDITS = ["990_drees_mmop2", "Base inscrits", "Données médecine", "Données odontologie", "Données pharma",
              "Medicale Junior", "pipeline"]
 # fichier -> (script qui l'écrit, commande, source et millésime)
-V1 = ("sante/load.py", "uv run python -m sante.load",
+V1 = ("v2/sante/load.py", "PYTHONPATH=v2 uv run python -m sante.load",
       "DREES RPPS 2012–2026 par profession (dép × âge × sexe × mode) ; Insee Omphale 2022, 3 scénarios")
 B = {
     "checks.csv": V1, "population.parquet": V1, "stock.parquet": V1,
-    "stock_ameli.parquet": ("sante/ameli.py", "uv run python -m sante.ameli",
+    "stock_ameli.parquet": ("v2/sante/ameli.py", "PYTHONPATH=v2 uv run python -m sante.ameli",
                             "data.ameli.fr, démographie des professionnels libéraux (modifié le 2026-10-28)"),
-    "stock_commune.parquet": ("sante/cartosante.py", "uv run python -m sante.cartosante",
+    "stock_commune.parquet": ("v2/sante/cartosante.py", "PYTHONPATH=v2 uv run python -m sante.cartosante",
                               "CartoSanté (Atlasanté), effectifs libéraux par commune × âge, 2004–2025"),
-    "stock_nurses_salaried.parquet": ("sante/nurses.py", "uv run python -m sante.nurses",
+    "stock_nurses_salaried.parquet": ("v2/sante/nurses.py", "PYTHONPATH=v2 uv run python -m sante.nurses",
                                       "DREES, infirmiers salariés (BTS), 2023, ratissés dép × âge × sexe"),
 }
 for f, s in {

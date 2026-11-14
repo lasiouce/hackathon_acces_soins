@@ -78,7 +78,7 @@ P = paramètre, L = levier. Chaque plage indique son statut.
   - **Instantané figé du jumeau** : empreinte `c2dc760126b34239` (`.py`
     triés), critères C1–C14 au vert. Le premier passage, sur le code de
     03:45, donne des ST identiques (écart max 0,000).
-- Code : [`v2/sensibilite/`](../../../sensibilite/). Commandes dans
+- Code : [`v2/sensibilite/`](../../../sensibilite). Commandes dans
   « Reproduire ».
 
 ### Facteurs sans prise dans le jumeau (effet nul par construction, pas mesuré)

@@ -1,6 +1,6 @@
 filters:
   and:
-    - file.inFolder("docs/lab")
+    - file.inFolder("v2/docs/lab")
     - file.ext == "md"
     - type != "decisions"
     - type != "ledger"

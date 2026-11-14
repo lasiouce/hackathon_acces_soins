@@ -26,8 +26,8 @@ aliases: [Lab profile]
   ultérieure.
 - **Horizon de référence 2050.** Granularité : tous les niveaux, jusqu'à la
   commune.
-- Feuille de route : [ROADMAP.md](../../ROADMAP.md). Décisions du
-  2026-11-14 dans [decisions.md](decisions.md).
+- Feuille de route : [v2/ROADMAP.md](../../v2/ROADMAP.md). Décisions du
+  2026-11-14 dans [v2/docs/lab/decisions.md](../../v2/docs/lab/decisions.md).
 
 ## What this project is for
 A 48 h hackathon tool, built on French open data, that projects how many health
@@ -76,12 +76,12 @@ Two parts, both required (user, 2026-11-13):
 | Record | Path |
 |---|---|
 | Layout | single-track |
-| Derivations | `docs/lab/derivations/` + `README.md` |
-| Explorations | `docs/lab/explorations/` + `README.md` (open-data sources go here) |
-| Decisions | `docs/lab/decisions.md` |
-| Stage reports | `docs/lab/reports/`; raw outputs in `artifacts/sNN_*/` |
-| Open-questions ledger | `docs/lab/open.md` |
-| Live hypotheses | `docs/lab/decisions.md` § Open |
+| Derivations | `v2/docs/lab/derivations/` + `README.md` |
+| Explorations | `v2/docs/lab/explorations/` + `README.md` (open-data sources go here) |
+| Decisions | `v2/docs/lab/decisions.md` |
+| Stage reports | `v2/docs/lab/reports/`; raw outputs in each axis `out/` folder |
+| Open-questions ledger | `v2/docs/lab/open.md` |
+| Live hypotheses | `v2/docs/lab/decisions.md` § Open |
 
 ## Upstream
 None. This is separate from SEVEL LABS.

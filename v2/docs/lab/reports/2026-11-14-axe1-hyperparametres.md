@@ -13,7 +13,7 @@ tags: [axe1, parametres, fiches, regulation, pharmacie, odontologie, ifsi]
 
 # Axe 1 — hyperparamètres sourcés par profession
 
-> **Headline.** 27 fiches dans [`fiches/`](../fiches/) : 19 sourcées, 1
+> **Headline.** 27 fiches dans [`fiches/`](../fiches) : 19 sourcées, 1
 > mesurée, 1 supposée, 6 non mesurables. Les 4 pistes prioritaires sont
 > couvertes pour chaque profession concernée. Le seul effet de la régulation
 > chiffré dans la littérature concerne les IDE : −25,57 IDEL pour

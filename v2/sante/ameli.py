@@ -1,6 +1,6 @@
 """Loader: ameli "Professionnels de santé libéraux : effectif et densité" -> data/processed/stock_ameli.parquet
 
-Run: uv run python -m sante.ameli
+Run (racine du dépôt): PYTHONPATH=v2 uv run python -m sante.ameli
 Source: data.ameli.fr dataset demographie-effectifs-et-les-densites (modified 2026-10-28), export where effectif > 0.
 Output keeps detailed cells only (no 'Tout âge' / 'tout sexe' / 'Ensemble des ...' aggregates), same columns
 as stock.parquet where they apply: profession, specialty, source, year, dep, dep_name, region, mode, mode3,

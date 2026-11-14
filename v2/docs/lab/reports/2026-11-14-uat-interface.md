@@ -7,7 +7,7 @@ headline: "V1 : 11 tâches réussies sur 22 (6 échecs, dont l'effectif 2035 et 
 status: draft
 professions: [sages-femmes, dentistes, pharmaciens, kines]
 hypothesis: L'interface répond aux 6 critères (écart, flux, délai, <100 ms, incertitude, fiche)
-sources: [v2/prototype/, v2/prototype-carte/, docs/lab/lexicon.md]
+sources: [v2/prototype/, v2/prototype-carte/, v2/docs/lab/lexicon.md]
 tags: [uat, interface, prototype]
 ---
 

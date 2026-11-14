@@ -3,7 +3,7 @@
 I = flux annuel net ajusté dans les tranches où la rétention brute dépasse 1 (entrées, retours,
 arrivées d'autres territoires). k(t) = taille relative de la cohorte en formation (DREES, inscrits)
 si `filiere` est activé, sinon 1. m = multiplicateur de scénario (quotas) : evenement_quotas()
-construit l'événement daté. Convention v1 (app/levers.project_flow) : les entrées de l'année
+construit l'événement daté. Convention v1 (v2/sante/levers_v1.project_flow) : les entrées de l'année
 origine + L_p sont encore au niveau de base ; m s'applique à partir de origine + L_p + 1.
 """
 import numpy as np

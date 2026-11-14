@@ -34,7 +34,7 @@ What the file holds was checked first. Every département row details at most on
 
 ## How
 - **Data:** `data/raw/drees/infirmieres_salariees_bts_2013_2023.xlsx` (DREES / Insee BTS, published 2025-03-25, updated 2026-07-02). Seed: `infirmieres_liberales_snds_2012_2023.xlsx` (dép × sex × age, missing rows read as 0).
-- **Method:** [`sante/nurses.py`](../../../sante/nurses.py). Both marginals are scaled to the file's dép total. The 10 × 2 table is then fitted by IPF, seeded with the liberal nurses' age × sex in the same dép and year. A 1e-3 blend of the national salaried joint keeps the empty seed cells reachable. Output: `data/processed/stock_nurses_salaried.parquet`, with `mode3='salarie'`.
+- **Method:** [`sante/nurses.py`](../../../../sante/nurses.py). Both marginals are scaled to the file's dép total. The 10 × 2 table is then fitted by IPF, seeded with the liberal nurses' age × sex in the same dép and year. A 1e-3 blend of the national salaried joint keeps the empty seed cells reachable. Output: `data/processed/stock_nurses_salaried.parquet`, with `mode3='salarie'`.
 - **Run:** `uv run python -m sante.nurses` (≈ 3 s; it asserts the 0.1 % check).
 
 ## ⚑ What could make it wrong

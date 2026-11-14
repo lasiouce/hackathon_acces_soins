@@ -1,6 +1,6 @@
 """Comparison bench: every estimator in sante.estimators.ESTIMATORS on the same windows and metric.
 
-Run: uv run python -m sante.backtest   -> artifacts/s01_backtest/{results.csv, errors_by_dep.parquet}
+Run (racine du dépôt): PYTHONPATH=v2 uv run python -m sante.backtest   -> v2/sante/out/s01_backtest/{results.csv, errors_by_dep.parquet}
 Error = absolute % error on each département's total headcount (sexes and ages summed).
 MAPE over départements with >= MIN_N professionals at origin; WAPE = sum|err| / sum(actual).
 """
@@ -11,7 +11,7 @@ import pandas as pd
 from sante.estimators import ESTIMATORS
 from sante.model import stock_table
 
-OUT = Path("artifacts/s01_backtest")
+OUT = Path("v2/sante/out/s01_backtest")
 MIN_N = 30
 # (profession, fit window, origin, targets). Origin 2021 rows exist because the student pipeline starts in 2020.
 DESIGN = [

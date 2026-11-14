@@ -16,7 +16,7 @@ tags: []
 > **Headline:** <the result, with its number and unit>
 
 ## Question
-<one sentence: what decision or hypothesis does this inform? Link it: [H1](../decisions.md), K2…>
+<one sentence: what decision or hypothesis does this inform? Link it: [H1](../lab/decisions.md), K2…>
 
 ## Result
 <the number(s). A table or one figure. Put images in docs/lab/figures/>

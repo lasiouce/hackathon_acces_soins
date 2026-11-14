@@ -27,10 +27,11 @@ recherche quantitative.
 
 **Dossier v2 (2026-11-14).** Tout nouveau travail va dans `v2/` : code,
 `v2/docs/lab/` (décisions, ledger, rapports, fiches).
-- La v1 (`sante/`, `app/`, `docs/lab/`) est figée et se consulte en lecture
-  seule.
-- Pour les sessions v2, les règles sur `docs/lab/decisions.md` et
-  `open.md` s'appliquent à `v2/docs/lab/`.
+- La v1 a été absorbée dans `v2/` le 2026-11-14 : son code utile est dans
+  `v2/sante/`, son registre archivé dans `v2/docs/lab/archive-v1/` (lecture
+  seule). L'application Streamlit est supprimée.
+- Les règles ci-dessous sur `docs/lab/` s'appliquent à `v2/docs/lab/` ; seul
+  le profil reste à `docs/lab/profile.md`.
 
 ## Lab profile
 [`docs/lab/profile.md`](docs/lab/profile.md) holds the headline metric (decision usefulness **and**
@@ -53,19 +54,19 @@ end, < 2 s recompute) and where records go. Every `lab` skill reads it.
 The repo root is an Obsidian vault (core plugins only, nothing to install).
 [`Home.md`](Home.md) is the entry point.
 - Every analysis gets a note in `docs/lab/reports/`, made from
-  `docs/templates/analysis.md`. Its frontmatter carries a `headline` with a
+  `v2/docs/templates/analysis.md`. Its frontmatter carries a `headline` with a
   number.
 - Every analysis also gets a row in Home's **Analyses log**. Update Home's
   **Status** table when it moves.
 - Decks for colleagues go in `docs/lab/presentations/`, made from
-  `docs/templates/deck.md`. Slides are separated by `---`, and the deck is
+  `v2/docs/templates/deck.md`. Slides are separated by `---`, and the deck is
   shown with Obsidian's *Start presentation*.
 - Diagrams are Mermaid. Figures go in `docs/lab/figures/`.
 
 ## Decisions: every session records them, every session checks them
 This applies to every session working in this folder, sub-sessions included.
 - **Every decision is recorded in the vault.** A choice made, changed or
-  rejected gets a dated entry in [`docs/lab/decisions.md`](docs/lab/decisions.md). That covers
+  rejected gets a dated entry in [`v2/docs/lab/decisions.md`](v2/docs/lab/decisions.md). That covers
   a method, a parameter value, a scope cut, a data source, or a UI rule.
   - An open choice goes under `## Open / not yet decided`.
   - Never only in chat, and never only in a report.
@@ -81,10 +82,10 @@ This applies to every session working in this folder, sub-sessions included.
 
 ## House rules
 - **We build estimation algorithms, not one exact number.** Every
-  estimator goes behind the common interface in `sante/estimators.py`.
+  estimator goes behind the common interface in `v2/sante/estimators.py`.
   The backtest compares them; no single figure is presented as "the"
   projection.
-- **Neutral wording.** UI text follows [`docs/lab/lexicon.md`](docs/lab/lexicon.md): describe
+- **Neutral wording.** UI text follows [`v2/docs/lab/lexicon.md`](v2/docs/lab/lexicon.md): describe
   and compare (e.g. "accès moindre"), never judge ("médiocre", "désert").
 - **Three personas share one model**: ARS/DG (zoom commune → groups of
   communes → département → région),

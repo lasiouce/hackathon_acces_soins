@@ -1,6 +1,6 @@
 """Salaried nurses: département x age x sex stock from DREES/BTS marginal tables, by raking.
 
-Run: uv run python -m sante.nurses
+Run (racine du dépôt): PYTHONPATH=v2 uv run python -m sante.nurses
 Output
   stock_nurses_salaried.parquet  same columns as stock.parquet, profession='infirmiers-salaries', source='BTS'
 Source: DREES "Infirmières salariées" (BTS Insee, 2013-2023, published 2025-03-25, updated 2026-07-02).

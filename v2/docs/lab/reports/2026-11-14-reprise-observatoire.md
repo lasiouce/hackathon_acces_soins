@@ -16,7 +16,7 @@ tags: [reprise, équipe, validation, levier, données]
 > **Headline :** sur 31 éléments passés en revue, 19 sont repris ou
 > adaptés, 2 sont à vérifier (B4, C7), 7 ne sont pas repris (E1–E6, C8) et
 > 3 attendent la couche personas (D1–D3).
-> **[`v2/ROADMAP.md`](../../ROADMAP.md) prime** (décision du
+> **[`v2/ROADMAP.md`](../../../ROADMAP.md) prime** (décision du
 > 2026-11-14) : on reprend ce qui sert nos axes, on n'adopte ni sa
 > définition de « libéral », ni son grain, ni son horizon.
 

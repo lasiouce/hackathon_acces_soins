@@ -47,7 +47,7 @@ try:   # version du code, pour la traçabilité des fiches exportées
     VERSION = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=ROOT).stdout.strip() or "?"
 except Exception:
     VERSION = "?"
-LAG = {"pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}   # app/levers.py (supposé)
+LAG = {"pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}   # v2/sante/levers_v1.py (supposé)
 DECISION = 2026
 # Leviers suspendus tant que les défauts de la seconde revue du jumeau sont ouverts
 # (v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0-v2.md) : retraite (tranche 65+), régulation (non conservative).

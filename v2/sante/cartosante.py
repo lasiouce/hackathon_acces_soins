@@ -1,6 +1,6 @@
 """Loader: CartoSanté (Atlasanté) liberal stock by commune x age band -> data/processed/stock_commune.parquet
 
-Run: uv run python -m sante.cartosante
+Run (racine du dépôt): PYTHONPATH=v2 uv run python -m sante.cartosante
 Source: OGC TJS https://cartosante.atlasante.fr/GC_tjs.php, datasets {infi,kine,dent}_popage, attribute eft
 (liberal professionals active at 31/12, producer FNPS/SNDS). Raw XML is cached in data/raw/cartosante/ with
 the extraction date; delete it to refresh.

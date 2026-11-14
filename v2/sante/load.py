@@ -1,6 +1,6 @@
 """Loaders: raw DREES / Insee Excel files -> tidy parquet in data/processed/.
 
-Run: uv run python -m sante.load
+Run (racine du dépôt): PYTHONPATH=v2 uv run python -m sante.load
 Outputs
   stock.parquet       profession, year, dep, dep_name, region, mode, mode3, age_band, age_lo, age_hi, sex, specialty, n
   population.parquet  scenario, year, dep, dep_name, sex, age_lo, age_hi, pop

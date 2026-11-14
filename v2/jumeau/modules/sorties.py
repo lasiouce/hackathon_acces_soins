@@ -17,7 +17,7 @@ tranche ouverte de façon permanente (séjour infini pour Δ ≥ 5, seconde revu
 La montée en charge (3 mois par an) se fait dans le scénario : evenement_retraite().
 cumul_multiplicateur k : e[65+] × max(0, 1 − part_cumul_p · (k − 1)), part_cumul par profession (COR 2016).
 multiplicateur_precoces m : e[âge < 60] × m (départs précoces ; effet d'une politique non chiffré, supposé).
-Le chemin v1 (app/levers.perturb_retention) n'est plus reproduit pour ce levier : la v1 porte le défaut.
+Le chemin v1 (v2/sante/levers_v1.perturb_retention) n'est plus reproduit pour ce levier : la v1 porte le défaut.
 """
 import math
 
