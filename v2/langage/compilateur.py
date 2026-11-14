@@ -121,25 +121,42 @@ def _nombre(tok: str) -> float | None:
         return glossaire()["nombres"].get(tok)
 
 
-def _direction(c: str) -> str | None:
+def _direction(c: str, pos: int | None = None) -> str | None:
+    """Sens hausse / baisse. Avec pos (position de la quantité), le mot de sens le plus proche l'emporte,
+    à égalité celui qui suit (« 30 % … en moins ») ; sinon le premier de la proposition."""
     D = glossaire()["directions"]
     hits = [(s, "hausse") for s, _, _ in _find(c, D["hausse"])] + [(s, "baisse") for s, _, _ in _find(c, D["baisse"])]
-    if re.search(r"(?:^|\s)\+\s*\d", c):
+    for sens, racines in D.get("racines", {}).items():   # formes conjuguées : « augmentait », « allongeons »…
+        hits += [(m.start(), sens) for m in re.finditer(rf"(?<![a-z])(?:{'|'.join(racines)})[a-z]*", c)]
+    if re.search(r"(?:^|[\s(])\+\s*\d", c):
         hits.append((c.index("+"), "hausse"))
-    if re.search(r"(?:^|\s)-\s*\d", c):
+    if re.search(r"(?:^|[\s(])-\s*\d", c):
         hits.append((c.index("-"), "baisse"))
-    return min(hits)[1] if hits else None
+    if not hits:
+        return None
+    if pos is None:
+        return min(hits)[1]
+    return min(hits, key=lambda h: (abs(h[0] - pos), h[0] < pos))[1]
 
 
-def quantite(c: str) -> dict | None:
-    """Une quantité dans une proposition : {'type': 'facteur'|'pct'|'ans', 'v': float, 'brut': str}."""
+def quantite(c: str, sorte: str | None = None) -> dict | None:
+    """Une quantité dans une proposition : {'type': 'facteur'|'pct'|'ans', 'v': float, 'brut': str}.
+
+    sorte = 'ans' (levier en années) ou 'facteur' (levier multiplicateur) : on ne cherche que ce type,
+    pour qu'« avant 60 ans » ne passe pas pour une durée quand le levier est un multiplicateur."""
+    if sorte == "facteur":
+        q = quantite(c)
+        return q if q and q["type"] != "ans" else _quantite_facteur(c)
+    if sorte == "ans":
+        q = quantite(c)
+        return q if q and q["type"] == "ans" else None
     D = glossaire()["directions"]
-    mots = "|".join(glossaire()["nombres"])
+    mots = "|".join(sorted(glossaire()["nombres"], key=len, reverse=True))
     # pourcentages
     m = re.search(rf"{NUM}\s*(?:%|pour ?cent|points?\b)", c)
     if m:
         p = _nombre(m.group(1))
-        d = _direction(c)
+        d = _direction(c, m.start())
         if d is None:
             return {"type": "pct_sans_sens", "v": p, "brut": m.group(0)}
         return {"type": "facteur", "v": 1 + p / 100 if d == "hausse" else 1 - p / 100, "brut": m.group(0) + f" ({d})"}
@@ -149,12 +166,26 @@ def quantite(c: str) -> dict | None:
         n = _nombre(m.group(1))
         if n is not None:
             v = n / 12 if m.group(2) == "mois" else n
-            d = _direction(c)
+            d = _direction(c, m.start())
             return {"type": "ans", "v": -v if d == "baisse" else v, "brut": m.group(0)}
-    # multiplicateurs « x 1,5 », « 1,5 fois »
-    m = re.search(rf"(?:(?<![a-z])x|×)\s*{NUM}|{NUM}\s*fois", c)
+    return _quantite_facteur(c)
+
+
+def _quantite_facteur(c: str) -> dict | None:
+    D = glossaire()["directions"]
+    mots = "|".join(sorted(glossaire()["nombres"], key=len, reverse=True))
+    # multiplicateurs « x 1,5 », « 1,5 fois », « trois fois plus / moins »
+    m = re.search(rf"(?:(?<![a-z])x|×)\s*{NUM}|(?<![a-z0-9])({NUM[1:-1]}|{mots})\s*fois(?:\s+(plus|moins))?", c)
     if m:
-        return {"type": "facteur", "v": _nombre(m.group(1) or m.group(2)), "brut": m.group(0)}
+        n = _nombre(m.group(1) or m.group(2))
+        if n:
+            return {"type": "facteur", "v": 1 / n if m.group(3) == "moins" else n, "brut": m.group(0)}
+    # fractions avec un sens : « un bon tiers de plus », « un quart de moins »
+    d = _direction(c)
+    if d and not _find(c, D["facteurs"]):
+        for terme, f in sorted(glossaire()["fractions"].items(), key=lambda x: -len(x[0])):
+            if _rx(terme).search(c) and not re.search(rf"{terme} (?:des )?zones", c):
+                return {"type": "facteur", "v": 1 + f if d == "hausse" else 1 - f, "brut": f"{terme} ({d})"}
     # formules
     f = _find(c, D["facteurs"])
     if f:
@@ -184,6 +215,12 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
     S, G = serveur(), glossaire()
     UI = S.UI
     t = norm(texte)
+    mots_n = "|".join(sorted(G["nombres"], key=len, reverse=True))
+    t = re.sub(rf"(?<![a-z0-9])(\d+|{mots_n})\s+ans?\s+et\s+demie?(?![a-z])",
+               lambda m: f"{(_nombre(m.group(1)) or 0) + 0.5:g} ans", t)          # « un an et demi » -> « 1.5 ans »
+    t = re.sub(r"(?<![a-z0-9])(?:un )?demi an(?:nee)?(?![a-z])", "0.5 ans", t)
+    t = re.sub(r"emploi et (?:la )?retraite", "emploi retraite", t)                       # ne pas couper sur ce « et »
+    t = re.sub(rf"multipli[a-z]* par {NUM}", lambda m: f"x {m.group(1)}", t)
     res = {"texte": texte, "leviers": {}, "profession": None, "territoire": None, "compris": [],
            "non_modelise": [], "non_compris": [], "reformulations": [], "avertissements": []}
 
@@ -201,6 +238,11 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
 
     # profession
     profs = detecter_profession(t)
+    m = re.search(r"combien d(?:e |es | )(.+)", t)
+    if m and len(profs) > 1:
+        demandee = detecter_profession(m.group(1))
+        if demandee:
+            profs = [demandee[0]] + [p for p in profs if p != demandee[0]]
     if profs:
         res["profession"] = profs[0]
         if len(profs) > 1:
@@ -234,7 +276,7 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
         reste = c
         for s, e, _ in sorted(hits, reverse=True):
             reste = reste[:s] + " " * (e - s) + reste[e:]
-        q = quantite(reste)
+        q = quantite(reste, "facteur") or quantite(reste, "ans")
         leviers_c = list(dict.fromkeys(all_terms[h[2]] for h in hits))
         if not leviers_c and q and en_attente:
             leviers_c, en_attente = [en_attente], None
@@ -259,6 +301,7 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
                     continue
                 brut[k] = 1
                 continue
+            q = quantite(reste, "ans" if l["fmt"] == "ans" else "facteur") or q
             if q is None:
                 en_attente = k
                 res["non_compris"].append(f"{c} (« {l['label']} » sans ampleur chiffrée : levier laissé au défaut)")
@@ -295,7 +338,8 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
             if _find(t, termes):
                 brut["dest"] = opt
                 break
-    if "quotas" in brut and _find(t, G["leviers"]["quotas_region"]["termes"]):
+    if "quotas" in brut and (_find(t, G["leviers"]["quotas_region"]["termes"])
+                             or (res["territoire"] != "FR" and re.search(r"(?<![a-z])(?:seulement|uniquement|exclusivement)(?![a-z])", t))):
         brut["quotas_region"] = 1
         if res["territoire"] == "FR":
             res["avertissements"].append("Quotas « seulement dans la région » sans région ni département cité : le serveur refusera ce scénario.")
@@ -308,7 +352,7 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
             lv[k] = v
             continue
         x, src = v
-        x = round(x, 4)
+        x = round(round(x / l["step"]) * l["step"], 4) if l.get("step") else round(x, 4)   # au pas du levier
         if not l["min"] <= x <= l["max"]:
             b = min(max(x, l["min"]), l["max"])
             res["avertissements"].append(f"{l['label']} : {_fmt(l, x)} ramené à la borne {_fmt(l, b)}.")

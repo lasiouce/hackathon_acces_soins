@@ -2426,6 +2426,27 @@ près.
 jumeau, réécrit à tort par le scénario de l'axe 5. À vérifier à chaque
 relance.
 
+## 2026-11-14 — Axe 5 : l'amplitude de référence des leviers est celle de DD76 (quotas ±20 %)
+
+**Décision.** La part « décision / connaissance » et le seuil « assez sûr
+pour décider » se rapportent à l'amplitude **DD76** :
+- quotas et capacité de formation × [0,8 ; 1,2] ;
+- report de la retraite de 0 à 2 ans ;
+- autres leviers inchangés.
+
+La variante « interface » (quotas de 0,7 à 1,5, retraite de 0 à 3 ans)
+reste publiée comme sensibilité. Elle ne sert pas de référence.
+
+**Pourquoi.** Choix de l'utilisateur·rice, 2026-11-14 : « DD76 (±20 %) ».
+L'amplitude DD76 est sourcée (DREES, Dossiers n° 76) ; celle de
+l'interface est un choix d'ergonomie.
+- Conséquence en 2050 : la décision pèse plus que la connaissance pour les
+  IDE, les MK et les SF.
+- Les CD sont à égalité.
+- Les PH penchent du côté de la connaissance (0,38 contre 0,61).
+**Ce qui le renverserait.** Une source qui fixe une autre plage plausible
+pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
+
 ## Open / not yet decided
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
@@ -3138,3 +3159,17 @@ de 48 690 (1er janvier 2026, mesuré). Aucun double compte (rapport `reports/202
 quatre autres professions ont aussi un privé 2026 inférieur à leur total. La phrase de la synthèse est corrigée ; le chiffre de
 62 000 n'a pas de source retrouvée.
 **Pourquoi.** L'erreur venait de la session v2 (comparaison d'une valeur 2050 à un total 2026).
+
+## 2026-11-14 — Compilateur : glossaire étendu par classes d'erreurs, 70 % sur un troisième jeu à l'aveugle
+
+**Décision.** Le glossaire et le compilateur sont étendus en deux passes, chacune guidée par les échecs d'un jeu à l'aveugle et
+mesurée sur le suivant, jamais vu : 47 % (jeu 1, version d'origine) → 53 % (jeu 2) → **70 % (jeu 3, chiffre à citer)**.
+Changements par classe : synonymes et formes conjuguées (racines), fractions (« un bon tiers »), demi-années, quantité
+cherchée selon le type du levier (« avant 60 ans » n'est plus une durée), sens pris au mot le plus proche de la quantité,
+arrondi au pas du levier, « emploi et retraite » non coupé, « multiplié par N », « combien de X » pour la profession,
+politiques de rémunération non modélisées. Cas d'origine inchangés (35/36).
+**Convention gardée :** deux professions ou deux territoires → le premier cité, avec un avertissement (les jeux 1 et 2
+attendaient « aucun » : écart de convention, pas d'erreur ; le jeu 3 a été écrit avec la convention du compilateur).
+**Pourquoi.** L'utilisateur·rice : « Extend glossary ». Mesurer sur un jeu jamais vu à chaque version évite de se tromper
+sur des cas déjà corrigés.
+**Ouvert.** Gentilés de ville (6 échecs sur 9 au jeu 3), négation partielle, « remplacer un confrère qui part » ; un jeu 4 pour mesurer.

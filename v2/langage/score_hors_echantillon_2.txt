@@ -1,0 +1,9 @@
+exact 24/30 = 80%
+{'simple': '10/12', 'combine': '5/6', 'negation': '4/4', 'non_modelise': '3/4', 'piege': '2/4'}
+{'leviers': '28/30', 'profession': '28/30', 'territoire': '28/30', 'non_modelise': '30/30'}
+- ('h2-03', 'simple', 'Les kinés bretons partent deux ans plus tard à la retraite.', {'territoire': ('FR', 'R53')})
+- ('h2-09', 'simple', "Le gouvernement envisage d'accueillir 30 % de pharmaciens à diplôme étranger en moins.", {'leviers': ({'etrangers': 1.3}, {'etrangers': 0.7})})
+- ('h2-17', 'combine', "Si on régule les pharmaciens et que ceux qui ne peuvent pas s'installer abandonnent le métier, avec en plus 5 % de quotas en moins ?", {'leviers': ({'quotas': 1.05, 'regul': 1.0, 'dest': 'sortie'}, {'regul': 1.0, 'dest': 'sortie', 'quotas': 0.95})})
+- ('h2-26', 'non_modelise', 'Revaloriser de 10 % les honoraires des kinés et autoriser les pharmaciens à vacciner.', {'profession': ('kines', None)})
+- ('h2-28', 'piege', 'Retraite repoussée de 4 ans pour les dentistes et les sages-femmes.', {'profession': ('dentistes', None)})
+- ('h2-29', 'piege', 'Moitié moins de départs avant 60 ans chez les infirmiers en Bretagne et en Normandie.', {'territoire': ('R53', 'FR')})

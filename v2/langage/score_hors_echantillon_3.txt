@@ -1,0 +1,12 @@
+exact 21/30 = 70%
+{'simple': '8/12', 'combine': '4/6', 'negation': '2/4', 'non_modelise': '4/4', 'piege': '3/4'}
+{'leviers': '25/30', 'profession': '30/30', 'territoire': '24/30', 'non_modelise': '30/30'}
+- ('h3-03', 'simple', 'Les kinés lyonnais partiront à la retraite un an et demi plus tard.', {'territoire': ('FR', 'D69')})
+- ('h3-04', 'simple', "Le gouvernement a annoncé que les pharmaciens ne pourraient plus s'installer que pour remplacer un confrère qui part.", {'leviers': ({}, {'regul': 1.0})})
+- ('h3-07', 'simple', 'Deux fois moins de départs avant 60 ans chez les sages-femmes marseillaises.', {'territoire': ('FR', 'D13')})
+- ('h3-11', 'simple', 'Les infirmiers bordelais travailleraient deux ans de plus avant de raccrocher.', {'leviers': ({}, {'retraite': 2.0}), 'territoire': ('FR', 'D33')})
+- ('h3-16', 'combine', 'Kinés du Grand Est : formation +10 % réservée à la région, cumul emploi-retraite +20 % et 20 % de départs anticipés en moins.', {'leviers': ({'cumul': 1.2, 'precoces': 0.8}, {'quotas': 1.1, 'quotas_region': 1.0, 'cumul': 1.2, 'precoces': 0.8})})
+- ('h3-18', 'combine', "Régulation dans 70 % des territoires pour les infirmiers corses ; ceux qui ne peuvent pas s'installer quittent le métier.", {'leviers': ({'regul': 1.0, 'dest': 'sortie'}, {'regul': 1.0, 'part_zones': 0.7, 'dest': 'sortie'}), 'territoire': ('FR', 'R94')})
+- ('h3-20', 'negation', "Sans réguler l'installation, que donnerait un doublement des diplômés étrangers pour les sages-femmes en Île-de-France ?", {'leviers': ({}, {'etrangers': 2.0})})
+- ('h3-22', 'negation', 'Je ne veux ni régulation ni report de la retraite : juste 30 % de départs précoces en moins chez les infirmiers lillois.', {'territoire': ('FR', 'D59')})
+- ('h3-28', 'piege', 'Repousser de cinq ans le départ en retraite des pharmaciens strasbourgeois.', {'territoire': ('FR', 'D67')})

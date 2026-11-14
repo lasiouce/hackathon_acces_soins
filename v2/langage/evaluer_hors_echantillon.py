@@ -6,7 +6,7 @@ Un levier à sa valeur par défaut compte comme non réglé (convention du jeu d
 import sys, yaml, importlib.util, collections
 sys.path.insert(0,"v2/langage")
 spec=importlib.util.spec_from_file_location("c","v2/langage/compilateur.py");C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
-cas=yaml.safe_load(open("v2/langage/cas_test_hors_echantillon.yaml"))
+cas=yaml.safe_load(open("v2/langage/"+(sys.argv[1] if len(sys.argv)>1 else "cas_test_hors_echantillon.yaml")))
 S=C.serveur();D={l["k"]:l["default"] for l in S.LEVIERS_UI}
 def norm_lv(d):
     out={}

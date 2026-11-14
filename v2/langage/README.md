@@ -58,6 +58,22 @@ Défauts dominants : tournures sans terme du glossaire (« un bon tiers », « d
 arrondies, deuxième levier d'une phrase combinée perdu, « dans la région seulement ». Le glossaire **n'a pas été ajusté** sur
 ces cas : le jeu reste hors échantillon pour la prochaine version. Sortie complète : `score_hors_echantillon.txt`.
 
+## Glossaire étendu, mesuré sur trois jeux à l'aveugle successifs (2026-11-14)
+Chaque jeu est écrit par un agent qui n'a vu ni le glossaire, ni le compilateur, ni les jeux précédents. Il est **noté avant
+toute modification** ; ses échecs servent ensuite à corriger des *classes* d'erreurs (jamais une phrase), et le jeu suivant mesure.
+
+| Version | Jeu à l'aveugle (jamais vu) | Exact | Leviers | Profession | Territoire |
+|---|---|---|---|---|---|
+| glossaire d'origine | jeu 1 | 14/30 (47 %) | 17/30 | 28/30 | 30/30 |
+| + synonymes, fractions, demi-années, quantité par type de levier | jeu 2 | 16/30 (53 %) | 20/30 | 28/30 | 28/30 |
+| + sens le plus proche de la quantité, racines conjuguées, arrondi au pas, « emploi et retraite » | jeu 3 | **21/30 (70 %)** | 25/30 | 30/30 | 24/30 |
+
+**Le chiffre à citer est 70 %** (jeu 3). Les jeux 1 et 2 sont désormais en échantillon (29/30 et 24/30 : non citables) ;
+les cas d'origine restent à 35/36. Défauts restants (jeu 3) : gentilés de ville (« lyonnais », « marseillaises » :
+6 territoires sur 9 échecs), « remplacer un confrère qui part » (régulation sans le mot), « % des territoires » pour la part
+des zones, négation qui écarte un levier alors qu'un autre est demandé (« sans réguler…, un doublement des étrangers »),
+« réservée à la région ». Un jeu 4 est nécessaire pour mesurer la version suivante. Sorties : `score_hors_echantillon*.txt`.
+
 ## Dans la carte
 `v2/prototype-carte/server.py` expose `GET /api/interpret?q=…&prof=…&terr=…` (profession et territoire affichés
 servent de défaut). La carte montre « Ce que j'ai compris / Pas encore dans le modèle / Pas compris / À noter » et

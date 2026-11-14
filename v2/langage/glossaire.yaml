@@ -9,20 +9,26 @@ leviers:
     unite: multiplicateur          # 1,2 = +20 % de places
     termes: [numerus apertus, numerus clausus, quotas, quota, places en formation, places de formation,
              places en ifsi, places en ifmk, places, capacites de formation, capacites d accueil,
-             nombre d etudiants, etudiants formes, admissions en formation, ifsi, ifmk]
+             nombre d etudiants, etudiants formes, admissions en formation, ifsi, ifmk,
+             former, formait, formerait, formons, forme, formes, formees, diplomer, diplomes formes,
+             etudiants, etudiantes, promotions, entrees en formation, places d etudiants, numerus]
     source: "Loi n° 2019-774 du 24 juillet 2019, art. 1 (numerus apertus pour médecine, maïeutique, odontologie, pharmacie) ; quotas IFSI et IFMK : arrêtés annuels (référence non citée)"
   quotas_region:
     famille: former
     unite: bascule
     termes: [seulement dans la region, uniquement dans la region, dans la region seulement, quotas regionaux,
-             places regionales, seulement dans cette region]
+             places regionales, seulement dans cette region, uniquement en, seulement en, uniquement dans,
+             seulement dans, exclusivement, dans la region uniquement, formes dans la region]
     source: null
   etrangers:
     famille: attirer
     unite: multiplicateur
     termes: [diplomes etrangers, diplome etranger, diplomes a l etranger, padhue, evc,
              epreuves de verification des connaissances, reconnaissance des diplomes,
-             praticiens a diplome hors union europeenne, professionnels etrangers, diplomes hors ue]
+             praticiens a diplome hors union europeenne, professionnels etrangers, diplomes hors ue,
+             diplomees a l etranger, diplomee a l etranger, diplome a l etranger, formes a l etranger,
+             formees a l etranger, venus de l etranger, venues de l etranger, etrangers, etrangeres,
+             etranger, hors union europeenne, hors ue, recrutement international, recruter a l etranger]
     source: "Code de la santé publique, art. L4111-2 (autorisation d'exercice des titulaires de diplômes hors UE, épreuves de vérification des connaissances)"
   regul:
     famille: installer
@@ -42,35 +48,44 @@ leviers:
     unite: option
     options:
       salariat: [salariat, salaries, vers le salariat, en salariat, deviennent salaries]
-      sortie: [quittent la profession, hors de la profession, quitter la profession, sortent de la profession, abandonnent]
+      sortie: [quittent la profession, hors de la profession, quitter la profession, sortent de la profession, abandonnent,
+               quittent le metier, quitter le metier, changent de metier, arretent, cessent d exercer]
       voisine: [zone voisine, zones voisines, departement voisin, a cote, voisine]
     source: null
   retraite:
     famille: retenir
     unite: ans
     termes: [age de depart a la retraite, age de la retraite, age legal, retraite, cessation d activite,
-             fin d activite, en activite]
+             fin d activite, en activite, age de depart, depart a la retraite, departs a la retraite,
+             partir plus tard, partent plus tard, travailler plus longtemps, de travail en plus,
+             annees de travail, an de travail, ans de travail, restent, rester, restant, plus longtemps,
+             prolonger l activite, carriere plus longue, la carriere, carriere, carrieres]
     source: "Loi n° 2023-270 du 14 avril 2023 de financement rectificative de la sécurité sociale pour 2023 (report de l'âge légal)"
   cumul:
     famille: retenir
     unite: multiplicateur
     termes: [cumul emploi retraite, cumul emploi et retraite, cumul activite retraite, retraites actifs,
-             retraite active, cumul]
+             retraite active, cumul, cumulent, cumuler, cumulant, cumulent emploi retraite]
     source: "Code de la sécurité sociale, art. L161-22 (cumul emploi-retraite)"
   precoces:
     famille: retenir
     unite: multiplicateur
     termes: [departs anticipes, departs avant 60 ans, depart avant 60 ans, departs precoces,
-             abandons en cours de carriere, sorties precoces, departs prematures, cessations precoces]
+             abandons en cours de carriere, sorties precoces, departs prematures, cessations precoces,
+             avant la soixantaine, avant soixante ans, quittent le metier avant, partent avant 60 ans]
     source: null
 
 # Verbes et formules de direction. effet : hausse | baisse | facteur (valeur imposée) | annule.
 directions:
   hausse: [augmenter, augmente, augmentant, augmentation, hausse, plus, accroitre, relever, encourager,
            renforcer, reculer, repousser, decaler, prolonger, retarder, davantage, supplementaires,
-           supplementaire, ouvrir, elargir, developper]
+           supplementaire, ouvrir, elargir, developper, augmentent, augmentons, augmenterait, hausser,
+           accroit, accroissement, favoriser, favorise, favorisant, inciter, encourage, soutenir,
+           renforce, prolonge, repousse, recule, relevant, faire venir, attirer, accueillir, accueille,
+           multiplier, gagner, de plus, en plus]
   baisse: [reduire, reduisant, reduction, baisser, baisse, diminuer, diminution, moins, limiter,
-           freiner, restreindre, avancer]
+           freiner, restreindre, avancer, reduit, reduite, reduits, reduisons, diminue, diminuant,
+           baissant, limite, limitant, couper, freine, de moins, en moins, retirer]
   facteurs:            # formule -> multiplicateur (leviers multiplicateurs)
     doubler: 2.0
     double: 2.0
@@ -86,12 +101,26 @@ directions:
     supprimer: 0.0
     interdire: 0.0
     zero: 0.0
+  racines:             # débuts de mots, toutes conjugaisons
+    hausse: [augment, hauss, accroi, relev, renforc, allong, prolong, multipli, repouss, recul, retard, encourag, favoris]
+    baisse: [redui, reduc, baiss, diminu, restrei, raccourc, frein]
   plafonner: [plafonner, plafond, au maximum]   # reconnu, sans valeur chiffrée : signalé
 unites:
   pourcent: ["%", pour cent, pourcent, points]
   ans: [an, ans, annee, annees]
   mois: [mois]
   fois: ["x", "×", fois]
+# Fractions : avec un sens (hausse ou baisse), 1 ± fraction pour un levier multiplicateur.
+fractions:
+  un bon tiers: 0.35
+  un petit tiers: 0.3
+  un tiers: 0.3333
+  un bon quart: 0.25
+  un quart: 0.25
+  un cinquieme: 0.2
+  un dixieme: 0.1
+  deux tiers: 0.6667
+  trois quarts: 0.75
 nombres:
   un: 1
   une: 1
@@ -104,7 +133,13 @@ nombres:
   huit: 8
   neuf: 9
   dix: 10
+  onze: 11
+  douze: 12
   quinze: 15
+  vingt cinq: 25
+  soixante: 60
+  soixante dix: 70
+  quatre vingt: 80
   vingt: 20
   trente: 30
   quarante: 40
@@ -184,9 +219,16 @@ non_modelises:
     termes: [maison de sante, maisons de sante, msp, centre de sante, centres de sante, exercice coordonne, cpts]
     raison: "Le jumeau ne distingue pas le mode d'exercice coordonné et n'a pas d'effet estimé d'une maison de santé sur l'installation ou le départ des professionnels."
     source: null
+  remuneration:
+    libelle: Rémunération, tarifs et honoraires
+    termes: [salaire, salaires, remuneration, remunerations, revaloriser, revalorisation, honoraires, tarifs,
+             tarif, cotation, cotations, grille salariale, primes de salaire]
+    raison: "Le jumeau n'estime aucune élasticité des installations, des départs ou des entrées en formation à la rémunération."
+    source: null
   aides_installation:
     libelle: Aides ou primes à l'installation
-    termes: [prime a l installation, primes a l installation, aide a l installation, aides a l installation,
+    termes: [aide au logement, aides au logement, logement, euros, bourse, bourses, allocation, exoneration fiscale,
+             prime a l installation, primes a l installation, aide a l installation, aides a l installation,
              contrat d aide, incitations financieres, prime, primes, exoneration]
     raison: "Aucune élasticité de l'installation aux aides financières n'est estimée sur données ouvertes ; le jumeau ne relie pas un montant en euros à un flux."
     source: null
