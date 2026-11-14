@@ -273,7 +273,8 @@ calculés sur le jumeau 4721268.
   - « interface » : × [0,7 ; 1,5], retraite 0–3 ans, plages de
     `v2/prototype/server.py`.
 
-  Le choix entre les deux revient à l'utilisateur·rice (open.md).
+  **Référence retenue : « dd76 »** (choix de l'utilisateur·rice,
+  2026-11-14). « Interface » reste publiée comme sensibilité.
 
 ### Part de la variance de N privé (Sobol par groupe, S1, IC 95 % bootstrap, mesuré)
 
