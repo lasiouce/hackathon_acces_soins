@@ -109,7 +109,9 @@ indépendant), et chaque sortie le rappelle.
   `chatbot/` (Claude Haiku 5.5 avec une clé, glossaire sans clé), avec le contexte affiché (profession,
   territoire, leviers, année). Il explique l'écart par flux, le délai d'effet, la fourchette et le statut des
   leviers ; il **ne calcule rien**, et les nombres non rattachés à un résultat sont corrigés puis bloqués.
-  On peut aussi y proposer une politique (« former 20 % de kinés en plus en Auvergne d'ici 2035 ») : le bouton
+  **Assistant de simulation** (interface de chatbot, scénarios à essayer) : on y propose une politique ou un **mélange de
+  politiques** ; la réponse dit ce que ça change concrètement, la part de chaque levier et leur interaction, et nomme le
+  modèle servi (A0, stock-flux à taux départementaux, MAPE 8,68 % à 5 ans). Proposer « former 20 % de kinés en plus en Auvergne d'ici 2035 » : le bouton
   « Afficher ce scénario sur la carte » règle profession, territoire, leviers et année. Les grandeurs sont dites dans un
   **vocabulaire fixe calculé par le code** (« légère hausse », « incertitude modérée », « moyen terme », « proche de la
   moyenne nationale » ; seuils dans `v2/docs/lab/lexicon.md`), vérifié comme les nombres. Mesuré sur 22 questions avec

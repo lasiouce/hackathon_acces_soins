@@ -209,6 +209,7 @@ def _ligne(r: dict, y: int, dens_fr: float | None = None) -> dict:
            "ecart": round(r["scn"][i] - b), "ecart_pct": ecart_pct, "evolution_pct_depuis_origine": evo,
            "fourchette_scenario": [round(lo), round(hi)], "fourchette_demi_largeur_pct": demi,
            "densite_100k_tendanciel": _r1(r["dens_base"][i]), "densite_100k_scenario": _r1(r["dens_scn"][i]),
+           "ecart_densite_100k": _r1(r["dens_scn"][i] - r["dens_base"][i]) if r["dens_scn"][i] and r["dens_base"][i] else None,
            "population": round(r["pop"][i]) if r["pop"][i] == r["pop"][i] else None}
     d = r["dens_scn"][i]
     if dens_fr and d and d == d:
@@ -275,11 +276,80 @@ def projeter(profession_: str, territoire_: str = "FR", leviers_: dict | None = 
         "annees": [_ligne(r, y, _dens_fr(p, lv, y)) for y in ys],
         f"ecart_par_flux_cumule_{ys[-1]}": flux,
         "provenance_leviers": _provenance(lv, p), **extra,
+        **({"melange_de_politiques": m} if (m := _contributions(p, t, lv, ys[-1])) else {}),
         "fourchette_methode": f"scénario × (1 ± {r['k']:.4f} × années depuis {r['origin']}) : erreur de backtest extrapolée, ~8 cas sur 10",
         "perimetre": PERIMETRE, "calcul_ms": round((time.perf_counter() - t0) * 1000, 1),
         "_serie": {"annees": r["years"], "tendanciel": r["base"], "scenario": r["scn"], "k": r["k"],
                    "origine": r["origin"], "observe": r["obs"]},
     }
+
+
+# Un levier de politique = un groupe de réglages (la hausse des places et sa restriction régionale vont ensemble).
+_GROUPES = {"quotas": ("quotas", "quotas_region"), "etrangers": ("etrangers",), "regul": ("regul", "part_zones", "dest"),
+            "retraite": ("retraite",), "cumul": ("cumul",), "precoces": ("precoces",)}
+
+
+def _contributions(p: str, t: str, lv: dict, y: int) -> dict | None:
+    """Mélange de politiques : effet de chaque levier seul, effet combiné, et interaction (combiné − somme des seuls).
+    Tout est calculé par le jumeau, sur le même état de départ ; rien n'est additionné à la main."""
+    d = {l["k"]: l["default"] for l in S().LEVIERS_UI}
+    ctx = {k: lv[k] for k in ("pop_scen", "activite")}
+    actifs = [g for g, ks in _GROUPES.items() if any(lv[k] != d[k] for k in ks) and lv[ks[0]] != d[ks[0]]]
+    if len(actifs) < 2:
+        return None
+    base = _answer(p, leviers(ctx), t)
+    i = base["years"].index(y)
+    b = base["base"][i]
+    tout = _answer(p, lv, t)["scn"][i] - b
+    out, somme = [], 0.0
+    for g in actifs:
+        seul = leviers({**ctx, **{k: lv[k] for k in _GROUPES[g]}})
+        e = _answer(p, seul, t)["scn"][i] - b
+        somme += e
+        out.append({"levier": "; ".join(resume_leviers(seul)), "ecart_seul": round(e),
+                    "ecart_seul_pct": round(e / b * 100, 2) if b else None,
+                    "qualificatif": q_variation(e / b * 100 if b else None),
+                    "part_de_l_ecart_combine_pct": round(e / tout * 100, 1) if abs(tout) > 0.5 else None})
+    out.sort(key=lambda x: -abs(x["ecart_seul"]))
+    return {"annee": y, "leviers": out, "ecart_combine": round(tout), "somme_des_effets_seuls": round(somme),
+            "interaction": round(tout - somme),
+            "lecture": "écart au tendanciel de chaque levier seul, puis de tous ensemble ; l'interaction est la différence "
+                       "entre l'effet combiné et la somme des effets seuls (la régulation, par exemple, peut absorber des entrées "
+                       "supplémentaires)"}
+
+
+# Réglages de référence pour comparer les leviers entre eux (supposés : des ordres de grandeur, pas des recommandations).
+_REFERENCE = {"quotas": {"quotas": 1.2}, "etrangers": {"etrangers": 1.5}, "retraite": {"retraite": 2.0},
+              "cumul": {"cumul": 1.5}, "precoces": {"precoces": 0.7}, "regul": {"regul": True}}
+
+
+def effets_des_leviers(profession_: str, territoire_: str = "FR", annee: int = 2040) -> dict:
+    """Chaque levier seul, à un réglage de référence, puis tous ensemble : écart au tendanciel à l'année demandée."""
+    p, t = profession(profession_), territoire(territoire_)
+    base = _answer(p, leviers({}), t)
+    y = _annees([annee], base)[0]
+    i = base["years"].index(y)
+    b = base["base"][i]
+    meta = {m["k"]: m for m in S().lever_meta()}
+    rows = []
+    for k, reg in _REFERENCE.items():
+        lv = leviers(reg)
+        r = _answer(p, lv, t)
+        e = r["scn"][i] - b
+        ans = S().LAG[p] + 1 if k == "quotas" else _DELAI_ANS.get(k, 1)
+        rows.append({"levier": "; ".join(resume_leviers(lv)), "ecart": round(e), "ecart_pct": round(e / b * 100, 2) if b else None,
+                     "qualificatif": q_variation(e / b * 100 if b else None), "delai_qualificatif": q_delai(ans),
+                     "statut": meta[k]["status"], "source": meta[k]["source"]})
+    rows.sort(key=lambda x: -abs(x["ecart"]))
+    tous = leviers({k: v for reg in _REFERENCE.values() for k, v in reg.items()})
+    e = _answer(p, tous, t)["scn"][i] - b
+    return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t, "annee": y,
+            "tendanciel": round(b), "leviers_seuls": rows,
+            "tous_ensemble": {"ecart": round(e), "ecart_pct": round(e / b * 100, 2) if b else None,
+                              "qualificatif": q_variation(e / b * 100 if b else None)},
+            "methode": "réglages de référence supposés (ordres de grandeur dans les bornes, pas des recommandations) ; "
+                       "classement par écart projeté au tendanciel ; le choix revient au décideur",
+            "perimetre": PERIMETRE}
 
 
 def comparer(profession_: str, territoire_: str, scenarios: list[dict], annee: int = 2050) -> dict:
@@ -414,6 +484,19 @@ HORS_PERIMETRE = [
 ]
 
 
+# Modèle servi (v2/prototype/server.py, Model : twin_of(StockFlowLocal)) ; chiffres mesurés, cités des articles.
+MODELE = {
+    "nom": "Stock-flux à taux départementaux (A0, axe 2)",
+    "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans",
+    "estimation": "rétention nette et entrées ajustées sur les 5 dernières années observées ; taux départementaux rétrécis vers le national (poids 200 personnes, supposé)",
+    "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
+    "precision": "MAPE 8,68 % par département à 5 ans, secteur privé, contre 9,30 % pour la tendance linéaire (mesuré, article axe 2, tableau 1)",
+    "fourchette": "± pente de l'erreur de backtest × horizon × 1,6, environ 8 cas sur 10 (facteur cité, non reproduit ; article axe 5) ; extrapolée au-delà d'environ 10 ans",
+    "alternative": "C1, cohortes bayésiennes : MAPE 7,73 % au même banc, proposée par défaut (décision axe 2, étape 2), pas encore servie par la carte",
+    "sources": "v2/papers/axe2-methodes/main.pdf ; v2/sante/estimators.py (StockFlowLocal) ; v2/jumeau/ ; v2/prototype/server.py (Model)",
+}
+
+
 def perimetre() -> dict:
     G = NL().glossaire()
     srv = S()
@@ -430,6 +513,7 @@ def perimetre() -> dict:
         },
         "hors_perimetre": HORS_PERIMETRE,
         "politiques_non_modelisees": [{"id": k, "libelle": v["libelle"], "raison": v["raison"]} for k, v in G["non_modelises"].items()],
+        "modele_de_projection": MODELE,
         "version_modele": version_modele(),
     }
 

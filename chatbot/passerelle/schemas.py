@@ -68,6 +68,10 @@ OUTILS: dict[str, tuple[str, dict]] = {
                         "reference": {"type": "string", "enum": ["tendanciel", "origine"],
                                       "description": "tendanciel : même année sans politique (défaut) ; origine : aujourd'hui."}},
                        ["profession", "territoire", "hausse_pct"])),
+    "effets_des_leviers": ("Compare l'effet de CHAQUE levier seul, à un réglage de référence, puis de tous ensemble, pour une "
+                           "profession, un territoire et une année. À utiliser pour « quelles politiques ont le plus d'effet », "
+                           "« quoi d'autre », « par quoi commencer ».",
+                           _obj({"profession": PROF, "territoire": TERR, "annee": ANNEE}, ["profession"])),
     "decrire_leviers": ("Leviers du modèle : bornes, délai d'effet, statut (sourcé / supposé), source.", _obj({}, [])),
     "incertitude": ("Indices de Sobol (axe 5) : quels paramètres et choix d'estimation pèsent le plus sur la projection.",
                     _obj({"profession": PROF, "annee": {"type": "integer", "enum": [2030, 2040, 2050]}}, ["profession"])),

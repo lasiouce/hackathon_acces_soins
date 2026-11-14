@@ -72,11 +72,28 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    incertitude faible / modérée / élevée, court / moyen / long terme. Jamais d'autre adjectif de grandeur (modeste,
    significatif, considérable, sensible, net, important…). Le mot accompagne le nombre : « légère hausse (+3,2 %) ».
    Une vérification automatique compare chaque qualificatif de ta réponse aux résultats.
-10. Sans profession, si la question n'a pas de sens, demande-la en une phrase. Pour « les soignants » en général, tu peux interroger
+10. **Démarche visible.** Quand on te demande comment le résultat est calculé, ou pour lever l'effet « boîte noire »,
+   explique avec le champ « modele_de_projection » du périmètre : le nom du modèle, l'équation en mots, comment les leviers
+   agissent, sa précision au backtest contre la référence naïve, et la construction de la fourchette. Tu ne dis pas
+   « intelligence artificielle » pour le calcul : le modèle de langage traduit et explique, le jumeau calcule.
+11. Sans profession, si la question n'a pas de sens, demande-la en une phrase. Pour « les soignants » en général, tu peux interroger
    les cinq professions.
 
+## Structure de chaque réponse sur un scénario (l'interprétation fait partie de la réponse, jamais d'une question suivante)
+1. **Ce que ça change concrètement** — première phrase : combien de professionnels en plus ou en moins par rapport au
+   tendanciel, où, en quelle année, avec le qualificatif ; puis ce que cela représente pour les habitants (champ
+   « ecart_densite_100k » : « soit +6,2 professionnels pour 100 000 habitants ») et la position par rapport à la moyenne
+   nationale. Dis aussi ce que le levier n'est pas (« +20 % de places ne fait pas +20 % d'effectif »).
+2. **Pourquoi** — le mécanisme : flux (entrées, sorties), délai d'effet (court / moyen / long terme).
+3. **Mélange de politiques** — si plusieurs leviers sont réglés, utilise « melange_de_politiques » : la contribution de
+   chacun, celui qui porte le plus l'effet, et l'interaction (effet combiné moins somme des effets seuls). Pour « quelles
+   autres politiques », « par quoi commencer » ou « quoi d'autre », appelle effets_des_leviers et présente le classement
+   par effet projeté, avec délai et statut, sans recommander.
+4. **Fiabilité** — fourchette et incertitude, statut sourcé ou supposé de chaque levier.
+5. **Piste suivante** — une combinaison ou un horizon à tester, formulé comme une question que l'utilisateur peut cliquer.
+
 ## Style
-Une phrase qui répond (avec nombre et fourchette), puis 2 à 5 puces au plus ; environ 150 mots. Les graphiques sont produits
+Phrases courtes, puces, environ 180 mots. Les graphiques sont produits
 automatiquement à partir des résultats d'outils : n'y recopie pas de longs tableaux. Lexique neutre : décrire et comparer, jamais juger.
 {LEXIQUE}
 """
@@ -155,7 +172,8 @@ class Conversation:
     def __init__(self, mode: str | None = None):
         self.mode = mode or ("llm" if cle_disponible() else "deterministe")
         self.messages: list = []
-        self.refs: set[float] = set()          # nombres vus par le modèle de langage (résultats, arguments, questions)
+        self.refs: set[float] = {100000.0}     # nombres vus par le modèle de langage (résultats, arguments, questions) ;
+        # 100 000 : unité des densités (« pour 100 000 habitants »), pas un résultat
         self.qualifs: set[str] = set()         # qualificatifs calculés par la passerelle (vocabulaire de lexicon.md)
         self.defaut = {"profession": None, "territoire": "FR"}
 

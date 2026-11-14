@@ -235,17 +235,36 @@ body.levopen #legend{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 /* panneau « Questions » : l'agent de v2/agent explique les sorties ; il ne calcule rien */
-#ask{display:none;position:fixed;right:16px;top:76px;width:min(420px,calc(100vw - 32px));max-height:calc(100dvh - 100px);z-index:30;flex-direction:column;font-size:14px}
+#ask{display:none;position:fixed;right:16px;top:76px;bottom:16px;width:min(480px,calc(100vw - 32px));z-index:30;flex-direction:column;font-size:14.5px;overflow:hidden}
 body.askon #ask{display:flex}
-#ask header{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}#ask header b{flex:1}
-#asklog{overflow:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px;min-height:80px}
-#asklog .u{align-self:flex-end;background:var(--ground);border-radius:8px;padding:6px 10px;max-width:85%}
-#asklog .a{white-space:pre-wrap}#asklog .askapply{display:block;margin-top:.5rem;font:inherit;font-size:.85rem;border:1px solid currentColor;background:none;padding:.25rem .6rem;cursor:pointer}#asklog .a .chk{display:block;margin-top:6px;font-size:12px;color:var(--mute)}
-#asklog .a .chk.warn{color:#8C5A1B}#asklog .st{color:var(--mute);font-size:13px}
-#askchips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}#askchips button{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;cursor:pointer}
-#askf{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--line)}#askf input{flex:1;min-width:0;height:38px;border:1px solid var(--line);border-radius:8px;padding:0 10px}
-#askf button{height:38px;border:1px solid var(--line);background:var(--ground);border-radius:8px;padding:0 12px;cursor:pointer}
-@media (max-width:700px){#ask{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:75dvh}}
+@media (min-width:701px){body.askon #card{right:calc(min(480px,100vw - 32px) + 28px)}body.askon #zoom{right:calc(min(480px,100vw - 32px) + 28px)}}
+.chathead{display:flex;align-items:center;gap:8px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--line)}.chathead b{flex:1;font-size:15px}
+#asknew{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:4px 10px;cursor:pointer}
+#asklog{flex:1;min-height:0;overflow:auto;padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px}
+#askwelcome .wt{font-size:22px;font-weight:600;letter-spacing:-.01em;margin:4px 0 6px}
+#askwelcome .wh{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin:18px 0 7px}
+#askwelcome .st{color:var(--mute);font-size:13.5px;margin:0}
+.cards{display:grid;gap:7px}
+.cards button{text-align:left;font:inherit;font-size:14px;line-height:1.35;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.cards button:hover,.cards button:focus-visible{border-color:var(--sel);background:var(--ground)}
+.cards.mini{display:flex;flex-wrap:wrap}.cards.mini button{font-size:12.5px;padding:5px 11px;border-radius:14px}
+#asklog .u{align-self:flex-end;max-width:85%;background:var(--sel);color:#fff;border-radius:14px 14px 4px 14px;padding:8px 12px;white-space:pre-wrap}
+#asklog .a{align-self:flex-start;max-width:95%;background:var(--ground);border-radius:14px 14px 14px 4px;padding:10px 13px;white-space:pre-wrap}
+#asklog .askapply{display:block;margin-top:9px;font:inherit;font-size:13px;font-weight:600;border:1px solid var(--sel);color:var(--sel);background:var(--panel);border-radius:8px;padding:5px 11px;cursor:pointer}
+#asklog .askapply:hover{background:var(--sel);color:#fff}
+#asklog .a .chk{display:block;margin-top:7px;font-size:12px;color:var(--mute)}#asklog .a .chk.warn{color:#8C5A1B}
+#asklog .st{color:var(--mute);font-size:13px;margin:0}
+#asklog .typing::after{content:"";display:inline-block;width:1.2em;animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+#askf{display:flex;gap:8px;align-items:flex-end;padding:10px 14px 6px;border-top:1px solid var(--line)}
+#askf textarea{flex:1;min-width:0;resize:none;font:inherit;line-height:1.35;border:1px solid var(--line);border-radius:10px;padding:9px 11px;max-height:140px}
+#askf button{height:40px;border:0;background:var(--sel);color:#fff;border-radius:10px;padding:0 14px;cursor:pointer}
+#askf button[disabled]{opacity:.45;cursor:not-allowed}
+#asklog .plan{white-space:normal;font-size:12.5px;border-bottom:1px solid var(--line);padding:0 0 8px;margin-bottom:8px}
+#asklog .plan ol{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:2px}#asklog .plan li span{display:inline-block;min-width:76px;color:var(--faint)}
+#asklog .plan details summary{cursor:pointer}#asklog .plan dl{margin:.4rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .6rem}#asklog .plan dt{color:var(--faint)}#asklog .plan dd{margin:0}
+.askfoot{margin:0;padding:0 16px 10px;font-size:11px;color:var(--faint)}
+@media (max-width:700px){#ask{left:8px;right:8px;top:auto;bottom:8px;width:auto;height:78dvh}}
 </style>
 </head>
 <body>
@@ -266,7 +285,7 @@ body.askon #ask{display:flex}
   <div id="profs" class="float" style="position:static" role="group" aria-label="Profession"></div>
   <div class="spacer"></div>
   <div id="actions"><button class="btn" id="txt" title="Taille du texte" aria-pressed="false">A+</button>
-    <button class="btn" id="askbtn" title="Poser une question sur le résultat affiché (agent conversationnel)" aria-pressed="false">Questions</button>
+    <button class="btn" id="askbtn" title="Assistant de simulation : proposer une politique, poser une question" aria-pressed="false">Assistant</button>
     <button class="btn" id="xbtn" title="Flux, paramètres, sources, comparaison de scénarios, export JSON" aria-pressed="false">Expert</button>
     <button class="btn" id="save" title="Copie un lien qui restaure ce scénario"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2L8 3.8"/><path d="M9.5 6.5a3 3 0 0 0-4.2 0L2.7 9.1a3 3 0 0 0 4.2 4.2L8 12.2"/></svg>Enregistrer le scénario</button>
   </div>
@@ -299,11 +318,26 @@ body.askon #ask{display:flex}
 <aside id="xp" class="float" aria-label="Mode expert"><header><b>Mode expert</b><nav>
   <button data-t="flux" aria-pressed="true">Flux</button><button data-t="lev">Leviers</button><button data-t="cmp">Scénarios</button></nav>
   <button class="icon" id="xclose" aria-label="Fermer le mode expert">×</button></header><div id="xbody"></div></aside>
-<aside id="ask" class="float" aria-label="Questions sur le résultat"><header><b>Questions sur le résultat</b>
-  <button class="icon" id="askclose" aria-label="Fermer les questions">×</button></header>
-  <div id="asklog" aria-live="polite"><p class="st" id="askst">Un agent explique les chiffres du modèle (écart par flux, délai, fourchette, sources). Il ne calcule rien : chaque nombre vient du modèle et est vérifié.</p></div>
-  <div id="askchips"><button>Pourquoi ce résultat ?</button><button>Quelle confiance accorder à ce chiffre ?</button><button>Quels leviers sont supposés ?</button></div>
-  <form id="askf" autocomplete="off"><input id="askq" maxlength="1000" placeholder="ex. combien de kinés en 2035 si on forme 20 % de plus ?" aria-label="Votre question"><button>Envoyer</button></form></aside>
+<aside id="ask" class="float" aria-label="Assistant de simulation">
+  <div class="chathead"><b>Assistant de simulation</b><button type="button" id="asknew">Nouvelle conversation</button>
+  <button class="icon" id="askclose" aria-label="Fermer l'assistant">×</button></div>
+  <div id="asklog" aria-live="polite"><div id="askwelcome">
+    <p class="wt">Que voulez-vous simuler ?</p>
+    <p class="st" id="askst" data-d="Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.">Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.</p>
+    <p class="wh">Scénarios à essayer</p>
+    <div id="askchips" class="cards">
+      <button type="button">Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ?</button>
+      <button type="button">Pour les infirmiers en Occitanie, quelles politiques ont le plus d'effet d'ici 2040 ?</button>
+      <button type="button">Réguler l'installation des infirmiers en Occitanie et former 10 % de plus : que se passe-t-il d'ici 2040 ?</button>
+      <button type="button">Repousser de 2 ans la cessation d'activité des sages-femmes : quel effet en 2040 ?</button>
+      <button type="button">Accueillir deux fois plus de dentistes diplômés à l'étranger : quel effet en Bretagne en 2035 ?</button>
+      <button type="button">Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?</button>
+    </div>
+    <p class="wh">Comprendre la carte affichée</p>
+    <div class="cards mini"><button type="button">Pourquoi ce résultat ?</button><button type="button">Quelle confiance accorder à ce chiffre ?</button><button type="button">Quels départements ont la densité la plus faible en 2050 ?</button><button type="button">Comment le jumeau calcule-t-il ?</button></div>
+  </div></div>
+  <form id="askf" autocomplete="off"><textarea id="askq" rows="1" maxlength="1000" placeholder="Décrivez une politique ou posez une question…" aria-label="Votre message"></textarea><button aria-label="Envoyer">Envoyer</button></form>
+  <p class="askfoot">Projection sous hypothèses · chaque nombre vient du jumeau et est vérifié · mots de grandeur fixés par le lexique</p></aside>
 <div id="nl" class="float" role="dialog" aria-modal="true" aria-labelledby="nlh"></div>
 <div id="tip"></div>
 
@@ -406,7 +440,8 @@ function buildMap(){
 function pad(card){const w=innerWidth,h=innerHeight,wide=w>=1100,z=parseFloat(getComputedStyle($("#card")).zoom)||1;
   // le panneau des leviers se replie à l'ouverture d'un territoire : seule une marge étroite reste à gauche
   const left=!wide?16:card&&$("#levers").classList.contains("closed")?150:(card?150:$("#levers").offsetWidth*z+30);
-  const right=wide&&card?$("#card").offsetWidth*z+28:16;
+  // l'assistant (interface principale) occupe la droite sur ordinateur : la carte se cadre à sa gauche
+  const right=(wide&&card?$("#card").offsetWidth*z+28:16)+(document.body.classList.contains("askon")&&w>700?$("#ask").offsetWidth+16:0);
   const sheet=card&&w<=600;   // feuille du bas : la carte se cadre au-dessus
   return {left,right,top:sheet?120:Math.min(130,h*.14),bottom:sheet?Math.round(h*.6)+12:24};}
 // évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
@@ -793,8 +828,20 @@ function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof
   if(c.annee>=2026&&c.annee<=2050)setYear(c.annee);levState();
   // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
   if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();toast("Scénario du chatbot affiché sur la carte");}
-async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");
-  log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st">Le jumeau calcule…</div>`);const st=log.lastElementChild;log.scrollTop=log.scrollHeight;
+// la démarche, rendue visible : ce que l'assistant a compris (leviers, horizon, territoire), lu dans le calcul lancé
+function askPlan(c){if(!c)return"";const lv=Object.entries(c.leviers||{}).map(([k,v])=>{const l=LV(k);if(!l)return null;
+    let t;try{t=phrase(k,v);}catch{t=null;}
+    if(l.type=="toggle")return v?askEsc(l.label.replace(/^…\s*/,"").replace(/^./,c=>c.toUpperCase()))+(l.status?` <i>(${askEsc(l.status)})</i>`:""):null;
+    return askEsc(`${l.label} : ${t||v}`)+(l.status?` <i>(${askEsc(l.status)})</i>`:"");}).filter(Boolean);
+  return `<div class="plan"><b>Ce que l'assistant a compris</b><ol><li><span>Leviers</span>${lv.length?lv.join(" · "):"aucun : tendance sans nouvelle politique"}</li>`
+    +`<li><span>Horizon</span>${c.annee}</li><li><span>Territoire</span>${askEsc(names[c.terr]||c.terr)} · ${askEsc(META.professions[c.prof]||c.prof)}</li>`
+    +`<li><span>Calcul</span>${askModele()}</li></ol></div>`;}
+function askModele(){const m=ASK.modele;if(!m)return "jumeau numérique ; aucun chiffre écrit par l'IA";
+  return `<details><summary>${askEsc(m.nom)} ; aucun chiffre écrit par l'IA</summary><dl>`+[["Équation",m.equation],["Estimation",m.estimation],
+    ["Leviers",m.leviers],["Précision",m.precision],["Fourchette",m.fourchette],["Autre méthode",m.alternative],["Sources",m.sources]]
+    .map(([k,v])=>`<dt>${k}</dt><dd>${askEsc(v||"")}</dd>`).join("")+`</dl></details>`;}
+async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const log=$("#asklog");$("#askwelcome").hidden=true;
+  log.insertAdjacentHTML("beforeend",`<div class="u">${askEsc(q)}</div><div class="st typing">L'assistant traduit, le jumeau calcule…</div>`);const st=log.lastElementChild;log.scrollTop=log.scrollHeight;
   try{const r=await fetch("/api/agent",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,contexte:askCtx(),session:ASK.sid})});
     const d=await r.json();
     if(d.error){st.textContent=d.error;}
@@ -802,19 +849,29 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
       const chk=(ia?(VERIF[v]||""):"Réponse du glossaire de l'équipe, sans IA")+(lx.ok?"":` · ⚠ hors lexique neutre : ${lx.termes.join(", ")}`);
       const tools=[...new Set((d.appels||[]).map(x=>x.outil))].join(", ");
       const c=d.carte,btn=c?`<button class="askapply">Afficher ce scénario sur la carte</button>`:"";
-      st.outerHTML=`<div class="a">${askMd(d.reponse)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
+      st.outerHTML=`<div class="a">${askPlan(c)}${askMd(d.reponse)}${btn}<span class="chk${v=="bloquee"||!lx.ok?" warn":""}">${chk} · calculs : ${tools||"aucun"} · ${d.secondes} s</span></div>`;
       if(c){const el=[...$("#asklog").querySelectorAll(".a")].pop();el.querySelector(".askapply").onclick=()=>askApply(c);}}
   }catch(e){st.textContent="Serveur injoignable.";}
   ASK.busy=false;log.scrollTop=log.scrollHeight;}
 function buildAsk(){
   // interface principale (décision du 2026-11-14) : la conversation est ouverte au chargement, refermable
   const open=async(on,focus=true)=>{document.body.classList.toggle("askon",on);$("#askbtn").setAttribute("aria-pressed",on);
-    if(on){try{const e=await fetch("/api/agent/etat").then(r=>r.json());$("#askst").textContent=(e.disponible?e.message+" ":e.message)+(e.disponible?"Chaque nombre vient du modèle et est vérifié.":"");$("#askf button").disabled=!e.disponible;}catch{}if(focus)$("#askq").focus();}};
+    try{if(map&&bbox[S.terr||"FR"])map.fitBounds(bbox[S.terr||"FR"],{padding:pad(!!S.terr),duration:0});}catch(e){}
+    if(on){try{const e=await fetch("/api/agent/etat").then(r=>r.json());ASK.modele=e.modele||null;$("#askst").textContent=(e.disponible?$("#askst").dataset.d+" "+e.message:e.message);$("#askf button").disabled=!e.disponible;}catch{}if(focus)$("#askq").focus();}};
   $("#askbtn").onclick=()=>open(!document.body.classList.contains("askon"));
   open(true,false);
   $("#askclose").onclick=()=>$("#askbtn").click();
-  $("#askf").onsubmit=e=>{e.preventDefault();const q=$("#askq").value;$("#askq").value="";askSend(q);};
-  $("#askchips").onclick=e=>{const b=e.target.closest("button");if(b)askSend(b.textContent);};}
+  askWire();}
+// ---------- interface de chatbot : accueil (scénarios à essayer), saisie multiligne, nouvelle conversation ----------
+function askGrow(){const q=$("#askq");q.style.height="auto";q.style.height=Math.min(140,q.scrollHeight)+"px";}
+function askWire(){const q=$("#askq");
+  $("#askf").onsubmit=e=>{e.preventDefault();const v=q.value;q.value="";askGrow();askSend(v);};
+  q.onkeydown=e=>{if(e.key=="Enter"&&!e.shiftKey){e.preventDefault();$("#askf").requestSubmit();}};   // Maj+Entrée : retour à la ligne
+  q.oninput=askGrow;
+  $("#askwelcome").onclick=e=>{const b=e.target.closest("button");if(b)askSend(b.textContent);};
+  $("#asknew").onclick=()=>{ASK.sid=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2);
+    $("#asklog").querySelectorAll(".u,.a,.st:not(#askst)").forEach(x=>x.remove());$("#askwelcome").hidden=false;q.focus();};}
+
 </script>
 </body>
 </html>

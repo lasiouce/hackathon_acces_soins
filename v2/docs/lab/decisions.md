@@ -3589,3 +3589,36 @@ moyenne nationale ».
 `test_aucun_fichier_du_modele_modifie`, attendu quand la passerelle pointe sur une copie de travail modifiée.
 **Limites.** Le contrôle vérifie qu'un qualificatif figure dans les résultats, pas qu'il qualifie la bonne grandeur ;
 jeu écrit par l'auteur de l'agent ; seuils non validés. Code de Juliette Konop modifié (`chatbot/`) : à lui signaler.
+
+## 2026-11-14 — Assistant de simulation : interface de chatbot, mélange de politiques, interprétation dans la réponse, modèle nommé
+
+**Décision.**
+- **Interface de chatbot** (`index.html` et `index-option1.html`) : « Assistant de simulation » au lieu de « Questions sur
+  le résultat » ; accueil « Que voulez-vous simuler ? » avec des **scénarios à essayer** cliquables (dont des mélanges de
+  politiques) et « Comprendre la carte affichée » ; bulles ; saisie multiligne (Entrée envoie, Maj+Entrée retour à la
+  ligne) ; « Nouvelle conversation » ; colonne de 480 px pleine hauteur (`index.html`, la carte se cadre à sa gauche) ou
+  jusqu'à 46 rem (option 1) ; sur mobile, l'assistant passe avant la carte (option 1).
+- **Démarche visible** : chaque réponse commence par « Ce que l'assistant a compris » (leviers et statut, horizon,
+  territoire, calcul), lu dans le calcul réellement lancé, avec le **modèle servi** dépliable.
+- **Modèle nommé** (`MODELE` dans `v2/prototype-carte/server.py` et dans le périmètre de `chatbot/passerelle/requetes.py`) :
+  A0, stock-flux à taux départementaux rétrécis vers le national (`StockFlowLocal`, jumeau à 2 secteurs) ; MAPE 8,68 % à
+  5 ans par département contre 9,30 % pour la tendance linéaire (article axe 2, tableau 1) ; fourchette ± pente × h × 1,6
+  (article axe 5, facteur cité) ; C1 (7,73 %) proposée par défaut mais pas encore servie. Règle 10 du prompt : expliquer la
+  méthode avec ce champ.
+- **Mélange de politiques** : `projeter` renvoie `melange_de_politiques` dès que deux leviers sont réglés (effet de chaque
+  levier seul, effet combiné, interaction = combiné − somme des seuls, tout calculé par le jumeau) ; nouvelle requête
+  **`effets_des_leviers`** : chaque levier seul à un réglage de référence **supposé** (places +20 %, étrangers × 1,5,
+  retraite +2 ans, cumul × 1,5, départs avant 60 ans × 0,7, régulation), puis tous ensemble, classés par écart projeté.
+- **L'interprétation fait partie de la réponse** (prompt, « Structure de chaque réponse ») : ce que ça change
+  concrètement (professionnels en plus, `ecart_densite_100k` pour 100 000 habitants, position nationale, ce que le levier
+  n'est pas), pourquoi, mélange, fiabilité, piste suivante.
+- La vérification du chatbot compte « 100 000 » comme unité (il était retiré des réponses sans contexte).
+**Pourquoi.** L'utilisateur·rice : « PART VRAIMENT D'UNE UI DE CHATBOT », « SCÉNARIOS À ESSAYER » ; le chatbot convertit
+les intentions en leviers et les prévisions en langage naturel, « démystifie l'effet boîte noire » ; « donne le modèle
+sous-jacent plus précisément (voir axe 2, les papiers) » ; « le "comment interpréter ça" devrait être INCLUS DANS LA
+RÉPONSE : … CONCRÈTEMENT L'IMPACT D'UN MÉLANGE DE DIFFÉRENTES POLITIQUES PUBLIQUES ».
+**Vérifié.** Kinés ARA, places +20 % et retraite +2 ans, 2040 : +1 576 (hausse marquée), dont places +1 165 et retraite
++411, interaction quasi nulle ; infirmiers Occitanie 2040 : classement des 6 leviers (places +2 496 en tête, régulation
+−1 463), tous ensemble +2 097, moins que la somme. Recette `index.html` 31/32 et option 1 35/37 au premier passage ; les
+échecs R14 (latence) et O04 repassent au second essai (180 ms ; ✓), R25 (A+, absent de l'option 1) déjà en échec. Tests du
+chatbot 32/33 (l'échec attendu : copie de travail modifiée). Pas de nouvelle mesure sur les 22 questions.

@@ -178,10 +178,11 @@ class Handler(V1.Handler):
         if u.path == "/api/agent/etat":
             code, j = _chatbot("GET", "/api/etat")
             if code != 200:
-                return self.send_json({"disponible": False, "message": "Chatbot non lancé (chatbot/, port 8768) : "
+                return self.send_json({"disponible": False, "message": "Assistant non lancé (chatbot/, port 8768) : "
                                        "la carte reste utilisable. Voir le README, « Chatbot »."})
             mode = "IA (" + j.get("modele", "?") + ")" if j.get("mode") == "llm" else "sans IA (glossaire de l'équipe)"
-            return self.send_json({"disponible": True, "mode": j.get("mode"), "message": f"Chatbot prêt, mode {mode}."})
+            return self.send_json({"disponible": True, "mode": j.get("mode"), "message": f"Assistant prêt, mode {mode}.",
+                                   "modele": MODELE})
         return super().do_GET()
 
     def do_POST(self):
@@ -219,6 +220,19 @@ class Handler(V1.Handler):
 
 
 CHATBOT = os.environ.get("CHATBOT_URL", "http://127.0.0.1:8768")
+
+# Modèle servi par la carte (V1.Model : twin_of(StockFlowLocal)) : affiché sous chaque réponse de l'assistant.
+# Même texte que MODELE dans chatbot/passerelle/requetes.py (périmètre du chatbot) ; chiffres cités des articles.
+MODELE = {
+    "nom": "Stock-flux à taux départementaux (A0, axe 2)",
+    "equation": "N(t+1) = rétention × vieillissement de N(t) + entrées, par profession × département × sexe × tranche d'âge de 5 ans",
+    "estimation": "rétention nette et entrées ajustées sur les 5 dernières années observées ; taux départementaux rétrécis vers le national (poids 200 personnes, supposé)",
+    "leviers": "événements datés du jumeau (modules entrées, sorties, diplômés étrangers, régulation) appliqués au même état de départ ; état à 2 secteurs (libéral = privé, salarié)",
+    "precision": "MAPE 8,68 % par département à 5 ans, secteur privé, contre 9,30 % pour la tendance linéaire (mesuré, article axe 2, tableau 1)",
+    "fourchette": "± pente de l'erreur de backtest × horizon × 1,6, environ 8 cas sur 10 (facteur cité, non reproduit ; article axe 5) ; extrapolée au-delà d'environ 10 ans",
+    "alternative": "C1, cohortes bayésiennes : MAPE 7,73 % au même banc, proposée par défaut (décision axe 2, étape 2), pas encore servie par la carte",
+    "sources": "v2/papers/axe2-methodes/main.pdf ; v2/sante/estimators.py (StockFlowLocal) ; v2/jumeau/ ; v2/prototype/server.py (Model)",
+}
 
 
 def _scenario_carte(appels: list) -> dict | None:

@@ -103,7 +103,7 @@ def qualificatifs(objet) -> set[str]:
             for k, v in x.items():
                 if k == "qualificatifs" and isinstance(v, dict):
                     out.update(str(t).replace(" (extrapolée)", "") for t in v.values() if t)
-                elif k == "delai_qualificatif" and v:
+                elif k in ("delai_qualificatif", "qualificatif") and isinstance(v, str) and v:
                     out.add(str(v))
                 else:
                     walk(v)
