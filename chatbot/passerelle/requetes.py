@@ -517,12 +517,11 @@ MODELE = MODELES[os.environ.get("JUMEAU_MODELE", "C1").upper()]
 
 
 # ------------------------------------------------------------------ planifier : objectif chiffré -> mélanges de leviers datés
-# Zones plausibles SUPPOSÉES (aucune source sur les variations réalistes) : la recherche s'y fait d'abord ; au-delà, jusqu'aux
-# bornes du modèle, chaque réglage hors zone est signalé. Seuls les leviers qui peuvent augmenter l'effectif sont cherchés
-# (la régulation déplace ou retire des entrées). Kill test d'additivité (2026-11-14) : écart médian 0,2 %, 1 mélange sur 20
-# au-delà de 10 % (avec régulation) : la somme des effets seuls sert à chercher, le jumeau recalcule chaque mélange montré.
-_ZONES = {"quotas": (1.0, 1.2, 0.05), "etrangers": (1.0, 1.5, 0.1), "retraite": (0.0, 1.0, 0.5), "cumul": (1.0, 1.5, 0.1),
-          "precoces": (1.0, 0.8, -0.1)}
+# Recherche dans les bornes du modèle (curseurs de la carte). Seuls les leviers qui peuvent augmenter l'effectif sont
+# cherchés (la régulation déplace ou retire des entrées). Kill test d'additivité (2026-11-14) : écart médian 0,2 %, 1 mélange
+# sur 20 au-delà de 10 % (avec régulation) : la somme des effets seuls sert à chercher, le jumeau recalcule chaque mélange montré.
+# Zones plausibles retirées le 2026-11-14 (demande de l'utilisateur·rice) : le critère « le plus simple » préfère déjà les
+# petits réglages.
 _BORNES = {"quotas": (1.0, 1.5, 0.05), "etrangers": (1.0, 2.0, 0.1), "retraite": (0.0, 3.0, 0.5), "cumul": (1.0, 2.0, 0.1),
            "precoces": (1.0, 0.5, -0.1)}
 
@@ -607,11 +606,7 @@ def planifier(profession_: str, territoire_: str = "FR", annee: int = 2040, gran
         li = _ligne(r, y)
         return v, li
 
-    zone = "plausible"
-    cands, eff, grilles = chercher(_ZONES)
-    if not cands:
-        zone = "bornes"
-        cands, eff, grilles = chercher(_BORNES)
+    cands, eff, grilles = chercher(_BORNES)
     criteres = [("le plus simple", lambda c: (len(c[0]), c[2])), ("effet le plus tôt", lambda c: (c[3], len(c[0]), c[2])),
                 ("prudent (cible atteinte au bas de la fourchette)", lambda c: (len(c[0]), c[2]))]
     out, vus = [], set()
@@ -630,12 +625,10 @@ def planifier(profession_: str, territoire_: str = "FR", annee: int = 2040, gran
             lev = []
             for k, g in ch.items():
                 d = delai(k)
-                z = _ZONES[k]
-                hors = not (min(z[0], z[1]) - 1e-9 <= g <= max(z[0], z[1]) + 1e-9)
                 lev.append({"levier": _fmt_levier(k, g), "delai_ans": d, "delai_qualificatif": q_delai(d),
                             "decision_dans_le_modele": S().DECISION, "premier_effet": S().DECISION + d,
                             "dernier_moment_pour_un_premier_effet_avant_l_horizon": y - d,
-                            "statut": meta[k]["status"], "source": meta[k]["source"], "hors_zone_plausible": hors})
+                            "statut": meta[k]["status"], "source": meta[k]["source"]})
             out.append({"critere": nom, "leviers": lev, "reglage_carte": ch,
                         "valeur_obtenue": _r1(v) if grandeur == "densite" else round(v),
                         "ecart_au_tendanciel": _r1(v - v_tend) if grandeur == "densite" else round(v - v_tend),
@@ -651,9 +644,7 @@ def planifier(profession_: str, territoire_: str = "FR", annee: int = 2040, gran
                                          "ecart_a_la_cible_pct": round((v / cible - 1) * 100, 1)},
                 "lecture": "cible hors d'atteinte avec les leviers du modèle, même aux bornes : horizon trop court ou objectif trop haut",
                 "methode": _METHODE_PLAN}
-    note = ("mélanges trouvés dans les zones plausibles" if zone == "plausible" else
-            "AUCUN mélange de 3 leviers au plus n'atteint la cible dans les zones plausibles : ces mélanges dépassent au moins une zone")
-    return {**tete, "deja_atteint_sans_politique": False, "atteignable": True, "zone": zone, "note_zone": note, "melanges": out,
+    return {**tete, "deja_atteint_sans_politique": False, "atteignable": True, "melanges": out,
             "methode": _METHODE_PLAN}
 
 
@@ -668,8 +659,8 @@ def _correspondances() -> dict:
 
 
 def traduire_politique(politique: str, profession_: str, territoire_: str = "FR", annee: int = 2040) -> dict:
-    """Politique non modélisée -> leviers du même mécanisme (SUPPOSÉ), essayés à deux ampleurs (bas et haut de la zone
-    plausible) : une fourchette de traduction, pas une estimation de la politique."""
+    """Politique non modélisée -> leviers du même mécanisme (SUPPOSÉ), essayés à deux ampleurs d'essai (supposées) : une
+    fourchette de traduction, pas une estimation de la politique."""
     G = NL().glossaire()["non_modelises"]
     C = _correspondances()
     if politique not in G or politique not in C:
@@ -702,13 +693,12 @@ def traduire_politique(politique: str, profession_: str, territoire_: str = "FR"
             "leviers_du_meme_mecanisme": [{k: l[k] for k in ("levier", "sens", "mecanisme")} for l in c["leviers"]],
             "essais": essais,
             "lecture": "traduction supposée : l'ampleur réelle de la politique est inconnue ; les deux essais encadrent un effet "
-                       "possible si la politique agit par ce mécanisme, dans la zone plausible"}
+                       "possible si la politique agit par ce mécanisme, à ces deux ampleurs d'essai (supposées)"}
 
 
-_METHODE_PLAN = ("effet de chaque levier seul calculé par le jumeau sur sa grille, mélanges cherchés sur la somme des effets "
-                 "(additivité vérifiée : écart médian 0,2 % sur 20 mélanges), chaque mélange montré recalculé par le jumeau ; "
-                 "zones plausibles supposées (places +0 à +20 %, étrangers ×1 à ×1,5, retraite +0 à +1 an, cumul ×1 à ×1,5, "
-                 "départs avant 60 ans ×1 à ×0,8), bornes du modèle au-delà ; décision en 2026 dans le modèle")
+_METHODE_PLAN = ("effet de chaque levier seul calculé par le jumeau sur sa grille, dans les bornes du modèle ; mélanges "
+                 "cherchés sur la somme des effets (additivité vérifiée : écart médian 0,2 % sur 20 mélanges), chaque mélange "
+                 "montré recalculé par le jumeau ; décision en 2026 dans le modèle")
 
 
 def perimetre() -> dict:

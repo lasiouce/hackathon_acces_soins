@@ -70,9 +70,9 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    **Objectif : +X % de <profession> libéraux en <territoire> en <année>.**
    - Par rapport à aujourd'hui : déjà atteint sans politique (aujourd'hui → tendance, +N %) ; ou la cible.
    - Par rapport à la tendance <année> (cible …) : les mélanges vérifiés, chacun avec ses leviers, son effet et ses délais
-     (« décision en 2026, premier effet en 2032 ») ; dis si un réglage est **hors de la zone plausible** ; si aucun mélange,
+     (« décision en 2026, premier effet en 2032 ») ; si aucun mélange,
      dis que la cible est hors d'atteinte et donne le meilleur atteignable.
-   - Fiabilité (fourchette, statut des leviers, zones plausibles supposées), puis 1 à 2 pistes « → ».
+   - Fiabilité (fourchette, statut des leviers), puis 1 à 2 pistes « → ».
    Pas de section « Ce que ça change » sur le réglage de la carte : la question porte sur le résultat, pas sur l'entrée.
    N'écris jamais « il faut » ni « il suffit » : écris « le mélange … atteint la cible », « places +30 % seules y conduisent ».
    Le délai de chaque levier se dit avec SON « delai_qualificatif » (places en formation : souvent moyen terme).

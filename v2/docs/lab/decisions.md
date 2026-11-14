@@ -3814,3 +3814,13 @@ pour avoir les nombres au niveau national ».
 **Ce qui le renverserait.** Une recette rejouée par personas qui trouve un défaut bloquant sur la page
 basculée, ou une session qui modifiait encore l'ancien `index.html` (les deux pages étaient maintenues en
 parallèle jusqu'au commit 17842ea).
+
+## 2026-11-14 — `planifier` : zones plausibles retirées, recherche dans les bornes du modèle
+
+**Décision.** Plus de zones plausibles supposées ni de mention « hors zone » : `planifier` cherche directement dans les
+bornes des curseurs ; le critère « le plus simple » (moins de leviers, puis plus petit déplacement) préfère déjà les petits
+réglages. Les deux essais de `traduire_politique` gardent leurs valeurs, décrites comme « ampleurs d'essai supposées ».
+**Remplace** les zones plausibles de l'entrée « Assistant : objectif chiffré → mélanges de leviers… » (même jour).
+**Pourquoi.** L'utilisateur·rice : « je comprends pas vraiment les zones plausibles », puis « tu peux enlever ça ».
+**Effet constaté.** Kinés ARA +10 % en 2040 : diplômés étrangers ×1,6 seul (avant : places +15 % et étrangers ×1,3) ;
+kinés France +20 % : inchangé (places +15 % et étrangers ×1,8).

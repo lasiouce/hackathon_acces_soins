@@ -1,6 +1,6 @@
 # Politiques hors modèle -> leviers du jumeau qui portent le même MÉCANISME (2026-11-14).
 # Toutes les traductions sont SUPPOSÉES : aucune élasticité n'est estimée sur données ouvertes (glossaire, non_modelises).
-# Une traduction donne le levier et le SENS, jamais l'ampleur : l'ampleur se teste dans la zone plausible, et la réponse
+# Une traduction donne le levier et le SENS, jamais l'ampleur : l'ampleur se teste à deux réglages d'essai (supposés), et la réponse
 # le dit. « aucune » = pas de mécanisme commun : la réponse dit « pas dans le modèle ». À relire par l'équipe.
 # Clés = clés de v2/langage/glossaire.yaml (non_modelises).
 obligation_zone:
