@@ -1,0 +1,164 @@
+{
+ "couverture_par_classe": {
+  "dentistes|1–2": {
+   "couverture": 0.708,
+   "communes": 9873,
+   "passe": false
+  },
+  "dentistes|3–5": {
+   "couverture": 0.734,
+   "communes": 4545,
+   "passe": false
+  },
+  "dentistes|6–10": {
+   "couverture": 0.729,
+   "communes": 1991,
+   "passe": false
+  },
+  "dentistes|11–20": {
+   "couverture": 0.675,
+   "communes": 957,
+   "passe": false
+  },
+  "dentistes|21–50": {
+   "couverture": 0.685,
+   "communes": 559,
+   "passe": false
+  },
+  "dentistes|51–100": {
+   "couverture": 0.724,
+   "communes": 123,
+   "passe": false
+  },
+  "dentistes|101–200": {
+   "couverture": 0.762,
+   "communes": 42,
+   "passe": true
+  },
+  "dentistes|>200": {
+   "couverture": 0.381,
+   "communes": 21,
+   "passe": false
+  },
+  "infirmiers-liberaux|1–2": {
+   "couverture": 0.818,
+   "communes": 16090,
+   "passe": true
+  },
+  "infirmiers-liberaux|3–5": {
+   "couverture": 0.815,
+   "communes": 13946,
+   "passe": true
+  },
+  "infirmiers-liberaux|6–10": {
+   "couverture": 0.811,
+   "communes": 7745,
+   "passe": true
+  },
+  "infirmiers-liberaux|11–20": {
+   "couverture": 0.817,
+   "communes": 3857,
+   "passe": true
+  },
+  "infirmiers-liberaux|21–50": {
+   "couverture": 0.834,
+   "communes": 1732,
+   "passe": true
+  },
+  "infirmiers-liberaux|51–100": {
+   "couverture": 0.718,
+   "communes": 443,
+   "passe": false
+  },
+  "infirmiers-liberaux|101–200": {
+   "couverture": 0.677,
+   "communes": 195,
+   "passe": false
+  },
+  "infirmiers-liberaux|>200": {
+   "couverture": 0.62,
+   "communes": 79,
+   "passe": false
+  },
+  "kines|1–2": {
+   "couverture": 0.778,
+   "communes": 10936,
+   "passe": true
+  },
+  "kines|3–5": {
+   "couverture": 0.763,
+   "communes": 7294,
+   "passe": true
+  },
+  "kines|6–10": {
+   "couverture": 0.748,
+   "communes": 3731,
+   "passe": false
+  },
+  "kines|11–20": {
+   "couverture": 0.77,
+   "communes": 1940,
+   "passe": true
+  },
+  "kines|21–50": {
+   "couverture": 0.719,
+   "communes": 1108,
+   "passe": false
+  },
+  "kines|51–100": {
+   "couverture": 0.7,
+   "communes": 250,
+   "passe": false
+  },
+  "kines|101–200": {
+   "couverture": 0.472,
+   "communes": 127,
+   "passe": false
+  },
+  "kines|>200": {
+   "couverture": 0.396,
+   "communes": 48,
+   "passe": false
+  }
+ },
+ "couverture_2020": {
+  "infirmiers-liberaux|1–2": 0.846,
+  "infirmiers-liberaux|3–5": 0.838,
+  "infirmiers-liberaux|6–10": 0.814,
+  "infirmiers-liberaux|11–20": 0.791,
+  "infirmiers-liberaux|21–50": 0.753,
+  "infirmiers-liberaux|51–100": 0.556,
+  "infirmiers-liberaux|101–200": 0.617,
+  "infirmiers-liberaux|>200": 0.333,
+  "kines|1–2": 0.786,
+  "kines|3–5": 0.785,
+  "kines|6–10": 0.768,
+  "kines|11–20": 0.758,
+  "kines|21–50": 0.757,
+  "kines|51–100": 0.68,
+  "kines|101–200": 0.565,
+  "kines|>200": 0.556,
+  "dentistes|1–2": 0.724,
+  "dentistes|3–5": 0.757,
+  "dentistes|6–10": 0.739,
+  "dentistes|11–20": 0.625,
+  "dentistes|21–50": 0.677,
+  "dentistes|51–100": 0.634,
+  "dentistes|101–200": 0.571,
+  "dentistes|>200": 0.286
+ },
+ "N_min": {
+  "infirmiers-liberaux 2014": 51,
+  "infirmiers-liberaux 2016": 21,
+  "infirmiers-liberaux 2018": null,
+  "infirmiers-liberaux 2020": null,
+  "kines 2014": 51,
+  "kines 2016": 51,
+  "kines 2018": 51,
+  "kines 2020": 21,
+  "dentistes 2014": 101,
+  "dentistes 2016": 21,
+  "dentistes 2018": 21,
+  "dentistes 2020": 21
+ }
+}

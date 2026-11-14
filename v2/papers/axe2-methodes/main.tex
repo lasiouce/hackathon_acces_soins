@@ -382,6 +382,25 @@ mesurée ; le traitement bayésien complet de ces variances est la prochaine ét
 \paragraph{Par profession.} En MAPE, C1 bat A0 pour les dentistes, les infirmiers libéraux et les
 sages-femmes, et fait jeu égal pour les kinés (une seule origine) et les pharmaciens\mesure.
 
+\subsection{À la commune : deux modèles rejetés au protocole d'échelle fine}
+Le protocole d'échelle fine (N4) juge la projection communale à $h = 5$ (CartoSanté, libéraux,
+infirmiers, kinés et dentistes, origines 2014--2020) ; le critère retenu pour ce chantier est une bande
+à 80\,\% couvrant entre 75 et 85\,\% des cas dans chaque classe de taille. Deux variantes ont été
+inscrites avant leur passage.
+\begin{itemize}
+  \item \textbf{K}, cohortes communales à rétrécissement commune $\subset$ EPCI $\subset$ département
+        $\subset$ région, variance $\alpha\mu + \beta\mu^2$ mesurée dans la fenêtre : bande trop large
+        (couverture de 90 à 100\,\%\mesure{} chez les infirmiers) et point moins bon que la part tenue
+        sous 10 personnes (P80 de $|$erreur$|$ de 84 contre 43\,\%\mesure{} pour les communes de 1 ou
+        2 infirmiers).
+  \item \textbf{K2}, part communale tenue $\times$ total départemental projeté, bande empirique par
+        classe : calibrée pour les infirmiers de 1 à 50 professionnels (81 à 83\,\%\mesure), trop
+        étroite au-dessus (62 à 72\,\%\mesure) et pour les dentistes (68 à 73\,\%\mesure).
+\end{itemize}
+Lecture\derive{} : la partie locale de l'erreur, de type Poisson, se calibre ; l'erreur du total
+départemental, commune à toutes les communes d'un département et proportionnelle à leur taille, domine
+dans les grandes communes et doit être portée séparément, par les tirages départementaux de C1.
+
 \subsection{Ancien périmètre (secondaire)}
 Sur le périmètre libéral + mixte, A2 reste le seul gain : $-0{,}10$\mesure{} point
 (IC 95\,\% $[-0{,}21\,;\,-0{,}002]$\mesure). A1b est à égalité ($-0{,}03$\mesure), A3 et la combinaison
@@ -467,6 +486,8 @@ uv run --with scipy python -m methodes.banc_apc  # étape 1 : APC
 uv run --with scipy python -m methodes.sbc       # calibration par simulation
 uv run --with scipy python -m methodes.banc_cohortes  # étape 2 : N1 et N6
 uv run --with scipy python -m methodes.sbc2 200       # étape 2 : 5 x 2 x 200
+uv run --with scipy python -m methodes.banc_communes  # commune : K (N4)
+uv run --with scipy python -m methodes.banc_communes_k2  # commune : K2 (N4)
 \end{verbatim}
 Graine du bootstrap 20261114, 2\,000 tirages. Sorties dans \texttt{v2/methodes/out/}. Données :
 \texttt{data/processed/stock.parquet} (DREES, 2026-07-02) et
@@ -494,6 +515,7 @@ composantes où les entrées sont aussi probabilistes battent le stock-flux (7,7
         calibration par simulation met en défaut ; prévisions 2027--2030 déposées (score à la
         publication du RPPS 2027) ; niveau local amorti
         pour les entrées qui se retournent ; grain infra-départemental sous le protocole N4 ;
+  \item à la commune, une bande qui additionne l'erreur locale et celle du total départemental ;
   \item logit conditionnel de l'installation, la régulation devenant un ensemble de choix restreint ;
   \item réconciliation des prévisions entre échelles ;
   \item validation par CRPS, PIT, calibration par simulation et mondes simulés, avec une référence
