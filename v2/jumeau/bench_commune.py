@@ -87,16 +87,21 @@ def main(profile=False):
         pr.disable()
         pstats.Stats(pr).sort_stats("tottime").print_stats(18)
         return
-    ts = []
+    ts, cpu = [], []
     for _ in range(3):
-        t0 = time.perf_counter()
+        t0, c0 = time.perf_counter(), time.process_time()
         for st, mods, sc in states:
             run(st, mods, sc, H, ledger=False)
         ts.append(time.perf_counter() - t0)
+        cpu.append(time.process_time() - c0)        # temps CPU du processus : moins sensible aux autres charges
     cells = sum(len(st.cells) for st, _, _ in states)
+    import os
+    load = os.getloadavg()[0]
     print(f"5 professions, {cells} cellules communales, {H - states[0][0].year} ans : "
-          f"médiane {np.median(ts):.2f} s (runs {[round(t, 2) for t in ts]})")
-    return dict(seconds=float(np.median(ts)), runs=ts, cells=cells)
+          f"médiane {np.median(ts):.2f} s réel, {np.median(cpu):.2f} s CPU (runs {[round(t, 2) for t in ts]}, "
+          f"charge machine {load:.1f})")
+    return dict(seconds=float(np.median(ts)), cpu_seconds=float(np.median(cpu)), runs=ts, cpu_runs=cpu, cells=cells,
+                load=load)
 
 
 if __name__ == "__main__":

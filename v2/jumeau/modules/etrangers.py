@@ -10,15 +10,22 @@ La part formée en France, (1 − part_p) · entrées⁺, est celle que suit `li
 Âge : l'ajout entre dans la tranche qui contient `age_entree` (28 ans, DD76, tableaux 12-13 : âge moyen des
 diplômés à l'étranger à l'entrée, SF et CD ; repris pour MK, supposé). Territoires et sexes : comme les entrées
 ajustées (supposé). Le total ajouté par cellule est inchangé ; seule sa répartition par âge change.
-Flux (DD76, tableaux 12-13 ; ER 1075 pour MK), par an : SF 70 · CD 665 · MK 1 175 ; PH et IDE : non publié
-→ 0, le levier est sans effet pour eux (dit, pas caché).
+Flux par an (fiche axe 1 param-diplomes-etrangers-flux, 2026-11-14) : CD 1 300 (sourcé : Ordre 2022, 1 313
+primo-inscrits diplômés à l'étranger ; 1 309 reconnaissances UE) · MK 2 200 (dérivé : 2 528 autorisations en
+2023, CNOMK 2024 ; stock diplômés hors France +2 212 / an net 2020-2024 ; plage 1 700-2 500) · PH 240 (dérivé :
+8,1 % des primo-inscrits de l'Ordre 2024-2025) · IDE 400 (sourcé, confiance faible : hypothèse DREES ER 1319 ;
+plage 400-1 100) · SF 80 (dérivé ; plage 70-170). Variante basse (DD76, ER 1075, données 2015-2020) :
+SF 70 · CD 665 · MK 1 175 · PH et IDE 0 (FLUX_BAS).
+⚑ Définitions hétérogènes (primo-inscription, entrée RPPS, autorisation) : un flux d'entrées en activité est
+probablement plus bas que les décisions de reconnaissance ; la part est plafonnée à 1.
 """
 import numpy as np
 
 from jumeau.history import stock_flow_rates
 from jumeau.module import Add, Module, Param, par_profession, register
 
-FLUX = {"sages-femmes": 70.0, "dentistes": 665.0, "kines": 1175.0, "*": 0.0}
+FLUX = {"sages-femmes": 80.0, "dentistes": 1300.0, "kines": 2200.0, "pharmaciens": 240.0, "infirmiers": 400.0, "*": 0.0}
+FLUX_BAS = {"sages-femmes": 70.0, "dentistes": 665.0, "kines": 1175.0, "*": 0.0}
 
 
 def part_etrangere(hist, state, flux) -> np.ndarray:
@@ -39,9 +46,10 @@ class Etrangers(Module):
     needs = ("entrees",)
     params = (
         Param("flux", FLUX, "personnes/an, par profession",
-              "DREES, Les Dossiers n° 76 (2021), tableaux 12 et 13 ; ER n° 1075 (MK, 2016) ; fiche axe 1 "
-              "param-age-entree-exercice", "RPPS 2020 ; 2016", "sourcé",
-              "Diplômés à l'étranger entrant chaque année. PH, IDE : non publié → 0.", (0.0, 1e5)),
+              "fiche axe 1 param-diplomes-etrangers-flux : Ordre CD 2022, CNOMK 2024, Ordre PH 2024-2025, DREES "
+              "ER 1319 (IDE) ; variante basse FLUX_BAS : DD76 tableaux 12-13, ER 1075", "2022-2025", "sourcé",
+              "Diplômés à l'étranger entrant chaque année. CD sourcé, MK/PH/SF dérivés, IDE confiance faible.",
+              (0.0, 1e5)),
         Param("multiplicateur", 1.0, "× flux observé", "fiche param-age-entree-exercice (plage supposée × [0,5 ; 2])",
               "—", "supposé", "Reconnaissance des diplômes, procédures d'autorisation d'exercice.", (0.0, 3.0),
               "attirer"),

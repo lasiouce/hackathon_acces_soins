@@ -151,6 +151,7 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
     keep = None if keep is None else set(keep)
     for m in modules:
         m.begin(x, Context(state.year, origin, scenario, x.cells, rng, len(x.ages)))
+    owned = True                       # N n'est référencé par aucun état gardé : les flux peuvent l'écrire en place
     for year in range(state.year + 1, until + 1):
         ctx = Context(year, origin, scenario, x.cells, rng, len(x.ages))
         N = x.N
@@ -164,7 +165,13 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
                     for acct, v in f.out.items():
                         book.append((year, f.name, acct, v if hasattr(v, "index") else np.asarray(v, float)))   # Series : par profession
                     continue
+                if owned and not ledger and f.name not in needed and isinstance(f, (Rate, Add)):
+                    # chemin rapide : mêmes opérations flottantes (factor * N, N + amount), sans allouer
+                    (np.multiply(f.factor, N, out=N) if isinstance(f, Rate) else np.add(N, f.amount, out=N))
+                    x = State(x.cells, x.ages, N, x.year, x.level, x.pool, x._key)
+                    continue
                 new = apply(N, f)
+                owned = True
                 if ledger or f.name in needed:
                     d = new - N
                     if f.name in needed:
@@ -174,10 +181,15 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
                         book.append((year, f.name, acct, d.sum(axis=1)))
                 N = new
                 x = State(x.cells, x.ages, N, x.year, x.level, x.pool, x._key)
-        floored = np.maximum(N, 0) if floor else N
+        if floor and owned and not ledger:
+            floored = np.maximum(N, 0, out=N)
+        else:
+            floored = np.maximum(N, 0) if floor else N
         if ledger:
             book.append((year, "plancher", "plancher", (floored - N).sum(axis=1)))
         x = State(x.cells, x.ages, floored, year, x.level, x.pool, x._key)
+        owned = True
         if keep is None or year in keep:
             out[year] = x
+            owned = False                  # l'état gardé ne doit plus être modifié
     return Trajectory(out, book)

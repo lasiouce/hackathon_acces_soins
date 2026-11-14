@@ -460,7 +460,7 @@ def c14_levers():
     ph = abs(tot(cap, H2050, "pharmaciens") / tot(base, H2050, "pharmaciens") - 1)
     out["capacite_cd"] = dict(effet_o6=eff[o + 6], effet_o7=eff[o + 7], effet_2050_pct=100 * eff[H2050],
                               diplomes_ratio=float(g["dentistes"] / g0["dentistes"]), pharmaciens=ph,
-                              dd76_2050_pct="±12 à 13 % pour ±20 % de quotas (cité)")
+                              dd76_2050_pct="±9 % pour ±20 % de quotas (DD76, audit des sources axe 1)")
     oks.append(abs(eff[o + 6]) < 1e-12 and eff[o + 7] > 0 and abs(g["dentistes"] / g0["dentistes"] - 1.2) < 1e-9
                and ph < 1e-12)
     # c. abandon IFSI : diviser la perte par deux (ρ 0,718 → 0,859)
@@ -475,19 +475,23 @@ def c14_levers():
     ratio = float(gi.iloc[0] / gi0.iloc[0])
     out["abandon_ifsi"] = dict(diplomes_ratio=ratio, attendu=(1 - (1 - 0.718) / 2) / 0.718,
                                effet_2050_pct=100 * (tot(ab, H2050) / tot(bi, H2050) - 1),
-                               er1319="≈ +14 % de places (cité par l'axe 1 ; ρ = 0,77 donnerait +14,9 %)")
+                               er1319="≈ +14 % de places ; équivalent DREES en effectifs ≈ +7,9 % en 2050 (audit des sources axe 1) : écart")
     oks.append(abs(ratio - out["abandon_ifsi"]["attendu"]) < 1e-9 and tot(ab, H2050) > tot(bi, H2050))
-    # d. diplômés étrangers ×2 : ajout année 1 = part · entrées⁺ ; PH sans flux publié → 0
+    # d. diplômés étrangers ×2 : ajout année 1 = part · entrées⁺ ; une profession à flux nul n'est pas touchée
     et = est.trajectory(o + 1, Scenario(modules=LEVIERS, params={"etrangers.multiplicateur": 2.0}))
     added = float(sum(x.sum() for y, f, a, x in et.ledger if f == "etrangers"))
     e_pos = float(sum(np.clip(x, 0, None).sum() for y, f, a, x in et.ledger if f == "entrees") * 0)  # registre net
     share = part_etrangere(est.hist, est.state, FLUX)
     cd = (est.state.cells.profession == "dentistes").to_numpy()
     et50 = est.trajectory(H2050, Scenario(modules=LEVIERS, params={"etrangers.multiplicateur": 2.0}))
+    zero = est.trajectory(H2050, Scenario(modules=LEVIERS, params={"etrangers.multiplicateur": 2.0,
+                                                                   "etrangers.flux": {"dentistes": 1300.0, "*": 0.0}}))
     out["etrangers_x2"] = dict(part_cd=float(share[cd][0]), part_ph=float(share[~cd][0]), ajout_annee1=added,
                                effet_2050_cd_pct=100 * (tot(et50, H2050, "dentistes") / tot(base, H2050, "dentistes") - 1),
-                               effet_2050_ph=tot(et50, H2050, "pharmaciens") - tot(base, H2050, "pharmaciens"))
-    oks.append(added > 0 and out["etrangers_x2"]["effet_2050_ph"] == 0 and 0 < share[cd][0] < 1)
+                               effet_2050_ph_pct=100 * (tot(et50, H2050, "pharmaciens") / tot(base, H2050, "pharmaciens") - 1),
+                               ph_flux_nul=tot(zero, H2050, "pharmaciens") - tot(base, H2050, "pharmaciens"))
+    oks.append(added > 0 and out["etrangers_x2"]["ph_flux_nul"] == 0 and 0 < share[cd][0] <= 1
+               and out["etrangers_x2"]["effet_2050_ph_pct"] > 0)
     # e. départs précoces × 0,5
     pr = est.trajectory(H2050, Scenario(params={"sorties.multiplicateur_precoces": 0.5}))
     out["precoces_x05_pct"] = 100 * (tot(pr, H2050) / tot(base, H2050) - 1)
@@ -514,7 +518,8 @@ def c14_levers():
                 "regulation.part_zones": {"kines": 0.4, "*": 1.0}}, modules=REG).over(ks.scenario), ks.origin + 1))
     out["une_zone_part_arrondie_a_0"] = one
     oks.append(mv[0.0] == 0 and 0 < mv[0.6] < mv[1.0] and one is None)
-    # h. retraite + 1 an, comparée au repère DREES (≈ +1 % d'effectif par an de décalage, cité)
+    # h. retraite + 1 an : effet en 2050 (le repère DREES ≈ +1 % — plus de 60 ans, tous modes, plafond 67 ans,
+    #    dès 2020 — n'est pas comparable ; rapporté, pas testé)
     ret = {}
     for p in ("kines", "infirmiers-liberaux"):
         tp = stock_table([p])
@@ -534,12 +539,12 @@ def c14_levers():
     oks.append(not bad and len(levers) >= 10)
     crit("C14", "leviers branchés : identité, effets, délai, région, chiffres cités",
          f"identité LEVIERS {out['identite']} ; capacité CD ×1,2 : 0 en {o + 6}, +{100 * eff[o + 7]:.2f} % en {o + 7}, "
-         f"{out['capacite_cd']['effet_2050_pct']:+.1f} % en 2050 (DD76 cité : ±12-13 % pour ±20 %) ; IFSI perte ÷ 2 : "
-         f"diplômés ×{ratio:.3f} (ER 1319 cité : ≈ +14 %) ; étrangers ×2 : part CD {share[cd][0]:.2f}, "
-         f"{out['etrangers_x2']['effet_2050_cd_pct']:+.1f} % CD, PH 0 ; précoces ×0,5 {out['precoces_x05_pct']:+.1f} % ; "
+         f"{out['capacite_cd']['effet_2050_pct']:+.1f} % en 2050 (DD76 : ±9 % pour ±20 %) ; IFSI perte ÷ 2 : "
+         f"diplômés ×{ratio:.3f}, IDE {out['abandon_ifsi']['effet_2050_pct']:+.1f} % en 2050 (DREES en effectifs ≈ +7,9 % : écart) ; étrangers ×2 : part CD {share[cd][0]:.2f}, "
+         f"{out['etrangers_x2']['effet_2050_cd_pct']:+.1f} % CD, {out['etrangers_x2']['effet_2050_ph_pct']:+.1f} % PH (flux nul → 0) ; précoces ×0,5 {out['precoces_x05_pct']:+.1f} % ; "
          f"quotas région 84 : hors région 0, région {out['quotas_region_84']['region_pct']:+.1f} % ; part zones 0/0,6/1 → "
          f"{mv[0.0]:.0f}/{mv[0.6]:.0f}/{mv[1.0]:.0f} déplacés ; retraite +1 : "
-         + ", ".join(f"{k} {v:+.2f} %" for k, v in ret.items()) + f" (DREES cité ≈ +1 %) ; {len(levers)} leviers, "
+         + ", ".join(f"{k} {v:+.2f} %" for k, v in ret.items()) + f" (repère DREES non comparable) ; {len(levers)} leviers, "
          f"familles {sorted(set(out['leviers'].values()))} ; sous-tests {oks}", all(oks), avant="leviers absents ou non branchés")
     return out
 
@@ -559,8 +564,9 @@ def c15_speed():
     full = run(st, mods, sc, H2050).states[H2050].N
     fast = run(st, mods, sc, H2050, ledger=False, keep=[H2050]).states[H2050].N
     gap = float(np.abs(full - fast).max())
-    crit("C15", "vitesse à la commune : 5 professions ≤ 2 s", f"{r['seconds']:.2f} s médiane ({r['cells']} cellules, "
-         f"24 ans) ; chemin rapide = chemin complet (écart {gap})", r["seconds"] <= 2.0 and gap == 0,
+    crit("C15", "vitesse à la commune : 5 professions ≤ 2 s", f"{r['seconds']:.2f} s réel, {r['cpu_seconds']:.2f} s CPU "
+         f"(médianes ; {r['cells']} cellules, 24 ans ; charge machine {r['load']:.1f}) ; chemin rapide = chemin complet "
+         f"(écart {gap})", r["seconds"] <= 2.0 and gap == 0,
          avant="3,99 s mesurées (registre complet, np.roll, sorties et entrées recalculées chaque année)")
     return dict(r, gap_rapide_complet=gap)
 

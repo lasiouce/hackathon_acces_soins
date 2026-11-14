@@ -29,8 +29,9 @@ donc réécrit chaque critère pour qu'il puisse échouer, et vérifié qu'il é
 le défaut (mutation). Une troisième revue ne trouve plus de défaut bloquant ; ses défauts importants
 sont corrigés à leur tour. Douze leviers sont branchés, et le vivier en formation est relié aux
 inscrits réels (DREES). Les 17\mesure{} critères passent. Un scénario se recalcule en 21\mesure{}~ms au
-département, et en 1,4 à 1,6\mesure{}~s pour cinq professions à l'échelle de la commune (environ
-\num{700000} cellules), sous la cible de 2\suppose{}~s.
+département. Pour cinq professions à l'échelle de la commune (environ \num{700000} cellules), il
+prend 1,4 à 1,6\mesure{}~s sur une machine peu chargée, mais 2,0 à 4,6\mesure{}~s sous forte charge :
+la cible de 2\suppose{}~s n'est pas établie.
 \end{abstract}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; jumeau numérique ;
 modèle stock-flux ; architecture en greffons ; tests de mutation ; revue adversariale.
@@ -286,7 +287,7 @@ règle « entrées $\le$ sorties » : écart $7\cdot10^{-15}$\mesure{} à une fo
 retraite à 3 tranches $\ge 65$ : écart de séjour $10^{-14}$\mesure{} & $\times243 \to +14\,317$~\% ;
 règle non testée ; séjour $\ne +\Delta$ \\
 C14 & 12 leviers en 4 familles : identité au tendanciel (0,0) ; capacité dentistes $\times1{,}2$
-$\to +9{,}1$\mesure{}~\% en 2050 (DD76 cite $\pm12$-13~\%) ; quotas régionaux sans effet hors
+$\to +9{,}1$\mesure{}~\% en 2050 (DD76 : $\pm9$~\% pour $\pm20$~\%) ; quotas régionaux sans effet hors
 région & leviers absents \\
 C15 & 5 professions à la commune (\num{698212} cellules) : 1,35 à 1,57\mesure{}~s ; chemin rapide
 = chemin complet (écart 0) & 3,99\mesure{}~s \\
@@ -300,6 +301,23 @@ les âges \\
 d'échec). Colonne de droite : valeur mesurée par les revues adversariales sur le code d'avant.}
 \label{tab:criteres}
 \end{table}
+
+\paragraph{Comparaison aux chiffres publiés.}
+\begin{itemize}
+  \item \textbf{Quotas, dentistes.} Une capacité $\times1{,}2$ donne $+9{,}1$\mesure{}~\% en 2050 avec le
+        flux bas de diplômés à l'étranger (665 par an), contre $\pm9$~\% dans DD76 pour des quotas à
+        $\pm20$~\% \citep{drees2021dd76} : les deux concordent. Avec le flux actuel (\num{1300} par an,
+        Ordre 2022), l'effet tombe à $+6{,}3$\mesure{}~\%, parce que la part formée en France baisse.
+        La concordance dépend donc d'un paramètre mal mesuré.
+  \item \textbf{Abandon en IFSI divisé par deux.} Le jumeau donne $+15{,}6$\mesure{}~\% d'IDE libéraux
+        en 2050 ($+14{,}1$\mesure{}~\% avec 400 IDE diplômés à l'étranger par an). Le chiffre de la DREES repris par l'axe~1 (environ $+14$~\%) porte sur des places ;
+        son équivalent en effectifs est d'environ $+7{,}9$~\% en 2050. Le jumeau donne donc environ deux
+        fois plus : c'est un écart non expliqué, pas une concordance.
+  \item \textbf{Retraite $+1$~an.} Le jumeau donne $+3{,}02$\mesure{}~\% d'IDE libéraux et
+        $+1{,}55$\mesure{}~\% de kinés en 2050. Le repère de la DREES (environ $+1$~\%) n'est pas
+        comparable : il mesure un écart de niveau d'un an chez les plus de 60~ans, tous modes
+        d'exercice, avec un plafond à 67~ans et dès 2020.
+\end{itemize}
 
 \paragraph{Effets des leviers (dentistes, 2050).}
 \begin{itemize}
@@ -315,7 +333,9 @@ et la sensibilité relèvent de l'axe~5.
   \item 21\mesure{}~ms pour 7 professions au département (\num{1410} cellules) ;
   \item 5 professions, 2 secteurs, état ventilé par la population sur \num{35000} communes
         (\num{698212} cellules), 24 ans : 3,99\mesure{}~s au départ, puis 1,35 à 1,57\mesure{}~s
-        après optimisation (machine partagée).
+        après optimisation, sans que la charge de la machine soit relevée. Remesuré test isolé sur une
+        machine chargée par d'autres calculs (charge moyenne 9 à 14) : 2,0 à 4,6\mesure{}~s en temps réel
+        et 1,9 à 2,6\mesure{}~s en temps CPU. L'objectif de 2~s n'est donc pas établi.
 \end{itemize}
 Le profil mesuré avant tout changement attribuait le temps au registre des flux (1,1~s), aux passes
 d'application (1,0~s), aux sorties recalculées chaque année (0,8~s) et aux entrées (0,5~s). Le chemin
