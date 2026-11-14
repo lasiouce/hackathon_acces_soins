@@ -1,0 +1,378 @@
+\documentclass[11pt]{article}
+\input{../template/preamble}
+
+\title{Prévoir l'effectif libéral des professions de santé par département :\\
+un shrinkage hiérarchique améliore de peu le stock-flux, les âges fins non}
+\author[1]{Équipe hackathon-santé}
+\author[1]{Claude (Anthropic), assistant de recherche}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Prétirage, version du \today{} --- non relu par des pairs}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\begin{abstract}
+On cherche une méthode interprétable qui prévoie, mieux que le modèle stock-flux à taux locaux,
+l'effectif \enquote{libéral} (secteur privé, lucratif ou non) des sages-femmes, chirurgiens-dentistes,
+pharmaciens, masseurs-kinésithérapeutes et infirmiers par département. Cinq variantes ont été
+inscrites avant tout passage sur un banc de prévision pré-enregistré (origines glissantes 2016--2025,
+erreur absolue moyenne en pourcentage, MAPE, par département à cinq ans). Les cinq sont des stock-flux :
+même équation, estimation différente. Un shrinkage hiérarchique des taux (département, région,
+national) donne une MAPE de 8,57\,\%\mesure{} contre 8,68\,\%\mesure{} pour la référence, soit
+$-0{,}11$\mesure{} point (IC 95\,\% $[-0{,}21\,;\,-0{,}02]$\mesure), et le gain se reproduit sur un second
+périmètre ($-0{,}10$\mesure{} point). Des âges en années simples font jeu égal sur l'effectif total ;
+sur des mondes simulés, ils divisent par trois\mesure{} l'erreur sur la part des 60 ans et plus. Une
+rétention des seniors prolongée en tendance dégrade la prévision ($+0{,}33$\mesure{} point). La borne de
+rétention $r \le 1{,}2$ d'un modèle voisin produit une croissance composée (+23\,\%\mesure{} de dentistes
+en 2050 par rapport à la référence). Limite principale : le gain est petit, l'intervalle ignore la
+corrélation entre origines, et les cibles ont déjà été vues lors d'un banc antérieur. L'article est une
+première étape ; les familles de méthodes hors stock-flux restent à mesurer.
+\end{abstract}
+
+{\renewcommand\abstractname{Abstract}
+\begin{abstract}
+We look for an interpretable method that forecasts the private-sector (\emph{libéral}) headcount of
+midwives, dentists, pharmacists, physiotherapists and nurses by French département better than a
+stock-flow model with local rates. Five variants were registered before any run on a pre-registered
+forecasting bench (rolling origins 2016--2025, mean absolute percentage error by département at five
+years). All five are stock-flow models: same equation, different estimation. Hierarchical shrinkage of
+the rates (département, region, nation) reaches 8.57\,\% MAPE against 8.68\,\% for the reference
+($-0.11$ point, 95\,\% CI $[-0.21, -0.02]$), and the gain replicates on a second perimeter ($-0.10$).
+Single-year ages tie on the total headcount; on simulated worlds they divide the error on the share
+aged 60+ by three. Extrapolating the trend in senior retention degrades forecasts ($+0.33$ point). A
+retention cap $r \le 1.2$ used by a related model yields compounding growth (+23\,\% dentists in 2050
+relative to the reference). Main limits: the gain is small, the interval ignores correlation between
+origins, and targets were already seen by an earlier bench. This is a first step; non stock-flow
+families remain to be measured.
+\end{abstract}}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; stock-flux ;
+shrinkage hiérarchique ; backtest pré-enregistré ; jumeau numérique.
+
+\medskip
+\noindent\textit{Provenance des nombres :} \mesure{} mesuré, \derive{} dérivé, \suppose{} supposé.
+Tous viennent du rapport \texttt{v2/docs/lab/reports/2026-11-14-axe2-methodes.md}.
+
+\section{Introduction}
+Un décideur public qui anticipe des tensions territoriales a besoin d'une projection d'effectifs par
+profession et par territoire, et de savoir ce qu'un levier (quotas de formation, âge de départ,
+régulation de l'installation) y change. Le projet construit pour cela un \enquote{jumeau numérique} de
+l'offre de soins : un état $N[\text{profession}, \text{secteur}, \text{territoire}, \text{sexe}, \text{âge}]$
+que des modules de flux font avancer d'année en année. Son modèle de départ est un stock-flux par
+composantes, comme les projections de la DREES~\cite{drees2021dd76}.
+
+La question de cet article : une autre méthode, aussi lisible, prévoit-elle mieux ? \enquote{Lisible}
+est une contrainte dure : chaque méthode doit nommer le paramètre qu'un levier modifie ; une méthode qui
+ne le peut pas est exclue.
+
+\paragraph{Ce que l'article apporte, et ce qu'il n'apporte pas.}
+\begin{itemize}
+  \item Le premier passage confirmatoire du protocole de prévision pré-enregistré du projet : le
+        stock-flux à taux locaux bat la meilleure référence naïve (la tendance linéaire) de
+        $-0{,}63$\mesure{} point de MAPE (IC 95\,\% $[-0{,}97\,;\,-0{,}27]$\mesure).
+  \item Cinq variantes pré-inscrites, avec un verdict chacune. \textbf{Toutes sont des stock-flux} :
+        elles gardent l'équation $N(t+1) = s \cdot A(N(t)) + I$ et ne changent que l'opérateur de
+        vieillissement $A$, le partage d'information entre territoires ou la dépendance au temps de $s$.
+        Les écarts mesurés (de l'ordre de 0,1\mesure{} point) en sont la conséquence.
+  \item Un test sur mondes simulés à âges connus, une vérification de la borne de rétention d'un modèle
+        voisin, et un diagnostic sur la répartition régionale des entrées.
+  \item Les familles de méthodes hors stock-flux (microsimulation, bayésien hiérarchique ou espace-état,
+        choix discret de l'installation) \emph{ne sont pas mesurées ici}. La section~\ref{sec:conclusion}
+        en donne la feuille de route.
+\end{itemize}
+
+\section{Travaux existants}
+\paragraph{Les modèles de projection d'effectifs de santé.} Une revue systématique de la littérature
+2010--2023 retient 40 études qui projettent à la fois l'offre et la demande de
+professionnels~\cite{lee2024hrh}. Les points qu'elle établit et qui nous concernent :
+\begin{itemize}
+  \item Côté offre, toutes recourent au stock-flux (40 sur 40) ; la simulation par agents (3 études) et
+        la dynamique des systèmes (7) sont présentées comme des réponses à ses limites, notamment
+        l'hétérogénéité de la population active, par exemple par âge.
+  \item Seules 10 études travaillent à une échelle infranationale, et le manque de données locales y
+        est un obstacle récurrent.
+  \item La validation reste rare : 8 études valident la précision des prédictions contre des données
+        passées, 13 font une analyse de sensibilité. Une erreur quadratique moyenne en pourcentage
+        inférieure à 10\,\% y est donnée comme règle empirique d'acceptabilité.
+  \item Le manque de standardisation dans la description des méthodes fait percevoir ces modèles
+        comme des boîtes noires ; les auteurs proposent une grille de 30 items (cadre analytique,
+        paramètres et leur estimation, hypothèses, incertitude, méthodes de validation, sources de
+        données). Cet article en suit l'esprit : chaque paramètre, hypothèse et validation est
+        explicite.
+\end{itemize}
+En France, les projections de la DREES pour les chirurgiens-dentistes, sages-femmes et pharmaciens
+jusqu'en 2050 reposent sur un modèle par composantes (âge, sexe, mode d'exercice) : cessations,
+transitions de mode d'exercice, entrées décalées de la durée des études, diplômés à
+l'étranger~\cite{drees2021dd76}. Notre référence en reprend la structure, simplifiée à une rétention
+nette et à un flux d'entrées nettes par cellule.
+
+\paragraph{Cohortes par composantes en bayésien, à l'échelle infranationale.} Alexander et Alkema
+placent l'identité des cohortes par composantes dans un cadre bayésien pour estimer et projeter des
+populations de comtés kényans avec très peu de données~\cite{alexander2021bayesian}. Les processus
+(mortalité par composantes principales des tables nationales, migration nette à profil d'âge constant
+et volume en marche aléatoire, multiplicateur âge-temps résiduel) sont reliés aux observations par
+des modèles de données qui portent l'erreur d'échantillonnage, et la somme des comtés est contrainte
+autour du total national publié. Validées hors échantillon contre le recensement 2019, ses
+projections sont à environ 1\,\% des effectifs observés, avec une erreur quadratique 3 à 10 fois
+plus faible qu'une extrapolation linéaire, et une couverture des intervalles à 90\,\% proche de sa
+valeur nominale (cité). C'est la forme la plus proche de notre jumeau parmi les méthodes hors
+stock-flux déterministe : même identité comptable, mais des taux estimés avec un modèle explicite,
+une incertitude propagée et un partage d'information entre zones. Notre shrinkage A2 en est la
+version déterministe et sans incertitude.
+
+\paragraph{Ce dont nous partons.} Un observatoire construit par un membre de
+l'équipe~\cite{evolutionsoin2026} utilise un stock-flux voisin, avec un shrinkage département $\to$
+région $\to$ national (poids 200) et des taux de maintien bornés à $[0{,}5\,;\,1{,}2]$. Son audit
+signale que le vieillissement uniforme dans la tranche biaise la part des seniors de +8 à +19\,\% sur
+des mondes simulés (chiffre cité). Nous testons ces trois éléments.
+
+\paragraph{Ce que nous ne citons pas encore.} Un état de l'art interne au
+projet\footnote{\texttt{v2/docs/lab/explorations/2026-11-14-etat-de-lart-methodes.md}.} a repéré
+d'autres familles en boîte blanche : modèles âge-période-cohorte bayésiens pour les cessations,
+logit conditionnel du lieu d'installation, réconciliation optimale des prévisions entre échelles,
+règles de score propres et histogrammes PIT pour valider des prévisions probabilistes. Ces références
+n'ont pas encore été lues en texte intégral ; la règle du projet les exclut de la bibliographie tant
+que ce n'est pas fait.
+
+\section{Données}
+\begin{itemize}
+  \item \textbf{Effectifs.} DREES, démographie des professionnels de santé depuis 2012, publication du
+        2026-07-02 (répertoire RPPS) : profession $\times$ département $\times$ sexe $\times$ tranche
+        d'âge quinquennale $\times$ mode d'exercice $\times$ secteur d'activité, 2012--2026. Kinés : RPPS
+        à partir de 2017 seulement (rupture ADELI $\to$ RPPS). Infirmiers libéraux : 2012--2023.
+  \item \textbf{Séparation public / privé.} Construite par l'axe 4 du projet à partir du secteur
+        d'activité des fichiers DREES ; les salariés ambigus sont répartis par leur part privée
+        observée dans FINESS (extraction du 2026-05-04). Nous utilisons la variante centrale.
+  \item \textbf{Deux périmètres.} \emph{Privé} (confirmatoire) : secteur privé, lucratif ou non ; pour
+        les infirmiers, l'âge des salariés privés manque et seuls les infirmiers libéraux sont gardés.
+        \emph{Ancien} (secondaire) : modes libéral et mixte, pour la comparaison avec un banc antérieur.
+  \item \textbf{Inscrits en formation.} DREES, fichier \texttt{990\_drees\_mmop2\_f.xlsx}, feuille
+        \texttt{Feuil1} (2020--2024), qui porte la correspondance université $\to$ ARS.
+\end{itemize}
+Départements : 101, hors collectivités d'outre-mer (codes 999 et 20 exclus).
+
+\section{Méthode}
+\subsection{Référence (A0)}
+Par cellule $c$ = (profession, département, sexe) et tranche $a$ :
+\begin{equation}
+  N_{c}(t+1) = s_{c} \odot A\big(N_{c}(t)\big) + I_{c},
+\end{equation}
+où $A$ fait passer $1/5$ de chaque tranche à la suivante (âges supposés uniformes dans la tranche),
+$s_{c,a} = \min(1, r_{c,a})$ est la rétention nette ajustée par moindres carrés sur la fenêtre, et
+$I_{c,a}$ est le flux net moyen là où le ratio brut $r_{c,a}$ dépasse~1. Les taux départementaux sont
+rétrécis vers le national : $r = (\text{num} + k\,r_{\text{nat}})/(\text{den} + k)$, $k = 200$\suppose.
+
+\subsection{Variantes inscrites}
+\begin{description}
+  \item[A1a, âges interpolés.] Chaque année, chaque tranche est désagrégée en âges simples (densité
+        linéaire par morceaux entre milieux de tranches, masse de chaque tranche conservée), vieillie
+        d'un an, puis réagrégée. Le même opérateur sert à l'ajustement et à la projection. Hypothèses :
+        tranche \enquote{moins de 25 ans} = 20--24 ans\suppose, tranche ouverte 65+ de largeur
+        10 ans\suppose.
+  \item[A1b, âges simples.] L'état est tenu en âges simples (20 à 74 ans et plus), désagrégé une fois à
+        l'origine ; les cohortes sont suivies exactement. Rétention et entrées restent calibrées par
+        tranche ; les entrées sont réparties uniformément dans la tranche\suppose.
+  \item[A2, shrinkage hiérarchique.] $r_{\text{dép}} = (\text{num} + k\,r_{\text{rég}})/(\text{den} + k)$
+        et $r_{\text{rég}} = (\text{num}_{\text{rég}} + k\,r_{\text{nat}})/(\text{den}_{\text{rég}} + k)$,
+        $k = 200$\suppose{} aux deux niveaux, non réglé sur le banc.
+  \item[A3, rétention des 60 ans et plus en tendance.]
+        $s_{c,a}(t) = \min\!\big(1,\ s_{c,a} + \lambda\, b_{p,\text{sexe},a}\,(t - \bar t)\big)$ pour
+        $a \ge 60$, où $b$ est la pente nationale des ratios annuels sur la fenêtre et $\bar t$ son
+        milieu ; $\lambda = 1$.
+  \item[A123.] A1a + A2 + A3, combinaison pré-spécifiée.
+  \item[B4 (diagnostic, non candidat).] Schéma de l'observatoire~\cite{evolutionsoin2026} : $r = 1$
+        et entrées = résidus moyens sur 5 ans dans les tranches de moins de 35 ans ; ailleurs $r$
+        rétréci département $\to$ région $\to$ national et borné à $[0{,}5\,;\,1{,}2]$, sans entrée
+        absolue.
+\end{description}
+
+\subsection{Ce que chaque levier modifie}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}p{0.2\textwidth}p{0.45\textwidth}p{0.27\textwidth}@{}}
+\toprule
+Variante & Paramètre que touche un levier & Nature \\
+\midrule
+A0, A1a, A1b, A2 & \texttt{methodes\_sorties.}\allowbreak\texttt{decalage\_retraite}, \texttt{cumul\_multiplicateur} & rétention $s$ par tranche \\
+ & \texttt{methodes\_entrees.multiplicateur} & flux d'entrées $I$ \\
+A3 & \texttt{methodes\_sorties.tendance\_60plus} ($\lambda$) & pente de rétention des 60+ \\
+A2 & $k$ (poids du shrinkage) & réglage d'estimation, pas un levier \\
+\bottomrule
+\end{tabular}
+\caption{Paramètres touchés par les leviers. Aucune variante n'introduit de paramètre sans nom.}
+\end{table}
+
+\subsection{Mise en \oe{}uvre}
+Les variantes sont trois modules (\texttt{methodes\_vieillissement}, \texttt{methodes\_sorties},
+\texttt{methodes\_entrees}) branchés sur le registre du jumeau, sans modifier son code. Aux options de
+la référence, la composition reproduit le jumeau de référence à $9 \times 10^{-13}$\mesure{} personne
+près ; la désagrégation conserve la masse à $5 \times 10^{-13}$\mesure{} près. Le recalcul d'un
+scénario jusqu'en 2050 (5 professions, département) prend de 14 à 40\mesure{}~ms.
+
+\section{Résultats}
+\subsection{Banc de prévision, périmètre privé (confirmatoire)}
+\begin{table}[h]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Variante & MAPE $h=5$ (\%) & $\Delta$ vs tendance (IC 95\,\%) & $\Delta$ vs A0 (IC 95\,\%) \\
+\midrule
+A0 stock-flux taux locaux & 8,68 & $-0{,}63$ $[-0{,}97\,;\,-0{,}27]$ & --- \\
+\textbf{A2 shrinkage hiérarchique} & \textbf{8,57} & $-0{,}74$ $[-1{,}07\,;\,-0{,}40]$ & $\mathbf{-0{,}11}$ $[-0{,}21\,;\,-0{,}02]$ \\
+A1b âges simples & 8,70 & $-0{,}60$ $[-0{,}96\,;\,-0{,}24]$ & $+0{,}03$ $[-0{,}07\,;\,+0{,}11]$ \\
+A123 combinaison & 8,74 & $-0{,}56$ $[-0{,}92\,;\,-0{,}21]$ & $+0{,}06$ $[-0{,}07\,;\,+0{,}18]$ \\
+A1a âges interpolés & 8,77 & $-0{,}53$ $[-0{,}89\,;\,-0{,}17]$ & $+0{,}09$ $[+0{,}01\,;\,+0{,}18]$ \\
+A3 rétention 60+ en tendance & 9,00 & $-0{,}30$ $[-0{,}67\,;\,+0{,}08]$ & $+0{,}33$ $[+0{,}23\,;\,+0{,}42]$ \\
+\textit{B4 observatoire (diagnostic)} & \textit{8,32} & $-0{,}98$ $[-1{,}37\,;\,-0{,}59]$ & $-0{,}35$ $[-0{,}65\,;\,-0{,}08]$ \\
+tendance linéaire (naïve) & 9,30 & --- & --- \\
+persistance (naïve) & 9,92 & --- & --- \\
+\bottomrule
+\end{tabular}}
+\caption{MAPE par département à cinq ans, départements de 30 professionnels ou plus à l'origine,
+moyenne à poids égal sur 22 cellules profession $\times$ origine. Toutes les valeurs sont
+mesurées\mesure. IC par bootstrap des départements (2\,000 tirages, graine 20261114).}
+\label{tab:prive}
+\end{table}
+
+Toutes les variantes, la référence comprise, battent la tendance, sauf A3 (égalité). Les victoires
+tiennent aussi à l'IC 99\,\% (correction de Bonferroni pour cinq variantes). La limite $h \to 0$ est
+respectée : à $h = 1$, aucune variante n'est à plus d'un point de la persistance.
+
+\paragraph{Par profession.} Le gain de A2 vient surtout des dentistes (8,66 contre 8,95\mesure) et des
+infirmiers libéraux (5,72 contre 5,89\mesure) ; il est nul ou négatif pour les kinés et les pharmaciens.
+Les sages-femmes privées ont la MAPE la plus forte (13 à 14\,\%\mesure), dans une série libérale qui a
+été multipliée par 1,8\mesure{} entre 2012 et 2026. Pour les dentistes, la référence ne bat la tendance
+que sur 2 origines sur 6\mesure : leur classement dépend de l'origine.
+
+\paragraph{Prédictions écrites avant le banc.} Trois prédictions avaient été déposées
+(empreinte SHA-256 de la dérivation \texttt{1c324f5795b0}) :
+$|\Delta(\text{A1}, \text{A0})| < 0{,}3$ point (observé $+0{,}09$ et $+0{,}03$\mesure : tient) ;
+A2 améliore A0 de 0 à 0,3 point (observé $-0{,}11$\mesure : tient) ;
+A3 réduit le biais national des pharmaciens et des dentistes (pharmaciens : $-0{,}15$ $\to$
+$+2{,}28$\,\%\mesure{} : \textbf{falsifiée}).
+
+\subsection{Ancien périmètre (secondaire)}
+Sur le périmètre libéral + mixte, A2 reste le seul gain : $-0{,}10$\mesure{} point
+(IC 95\,\% $[-0{,}21\,;\,-0{,}002]$\mesure). A1b est à égalité ($-0{,}03$\mesure), A3 et la combinaison
+sont pires ($+0{,}76$ et $+0{,}50$\mesure). \textbf{B4 se renverse} : meilleur que A0 au privé, il est
+pire de $+0{,}53$\mesure{} point ici. La référence y mesure 8,21\,\%\mesure, contre 8,08\,\% dans le banc
+antérieur du projet, sur une grille différente.
+
+\subsection{Mondes simulés : le biais du vieillissement uniforme}
+Dix-huit mondes à âges simples connus (un pic de génération de taille 0, 60 ou 120, centré à 40, 50 ou
+55 ans ; entrées constantes ou en hausse de 2\,\% par an\suppose) sont observés en tranches, ajustés
+sur dix ans, puis projetés.
+\begin{table}[h]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Méthode & $|$erreur$|$ 60+ à $h=5$, moy. (max) & $|$erreur$|$ 60+ à $h=10$ & $|$erreur$|$ total à $h=5$ \\
+\midrule
+uniforme (A0) & 7,0 (18,9) & 5,2 (12,0) & 3,9 \\
+A1a âges interpolés & 5,3 (13,5) & 4,5 (9,7) & 3,0 \\
+A1b âges simples & 2,1 (5,9) & 1,8 (2,9) & 3,8 \\
+\bottomrule
+\end{tabular}}
+\caption{Erreurs en \%, mesurées\mesure{} sur mondes simulés.}
+\end{table}
+Le vieillissement uniforme biaise la part des 60 ans et plus jusqu'à 19\,\%\mesure, l'ordre de grandeur
+signalé par l'observatoire. Le biais ne se voit pas sur le total à cinq ans : la rétention ajustée
+l'absorbe dans la fenêtre\derive, et l'erreur totale est dominée par les entrées. C'est pourquoi A1b
+fait jeu égal au banc tout en étant plus juste sur la structure par âge.
+
+\subsection{La borne $r \le 1{,}2$ fait-elle s'emballer les entrées ?}
+De 27 à 47\,\%\mesure{} des cellules de 35 ans et plus ont $r > 1$ sous B4 : leur croissance est
+proportionnelle au stock et se compose. De 2026 à 2050, l'écart de croissance annuelle à A0 va de
+$+0{,}1$ à $+0{,}9$\mesure{} point ; pour les dentistes, l'effectif 2050 vaut 1,61 fois\mesure{}
+celui de 2026 contre 1,31\mesure{} sous A0 (+23\,\%\mesure). Ce n'est pas l'emballement de
++3,5\,\% par an observé lors du banc antérieur, mais le piège est en partie reproduit, et il se
+concentre au-delà de l'horizon que l'on peut tester rétrospectivement. Une ablation exploratoire
+(conçue après le banc) attribue l'avantage de B4 au privé à cette croissance proportionnelle, non aux
+entrées récentes ni à la hiérarchie.
+
+\subsection{La région de formation prédit-elle la région d'installation ?}
+Sur 12 régions, la part du stock 2026 prédit la part régionale des entrées nettes avec une
+corrélation de 0,996\mesure{} (dentistes et pharmaciens), contre 0,64\mesure{} (dentistes) et
+0,94\mesure{} (pharmaciens) pour la part des étudiants (années 2 à 6, 2020--2024). En niveau, répartir
+les entrées par région de formation dégraderait donc la prévision. Le test des \emph{variations}
+demande des inscrits par université avant 2020, que nous n'avons pas.
+
+\section{Validation et menaces à la validité}
+\paragraph{Protocole.} Le banc suit le protocole de prévision du projet, gelé par empreinte avant tout
+calcul : origines glissantes, horizons 1, 3, 5, 8 et 10 ans, métrique principale unique (MAPE par
+département à cinq ans), critère = borne haute de l'IC 95\,\% de l'écart à la meilleure naïve
+inférieure à 0. Les cinq variantes ont été inscrites au registre avant leur premier passage ; B4 et
+l'ablation sont déclarés diagnostic et exploratoire. La comparaison à A0 n'est pas le critère du
+protocole : elle était annoncée comme exploratoire dans la dérivation.
+
+\paragraph{Menaces.}
+\begin{itemize}
+  \item \textbf{Petite marge.} Le gain de A2 ($-0{,}11$ point) a une borne haute de $-0{,}02$ (privé)
+        et $-0{,}002$ (ancien). Le bootstrap par département ignore la corrélation entre origines qui
+        se recouvrent : l'intervalle est probablement trop étroit\suppose.
+  \item \textbf{Contamination.} Les cibles 2023 et 2026 ont déjà été vues par un banc antérieur du
+        projet. Seul un dépôt de prévisions 2027--2030, scoré à la publication du RPPS 2027, sera hors
+        échantillon.
+  \item \textbf{Périmètre privé.} La répartition public / privé des salariés ambigus repose sur une
+        part FINESS de 2026 appliquée à toute la série ; seule la variante centrale a été passée.
+  \item \textbf{Hypothèses d'âge.} Les largeurs des tranches extrêmes et la répartition uniforme des
+        entrées dans la tranche sont supposées.
+  \item \textbf{Leviers.} Une revue du jumeau a relevé un biais du levier retraite sur la tranche 65+,
+        hérité par \texttt{methodes\_sorties}. Aucun levier n'a servi à départager les méthodes.
+\end{itemize}
+
+\section{Reproductibilité}
+Depuis la racine du dépôt :
+\begin{verbatim}
+export PYTHONPATH=v2
+uv run python -m methodes.verif     # contrôles V1-V5
+uv run python -m methodes.banc      # banc N1
+uv run python -m methodes.monde     # mondes simulés
+uv run python -m methodes.b4        # borne r <= 1,2
+uv run python -m methodes.c5        # région de formation
+uv run python -m methodes.ablation  # exploratoire
+\end{verbatim}
+Graine du bootstrap 20261114, 2\,000 tirages. Sorties dans \texttt{v2/methodes/out/}. Données :
+\texttt{data/processed/stock.parquet} (DREES, 2026-07-02) et
+\texttt{v2/data/processed/secteur\_stock.parquet} (reconstruit par \texttt{v2/data/build\_secteur.py}).
+Le banc de chaque périmètre prend environ 20\mesure{}~s, plus quelques minutes de bootstrap. Le code
+n'est pas encore versionné (aucun commit au 2026-11-14).
+
+\section{Conclusion}
+\label{sec:conclusion}
+Sur le banc pré-enregistré, le stock-flux à taux locaux bat les références naïves, et un shrinkage
+hiérarchique l'améliore de peu mais de façon reproductible sur deux périmètres. Les âges fins n'aident
+pas la prévision de l'effectif total ; ils corrigent la structure par âge, dont dépendent les leviers
+retraite. Prolonger la tendance de rétention des seniors dégrade la prévision.
+
+Ces résultats restent internes à une seule famille : \textbf{les cinq variantes sont des stock-flux}.
+Leur proximité (écarts de l'ordre de 0,1 point) dit que l'estimation des sorties n'est plus le
+facteur limitant. Feuille de route vers d'autres familles, par ordre de priorité :
+\begin{enumerate}
+  \item \textbf{Choix discret de l'installation} (logit sur des attributs départementaux datés :
+        croissance de la population, densité relative, zonage). C'est la famille qui vise la source
+        d'erreur dominante, la répartition des entrées, et son coefficient de zonage est le levier
+        régulation. Il faut une série de population par département avant 2018 (\textasciitilde{}1\,h).
+  \item \textbf{Bayésien hiérarchique ou espace-état}, évalué à la commune selon le protocole
+        d'échelle fine, où les petits effectifs rendent le partage d'information décisif
+        (\textasciitilde{}2\,h).
+  \item \textbf{Microsimulation individuelle}, pour les bandes d'incertitude et les règles non
+        linéaires (régulation par commune) ; sa prévision ponctuelle égale celle du stock-flux à taux
+        égaux\derive.
+\end{enumerate}
+Autres suites : inscrire et passer la combinaison A2 + A1b (\textasciitilde{}10\,min), déposer les
+prévisions 2027--2030 (\textasciitilde{}10\,min), et trancher entre A0 et B4 à 2050 par la
+reproduction des projections DREES~\cite{drees2021dd76} (\textasciitilde{}30\,min).
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\appendix
+\section{Annexes}
+\paragraph{Désagrégation.} Pour des tranches de bornes basses $\ell_a$ et de largeurs $w_a$, la densité
+moyenne $m_a = N_a / w_a$ est placée au milieu de la tranche ; la densité de l'âge simple $x$ est
+l'interpolation linéaire de $m$ en $x + 1/2$, tronquée à 0, puis remise à l'échelle pour que chaque
+tranche garde sa masse $N_a$. Avec une densité uniforme dans la tranche, l'opérateur $A$ redonne
+exactement $0{,}8\,N_a + 0{,}2\,N_{a-1}$ (vérifié à $1{,}6 \times 10^{-14}$\mesure{} près).
+\end{document}
