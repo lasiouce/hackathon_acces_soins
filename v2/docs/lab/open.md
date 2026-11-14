@@ -156,6 +156,13 @@ restent valables : on les reprend ici au moment où on les traite.
 | Axe 2 : multi-états de Markov privé ↔ public ↔ sortie (transitions nettes, a priori hiérarchique), kill test N1 sur le total privé | ~3 h Claude + ~1 h machine | dérivation SD/ABM | 2026-11-14 | open |
 | Axe 2 : modèle à agents à règles estimées (logit) pour la régulation par commune, après l'étape 3 ; doit reproduire le signe de N3 | ~2 h après le logit | dérivation SD/ABM | 2026-11-14 | open |
 | Axe 4 : archiver l'Annuaire Santé à chaque extraction (au moins 3 instantanés), pour rendre des règles d'agents estimables | ~10 min par extraction | dérivation SD/ABM | 2026-11-14 | open |
-| Axe 3 N10 : juger le modèle hiérarchique commune ⊂ EPCI ⊂ département de l'axe 2 sur N10 (couverture par classe, 3 grains) dès sa soumission | ~20 min | axe 3 N10 | 2026-11-14 | open |
+| Axe 3 N10 : juger le modèle hiérarchique commune ⊂ EPCI ⊂ département de l'axe 2 sur N10 (couverture par classe, 3 grains) dès sa soumission | ~20 min | axe 3 N10 | 2026-11-14 | done 2026-11-14 : K3 ne passe à aucun grain ; MK EPCI à une classe près |
 | Pharmaciens communaux : parts hors officine tenues fixes à 2026 ; erreur médiane 10,7 % à l'EPCI (seuil 10 %) sur la composante officine ; tester un ratio pharmaciens / officine par taille d'officine (chiffre d'affaires non ouvert ?) | ~1 h | axe 4, projection communale | 2026-11-14 | open |
 | Sages-femmes : historique communal non disponible en données ouvertes (5 routes testées, ~40 min) ; seule voie, l'archivage de l'Annuaire | temps du monde | axe 4, projection communale | 2026-11-14 | open |
+| Projection communale : K3 = bande locale (K2) ⊕ part × tirages du total départemental de C1, après passage RPPS privé → CartoSanté libéral ; à inscrire avant le banc N4 | ~2 h Claude | chantier communal | 2026-11-14 | open |
+| Axe 4 : table de passage RPPS privé ↔ CartoSanté libéral par département × année (nécessaire à K3) | ~1 h | chantier communal | 2026-11-14 | open |
+| Projection communale : même banc à l'EPCI et au bassin de vie (N4 le prévoit) | ~30 min | chantier communal | 2026-11-14 | open |
+| Vérifier dans les notices Insee (Omphale, seuil de ~50 000 habitants pour les zones à façon) et DREES (Hippocrate, DD76 : national, variantes régionales passées) le grain le plus fin des modèles de référence ; cité de mémoire le 2026-11-14 | ~20 min | question de l'utilisateur·rice | 2026-11-14 | open |
+| Axe 3 : juger la soumission K3 (`v2/methodes/out/n10_soumission_k3.parquet`) avec N10 (grain.py) | ~20 min | chantier communal | 2026-11-14 | open |
+| Compilateur en langage naturel : jeu de cas indépendant, écrit par quelqu'un d'autre (le 97 % actuel porte sur des cas écrits avec le glossaire) | ~30 min, temps humain | v2/langage | 2026-11-14 | open |
+| Glossaire : références juridiques à relire par un·e juriste (sources « null ») | ~30 min, temps humain | v2/langage | 2026-11-14 | open |

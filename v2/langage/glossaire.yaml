@@ -1,0 +1,223 @@
+# Glossaire contrôlé du compilateur de politiques (v2/langage). Relisible, modifiable sans code.
+# Tous les termes sont écrits en minuscules ; le compilateur ignore accents, casse, apostrophes et tirets.
+# source : texte juridique quand il est connu avec certitude, sinon null (aucune référence inventée).
+# Les clés de leviers et leurs bornes viennent de v2/prototype/server.py (LEVIERS_UI) : elles ne sont pas recopiées ici.
+
+leviers:
+  quotas:
+    famille: former
+    unite: multiplicateur          # 1,2 = +20 % de places
+    termes: [numerus apertus, numerus clausus, quotas, quota, places en formation, places de formation,
+             places en ifsi, places en ifmk, places, capacites de formation, capacites d accueil,
+             nombre d etudiants, etudiants formes, admissions en formation, ifsi, ifmk]
+    source: "Loi n° 2019-774 du 24 juillet 2019, art. 1 (numerus apertus pour médecine, maïeutique, odontologie, pharmacie) ; quotas IFSI et IFMK : arrêtés annuels (référence non citée)"
+  quotas_region:
+    famille: former
+    unite: bascule
+    termes: [seulement dans la region, uniquement dans la region, dans la region seulement, quotas regionaux,
+             places regionales, seulement dans cette region]
+    source: null
+  etrangers:
+    famille: attirer
+    unite: multiplicateur
+    termes: [diplomes etrangers, diplome etranger, diplomes a l etranger, padhue, evc,
+             epreuves de verification des connaissances, reconnaissance des diplomes,
+             praticiens a diplome hors union europeenne, professionnels etrangers, diplomes hors ue]
+    source: "Code de la santé publique, art. L4111-2 (autorisation d'exercice des titulaires de diplômes hors UE, épreuves de vérification des connaissances)"
+  regul:
+    famille: installer
+    unite: bascule
+    termes: [regulation a l installation, regulation de l installation, reguler l installation, regulation,
+             reguler, regulees, regules, conventionnement selectif, conventionnement, zonage,
+             un depart pour une arrivee, une arrivee pour un depart, remplacement d un depart,
+             installation regulee, installation conditionnee]
+    source: null    # avenants conventionnels par profession (infirmiers, kinés, sages-femmes, dentistes) : références non vérifiées ici
+  part_zones:
+    famille: installer
+    unite: part     # repérée par « N % des zones », « la moitié des zones »… quand la régulation est demandée
+    termes: [des zones, zones regulees]
+    source: null
+  dest:
+    famille: installer
+    unite: option
+    options:
+      salariat: [salariat, salaries, vers le salariat, en salariat, deviennent salaries]
+      sortie: [quittent la profession, hors de la profession, quitter la profession, sortent de la profession, abandonnent]
+      voisine: [zone voisine, zones voisines, departement voisin, a cote, voisine]
+    source: null
+  retraite:
+    famille: retenir
+    unite: ans
+    termes: [age de depart a la retraite, age de la retraite, age legal, retraite, cessation d activite,
+             fin d activite, en activite]
+    source: "Loi n° 2023-270 du 14 avril 2023 de financement rectificative de la sécurité sociale pour 2023 (report de l'âge légal)"
+  cumul:
+    famille: retenir
+    unite: multiplicateur
+    termes: [cumul emploi retraite, cumul emploi et retraite, cumul activite retraite, retraites actifs,
+             retraite active, cumul]
+    source: "Code de la sécurité sociale, art. L161-22 (cumul emploi-retraite)"
+  precoces:
+    famille: retenir
+    unite: multiplicateur
+    termes: [departs anticipes, departs avant 60 ans, depart avant 60 ans, departs precoces,
+             abandons en cours de carriere, sorties precoces, departs prematures, cessations precoces]
+    source: null
+
+# Verbes et formules de direction. effet : hausse | baisse | facteur (valeur imposée) | annule.
+directions:
+  hausse: [augmenter, augmente, augmentant, augmentation, hausse, plus, accroitre, relever, encourager,
+           renforcer, reculer, repousser, decaler, prolonger, retarder, davantage, supplementaires,
+           supplementaire, ouvrir, elargir, developper]
+  baisse: [reduire, reduisant, reduction, baisser, baisse, diminuer, diminution, moins, limiter,
+           freiner, restreindre, avancer]
+  facteurs:            # formule -> multiplicateur (leviers multiplicateurs)
+    doubler: 2.0
+    double: 2.0
+    deux fois plus: 2.0
+    tripler: 3.0
+    triple: 3.0
+    diviser par deux: 0.5
+    divise par deux: 0.5
+    moitie moins: 0.5
+    reduire de moitie: 0.5
+    de moitie: 0.5          # avec un verbe de baisse ; « moitié plus » donne 1,5
+    moitie plus: 1.5
+    supprimer: 0.0
+    interdire: 0.0
+    zero: 0.0
+  plafonner: [plafonner, plafond, au maximum]   # reconnu, sans valeur chiffrée : signalé
+unites:
+  pourcent: ["%", pour cent, pourcent, points]
+  ans: [an, ans, annee, annees]
+  mois: [mois]
+  fois: ["x", "×", fois]
+nombres:
+  un: 1
+  une: 1
+  deux: 2
+  trois: 3
+  quatre: 4
+  cinq: 5
+  six: 6
+  sept: 7
+  huit: 8
+  neuf: 9
+  dix: 10
+  quinze: 15
+  vingt: 20
+  trente: 30
+  quarante: 40
+  cinquante: 50
+  cent: 100
+
+professions:
+  sages-femmes: [sages femmes, sage femme, maieutique, maieuticien, maieuticiens, maieuticiennes]
+  dentistes: [chirurgiens dentistes, chirurgien dentiste, dentistes, dentiste, odontologie]
+  pharmaciens: [pharmaciens, pharmacien, pharmaciennes, pharmacienne, officine, officines, pharmacie, pharmacies]
+  kines: [masseurs kinesitherapeutes, masseur kinesitherapeute, kinesitherapeutes, kinesitherapeute,
+          kinesitherapie, kines, kine, mk, ifmk]
+  infirmiers: [infirmiers, infirmier, infirmieres, infirmiere, ide, idel, ifsi]
+
+# Villes fréquemment citées -> département (code officiel géographique). Les départements et régions
+# eux-mêmes sont lus dans le serveur (geo(), REGIONS).
+villes:
+  clermont ferrand: "63"
+  lyon: "69"
+  marseille: "13"
+  toulouse: "31"
+  bordeaux: "33"
+  lille: "59"
+  nantes: "44"
+  strasbourg: "67"
+  montpellier: "34"
+  rennes: "35"
+  nice: "06"
+  grenoble: "38"
+  saint etienne: "42"
+  dijon: "21"
+  tours: "37"
+  limoges: "87"
+  rouen: "76"
+  reims: "51"
+  brest: "29"
+  aurillac: "15"
+  gueret: "23"
+
+# Neutralisation du lexique (docs/lab/lexicon.md) : terme jugeant -> formulation neutre.
+neutralisation:
+  - {terme: desert medical, neutre: territoire à accès moindre (densité inférieure à la moyenne)}
+  - {terme: deserts medicaux, neutre: territoires à accès moindre (densité inférieure à la moyenne)}
+  - {terme: mediocre, neutre: moindre (que la moyenne nationale ou régionale)}
+  - {terme: mauvais, neutre: moindre (que la moyenne)}
+  - {terme: penurie, neutre: écart entre l'offre projetée et les besoins projetés}
+  - {terme: manque, neutre: écart entre l'offre projetée et les besoins projetés}
+  - {terme: sur dotee, neutre: à densité supérieure à la moyenne}
+  - {terme: sur dotees, neutre: à densité supérieure à la moyenne}
+  - {terme: sur dote, neutre: à densité supérieure à la moyenne}
+  - {terme: sous dotee, neutre: à densité inférieure à la moyenne}
+  - {terme: sous dotees, neutre: à densité inférieure à la moyenne}
+  - {terme: trop de professionnels, neutre: densité supérieure à la moyenne}
+  - {terme: catastrophique, neutre: la densité diminue de X % d'ici l'horizon (chiffre à lire dans la projection)}
+  - {terme: critique, neutre: la densité diminue de X % d'ici l'horizon (chiffre à lire dans la projection)}
+  - {terme: alarmante, neutre: la densité diminue de X % d'ici l'horizon (chiffre à lire dans la projection)}
+  - {terme: abandonnes, neutre: où la densité a le plus baissé}
+  - {terme: oublies, neutre: où la densité a le plus baissé}
+  - {terme: mauvais eleve, neutre: en dessous de la moyenne}
+  - {terme: bon eleve, neutre: au-dessus de la moyenne}
+  - {terme: echec, neutre: effet projeté de +/− N professionnels}
+  - {terme: il faut, neutre: le scénario X conduit à …}
+  - {terme: doivent, neutre: le scénario X conduit à …}
+  - {terme: on doit, neutre: le scénario X conduit à …}
+  - {terme: prevision, neutre: projection sous hypothèses}
+
+# Politiques reconnues mais absentes du jumeau, avec la raison.
+non_modelises:
+  obligation_zone:
+    libelle: Obligation d'exercice en zone sous-dotée
+    termes: [obligation d exercer, obligation d exercice, obligation d installation, zone sous dotee,
+             zones sous dotees, exercer en zone, affectation obligatoire]
+    raison: "Le jumeau n'a pas de flux d'affectation contrainte des jeunes diplômés ; la régulation « un départ pour une arrivée » est le seul levier d'installation modélisé."
+    source: null
+  aides_installation:
+    libelle: Aides ou primes à l'installation
+    termes: [prime a l installation, primes a l installation, aide a l installation, aides a l installation,
+             contrat d aide, incitations financieres, prime, primes, exoneration]
+    raison: "Aucune élasticité de l'installation aux aides financières n'est estimée sur données ouvertes ; le jumeau ne relie pas un montant en euros à un flux."
+    source: null
+  cesp:
+    libelle: Contrat d'engagement de service public (CESP)
+    termes: [cesp, contrat d engagement de service public]
+    raison: "Concerne surtout les étudiants en médecine (hors périmètre) et les dentistes ; pas de flux CESP dans le jumeau."
+    source: "Code de l'éducation, art. L632-6 (CESP)"
+  vaccination_officine:
+    libelle: Vaccination en officine et autres transferts de tâches
+    termes: [vacciner, vaccination, vaccinent, transfert de taches, transferts de taches, delegation de taches,
+             nouvelles missions, prescription par le pharmacien, protocoles de cooperation]
+    raison: "Le jumeau projette des effectifs, pas l'activité ni le recours aux soins : un transfert de tâches ne change pas le nombre de professionnels projeté."
+    source: null
+  ipa:
+    libelle: Infirmiers en pratique avancée (IPA)
+    termes: [pratique avancee, ipa, infirmiers en pratique avancee]
+    raison: "Les IPA ne sont pas distingués dans les données d'effectifs utilisées ; pas de flux spécifique."
+    source: "Code de la santé publique, art. L4301-1 (exercice en pratique avancée)"
+  acces_direct:
+    libelle: Accès direct (kiné, IPA, orthophoniste…)
+    termes: [acces direct, sans prescription, sans ordonnance]
+    raison: "Change le parcours et la demande, pas l'effectif : le jumeau ne modélise ni la demande ni l'activité."
+    source: "Loi n° 2023-379 du 19 mai 2023 portant amélioration de l'accès aux soins par la confiance aux professionnels de santé"
+  teleconsultation:
+    libelle: Téléconsultation, télésoin
+    termes: [teleconsultation, teleconsultations, telesoin, telemedecine]
+    raison: "Agit sur l'accès et l'activité, pas sur le nombre de professionnels installés ; non modélisé."
+    source: null
+  quatrieme_annee_mg:
+    libelle: 4e année de l'internat de médecine générale
+    termes: [4e annee, quatrieme annee, 4eme annee, medecine generale, generalistes, medecins generalistes]
+    raison: "La médecine générale est hors périmètre du projet (brief) ; le jumeau couvre 5 professions non médicales."
+    source: null
+  medecins_specialistes:
+    libelle: Médecins spécialistes
+    termes: [specialistes, medecins specialistes, cardiologues, dermatologues, ophtalmologues]
+    raison: "Prévus en phase 2 ; aucun levier du prototype ne les couvre."
+    source: null

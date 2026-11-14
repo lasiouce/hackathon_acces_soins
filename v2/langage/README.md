@@ -1,0 +1,59 @@
+# v2/langage — compilateur de politiques en langage naturel
+
+Pour un·e élu·e non technique : une phrase (« augmenter de 20 % le numerus apertus des kinés dans
+le Puy-de-Dôme ») devient un réglage des 9 leviers du prototype (`v2/prototype/server.py`).
+
+## Règle : traduire, jamais calculer
+- **Aucun modèle de langage, aucune boîte noire.** Le compilateur est déterministe : glossaire
+  relisible + règles explicites. Même texte, même sortie.
+- Il produit des **réglages de leviers**, jamais un effectif. Les effectifs viennent du jumeau
+  (`/api/scenario`), et `phrases.py` ne fait que les mettre en mots.
+- Ce qui n'est pas dans le modèle est **dit** (`non_modelise`, avec la raison), pas approché.
+
+## Architecture
+```
+texte ─► norm (accents, casse, tirets) ─► glossaire.yaml
+        ├─ neutralisation du lexique  → reformulations
+        ├─ politiques non modélisées → non_modelise (+ raison, source)
+        ├─ profession (synonymes), territoire (régions, départements de geo(), villes)
+        └─ propositions (, ; : et) → terme de levier + quantité (%, ans, ×, doubler, moitié…)
+              → bornes LEVIERS_UI (bornage signalé) → parse_levers du serveur → leviers_valides
+réponse /api/scenario ─► phrases.py → « En 2050, environ 1 930 kinés libéraux dans le Puy-de-Dôme… »
+```
+| Fichier | Rôle |
+|---|---|
+| `glossaire.yaml` | termes par levier, directions, unités, professions, villes, neutralisation, non modélisé (champ `source`, `null` si inconnu) |
+| `compilateur.py` | `compile(texte, profession=None, territoire=None) -> dict` |
+| `cas_test.yaml` | 36 politiques écrites **avant** le code, non ajustées ensuite |
+| `evaluer.py` | taux de correspondance exacte et par champ, liste des échecs |
+| `phrases.py` | gabarits de phrases ; fourchette = règle de `index.html` : scn × (1 ± k × horizon) |
+
+Lancer (racine du dépôt) :
+```
+uv run python v2/langage/evaluer.py
+uv run python v2/langage/compilateur.py "Doubler les PADHUE chez les dentistes en Bretagne"
+uv run python v2/langage/phrases.py "Augmenter de 20 % les quotas de kinés dans le Puy-de-Dôme"
+```
+
+## Taux mesuré (2026-11-14)
+`evaluer.py` : **35/36 (97 %)** en correspondance exacte (leviers + profession + territoire) ;
+profession 36/36, territoire 36/36, non modélisé 36/36. Échec : #34, « augmenter les quotas des kinés
+et des infirmiers de 10 % » (le « et » coupe la proposition, le +10 % n'est pas rattaché).
+
+⚑ **Ce chiffre surestime la qualité réelle** : les cas et le glossaire ont été écrits par la même
+personne, dans la même session ; c'est un taux *en échantillon*. Un essai hors échantillon de 8
+phrases nouvelles a révélé 4 défauts génériques (décimale « 1,5 » coupée, « pas de régulation »
+activait la régulation, « dans les » non reconnu, « plafonner » ignoré en silence), corrigés sans
+toucher aux cas. Il faut un jeu de cas écrit par quelqu'un d'autre pour un chiffre honnête.
+
+## Limites connues
+- Une seule profession et un seul territoire par scénario (le premier cité, avec avertissement).
+- Pas de grain commune ni de groupement : ville → département (liste courte de `villes`).
+- Une quantité se rattache au levier de sa proposition ou, à défaut, au levier cité juste avant
+  sans ampleur ; les phrases à coordination (« A et B de 10 % ») échouent.
+- Pas de dates ni de calendrier (« d'ici 2030 ») : le serveur décide en 2026 ; l'année citée est ignorée.
+- Pourcentage sans verbe de sens (« quotas à 20 % ») : signalé, non traduit. « Plafonner » : signalé.
+- Négation gérée seulement pour les bascules (« pas de », « sans »).
+- Dans `phrases.py`, l'article du département est « le / l' » (faux pour « la Creuse », « les Landes »).
+- Termes génériques (« prime », « places », « régulation ») : risque de faux positifs.
+- `compile` importe le serveur (charge le jumeau, quelques secondes au premier appel).
