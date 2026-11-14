@@ -89,7 +89,9 @@ indépendant), et chaque sortie le rappelle.
 
 ## Ce que fait l'outil
 
-**La carte de décision** (`v2/prototype-carte/`, http://localhost:8767) :
+**La carte de décision** (`v2/prototype-carte/`, http://localhost:8767) : trois colonnes fixes, habillage « sémiologie
+graphique » (fond blanc, gamme bistre ↔ pétrole). Le scénario est à gauche, la carte au centre, la fiche à droite (onglets
+Assistant, Territoire, Comparer, Expert). Les deux panneaux latéraux se replient, et la carte s'ouvre centrée sur la France.
 
 - **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Recalcul après chaque réglage en
@@ -123,24 +125,20 @@ indépendant), et chaque sortie le rappelle.
 - **Fiche par territoire** : effectif 2026, 2050, écart au tendanciel, repères 2030 / 2035 / 2040 / 2050
   avec fourchette et densité, écart décomposé par flux, export CSV avec sources, millésimes, hypothèses et
   version du code.
+  - Sans territoire ouvert, la fiche montre la France.
+  - Avec un territoire ouvert, une bascule « territoire / France entière » donne les chiffres nationaux.
 - **Mode expert** : écart par flux et par année, chaque levier avec sa valeur, son paramètre, son délai,
   son statut et sa source, trois scénarios épinglés côte à côte, export JSON.
-
-**La refonte de la carte, en cours** (`v2/prototype-carte/index-option1.html`, http://localhost:8767/index-option1.html) :
-mêmes fonctions, dans trois colonnes fixes et l'habillage « sémiologie graphique » (fond blanc, gamme bistre ↔ pétrole).
-- **Colonnes** : le scénario à gauche, simplifié à un curseur par paramètre ; la carte au centre ; la fiche à droite, avec
-  les onglets Territoire, Comparer et Expert.
-- **Trois panneaux dépliables** ; une liste classée sous la carte, par département ou par région.
-- **Accès au chat** par une icône sur la carte.
-- **Statut** : la page actuelle reste `index.html` jusqu'à la bascule.
 
 La recette iso-fonctionnelle vérifie chaque fonction dans Chrome headless, sans dépendance. Elle a besoin de Node 22 ou
 plus et d'un serveur lancé sur une version à jour :
 
 ```bash
-node v2/prototype-carte/recette.mjs                                                   # page actuelle
-node v2/prototype-carte/recette.mjs http://localhost:8767/index-option1.html --option1 # refonte
+node v2/prototype-carte/recette.mjs --option1   # 39 contrôles sur 40 ; R25 (bouton A+) absent de cette mise en page
 ```
+
+L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle reste dans l'historique git :
+`git show 17842ea:v2/prototype-carte/index.html`.
 
 **Le jumeau** (`v2/jumeau/`), sur lequel la carte est branchée :
 
