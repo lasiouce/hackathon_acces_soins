@@ -152,35 +152,42 @@ def scenario(prof: str, terr: str = "FR", leviers: dict | None = None, annees: l
     }
 
 
-def carte(prof: str, leviers: dict | None = None, region: str | None = None) -> dict:
-    """Par département : effectif 2026, tendanciel et scénario 2050, évolution, densité pour 100 000 habitants."""
+def carte(prof: str, leviers: dict | None = None, region: str | None = None, annee: int | None = None) -> dict:
+    """Par département : effectif 2026, tendanciel et scénario à l'année demandée (2050 par défaut), évolution, densité."""
     c = _get("/api/carte", prof=prof, **_leviers_q(leviers))
     if "error" in c:
         return {"erreur": c["error"]}
+    Y = int(annee) if annee else H
+    ys = c.get("years") or [c["y26"], H]
+    if Y not in ys:
+        return {"erreur": f"Année {Y} hors du modèle : {ys[0]} à {ys[-1]}." + (" Après 2050 : pas dans le modèle." if Y > H else "")}
+    i = ys.index(Y)
     names, a = _terr_names(), c["activite"]
     deps = c["deps"]
+    for v in deps.values():   # valeurs à l'année demandée (séries annuelles de /api/carte)
+        v["sy"], v["by"], v["py"] = (v["s"][i], v["b"][i], v["p"][i]) if "s" in v else (v["s50"], v["b50"], v["p50"])
     T = lambda key: sum(v[key] for v in deps.values())
-    dfr = T("s50") * a / T("p50") * 1e5
+    dfr = T("sy") * a / T("py") * 1e5
     rnom = territoire(region).get("nom", region) if region else None
     rows = []
     for code, v in deps.items():
         nom, reg = names.get("D" + code, (code, None))
         if rnom and reg != rnom:
             continue
-        d50 = v["s50"] * a / v["p50"] * 1e5 if v["p50"] else None
+        dY = v["sy"] * a / v["py"] * 1e5 if v["py"] else None
         rows.append({"dep": code, "nom": nom, "region": reg, "effectif_2026": round(v["o"]),
-                     "tendanciel_2050": round(v["b50"]), "scenario_2050": round(v["s50"]),
-                     "evolution_2026_2050_pct": round((v["s50"] / v["o"] - 1) * 100, 1) if v["o"] else None,
+                     f"tendanciel_{Y}": round(v["by"]), f"scenario_{Y}": round(v["sy"]),
+                     f"evolution_2026_{Y}_pct": round((v["sy"] / v["o"] - 1) * 100, 1) if v["o"] else None,
                      "densite_2026": round(v["o"] / v["p26"] * 1e5, 1) if v["p26"] else None,
-                     "densite_2050": round(d50, 1) if d50 else None,
-                     "densite_2050_ecart_a_la_france_pct": round((d50 / dfr - 1) * 100, 1) if d50 else None})
-    rows.sort(key=lambda r: r["densite_2050"] if r["densite_2050"] is not None else 1e9)
-    for i, r in enumerate(rows, 1):
-        r["rang_densite_2050_croissant"] = i
-    return {"profession": prof, "france": {"effectif_2026": round(T("o")), "scenario_2050": round(T("s50")),
-            "densite_2050_pour_100000": round(dfr, 1)}, "departements": rows, "nb_departements": len(rows),
+                     f"densite_{Y}": round(dY, 1) if dY else None,
+                     f"densite_{Y}_ecart_a_la_france_pct": round((dY / dfr - 1) * 100, 1) if dY else None})
+    rows.sort(key=lambda r: r[f"densite_{Y}"] if r[f"densite_{Y}"] is not None else 1e9)
+    for j, r in enumerate(rows, 1):
+        r[f"rang_densite_{Y}_croissant"] = j
+    return {"profession": prof, "annee": Y, "france": {"effectif_2026": round(T("o")), f"scenario_{Y}": round(T("sy")),
+            f"densite_{Y}_pour_100000": round(dfr, 1)}, "departements": rows, "nb_departements": len(rows),
             "zones_regulees_deps": c["regul_deps"],
-            "note": "Densité = effectif × activité / habitants × 100 000 (Insee Omphale 2022). Tri : densité 2050 croissante."}
+            "note": f"Densité = effectif × activité / habitants × 100 000 (Insee Omphale 2022). Tri : densité {Y} croissante."}
 
 
 def interpreter(phrase: str) -> dict:
@@ -225,10 +232,11 @@ SCHEMAS = [
          "prof": PROF, "terr": {"type": "string", "description": "FR, R<code région> ou D<code département>"},
          "leviers": _LEVIERS_SCHEMA, "annees": {"type": "array", "items": {"type": "integer"}}}}},
     {"name": "carte", "description": "Tous les départements (ou ceux d'une région) pour une profession : effectif 2026, "
-     "tendanciel et scénario 2050, évolution, densité 2026 et 2050, écart de densité à la France, rang. Pour comparer "
+     "tendanciel et scénario à une année (2050 par défaut, toute année 2026-2050), évolution, densité, écart de densité à la France, rang. Pour comparer "
      "des territoires.",
      "input_schema": {"type": "object", "additionalProperties": False, "required": ["prof"], "properties": {
-         "prof": PROF, "leviers": _LEVIERS_SCHEMA, "region": {"type": "string", "description": "nom de région (facultatif)"}}}},
+         "prof": PROF, "leviers": _LEVIERS_SCHEMA, "region": {"type": "string", "description": "nom de région (facultatif)"},
+         "annee": {"type": "integer", "description": "année affichée, 2026 à 2050 (2050 par défaut)"}}}},
     {"name": "interpreter", "description": "Traduit une phrase de politique en réglage de leviers avec le compilateur "
      "déterministe de la carte ; dit aussi ce qui n'est pas modélisé.",
      "input_schema": {"type": "object", "properties": {"phrase": {"type": "string"}}, "required": ["phrase"], "additionalProperties": False}},
