@@ -1,7 +1,7 @@
 // Recette iso-fonctionnelle de la carte : chaque fonction de la page, vérifiée dans Chrome headless.
 // Usage (serveur de la carte lancé) : node v2/prototype-carte/recette.mjs [url] [--option1] [--only=R30,O02] [--captures=dossier]
-//   url par défaut http://localhost:8767/ ; --option1 ajoute les contrôles propres à la refonte (panneaux, défilement horizontal,
-//   cadrage France, chiffres nationaux) ;
+//   url par défaut http://localhost:8767/ (l'option 1 depuis la bascule du 2026-11-14) ; --option1 ajoute les contrôles
+//   propres à cette mise en page (panneaux, défilement horizontal, cadrage France, chiffres nationaux) ;
 //   --only ne lance que les contrôles listés ; --captures enregistre deux captures (1440×900 et 390×844, Puy-de-Dôme, places +20 %).
 // Aucune dépendance : Chrome piloté par le protocole DevTools, WebSocket natif de Node ≥ 22.
 import { spawn } from "node:child_process";

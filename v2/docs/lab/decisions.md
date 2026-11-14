@@ -3702,3 +3702,21 @@ que la fiche et l'onglet Comparer ne couvrent pas.
 **Pourquoi.** L'utilisateur·rice : « élargie le panneau de gauche […] je suis obligé de scroller
 horizontalement », « en arrivant sur le site centre la position de la carte sur la France », « ajoute une option
 pour avoir les nombres au niveau national ».
+
+## 2026-11-14 — Bascule : l'option 1 (direction A) devient la carte par défaut
+
+**Décision.**
+- `v2/prototype-carte/index-option1.html` remplace `index.html`, la page servie sur http://localhost:8767.
+  Le fichier à part est retiré.
+- L'ancienne carte à panneaux flottants n'est plus servie. Elle reste dans l'historique :
+  `git show 17842ea:v2/prototype-carte/index.html`.
+- La recette tourne désormais sur l'adresse par défaut : `node v2/prototype-carte/recette.mjs --option1`.
+  Résultat : 39/40. Seul R25 échoue, faute de bouton A+ dans l'option 1 ; c'est un écart connu, pas une
+  régression de la bascule.
+- README mis à jour : description de la carte, fiche France et bascule nationale, commande de recette.
+- Même façon de faire que la bascule précédente (« Carte : bascule de `index.html` sur la refonte… »).
+
+**Pourquoi.** L'utilisateur·rice : « Fais la bascule sur la nouvelle carte. En tant que carte par défaut. »
+**Ce qui le renverserait.** Une recette rejouée par personas qui trouve un défaut bloquant sur la page
+basculée, ou une session qui modifiait encore l'ancien `index.html` (les deux pages étaient maintenues en
+parallèle jusqu'au commit 17842ea).
