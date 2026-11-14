@@ -3241,3 +3241,17 @@ curseur fonctionnel ; 390×844 : panneau replié ; aucune erreur JavaScript).
 population → densité). Vérifié en Chromium headless : vue densité, changement de scénario de population et d'activité,
 repères de la fiche, mode expert ; aucune erreur JavaScript.
 **Non fait.** Densité à la commune (population communale non chargée) ; besoin (module de demande) toujours ouvert.
+
+## 2026-11-14 — Données traitées commitées (data/processed/, v2/data/processed/), données brutes toujours exclues
+
+**Décision.** Les deux dossiers de données traitées (≈ 37 Mo, 34 fichiers, le plus gros 15,6 Mo) sont commités ; ils étaient
+ignorés depuis le premier commit. Les données brutes (≈ 3,6 Go) restent ignorées. Chaque dossier a un `MANIFEST.md` généré par
+`v2/data/manifest.py` : taille, empreinte SHA-256, script de construction et son dernier commit, commande, source.
+`manifest.py --check` échoue si un fichier change sans manifeste ou si un script de construction cite un fichier des
+organisateurs (inscrits par université, `990_drees_mmop2`, sous accord de confidentialité).
+**Pourquoi.** L'utilisateur·rice : « ok go ahead », pour que l'équipe n'ait pas à tout reconstruire. Vérifié : aucun script
+qui écrit un fichier traité ne lit un fichier des organisateurs (ils ne servent qu'au module de formation, à la volée).
+Toutes les sources sont ouvertes (DREES, Insee, ameli, CartoSanté, Annuaire Santé, FINESS, zonage data.gouv).
+**Remplace** l'exclusion de `data/processed/` et `v2/data/processed/` du `.gitignore` du premier commit.
+**Ce qui le renverserait.** Un fichier traité dérivé d'une donnée non ouverte, ou une taille qui dépasserait les limites de
+GitHub (100 Mo par fichier).

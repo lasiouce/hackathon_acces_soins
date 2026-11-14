@@ -104,6 +104,12 @@ Points de méthode :
 
 Prérequis : Python 3.12+ et [uv](https://docs.astral.sh/uv/).
 
+**Les données traitées sont dans le dépôt** (`data/processed/` et `v2/data/processed/`, environ 37 Mo, données ouvertes
+seulement) : après `uv sync`, la carte et le jumeau tournent sans rien télécharger. Chaque dossier a un `MANIFEST.md`
+(source, script, commande, empreinte). `uv run python v2/data/manifest.py --check` vérifie qu'ils sont à jour et
+qu'aucun fichier des organisateurs n'y entre. Les commandes ci-dessous ne servent qu'à **reconstruire** ces fichiers,
+à partir des données brutes (≈ 3,6 Go, non commitées) :
+
 ```bash
 uv sync
 uv run python -m sante.load                                 # données ouvertes -> data/processed/
