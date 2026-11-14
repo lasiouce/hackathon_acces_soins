@@ -16,3 +16,4 @@ statut: sourcé
 Avenant 5 (signé 06/11/2017) : régulation 1 arrivée pour 1 départ en zone sur-dotée, à partir du 01/07/2018 sous réserve de publication du nouveau zonage régional
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

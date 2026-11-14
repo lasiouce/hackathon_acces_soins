@@ -16,3 +16,4 @@ statut: sourcé
 Décret n° 2023-736 du 08/08/2023 (JO 09/08/2023) : pharmaciens peuvent prescrire et administrer tous les vaccins du calendrier aux 11 ans et plus (sauf vivants atténués chez immunodéprimés pour la prescription)
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

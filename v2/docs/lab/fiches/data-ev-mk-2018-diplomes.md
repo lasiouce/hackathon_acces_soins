@@ -16,3 +16,4 @@ statut: sourcé
 2018 année blanche pour les diplômés MK (allongement 3→4 ans en 2015) ; 2 820 diplômés en 2017 (date = fin d'année, jour supposé)
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

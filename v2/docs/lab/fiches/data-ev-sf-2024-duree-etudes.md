@@ -13,6 +13,7 @@ statut: sourcé
 
 # ev-sf-2024-duree-etudes
 
-Décret n° 2024-679 du 03/07/2024 (JO 05/07/2024) créant le 3e cycle ; 1re cohorte concernée = entrée en 2e année à la rentrée 2024
+TEXTE D'APPLICATION DE ev-sf-2023-duree-etudes : même choc (même cohorte), ne pas l'appliquer deux fois dans un scénario. Décret n° 2024-679 du 03/07/2024 (JO 05/07/2024) créant le 3e cycle ; 1re cohorte concernée = entrée en 2e année à la rentrée 2024
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

@@ -5,7 +5,7 @@ module: etat (commune)
 valeur: "privés au 2026-11-13 : PH 61 882 · SF 11 612 · CD 48 489 · MK 96 177 · IDE 228 598 (ambigus 203 à 40 678)"
 unite: personnes (une personne à k activités compte 1/k par commune)
 incertitude: "instantané sans âge ; activités sans commune : 0,4 % (PH) à 11,5 % (CD) ; écart médian par dép. à la centrale DREES 2026 : −3,2 % (PH) à −14,6 % (IDE)"
-source: "ANS, Annuaire Santé — extractions des données en libre accès (RPPS), data.gouv.fr, PS_LibreAcces_202611131942.zip ; FINESS entités juridiques au 2026-05-04"
+source: "ANS, Annuaire Santé — extractions des données en libre accès (RPPS), data.gouv.fr, PS_LibreAcces.zip (fichiers PS_LibreAcces_*_202611131942.txt) ; FINESS entités juridiques au 2026-05-04"
 millesime: "2026-11-13"
 statut: mesuré
 ---

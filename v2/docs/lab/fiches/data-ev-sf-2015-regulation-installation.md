@@ -16,3 +16,4 @@ statut: sourcé (partiel)
 Avenant 3 (signé 11/05/2015, JO 11/09/2015) : supprime le conventionnement en zone sur-dotée par réduction d'activité, ajoute 2 cas dérogatoires (date d'effet non indiquée ; date = JO)
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

@@ -16,3 +16,4 @@ statut: sourcé
 Avenant 11 (signé 31/03/2026) : cadre de régulation de l'activité des remplaçants et salariés ; entrée en vigueur 06/05/2026
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

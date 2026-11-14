@@ -16,3 +16,4 @@ statut: sourcé
 Arrêté du 02/09/2015 (JO 04/09/2015) : 1 année universitaire validée + 4 ans en IFMK (10 semestres) ; applicable aux étudiants entrant en 1re année à la rentrée de sept. 2015 (formation IFMK passe de 3 à 4 ans)
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

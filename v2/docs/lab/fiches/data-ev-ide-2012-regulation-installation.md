@@ -16,3 +16,4 @@ statut: sourcé
 Avenant 3 (signé 28/09/2011, JO 26/11/2011) : zone sur-dotée, conventionnement uniquement en remplacement d'un départ, depuis le 27/05/2012
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

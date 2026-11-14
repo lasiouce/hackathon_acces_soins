@@ -13,6 +13,7 @@ statut: sourcé
 
 # ev-sf-2023-duree-etudes
 
-Loi n° 2023-29 du 25/01/2023 : création d'un 3e cycle de maïeutique et du DE de docteur en maïeutique (études portées à 6 ans) ; s'applique aux étudiants qui débutent la 2e année après le 1er sept. 2024
+Loi n° 2023-29 du 25/01/2023 : création d'un 3e cycle de maïeutique et du DE de docteur en maïeutique (études portées à 6 ans) ; s'applique aux étudiants qui débutent la 2e année après le 1er sept. 2024 Le décret d'application est ev-sf-2024-duree-etudes (même choc). [Corrigé d'après l'audit des sources axe 1, 2026-11-14.]
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

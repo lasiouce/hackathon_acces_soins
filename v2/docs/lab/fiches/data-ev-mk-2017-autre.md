@@ -16,3 +16,4 @@ statut: sourcé
 Rupture de série : passage d'ADELI au RPPS pour compter les effectifs de MK en 2017
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

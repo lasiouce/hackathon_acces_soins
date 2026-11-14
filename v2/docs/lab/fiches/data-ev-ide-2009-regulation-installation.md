@@ -16,3 +16,4 @@ statut: sourcé
 Avenant 1 (signé 04/09/2008, JO 18/10/2008) : en zone sur-dotée, conventionnement seulement si un IDE libéral cesse définitivement son activité ; en vigueur depuis le 18/04/2009
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.

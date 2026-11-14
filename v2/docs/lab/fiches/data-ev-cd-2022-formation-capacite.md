@@ -16,3 +16,4 @@ statut: sourcé (partiel)
 Annonce gouvernementale du 02/12/2021 : 8 nouveaux sites d'odontologie (Amiens, Caen, Rouen, Dijon, Besançon, Grenoble, Poitiers, Tours) à la rentrée 2022 (date = rentrée, jour supposé) ; cible 7 265 étudiants formés d'ici 2026 (+14 % de capacité). Fichier DREES local : 1res inscriptions en 2e année en 2022-23 (Besançon, Dijon, Rouen) et 2023-24 (Amiens, Tours)
 
 Registre : `v2/data/events.csv`. Rapport : [registre d'événements](../reports/2026-11-14-axe4-registre-evenements.md).
+Audit : [audit des sources](../reports/2026-11-14-audit-sources.md), lot C1.
