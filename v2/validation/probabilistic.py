@@ -119,7 +119,7 @@ def verdicts(sc: pd.DataFrame, label: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def apc_draws(S: int = 200) -> pd.DataFrame:
+def apc_draws(S: int = 100) -> pd.DataFrame:
     """N6 pour l'APC avec ses propres tirages : origine 2021, cible 2026 (h = 5)."""
     from methodes.apc import APCEstimator
     from methodes.perimetres import prive

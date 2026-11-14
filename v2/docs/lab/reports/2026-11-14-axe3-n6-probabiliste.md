@@ -148,3 +148,10 @@ M3 dans N5.
 
 **Verdict N6 :** aucune bande calibrée ; sur la seule origine jugeable, la
 persistance a le meilleur CRPS ; les entrées du stock-flux échouent la SBC.
+
+**Tirages propres de l'APC (ajout, relancé après correction).** Écart au
+protocole : **100 tirages** par cellule au lieu de 200 (l'APC n'en expose
+que 100). Origine 2021, h = 5, dont une cellule kinés que les autres
+estimateurs n'ont pas. CRPS log 0,0646 ; Δ vs persistance +0,0014
+[−0,0033 ; +0,0068] → **égalité** ; couverture 50 % : 29,4 % ; 80 % :
+**54,4 %** → **non calibrée** (trop étroite), comme l'avait vu l'axe 2.
