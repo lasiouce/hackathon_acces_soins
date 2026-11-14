@@ -2120,6 +2120,30 @@ corrélation.
 secteur pour les salariés (H_ind, axe 4) rejetée sur l'âge : la
 répartition par âge du public et du privé serait alors à revoir.
 
+## 2026-11-14 — Chantier « projection communale fiable » : l'axe 2 porte, l'axe 3 juge, l'axe 4 alimente
+
+**Décision.**
+- **Définition de « fiable »** à la commune : **calibrée**, c'est-à-dire que la bande à 80 %
+  contient la valeur observée dans environ 80 % des cas au backtest, et pas « étroite ». Le
+  bruit de Poisson est irréductible (≈ ±45 % pour N = 5, dérivé).
+- **Axe 3** : lancer N4, le protocole d'échelle fine, déjà gelé. Il fixe le seuil N_min
+  d'affichage sans bande, et le contrôle de couverture par classe de taille et par
+  profession, à la commune, à l'EPCI et au bassin de vie.
+- **Axe 2** : étendre le modèle de cohortes bayésien hiérarchique de l'étape 2 à
+  commune ⊂ EPCI ⊂ département ⊂ région, avec rétrécissement partiel. Le juger sur N4.
+- **Axe 4** : fournir les historiques communaux manquants :
+  - pharmaciens, reconstitués à partir de FINESS et de l'Annuaire ;
+  - sages-femmes, si une source ouverte existe ;
+
+  ainsi que les tables de passage commune → EPCI / bassin de vie.
+- **Affichage** : pour chaque profession, le grain le plus fin qui passe N4. En dessous, la
+  carte montre l'observé à la commune avec la projection de l'échelon supérieur, et le dit.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « trouver l'axe qui nous permettra d'avoir
+une projection fiable à l'échelle des communes », puis « Oui, lancer ».
+**Ce qui le renverserait.** N4 montre qu'aucun modèle n'est calibré à la commune pour une
+profession : elle reste alors à l'EPCI ou au département.
+
 ## Open / not yet decided
 - **Brancher la rétention dépendante de la densité pour les IDE dans le tendanciel ?**
   L'effet est mesuré (N9 : +0,11 [+0,05 ; +0,18]) mais corrélationnel. Question posée le
