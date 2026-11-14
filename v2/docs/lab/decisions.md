@@ -2428,3 +2428,24 @@ pilote de l'étape 2 a vu l'origine 2021). Score à la publication du RPPS
 2027, avec le critère de N1.
 **Ce qui le renverserait.** Rien : un dépôt ne se modifie pas. Une erreur
 de code donne un nouveau dépôt daté, et l'ancien reste.
+
+## 2026-11-14 — Axe 2, étape 2 : la calibration par simulation échoue sur le niveau national des entrées ; bande nationale de C1 non publiable, traitement bayésien complet rouvert
+
+**Décision.**
+- On ne publie **que la bande départementale de C1**, avec sa couverture
+  mesurée (77,6 % pour 80 % nominal, toutes origines).
+- **Aucune bande nationale de C1** n'est publiée.
+- **On rouvre le traitement bayésien complet** de σ_u, σ_v (niveau
+  national) et τ_r (écart régional), avec des a priori demi-normaux écrits.
+  Cela applique la règle pré-écrite dans la dérivation.
+
+**Pourquoi.** Calibration par simulation, 5 × 2 × 200, θ ré-estimé
+([rapport](reports/2026-11-14-axe2-cohortes-bayesiennes.md)) :
+- APC : 0 échec sur 30 tests.
+- Niveau national des entrées L_T : 10 échecs sur 10, rangs en U ; la loi
+  a posteriori est trop étroite sachant σ̂.
+- Écarts régionaux δ : 3 sur 10, dans les petites cellules masculines,
+  où τ̂_r ≈ 0.
+
+**Ce qui le renverserait.** Une nouvelle calibration par simulation, avec
+σ et τ intégrés, qui passe.

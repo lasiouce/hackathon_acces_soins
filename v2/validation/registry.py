@@ -57,3 +57,34 @@ REGISTRY.update({
     "axe2_obs_r12": ("2026-11-14", "diagnostic", _axe2("ObservatoireR12"),
                      "B4 : schéma de l'observatoire (r borné à [0,5 ; 1,2]) ; pas candidat"),
 })
+
+
+# --- Axe 2, étape 1 du programme (APC des sorties), inscrit 2026-11-14 03:58 AVANT tout passage sur le banc. ---
+# Dérivation et prédictions : v2/docs/lab/derivations/2026-11-14-axe2-apc-sorties.md (SHA-256 a933da1958e2).
+def _axe2_apc():
+    from methodes.apc import APCEstimator
+    return APCEstimator
+
+
+REGISTRY["axe2_apc"] = ("2026-11-14", "confirmatoire", _axe2_apc,
+                        "APC gaussien de la rétention nette (Bayes empirique), période prolongée à plat ; "
+                        "périmètre privé ; CRPS et PIT à h = 5 en secondaire")
+
+
+# --- Axe 2, étape 2 (cohortes bayésiennes, entrées probabilistes), inscrit 2026-11-14 04:41 AVANT le banc. ---
+# Dérivation : v2/docs/lab/derivations/2026-11-14-axe2-cohortes-bayesiennes.md (SHA-256 b608b1ac0c69, version avec l'écart d'avant inscription).
+# Écart signalé : un pilote (dentistes et sages-femmes, origine 2021) a vu les cibles 2026 avant cette inscription.
+def _axe2_coh(cls_name):
+    def f():
+        from methodes import cohortes
+        return getattr(cohortes, cls_name)
+    return f
+
+
+REGISTRY.update({
+    "axe2_cohortes_c1": ("2026-11-14", "confirmatoire", _axe2_coh("CohortesEstimator"),
+                         "C1 : APC des sorties + entrées en niveau local national × parts hiérarchiques, θ fixé ; "
+                         "N1 (moyenne a posteriori) et N6 (200 tirages)"),
+    "axe2_cohortes_c2": ("2026-11-14", "confirmatoire", _axe2_coh("CohortesLaplace"),
+                         "C2 : comme C1, θ propagé par Laplace sur log θ"),
+})
