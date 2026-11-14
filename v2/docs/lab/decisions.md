@@ -1366,6 +1366,16 @@ sous celle du dép. réparti ; une archive datée de l'Annuaire (flux individuel
 
 ## 2026-11-14 — Jumeau : leviers branchés (former, attirer, installer, retenir)
 
+*Correction du 2026-11-14, d'après l'audit des sources de l'axe 1 :*
+- *DD76 donne ±9 % en 2050 pour ±20 % de quotas, et non ±12-13 % : notre
+  +9,1 % concorde.*
+- *Les ≈ +14 % d'ER 1319 sont des places. Leur équivalent en effectifs
+  est d'environ +7,9 % en 2050, contre +15,6 % dans le jumeau : c'est un
+  écart.*
+- *Le repère retraite de la DREES (≈ +1 %) n'est pas comparable à notre
+  mesure.*
+- *Les « comparaisons » ci-dessous sont remplacées par ces trois points.*
+
 **Décision.** Ce qui est livré dans `v2/jumeau/`, couvert par le critère
 C14 et par une mutation par levier.
 - **Greffons qui ajoutent un écart au tendanciel.** `entrees` n'est pas
@@ -1497,6 +1507,8 @@ l'utilisateur·rice ; la question reste ouverte de son côté.
   avant 40 ans, déménagements compris), pas un flux brut.
   - **Utilisable à partir de 2012 seulement :** T1 (Σ communes = même formule sur le pull départemental) passe
     à ≤ 0,2 % (MK, CD) et ≤ 1,6 % (IDE) en 2012–2025, échoue en 2006–2011 (jusqu'à 199 % pour CD 2009).
+    *Corrigé le 2026-11-14 après l'ajout de Paris et Lyon par arrondissement :* ≤ 0,28 % (CD), ≤ 0,34 % (MK),
+    ≤ 1,69 % (IDE) en 2012–2025 ; T2 inchangé (0,90).
   - **T2 échoue tel que pré-enregistré :** l'année sans diplômés kinés (2018) ne fait baisser I_net national
     qu'à 0,90 × la référence (seuil 0,8) ; minimum 0,87 en 2019. Le proxy ne voit qu'une fraction des
     promotions françaises. Explication possible, non mesurée : un tiers des kinés ont un diplôme UE.
@@ -1546,6 +1558,16 @@ needs to be done next, and also the work on UAT ».
 **Ce qui le renverserait.** —
 
 ## 2026-11-14 — Jumeau : chemin rapide à la commune (5 professions en ≤ 2 s)
+
+*Remesuré le 2026-11-14 au matin, en isolant le test : 10 lancements de 3
+runs, plus les opérations en place (`np.multiply(..., out=N)`, même
+arithmétique, écart 0 vérifié). La machine était chargée par les
+calculs des autres sessions (charge moyenne de 9 à 14). Résultats :
+médianes de 2,0 à 4,6 s en temps réel et de 1,9 à 2,6 s en temps CPU.
+**C15 échoue sous charge.** Les 1,35 à 1,57 s plus bas avaient été
+mesurées sans relever la charge ; elles ne sont pas reproduites ce
+matin. Il faut remesurer sur une machine au repos avant de déclarer
+l'objectif atteint.*
 
 **Décision.**
 - `run(..., ledger=False, keep=…)` est le chemin rapide : il ne tient
@@ -1852,6 +1874,154 @@ entrées séparées de la rétention, contrôle synthétique pour N3).
 **Pourquoi.** L'utilisateur·rice, 2026-11-14 : « en fait si si », après la revue de l'analyse
 transmise.
 **Ce qui le renverserait.** Un signe nul ou contraire : la boucle n'est alors pas branchée.
+
+## 2026-11-14 — Jumeau : flux de diplômés à l'étranger mis à jour (axe 1), variante basse gardée
+
+**Décision.**
+- **Nouveaux défauts de `etrangers.flux`** (fiche axe 1
+  `param-diplomes-etrangers-flux`), par an :
+  - CD 1 300, sourcé (Ordre 2022) ;
+  - MK 2 200, dérivé (CNOMK 2024) ;
+  - PH 240, dérivé ;
+  - IDE 400, sourcé, confiance faible (ER 1319) ;
+  - SF 80, dérivé.
+- **Variante basse `FLUX_BAS`** (DD76, ER 1075, données 2015-2020) : SF
+  70, CD 665, MK 1 175, PH et IDE 0.
+- Les deux définitions diffèrent (reconnaissance ou primo-inscription
+  contre entrée en activité). Le nouveau défaut est donc probablement un
+  majorant.
+
+**Conséquence mesurée.** La part étrangère des entrées positives
+augmente : 0,47 pour les dentistes, contre 0,24 avant. Comme
+`lien_formation` ne multiplie que la part formée en France, les autres
+leviers baissent :
+- capacité dentistes × 1,2 : **+6,3 % en 2050**, contre +9,1 % avec le
+  flux bas. DD76 donne ±9 % : la concordance ne tient qu'avec le flux
+  bas ;
+- abandon IFSI divisé par deux : +14,1 % d'IDE libéraux, contre
+  +15,6 % ;
+- diplômés étrangers × 2 : +37,2 % de dentistes en 2050, contre +18,1 %.
+
+**Pourquoi.** Valeurs plus récentes et sourcées. L'axe 5 mesure que ce
+levier pèse beaucoup (ST 0,27 pour les MK, 0,17 pour les CD).
+**Ce qui le renverserait.** Un flux d'entrées en activité (RPPS, par
+année de première inscription) plus bas que les reconnaissances. Dans
+ce cas, le défaut redeviendrait la variante basse, ou un point entre les
+deux.
+
+## 2026-11-14 — Axe 3, matin : cas limites L1–L3 passent ; N_min communal = 51 ; bande en √h calibrée (N8, gel 08:06)
+
+**Décision.**
+- **N2-B (cas limites, jumeau par défaut, privé)** : L1, L2 (N(o+200) = Q·C
+  à −0,05 à −0,46 %, état initial sans effet) et L3 (1re année d'effet d'un
+  quota = o + L_p + 1) **passent** pour les 5 professions. N2 reste en échec
+  pour sa partie A (DREES à 2050).
+- **N4** : **N_min = 51 professionnels**, fixé par les kinés (origines 2018
+  et 2020) ; 21 pour CD et IDE seuls. Sous 51, une projection communale
+  n'est pas affichée sans bande P10–P90, ou elle est agrégée. Bande calibrée
+  dans 14 classes sur 21.
+- **N8 (nouveau protocole, SHA-256 `97ef367fd221`)** : bande
+  log N ~ N(log prédit, s²·h), s² = moyenne de e²/h′. Pour la variante par
+  défaut : couverture 49,2 % (50 %) et 75,9 % (80 %) → **calibrée**, et
+  gagne contre la tendance en CRPS (−0,0045 [−0,0070 ; −0,0020]). Forme
+  suggérée par N7-C sur les mêmes origines : **à confirmer** sur le dépôt
+  2027. C'est la seule bande qui peut être affichée sous son niveau nominal,
+  avec cette réserve.
+- N6, tirages propres de l'APC : 100 tirages au lieu de 200 (écart déclaré) ;
+  égalité avec la persistance, couverture « 80 % » de 54 %.
+
+**Pourquoi.** Rapports [N2](reports/2026-11-14-axe3-n2-long-terme.md),
+[N4](reports/2026-11-14-axe3-n4-echelle-fine.md),
+[N8](reports/2026-11-14-axe3-n8-bande-racine.md).
+**Ce qui le renverserait.** Le dépôt 2027 hors de la bande en √h au-delà de
+la tolérance de N6 ; une projection départementale réelle (au lieu de
+l'oracle) qui relève N_min.
+
+## 2026-11-14 — Axe 1 : flux de diplômés étrangers par profession, sources récentes plutôt que DD76
+
+**Décision.**
+- La fiche `param-diplomes-etrangers-flux` propose des flux récents :
+  - CD **1 300 par an** : Ordre 2022, recoupé par les décisions de
+    reconnaissance UE ;
+  - MK **2 200 par an** : autorisations 2023 et hausse du stock ;
+  - IDE **400 par an** : hypothèse DREES ER 1319 ;
+  - PH **240** et SF **80** par an : dérivés de l'Ordre et de la DD76.
+- Ces flux remplacent les valeurs DD76 / ER 1075 (CD 665, MK 1 175), qui
+  datent de 2015-2020 et restent la variante basse.
+- **Le défaut du jumeau reste la décision de l'axe 0** : proposition
+  envoyée le 2026-11-14.
+
+**Pourquoi.** L'axe 5 (partie 2) mesure ST 0,27 (MK) et 0,17 (CD) pour ce
+levier à 2050. Les sources récentes donnent environ le double des valeurs
+DD76.
+**Ce qui le renverserait.** Une série d'entrées en activité (RPPS) par pays
+de diplôme, qui donnerait un flux réel plus bas que les autorisations.
+
+## 2026-11-14 — Axe 3 : prévisions 2027–2030 déposées avant le RPPS 2027
+
+**Décision.** Dépôt prévu par N1 et N8 : variante par défaut, privé, origine
+2026, cibles 2027, 2028 et 2030 par profession × département, avec les
+quantiles 10–90 % de la bande en √h.
+`v2/validation/depot/jumeau_taux_locaux_2026-11-14.parquet`, SHA-256
+`ca036374d216`. Infirmiers libéraux exclus (série arrêtée en 2023). Totaux
+nationaux 2027 : CD 47 835, MK 104 755, PH 63 311, SF 13 301. Le score sera
+calculé à la publication du RPPS 2027 (vers juillet 2027), avec les critères
+de N1 et N8, sans toucher au fichier.
+
+**Pourquoi.** Seul test hors échantillon non contaminé par K1 ni par le choix
+de la bande en √h.
+**Ce qui le renverserait.** Rien : un dépôt ne se modifie pas ; une nouvelle
+variante fait un nouveau dépôt.
+
+## 2026-11-14 — Axe 4 : SF « Prévention » = public ; variante SAE pour les pharmaciens hospitaliers ; PLM et COG 2026 dans les tables communales
+
+**Décision.**
+- **Sages-femmes salariées en « Prévention » → public** (`OVERRIDE` de `build_secteur.py`), au lieu d'une
+  part FINESS PMI de 0,07. Mesuré par l'axe 1 : 1 423 SF en PMI au 31/12/2024 (DREES, séries du personnel de
+  PMI) pour 1 383 SF en « Prévention » au RPPS 2026. Fourchette « libéral » SF 2026 :
+  **12 059 – 13 331 (centrale 12 819)**, largeur 2 601 → 1 272. *Remplace* la ligne SF de l'entrée
+  « public / privé lu dans le secteur d'activité » (12 059 – 14 660, centrale 12 912).
+- **Pharmaciens hospitaliers : la centrale reste celle du RPPS** (16,6 % de privés sûrs, 19,8 % au plus), car
+  elle est par personne et croisée dép × âge × sexe. La SAE (29,4 %, axe 1) et l'Ordre (28,6 %) sont donnés en
+  **variante mesurée** : +1 116 pharmaciens privés (63 612 → 64 728), dans la fourchette (max 67 219). L'écart
+  RPPS / SAE n'est pas réconcilié (open.md).
+- **Paris et Lyon par arrondissement** dans `commune_stock.parquet`, comme Marseille : séries complètes lues
+  par position (ordre croissant jusqu'en 2025), reste « commune − arrondissements complets » donné aux
+  arrondissements à série partielle. Contrôle : la nouvelle table = la table v1 + exactement l'écart du
+  dép. 13 (2025 : CD +780, MK +1 886, IDE +2 695).
+- **Codes commune anciens → COG 2026** (FINESS historique) par le fichier Insee des événements depuis 1943,
+  appliqué transitivement, et conversion des codes FINESS DROM (9A…9F → 97…). Officines rattachées :
+  96,2–97,3 % → **99,9 %** chaque année.
+
+**Pourquoi.** Mesures de l'axe 1 (SAE, PMI) ; contrôles ci-dessus.
+**Ce qui le renverserait.** Une source qui explique l'écart RPPS / SAE chez les pharmaciens (PUI des
+établissements médico-sociaux, multi-inscriptions) : la variante deviendrait la centrale.
+
+## 2026-11-14 — L'observatoire d'un collègue n'est plus cité comme dépôt : ses arguments sont intégrés au texte
+
+**Décision.**
+- Les articles ne citent plus le dépôt `evolutionsoin2026`. Il s'agit du
+  travail d'un collègue, et le dépôt est privé. Sont concernés
+  `papers/axe2-methodes`, `papers/axe3-validation` et
+  `papers/synthese/parts.tex`.
+- Ses arguments sont repris dans le texte comme hypothèses à tester, et
+  présentés comme un « travail interne d'un membre de l'équipe, non
+  publié » :
+  - shrinkage département → région → national de poids 200 ;
+  - taux de maintien bornés à [0,5 ; 1,2] ;
+  - biais du vieillissement uniforme ;
+  - sept mondes simulés.
+- Les chiffres que nous n'avons pas reproduits (+8 à +19 % sur l'effectif
+  des 60 ans et plus, −12,4 % à 15 ans) sont dits « rapportés par son
+  auteur ». Leur étiquette « mesuré » est retirée.
+- Les entrées bibliographiques sont supprimées. Les trois documents
+  compilent (tectonic, sans erreur).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « evolutionsoin2026 est un
+travail fait par un collègue. Prends juste les arguments et intègre-les
+dedans. »
+**Ce qui le renverserait.** La publication du dépôt, qui permettrait de le
+citer.
 
 ## Open / not yet decided
 - **Boucles de rétroaction non linéaires** (analyse transmise le 2026-11-14 :
@@ -2160,3 +2330,28 @@ corrigée ensuite (dérivation § Écart).
 **Ce qui le renverserait.**
 - Le dépôt 2027–2030 où C1 ne bat pas A0.
 - Le gain qui continue de décroître sur les origines récentes (CD, PH).
+
+## 2026-11-14 — Axe 2 : dépôt des prévisions 2027–2030 de A0 et C1 (protocole N1), avant la publication du RPPS 2027
+
+**Décision.**
+- Deux fichiers sont déposés, avant toute donnée 2027 :
+  - `v2/validation/depot/jumeau_taux_locaux_2026-11-14.parquet`, SHA-256
+    `4f7400845340` ;
+  - `v2/validation/depot/axe2_cohortes_c1_2026-11-14.parquet`, SHA-256
+    `689b230b5b50`.
+  - Code : `v2/methodes/depot.py`.
+- **Contenu.** Les prévisions portent sur 2027, 2028 et 2030, par
+  profession × département, au périmètre privé central.
+  - L'origine est 2026, et 2023 pour les infirmiers libéraux.
+  - C1 donne la moyenne a posteriori, plus les quantiles 10, 50 et 90 de
+    200 tirages.
+- **Divergence déposée.** Infirmiers libéraux en 2030 : A0 prévoit
+  111 200, C1 96 687.
+  - C1 suit la stagnation récente des entrées (98 854 en 2023).
+  - C'est le test le plus discriminant du dépôt.
+
+**Pourquoi.** C'est le seul test hors échantillon non contaminé (N1 ; le
+pilote de l'étape 2 a vu l'origine 2021). Score à la publication du RPPS
+2027, avec le critère de N1.
+**Ce qui le renverserait.** Rien : un dépôt ne se modifie pas. Une erreur
+de code donne un nouveau dépôt daté, et l'ancien reste.

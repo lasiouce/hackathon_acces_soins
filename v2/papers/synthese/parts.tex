@@ -18,10 +18,11 @@ des critères d'acceptation passait par construction. Deux revues adversariales 
 montré, avec 6\mesure{} puis 4\mesure{} défauts bloquants confirmés en exécutant le code. Nous avons
 donc réécrit chaque critère pour qu'il puisse échouer, et vérifié qu'il échoue quand on réintroduit
 le défaut (mutation). Une troisième revue ne trouve plus de défaut bloquant ; ses défauts importants
-sont corrigés à leur tour. Les 13\mesure{} critères passent ; un scénario se recalcule en
-22 à 36\mesure{}~ms au département. La principale limite est le passage à la commune : environ
-6,8\derive{}~s extrapolés pour cinq professions et deux secteurs, au-dessus de la cible de
-2\suppose{}~s.\end{quote}
+sont corrigés à leur tour. Douze leviers sont branchés, et le vivier en formation est relié aux
+inscrits réels (DREES). Les 17\mesure{} critères passent. Un scénario se recalcule en 21\mesure{}~ms au
+département. Pour cinq professions à l'échelle de la commune (environ \num{700000} cellules), il
+prend 1,4 à 1,6\mesure{}~s sur une machine peu chargée, mais 2,0 à 4,6\mesure{}~s sous forte charge :
+la cible de 2\suppose{}~s n'est pas établie.\end{quote}
 
 \section{Introduction}
 
@@ -41,7 +42,7 @@ menés en parallèle :
 Sans un objet commun, chaque axe recoderait la dynamique à sa façon, et les résultats ne seraient
 pas comparables.
 
-L'axe~0, objet de ce prétirage, fournit cet objet commun. La question est double :
+L'axe~0, objet de ce document, fournit cet objet commun. La question est double :
 \begin{enumerate}
   \item un contrat de modules peut-il porter le modèle existant \emph{à l'identique}, tout en
         acceptant d'autres méthodes sans modifier aucun fichier ?
@@ -55,7 +56,7 @@ L'axe~0, objet de ce prétirage, fournit cet objet commun. La question est doubl
         déclarées et vérifiées, et le registre des flux est tenu par cellule (section~\ref{a0-sec:methode}).
   \item La réécriture du modèle stock-flux de référence en modules, avec un écart \emph{nul} à
         l'implémentation d'origine. La v1 sert d'oracle figé (section~\ref{a0-sec:resultats}).
-  \item Treize critères d'acceptation écrits pour pouvoir échouer. Chacun est accompagné de la valeur
+  \item Dix-sept critères d'acceptation écrits pour pouvoir échouer. Chacun est accompagné de la valeur
         mesurée sur le code fautif, et quatre d'entre eux d'une mutation rejouée.
   \item Le récit de trois revues adversariales : ce qu'elles ont trouvé, et ce que cela dit des tests
         « vrais par construction » (section~\ref{a0-sec:validation}).
@@ -270,12 +271,38 @@ C13 & Bornes sur la valeur composée et sur les paramètres ajustés ; JSON + \t
 règle « entrées $\le$ sorties » : écart $7\cdot10^{-15}$\mesure{} à une formule indépendante ;
 retraite à 3 tranches $\ge 65$ : écart de séjour $10^{-14}$\mesure{} & $\times243 \to +14\,317$~\% ;
 règle non testée ; séjour $\ne +\Delta$ \\
+C14 & 12 leviers en 4 familles : identité au tendanciel (0,0) ; capacité dentistes $\times1{,}2$
+$\to +9{,}1$\mesure{}~\% en 2050 (DD76 : $\pm9$~\% pour $\pm20$~\%) ; quotas régionaux sans effet hors
+région & leviers absents \\
+C15 & 5 professions à la commune (\num{698212} cellules) : 1,35 à 1,57\mesure{}~s ; chemin rapide
+= chemin complet (écart 0) & 3,99\mesure{}~s \\
+C16 & Vivier réel (DREES 491) : diplômés IDE modélisés \num{25385} contre \num{25249} observés
+(2024) ; identité en mode levier & vivier relatif seul \\
+C17 & Diplômés à l'étranger entrés dans la tranche de 28~ans ; total inchangé & répartis sur tous
+les âges \\
 \bottomrule
 \end{tabular}
 \caption{Critères d'acceptation de l'axe~0 (\texttt{jumeau.check}, code de sortie~1 en cas
 d'échec). Colonne de droite : valeur mesurée par les revues adversariales sur le code d'avant.}
 \label{a0-tab:criteres}
 \end{table}
+
+\paragraph{Comparaison aux chiffres publiés.}
+\begin{itemize}
+  \item \textbf{Quotas, dentistes.} Une capacité $\times1{,}2$ donne $+9{,}1$\mesure{}~\% en 2050 avec le
+        flux bas de diplômés à l'étranger (665 par an), contre $\pm9$~\% dans DD76 pour des quotas à
+        $\pm20$~\% \citep{a0-drees2021dd76} : les deux concordent. Avec le flux actuel (\num{1300} par an,
+        Ordre 2022), l'effet tombe à $+6{,}3$\mesure{}~\%, parce que la part formée en France baisse.
+        La concordance dépend donc d'un paramètre mal mesuré.
+  \item \textbf{Abandon en IFSI divisé par deux.} Le jumeau donne $+15{,}6$\mesure{}~\% d'IDE libéraux
+        en 2050 ($+14{,}1$\mesure{}~\% avec 400 IDE diplômés à l'étranger par an). Le chiffre de la DREES repris par l'axe~1 (environ $+14$~\%) porte sur des places ;
+        son équivalent en effectifs est d'environ $+7{,}9$~\% en 2050. Le jumeau donne donc environ deux
+        fois plus : c'est un écart non expliqué, pas une concordance.
+  \item \textbf{Retraite $+1$~an.} Le jumeau donne $+3{,}02$\mesure{}~\% d'IDE libéraux et
+        $+1{,}55$\mesure{}~\% de kinés en 2050. Le repère de la DREES (environ $+1$~\%) n'est pas
+        comparable : il mesure un écart de niveau d'un an chez les plus de 60~ans, tous modes
+        d'exercice, avec un plafond à 67~ans et dès 2020.
+\end{itemize}
 
 \paragraph{Effets des leviers (dentistes, 2050).}
 \begin{itemize}
@@ -288,13 +315,29 @@ et la sensibilité relèvent de l'axe~5.
 
 \paragraph{Temps de recalcul jusqu'en 2050.}
 \begin{itemize}
-  \item de 22 à 36\mesure{}~ms pour 7 professions au département (\num{1410} cellules), sur une
-        machine partagée avec d'autres sessions ;
-  \item à la taille commune (une profession, \num{35047} territoires, données répliquées) :
-        0,57\mesure{}~s pour un secteur et 1,36\mesure{}~s pour deux (0,78~s avant les corrections
-        de la troisième revue) ;
-  \item pour cinq professions et deux secteurs : environ 6,8\derive{}~s par extrapolation, au-dessus
-        des 2\suppose{}~s visés.
+  \item 21\mesure{}~ms pour 7 professions au département (\num{1410} cellules) ;
+  \item 5 professions, 2 secteurs, état ventilé par la population sur \num{35000} communes
+        (\num{698212} cellules), 24 ans : 3,99\mesure{}~s au départ, puis 1,35 à 1,57\mesure{}~s
+        après optimisation, sans que la charge de la machine soit relevée. Remesuré test isolé sur une
+        machine chargée par d'autres calculs (charge moyenne 9 à 14) : 2,0 à 4,6\mesure{}~s en temps réel
+        et 1,9 à 2,6\mesure{}~s en temps CPU. L'objectif de 2~s n'est donc pas établi.
+\end{itemize}
+Le profil mesuré avant tout changement attribuait le temps au registre des flux (1,1~s), aux passes
+d'application (1,0~s), aux sorties recalculées chaque année (0,8~s) et aux entrées (0,5~s). Le chemin
+rapide garde les mêmes opérations flottantes, mais ne tient pas le registre, calcule le vieillissement
+sans copie et met en cache les facteurs constants d'une année à l'autre. Il donne le même état que le
+chemin complet (écart 0).
+
+\paragraph{Vivier réel.} Le vivier part des inscrits en 1re année de la DREES (jeu 491). Les diplômés
+d'infirmiers qu'il reconstitue suivent les observations à 0,5~\% près en 2024 et 2025. Deux mesures en
+limitent la portée :
+\begin{itemize}
+  \item sur les diplômés 2019--2025, avec un abandon calibré sur 2016--2018, la persistance fait mieux
+        que le vivier (MAPE IDE 3,2\mesure{}~\% contre 8,4\mesure{}~\%), parce que l'abandon a
+        augmenté ;
+  \item sur le stock d'IDE libéraux de 2018 à 2023, le mode « vivier » fait un peu mieux que le
+        stock-flux local (7,40\mesure{} contre 7,82\mesure{}~\% de MAPE par département), sur une
+        seule origine, sans pré-enregistrement.
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
@@ -426,17 +469,17 @@ attendue ou un invariant, y joindre sa valeur sur le code fautif, et rejouer la 
 
 \paragraph{Questions ouvertes, avec leur coût} (temps de travail estimé, \suppose) :
 \begin{itemize}
-  \item troisième revue adversariale : environ 3~min de machine ;
-  \item recalcul sur un état communal réel, avec vectorisation si nécessaire : environ 20~min ;
+  \item mode « vivier » au banc N1 de l'axe~3, sur plusieurs origines : environ 30~min ;
+  \item abandon en formation projeté plutôt que constant : environ 45~min ;
+  \item état communal réel projetable : environ 1~h ;
   \item calibrage à fractions par tranche pour les communes : environ 30~min ;
-  \item diplômés du vivier reliés aux entrées : environ 1~h ;
   \item plancher converti en sortie explicite : environ 20~min.
 \end{itemize}
 
 
 
 \part{Axe 1 --- hyperparamètres sourcés et mesurables}
-\noindent\textit{Article d'origine : « Vingt-sept hyperparamètres sourcés pour un jumeau numérique de l'offre de soins \enquote{libérale}~: catalogue, statut de preuve et lien aux leviers de politique publique » (\texttt{v2/papers/axe1-hyperparametres/}).}
+\noindent\textit{Article d'origine : « Vingt-neuf hyperparamètres sourcés et audités pour un jumeau numérique de l'offre de soins \enquote{libérale}~: catalogue, statut de preuve et panel de politiques publiques » (\texttt{v2/papers/axe1-hyperparametres/}).}
 
 \begin{quote}\small\textbf{Résumé de l'axe.} Un jumeau numérique de l'offre de soins simule des politiques publiques en
 réglant des hyperparamètres. Encore faut-il que chacun ait une valeur, une
@@ -445,28 +488,34 @@ pour cinq professions (sages-femmes, chirurgiens-dentistes, pharmaciens,
 masseurs-kinésithérapeutes, infirmiers) sur quatre mécanismes propres à chaque
 profession : régulation conventionnelle de l'installation, filières en
 pharmacie, spécialisation en odontologie, abandon en études infirmières.
-Nous y ajoutons les paramètres de sortie communs.
+Nous y ajoutons les sorties, la part privée des salariés hospitaliers et le
+flux de diplômés étrangers.
 
-Le catalogue compte 27~hyperparamètres : 19~sourcés, 1~mesuré, 1~supposé et
-6~non mesurables à ce jour. Un seul effet causal de la régulation est
-publié : $\num{-25.57}$ infirmières libérales pour \num{100000}~habitants en
-zone sur-dotée, par rapport aux zones intermédiaires~\cite{a1-irdes270}.
+Le catalogue compte 29~hyperparamètres : 20~sourcés, 2~mesurés, 1~supposé et
+6~non mesurables à ce jour. Toutes les citations du projet ont été relues en
+texte intégral : 469~citations, dont 382~confirmées, 55~corrigées et
+32~non vérifiables. Un seul effet causal de la régulation est publié :
+$\num{-25.57}$ infirmières libérales pour \num{100000}~habitants en zone
+sur-dotée, par rapport aux zones intermédiaires~\cite{a1-irdes270}.
 
-Deux affirmations courantes ne résistent pas aux sources.
+Trois résultats changent le modèle.
 \begin{itemize}
-\item Le \enquote{30~\% d'abandon} en institut de formation en soins
-  infirmiers (IFSI) n'a pas de source primaire. Ce que la DREES mesure, c'est
-  un rendement diplômés / entrants passé de \num{0.84}\derive{} à
-  \num{0.72}\derive{}.
-\item L'obligation d'exercer deux ans en zone sous-dotée vise les
-  kinésithérapeutes, et non les dentistes.
+\item Le \enquote{30~\% d'abandon en première année} d'IFSI n'a pas de
+  source primaire. Le rendement diplômés / entrants mesuré sur les données
+  de la DREES est passé de \num{0.84}\mesure{} à \num{0.72}\mesure.
+\item Dans les établissements de santé, la part privée des sages-femmes
+  salariées vaut 19,8~\%\mesure{} dans la SAE, comme dans le RPPS. Celle
+  des pharmaciens vaut 29,4~\%\mesure{}, contre 17~\% dans le RPPS.
+\item Le flux de diplômés étrangers est sous-estimé dans les projections
+  anciennes. Il atteint environ \num{1300} dentistes et \num{2200}
+  kinésithérapeutes par an.
 \end{itemize}
-Nous traduisons enfin 14~politiques publiques en réglages de ces
-hyperparamètres, pour l'interface du décideur. Huit ont un point d'entrée
-dans le code du jumeau ; trois sont jouables aujourd'hui.
-Limite principale : aucun effet chiffré de la régulation n'existe pour les
-sages-femmes, les kinésithérapeutes ou les dentistes, ni sur la destination
-des entrants bloqués.\end{quote}
+
+Ces paramètres alimentent un panel de 14~politiques publiques, dont 9 sont
+jouables dans l'interface du décideur. Limite principale : aucun effet
+chiffré de la régulation n'existe pour les sages-femmes, les
+kinésithérapeutes ou les dentistes, ni sur la destination des entrants
+bloqués.\end{quote}
 
 \section{Introduction}
 
@@ -482,7 +531,8 @@ d'hyperparamètres. Les modèles de référence ne suffisent pas.
 \begin{itemize}
 \item Omphale (Insee) projette la population.
 \item Les projections de la DREES par profession~\cite{a1-dd76,a1-er1062,a1-er1075,a1-er1319}
-  ne paramètrent que la formation, la cessation et les diplômés étrangers.
+  paramètrent la formation, la cessation, les reprises, les transitions de
+  mode d'exercice, les changements de région et les diplômés étrangers.
 \end{itemize}
 Aucun des deux n'expose les mécanismes propres à chaque profession sur
 lesquels portent les politiques récentes : régulation conventionnelle de
@@ -495,7 +545,7 @@ mesurables ?
 
 \paragraph{Contributions.}
 \begin{enumerate}
-\item Un catalogue de 27~fiches. Chacune donne un mécanisme, une valeur,
+\item Un catalogue de 29~fiches. Chacune donne un mécanisme, une valeur,
   une unité, une incertitude, une source primaire, un millésime et un statut
   de preuve. Les fiches sont dans \texttt{v2/docs/lab/fiches/param-*.md}.
 \item Pour la régulation, les textes conventionnels exacts des quatre
@@ -510,6 +560,8 @@ mesurables ?
   série longue de la DREES, avec son script.
 \item La correspondance entre chaque hyperparamètre, le module du jumeau qui
   le lit et le levier de politique publique qui le déplace.
+\item Un audit en texte intégral de toutes les sources citées par le
+  projet, avec un registre d'une ligne par citation.
 \end{enumerate}
 
 \section{Travaux existants}
@@ -535,7 +587,7 @@ jusqu'en 2050~\cite{a1-er1319}.
 
 \paragraph{Évaluation de la régulation.}
 L'IRDES~\cite{a1-irdes270} estime par différence de différences l'effet du
-zonage infirmier de 2012 sur la période 2006--2016. C'est la seule
+zonage infirmier, expérimenté en 2008--2009 et généralisé en 2012, sur la période 2006--2016. C'est la seule
 estimation causale chiffrée que nous ayons trouvée.
 \begin{itemize}
 \item L'IGAS~\cite{a1-igas2023} constate une baisse des disparités pour les
@@ -662,8 +714,8 @@ DREES~\cite{a1-dd76}. Elle inclut décès, retraite et départs.
 
 \subsection{Catalogue}
 
-Le tableau~\ref{a1-tab:catalogue} donne les 27~hyperparamètres. Répartition
-par statut : 19~sourcés, 1~mesuré, 1~supposé, 6~non mesurables.
+Le tableau~\ref{a1-tab:catalogue} donne les 29~hyperparamètres. Répartition
+par statut : 20~sourcés, 2~mesurés, 1~supposé, 6~non mesurables.
 
 \begin{table}[p]
 \centering\scriptsize
@@ -679,9 +731,9 @@ regul-theta-fuite & IDE & régulation & $\theta = \num{0.80}$ $[\num{0.74} ; \nu
 sf-regul-regle & SF & régulation & sur-dotée : 1 pour 1 ; 12,2~\%\derive{} de la population (avenant 4, 2018~\cite{a1-avenant4sf}) & So \\
 sf-regul-effet & SF & régulation & direction seulement (disparités en baisse, 2016--2019~\cite{a1-igas2023}) & NM \\
 mk-regul-regle & MK & régulation & non prioritaire : 1 pour 1 ; 26,5~\%\derive{} de la population (avenant 7, 2023~\cite{a1-avenant7mk}) & So \\
-mk-obligation-exercice & MK & installation & 2 ans en zone (très) sous-dotée ou 2 ans en établissement ; premiers diplômés concernés en 2027~\cite{a1-avenant7mk} & So \\
+mk-obligation-exercice & MK & installation & 2 ans en zone (très) sous-dotée ou 2 ans en établissement ; premiers diplômés concernés vers 2027--2028\derive{}~\cite{a1-avenant7mk} & So \\
 mk-regul-effet & MK & régulation & non chiffré & NM \\
-cd-regul-regle & CD & régulation & non prioritaire : 1 pour 1 ; 4,8~\%\derive{} de la population ; spécialistes exemptés ; effet au 1/1/2025~\cite{a1-conventioncd2023} & So \\
+cd-regul-regle & CD & régulation & non prioritaire : 1 pour 1 ; 4,8~\%\derive{} de la population ; spécialistes dérogatoires (art. 35.5) ; effet au 1/1/2025~\cite{a1-conventioncd2023} & So \\
 cd-regul-effet & CD & régulation & non chiffré ; borne haute d'environ 5~\%\derive{} du flux & NM \\
 regul-report-entrants & 4 prof. & régulation & $\psi$ : qualitatif seulement (report en bordure, remplacement~\cite{a1-irdes270,a1-ccomptes2024}) & NM \\
 \midrule
@@ -689,11 +741,11 @@ regul-report-entrants & 4 prof. & régulation & $\psi$ : qualitatif seulement (r
 ph-filiere-primo-inscrits & PH & filières & D 71,0 ; H 9,5 ; B 8,6 ; G 5,7 ; E 3,5 ; A 1,2 ; C 0,4~\% de \num{3044} primo-inscrits (1/1/2026~\cite{a1-cnop2025}) & So \\
 ph-part-privee-biologie & PH & transitions & $s_G$~=~55,8~\%\derive{} (1/1/2026~\cite{a1-cnop2025}) & So \\
 ph-part-privee-etablissements & PH & transitions & $s_H$~=~28,6~\%\derive{} des inscriptions (Ordre~\cite{a1-cnop2025}) ; 17~\% selon la DREES (axe~4) & So \\
-ph-internat-postes & PH & filières & \num{746} postes (biologie \num{266}, pharmacie hospitalière \num{480}, rentrée 2025~\cite{a1-cnop2024}) ; environ 14~\%\derive{} d'une promotion & So \\
+ph-internat-postes & PH & filières & \num{746} postes (biologie \num{266}, pharmacie hospitalière \num{480}, rentrée 2025~\cite{a1-arrete2024pharma}) ; environ 19~\%\derive{} d'une promotion & So \\
 ph-taux-inscription-diplomes & PH & abandon & 32,8~\% de diplômés non inscrits à 3~ans (2015~\cite{a1-cnop2016}) & So \\
 \midrule
 \multicolumn{5}{l}{\emph{Spécialisation en odontologie}} \\
-cd-specialisation-des & CD & filières & 9,2~\%\derive{} d'une promotion ; ODF 52, CO 25, MBD 44 postes (2024--2025~\cite{a1-arrete2024odonto}) & So \\
+cd-specialisation-des & CD & filières & 9,1~\%\derive{} d'une promotion ; ODF 52, CO 25, MBD 44 postes (2024--2025~\cite{a1-arrete2024odonto}) & So \\
 cd-stock-specialistes & CD & filières & ODF \num{2465}, CO \num{222}, MBD \num{100}, omnipraticiens \num{43242} (2022~\cite{a1-oncd2022}) & So \\
 \midrule
 \multicolumn{5}{l}{\emph{Abandon en études infirmières}} \\
@@ -708,6 +760,10 @@ age-entree-exercice & toutes & installation & SF 24, CD 26, PH 27 à 29~ans (RPP
 cumul-emploi-retraite & toutes & sorties & CD 4,7 ; PH 1,8 ; MK et IDE 1,5 ; SF 0,8~\%\derive{} (2015~\cite{a1-cor2016}) & So \\
 mk-age-retraite & MK & sorties & 66,8 à 67,3~ans (2019--2023~\cite{a1-cnomk2024}) & So \\
 ph-sorties-ordre & PH & sorties & \num{3902} radiations en 2024 ; 18,4~\% de 60~ans et plus~\cite{a1-cnop2024} & So \\
+\midrule
+\multicolumn{5}{l}{\emph{Ajoutés après l'audit et le classement de l'axe~5}} \\
+part-privee-salaries-sae & SF, PH, MK, CD & transitions & part privée des salariés d'établissements de santé : SF 19,8 ; PH 29,4 ; MK 44,3 ; CD 2,2~\%\mesure{} (SAE 2025~\cite{a1-sae708}) & Me \\
+diplomes-etrangers-flux & toutes & installation & CD \num{1300}, MK \num{2200}\derive, IDE 400, PH 240\derive, SF 80\derive{} par an~\cite{a1-dd76,a1-er1075,a1-er1319,a1-cnomk2024} & So \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -734,7 +790,7 @@ d'habitants~\cite{a1-zonagesdatagouv}.
   sur-dotée doit réaliser les deux tiers de son activité dans sa zone
   d'installation~\cite{a1-avenant6ide}.
 \item \textbf{Dentistes.} Les spécialistes (orthopédie dento-faciale,
-  chirurgie orale, médecine bucco-dentaire) sont exemptés~\cite{a1-conventioncd2023}.
+  chirurgie orale, médecine bucco-dentaire) peuvent y déroger (art.~35.5) ; c'est une dérogation, pas une exemption automatique~\cite{a1-conventioncd2023}.
 \item \textbf{Kinésithérapeutes.} Ceux qui entrent en formation à partir
   de 2023 doivent, pour être conventionnés, choisir entre deux options~\cite{a1-avenant7mk} :
   \begin{itemize}
@@ -743,7 +799,14 @@ d'habitants~\cite{a1-zonagesdatagouv}.
   \item justifier de deux ans d'exercice en établissement.
   \end{itemize}
   Le Conseil d'État a rejeté les recours contre cette règle~\cite{a1-ce488665}.
-  La note de cadrage du projet l'attribuait à tort aux dentistes.
+  La note de cadrage du projet l'attribuait à tort aux dentistes. Le texte
+  parle d'\enquote{établissement sanitaire ou médico-social}, sans préciser
+  public ou privé. Les premiers diplômés concernés arriveraient vers
+  2027--2028\derive.
+\item \textbf{Kinésithérapeutes, historique.} Une régulation de 2012 a été
+  annulée en partie par le Conseil d'État en 2014. Une régulation en zone
+  sur-dotée existait aussi depuis l'avenant~5 de 2018~\cite{a1-ccomptes2024},
+  que l'avenant~7 renomme \enquote{non prioritaire}.
 \end{itemize}
 
 \paragraph{Effet mesuré.}
@@ -794,8 +857,12 @@ Le défaut proposé est la valeur de la DREES, cohérente avec le stock du
 RPPS ; l'Ordre fournit la borne haute.
 
 \paragraph{Internat.}
-L'internat ouvre \num{746}~postes à la rentrée 2025~\cite{a1-cnop2024}, soit
-environ 14~\%\derive{} d'une promotion.
+L'internat ouvre \num{746}~postes à la rentrée 2025~\cite{a1-arrete2024pharma},
+soit environ 19~\%\derive{} d'une promotion de \num{3901} étudiants de
+sixième année. Rapportés aux \num{536}~internes inscrits en première année
+(\mesure), on obtient 14~\%\derive{}. Le fichier d'inscription masque
+probablement les petits effectifs : en 2018, 497~postes étaient pourvus sur
+498 ouverts~\cite{a1-cng2018}.
 
 \paragraph{Diplômés non inscrits.}
 Le taux de diplômés non inscrits à l'Ordre à trois ans était de 32,8~\% en
@@ -808,15 +875,18 @@ Le concours national offre \num{121}~postes de DES en 2024--2025 : \num{52}
 en orthopédie dento-faciale, \num{25} en chirurgie orale et \num{44} en
 médecine bucco-dentaire~\cite{a1-arrete2024odonto}. L'année précédente en
 offrait \num{120}~\cite{a1-arrete2023odonto}, et 2018 en offrait
-\num{110}~\cite{a1-cng2018}.
+\num{110}~\cite{a1-cng2018}. L'arrêté de 2026 en ouvre \num{140} pour
+2026--2027 : 51, 39 et 50~\cite{a1-arrete2026odonto}.
 
-Rapportés aux \num{1322}~places en deuxième année quatre ans plus tôt, ces
-postes représentent 9,2~\%\derive{} d'une promotion. Le décalage de quatre
+Rapportés aux places en deuxième année quatre ans plus tôt, environ
+\num{1332}\derive{}, ces postes représentent 9,1~\%\derive{} d'une
+promotion. L'arrêté de 2020 n'a pas pu être lu ; le dénominateur est déduit
+de la hausse de 8,5~\% jusqu'à \num{1446} places en 2022. Le décalage de quatre
 ans est \emph{supposé}\suppose{}.
 
 \paragraph{Stock de spécialistes.}
 Le stock d'orthodontistes est stable : \num{2441} en 2019 et \num{2465} en
-2022~\cite{a1-oncd2022}. Les spécialistes, exemptés de régulation, forment donc
+2022~\cite{a1-oncd2022}. Les spécialistes, qui peuvent déroger à la régulation, forment donc
 un sous-stock de 6~\%\derive{} qu'il faut séparer des omnipraticiens dans le
 module de régulation.
 
@@ -889,76 +959,201 @@ La finalité du projet est de laisser le décideur jouer, dans l'interface,
 sur un large panel de politiques applicables. Chaque politique doit donc se
 traduire en réglage d'un hyperparamètre du catalogue.
 
-Le tableau~\ref{a1-tab:leviers} couvre 14~politiques, regroupées en 12~lignes (la régulation des quatre professions tient en une ligne). Il donne pour chacune :
+Le tableau~\ref{a1-tab:leviers} couvre 14~politiques, regroupées en 12~lignes :
+la régulation des quatre professions tient en une ligne. Il donne pour
+chacune :
 \begin{itemize}
 \item le paramètre déplacé ;
 \item la plage jouable proposée ;
 \item la preuve disponible de l'effet ;
-\item l'existence ou non d'un point d'entrée dans le code du jumeau à la
-  date du prétirage.
+\item l'existence d'un point d'entrée dans le code du jumeau, à la date de
+  cette version.
 \end{itemize}
 
 \paragraph{Ce qu'il montre.}
 \begin{itemize}
-\item Huit politiques ont un point d'entrée dans le code.
-\item Trois sont jouables dès maintenant : abandon en IFSI, places en
-  formation, cumul emploi-retraite. Deux d'entre elles ont un défaut à
-  corriger.
-\item Les leviers retraite et régulation existent, mais sont suspendus
-  après la seconde revue du jumeau.
-\item Six politiques demandent un module encore absent (installation
-  communale, filières) ou un flux séparé.
+\item Neuf politiques sont jouables : régulation (quatre professions),
+  abandon en IFSI, places en formation, cumul emploi-retraite, report de la
+  retraite et diplômés étrangers. L'interface les range en quatre familles :
+  former, attirer, installer, retenir.
+\item Cinq ne le sont pas :
+  \begin{itemize}
+  \item la règle des deux tiers, les postes d'internat en pharmacie, les DES
+    en odontologie et la rétention des diplômés en pharmacie, faute de
+    module ;
+  \item l'obligation d'exercice, faute de modèle d'installation communale.
+  \end{itemize}
 \end{itemize}
-Le goulot du panel est donc le code, pas la documentation des paramètres.
 
 \begin{table}[htbp]
 \centering\scriptsize
-\caption{Panel de politiques publiques jouables. Code : \textbf{oui} = point d'entrée actif ; \textbf{susp.} = module présent, levier suspendu ; \textbf{non} = module absent.}\label{a1-tab:leviers}
-\begin{tabular}{p{3.6cm}p{2.9cm}p{2.6cm}p{3.2cm}p{0.8cm}}
+\caption{Panel de politiques publiques. Code : \textbf{oui} = point d'entrée actif dans le jumeau ; \textbf{non} = module absent. ST : indice de Sobol total sur l'effectif national à 2050, mesuré par l'axe~5.}\label{a1-tab:leviers}
+\begin{tabular}{p{3.3cm}p{2.5cm}p{2.4cm}p{3.1cm}p{1.2cm}p{0.6cm}}
 \toprule
-Politique & Hyperparamètre & Plage jouable & Preuve de l'effet & Code \\
+Politique & Hyperparamètre & Plage jouable & Preuve de l'effet & ST 2050 & Code \\
 \midrule
-Réguler l'installation (IDE, SF, MK, CD) par liste de communes & règle $E\le X$, $\theta_p$, $\psi_{p,d}$ & 0 à 100~\% des communes ; $\theta\in[\num{0.5};1]$\suppose & IDE seulement~\cite{a1-irdes270} & susp. \\
-Étendre la régulation aux dentistes spécialistes & exemption CD & oui / non & aucune & non \\
-Règle des deux tiers en périphérie (IDE) & règle d'activité & oui / non & aucune & non \\
-Obligation d'exercice en zone sous-dotée, étendue au-delà des MK & durée par profession & 0 à 3~ans\suppose & observable après 2027 & non \\
-Réduire l'abandon en IFSI & $\rho_{\mathrm{IDE}}$, soit \num{0.056} à \num{0.105} par an\derive & niveaux 2009--2018 à 2022 & équivalent à +14~\% de places~\cite{a1-er1319} & oui \\
-Places en formation & capacité & $\times[\num{0.8};\num{1.2}]$ & $\pm$12 à 13~\% à 2050~\cite{a1-dd76} & oui \\
-Postes d'internat en pharmacie & $\varphi_G$, $\varphi_H$ & $\pm$20~\%\suppose & mécanique & non \\
-Postes de DES en odontologie & part de spécialistes & 100 à 160\suppose & mécanique & non \\
-Retenir les diplômés en pharmacie & taux d'inscription & 20 à 35~\%~\cite{a1-cnop2016} & aucune & non \\
-Plafonner ou encourager le cumul emploi-retraite & part en cumul & $\times[\num{0.5};2]$ (axe~5) & aucune propre & oui \\
-Reporter l'âge de départ & décalage de retraite & 0 à 2~ans & +1~\% d'effectif par an~\cite{a1-er1062,a1-er1075} & susp. \\
-Diplômés étrangers & flux d'entrée & $\times[\num{0.5};2]$\suppose & variante DREES~\cite{a1-dd76} & partiel \\
+Réguler l'installation (IDE, SF, MK, CD) par liste de communes & règle $E\le X$, $\theta_p$, $\psi_{p,d}$ & 0 à 100~\% des zones ; $\theta\in[\num{0.5};1]$\suppose & IDE seulement~\cite{a1-irdes270} & $\le$\num{0.01} (redistribue) & oui \\
+Étendre la régulation aux dentistes spécialistes & part dérogatoire CD & 0 à 1 & aucune & $\le$\num{0.011} & oui \\
+Règle des deux tiers en périphérie (IDE) & règle d'activité & oui / non & aucune & --- & non \\
+Obligation d'exercice en zone sous-dotée, étendue au-delà des MK & durée par profession & 0 à 3~ans\suppose & observable après 2027 & --- & non \\
+Réduire l'abandon en IFSI & $\rho_{\mathrm{IDE}}$, soit \num{0.056} à \num{0.105} par an\derive & niveaux 2009--2018 à 2022 & perte $\div 2$ $\approx$ +14~\% de places~\cite{a1-er1319} & \num{0.07} & oui \\
+Places en formation & capacité, quotas & $\times[\num{0.8};\num{1.2}]$ & $\pm$9 (CD), 12 (SF), 13~\% (PH) à 2050~\cite{a1-dd76} & \num{0.14} à \num{0.39} & oui \\
+Postes d'internat en pharmacie & $\varphi_G$, $\varphi_H$ & $\pm$20~\%\suppose & mécanique & --- & non \\
+Postes de DES en odontologie & part de spécialistes & 100 à 160\suppose & mécanique & --- & non \\
+Retenir les diplômés en pharmacie & taux d'inscription & 10 à 33~\%~\cite{a1-cnop2016} & aucune & --- & non \\
+Plafonner ou encourager le cumul emploi-retraite & part en cumul & $\times[\num{0.5};2]$ & aucune propre & \num{0.00} & oui \\
+Reporter l'âge de départ & décalage de retraite & 0 à 2~ans & +1~\% du tendanciel pour 1~an~\cite{a1-er1062,a1-er1075} & $\le$\num{0.01} & oui \\
+Diplômés étrangers & flux d'entrée & $\times[\num{0.5};2]$\suppose & flux observés (fiche) & MK \num{0.27} ; CD \num{0.17} & oui \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Priorisation par l'analyse de sensibilité (axe~5)}
 
-Le classement de Morris puis de Sobol de l'axe~5 n'est pas encore publié à
-la date de ce prétirage ; il sera intégré à la version suivante. Son plan
-déclaré permet déjà trois constats.
+L'axe~5 classe les facteurs par indices de Sobol sur l'effectif privé
+national à 2050 (valeurs mesurées sur le jumeau par l'axe~5).
+
+\paragraph{Partie~1 : incertitudes.}
+La variance vient surtout de trois sources :
 \begin{itemize}
-\item Il inclut deux paramètres de ce catalogue : la part en cumul
-  emploi-retraite, tirée entre $0,5$ et $2$ fois la valeur de la fiche, et
-  le décalage de la retraite, de $0$ à $2$~ans.
-\item Il exclut par construction la formation et la régulation. Le jumeau
-  tourne au département, alors que le zonage est communal, et le vivier en
-  formation n'alimente pas l'effectif.
-\item Il ne pourra donc pas classer $\rho_{\mathrm{IDE}}$, $\theta_p$ ni
-  $\psi_{p,d}$. Les sourcer plus finement reste à justifier par une analyse
-  au niveau communal.
+\item la part privée des salariés ambigus : ST \num{0.91} pour les SF et
+  \num{0.48} pour les PH ;
+\item le lien entre formation et entrées : la filière pèse \num{0.55} pour
+  les CD et \num{0.32} pour les PH ;
+\item la fenêtre d'ajustement : \num{0.53} pour les MK et les IDE.
 \end{itemize}
+Le cumul emploi-retraite ne déplace rien ($\mu^* \le 0,25~\%$ de l'effectif).
+
+\paragraph{Partie~2 : leviers branchés.}
+En 2050, la décision pèse plus que la connaissance pour les IDE
+(\num{0.88} contre \num{0.12}) et les MK (\num{0.71} contre \num{0.15}).
+C'est l'inverse pour les SF (\num{0.41} contre \num{0.57}) et les CD
+(\num{0.41} contre \num{0.59}).
+
+\paragraph{Conséquences pour ce catalogue.}
+\begin{enumerate}
+\item \textbf{Part privée des salariés.} C'est la priorité de sourçage :
+  elle a été traitée dans cette version, voir ci-dessous.
+\item \textbf{Formation $\to$ entrées} ($\rho$, $\varepsilon_{\mathrm{PH}}$,
+  internat, DES). L'effort n'est utile qu'une fois ce lien branché et
+  validé au banc (axe~2).
+\item \textbf{Diplômés étrangers.} Ils pèsent \num{0.27} pour les MK et
+  \num{0.17} pour les CD. Le flux a été actualisé dans cette version.
+\item \textbf{Ne plus approfondir} : le cumul emploi-retraite, $\theta$, la
+  destination des entrants bloqués et la part dérogatoire, tous à ST
+  $\le$ \num{0.011} au niveau national.
+\end{enumerate}
+Ces facteurs agissent sur la répartition entre communes, que l'axe~5 ne
+mesure pas. Leur ST nul ne dit rien de leur effet local.
+
+\subsection{Part privée des salariés hospitaliers (SAE et PMI)}
+
+\paragraph{Hôpital.}
+La SAE 2025~\cite{a1-sae708} donne la part privée des salariés des
+établissements de santé, en personnes au 31/12, privé lucratif et non
+lucratif réunis (tableau~\ref{a1-tab:sae}). Elle est stable sur 2023--2025.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Part privée des salariés des établissements de santé : SAE 2025 et RPPS 2026\mesure.}\label{a1-tab:sae}
+\begin{tabular}{lrrrr}
+\toprule
+Profession & Public & Privé (PNL + PL) & SAE & RPPS (secteurs hospitaliers) \\
+\midrule
+Sages-femmes & \num{13737} & \num{3389} & 19,8~\% & 17,4~\% \\
+Pharmaciens & \num{6327} & \num{2639} & 29,4~\% & 17,4~\% \\
+Kinésithérapeutes & \num{7619} & \num{6062} & 44,3~\% & 44,4~\% \\
+Dentistes & \num{1892} & \num{43} & 2,2~\% & 3,4~\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les deux sources concordent pour les SF et les MK, à 2 points près. Pour
+les PH, la SAE rejoint l'Ordre (28,6~\%) et s'écarte du RPPS. Le choix de
+la source revient à l'axe~4.
+
+\paragraph{Hors hôpital.}
+Les sages-femmes que le RPPS classe en \enquote{Prévention} sont
+\num{1383}\mesure. La PMI en compte \num{1423} au
+31/12/2024~\cite{a1-dreespmi}, soit 3~\%\derive{} d'écart. La PMI est un
+service départemental, donc un employeur public. Classer cette catégorie en
+public réduirait l'écart min--max de la sortie \enquote{libérale} des SF de
+\num{2601} à \num{1272}\derive{} (soit $-51~\%$).
+
+\subsection{Flux de diplômés étrangers}
+
+\paragraph{Ce que montrent les sources récentes.}
+Elles dépassent nettement les hypothèses des projections antérieures.
+\begin{itemize}
+\item \textbf{Dentistes.} \num{665} entrées par an sur 2016--2020~\cite{a1-dd76}.
+  Les données de l'Ordre relayées par des questions parlementaires donnent
+  \num{1313} nouveaux inscrits en 2022, dont 19 hors UE. Les décisions
+  européennes de reconnaissance sont du même ordre :
+  \num{1309}~\cite{a1-regprof}.
+\item \textbf{Kinésithérapeutes.} \num{1175} en 2015~\cite{a1-er1075}, contre
+  \num{2528} autorisations en 2023 et un stock de diplômés hors France qui
+  croît de \num{2212}\derive{} par an~\cite{a1-cnomk2024}.
+\end{itemize}
+
+\paragraph{Valeurs proposées.}
+\num{1300} (CD), \num{2200}\derive{} (MK), 400 (IDE, hypothèse
+DREES~\cite{a1-er1319}), 240\derive{} (PH) et 80\derive{} (SF) par an. Les
+définitions diffèrent d'une source à l'autre : primo-inscription, entrée
+en activité, autorisation, reconnaissance.
 
 \section{Validation et menaces à la validité}
 
+\paragraph{Audit des sources en texte intégral.}
+Chaque citation du projet a été relue dans sa source primaire, en texte
+intégral, par six lots indépendants : les fiches et les articles des
+axes~0 à 5, ainsi que l'état de l'art. Il y a 469~citations au total
+(tableau~\ref{a1-tab:audit}). Les registres, avec une ligne par citation et
+l'URL lue, sont dans \texttt{v2/docs/lab/reports/2026-11-14-audit-sources.md}.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Audit des sources en texte intégral : verdicts par lot.}\label{a1-tab:audit}
+\begin{tabular}{lrrrr}
+\toprule
+Lot & Citations & Confirmées & Corrigées & Non vérifiables \\
+\midrule
+Régulation (axe~1) & 93 & 80 & 8 & 5 \\
+Pharmacie, odontologie (axe~1) & 62 & 53 & 8 & 1 \\
+DREES, IFSI, sorties (axes~0, 1, 3) & 55 & 41 & 11 & 3 \\
+Méthodes (axes~0, 2, 3, 5) & 54 & 39 & 9 & 6 \\
+Événements (axe~4) & 93 & 76 & 9 & 8 \\
+Données (axe~4) & 112 & 93 & 10 & 9 \\
+\midrule
+Total & 469 & 382 & 55 & 32 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Aucune correction ne renverse une conclusion. Trois d'entre elles changent
+un chiffre de cet article :
+\begin{itemize}
+\item quotas $\pm$20~\% : l'effet est de $\pm$9~\% (CD), $\pm$12~\%
+  (SF) et $\pm$13~\% (PH) à 2050~\cite{a1-dd76}, et non \enquote{$\pm$12 à
+  13~\%} ;
+\item retraite : la DREES mesure +1~\% par rapport au tendanciel pour un an
+  de décalage des plus de 60~ans, dès 2020~\cite{a1-er1062,a1-er1075}. Ce n'est
+  pas un rythme annuel, et ce n'est pas comparable en l'état aux +3~\% du
+  jumeau pour les IDE libéraux en 2050 ;
+\item internat en pharmacie : 19~\% d'une promotion en postes, et non
+  14~\%.
+\end{itemize}
+
 \paragraph{Ce qui est validé.}
-Deux recoupements sont faits.
+Trois recoupements sont faits.
 \begin{itemize}
 \item Le rendement $\rho$ reproduit la valeur publiée par la DREES pour
   l'entrée 2018 (81,4~\%\mesure{} contre 81~\%~\cite{a1-er1266}).
 \item Le zonage data.gouv concorde avec l'extraction CartoSanté de l'axe~4.
+  Les parts de population comptent Paris, Lyon et Marseille par
+  arrondissement ; avec les communes seules, on obtient IDE 26,1~\%,
+  MK 24,4~\% et CD 2,2~\%\derive.
+\item La part privée hospitalière des SF et des MK concorde entre la SAE et
+  le RPPS ; celle des PH ne concorde pas.
 \end{itemize}
 L'effet de la régulation infirmière sert de cible au protocole N3 de
 l'axe~3, qui n'est pas validé à ce jour.
@@ -982,6 +1177,11 @@ l'axe~3, qui n'est pas validé à ce jour.
   2011 et sur 2006--2016 ; rien de chiffré ne couvre l'après-2019.
 \item \textbf{Millésimes anciens.} Le cumul emploi-retraite et le taux
   d'inscription des pharmaciens datent de 2015.
+\item \textbf{Définitions du flux étranger.} Les sources mesurent des
+  objets différents : primo-inscription, entrée en activité, autorisation,
+  décision de reconnaissance. Leurs rapports sont inconnus.
+\item \textbf{SAE.} Les multi-employeurs y sont comptés une fois par
+  établissement, et les non-réponses sont imputées.
 \end{enumerate}
 
 \section{Reproductibilité}
@@ -996,7 +1196,11 @@ l'axe~3, qui n'est pas validé à ce jour.
 
 \paragraph{Ce qui se recalcule.}
 \begin{itemize}
-\item \textbf{Rendement $\rho$.} C'est le seul calcul propre. Il se
+\item \textbf{Part privée des salariés (SAE).} Le script est reproduit
+  dans la fiche \texttt{param-part-privee-salaries-sae}. Il lit les
+  bordereaux Q20 et Q23 et le fichier d'identification des bases
+  statistiques SAE 2025~\cite{a1-sae708}.
+\item \textbf{Rendement $\rho$.} Il se
   reproduit avec le script de l'annexe~\ref{a1-app:script}, à partir du
   fichier \enquote{Séries longues -- 1966-2025} de la DREES~\cite{a1-drees491}.
 \item \textbf{Parts de zonage.} Elles se recalculent sur
@@ -1009,7 +1213,7 @@ Aucune graine n'intervient : aucun calcul n'est aléatoire.
 \section{Conclusion}
 
 \paragraph{Ce que l'axe~1 apporte.}
-Il fournit au jumeau 21~paramètres dotés d'une valeur sourcée, mesurée ou
+Il fournit au jumeau 23~paramètres dotés d'une valeur sourcée, mesurée ou
 supposée explicite. Il désigne aussi six paramètres que personne ne mesure
 encore.
 
@@ -1017,15 +1221,23 @@ encore.
 \begin{itemize}
 \item \textbf{Axe~0, module de régulation.} Il doit intégrer :
   \begin{itemize}
-  \item l'exemption des spécialistes dentaires ;
+  \item la dérogation des spécialistes dentaires (art.~35.5) ;
   \item la règle des deux tiers pour les infirmiers ;
-  \item l'obligation d'exercice des kinésithérapeutes à partir de 2027 ;
+  \item l'obligation d'exercice des kinésithérapeutes, vers 2027--2028 ;
   \item $\theta_p$ et $\psi_{p,d}$ comme paramètres de scénario.
   \end{itemize}
 \item \textbf{Axe~0, module de formation.} Il lit $\rho_{\mathrm{IDE}}$ au
   lieu d'un abandon supposé.
 \item \textbf{Axe~3.} Il gagne une seconde cible, l'IRDES, et deux
   expériences naturelles à construire : sages-femmes et kinésithérapeutes.
+\item \textbf{Axe~4.} Deux décisions lui reviennent :
+  \begin{itemize}
+  \item choisir la source de la part privée hospitalière des PH (SAE ou
+    RPPS) ;
+  \item classer la catégorie \enquote{Prévention} des SF en public.
+  \end{itemize}
+\item \textbf{Axe~0, module des diplômés étrangers.} Actualiser les flux,
+  en priorité MK et CD, pondérés par l'axe~5.
 \end{itemize}
 
 \paragraph{Questions ouvertes, avec leur coût.}
@@ -1037,12 +1249,16 @@ encore.
 \item Cessation par âge sur le RPPS : environ 1~h.
 \item Lecture des arrêtés de méthodologie du zonage et de l'avenant~11 des
   infirmiers : environ 50~min.
+\item Lauréats hors UE (procédure d'autorisation d'exercice) pour CD, PH
+  et SF : environ 30~min.
+\item Sages-femmes en \enquote{Autre secteur} (796, 63~\% de l'écart
+  restant) : environ 1~h.
 \end{itemize}
 
 
 
 \part{Axe 2 --- méthodes de modélisation interprétables}
-\noindent\textit{Article d'origine : « Prévoir l'effectif libéral des professions de santé par département : un shrinkage hiérarchique améliore de peu le stock-flux, les âges fins non » (\texttt{v2/papers/axe2-methodes/}).}
+\noindent\textit{Article d'origine : « Prévoir l'effectif libéral des professions de santé par département : des cohortes par composantes bayésiennes, entrées comprises, battent le stock-flux » (\texttt{v2/papers/axe2-methodes/}).}
 
 \begin{quote}\small\textbf{Résumé de l'axe.} On cherche une méthode interprétable qui prévoie, mieux que le modèle stock-flux à taux locaux,
 l'effectif \enquote{libéral} (secteur privé, lucratif ou non) des sages-femmes, chirurgiens-dentistes,
@@ -1060,8 +1276,11 @@ en 2050 par rapport à la référence). Limite principale : le gain est petit, l
 corrélation entre origines, et les cibles ont déjà été vues lors d'un banc antérieur. Première méthode hors stock-flux déterministe, un modèle âge-période-cohorte bayésien de la rétention
 nette fait jeu égal (8,74\,\%\mesure) ; sa prévision probabiliste réussit la calibration par
 simulation mais reste trop étroite hors échantillon (couverture de 50\,\%\mesure{} pour 80\,\% nominal),
-faute d'incertitude sur les entrées. L'article rend compte des premières étapes d'un programme en boîte
-blanche.\end{quote}
+faute d'incertitude sur les entrées. Rendre aussi les entrées probabilistes (niveau national
+en niveau local, parts départementales hiérarchiques) change le résultat : la MAPE tombe à
+7,73\,\%\mesure{} ($-0{,}95$\mesure{} point, IC 95\,\% $[-1{,}51\,;\,-0{,}47]$\mesure) et la bande à 80\,\%
+couvre 77,6\,\%\mesure{} des cas sur toutes les origines. L'article rend compte des premières étapes
+d'un programme en boîte blanche.\end{quote}
 
 \section{Introduction}
 Un décideur public qui anticipe des tensions territoriales a besoin d'une projection d'effectifs par
@@ -1119,13 +1338,15 @@ l'étranger~\cite{a2-drees2021dd76}. Notre référence en reprend la structure, 
 nette et à un flux d'entrées nettes par cellule.
 
 \paragraph{Cohortes par composantes en bayésien, à l'échelle infranationale.} Alexander et Alkema
-placent l'identité des cohortes par composantes dans un cadre bayésien pour estimer et projeter des
-populations de comtés kényans avec très peu de données~\cite{a2-alexander2021bayesian}. Les processus
-(mortalité par composantes principales des tables nationales, migration nette à profil d'âge constant
-et volume en marche aléatoire, multiplicateur âge-temps résiduel) sont reliés aux observations par
+placent l'identité des cohortes par composantes dans un cadre bayésien pour estimer et projeter,
+avec très peu de données, les femmes de 15 à 49 ans des comtés kényans
+(1979--2019)~\cite{a2-alexander2021bayesian}. Les processus (mortalité par composantes principales des
+tables nationales ; migrations entrantes et sortantes modélisées séparément, chacune à profil d'âge
+constant et à total en marche aléatoire d'ordre 2, la migration nette en étant la différence ;
+multiplicateur âge-temps résiduel) sont reliés aux observations par
 des modèles de données qui portent l'erreur d'échantillonnage, et la somme des comtés est contrainte
-autour du total national publié. Validées hors échantillon contre le recensement 2019, ses
-projections sont à environ 1\,\% des effectifs observés, avec une erreur quadratique 3 à 10 fois
+autour du total national publié. Validées hors échantillon contre le recensement 2019, au niveau
+des districts, ses projections sont à environ 1\,\% des effectifs observés, avec une erreur quadratique 3 à 10 fois
 plus faible qu'une extrapolation linéaire, et une couverture des intervalles à 90\,\% proche de sa
 valeur nominale (cité). C'est la forme la plus proche de notre jumeau parmi les méthodes hors
 stock-flux déterministe : même identité comptable, mais des taux estimés avec un modèle explicite,
@@ -1241,6 +1462,24 @@ croît avec l'horizon ; l'ordre 2, qui prolongerait la pente, est écarté a pri
 La rétention projetée est $s = \min(1, e^{\eta})$ ; les entrées restent celles de A0. Le levier
 \texttt{apc\_sorties.periode\_60plus} ajoute un choc au log de la rétention des 60 ans et plus.
 
+\subsection{Deuxième méthode : cohortes par composantes, entrées probabilistes}
+\label{a2-sec:cohortes}
+L'APC laisse les entrées fixes. Dans les tranches où la rétention nationale dépasse 1 (les plus
+jeunes), on modélise le flux net $e_{d,\tau} = N(a,\tau) - s_d B(a,\tau-1)$, avec $s_d$ de A0 :
+\begin{align}
+  M_\tau &= \textstyle\sum_d e_{d,\tau} = L_\tau + u_\tau, \qquad L_\tau = L_{\tau-1} + v_\tau, \\
+  e_{d,\tau} &= \pi_d\, M_\tau\,(1 + \delta_{\text{rég}(d)} + \zeta_d) + \varepsilon_{d,\tau},
+\end{align}
+avec $u \sim \mathcal N(0,\sigma_u^2\kappa)$, $v \sim \mathcal N(0,\sigma_v^2\kappa)$, $\kappa$ la
+moyenne de $|M_\tau|$ (variances de forme poissonienne, communes aux sexes et tranches d'une
+profession), $\pi_d$ la part du département dans le stock de la tranche à l'origine,
+$\delta \sim \mathcal N(0,\tau_r^2)$, $\zeta \sim \mathcal N(0,\tau_d^2)$ et
+$\varepsilon \sim \mathcal N(0, \sigma_\varepsilon^2 \pi_d \kappa + \omega_e^2)$. Le niveau $L$ est
+filtré par Kalman ($\sigma_u, \sigma_v$ au maximum de vraisemblance) et prolongé à plat ; les parts
+suivent le même Bayes empirique que l'APC. La variante C1 fixe tous les hyperparamètres à leur
+estimation ; C2 propage leur incertitude par une approximation de Laplace sur $\log\theta$. Le levier
+des quotas multiplie $M$.
+
 \subsection{Ce que chaque levier modifie}
 \begin{table}[h]
 \centering\small
@@ -1338,6 +1577,42 @@ $p_{KS}$ de 0,20 à 0,56\mesure) et avec $\theta$ ré-estimé (40 jeux, $p_{KS}$
 prédictif à 90\,\%. Le modèle est donc correctement codé et calibré sur ce qu'il voit ; c'est
 l'extrapolation hors échantillon qui manque d'incertitude.
 
+\subsection{Cohortes bayésiennes, entrées comprises (inscrit avant passage)}
+\begin{table}[h]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+& MAPE $h=5$ (\%) & $\Delta$ vs A0 (IC 95\,\%) & couverture 80\,\% (toutes origines) \\
+\midrule
+A0 stock-flux taux locaux & 8,68 & --- & --- \\
+APC seule (étape 1) & 8,74 & $+0{,}07$ $[-0{,}03\,;\,+0{,}16]$ & 51\,\% \\
+C1 cohortes, $\theta$ fixé & \textbf{7,73} & $\mathbf{-0{,}95}$ $[-1{,}51\,;\,-0{,}47]$ & 77,6\,\% \\
+C2 cohortes, $\theta$ propagé & 7,73 & $-0{,}95$ $[-1{,}51\,;\,-0{,}47]$ & 76,0\,\% \\
+\bottomrule
+\end{tabular}}
+\caption{Périmètre privé ; valeurs mesurées\mesure. C1 bat A0 dans 17 cellules profession
+$\times$ origine sur 22\mesure.}
+\end{table}
+
+\paragraph{Ce qui produit le gain.} Le niveau local suit les entrées récentes au lieu de leur moyenne
+sur la fenêtre : le biais national des sages-femmes passe de $+7{,}6$ à $+3{,}0$\,\%\mesure. Les
+entrées sont réparties au prorata du stock, rétréci par région et département, au lieu du flux bruité
+de chaque département. Le gain tient sans les deux cellules qu'un pilote avait vues avant l'inscription
+(7,52 contre 8,52\,\%\mesure), mais il décroît sur les origines récentes pour les dentistes et les
+pharmaciens.
+
+\paragraph{Prévision probabiliste (N6).} La référence naïve probabiliste exige 20 erreurs passées :
+seule l'origine 2021 est jugeable (sages-femmes, dentistes, pharmaciens ; 279 départements). Le CRPS
+de C1 sur $\log N$ fait jeu égal avec la persistance probabiliste ($+0{,}003$
+$[-0{,}001\,;\,+0{,}007]$\mesure) ; sa bande à 80\,\% couvre 73,5\,\%\mesure{} (cible $[75\,;\,85]$)
+et celle à 50\,\% 45,9\,\%\mesure{} (cible $[44\,;\,56]$). Sur toutes les origines, hors protocole,
+elle couvre 77,6 et 50,0\,\%\mesure{} et son histogramme PIT est presque plat. Propager $\theta$ (C2)
+ne change rien : la dispersion vient des innovations futures, pas des hyperparamètres.
+
+\paragraph{Par profession.} En MAPE, C1 bat A0 pour les dentistes, les infirmiers libéraux et les
+sages-femmes, et fait jeu égal pour les kinés (une seule origine) et les pharmaciens\mesure.
+
 \subsection{Ancien périmètre (secondaire)}
 Sur le périmètre libéral + mixte, A2 reste le seul gain : $-0{,}10$\mesure{} point
 (IC 95\,\% $[-0{,}21\,;\,-0{,}002]$\mesure). A1b est à égalité ($-0{,}03$\mesure), A3 et la combinaison
@@ -1421,6 +1696,8 @@ uv run python -m methodes.c5        # région de formation
 uv run python -m methodes.ablation  # exploratoire
 uv run --with scipy python -m methodes.banc_apc  # étape 1 : APC
 uv run --with scipy python -m methodes.sbc       # calibration par simulation
+uv run --with scipy python -m methodes.banc_cohortes  # étape 2 : N1 et N6
+uv run --with scipy python -m methodes.sbc2 200       # étape 2 : 5 x 2 x 200
 \end{verbatim}
 Graine du bootstrap 20261114, 2\,000 tirages. Sorties dans \texttt{v2/methodes/out/}. Données :
 \texttt{data/processed/stock.parquet} (DREES, 2026-07-02) et
@@ -1440,11 +1717,12 @@ l'axe 2 décidé le 2026-11-14 en sort par étapes, en gardant l'identité des c
 mais en estimant chaque flux par un modèle statistique explicite. \textbf{Étape 1, faite :} un APC
 bayésien de la rétention nette fait jeu égal avec le stock-flux en prévision ponctuelle et fournit une
 prévision probabiliste, correctement codée (calibration par simulation réussie) mais trop étroite hors
-échantillon, faute d'incertitude sur les entrées. Étapes suivantes, dans l'ordre décidé :
+échantillon, faute d'incertitude sur les entrées. \textbf{Étape 2, faite :} des cohortes par
+composantes où les entrées sont aussi probabilistes battent le stock-flux (7,73 contre
+8,68\,\%\mesure) et donnent une bande presque calibrée. Étapes suivantes :
 \begin{enumerate}
-  \item cohortes par composantes en bayésien hiérarchique, commune $\subset$ département $\subset$
-        région, \emph{entrées comprises} : c'est la condition d'une bande calibrée
-        (\textasciitilde{}1 jour)\suppose ;
+  \item dépôt des prévisions 2027--2030, seul test hors échantillon propre ; niveau local amorti
+        pour les entrées qui se retournent ; grain infra-départemental sous le protocole N4 ;
   \item logit conditionnel de l'installation, la régulation devenant un ensemble de choix restreint ;
   \item réconciliation des prévisions entre échelles ;
   \item validation par CRPS, PIT, calibration par simulation et mondes simulés, avec une référence
@@ -1457,25 +1735,27 @@ reproduction des projections DREES~\cite{a2-drees2021dd76} (\textasciitilde{}30\
 
 
 \part{Axe 3 --- méthodologie de validation}
-\noindent\textit{Article d'origine : « Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats : six protocoles pré-enregistrés, et un levier qui ne passe pas le sien » (\texttt{v2/papers/axe3-validation/}).}
+\noindent\textit{Article d'origine : « Valider un jumeau numérique de l'offre de soins avant d'en voir les résultats : huit protocoles pré-enregistrés, et ce qui n'y résiste pas » (\texttt{v2/papers/axe3-validation/}).}
 
 \begin{quote}\small\textbf{Résumé de l'axe.} Un jumeau numérique de l'offre de soins projette l'effectif « libéral » (secteur privé) de cinq
-professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Il ne vaut que s'il est validé.
-Or les données courent de 2012 à 2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas
-un levier. Nous proposons six protocoles, un par niveau, écrits et gelés par empreinte SHA-256
-avant tout calcul. Ils portent sur la prévision à dix ans au plus, la cohérence à 2050, l'effet
-causal d'un levier, l'échelle communale, des mondes simulés à vérité connue et la calibration des
-prévisions probabilistes. Le niveau du
-levier a été lancé sur la régulation de l'installation infirmière en zone sur-dotée, par différence
-de différences entre zones sur-dotées et intermédiaires de \num{59}\mesure{} départements. L'effet
-estimé est de $\num{-30.3}$\mesure{}~log-points sur 2012--2019 (IC à 95~\% $[\num{-34.1} ;
-\num{-26.4}]$), et les trois placebos passent. Mais le test de tendances parallèles fixé d'avance
-échoue ($p = \num{0.043}$\mesure{} pour un seuil de \num{0.10}\suppose{}). Le levier n'est donc pas
-validé. Pour les kinés, la prédiction pré-enregistrée de marche puis d'arrêt (régulation annulée en
-2014) est confirmée : la pente relative remonte de \num{3.1}\mesure{}~points par an
-($[\num{1.1} ; \num{5.1}]$). Nous tirons aussi une leçon des deux revues adversariales du jumeau :
-plusieurs de ses critères d'acceptation passaient par construction. Limite principale : la date du
-zonage utilisé est probable mais pas prouvée.\end{quote}
+professions jusqu'en 2050, à toutes les échelles jusqu'à la commune. Les données courent de 2012 à
+2026 : aucun backtest n'atteint 2050, et un backtest ne valide pas un levier. Nous avons écrit huit
+protocoles, gelés par empreinte SHA-256 avant tout calcul qui les concerne : prévision à dix ans au
+plus, cohérence à 2050, effet causal d'un levier, échelle communale, mondes simulés à vérité connue,
+prévision probabiliste, un addendum daté et une bande d'incertitude en $\sqrt h$. Nous les avons appliqués tels quels. La régulation de
+l'installation infirmière en zone sur-dotée a un effet estimé de $\num{-30.3}$\mesure{}~log-points
+au département et de $\num{-32.2}$\mesure{} au sein des bassins de vie. Le test de tendances
+parallèles fixé d'avance échoue pourtant deux fois ($p = \num{0.043}$\mesure{} puis
+\num{0.025}\mesure{}) : le levier n'est pas validé. Chez les kinés, la pente remonte après
+l'annulation de la régulation en 2014 (\num{3.1}\mesure{} points par an). Au backtest, la variante
+par défaut ne bat la tendance qu'à l'origine 2021 ; aux origines 2016 et 2018, c'est l'égalité. Dans
+des mondes simulés, le moteur est exact sans bruit mais biaisé par le bruit, qu'il lit comme des
+entrées. Les cas limites analytiques passent, mais la reproduction des projections DREES à 2050
+échoue de 14 à 25\mesure{}~\% : aucun chiffre 2050 n'est citable. Seule une bande dont la largeur
+croît comme $\sqrt h$ est calibrée (couverture de 49 et 76\mesure{}~\% pour 50 et 80~\% nominaux),
+résultat à confirmer sur les prévisions déposées pour 2027. Sous 51\mesure{} professionnels, une
+projection communale ne s'affiche pas sans sa bande. Ces verdicts, obtenus sans retouche des
+protocoles, sont le résultat principal.\end{quote}
 
 \section{Introduction}
 Le projet construit un jumeau numérique de l'offre de soins. Il simule des politiques nationales,
@@ -1596,14 +1876,16 @@ Niveau & Gel & SHA-256 (12 car.) & État \\
 \midrule
 Plan & 2026-11-14 02:54 & \texttt{0108455d34aa} & --- \\
 N1 Prévision & 02:54 & \texttt{eb527ecb06a0} & lancé par l'axe 2 \\
-N2 Long terme & 02:54 & \texttt{bc5df3083cc5} & non lancé \\
+N2 Long terme & 02:54 & \texttt{bc5df3083cc5} & lancé (A affaiblie) \\
 N3 Leviers & 02:54 & \texttt{c37e36457f12} & \textbf{lancé} \\
-N4 Échelle fine & 02:54 & \texttt{91f897cc5071} & non lancé \\
-N5 Mondes simulés & 03:46 & \texttt{1046545b17c0} & non lancé \\
-N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & non lancé \\
+N4 Échelle fine & 02:54 & \texttt{91f897cc5071} & lancé \\
+N5 Mondes simulés & 03:46 & \texttt{1046545b17c0} & lancé \\
+N6 Probabiliste & 03:53 & \texttt{d1cc665cb864} & lancé \\
+N7 Addendum & 04:37 & \texttt{06ba47b91647} & lancé \\
+N8 Bande en $\sqrt h$ & 08:06 & \texttt{97ef367fd221} & lancé \\
 \bottomrule
 \end{tabular}
-\caption{Protocoles gelés. N5 et N6 ont été ajoutés après le lancement de N3, mais avant tout
+\caption{Protocoles gelés. N5 à N8 ont été ajoutés après le lancement de N3, mais avant tout
 calcul qui les concerne. Ils s'ajoutent aux autres sans les modifier.}\label{a3-tab:sha}
 \end{table}
 
@@ -1735,6 +2017,29 @@ Conséquence dérivée de la grille : à $h = 5$, seule l'origine 2021 a des err
 l'origine 2016). Les kinés (série depuis 2017) et les infirmiers libéraux (série jusqu'en 2023) en
 sont exclus\derive{}. N6 à $h = 5$ ne jugera donc d'abord que trois professions sur une origine.
 
+\subsection{Addendum N7}
+Gelé à 04:37, après le résultat de N3, il ajoute quatre volets.
+\begin{itemize}
+  \item \textbf{A.} La différence de différences de N3, mais au sein des bassins de vie 2022 (cellule
+        bassin $\times$ zone, $Y \ge 5$\suppose{} en 2008, grappes départementales, variance CR1). Mêmes
+        tests et seuils ; c'est un \emph{second} test du levier, déclaré comme tel.
+  \item \textbf{B.} Le verdict de N1 origine par origine (2016, 2018, 2021), pour tous les estimateurs
+        inscrits ; « stable » si le signe de $\Delta$ est le même aux trois origines.
+  \item \textbf{C.} Une bande « pente d'erreur » à armes égales :
+        $\log N \sim \mathcal N(\log \hat N, (s h)^2)$, $s$ étant la moyenne quadratique des erreurs
+        logarithmiques passées divisées par leur horizon ; CRPS gaussien.
+  \item \textbf{D.} Une cible ajoutée, l'ER~1319 pour les infirmiers libéraux \citep{a3-er1319}, et la
+        réconciliation des dentistes à 2050 par valeurs de Shapley sur trois facteurs (périmètre,
+        origine et fenêtre, niveau des entrées), avec un résidu toléré d'au plus 25\suppose{}~\%.
+\end{itemize}
+
+\subsection{N8 : bande en $\sqrt h$}
+Gelé à 08:06, après avoir vu que la bande linéaire en $h$ était trop large, N8 teste
+$\log N \sim \mathcal N(\log \hat N, s^2 h)$, avec $s^2$ la moyenne de $e^2/h'$ sur les erreurs passées :
+la variance d'une marche aléatoire. Origines, CRPS et seuils de couverture sont ceux de N6 et N7-C.
+L'hypothèse a été suggérée par les données et elle est testée sur les mêmes origines : seul le dépôt
+2027 la confirmera.
+
 \section{Résultats}\label{a3-sec:resultats}
 \subsection{Niveau 3, E1 : régulation infirmière}
 \begin{table}[h]
@@ -1841,15 +2146,103 @@ périmètres est le rétrécissement hiérarchique : $-\num{0.11}$\mesure{} $[\n
 \num{-0.02}]$. La clause d'instabilité du protocole joue pour les dentistes : la variante par défaut
 ne bat la naïve que sur 2\mesure{} origines sur 6. Aucune prévision n'est encore déposée pour 2027.
 
-\subsection{Niveaux 2, 4, 5 et 6}
-Ils ne sont pas lancés. Le code des niveaux 1, 2 et 4 a été vérifié sur données synthétiques
-seulement, pour ne rien voir avant le gel :
+\subsection{Niveau 3, second test : au sein des bassins de vie (N7-A)}
+Sur 135\mesure{} bassins de vie et 60\mesure{} départements, l'effet est de
+$\num{-32.2}$\mesure{} $[\num{-37.2} ; \num{-27.3}]$. Le test de tendances échoue de nouveau
+($F(4, 56) = \num{3.02}$, $p = \num{0.025}$\mesure{}), ainsi que le placebo de date ($+\num{2.6}$\mesure{}
+$[\num{0.1} ; \num{5.1}]$). Les placebos dentistes ($+\num{0.6}$\mesure{}) et zone~4
+($\num{-10.3}$\mesure{}, sous la moitié de l'effet) passent. Avant 2008, la zone sur-dotée gagnait
+environ 1\mesure{}~point par an sur sa voisine intermédiaire ; après 2011, elle décroche de 6 à
+8\mesure{}~points par an. \textbf{Design invalide : le levier IDE reste non validé.} Chez les kinés,
+l'écart des pentes est de $+\num{3.3}$\mesure{} $[\num{0.8} ; \num{5.8}]$ points par an, mais le test de
+tendances échoue à ce grain ($p = \num{0.059}$\mesure{}).
+
+\subsection{Niveau 1 : stabilité entre origines (N7-B)}
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Estimateur (périmètre privé) & 2016 & 2018 & 2021 \\
+\midrule
+Variante par défaut & $+\num{0.10}$ égalité & $\num{-0.22}$ égalité & $\num{-1.22}$ gagne \\
+Rétrécissement hiérarchique & $\num{-0.16}$ égalité & $\num{-0.43}$ égalité & $\num{-1.08}$ gagne \\
+APC des sorties & $\num{-0.06}$ égalité & $\num{-0.16}$ égalité & $\num{-0.96}$ gagne \\
+Rétention 60+ en tendance & $+\num{1.05}$ perd & $+\num{0.17}$ égalité & $\num{-1.25}$ gagne \\
+\bottomrule
+\end{tabular}
+\caption{$\Delta$ MAPE (points) contre la meilleure naïve, $h = 5$, par origine\mesure{}. Extrait.}
+\end{table}
+Au périmètre privé, la victoire poolée de la variante par défaut repose sur l'origine 2021. Le
+classement des estimateurs change presque complètement d'une origine à l'autre (τ de Kendall de
+\num{0.07} à \num{0.29}\mesure{}). Sur l'ancien périmètre, la variante par défaut garde le même signe
+aux trois origines.
+
+\subsection{Niveau 5 : mondes simulés}
+Le moteur est exact dans le monde à l'équilibre (erreur $< 10^{-13}$\mesure{}~\%). Il échoue dans deux
+mondes :
 \begin{itemize}
-  \item un estimateur oracle gagne au critère N1, et la référence contre elle-même finit à égalité ;
-  \item sur un modèle jouet, l'écart à $N^\star = Q \cdot C$ est nul\mesure{} ;
-  \item avec une erreur de Poisson pure, $N_{\min}$ tombe dans la classe 21--50\mesure{}, ce qui
-        est cohérent avec la dérivation ($N \ge 26$).
+  \item \textbf{monde bruité} : 9 réplications sur 20 sous 1~\% d'erreur nationale à 15~ans, et une
+        MAPE départementale de \num{10.2}\mesure{}~\% contre un plancher de Poisson de
+        \num{5.7}\derive{}~\% ;
+  \item \textbf{cohorte nombreuse} : les 60~ans et plus sont \emph{sous}-estimés de
+        \num{34.5}\mesure{}~\% à 5~ans, contre la prédiction reprise de l'observatoire.
 \end{itemize}
+Les mondes à entrées croissantes, à saut d'entrées et à report du départ donnent le signe prédit
+(20 réplications sur 20). Avec des entrées en hausse de 3~\% par an, l'ampleur atteint
+$\num{-19.8}$\mesure{}~\%, au-delà de la tolérance autour de $-\num{12.4}$~\%. Une même cause explique
+les deux échecs : la règle « rétention plafonnée à 1, excédent compté comme entrée » coupe le bruit
+vers le bas et transforme en entrées tout excédent, y compris celui d'une cohorte qui passe.
+
+\subsection{Niveau 6 et N7-C : prévision probabiliste}
+Avec la bande empirique au même horizon (origine 2021 seulement), la persistance a le meilleur CRPS
+(\num{0.0633}\mesure{}) ; la variante par défaut perd ($+\num{0.0098}$ $[\num{0.0037} ; \num{0.0161}]$).
+Toutes les bandes sont trop étroites : l'intervalle « 80~\% » couvre de 56 à 70\mesure{}~\% des cas.
+Avec la bande « pente d'erreur » (origines 2017--2021), tous les modèles battent la tendance
+($\Delta \approx -\num{0.006}$\mesure{}), mais la bande est trop large : l'intervalle « 80~\% »
+couvre environ 96\mesure{}~\%. Les tirages propres de l'APC (100 par cellule, moins que les 200
+prévus par N6) font jeu égal avec la persistance ($+\num{0.0014}$ $[\num{-0.0033} ; \num{0.0068}]$),
+mais leur intervalle « 80~\% » ne couvre que 54\mesure{}~\% des cas. Aucune de ces bandes n'est donc publiable sous son niveau nominal. La SBC passe
+pour les cinq taux de rétention ($p$ de \num{0.14} à \num{0.94}\mesure{}) et échoue pour les entrées
+($p \approx 3 \cdot 10^{-46}$\mesure{}, rang moyen \num{0.22}) : le bruit biaise les entrées vers le
+haut, comme dans le monde bruité.
+
+\subsection{Niveau 2 : DREES à 2050 (N2-A, N7-D)}
+Faute d'une série ouverte des quotas 2016--2020, la reproduction de DD76 a été lancée avec des
+entrées plates (moyenne 2016--2020), version affaiblie du protocole. Elle échoue : en 2050, le ratio
+$N(t)/N(2020)$ est inférieur de \num{14.1} (dentistes), \num{15.0} (pharmaciens) et \num{17.4}\mesure{}~\%
+(sages-femmes) à celui de DD76 ; les formes (creux, plateau) sont respectées. Une variante à entrées
+par la filière dépasse DD76 de 14 à 15\mesure{}~\% (analyse exploratoire, qui utilise des inscrits
+connus après 2020). L'ER~1319 part du même effectif 2021 que nous (\num{98631}\mesure{}) ; en 2050 nous
+sommes \num{25.2}\mesure{}~\% en dessous, mais l'observé 2023 est déjà \num{5.9}\mesure{}~\% sous
+l'ER~1319. Pour les dentistes, notre cible à entrées récentes (\num{81491}\mesure{} en 2050) dépasse
+DD76 (\num{61800}) de \num{19691}. Les valeurs de Shapley attribuent \num{13056}\mesure{} à l'origine et
+à la fenêtre, \num{11658}\mesure{} aux entrées récentes et $-\num{1877}$\mesure{} au périmètre ; le résidu
+(16\derive{}~\%) passe le seuil. La variante par défaut, à entrées moyennes, donne
+\num{61964}\mesure{}, proche de DD76.
+
+\subsection{Niveau 2 : cas limites (N2-B)}
+Sur le jumeau par défaut, au périmètre privé, les trois cas limites passent pour les cinq
+professions. À l'origine, l'état reproduit l'observé (test faible, puisque l'état en est construit).
+À 200 ans, l'effectif égale $Q \cdot C$ à $-\num{0.05}$ à $-\num{0.46}$\mesure{}~\% près ; l'écart vient
+du plancher à zéro. Un état initial divisé par deux ne change rien. Une hausse de capacité de
+formation n'agit qu'à $o + L_p + 1$\mesure{}, comme prévu.
+
+\subsection{Niveau 4 : échelle fine}
+Avec l'estimateur par défaut (total départemental de la cible, oracle, $\times$ part communale tenue),
+le 80\textsuperscript{e} centile de l'erreur à 5~ans passe de 40--58\mesure{}~\% pour 3 à 5
+professionnels à 4--15\mesure{}~\% au-delà de 200. La règle fixée d'avance donne
+$N_{\min} = 51$\mesure{}, imposé par les kinés aux origines 2018 et 2020 ; il serait de 21 pour les
+dentistes et les infirmiers seuls. La prédiction dérivée ($N_{\min} \ge 16$) tient. La bande
+P10--P90 par classe est calibrée dans 14 classes sur 21\mesure{}. L'oracle retire l'erreur
+départementale : l'erreur réelle est plus grande.
+
+\subsection{N8 et dépôt 2027}
+Avec la bande en $\sqrt h$, la variante par défaut couvre \num{49.2}\mesure{}~\% des cas à 50~\% et
+\num{75.9}\mesure{}~\% à 80~\% : elle est calibrée, et elle bat la tendance en CRPS
+($\num{-0.0045}$ $[\num{-0.0070} ; \num{-0.0020}]$\mesure{}). Le PIT reste chargé dans sa première
+classe : les valeurs réelles sous la bande sont plus fréquentes que prévu. Les prévisions de
+l'origine 2026 pour 2027, 2028 et 2030, avec leurs quantiles, sont déposées (empreinte
+\texttt{ca036374d216}) et seront jugées à la publication du RPPS 2027.
 
 \section{Validation et menaces à la validité}\label{a3-sec:menaces}
 \subsection{Cas d'étude : des tests vrais par construction}
@@ -1901,6 +2294,10 @@ mesure une identité, passe par construction. Nos protocoles s'en gardent de qua
         origines, si bien que l'IC est probablement trop étroit\suppose{}.
   \item \textbf{Ordre de gel.} N5 a été gelé après le lancement de N3. Les deux niveaux ne partagent
         ni données ni seuil.
+  \item \textbf{Seconds tests.} N7-A est un second essai sur le même levier : la protection du
+        pré-enregistrement est entamée. Il échoue de toute façon.
+  \item \textbf{Forme affaiblie de N2.} Faute de série de quotas, les entrées de DD76 ne sont pas
+        reproduites ; l'échec de N2-A mêle l'écart de moteur et l'écart d'hypothèse.
   \item \textbf{Seuils choisis.} Les seuils de 3~\% (N2), 25~\% (N4) et $p \ge 0{,}10$ (N3) sont des
         choix argumentés, pas des dérivations.
 \end{itemize}
@@ -1909,10 +2306,18 @@ mesure une identité, passe par construction. Nos protocoles s'en gardent de qua
 Toutes les commandes se lancent depuis la racine du dépôt. \texttt{scipy} est ajouté à la volée,
 sans toucher au \texttt{pyproject.toml} partagé.
 \begin{verbatim}
-# N3 (~3 s), analyses exploratoires, auto-test du code N1, N2, N4
+# N3, N3 exploratoire, auto-test, N7-A, N7-B, N6 et N7-C, N5 et SBC, N2
 PYTHONPATH=v2 uv run --with scipy python -m validation.did
 PYTHONPATH=v2 uv run --with scipy python -m validation.did_explore
 PYTHONPATH=v2 uv run --with scipy python -m validation.selftest
+PYTHONPATH=v2 uv run --with scipy python -m validation.did_commune
+PYTHONPATH=v2 uv run --with scipy python -m validation.stability prive
+PYTHONPATH=v2 uv run --with scipy python -m validation.probabilistic
+PYTHONPATH=v2 uv run --with scipy python -m validation.worlds all
+PYTHONPATH=v2 uv run --with scipy python -m validation.dd76
+PYTHONPATH=v2 uv run --with scipy python -m validation.limits_twin
+PYTHONPATH=v2 uv run --with scipy python -m validation.fine_scale_run
+PYTHONPATH=v2 uv run --with scipy python -m validation.depot
 # empreintes des protocoles gelés
 shasum -a 256 v2/validation/preregistered/*.md
 \end{verbatim}
@@ -1927,40 +2332,45 @@ shasum -a 256 v2/validation/preregistered/*.md
           \item \texttt{data/processed/stock.parquet} (RPPS, publié le 2026-07-02).
         \end{itemize}
   \item \textbf{Sorties} : \texttt{v2/validation/out/}.
-  \item \textbf{Code} : dossier \texttt{v2/validation/}, avec \texttt{did.py},
-        \texttt{forecast.py}, \texttt{limits.py}, \texttt{fine\_scale.py} et
-        \texttt{registry.py}.
+  \item \textbf{Code} : les modules Python du dossier \texttt{v2/validation/} (un par niveau,
+        plus le registre des estimateurs).
+  \item \textbf{Autres données} : tables communales de l'axe~4
+        (\texttt{v2/data/processed/}) ; projections DREES des infirmières 2024 (data.drees, export
+        CSV, extrait le 2026-11-14).
   \item \textbf{Version} : le dépôt n'était pas encore versionné au moment des calculs ; les
         empreintes des protocoles tiennent lieu de version.
 \end{itemize}
 
 \section{Conclusion}
-La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en six
-niveaux, chacun gelé avant ses résultats et doté de son test d'échec. Le premier levier testé
-illustre l'intérêt du gel. L'effet de la régulation infirmière est grand, de même signe que la
-littérature, et résiste à trois placebos. Il n'est pourtant pas validé, parce qu'un test fixé
-d'avance échoue de peu. Le gel interdit de relâcher ce seuil après coup ; on ne peut le revoir que
-par un second test, déclaré comme tel. Chez les kinés, la prédiction de marche et d'arrêt tient.
+La validation d'un jumeau à 2050 ne peut pas être un seul backtest. Nous l'avons découpée en sept
+protocoles, gelés avant leurs résultats et appliqués tels quels. Presque tous les tests qui pouvaient
+échouer ont échoué, et c'est l'information principale :
+\begin{itemize}
+  \item le levier IDE a un effet grand et constant, mais deux designs fixés d'avance refusent de le
+        valider ;
+  \item la précision par département n'est acquise que sur une origine ;
+  \item le moteur par défaut confond bruit, passage de cohorte et entrées ;
+  \item seule la bande en $\sqrt h$ est calibrée, sous réserve du dépôt 2027 ;
+  \item à 2050, l'hypothèse d'entrées domine tout, de $-15$ à $+15$\mesure{}~\% autour de DD76.
+\end{itemize}
 
 \paragraph{Ce que cela change.}
 \begin{itemize}
-  \item Le module \texttt{regulation} (axe~0) reste non validé. La valeur exploratoire
-        $\theta \approx \num{0.8}$ entre dans les fiches de l'axe~1 comme valeur \emph{supposée}.
-  \item Aucun chiffre 2050 n'est montré sans le niveau~2.
-  \item Sous $N_{\min}$, aucune projection communale n'est affichée sans bande.
+  \item Aucun chiffre 2050 n'est citable. Seule la bande en $\sqrt h$ peut être affichée sous son niveau
+        nominal, et sous 51 professionnels une projection communale ne s'affiche pas sans elle.
+  \item Les axes 0 et 2 doivent séparer les entrées de la rétention.
+  \item L'axe~5 doit vérifier la calibration de sa composante (b), linéaire en $h$.
+  \item Le niveau d'entrées de référence (moyenne de fenêtre ou années récentes) est une décision qui
+        revient à l'équipe : il fait passer les dentistes en 2050 de \num{62000} à \num{81000}\mesure{}.
 \end{itemize}
 
 \paragraph{Questions ouvertes, avec leur coût (temps de travail estimé).}
 \begin{itemize}
-  \item Pré-enregistrer puis lancer un second test IDE ($\Delta^{RM}$, $\bar M$ fixé d'avance) :
-        environ 30~min.
-  \item Pré-enregistrer et lancer $\theta$ pour E2 (kinés) : environ 15~min.
+  \item Troisième test du levier IDE (contrôle synthétique par bassin de vie) : environ 1~h.
+  \item Série ouverte des quotas 2016--2020 pour une reproduction fidèle de DD76 : environ 45~min.
   \item Dater le jeu Atlasanté contre un arrêté ARS de 2012 : environ 30~min.
-  \item Déposer les prévisions 2027--2030 : environ 5~min.
-  \item Lancer N2 : environ 1~h~15.
-  \item Lancer N4 : environ 15~min.
-  \item Lancer N5 : environ 1~h.
-  \item Écrire et lancer N6 (CRPS, couverture) : environ 40~min ; SBC après N5, environ 45~min.
+  \item $N_{\min}$ avec la projection départementale réelle au lieu de l'oracle : environ 15~min.
+  \item Score du dépôt 2027 (juillet 2027) : environ 15~min.
 \end{itemize}
 
 
@@ -2450,9 +2860,9 @@ uv run python v2/data/build_infirmiers.py # ~2 s
 
 
 \part{Axe 5 --- sensibilité et incertitude}
-\noindent\textit{Article d'origine : « Ce qui déplace l'effectif « libéral » en 2050 : criblage de Morris et indices de Sobol sur un jumeau numérique de l'offre de soins » (\texttt{v2/papers/axe5-sensibilite/}).}
+\noindent\textit{Article d'origine : « Ce qui déplace l'effectif \enquote{libéral} en 2050 : criblage de Morris et indices de Sobol sur un jumeau numérique de l'offre de soins » (\texttt{v2/papers/axe5-sensibilite/}).}
 
-\begin{quote}\small\textbf{Résumé de l'axe.} On cherche quels hyperparamètres déplacent l'effectif du secteur privé (« libéral ») de cinq professions de santé
+\begin{quote}\small\textbf{Résumé de l'axe.} On cherche quels hyperparamètres déplacent l'effectif du secteur privé (\enquote{libéral}) de cinq professions de santé
 en France (sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes, infirmiers) en 2030, 2040
 et 2050. Le modèle est un jumeau numérique stock-flux par département, âge et sexe. Dix facteurs au plus par
 profession --- choix d'estimation, ambiguïté public/privé des données, paramètres sourcés et leviers de politique
@@ -2463,7 +2873,11 @@ formation~$\to$~entrées (filière 0,55\mesure{} chez les dentistes ; quotas 0,1
 fenêtre d'ajustement (0,53\mesure{} chez les kinésithérapeutes et les infirmiers). Le cumul emploi-retraite ne
 déplace pas la sortie (effet $\le 0{,}25$\,\%\mesure{}). Les fourchettes à 2050 sont données en deux composantes
 séparées : propagation des incertitudes (de $-17$ à $+34$\,\%\mesure{}) et erreur de backtest extrapolée
-($\pm 9$ à $\pm 66$\,\%\derive{}). Limite principale : aucun backtest n'existe au-delà de 10 ans.\end{quote}
+($\pm 9$ à $\pm 66$\,\%\derive{}). Limite principale : aucun backtest n'existe au-delà de 10 ans. Avec les leviers branchés (formation, diplômés étrangers, régulation ; $N = 512$), la
+décision porte en 2050 une part de variance plus grande que la connaissance pour les infirmiers (0,88 contre
+0,12\mesure{}) et les kinésithérapeutes (0,71 contre 0,15\mesure{}), mais pas pour les sages-femmes ni les dentistes
+(0,41 contre 0,57--0,59\mesure{}) ; au département, le modèle n'est assez sûr pour décider que dans 57\mesure{}
+départements pour les infirmiers et 26\mesure{} pour les kinésithérapeutes.\end{quote}
 
 \section{Introduction}
 Le jumeau numérique de l'offre de soins (axe~0 du projet) projette l'effectif par profession, secteur, territoire,
@@ -2482,7 +2896,8 @@ lesquels de ces paramètres méritent une recherche de source plus fine, et quel
 
 \section{Travaux existants}
 La méthode des effets élémentaires de \citet{a5-morris1991} crible à faible coût les entrées d'un modèle déterministe
-par des plans un-facteur-à-la-fois randomisés. Les indices de \citet{a5-sobol2001} rapportent la variance partielle
+par des plans un-facteur-à-la-fois randomisés ; la mesure $\mu^*$ (moyenne des effets élémentaires absolus) vient
+de \citet{a5-campolongo2007}. Les indices de \citet{a5-sobol2001} rapportent la variance partielle
 due à une entrée (ou à un groupe) à la variance totale de la sortie. L'indice total, qui inclut toutes les
 interactions, s'estime par le plan et l'estimateur comparés par \citet{a5-saltelli2010} ; nous utilisons l'estimateur
 de \citet{a5-jansen1999} pour l'indice total et celui de \citet{a5-saltelli2010} pour le premier ordre. À notre
@@ -2493,7 +2908,7 @@ professions de santé en France ; nous ne revendiquons pas de nouveauté sur ce 
 \begin{itemize}
   \item \textbf{Effectifs privés par département, âge et sexe, 2012--2026} : DREES, RPPS, croisé avec le secteur
         d'activité et FINESS (axe~4, fichier \texttt{secteur\_stock.parquet}). Les salariés
-        « ambigus » sont répartis selon une part privée minimale, centrale ou maximale.
+        \enquote{ambigus} sont répartis selon une part privée minimale, centrale ou maximale.
   \item \textbf{Infirmiers} : le fichier par secteur n'a ni âge ni sexe. On utilise les infirmiers libéraux (SNDS,
         2012--2023, v1), soit \num{98854}\mesure{} en 2023 contre \num{277788}\mesure{} dans tout le privé
         (environ 36\,\%\derive{}).
@@ -2515,7 +2930,7 @@ le public. Origine 2026 (infirmiers : 2023).
 
 \subsection{Facteurs}
 Le tableau~\ref{a5-tab:fac} liste les facteurs. Les niveaux discrets sont équiprobables\suppose{}. La variante
-d'entrées « tendance » (pente linéaire prolongée) est exclue du plan : elle multiplie $Y_{2050}$ par 4 à
+d'entrées \enquote{tendance} (pente linéaire prolongée) est exclue du plan : elle multiplie $Y_{2050}$ par 4 à
 10\mesure{} avec une fenêtre de 2 ans (sages-femmes : \num{183200} contre \num{19000}\mesure{}).
 
 \begin{table}[h]\centering\small
@@ -2535,12 +2950,12 @@ multiplicateur de cumul & levier & $[1 ; 2]$ & levier \\
 quotas (après le délai $L_p$) & levier & $[0{,}8 ; 1{,}2]$ & levier \\
 \bottomrule
 \end{tabular}
-\caption{Facteurs de l'analyse. Famille « tout » : tous les facteurs ; famille « incertitude » : leviers au
+\caption{Facteurs de l'analyse. Famille \enquote{tout} : tous les facteurs ; famille \enquote{incertitude} : leviers au
 tendanciel.}\label{a5-tab:fac}
 \end{table}
 
 \subsection{Morris puis Sobol}
-\textbf{Morris} : $r = 30$ trajectoires, $p = 4$ niveaux, pas $\Delta = 2/3$ ; on rapporte $\mu^*$, moyenne des
+\textbf{Morris} : $r = 30$ trajectoires, $p = 4$ niveaux, pas $\Delta = 2/3$ ; on rapporte $\mu^*$ \citep{a5-campolongo2007}, moyenne des
 effets élémentaires absolus, en \% de $Y$ tendanciel. \textbf{Sobol} : matrices $A$, $B$ et $A_B^{(i)}$
 ($N = 2048$, soit $N(k+2)$ runs), $Y$ centré,
 \[
@@ -2551,7 +2966,7 @@ intervalles à 95\,\% par 500 rééchantillonnages bootstrap des lignes, graine 
 Sobol porte sur tous les facteurs.
 
 \subsection{Fourchettes à 2050}
-\textbf{(a) Propagation} : quantiles 5 et 95\,\% de $Y$ sur les $2N$ tirages de la famille « incertitude ».
+\textbf{(a) Propagation} : quantiles 5 et 95\,\% de $Y$ sur les $2N$ tirages de la famille \enquote{incertitude}.
 \textbf{(b) Backtest extrapolé} : banc à origines glissantes (protocole N1 de l'axe~3, $h \in \{1,3,5,8,10\}$),
 erreur relative du total national ; pente $a$ de $|\text{erreur}| \propto h$ (moindres carrés sans constante),
 puis $\pm 1{,}6\,a\,h$. Le facteur 1,6, repris d'un outil de l'équipe pour couvrir environ 8 cas sur 10, est cité,
@@ -2565,7 +2980,7 @@ dès que $S_T \ge 0{,}05$\mesure{}.
 \begin{table}[h]\centering\small
 \begin{tabular}{p{2.9cm}p{5.8cm}p{5.8cm}}
 \toprule
-Profession & Famille « incertitude » ($S_T$ 2050) & Famille « tout » ($S_T$ 2050) \\
+Profession & Famille \enquote{incertitude} ($S_T$ 2050) & Famille \enquote{tout} ($S_T$ 2050) \\
 \midrule
 Sages-femmes & part privée 0,91\mesure{} & part privée 0,66\mesure{} ; quotas 0,24\mesure{} \\
 Dentistes & filière 0,55\mesure{} ; part privée 0,26\mesure{} ; fenêtre 0,13\mesure{} & filière 0,44\mesure{} ; part privée 0,21\mesure{} ; quotas 0,19\mesure{} \\
@@ -2614,6 +3029,85 @@ dentistes 1,10, 1,39 et 1,85\mesure{} fois l'effet du correctif $e' = e/(1+\Delt
 Après correction (code du 2026-11-14), le rapport tombe à 1,05--1,16\mesure{}, écart expliqué par un demi-effet
 appliqué aux 55--59 ans. Tous les indices sont calculés sur le code corrigé.
 
+\section{Leviers branchés : la décision pèse-t-elle plus que l'ignorance ?}\label{a5-sec:lev}
+\subsection{Plan}
+La composition \enquote{leviers} du jumeau ajoute la formation (vivier relié aux entrées), les diplômés étrangers et la
+régulation, avec un tendanciel identique au stock-flux. On sépare deux groupes de facteurs. Le groupe
+\emph{décision} réunit ce que règle le décideur : quotas et capacité de formation $\times[0{,}8 ; 1{,}2]$, report de
+la retraite $[0 ; 2]$ ans, cumul emploi-retraite $\times[0{,}5 ; 2]$, départs avant 60 ans $\times[0{,}5 ; 1{,}5]$,
+abandon en formation infirmière $[0{,}056 ; 0{,}105]$ par an\derive{}, diplômés étrangers $\times[0{,}5 ; 2]$ et part
+des zones régulées $[0 ; 1]$. Le groupe \emph{connaissance} réunit les facteurs de la section~\ref{a5-sec:res} et la
+réponse des acteurs à la régulation (part contraignante $\theta \in [0{,}5 ; 1]$\suppose{}, destination des entrants
+bloqués, part exemptée). Les indices de groupe s'obtiennent en remplaçant d'un bloc les colonnes du groupe :
+$S_G$ par l'estimateur de \citet{a5-saltelli2010}, $S_{T,G}$ par celui de \citet{a5-jansen1999}. Pour les infirmiers, le
+périmètre devient le privé complet (table de l'axe~4 sous hypothèse d'indépendance secteur--âge--sexe). $N = 512$
+par profession, soit \num{8693} à \num{11253}\mesure{} runs ; un run coûte 0,12 à 0,7\,s\mesure{} selon la charge.
+
+\subsection{Parts de variance}
+\begin{table}[h]\centering\small
+\begin{tabular}{lccc}
+\toprule
+Profession & Décision $S_G$ (IC) & Connaissance $S_G$ (IC) & 2030 : déc. / conn. \\
+\midrule
+Infirmiers (privé) & 0,88\mesure{} [0,77--0,99] & 0,12\mesure{} [0,08--0,15] & 0,81 / 0,14\mesure{} \\
+Kinésithérapeutes & 0,71\mesure{} [0,60--0,82] & 0,15\mesure{} [0,10--0,20] & 0,41 / 0,64\mesure{} \\
+Pharmaciens & 0,48\mesure{} [0,39--0,57] & 0,52\mesure{} [0,44--0,61] & 0,04 / 0,91\mesure{} \\
+Sages-femmes & 0,41\mesure{} [0,33--0,48] & 0,57\mesure{} [0,49--0,63] & 0,03 / 1,04\mesure{} \\
+Dentistes & 0,41\mesure{} [0,33--0,50] & 0,59\mesure{} [0,50--0,67] & 0,09 / 0,88\mesure{} \\
+\bottomrule
+\end{tabular}
+\caption{Part de la variance de l'effectif privé national en 2050 (sauf dernière colonne) due à la décision et à la
+connaissance. L'interaction ($1 - S_{\text{déc}} - S_{\text{conn}}$) reste $\le 0{,}14$\mesure{}.}\label{a5-tab:groupes}
+\end{table}
+
+En 2030, l'ignorance l'emporte partout sauf chez les infirmiers. En 2050, le choix pèse plus que l'ignorance pour
+les infirmiers et les kinésithérapeutes ; pour les pharmaciens, les deux sont à égalité ; pour les sages-femmes et
+les dentistes, l'incertitude reste plus grande que l'effet du choix. Parmi les leviers, quotas (indice total 0,14 à
+0,39\mesure{}) et capacité de formation (0,08 à 0,36\mesure{}) dominent ; le report de la retraite ($\le 0{,}01$),
+le cumul (0,00) et la part des zones régulées ($\le 0{,}01$\mesure{}) ne déplacent pas le total national, la
+régulation ne faisant que redistribuer entre territoires.
+
+\subsection{Fourchettes départementales}
+Pour chaque département, la largeur P5--P95 de l'effectif 2050 sur 500 tirages de la connaissance seule (décisions au
+statu quo) est rapportée au tendanciel, puis comparée à un seuil dérivé : deux fois l'effet national de quotas
+$\times 1{,}2$, soit 22,6 à 27,4\,\%\derive{}. Sous ce seuil, l'effet du levier le plus fort dépasse la demi-bande
+de connaissance (figure~\ref{a5-fig:carte}). Le modèle n'est assez sûr pour décider que dans 57\mesure{} départements
+pour les infirmiers et 26\mesure{} pour les kinésithérapeutes ; aucun pour les sages-femmes, dentistes et
+pharmaciens (largeurs médianes 66, 69 et 55\,\%\mesure{}). La composante backtest au département (médiane $\pm 32$ à
+$\pm 77$\,\%\derive{}) n'est pas utilisable pour les infirmiers ($\pm 460$\,\%\derive{}) : la ventilation
+départementale de la table privée est suspecte, alors que la série nationale est lisse.
+
+\begin{figure}[h]\centering
+\resizebox{\textwidth}{!}{\input{../axe5-sensibilite/figures/carte_dep.tex}}
+\caption{Largeur relative P5--P95 de l'effectif privé 2050 par département (connaissance seule), rapportée au seuil
+\enquote{assez sûr pour décider}. Hexagone ; aucun backtest n'existe à cet horizon.}\label{a5-fig:carte}
+\end{figure}
+
+\subsection{Convergence}
+Les indices sont recalculés sur les $N$ premières lignes de chaque plan (300 tirages bootstrap). Section~\ref{a5-sec:res}
+($N = 2048$) : la largeur maximale de l'intervalle de $S_T$ (facteurs $S_T \ge 0{,}05$ en 2050) passe de 0,19--0,41 à
+$N = 128$ à 0,05--0,09\mesure{} à $N = 2048$, et l'écart à la valeur finale est $\le 0{,}021$\mesure{} dès
+$N = 1024$. Leviers ($N = 512$) : largeur maximale 0,12--0,17\mesure{}, écart entre $N = 256$ et $N = 512$
+$\le 0{,}05$\mesure{}, aucun intervalle plus large que l'indice sur 61 facteurs. $N = 512$ suffit pour les parts de
+groupe et le classement, pas pour départager deux leviers à $\pm 0{,}08$ près.
+
+\subsection{Où mettre l'effort de recherche}
+\begin{table}[h]\centering\small
+\begin{tabular}{p{4cm}p{3.1cm}p{4.5cm}p{2.2cm}}
+\toprule
+Source d'incertitude & $S_T$ 2050 & Moyen (axe, prix\suppose{}) & Gain\derive{} \\
+\midrule
+Filière (le vivier suit-il les entrées ?) & CD 0,33 ; PH 0,17\mesure{} & relier vivier et entrées, valider au banc (axe 2, $\sim$1\,h) & 0,33 ; 0,17 \\
+Part privée des salariés ambigus & SF 0,50 ; PH 0,26 ; CD 0,14\mesure{} & secteur par personne, FINESS, SAE (axe 4, $\sim$1--2\,h) & 0,25 ; 0,13 ; 0,07 \\
+Fenêtre et entrées, ensemble & 0,05--0,12\mesure{} & trancher au banc N1 (axes 2--3, $\sim$30\,min) & 0,05--0,12 \\
+Âges fins dans les tranches & IDE 0,05\mesure{} & brancher A1b (axe 2, $\sim$45\,min) & 0,04 \\
+Cumul, $\theta$, destination, exemption & $\le 0{,}011$\mesure{} & inutile d'approfondir & $\approx 0$ \\
+\bottomrule
+\end{tabular}
+\caption{Priorisation. Gain = $S_T \times$ fraction réductible (1 pour un choix tranché par le banc, 0,75 pour une
+plage divisée par deux, 0,5 pour un encadrement resserré).}\label{a5-tab:prio}
+\end{table}
+
 \section{Validation et menaces à la validité}
 \begin{itemize}
   \item \textbf{Les plages font les indices.} L'équiprobabilité des fenêtres (2 ans pèse autant que 5) est
@@ -2625,6 +3119,9 @@ appliqué aux 55--59 ans. Tous les indices sont calculés sur le code corrigé.
   \item \textbf{Extrapolation} : la composante (b) prolonge linéairement des erreurs observées jusqu'à $h = 10$
         vers $h = 24$--27.
   \item \textbf{Échelle} : sortie nationale ; au département, le classement peut différer (non mesuré).
+  \item \textbf{Leviers} : les infirmiers n'ont pas de facteur \enquote{données} (hypothèse d'indépendance non variée),
+        leur part \enquote{connaissance} est sous-estimée ; les parts de groupe dépendent des amplitudes jouables ;
+        quotas et capacité sont deux mécanismes d'une même politique, comptés tous deux.
   \item \textbf{Code en mouvement} : le jumeau a changé deux fois pendant l'analyse ; tout a été relancé sur la
         dernière version.
 \end{itemize}
@@ -2632,12 +3129,20 @@ appliqué aux 55--59 ans. Tous les indices sont calculés sur le code corrigé.
 \section{Reproductibilité}
 Depuis la racine du dépôt (graine \num{20261114}, \num{201276} runs, \SI{1187}{\second}\mesure{} sur une machine chargée) :
 \begin{verbatim}
-PYTHONPATH=v2:. uv run python -m sensibilite.run --n 2048 --r 30
+PYTHONPATH=<snap>:v2:. uv run python -m sensibilite.run --n 2048 --r 30
 PYTHONPATH=v2:. uv run python -m sensibilite.backtest
 PYTHONPATH=v2:. uv run python -m sensibilite.tendance
 PYTHONPATH=v2:. uv run python -m sensibilite.retraite_b1
 PYTHONPATH=v2:. uv run python -m sensibilite.resume
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.leviers \
+    --n 512 --mc 500 --profs <p> --tag _<p>
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.carte backtest
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.carte carte
+PYTHONPATH=<snap2>:v2:. uv run python -m sensibilite.convergence
+PYTHONPATH=v2:. uv run python -m sensibilite.priorites
 \end{verbatim}
+Partie leviers : \texttt{<snap2>} = \texttt{git archive} de \texttt{v2/jumeau} au commit 4721268 (empreinte
+\texttt{a8cb2750}).
 Le jumeau est figé dans un instantané (empreinte SHA-256 tronquée \texttt{c2dc7601} des sources triées ; critères C1--C14 au vert). Les sorties brutes ($X$, $Y$ de chaque plan) sont dans \url{v2/sensibilite/out/Y_*.npz}. Le rapport source est \url{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md}. Les références ont été vérifiées sur leurs
 métadonnées et leur résumé.
 
@@ -2648,6 +3153,9 @@ sages-femmes et pharmaciens d'abord ($\approx$ 1--2\,h\suppose{}) ; (2) la trans
 ($\approx$ 2\,h\suppose{}) ; (3) la distribution des âges dans les tranches ($\approx$ 45\,min\suppose{}) ;
 (4) l'âge de retraite, en faible priorité. Le cumul emploi-retraite ne déplace pas la sortie : inutile de
 l'approfondir. La fenêtre et la variante d'entrées sont des choix d'estimation à trancher par le banc de
-l'axe~3, pas par une source.
+l'axe~3, pas par une source. Avec les leviers branchés, la priorité devient : (1) relier le vivier aux entrées et le valider au
+banc (filière, dentistes et pharmaciens) ; (2) la part privée des salariés ambigus ; (3) fenêtre et entrées,
+tranchées ensemble au banc. Pour les sages-femmes et les dentistes, réduire l'incertitude vaut autant que choisir
+un levier ; pour les infirmiers et les kinésithérapeutes, le choix du décideur domine.
 
 
