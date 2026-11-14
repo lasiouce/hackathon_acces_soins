@@ -9,7 +9,7 @@ comprises), le moyen de la réduire et son prix (estimés, voir le rapport), et 
   gain = ST × fraction réductible   (fraction : 1 pour un choix d'estimation tranché par le banc, 0,75 pour une
                                      plage divisée par deux, effet linéaire, dérivé ; 0,5 pour une donnée
                                      dont on ne peut que resserrer l'encadrement, supposé)
-Run (racine) : PYTHONPATH=v2:. uv run python -m sensibilite.priorites -> out/parts_variance.csv, out/priorites.csv
+Run (racine) : PYTHONPATH=v2:. uv run python -m sensibilite.priorites [dd76|interface] -> out/parts_variance.csv, out/priorites.csv
 """
 from pathlib import Path
 
@@ -29,18 +29,22 @@ SOURCES = {
     "part_cumul": ("cumul emploi-retraite par caisse, millésime récent", "axe 1", "~30 min", 0.75),
     "theta": ("θ hors IDE : DiD sur le zonage SF/MK/CD (axe 3, N3)", "axe 3", "~1 h", 0.75),
     "repartition": ("destination des entrants bloqués : flux d'installation communaux (axe 4)", "axe 4", "~1 h", 0.5),
+    "flux_etrangers": ("flux annuel de diplômés à l'étranger : série ouverte par lieu de diplôme (open.md, axe 2)", "axe 1/2",
+                       "~1 h", 0.5),
     "part_exemptee": ("part des spécialistes parmi les entrants dentistes (RPPS par spécialité)", "axe 1", "~20 min", 0.75),
 }
 
 
-def main():
-    s = pd.concat([pd.read_csv(f) for f in sorted(OUT.glob("leviers_sobol_*.csv"))])
+def main(variante: str = "dd76"):
+    fs = sorted(f for f in OUT.glob("leviers_sobol_*.csv") if ("_interface_" in f.name) == (variante == "interface"))
+    s = pd.concat([pd.read_csv(f) for f in fs])
+    suf = "" if variante == "dd76" else "_interface"
     g = s[s.groupe == "G"].pivot_table(index=["profession", "annee"], columns="facteur", values=["S1", "ST"])
     parts = pd.DataFrame({"S_decision": g["S1"]["[decision]"], "S_connaissance": g["S1"]["[connaissance]"],
                           "ST_decision": g["ST"]["[decision]"], "ST_connaissance": g["ST"]["[connaissance]"]})
     parts["interaction"] = 1 - parts.S_decision - parts.S_connaissance
     parts["decision_pese_plus"] = parts.S_decision > parts.S_connaissance
-    parts.round(3).to_csv(OUT / "parts_variance.csv")
+    parts.round(3).to_csv(OUT / f"parts_variance{suf}.csv")
     print(parts.round(2).to_string())
     k = s[(s.groupe == "C") & (s.annee == 2050)]
     rows = []
@@ -49,11 +53,12 @@ def main():
         rows.append(dict(profession=r.profession, source=r.facteur, ST_2050=r.ST, ST_lo=r.ST_lo, ST_hi=r.ST_hi,
                          moyen=moyen, axe=axe, prix=prix, fraction_reductible=frac, gain=r.ST * frac))
     p = pd.DataFrame(rows).sort_values(["profession", "gain"], ascending=[True, False])
-    p.round(3).to_csv(OUT / "priorites.csv", index=False)
+    p.round(3).to_csv(OUT / f"priorites{suf}.csv", index=False)
     print(p[p.ST_2050 >= 0.02].round(2).to_string(index=False))
     d = s[(s.groupe == "D") & (s.annee == 2050)].pivot_table(index="facteur", columns="profession", values="ST")
     print("\nLeviers, ST à 2050 :\n", d.round(2).to_string())
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(sys.argv[1] if len(sys.argv) > 1 else "dd76")

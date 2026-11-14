@@ -92,7 +92,7 @@ def project(r):
 
 
 def carte():
-    a = pd.concat([pd.read_csv(f, dtype={"dep": str}) for f in sorted(OUT.glob("fourchettes_dep_*.csv"))])
+    a = pd.concat([pd.read_csv(f, dtype={"dep": str}) for f in sorted(OUT.glob("fourchettes_dep_*.csv")) if "interface" not in f.name])
     b = pd.read_csv(OUT / "backtest_dep.csv", dtype={"dep": str})
     q = effet_quotas()
     d = a.merge(b, on=["profession", "dep"], how="left")

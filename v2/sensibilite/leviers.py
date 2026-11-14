@@ -38,7 +38,14 @@ from sensibilite.methodes import bootstrap
 
 _entrees.scale = lru_cache(maxsize=None)(_entrees.scale)
 OUT = Path("v2/sensibilite/out")
-ETRANGERS = ("sages-femmes", "dentistes", "kines")          # flux étranger publié (DD76, ER 1075) ; PH, IDE : 0
+# amplitude des leviers : « dd76 » (quotas ±20 %, DD76) ou « interface » (plages de v2/prototype/server.py)
+AMPLITUDE = {"dd76": {"quotas": (0.8, 1.2), "capacite": (0.8, 1.2), "decalage_retraite": (0.0, 2.0)},
+             "interface": {"quotas": (0.7, 1.5), "capacite": (0.7, 1.5), "decalage_retraite": (0.0, 3.0)}}
+AMP = AMPLITUDE["dd76"]
+ETRANGERS = PROFS            # jumeau b64ce56 : flux étranger non nul pour les 5 professions (etrangers.FLUX)
+# flux annuel de diplômés à l'étranger, basse (FLUX_BAS : DD76, ER 1075 ; PH, IDE 0) et haute (FLUX) : facteur « connaissance »
+FLUX_BAS = {"sages-femmes": 70.0, "dentistes": 665.0, "kines": 1175.0, "pharmaciens": 0.0, "infirmiers": 0.0}
+FLUX_HAUT = {"sages-femmes": 80.0, "dentistes": 1300.0, "kines": 2200.0, "pharmaciens": 240.0, "infirmiers": 400.0}
 
 
 @lru_cache
@@ -56,8 +63,9 @@ def table(prof: str, variant: str) -> pd.DataFrame:
     if prof == "infirmiers":
         t = pd.read_parquet("v2/data/processed/infirmiers_secteur_age_sexe.parquet")
         t = t[(t.statut == "prive") & ~t.dep.isin(["999", "20"])]
-        t = t.groupby(["dep", "sex", "age_lo", "year"], as_index=False).n.sum().assign(profession="infirmiers", sector="prive")
-        return t[t.year >= t.groupby("dep").year.transform("min").max()]          # années complètes seulement
+        first = int(t[t.mode3 != "liberal_mixte"].year.min())     # 2013 : avant, libéraux seuls (saut fictif de +190 %)
+        t = t[t.year >= first]
+        return t.groupby(["dep", "sex", "age_lo", "year"], as_index=False).n.sum().assign(profession="infirmiers", sector="prive")
     t = sector_table([prof], variant)
     return t[t.sector == "prive"]                     # colonne sector gardée : « bloques » emprunte la démographie du privé
 
@@ -77,10 +85,11 @@ def factors(prof: str, knowledge_only: bool = False) -> list[F]:
               F("repartition", "C", levels=("voisine", "salariat", "sortie"), status="non mesurable")]
     if prof == "dentistes":
         k.append(F("part_exemptee", "C", 0.0, 0.06, status="supposé (spécialistes ≈ 6 % du stock, fiche)"))
+    k.append(F("flux_etrangers", "C", levels=("bas", "haut"), status="sourcé/dérivé (jumeau : FLUX_BAS, FLUX)"))
     if knowledge_only:
         return k
-    d = [F("quotas", "D", 0.8, 1.2, status="DD76 ±20 %"), F("capacite", "D", 0.8, 1.2, status="DD76 ±20 %"),
-         F("decalage_retraite", "D", 0.0, 2.0), F("cumul_multiplicateur", "D", 0.5, 2.0),
+    d = [F("quotas", "D", *AMP["quotas"], status="DD76 ±20 % ou interface"), F("capacite", "D", *AMP["capacite"]),
+         F("decalage_retraite", "D", *AMP["decalage_retraite"]), F("cumul_multiplicateur", "D", 0.5, 2.0),
          F("multiplicateur_precoces", "D", 0.5, 1.5)]
     if prof == "infirmiers":
         d.append(F("abandon", "D", 0.056, 0.105, status="dérivé (ρ 2009-2018 → 2022)"))
@@ -94,7 +103,7 @@ def factors(prof: str, knowledge_only: bool = False) -> list[F]:
 DEFAULT = {"fenetre": 5, "shrink": 200, "entrees": "plates", "filiere": False, "part_privee": "central",
            "fraction": 0.2, "theta": 0.8, "repartition": "voisine", "part_exemptee": 0.0, "quotas": 1.0,
            "capacite": 1.0, "decalage_retraite": 0.0, "cumul_multiplicateur": 1.0, "multiplicateur_precoces": 1.0,
-           "abandon": 0.1045, "etrangers": 1.0, "part_zones": 0.0}
+           "abandon": 0.1045, "etrangers": 1.0, "part_zones": 0.0, "flux_etrangers": "haut"}
 
 
 class Model:
@@ -126,14 +135,17 @@ class Model:
                   "sorties.cumul_multiplicateur": v["cumul_multiplicateur"],
                   "sorties.multiplicateur_precoces": v["multiplicateur_precoces"],
                   "entrees.filiere": v["filiere"], "formation.capacite": v["capacite"],
-                  "formation.abandon": {p: v["abandon"] if p == "infirmiers" else 0.0, "*": 0.0},
-                  "etrangers.multiplicateur": v["etrangers"]}
+
+                  "etrangers.multiplicateur": v["etrangers"],
+                  "etrangers.flux": {p: (FLUX_HAUT if v["flux_etrangers"] == "haut" else FLUX_BAS)[p], "*": 0.0}}
         z = zones().get(p)
         if z and int(round(v["part_zones"] * len(z))) > 0:
             params.update({"regulation.zones": {p: z}, "regulation.part_zones": {p: v["part_zones"], "*": 1.0},
                            "regulation.theta": v["theta"],
                            "regulation.repartition": {k: float(k == v["repartition"]) for k in ("voisine", "salariat", "sortie")},
                            "regulation.part_exemptee": {p: v["part_exemptee"], "*": 0.0}})
+        if p == "infirmiers":            # abandon IFSI : levier ; ailleurs, défaut sourcé du jumeau (SF 0,033, MK 0,016 par an)
+            params["formation.abandon"] = {p: v["abandon"], "*": 0.0}
         ev = [evenement_quotas(v["quotas"], self.o, LAG[p])] if v["quotas"] != 1.0 else []
         return Scenario(name="axe5-leviers", params=params, events=ev, modules=LEVIERS)
 
@@ -196,7 +208,7 @@ def run_prof(prof, n, rng, n_mc):
         Y[j] = m(u)
         progress(f"{prof}/leviers", j + 1, len(flat), t0)
     Y = Y.reshape(n, -1, len(YEARS))
-    np.savez_compressed(OUT / f"L_{prof}.npz", X=X, Y=Y, names=np.array(names))
+    np.savez_compressed(OUT / f"L_{prof}{'' if AMP is AMPLITUDE['dd76'] else '_interface'}.npz", X=X, Y=Y, names=np.array(names))
     rows = []
     labels = names + [f"[{g}]" for g in groups]
     fam = [f.family for f in m.f] + ["G"] * len(groups)
@@ -211,6 +223,8 @@ def run_prof(prof, n, rng, n_mc):
         for j, nm in enumerate(labels):
             rows.append(dict(profession=prof, annee=yr, facteur=nm, groupe=fam[j], S1=S1[j], S1_lo=q1[0, j],
                              S1_hi=q1[1, j], ST=ST[j], ST_lo=qt[0, j], ST_hi=qt[1, j]))
+    if n_mc == 0:
+        return pd.DataFrame(rows), pd.DataFrame(), m.runs
     # fourchettes départementales : connaissance seule, décisions au statu quo
     mk = Model(prof, knowledge_only=True)
     U = rng.random((n_mc, len(mk.f)))
@@ -242,15 +256,20 @@ def main():
     a.add_argument("--mc", type=int, default=1000)
     a.add_argument("--profs", default=",".join(PROFS))
     a.add_argument("--tag", default="")
+    a.add_argument("--amplitude", default="dd76", choices=tuple(AMPLITUDE))
+    a.add_argument("--sans-dep", action="store_true", help="sans les fourchettes départementales")
     args = a.parse_args()
+    global AMP
+    AMP = AMPLITUDE[args.amplitude]
     rng = np.random.default_rng(SEED)
     S, D, t0 = [], [], time.time()
     for prof in args.profs.split(","):
-        s, d, runs = run_prof(prof, args.n, rng, args.mc)
+        s, d, runs = run_prof(prof, args.n, rng, 0 if args.sans_dep else args.mc)
         S.append(s); D.append(d)
         print(f"FAIT {prof} : {runs} runs, {time.time() - t0:.0f}s", flush=True)
     pd.concat(S).to_csv(OUT / f"leviers_sobol{args.tag}.csv", index=False)
-    pd.concat(D).to_csv(OUT / f"fourchettes_dep{args.tag}.csv", index=False)
+    if not args.sans_dep:
+        pd.concat(D).to_csv(OUT / f"fourchettes_dep{args.tag}.csv", index=False)
     print(f"TOTAL {time.time() - t0:.0f}s", flush=True)
 
 

@@ -22,8 +22,10 @@
 | pharmaciens | filiere | 0.00 [0.00–0.00] | 0.16 [0.15–0.17] | 0.23 [0.21–0.24] |
 | pharmaciens | part_privee | 0.95 [0.91–1.00] | 0.56 [0.53–0.59] | 0.37 [0.35–0.40] |
 | pharmaciens | quotas | 0.00 [0.00–0.00] | 0.13 [0.12–0.14] | 0.25 [0.24–0.27] |
-| sages-femmes | part_privee | 0.96 [0.92–1.00] | 0.80 [0.76–0.84] | 0.66 [0.62–0.69] |
-| sages-femmes | quotas | 0.00 [0.00–0.00] | 0.11 [0.11–0.12] | 0.24 [0.23–0.26] |
+| sages-femmes | fenetre | 0.04 [0.03–0.04] | 0.07 [0.06–0.07] | 0.05 [0.05–0.06] |
+| sages-femmes | part_privee | 0.89 [0.85–0.93] | 0.61 [0.58–0.65] | 0.45 [0.43–0.48] |
+| sages-femmes | quotas | 0.00 [0.00–0.00] | 0.22 [0.21–0.24] | 0.39 [0.37–0.42] |
+| sages-femmes | shrink | 0.05 [0.05–0.05] | 0.07 [0.07–0.08] | 0.05 [0.04–0.05] |
 
 S1 (premier ordre) :
 | profession | facteur | 2030 | 2040 | 2050 |
@@ -48,8 +50,10 @@ S1 (premier ordre) :
 | pharmaciens | filiere | 0.0 | 0.14 | 0.21 |
 | pharmaciens | part_privee | 0.93 | 0.51 | 0.32 |
 | pharmaciens | quotas | 0.0 | 0.14 | 0.26 |
-| sages-femmes | part_privee | 0.96 | 0.79 | 0.65 |
-| sages-femmes | quotas | 0.0 | 0.11 | 0.23 |
+| sages-femmes | fenetre | 0.01 | 0.02 | 0.02 |
+| sages-femmes | part_privee | 0.89 | 0.6 | 0.45 |
+| sages-femmes | quotas | 0.0 | 0.21 | 0.38 |
+| sages-femmes | shrink | 0.04 | 0.04 | 0.02 |
 
 Morris μ* (% de Y réf., pas de 2/3 de la plage) :
 | profession | facteur | 2030 | 2040 | 2050 |
@@ -92,14 +96,14 @@ Morris μ* (% de Y réf., pas de 2/3 de la plage) :
 | pharmaciens | quotas | 0.0 | 8.33 | 17.05 |
 | pharmaciens | shrink | 0.72 | 2.07 | 2.72 |
 | sages-femmes | cumul_multiplicateur | 0.01 | 0.02 | 0.03 |
-| sages-femmes | decalage_retraite | 1.37 | 2.3 | 3.06 |
-| sages-femmes | entrees | 0.38 | 1.22 | 1.58 |
-| sages-femmes | fenetre | 1.36 | 3.15 | 3.9 |
-| sages-femmes | fraction | 0.52 | 2.92 | 6.11 |
-| sages-femmes | part_cumul | 0.01 | 0.01 | 0.02 |
-| sages-femmes | part_privee | 18.03 | 20.94 | 23.34 |
-| sages-femmes | quotas | 0.0 | 9.29 | 16.71 |
-| sages-femmes | shrink | 2.04 | 4.32 | 4.8 |
+| sages-femmes | decalage_retraite | 1.21 | 2.1 | 2.83 |
+| sages-femmes | entrees | 0.45 | 1.34 | 1.71 |
+| sages-femmes | fenetre | 1.31 | 3.02 | 3.72 |
+| sages-femmes | fraction | 0.48 | 2.76 | 5.82 |
+| sages-femmes | part_cumul | 0.01 | 0.01 | 0.01 |
+| sages-femmes | part_privee | 8.23 | 11.02 | 13.06 |
+| sages-femmes | quotas | 0.0 | 9.05 | 16.26 |
+| sages-femmes | shrink | 2.0 | 4.27 | 4.63 |
 
 ### Famille « incertitude » : ST [IC 95 %] par profession et horizon (facteurs avec ST ≥ 5% au moins une fois)
 | profession | facteur | 2030 | 2040 | 2050 |
@@ -120,7 +124,10 @@ Morris μ* (% de Y réf., pas de 2/3 de la plage) :
 | pharmaciens | fenetre | 0.04 [0.04–0.05] | 0.14 [0.13–0.15] | 0.15 [0.13–0.16] |
 | pharmaciens | filiere | 0.00 [0.00–0.00] | 0.19 [0.18–0.20] | 0.32 [0.30–0.34] |
 | pharmaciens | part_privee | 0.93 [0.90–0.98] | 0.63 [0.59–0.66] | 0.48 [0.45–0.50] |
-| sages-femmes | part_privee | 1.01 [0.97–1.05] | 0.95 [0.91–1.00] | 0.91 [0.87–0.95] |
+| sages-femmes | fenetre | 0.04 [0.03–0.04] | 0.08 [0.07–0.09] | 0.08 [0.07–0.09] |
+| sages-femmes | fraction | 0.00 [0.00–0.00] | 0.03 [0.03–0.03] | 0.09 [0.09–0.10] |
+| sages-femmes | part_privee | 0.95 [0.91–0.99] | 0.84 [0.80–0.88] | 0.78 [0.75–0.82] |
+| sages-femmes | shrink | 0.05 [0.05–0.06] | 0.10 [0.09–0.10] | 0.07 [0.07–0.08] |
 
 S1 (premier ordre) :
 | profession | facteur | 2030 | 2040 | 2050 |
@@ -141,7 +148,10 @@ S1 (premier ordre) :
 | pharmaciens | fenetre | 0.03 | 0.07 | 0.06 |
 | pharmaciens | filiere | -0.0 | 0.17 | 0.3 |
 | pharmaciens | part_privee | 0.94 | 0.61 | 0.45 |
-| sages-femmes | part_privee | 1.01 | 0.94 | 0.9 |
+| sages-femmes | fenetre | 0.02 | 0.03 | 0.03 |
+| sages-femmes | fraction | 0.0 | 0.03 | 0.09 |
+| sages-femmes | part_privee | 0.93 | 0.82 | 0.77 |
+| sages-femmes | shrink | 0.03 | 0.04 | 0.03 |
 
 Morris μ* (% de Y réf., pas de 2/3 de la plage) :
 | profession | facteur | 2030 | 2040 | 2050 |
@@ -171,19 +181,19 @@ Morris μ* (% de Y réf., pas de 2/3 de la plage) :
 | pharmaciens | part_cumul | 0.0 | 0.0 | 0.0 |
 | pharmaciens | part_privee | 10.46 | 14.06 | 16.5 |
 | pharmaciens | shrink | 1.15 | 3.03 | 3.64 |
-| sages-femmes | entrees | 0.41 | 1.26 | 1.58 |
-| sages-femmes | fenetre | 1.68 | 3.48 | 4.16 |
-| sages-femmes | fraction | 0.57 | 3.1 | 6.44 |
+| sages-femmes | entrees | 0.48 | 1.45 | 1.81 |
+| sages-femmes | fenetre | 1.67 | 3.43 | 4.12 |
+| sages-femmes | fraction | 0.53 | 2.93 | 6.12 |
 | sages-femmes | part_cumul | 0.0 | 0.0 | 0.0 |
-| sages-femmes | part_privee | 17.45 | 19.71 | 21.51 |
-| sages-femmes | shrink | 1.98 | 3.7 | 3.84 |
+| sages-femmes | part_privee | 7.92 | 10.33 | 11.99 |
+| sages-femmes | shrink | 1.89 | 3.52 | 3.59 |
 
 ### Fourchettes
 | profession | annee | y_ref | p05 | p50 | p95 | cv_pct | h | h_max_observe | demi_largeur_nat_pct | biais_moyen_h5_pct | a_bas_pct | a_haut_pct | b_bas | b_haut |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| sages-femmes | 2030 | 14382.5 | 13064.4 | 14277.9 | 16626.2 | 8.9 | 4 | 10 | 10.9 | 7.8 | -9.2 | 15.6 | 12809.3 | 15955.8 |
-| sages-femmes | 2040 | 17418.9 | 15043.7 | 17181.2 | 20583.3 | 10.7 | 14 | 10 | 38.3 | 7.8 | -13.6 | 18.2 | 10750.0 | 24087.7 |
-| sages-femmes | 2050 | 19123.8 | 16000.6 | 18826.5 | 22982.2 | 12.1 | 24 | 10 | 65.6 | 7.8 | -16.3 | 20.2 | 6572.5 | 31675.0 |
+| sages-femmes | 2030 | 14284.9 | 13064.4 | 14180.6 | 15213.2 | 5.1 | 4 | 10 | 11.0 | 7.9 | -8.5 | 6.5 | 12708.3 | 15861.5 |
+| sages-femmes | 2040 | 17302.0 | 15043.7 | 17064.2 | 18820.5 | 7.1 | 14 | 10 | 38.6 | 7.9 | -13.1 | 8.8 | 10618.5 | 23985.4 |
+| sages-femmes | 2050 | 18990.8 | 16000.6 | 18663.5 | 20999.7 | 8.6 | 24 | 10 | 66.2 | 7.9 | -15.7 | 10.6 | 6415.0 | 31566.6 |
 | dentistes | 2030 | 52584.7 | 44032.4 | 52688.0 | 55578.7 | 7.7 | 4 | 10 | 5.8 | -4.6 | -16.3 | 5.7 | 49550.3 | 55619.2 |
 | dentistes | 2040 | 65613.5 | 55290.7 | 67804.5 | 81304.8 | 11.7 | 14 | 10 | 20.2 | -4.6 | -15.7 | 23.9 | 52361.4 | 78865.7 |
 | dentistes | 2050 | 76397.3 | 64816.1 | 81496.3 | 102482.0 | 14.8 | 24 | 10 | 34.6 | -4.6 | -15.2 | 34.1 | 49945.6 | 102849.0 |

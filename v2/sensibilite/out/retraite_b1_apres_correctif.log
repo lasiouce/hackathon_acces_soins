@@ -1,13 +1,13 @@
       profession  delta_ans  annee      n_ref  effet_jumeau_pct  effet_b1_pct  surplus_x
-0   sages-femmes        1.0   2030   14382.53              1.08          1.03       1.05
-1   sages-femmes        1.0   2040   17418.86              1.58          1.46       1.08
-2   sages-femmes        1.0   2050   19123.79              2.10          1.94       1.08
-3   sages-femmes        2.0   2030   14382.53              1.97          1.88       1.05
-4   sages-femmes        2.0   2040   17418.86              3.26          3.01       1.09
-5   sages-femmes        2.0   2050   19123.79              4.39          4.03       1.09
-6   sages-femmes        3.0   2030   14382.53              2.75          2.60       1.06
-7   sages-femmes        3.0   2040   17418.86              5.03          4.62       1.09
-8   sages-femmes        3.0   2050   19123.79              6.89          6.30       1.09
+0   sages-femmes        1.0   2030   14284.90              1.07          1.02       1.05
+1   sages-femmes        1.0   2040   17301.95              1.57          1.45       1.08
+2   sages-femmes        1.0   2050   18990.81              2.09          1.93       1.09
+3   sages-femmes        2.0   2030   14284.90              1.95          1.86       1.05
+4   sages-femmes        2.0   2040   17301.95              3.24          2.99       1.09
+5   sages-femmes        2.0   2050   18990.81              4.38          4.02       1.09
+6   sages-femmes        3.0   2030   14284.90              2.72          2.58       1.06
+7   sages-femmes        3.0   2040   17301.95              5.00          4.59       1.09
+8   sages-femmes        3.0   2050   18990.81              6.87          6.28       1.09
 9      dentistes        1.0   2030   52584.75              1.16          1.09       1.06
 10     dentistes        1.0   2040   65613.53              1.52          1.38       1.11
 11     dentistes        1.0   2050   76397.29              1.61          1.41       1.14
