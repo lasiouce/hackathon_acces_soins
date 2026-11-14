@@ -59,7 +59,8 @@ const A = {
   expert: `(document.querySelector('[data-tab="xp"]')||document.querySelector('#xbtn')).click();return 1`,
   // la conversation est ouverte au chargement (interface principale, 2026-11-14) : ne cliquer que si elle est fermée
   ask: `const q=document.querySelector('#askq');if(!(q&&q.offsetParent))(document.querySelector('[data-tab="ask"]')||document.querySelector('#askbtn')).click();return 1`,
-  pins: `const t=document.querySelector('[data-tab="cmp"]');if(t)t.click();else{XT="cmp";renderExpert();}return 1`,
+  // comparaison et épingles : sous la fiche, dans l'onglet « Territoire et comparaison » (2026-11-14)
+  pins: `const t=document.querySelector('[data-tab="cmp"]')||document.querySelector('[data-tab="terr"]');if(t)t.click();else{XT="cmp";renderExpert();}return 1`,
 };
 
 // ---------- contrôles ----------
@@ -86,17 +87,18 @@ await check("R03", "survol : infobulle avec nom et valeur 2050", async () => {
   await until(`getComputedStyle(document.querySelector("#tip")).opacity==="1"`, 3000);
   return ev(`const t=document.querySelector("#tip").textContent;if(!t.includes("2050"))throw new Error(t);return t`);
 });
-await check("R04", "clic sur la carte en vue France : la région s'ouvre", async () => {
+// vue par département (2026-11-14) : en vue France, un clic ouvre le département sous le curseur
+await check("R04", "clic sur la carte en vue France : le département s'ouvre", async () => {
   const [x, y] = await ev(mapPoint);
   await cdp("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
   await cdp("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
-  await until(`S.terr&&S.terr.startsWith("R")`, 4000); await idle(); return ev(`return S.terr`);
+  await until(`S.terr&&S.terr.startsWith("D")`, 4000); await idle(); return ev(`return S.terr`);
 });
 await check("R05", "retour à la France (bouton France entière)", async () => { await ev(`document.querySelector("#zfr").click();return 1`); await until("!S.terr"); await idle(); });
-await check("R06", "profession : bouton → couleur, données et lien changent", async () => {
-  await ev(`document.querySelector('#profs button[data-p="dentistes"]').click();return 1`); await idle();
+await check("R06", "profession : liste du scénario → couleur, données et lien changent", async () => {
+  await ev(`const s=document.querySelector('#profsel');s.value="dentistes";s.dispatchEvent(new Event("change"));return 1`); await idle();
   const r = await ev(`return [S.prof,carte.prof,getComputedStyle(document.documentElement).getPropertyValue("--prof").trim().toLowerCase(),location.hash.includes("p=dentistes")]`);
-  await ev(`document.querySelector('#profs button[data-p="kines"]').click();return 1`); await idle();
+  await ev(`const s=document.querySelector('#profsel');s.value="kines";s.dispatchEvent(new Event("change"));return 1`); await idle();
   if (r[0] !== "dentistes" || r[1] !== "dentistes" || !r[2] || !r[3]) throw new Error(JSON.stringify(r));
 });
 await check("R07", "trois indicateurs : évolution, écart au tendanciel, densité (légende suit)", async () => {
@@ -239,10 +241,10 @@ if (OPTION1) {
     if (r.includes(false)) throw new Error(JSON.stringify(r));
   });
   // liste classée retirée (décision du 2026-11-14) ; à la place : le panneau de droite ne défile jamais horizontalement
-  await check("O03", "option 1 : panneau de droite sans défilement horizontal (Territoire, Comparer, Expert flux et leviers)", async () => {
+  await check("O03", "option 1 : panneau de droite sans défilement horizontal (Territoire et comparaison, Expert flux et leviers)", async () => {
     await ev(`select("D63");return 1`); await idle(); await ev(`addCmp();return 1`);
     const over = [];
-    for (const [t, sub] of [["terr"], ["cmp"], ["xp", "flux"], ["xp", "lev"]]) {
+    for (const [t, sub] of [["terr"], ["xp", "flux"], ["xp", "lev"]]) {
       await ev(`document.querySelector('[data-tab="${t}"]').click();${sub ? `document.querySelector('#xp nav [data-t="${sub}"]').click();` : ""}return 1`);
       await ev(`await new Promise(r=>setTimeout(r,150));return 1`);
       const o = await ev(`const p=[...document.querySelectorAll("#side .panel")].find(x=>!x.hidden);return p.scrollWidth-p.clientWidth`);
@@ -281,8 +283,9 @@ if (OPTION1) {
     return keep === "D63" && g > 0 ? `territoire conservé ; France : zoom ${fr.zoom}, 0 grisé ; retour : ${g} grisés` : false;
   });
   await check("O04", "option 1 : légende avec repère du territoire ouvert", async () => { await ev(`select("D63");return 1`); await idle(); return ev(`const m=document.querySelector("#mark");return getComputedStyle(m).display!=="none"&&m.textContent.includes("Puy-de-Dôme")`); });
-  await check("O05", "option 1 : onglets Territoire, Comparer, Expert", async () => {
-    for (const t of ["cmp", "xp", "terr"]) { await ev(`document.querySelector('[data-tab="${t}"]').click();return 1`); if (!(await ev(`return document.querySelector('[data-tab="${t}"]').getAttribute("aria-selected")==="true"`))) throw new Error(t); }
+  await check("O05", "option 1 : onglets Territoire et comparaison, Expert ; la comparaison est sous la fiche", async () => {
+    if (!(await ev(`return !!document.querySelector("#terrpanel #card")&&!!document.querySelector("#terrpanel #cmp")&&!document.querySelector('[data-tab="cmp"]')`))) throw new Error("fiche et comparaison non réunies");
+    for (const t of ["xp", "terr"]) { await ev(`document.querySelector('[data-tab="${t}"]').click();return 1`); if (!(await ev(`return document.querySelector('[data-tab="${t}"]').getAttribute("aria-selected")==="true"`))) throw new Error(t); }
   });
 }
 

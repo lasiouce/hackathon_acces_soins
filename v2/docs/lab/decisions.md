@@ -3902,3 +3902,91 @@ d'auteur. Commence le refacto ». L'hébergement par un service de l'État est d
 réserve des entrées « trois directions artistiques » et « Refonte de l'interface de la carte ».
 **Ce qui le renverserait.** Un hébergement hors d'un service de l'État : retour à la direction A (commit
 précédent). Ou une recette (`recette.mjs --option1`) qui régresse sous 39/40 à cause de l'habillage.
+
+## 2026-11-14 — Carte : profession et année en tête du Scénario, leviers en accordéons par famille
+
+**Décision.**
+- **Profession** : une liste déroulante DSFR (`fr-select`) en tête du panneau Scénario, avec une pastille de couleur
+  dans son libellé. Elle remplace les étiquettes de la barre du haut. Les professions absentes y figurent désactivées,
+  avec leur raison.
+  - Options écartées :
+    - contrôle segmenté dans la barre ;
+    - liste seule dans la barre ;
+    - menu dans le titre de la carte (composant maison).
+- **Curseur d'année** déplacé sous la profession, dans le même bloc d'en-tête du Scénario.
+- **Barre d'outils supprimée** : le fil d'Ariane est posé sur la carte, en haut à gauche. La carte gagne la hauteur de
+  la barre.
+- **Mobile** : le bloc profession + année reste visible quand le panneau est replié. Cela tient le P0 « profession hors
+  écran sur mobile » de l'UAT V2.
+- **Leviers regroupés par famille**, une famille par accordéon DSFR : Former, Attirer, Réguler l'installation, Retenir,
+  et Hypothèses de contexte.
+  - Chaque accordéon contient le curseur principal, son délai et sa source, puis les réglages fins de la famille.
+  - Son titre porte l'effet du réglage (« +1 234 en 2050 ») dès qu'un levier de la famille est modifié.
+  - Les accordéons sont **indépendants**, sans groupe, donc plusieurs peuvent être ouverts.
+  - Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.
+  - Cela respecte l'entrée « Carte : curseurs principaux visibles sous la phrase », qui a retiré l'accordéon à une
+    seule famille ouverte.
+- « Plus » ne contient plus que la phrase en langage naturel, le résumé et ses actions, et la liste « Pas encore dans
+  le modèle ». Les réglages fins et les sources sont dans leurs familles.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « réorganiser la sélection des spécialités […] Fais proposition. Déplace
+la barre de sélection temporelle dans la barre de scénario. Regroupe les paramètres par famille dans l'onglet
+scénario ».
+- Choix parmi quatre propositions : « En tête du Scénario » et « Accordéons DSFR ».
+- Conflit signalé avec la décision « curseurs principaux visibles » ; réponse : « Accordéons ouverts ».
+**Ce qui le renverserait.** Une recette par personas où la profession n'est plus trouvée hors de la barre du haut. Ou une
+démo sur grand écran où le panneau Scénario, plus long, oblige à défiler pour atteindre les familles.
+
+## 2026-11-14 — Carte : infobulles des indicateurs, légende alignée, maille Départements / Régions, Territoire et comparaison réunis
+
+**Décision.**
+- **Infobulles DSFR** (`fr-tooltip`) sur les trois boutons d'indicateur, ~~au survol et au focus clavier~~. **Remplacé le
+  2026-11-14** (demande : « N'affiche pas les infobulles au survol. Mets un petit icône informations et déplie la bulle
+  sur le bouton ») : une icône « i » (DSFR `fr-btn--tooltip`, icône `fr--info-line`) suit chaque bouton. Un clic sur
+  l'icône déplie la bulle, sans changer d'indicateur. Chaque bulle donne la définition de l'indicateur, puis la valeur
+  France à l'année affichée.
+  - **Évolution** : variation de l'effectif libéral depuis 2026, en points d'écart à l'évolution France.
+  - **Écart au tendanciel** : scénario comparé au tendanciel, en %. La carte est uniforme sans levier modifié.
+  - **Densité** : professionnels × activité pour 100 000 habitants (Insee Omphale 2022), en écart à la densité France.
+  - Les mots suivent le lexique : « au-dessus / en dessous de la moyenne nationale ».
+  - La légende reste réduite (entrée « Carte option 1 : ajustements ») : l'explication passe par l'infobulle, pas par
+    un titre visible.
+- **Légende alignée sur la carte.**
+  - Défaut corrigé : la gamme était faite de 7 blocs égaux, alors que la carte interpole en continu de −B à +B. Les
+    graduations étaient réparties avec l'unité comme sixième élément, si bien que « 0 » n'était pas au centre.
+  - La gamme est maintenant un dégradé continu des 7 mêmes couleurs, chaque graduation est posée à sa position exacte
+    (0 au centre), et l'unité (pts ou %) est à droite de la gamme.
+- ~~**Maille de la carte** : un sélecteur DSFR (`fr-segmented`) dans la légende, **Départements** par défaut, ou Régions.
+  Il est gardé dans le lien (`m=reg`).~~ **Remplacé le 2026-11-14** (demande : « Enlève les boutons Départements/Région.
+  Laisse la vue par département ») : le sélecteur est retiré.
+  - La carte est **toujours colorée par département**, à tout zoom, avec des limites nettes.
+  - Un clic ouvre le département sous le curseur, et le survol le nomme.
+  - Une région s'ouvre par le fil d'Ariane ou par la recherche ; elle reste mise en avant quand un de ses départements
+    est ouvert.
+  - Le paramètre de lien `m` n'existe plus.
+  - La vue France par région (retour UAT n° 2) est abandonnée.
+  - Le détail ci-dessous décrit le sélecteur retiré :
+  - Départements : la carte est colorée par département à tout zoom, avec des limites nettes. Un clic ouvre le
+    département, et le survol le nomme.
+  - Régions : c'est le comportement d'avant. Vue France par région ARS ; un clic ouvre la région, puis ses
+    départements. Maj + clic ouvre le département.
+  - **Remplace** le choix par défaut « premier clic = région » et « vue France colorée par région » (ajouts UAT n° 1
+    et 2 de l'entrée « Écran de décision V2 »). La vue régionale reste disponible en un clic.
+- **Panneau droit** : les onglets Territoire et Comparer deviennent un seul onglet, **« Territoire et
+  comparaison »**. La fiche est en haut, puis la section Comparer (territoires comparés, scénarios épinglés).
+  « Ajouter à la comparaison » fait défiler jusqu'à cette section. Les onglets sont maintenant Assistant, Territoire et
+  comparaison, Expert.
+- **Recette** : ~~R04 vérifie les deux mailles~~ R04 vérifie qu'un clic en vue France ouvre le département ; O03 et O05
+  suivent les onglets réunis.
+- **Bascules à choix unique sans coche** (ajout du même jour, demande : « Enlève la checkbox sur les boutons Évolution,
+  Écart au tendanciel etc. »). L'étiquette active est pleine, en bleu France, sans la coche du DSFR. Cela vaut pour
+  l'indicateur, l'échelle de la fiche et le mode expert.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Rajoute des infobulles […] Évolution, Écart au tendanciel, Densité.
+[…] rassemble les panneaux Territoire/Comparer. La légende de la carte n'est pas en adéquation avec l'échelle […]. Le
+clic sur le département amène sur la région, trouve quelque chose de plus ergonomique ».
+- Lecture retenue pour la légende : gamme et graduations décalées par rapport aux couleurs de la carte.
+- Maille par défaut Départements : la demande porte sur le clic sur un département.
+**Ce qui le renverserait.** Une recette par personas où la vue France en départements redevient illisible (retour UAT
+n° 2, « on voit tout ») : la maille Régions repasserait alors par défaut. Ou une autre lecture de « l'échelle en bas à
+gauche » que les graduations de la légende.

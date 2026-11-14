@@ -26,7 +26,7 @@ html.xl{font-size:18.75px}   /* racine du DSFR (16 px) : ses images à taille fi
 html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--text-default-grey)}
 [hidden]{display:none!important}
 /* le DSFR ne pose pas de box-sizing global : les blocs de la page et la liste déroulante comptent bordure et marge intérieure */
-#app,#levers,#side,.panel,#legend,#top,#yr,#nl,#toast,#tip,#askf,#asklog,.chathead,.fr-select{box-sizing:border-box}
+#app,#levers,#side,.panel,#legend,#scenhead,#yr,#nl,#toast,#tip,#askf,#asklog,.chathead,.fr-select{box-sizing:border-box}
 .num{font-variant-numeric:tabular-nums}
 p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses marges elle-même */
 .fold{width:2.5rem;height:2.5rem;flex:none;border:0;box-shadow:inset 0 0 0 1px var(--border-default-grey);background:var(--paper);color:var(--sel);cursor:pointer;font-size:1.1rem;line-height:1;display:grid;place-items:center}
@@ -35,25 +35,27 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 .note{font-size:.87rem;color:var(--mute);margin:.4rem 0 0}
 
 /* ---------- grille ---------- */
-#app{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto auto minmax(0,1fr);height:100dvh}
+#app{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);height:100dvh}
 #app>.fr-header{grid-column:1/-1;z-index:25}
 .fr-header__service-title{font-size:1.15rem}
 #app>.fr-header .fr-header__body-row{padding:.25rem 0}
 #app>.fr-header .fr-header__tools{display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:.6rem}
 #app>.fr-header #save{margin:0}
 .fr-header__service-tagline{font-size:.87rem}
-#top{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.1rem;padding:.55rem 1.1rem;border-bottom:1px solid var(--rule);background:var(--paper);z-index:20}
-#profs{display:flex;flex-wrap:wrap;gap:.3rem .4rem;align-items:center}
-#profs .fr-tag{margin:0}
-#profs .fr-tag i{width:.55rem;height:.55rem;border-radius:50%;margin-right:.4rem;flex:none}
-#profsel{display:none}
+/* en-tête du scénario (décision du 2026-11-14) : profession puis année affichée, au-dessus des familles de leviers */
+#scenhead{padding:.8rem 1.1rem .9rem;border-bottom:1px solid var(--rule);display:grid;gap:.7rem}
+#scenhead .fr-select-group,#scenhead .fr-label{margin:0}
+#scenhead .fr-label{display:flex;align-items:center;gap:.45rem}
+#scenhead .pdot{width:.65rem;height:.65rem;border-radius:50%;background:var(--prof);flex:none}
+#profsel{margin-top:.4rem}
 /* curseur d'année (décision du 2026-11-14) : toutes les années sont déjà dans /api/carte, bouger ne refait aucun appel */
-#yr{display:flex;align-items:center;gap:.5rem;box-shadow:inset 0 0 0 1px var(--border-default-grey);padding:.15rem .6rem .15rem .2rem}
-#yr button{border:0;background:none;width:2rem;height:2rem;cursor:pointer;font-size:.85rem;color:var(--sel)}
+#yr{display:flex;align-items:center;gap:.5rem;box-shadow:inset 0 0 0 1px var(--border-default-grey);padding:.15rem .6rem .15rem .2rem;margin-top:.4rem}
+#yr button{border:0;background:none;width:2rem;height:2rem;cursor:pointer;font-size:.85rem;color:var(--sel);flex:none}
 #yr button:hover{background:var(--wash)}
-#yr input{width:11rem;accent-color:var(--act)}
+#yr input{flex:1;min-width:0;accent-color:var(--act)}
 #yr b{font-size:1.15rem;min-width:2.8rem;text-align:right;color:var(--ink)}
-#crumb{display:flex;align-items:center;gap:.2rem;white-space:nowrap;color:var(--mute);min-width:0;overflow:hidden;font-size:.87rem}
+/* fil d'Ariane posé sur la carte, en haut à gauche */
+#crumb{position:absolute;left:.8rem;top:.8rem;z-index:2;max-width:calc(100% - 9.5rem);background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.25rem .5rem;display:flex;flex-wrap:wrap;align-items:center;gap:0 .2rem;white-space:nowrap;color:var(--mute);font-size:.87rem}
 #crumb button{border:0;background:none;padding:.2rem .3rem;cursor:pointer;color:var(--text-default-grey);text-decoration:underline;text-underline-offset:2px}
 #crumb b{padding:.2rem .3rem;color:var(--sel);font-weight:400}
 #crumb i{font-style:normal}
@@ -77,7 +79,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #levsum{display:none}
 #levers.closed{width:4rem}
 #levers.closed>header{flex-direction:column;border:0;padding:.6rem .3rem}
-#levers.closed h2,#levers.closed .body{display:none}
+#levers.closed h2,#levers.closed .body,#levers.closed #scenhead{display:none}
 #levers.closed #levsum,#side.closed #sidesum{display:block;writing-mode:vertical-rl;transform:rotate(180deg);font-weight:700;white-space:nowrap;margin:.8rem auto}
 #nlf .nlrow{display:flex;gap:.4rem;align-items:flex-end}
 #nlf .fr-input{flex:1;min-width:0;margin:0}
@@ -125,29 +127,47 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #legend{position:absolute;left:.8rem;bottom:.8rem;width:min(28rem,calc(100% - 4.6rem));background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
 #var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:wrap}
 #var .fr-tag{margin:0}
+#var .vi{display:inline-flex;align-items:center;gap:.1rem}
+/* icône d'information (DSFR, info-line) à la place du point d'interrogation, couleur d'action */
+#var .info{color:var(--text-action-high-blue-france);min-height:1.75rem;max-height:1.75rem;max-width:1.75rem;padding:.25rem .375rem}
+#var .info::before{-webkit-mask-image:url(dsfr/icons/system/fr--info-line.svg);mask-image:url(dsfr/icons/system/fr--info-line.svg)}
+/* bascules à choix unique (indicateur, échelle de la fiche, mode expert) : étiquette pleine, sans la coche du DSFR */
+:is(#var,#card .scope,#xp nav) .fr-tag[aria-pressed=true]::after{display:none}
+:is(#var,#card .scope,#xp nav) .fr-tag[aria-pressed=true]:not(:disabled){background-image:none;background-color:var(--background-active-blue-france)}
+:is(#var,#card .scope,#xp nav) .fr-tag[aria-pressed=true]:not(:disabled):hover{background-image:none;background-color:var(--background-active-blue-france-hover)}
 #lt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#rampbox{position:relative}
-#ramp{display:flex;height:.65rem}
-#ramp span{flex:1}
+/* gamme continue, comme la carte (interpolation de RAMP entre −B et +B) ; graduations posées à leur valeur exacte */
+.rrow{display:flex;align-items:flex-start;gap:.6rem}
+#rampbox{position:relative;flex:1}
+#ramp{height:.65rem}
+#unit{font-size:.8rem;color:var(--mute);white-space:nowrap;line-height:.65rem}
 #mark{position:absolute;top:-1.25rem;transform:translateX(-50%);font-size:.8rem;font-weight:700;white-space:nowrap;display:none}
 #mark:after{content:"";position:absolute;left:50%;top:1.15rem;width:2px;height:1.1rem;background:var(--text-title-grey)}
-#ticks{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mute);margin-top:.2rem}
+#ticks{position:relative;height:1.1rem;font-size:.8rem;color:var(--mute);margin-top:.2rem}
+#ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+#ticks span:first-child{transform:none}#ticks span:last-child{transform:translateX(-100%)}
+#ticks span::before{content:"";position:absolute;left:50%;top:-.3rem;width:1px;height:.25rem;background:var(--mute)}
+#ticks span:first-child::before{left:0}#ticks span:last-child::before{left:auto;right:0}
 #legend .note{font-size:.8rem}
 /* accès au chat : icône à gauche des boutons de zoom */
 #askbtn{position:absolute;right:4rem;top:.8rem;width:2.5rem;height:2.5rem;background:var(--paper);color:var(--sel);border:0;box-shadow:0 2px 6px 0 rgba(0,0,18,.16);cursor:pointer;display:grid;place-items:center;z-index:2}
 #askbtn:hover{background:var(--wash)}
 #askbtn[aria-pressed=true]{background:var(--act);color:var(--text-inverted-blue-france)}
 /* panneau Scénario simplifié : nom du paramètre, valeur, curseur */
-.pm{padding:.55rem 0;border-top:1px solid var(--hair)}
-.pm:first-child{border-top:0;padding-top:0}
+/* familles de leviers en accordéons DSFR indépendants : politiques ouvertes au chargement, contexte replié */
+#levfam .fr-accordion{margin:0}
+#levfam .fr-accordion__btn{display:flex;gap:.6rem;align-items:baseline;font-size:1rem}
+#levfam .fr-accordion__btn .ttl{flex:1;text-align:left}
+#levfam .fr-accordion__btn .ef{font-size:.87rem;font-weight:700;color:var(--sel);white-space:nowrap}
+#levfam .fr-collapse>*+*{margin-top:.9rem}
+#levfam .fr-collapse>.lev{border-top:1px solid var(--hair);padding-top:.8rem}
 .pm .val{font-weight:700;font-size:.93rem;margin-bottom:.3rem}
 .pm .val output{font-weight:400;color:var(--mute)}
 .pm .sw{font-weight:700}
-#levmore{border-top:1px solid var(--rule);padding-top:.6rem}
+#levmore{padding-top:.2rem}
 #levmore>summary{cursor:pointer;color:var(--mute);font-size:.9rem}
 #levmore[open]>summary{margin-bottom:.8rem}
 #levmore>*+*{margin-top:1rem}
-#levfine .fam{border-top:1px solid var(--hair);padding-top:.6rem}
 #zoom{position:absolute;right:.8rem;top:.8rem;display:flex;flex-direction:column;background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);z-index:2}
 #zoom button{width:2.5rem;height:2.5rem;border:0;background:none;cursor:pointer;display:grid;place-items:center;color:var(--sel)}
 #zoom button+button{border-top:1px solid var(--hair)}
@@ -167,6 +187,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #side.closed>header{flex-direction:column;align-items:center;border:0;padding:.6rem .3rem}
 #side.closed #tabs,#side.closed .panel{display:none!important}
 .panel{flex:1;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;padding:.9rem 1.1rem 1.2rem}
+#cmppanel{margin-top:1.4rem;border-top:2px solid var(--border-plain-blue-france);padding-top:.9rem}
+#cmppanel>.h4{font-size:1.1rem}
 #card header{display:flex;justify-content:space-between;gap:.5rem}
 #card h3{margin:0;font-size:1.6rem;line-height:1.15;text-wrap:balance}
 #card .sub{color:var(--mute);font-size:.87rem}
@@ -246,7 +268,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 /* ---------- survol, message, dialogue ---------- */
 #tip{position:fixed;pointer-events:none;background:var(--background-contrast-grey);color:var(--text-title-grey);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.45rem .7rem;font-size:.93rem;opacity:0;transition:opacity .12s;z-index:50;white-space:nowrap}
 #tip b{font-weight:700}
-#toast{position:fixed;left:50%;top:8rem;transform:translate(-50%,-6px);opacity:0;background:var(--background-contrast-info);color:var(--text-default-info);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.55rem .9rem;transition:all .25s;pointer-events:none;z-index:60;max-width:calc(100vw - 2rem)}
+#toast{position:fixed;left:50%;top:6rem;transform:translate(-50%,-6px);opacity:0;background:var(--background-contrast-info);color:var(--text-default-info);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.55rem .9rem;transition:all .25s;pointer-events:none;z-index:60;max-width:calc(100vw - 2rem)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #nl{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(36rem,calc(100vw - 2rem));max-height:80vh;overflow-y:auto;z-index:70;padding:1.5rem 1.5rem 1.2rem;font-size:.93rem;background:var(--paper);box-shadow:0 6px 18px 0 rgba(0,0,18,.16)}
 #nl.on{display:block}
@@ -262,13 +284,10 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 @media (max-width:700px){
   html,body{overflow-x:hidden;overflow-y:auto;height:auto}
   #app{display:block;height:auto}
-  #top{position:sticky;top:0;background:var(--paper);gap:.4rem .6rem;padding:.5rem .6rem}
   #crumb,#save span{display:none}
   #app>.fr-header .fr-header__body-row{flex-wrap:wrap}#app>.fr-header .fr-header__tools{flex:1 1 100%;padding-bottom:.4rem}
-  #yr{order:5;flex:1 1 100%}#yr input{flex:1;width:auto}
   #search{width:auto;flex:1 1 10rem}#search kbd{display:none}
-  #profs{flex:0 0 auto}#profs .fr-tag{display:none}
-  #profsel{display:block;max-width:12rem;margin:0}
+  #levers.closed #scenhead{display:grid;padding-top:0}   /* mobile : profession et année restent visibles, panneau replié */
   #levers,#side{width:auto!important;border:0;border-bottom:1px solid var(--rule)}
   #levers.closed>header,#side.closed>header{flex-direction:row;padding:.5rem .8rem}
   #levers.closed h2{display:block}
@@ -276,7 +295,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
   #mapwrap{height:58dvh;flex:none}
   .panel{overflow:visible}
   #asklog{max-height:70vh}
-  #app{display:flex;flex-direction:column}#app>.fr-header{order:-3}#top{order:-2}body.askon #side{order:-1}   /* mobile : l'assistant d'abord */
+  #app{display:flex;flex-direction:column}#app>.fr-header{order:-3}#levers{order:-2}body.askon #side{order:-1}   /* mobile : l'assistant d'abord */
   #legend{width:calc(100% - 4.6rem)}
   #legend .note{display:none}
 }
@@ -303,27 +322,26 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
     </div>
   </div></div></div>
 </header>
-<div id="top">
-  <div id="profs" role="group" aria-label="Profession"></div>
-  <div id="yr" title="Année affichée sur la carte, la liste, la fiche et le résumé">
-    <button id="yplay" aria-label="Faire défiler les années">▶</button>
-    <input type="range" id="yrange" min="2026" max="2050" step="1" value="2050" list="yticks" aria-label="Année affichée">
-    <datalist id="yticks"><option value="2030"></option><option value="2035"></option><option value="2040"></option><option value="2045"></option><option value="2050"></option></datalist>
-    <b id="yv" class="num">2050</b></div>
-  <nav id="crumb" aria-label="Fil d'Ariane"></nav>
-</div>
-
 <aside id="levers" aria-label="Scénario">
   <header><h2>Scénario</h2><span id="levsum"></span>
     <button class="fold" id="fold" aria-label="Replier le scénario" aria-expanded="true">‹</button></header>
+  <!-- en-tête du scénario (décision du 2026-11-14) : quelle profession, quelle année, puis quels leviers -->
+  <div id="scenhead">
+    <div class="fr-select-group"><label class="fr-label" for="profsel"><i class="pdot" aria-hidden="true"></i>Professions de santé</label>
+      <select class="fr-select" id="profsel"></select></div>
+    <div><span class="fr-label" id="yrl">Année affichée</span>
+    <div id="yr" title="Année affichée sur la carte, la fiche et le résumé">
+      <button id="yplay" aria-label="Faire défiler les années">▶</button>
+      <input type="range" id="yrange" min="2026" max="2050" step="1" value="2050" list="yticks" aria-labelledby="yrl">
+      <datalist id="yticks"><option value="2030"></option><option value="2035"></option><option value="2040"></option><option value="2045"></option><option value="2050"></option></datalist>
+      <b id="yv" class="num">2050</b></div></div>
+  </div>
   <div class="body">
     <div id="levfam"></div>
-    <!-- panneau simplifié (demande du 2026-11-14) : par défaut, seuls les paramètres et leurs curseurs ; le reste est replié ici -->
-    <details id="levmore"><summary>Plus : phrase, résumé, réglages fins, sources</summary>
+    <details id="levmore"><summary>Plus : phrase, résumé, actions</summary>
       <form id="nlf" autocomplete="off"><label for="nlq" class="fr-label">Décrire une politique en une phrase</label>
         <div class="nlrow"><input id="nlq" class="fr-input" placeholder="ex. former 20 % de kinés en plus en Auvergne" maxlength="500"><button class="fr-btn">Traduire</button></div></form>
       <div id="scen"></div>
-      <div id="levfine"></div>
       <p class="nm" id="nonmod"></p>
     </details>
   </div>
@@ -332,6 +350,7 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 <main id="center">
   <div id="mapwrap">
     <div id="map" aria-label="Carte des départements"></div>
+    <nav id="crumb" aria-label="Fil d'Ariane"></nav>
     <button id="askbtn" aria-pressed="false" aria-label="Assistant de simulation" title="Assistant de simulation : proposer une politique, poser une question"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/><path d="M5 6.2h6M5 8.2h4"/></svg></button>
     <div id="zoom">
       <button id="zin" aria-label="Zoomer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg></button>
@@ -339,20 +358,30 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Évolution 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur">
+        <!-- chaque indicateur suivi d'une icône « i » : un clic déplie sa bulle (infobulle DSFR au clic, pas au survol) -->
+        <span class="vi"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Évolution 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button type="button" class="fr-btn--tooltip fr-btn info" aria-describedby="tt-evo">Définition : évolution</button></span>
+        <span class="vi"><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button type="button" class="fr-btn--tooltip fr-btn info" aria-describedby="tt-ecart">Définition : écart au tendanciel</button></span>
+        <span class="vi"><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button type="button" class="fr-btn--tooltip fr-btn info" aria-describedby="tt-dens">Définition : densité</button></span>
+        <!-- bulles : définition de chaque indicateur, complétée par la valeur France du moment (legend()) -->
+        <span class="fr-tooltip fr-placement" id="tt-evo" role="tooltip" aria-hidden="true"></span>
+        <span class="fr-tooltip fr-placement" id="tt-ecart" role="tooltip" aria-hidden="true"></span>
+        <span class="fr-tooltip fr-placement" id="tt-dens" role="tooltip" aria-hidden="true"></span></div>
       <div id="lt"></div>
-      <div id="rampbox"><div id="mark"></div><div id="ramp"></div></div>
-      <div id="ticks"></div>
+      <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
     </div>
   </div>
 </main>
 
 <aside id="side" aria-label="Territoire, comparaison et mode expert">
-  <header><div id="tabs" role="tablist"><button role="tab" data-tab="ask" aria-selected="true">Assistant</button><button role="tab" data-tab="terr" aria-selected="false">Territoire</button><button role="tab" data-tab="cmp" aria-selected="false">Comparer</button><button role="tab" data-tab="xp" aria-selected="false">Expert</button></div>
+  <header><div id="tabs" role="tablist"><button role="tab" data-tab="ask" aria-selected="true">Assistant</button><button role="tab" data-tab="terr" aria-selected="false">Territoire et comparaison</button><button role="tab" data-tab="xp" aria-selected="false">Expert</button></div>
     <span id="sidesum"></span>
     <button class="fold" id="cardfold" aria-label="Replier le territoire" aria-expanded="true">›</button></header>
-  <div class="panel" id="card" role="tabpanel" aria-live="polite"></div>
-  <div class="panel" id="cmppanel" role="tabpanel" hidden><p class="h4">Territoires comparés, même scénario</p><div id="cmp"></div><div id="pins"></div></div>
+  <!-- Territoire et comparaison réunis (décision du 2026-11-14) : la fiche, puis les territoires comparés et les scénarios épinglés -->
+  <div class="panel" id="terrpanel" role="tabpanel">
+    <div id="card" aria-live="polite"></div>
+    <section id="cmppanel" aria-labelledby="cmph"><h3 class="h4" id="cmph">Comparer</h3><p class="note" style="margin:0 0 .6rem">Territoires comparés, même scénario.</p><div id="cmp"></div><div id="pins"></div></section>
+  </div>
   <div class="panel" id="xp" role="tabpanel" hidden aria-label="Mode expert"><nav><button class="fr-tag fr-tag--sm" data-t="flux" aria-pressed="true">Flux</button><button class="fr-tag fr-tag--sm" data-t="lev" aria-pressed="false">Leviers</button></nav><div id="xbody"></div><div id="lat">—</div></div>
   <div class="panel" id="ask" role="region" hidden aria-label="Assistant de simulation">
   <div class="chathead"><b>Assistant de simulation</b><button type="button" id="asknew" class="fr-btn fr-btn--tertiary fr-btn--sm">Nouvelle conversation</button></div>
@@ -425,29 +454,22 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
 
 function fbox(g){let b=[180,90,-180,-90];const w=c=>typeof c[0]=="number"?(b=[Math.min(b[0],c[0]),Math.min(b[1],c[1]),Math.max(b[2],c[0]),Math.max(b[3],c[1])]):c.forEach(w);w(g.coordinates);return b;}
 
+// profession : liste déroulante DSFR en tête du scénario ; les professions absentes y figurent, désactivées, avec leur raison
 function buildProfs(){
-  const el=$("#profs");
-  for(const [k,l] of Object.entries(META.professions)){
-    const b=document.createElement("button");b.className="fr-tag fr-tag--sm";b.setAttribute("aria-pressed","false");b.innerHTML=`<i style="background:${PCOL[k]}"></i><span>${l}</span>`;
-    b.dataset.p=k;el.append(b);}
-  for(const [k,why] of Object.entries(META.missing)){
-    const b=document.createElement("button");b.className="fr-tag fr-tag--sm";b.disabled=true;b.title="Absent : "+why;b.innerHTML=`<i style="background:var(--hair)"></i><span>${k}</span>`;el.append(b);}
-  // sélection exclusive : écoutée sur le conteneur, donc après la bascule du JS DSFR sur l'étiquette ; applyProf réécrit l'état
-  el.addEventListener("click",e=>{const b=e.target.closest("button[data-p]");if(!b)return;if(b.dataset.p===S.prof){applyProf();return;}S.prof=b.dataset.p;applyProf();refresh();});
-  const sel=document.createElement("select");sel.id="profsel";sel.className="fr-select";sel.setAttribute("aria-label","Profession");
-  sel.innerHTML=Object.entries(META.professions).map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
-  sel.onchange=()=>{S.prof=sel.value;applyProf();refresh();};el.append(sel);
+  const sel=$("#profsel");
+  sel.innerHTML=Object.entries(META.professions).map(([k,l])=>`<option value="${k}">${l}</option>`).join("")
+    +Object.entries(META.missing).map(([k,why])=>`<option disabled title="${esc(why)}">${esc(k)} (absent)</option>`).join("");
+  sel.onchange=()=>{S.prof=sel.value;applyProf();refresh();};
   applyProf();
 }
-function applyProf(){document.documentElement.style.setProperty("--prof",PCOL[S.prof]);
-  document.querySelectorAll("#profs button[data-p]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p==S.prof));const ps=$("#profsel");if(ps)ps.value=S.prof;}
+function applyProf(){document.documentElement.style.setProperty("--prof",PCOL[S.prof]);$("#profsel").value=S.prof;}
 
 // ---------- panneaux dépliables et onglets ----------
 function foldPanel(p,b,closed){const el=$(p),bt=$(b),c=closed??!el.classList.contains("closed");el.classList.toggle("closed",c);bt.setAttribute("aria-expanded",!c);
   const what={"#levers":"le scénario","#side":"le territoire"}[p];bt.setAttribute("aria-label",(c?"Déplier ":"Replier ")+what);
   bt.textContent=p=="#levers"?(c?"›":"‹"):(c?"‹":"›");}
 function showTab(t){TAB=t;document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab==t));
-  $("#card").hidden=t!="terr";$("#cmppanel").hidden=t!="cmp";$("#xp").hidden=t!="xp";$("#ask").hidden=t!="ask";
+  $("#terrpanel").hidden=t!="terr";$("#xp").hidden=t!="xp";$("#ask").hidden=t!="ask";
   document.body.classList.toggle("xpon",t=="xp");document.body.classList.toggle("askon",t=="ask");$("#askbtn").setAttribute("aria-pressed",t=="ask");
   if($("#side").classList.contains("closed"))foldPanel("#side","#cardfold",false);renderExpert();renderPins();if(t=="ask")askOpen();}
 function buildPanels(){
@@ -470,9 +492,9 @@ function buildMap(){
   map.on("load",()=>{
     fitFrance(0);
     map.addSource("d",{type:"geojson",data:GEO,promoteId:"code"});
-    map.addLayer({id:"fill",type:"fill",source:"d",paint:{"fill-color":["step",["zoom"],["case",["boolean",["feature-state","f"],false],["coalesce",["feature-state","c"],DIM],["coalesce",["feature-state","cr"],DIM]],6.3,["coalesce",["feature-state","c"],DIM]],
+    map.addLayer({id:"fill",type:"fill",source:"d",paint:{"fill-color":["coalesce",["feature-state","c"],DIM],
       "fill-color-transition":{duration:300},"fill-opacity":1}});
-    map.addLayer({id:"line",type:"line",source:"d",paint:{"line-color":"#FFFFFF","line-width":["interpolate",["linear"],["zoom"],4,.6,8,1.2],"line-opacity":["step",["zoom"],["case",["boolean",["feature-state","f"],false],1,.35],6.3,1]}});
+    map.addLayer({id:"line",type:"line",source:"d",paint:{"line-color":"#FFFFFF","line-width":["interpolate",["linear"],["zoom"],4,.6,8,1.2],"line-opacity":1}});
     map.addSource("r",{type:"geojson",data:REGL,tolerance:0});
     map.addLayer({id:"regcase",type:"line",source:"r",filter:["!",["has","cote"]],paint:{"line-color":"#FFFFFF","line-width":["interpolate",["linear"],["zoom"],4,4,8,6]}});
     map.addLayer({id:"reg",type:"line",source:"r",paint:{"line-color":["case",["has","cote"],"#6B7075",INK],"line-opacity":.9,
@@ -483,13 +505,12 @@ function buildMap(){
     map.on("mousemove","fill",e=>{const f=e.features[0],id=f.properties.code;map.getCanvas().style.cursor="pointer";
       if(hov!==id){if(hov)map.setFeatureState({source:"d",id:hov},{h:false});hov=id;map.setFeatureState({source:"d",id},{h:true});}
       const d=carte?.deps[id];
-      const rid=regOf["D"+id],rg=carte?.reg?.[rid];
-      tip.innerHTML=map.getZoom()<6.3&&rid!==focusReg&&rg?`<b>${names[rid]}</b><br>${fmt(rg.sy)} en ${S.y} · ${pct(raw(rg))}`
-        :`<b>${f.properties.nom}</b> <span style="opacity:.7">${names[rid]||""}</span><br>${d?fmt(d.sy)+" en "+S.y+" · "+pct(raw(d)):"donnée absente"}`;
+      const rid=regOf["D"+id];
+      tip.innerHTML=`<b>${f.properties.nom}</b> <span style="opacity:.7">${names[rid]||""}</span><br>${d?fmt(d.sy)+" en "+S.y+" · "+pct(raw(d)):"donnée absente"}`;
       tip.style.left=e.originalEvent.clientX+14+"px";tip.style.top=e.originalEvent.clientY+14+"px";tip.style.opacity=1;});
     map.on("mouseleave","fill",()=>{if(hov)map.setFeatureState({source:"d",id:hov},{h:false});hov=null;tip.style.opacity=0;map.getCanvas().style.cursor="";});
-    map.on("click","fill",e=>{const id="D"+e.features[0].properties.code,r=regOf[id];
-      if(r&&focusReg!==r&&map.getZoom()<6.3&&!e.originalEvent.shiftKey){select(r);}else select(id);});
+    // vue par département (décision du 2026-11-14) : un clic ouvre le département ; sa région s'ouvre par le fil d'Ariane ou la recherche
+    map.on("click","fill",e=>select("D"+e.features[0].properties.code));
     map.on("click",e=>{if(!map.queryRenderedFeatures(e.point,{layers:["fill"]}).length){backToFrance();}});
     refresh().then(()=>{if(S.terr)select(S.terr);renderCmp();});
   });
@@ -533,8 +554,15 @@ function legend(){
   $("#lt").textContent=(S.v=="evo"?`Évolution ${carte.y26} → ${S.y}, en points d'écart à la France (${pct(carte.nat)})`
     :S.v=="dens"?`Densité ${S.y} pour 100 000 habitants, écart à la moyenne France (${Math.round(carte.natD*1e5)} pour 100 000)`:`Effectif libéral ${S.y}, écart scénario − tendanciel`)
     +(carte.origin<carte.y26?` · observé jusqu'en ${carte.origin}, ${carte.y26} déjà projeté`:"");
-  $("#ramp").innerHTML=RAMP.map(c=>`<span style="background:${c}"></span>`).join("");
-  const B=brk().at(-1),b=[-B,-B/2,0,B/2,B];$("#ticks").innerHTML=b.map(x=>`<span>${(x>0?"+":x<0?"−":"")+Math.abs(Math.round(x*100))}</span>`).join("")+`<span>${S.v=="evo"?"pts":"%"}</span>`;
+  // même gamme que colorOf : 7 couleurs réparties de −B à +B ; chaque graduation est posée à sa position exacte
+  $("#ramp").style.background=`linear-gradient(90deg,${RAMP.join(",")})`;
+  const B=brk().at(-1),b=[-B,-B/2,0,B/2,B];
+  $("#ticks").innerHTML=b.map(x=>`<span style="left:${(x/B+1)/2*100}%">${(x>0?"+":x<0?"−":"")+Math.abs(Math.round(x*100))}</span>`).join("");
+  $("#unit").textContent=S.v=="evo"?"pts":"%";
+  // infobulles des indicateurs : définition, puis la valeur France à l'année affichée
+  $("#tt-evo").textContent=`Variation de l'effectif libéral entre ${carte.y26} et ${S.y}, lue par rapport à la France (${pct(carte.nat)} sur la période). 0 : même évolution que la France ; +10 pts : 10 points au-dessus de l'évolution nationale. Pétrole : au-dessus de la moyenne nationale ; bistre : en dessous.`;
+  $("#tt-ecart").textContent=`Effet du scénario réglé : effectif libéral du scénario comparé au tendanciel (même projection, sans nouvelle politique), en ${S.y}, en %. 0 : le scénario ne change rien sur ce territoire. Sans levier modifié, la carte est uniforme.`;
+  $("#tt-dens").textContent=`Professionnels libéraux (× activité moyenne) pour 100 000 habitants en ${S.y}, population Insee Omphale 2022, comparés à la densité France (${Math.round(carte.natD*1e5)} pour 100 000). Négatif : densité inférieure à la moyenne nationale.`;
 }
 // repère du territoire ouvert sur la gamme de la légende
 function mark(){const m=$("#mark"),T=cardT(),d=!T||T=="FR"||!carte?null:T.startsWith("D")?carte.deps[T.slice(1)]:carte.reg?.[T];
@@ -564,11 +592,11 @@ async function refresh(){
 function paint(){legend();const R={};
   for(const [id,d] of Object.entries(carte.deps)){const r=regOf["D"+id];if(!r)continue;R[r]??={s26:0,s50:0,b50:0,p26:0,p50:0,sy:0,by:0,py:0};for(const k in R[r])R[r][k]+=d[k];}
   carte.reg=R;
-  for(const [id,d] of Object.entries(carte.deps)){const r=R[regOf["D"+id]];
+  for(const [id,d] of Object.entries(carte.deps)){
     // territoire affiché (région ou département) : tout ce qui est hors de lui passe en gris uni ; « France entière » : rien de grisé
     const T=cardT(),inSel=T=="FR"?true:T.startsWith("D")?T=="D"+id:regOf["D"+id]==T;
     const dim=(!!focusReg&&regOf["D"+id]!=focusReg)||!inSel;
-    map.setFeatureState({source:"d",id},{c:dim?DIM:colorOf(val(d)),cr:dim?DIM:r?colorOf(val(r)):colorOf(val(d)),f:!!focusReg&&regOf["D"+id]==focusReg,dim});}
+    map.setFeatureState({source:"d",id},{c:dim?DIM:colorOf(val(d)),f:!!focusReg&&regOf["D"+id]==focusReg,dim});}
   mark();}
 function setFocus(r){focusReg=r;if(carte)paint();}
 const repaint=()=>{if(carte)paint();};
@@ -637,7 +665,7 @@ function levState(){
     if(p=="former")setL(LV("quotas"),1.2);if(p=="installer")setL(LV("regul"),true);if(p=="retenir")setL(LV("retraite"),2);levState();refresh();});
   const off=[];
   for(const [f,F] of Object.entries(FAM)){const d=$("#q-"+f);if(!d)continue;const why=unavailable(f);
-    d.style.display=why?"none":"";const fine=$("#qf-"+f);if(fine)fine.style.display=why?"none":"";if(why)off.push(`${FAM[f].q.replace(" ?","")} : ${why}`);
+    d.style.display=why?"none":"";if(why)off.push(`${FAM[f].q.replace(" ?","")} : ${why}`);
     const ls=[F.main,...F.more].map(LV),mod=ls.filter(l=>!NOCOUNT.includes(l.k)&&!isDef(l));
     $("#st-"+f).textContent=mod.length?phrase(F.main,S.lv[F.main])+(F.more.filter(k=>!NOCOUNT.includes(k)&&!isDef(LV(k))).length?" (et réglages précisés)":""):"rien de changé";
     const iy=SC?yIdx(SC.years):0,ef=SC?F.flows.reduce((a,k)=>a+(SC.flows[k]?SC.flows[k][iy]:0),0):0;
@@ -657,19 +685,18 @@ function leverHTML(l,main){const sup=l.status!="sourcé"&&l.status!="mesuré";
   return `<div class="${main?"main":"lev"}">${l.type=="toggle"?"":`<div class="val">${LBL[l.k]} : <output id="o-${l.k}"></output></div>`}${inp}
     <div class="ic"><p class="fr-badge fr-badge--sm fr-badge--no-icon" title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</p><button type="button" class="fr-tag fr-tag--sm src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
     <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div><p class="note" id="n-${l.k}"></p></div>`;}
-// curseur principal seul : nom du paramètre, valeur en phrase, jauge (délai et source sont dans « Plus »)
-function mainHTML(l){const inp=l.type=="range"?rangeHTML(l):toggleHTML(l);
-  return (l.type=="toggle"?"":`<div class="val">${LBL[l.k]} <output id="o-${l.k}"></output></div>`)+inp+`<p class="note" id="n-${l.k}"></p>`;}
-// délai et source d'un curseur principal, sans second curseur
-function srcHTML(l){const sup=l.status!="sourcé"&&l.status!="mesuré";
-  return `<div class="lev"><div class="val">${LBL[l.k]}</div><div class="ic"><p class="fr-badge fr-badge--sm fr-badge--no-icon" title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</p><button type="button" class="fr-tag fr-tag--sm src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
+// curseur principal d'une famille : nom du paramètre, valeur en phrase, jauge, puis délai et source
+function mainHTML(l){const inp=l.type=="range"?rangeHTML(l):toggleHTML(l),sup=l.status!="sourcé"&&l.status!="mesuré";
+  return `<div class="pm">${l.type=="toggle"?"":`<div class="val">${LBL[l.k]} <output id="o-${l.k}"></output></div>`}${inp}<p class="note" id="n-${l.k}"></p>
+    <div class="ic"><p class="fr-badge fr-badge--sm fr-badge--no-icon" title="Délai avant effet : ${l.delai}">délai : ${l.delai.split(",")[0]}</p><button type="button" class="fr-tag fr-tag--sm src${sup?" sup":""}" data-k="${l.k}" title="Cliquer pour la source">${sup?"effet supposé":"effet sourcé"}</button></div>
     <div class="srcbox" id="src-${l.k}">${(l.source||"source non renseignée").replace(/</g,"&lt;")}</div></div>`;}
+// une famille = un accordéon DSFR indépendant (pas de groupe : plusieurs ouverts à la fois) ; son titre porte l'effet du réglage
+const famHTML=(id,titre,corps,open)=>`<section class="fr-accordion" id="q-${id}"><h3 class="fr-accordion__title"><button type="button" class="fr-accordion__btn" aria-expanded="${open}" aria-controls="acc-${id}"><span class="ttl">${titre}</span><span class="ef" id="ef-${id}"></span></button></h3>
+  <div class="fr-collapse" id="acc-${id}">${corps}</div></section>`;
 function buildLevFam(){
-  // par défaut : une jauge par famille (places, diplômés étrangers, régulation, retraite)
-  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>`<div class="pm" id="q-${f}">${mainHTML(LV(F.main))}<span id="st-${f}" hidden></span><span id="ef-${f}" hidden></span></div>`).join("");
-  // replié dans « Plus » : sources des curseurs, réglages fins par famille, hypothèses de contexte (pas des politiques)
-  $("#levfine").innerHTML=Object.entries(FAM).map(([f,F])=>`<div class="fam" id="qf-${f}"><p class="h4">${F.q}</p>${srcHTML(LV(F.main))}${F.more.map(k=>leverHTML(LV(k),false)).join("")}</div>`).join("")
-    +`<div class="fam" id="q-contexte"><p class="h4">Hypothèses de contexte</p>${META.levers.filter(l=>l.famille=="contexte").map(l=>leverHTML(l,false)).join("")}</div>`;
+  // familles de politiques ouvertes au chargement (décision « curseurs principaux visibles ») ; hypothèses de contexte repliées
+  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>famHTML(f,F.q,mainHTML(LV(F.main))+F.more.map(k=>leverHTML(LV(k),false)).join("")+`<span id="st-${f}" hidden></span>`,true)).join("")
+    +famHTML("contexte","Hypothèses de contexte",META.levers.filter(l=>l.famille=="contexte").map(l=>leverHTML(l,false)).join(""),false);
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
   const H=S.lvHash||{},bad=[];
   // validation du lien : valeur hors bornes ou inconnue → valeur par défaut, signalée
@@ -798,9 +825,10 @@ function chart(f,i26,Ysel=2050){
 }
 
 // ---------- comparer / exporter ----------
-function addCmp(t=F?cardT():S.terr){if(t&&!S.cmp.includes(t)){S.cmp=[...S.cmp,t].slice(-4);writeHash();renderCmp();toast("Ajouté à la comparaison (onglet Comparer)");}}
+function addCmp(t=F?cardT():S.terr){if(t&&!S.cmp.includes(t)){S.cmp=[...S.cmp,t].slice(-4);writeHash();renderCmp();toast("Ajouté à la comparaison, sous la fiche");
+  $("#cmppanel").scrollIntoView({behavior:"smooth",block:"start"});}}
 function renderCmp(){
-  const tab=$('[data-tab="cmp"]');if(tab)tab.textContent=`Comparer${S.cmp.length?" · "+S.cmp.length:""}`;
+  $("#cmph").textContent=`Comparer${S.cmp.length?" · "+S.cmp.length+" territoire"+(S.cmp.length>1?"s":""):""}`;
   const el=$("#cmp");if(!carte)return;
   if(!S.cmp.length){el.innerHTML=`<p class="note" style="margin:0 0 .6rem">Aucun territoire ajouté : bouton « Ajouter à la comparaison » de la fiche, jusqu'à 4.</p>`;return;}
   el.innerHTML=`<table><tr><th>Territoire</th><th>2026</th><th>${S.y}</th><th>${S.v=="evo"?"Évolution":S.v=="dens"?"Densité vs France":"Écart tend."}</th><th>Écart ${S.y}</th><th></th></tr>`+S.cmp.map(id=>{const ds=id=="FR"?Object.keys(carte.deps):id.startsWith("R")?(META.territories.find(r=>r.id==id)?.deps||[]).map(d=>d.id.slice(1)):[id.slice(1)];
@@ -896,7 +924,7 @@ function exportJSON(){if(!SC)return;const o={genere:new Date().toISOString(),ver
   affiche:snap(),epingles:PIN};
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:"application/json"}));
   a.download=`scenario_${S.prof}_${S.terr||"FR"}.json`;a.click();}
-const _levState=levState;levState=function(){_levState();renderExpert();if(TAB=="cmp")renderPins();const n=changedN();$("#levsum").textContent=n?`Scénario · ${n} levier${n>1?"s":""} modifié${n>1?"s":""}`:"Scénario · tendance";};
+const _levState=levState;levState=function(){_levState();renderExpert();if(TAB=="terr")renderPins();const n=changedN();$("#levsum").textContent=n?`Scénario · ${n} levier${n>1?"s":""} modifié${n>1?"s":""}`:"Scénario · tendance";};
 let tt;function toast(m,ms=2200){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),ms);}
 // fil d'Ariane : France › région › département (› commune, à venir)
 function parent(id){return !id||id=="FR"?null:id.startsWith("D")?regOf[id]||"FR":"FR";}

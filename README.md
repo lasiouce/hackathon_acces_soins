@@ -95,18 +95,22 @@ indépendant), et chaque sortie le rappelle.
 **La carte de décision** (`v2/prototype-carte/`, http://localhost:8767) : trois colonnes fixes, habillage
 [DSFR](https://www.systeme-de-design.gouv.fr/) 1.15.4 (Système de design de l'État, copie locale dans
 `v2/prototype-carte/dsfr/`, licence Etalab 2.0, réservé aux sites de l'État). La carte garde sa gamme bistre ↔ pétrole,
-jamais rouge ni vert. Aucun build ni framework : HTML, CSS et JavaScript, comme avant. Le scénario est à gauche, la carte au centre, la fiche à droite (onglets
-Assistant, Territoire, Comparer, Expert). Les deux panneaux latéraux se replient, et la carte s'ouvre centrée sur la France.
+jamais rouge ni vert. Aucun build ni framework : HTML, CSS et JavaScript, comme avant. Le scénario est à gauche : la profession (liste déroulante) et l'année affichée
+en tête, puis les leviers par famille. La carte est au centre, avec le fil d'Ariane posé dessus. À droite, trois onglets :
+Assistant, Territoire et comparaison (la fiche, puis les territoires comparés et les scénarios épinglés), Expert. Les deux panneaux latéraux se replient, et la carte s'ouvre centrée sur la France.
 
 - **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,
-  ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Recalcul après chaque réglage en
+  ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Une infobulle définit chaque indicateur.
+  La carte est colorée par département ; un clic ouvre le département, et sa région s'ouvre par le fil
+  d'Ariane ou la recherche. Recalcul après chaque réglage en
   environ 50 ms (mesuré).
 - **Curseur d'année** (2026 → 2050, pas annuel, 2050 par défaut, bouton ▶ pour faire défiler) : carte,
   légende, résumé, fiche et comparaison suivent l'année choisie. Toutes les années arrivent en un seul
   appel (environ 100 ms) : bouger le curseur ne relance pas le calcul. L'année est gardée dans le lien.
 - **9 leviers en 4 familles** (former, attirer, installer, retenir), chacun avec son délai d'effet et
-  son niveau de preuve (sourcé ou supposé). Le curseur principal de chaque famille est visible ; les
-  réglages fins sont sous « Plus de réglages ».
+  son niveau de preuve (sourcé ou supposé). Une famille = un accordéon, ouvert au chargement : curseur
+  principal, délai et source, puis réglages fins ; son titre affiche l'effet du réglage. Les hypothèses de
+  contexte (population, activité) forment un cinquième accordéon, replié.
 - **Une phrase en langage naturel** (« augmenter de 20 % les places de kinés dans le Puy-de-Dôme »)
   devient un réglage des leviers. Le compilateur est déterministe et à glossaire (`v2/langage/`) : il
   traduit, il ne calcule jamais. Environ **77 % des phrases** sont entièrement bien traduites, mesuré
