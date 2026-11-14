@@ -2144,6 +2144,51 @@ une projection fiable à l'échelle des communes », puis « Oui, lancer ».
 **Ce qui le renverserait.** N4 montre qu'aucun modèle n'est calibré à la commune pour une
 profession : elle reste alors à l'EPCI ou au département.
 
+## 2026-11-14 — Axe 3, N10 : aucun grain infra-départemental n'est calibré pour IDE, MK et CD
+
+**Décision.**
+- Protocole [N10](reports/2026-11-14-axe3-n10-grain-couverture.md), gelé à
+  08:31 (SHA-256 `d86d27c7a750`) : 3 grains (commune, bassin de vie, EPCI),
+  bande P10–P90 empirique par classe de taille tirée des seules erreurs
+  passées, « fiable » = couverture dans [75 ; 85] % dans chaque classe.
+- **Verdict : aucun grain fin n'est fiable**, pour aucune profession ni
+  aucun estimateur (persistance, tendance, répartition-tendance, oracle).
+  En moyenne la couverture est proche de 80 % (IDE 81–84 %, MK 80–81 %,
+  CD 72–79 %), mais par classe elle est trop large pour les très petites
+  communes et trop étroite au-delà de 50 à 100 professionnels (22 à 59 %).
+- **Grain d'affichage : le département** pour IDE, MK et CD, jusqu'à ce
+  qu'un modèle (axe 2) passe N10. À la commune : l'observé, avec la
+  projection de l'échelon supérieur, et la carte le dit.
+- N_min (règle N4) par grain, estimateur principal : CD 21 partout ; IDE 51
+  (commune), 11 (BV) ; MK 21 partout.
+
+**Pourquoi.** Décision « Chantier projection communale fiable » : fiable =
+calibrée, pas étroite.
+**Ce qui le renverserait.** Le modèle hiérarchique de l'axe 2 qui passe N10
+à un grain fin.
+
+## 2026-11-14 — N10 : aucun grain infra-départemental n'est fiable avec les estimateurs actuels ; affichage au département
+
+**Décision.**
+- **Protocole N10** (axe 3, gelé à 08:31, SHA d86d27c7a750, commit 167d15d) :
+  - grains commune, bassin de vie et EPCI ; professions IDE, MK et CD ; origines 2014–2020 ;
+  - bande P10–P90 empirique par classe de taille ;
+  - « fiable » = couverture dans [75 ; 85] % dans **chaque** classe de taille.
+- **Verdict sur les estimateurs actuels** (persistance, tendance, répartition-tendance,
+  oracle) : **aucun grain sous le département n'est fiable**, pour aucune profession.
+  - La couverture moyenne est proche de 80 % : IDE 81–84 %, MK 80–81 %, CD 72–79 %.
+  - Mais elle est mal répartie : 94 % pour les communes de 1 ou 2 professionnels, 22 à 59 %
+    au-delà de 50 à 100 professionnels.
+- **Affichage, jusqu'à nouvel ordre** :
+  - projection au **département** pour IDE, MK et CD ;
+  - à la commune, l'**observé** seulement.
+- Le modèle hiérarchique de l'axe 2 est soumis au même protocole N10. Il ne change
+  l'affichage que s'il passe.
+
+**Pourquoi.** Le chantier « projection communale fiable » et sa définition de « fiable »
+(calibrée).
+**Ce qui le renverserait.** Le modèle de l'axe 2 passe N10 à un grain infra-départemental.
+
 ## Open / not yet decided
 - **Brancher la rétention dépendante de la densité pour les IDE dans le tendanciel ?**
   L'effet est mesuré (N9 : +0,11 [+0,05 ; +0,18]) mais corrélationnel. Question posée le
@@ -2500,3 +2545,36 @@ de code donne un nouveau dépôt daté, et l'ancien reste.
 
 **Ce qui le renverserait.** Une nouvelle calibration par simulation, avec
 σ et τ intégrés, qui passe.
+
+## 2026-11-14 — Axe 2 : dynamique des systèmes, modèles à agents et multi-états, verdicts a priori
+
+**Décision** ([dérivation](derivations/2026-11-14-axe2-familles-sd-abm.md)).
+- **Tué : modèle à agents à règles calées.** Sans trajectoires
+  individuelles ouvertes, ses règles ne sont pas identifiables à partir
+  des stocks agrégés. Ce serait une boîte noire par calibration.
+- **Promu : multi-états de Markov privé ↔ public ↔ sortie.**
+  - Transitions nettes estimables grâce à la séparation de l'axe 4.
+  - A priori hiérarchique ; kill test N1 sur le total privé.
+- **En attente :**
+  - le modèle à agents à règles estimées (logit), après l'étape 3. Il
+    sert à la régulation par commune et doit reproduire le signe de N3 ;
+  - la boucle B1 (infirmiers libéraux), en scénario de stress
+    seulement, sur décision de l'utilisateur·rice.
+- **Ordre proposé :**
+  1. variances en bayésien complet ;
+  2. logit d'installation ;
+  3. multi-états ;
+  4. agents à règles estimées ;
+  5. B1.
+
+**Pourquoi.**
+- Question de l'utilisateur·rice, 2026-11-14 : « y a-t-il d'autres modèles
+  comme les ABM, les systèmes dynamiques et boucles de rétroaction ? »,
+  puis « oui » pour la dérivation.
+- Par linéarité, un modèle à agents sans non-linéarité a la même
+  espérance que le stock-flux.
+- N9 : B2 est nul, et B1 n'est confirmé que pour les infirmiers libéraux.
+
+**Ce qui le renverserait.** Un panel individuel ouvert (au moins 3
+instantanés de l'Annuaire Santé, ou un RPPS individuel daté), qui
+rendrait les règles d'agents estimables.
