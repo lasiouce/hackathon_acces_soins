@@ -1488,6 +1488,63 @@ pour simplifier l'UX ? ».
 **Ce qui le renverserait.** Un autre découpage choisi par
 l'utilisateur·rice ; la question reste ouverte de son côté.
 
+## 2026-11-14 — Axe 4 : flux communaux — proxy d'installations nettes (2012–2025) et archivage de l'Annuaire
+
+**Décision.**
+- **Proxy d'installations libérales par commune** (IDE, MK, CD ; `v2/data/build_flux.py`) :
+  I_net(c, t) = ΔN_<40(c, t) + a_dep(t−1) · N_<40(c, t−1), avec a_dep = N_35–39 / 5 / N_<40 dans la
+  pyramide du département (RPPS libéral + mixte ; SNDS pour les IDE). C'est un **solde** (entrées − sorties
+  avant 40 ans, déménagements compris), pas un flux brut.
+  - **Utilisable à partir de 2012 seulement :** T1 (Σ communes = même formule sur le pull départemental) passe
+    à ≤ 0,2 % (MK, CD) et ≤ 1,6 % (IDE) en 2012–2025, échoue en 2006–2011 (jusqu'à 199 % pour CD 2009).
+  - **T2 échoue tel que pré-enregistré :** l'année sans diplômés kinés (2018) ne fait baisser I_net national
+    qu'à 0,90 × la référence (seuil 0,8) ; minimum 0,87 en 2019. Le proxy ne voit qu'une fraction des
+    promotions françaises. Explication possible, non mesurée : un tiers des kinés ont un diplôme UE.
+  - Usage retenu : la **répartition** des installations nettes entre communes (variable dépendante du logit
+    en parts), pas leur niveau national.
+- **Archivage de l'Annuaire** (`v2/data/archive_annuaire.py`) : instantané réduit daté, sans nom, dans
+  `v2/data/raw/annuaire/archive/` (non versionné), et flux agrégés entre deux instantanés (entrée, sortie,
+  arrivée, départ, stable). Premier instantané : 2026-11-13. **Aucune tâche planifiée** : la fréquence est
+  à décider (open.md).
+
+**Pourquoi.** Aucune source ouverte de flux d'installation par commune (rapport grain communal).
+**Ce qui le renverserait.** Deux instantanés de l'Annuaire espacés d'un an : ils donnent des entrées brutes
+par commune, contre lesquelles on validera ou remplacera I_net.
+
+## 2026-11-14 — Prétirage de synthèse ; un chantier long par axe pendant la nuit ; push sur GitHub
+
+**Décision.**
+- **Synthèse** : `v2/papers/synthese/`, régénérée par `build.py` à partir des six prétirages
+  d'axe (étiquettes, citations et figures préfixées par axe, bibliographies fusionnées). Elle
+  contient :
+  - l'introduction, qui reprend la feuille de route ;
+  - les parties « Interface et tests utilisateurs » et « Ce qui reste à faire ».
+
+  Compile avec tectonic, sans référence indéfinie. Le PDF n'est pas versionné.
+- **Chantiers de nuit envoyés aux six axes** :
+  - axe 0 : vitesse à la commune et vivier réel ;
+  - axe 1 : audit des sources en texte intégral et flux de diplômés étrangers ;
+  - axe 2 : étape 2, bayésien hiérarchique ;
+  - axe 3 : N6, SBC, N1 multi-origines, réconciliation DREES, DiD communale ;
+  - axe 4 : flux d'installation communaux, FINESS, attributs des communes, script d'archivage
+    de l'Annuaire ;
+  - axe 5 : Sobol sur les 12 leviers, part décision / ignorance, carte des fourchettes.
+
+  Garde-fous :
+  - commits limités à leurs chemins, sans mention de Claude, sans push ;
+  - téléchargements de données ouvertes de moins de 500 Mo ;
+  - pas d'installation système ;
+  - aucune tâche planifiée créée.
+- **Push sur `origin/main`** (dépôt privé `progdinh/hackathon_acces_soins`), à la demande de
+  l'utilisateur·rice. Les commits de la nuit seront poussés par la session v2 quand les axes
+  auront rendu compte.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « create a big aggregate of all 5 axis paper work
+until now with a big introduction that is the roadmap », « for each axis, launch a chronophage
+work », « then push everything to github », « in the aggregated paper, tell the main things that
+needs to be done next, and also the work on UAT ».
+**Ce qui le renverserait.** —
+
 ## Open / not yet decided
 - **Leviers de demande (transferts de tâches : vaccination en officine,
   IPA, accès direct au kiné)** : ajouter un module de besoin, ou les

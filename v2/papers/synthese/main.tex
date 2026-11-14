@@ -1,0 +1,58 @@
+\documentclass[11pt]{article}
+\PassOptionsToPackage{english}{babel}
+\input{../template/preamble}
+\input{extras}
+\setcounter{tocdepth}{1}
+
+\title{Un jumeau numérique de l'offre de soins libérale en France :\\
+feuille de route, six axes de recherche, interface et suite}
+\author[1]{Équipe hackathon-santé}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Prétirage de synthèse, version du \today{} --- non relu par des pairs}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+On projette jusqu'en 2050, de la commune au national, l'effectif « libéral » (secteur privé) des
+sages-femmes, dentistes, pharmaciens, kinésithérapeutes et infirmiers en France, et l'effet de
+politiques publiques nationales exprimées comme des réglages d'hyperparamètres sourcés. Ce
+document rassemble six prétirages :
+le socle commun (un jumeau numérique à contrat vérifiable, passé par trois revues
+adversariales), le catalogue des hyperparamètres sourcés, les méthodes de modélisation
+interprétables comparées sur un banc, la méthodologie de validation pré-enregistrée, les données
+(séparation public / privé, événements datés, zonage, grain communal) et l'analyse de
+sensibilité. Il les précède de la feuille de route et les fait suivre de l'interface, des tests
+utilisateurs simulés par des agents et de la liste de ce qui reste à faire. Aucun chiffre n'est
+présenté comme « la » projection : chaque nombre porte sa provenance, et aucune précision n'est
+annoncée au-delà de l'horizon testable d'environ dix ans.
+\end{abstract}
+\begin{otherlanguage}{english}
+\begin{abstract}
+We project to 2050, from municipality to national level, the private-sector headcount of
+midwives, dentists, pharmacists, physiotherapists and nurses in France, together with the effect
+of national policies expressed as sourced hyperparameter settings. This document gathers six
+preprints: the shared foundation (a digital twin with a verifiable contract, put through three
+adversarial reviews), the catalogue of sourced hyperparameters, interpretable models compared on
+a common bench, the pre-registered validation methodology, the data work, and the sensitivity
+analysis. They are preceded by the roadmap and followed by the interface, agent-simulated user
+tests and the remaining work. No figure is presented as "the" projection; every number states
+its provenance, and no accuracy is claimed beyond the roughly ten-year testable horizon.
+\end{abstract}
+\end{otherlanguage}
+
+\tableofcontents
+\clearpage
+
+\input{intro}
+\input{parts}
+\input{uat}
+\input{suite}
+
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+\input{annexes}
+\end{document}

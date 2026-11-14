@@ -1,0 +1,50 @@
+% Généré par build.py, ne pas modifier à la main.
+\section{Annexes de l'axe 0}
+\subsection{Annexe : interface d'un module}
+\begin{verbatim}
+@register
+class MonModule(Module):
+    name, order = "mon_module", 35
+    needs = ("entrees",)            # flux de l'année lus via ctx.delta
+    params = (Param("x", 1.0, "unité", "source", "millésime", "supposé",
+                    "description", (0.0, 3.0)),)
+    def fit(self, hist): ...        # calibrage sur l'historique <= origine
+    def step(self, state, ctx):     # lit l'état, ne le modifie pas
+        return [Add(self.name, ..., src="mon_compte")]
+\end{verbatim}
+
+\section{Annexes de l'axe 1}
+\subsection{Script du rendement de formation infirmière}\label{a1-app:script}
+\begin{verbatim}
+# rho_IDE = diplomes(t+3) / inscrits en 1re annee(t)
+# Fichier : DREES jeu 491, "Series longues - 1966-2025.xlsx"
+# Usage : python3 -I ide_rendement.py <series_longues.xlsx>
+import sys
+import pandas as pd
+
+def serie(f, onglet):
+    d = pd.read_excel(f, onglet, header=None)
+    annees = [int(float(str(a).rstrip('*')))
+              if str(a).rstrip('*').replace('.', '').isdigit() else None
+              for a in d.iloc[4]]
+    lib = "Infirmiers diplômés d'État"
+    ligne = d[d[1].astype(str).str.strip() == lib].iloc[0]
+    return {a: int(v) for a, v in zip(annees, ligne)
+            if a and str(v).strip() not in ('-', 'nan')}
+
+f = sys.argv[1]
+dip, ins = serie(f, 'Diplomes_an'), serie(f, 'Inscrits1ere_an')
+print('entree_t,inscrits_1A,diplomes_t+3,rho,1-rho')
+for t in sorted(ins):
+    if t + 3 in dip:
+        r = dip[t + 3] / ins[t]
+        print(f'{t},{ins[t]},{dip[t+3]},{r:.3f},{1-r:.1%}')
+\end{verbatim}
+
+\section{Annexes de l'axe 2}
+\subsection{Annexes}
+\paragraph{Désagrégation.} Pour des tranches de bornes basses $\ell_a$ et de largeurs $w_a$, la densité
+moyenne $m_a = N_a / w_a$ est placée au milieu de la tranche ; la densité de l'âge simple $x$ est
+l'interpolation linéaire de $m$ en $x + 1/2$, tronquée à 0, puis remise à l'échelle pour que chaque
+tranche garde sa masse $N_a$. Avec une densité uniforme dans la tranche, l'opérateur $A$ redonne
+exactement $0{,}8\,N_a + 0{,}2\,N_{a-1}$ (vérifié à $1{,}6 \times 10^{-14}$\mesure{} près).
