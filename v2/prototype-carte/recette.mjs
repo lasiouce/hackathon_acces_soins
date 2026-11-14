@@ -55,12 +55,13 @@ async function open(hash = "", w = 1440, h = 900) {
   await ev(`URL.createObjectURL=b=>{window.__blob=b;return "blob:recette"};HTMLAnchorElement.prototype.click=function(){window.__dl=this.download};return 1`);
 }
 // adaptateurs : la seule différence de structure tolérée entre la page actuelle et la refonte
+// panneau Résultat sans onglets (2026-11-14) : un mode de visualisation se choisit par ses boutons radio (#rm-…)
+const mode = m => `document.querySelector('#rm-${m}').click();return 1`;
 const A = {
-  expert: `(document.querySelector('[data-tab="xp"]')||document.querySelector('#xbtn')).click();return 1`,
-  // la conversation est ouverte au chargement (interface principale, 2026-11-14) : ne cliquer que si elle est fermée
-  ask: `const q=document.querySelector('#askq');if(!(q&&q.offsetParent))(document.querySelector('[data-tab="ask"]')||document.querySelector('#askbtn')).click();return 1`,
-  // comparaison et épingles : sous la fiche, dans l'onglet « Territoire et comparaison » (2026-11-14)
-  pins: `const t=document.querySelector('[data-tab="cmp"]')||document.querySelector('[data-tab="terr"]');if(t)t.click();else{XT="cmp";renderExpert();}return 1`,
+  expert: mode("flux"),   // flux par année (ex-onglet Expert) ; les leviers bruts sont dans le mode « Données »
+  // assistant : fenêtre modale ouverte par le bouton de la carte, fermée au chargement (2026-11-14)
+  ask: `if(!document.querySelector('#askdlg').open)document.querySelector('#askbtn').click();return 1`,
+  pins: mode("cmp"),      // comparaison et épingles : mode « Comparer »
 };
 
 // ---------- contrôles ----------
@@ -104,7 +105,7 @@ await check("R06", "profession : liste du scénario → couleur, données et lie
 await check("R07", "trois indicateurs : évolution, écart au tendanciel, densité (légende suit)", async () => {
   const t = [];
   for (const v of ["ecart", "dens", "evo"]) { await ev(`document.querySelector('[data-v="${v}"]').click();return 1`); t.push(await ev(`return S.v+"|"+document.querySelector("#lt").textContent`)); }
-  if (!t[0].startsWith("ecart|Effectif") || !t[1].startsWith("dens|Densité") || !t[2].startsWith("evo|Évolution")) throw new Error(t.join(" / "));
+  if (!t[0].startsWith("ecart|Effectif") || !t[1].startsWith("dens|Densité") || !t[2].startsWith("evo|Variation de l'effectif")) throw new Error(t.join(" / "));
 });
 await check("R08", "recherche : « puy » → Puy-de-Dôme, Entrée ouvre la fiche", async () => {
   await ev(`const q=document.querySelector("#q");q.focus();q.value="puy";q.dispatchEvent(new Event("input"));return 1`);
@@ -112,9 +113,14 @@ await check("R08", "recherche : « puy » → Puy-de-Dôme, Entrée ouvre la fic
   await ev(`document.querySelector("#q").dispatchEvent(new KeyboardEvent("keydown",{key:"Enter"}));return 1`);
   await until(`S.terr==="D63"`); await until(`document.querySelector("#card").textContent.includes("Puy-de-Dôme")`); await idle();
 });
-await check("R09", "fiche : effectifs, fourchette, trajectoire, repères, flux, zonage, actions", () => ev(`const c=document.querySelector("#card"),t=c.textContent;
-  const k=[t.includes("Effectif 2050"),t.includes("fourchette"),c.querySelectorAll("#chart path").length>=4,t.includes("Repères"),t.includes("par flux"),t.includes("Département non régulé"),!!c.querySelector('[onclick="addCmp()"]'),!!c.querySelector('[onclick="exportCard()"]')];
-  if(k.includes(false))throw new Error(JSON.stringify(k));return 1`));
+// fiche répartie (2026-11-14) : en tête effectifs, fourchette et actions ; trajectoire, repères, flux et zonage dans leurs modes
+await check("R09", "fiche : effectifs, fourchette, trajectoire, repères, flux, zonage, actions", async () => {
+  const seen = {};
+  for (const m of ["graph", "chrono", "flux", "data"]) { await ev(mode(m)); seen[m] = await ev(`const v=document.querySelector("#rv-${m}");return !v.hidden&&v.textContent`); }
+  const k = await ev(`const c=document.querySelector("#card"),t=c.textContent;return [t.includes("Effectif 2050"),t.includes("fourchette"),document.querySelectorAll("#chart path").length>=4,!!c.querySelector('[onclick="addCmp()"]'),!!c.querySelector('[onclick="exportCard()"]')]`);
+  k.push(!!seen.chrono && seen.chrono.includes("Repères"), !!seen.flux && seen.flux.includes("par flux"), !!seen.data && seen.data.includes("Département non régulé"));
+  await ev(mode("graph")); if (k.includes(false)) throw new Error(JSON.stringify(k));
+});
 await check("R10", "fil d'Ariane : France › Auvergne-Rhône-Alpes › Puy-de-Dôme, cliquable", async () => {
   const t = await ev(`return document.querySelector("#crumb").textContent`); if (!/France.*Auvergne-Rhône-Alpes.*Puy-de-Dôme/.test(t)) throw new Error(t);
   await ev(`document.querySelector('#crumb button[data-t="R84"]').click();return 1`); await until(`S.terr==="R84"`); await idle();
@@ -175,11 +181,11 @@ await check("R22", "export CSV : définition, sources, millésimes, leviers, fou
   for (const k of ["Définition", "Sources", "Millésimes", "Leviers", "Fourchette", "Limites", "annee;tendanciel;scenario;bas;haut", "2050;"]) if (!t.includes(k)) throw new Error("manque " + k);
   return ev(`return window.__dl`);
 });
-await check("R23", "mode expert : flux par année, leviers bruts avec paramètre et source", async () => {
+await check("R23", "modes Flux et Données : flux par année, leviers bruts avec paramètre et source", async () => {
   await ev(A.expert); await until(`document.querySelector("#xbody").textContent.includes("Écart total")`);
-  await ev(`document.querySelector('#xp [data-t="lev"]').click();return 1`);
-  const r = await ev(`return document.querySelector("#xbody").textContent.includes("entrees.multiplicateur")`);
-  await ev(`document.querySelector('#xp [data-t="flux"]').click();return 1`); return r;
+  await ev(mode("data"));
+  const r = await ev(`return document.querySelector("#xlev").textContent.includes("entrees.multiplicateur")`);
+  await ev(mode("graph")); return r;
 });
 await check("R24", "scénarios épinglés (3 au plus) et export JSON", async () => {
   await ev(A.pins); await until(`!!document.querySelector("#xpin")`);
@@ -214,10 +220,34 @@ await check("R31", "curseur d'année : 2035 → carte, légende, fiche, résumé
   await ev(`const r=document.querySelector("#yrange");r.value="2050";r.dispatchEvent(new Event("input"));return 1`);
   return ev(`return !location.hash.includes("y=")`);
 });
-await check("R32", "panneau « Questions » (agent) : s'ouvre, dit s'il est disponible, sans erreur", async () => {
+await check("R32", "assistant (fenêtre modale) : s'ouvre, dit s'il est disponible, sans erreur", async () => {
   await ev(A.ask); await until(`!!document.querySelector("#askq")&&document.querySelector("#askq").offsetParent!==null`, 4000);
   await ev(`await new Promise(r=>setTimeout(r,800));return 1`);
-  return ev(`return document.querySelector("#askst").textContent.slice(0,80)`);
+  const t = await ev(`return document.querySelector("#askst").textContent.slice(0,80)`);
+  await ev(`askHide();return 1`); return t;
+});
+// Graphique à courbes superposables (2026-11-14) : deux unités → deux axes ; trois unités → indice base 100 imposé
+await check("R33", "graphique : superposition à deux axes, puis base 100 au-delà de deux unités ; lien gardé", async () => {
+  await ev(`select("D63");return 1`); await idle(); await ev(mode("graph"));
+  const two = await ev(`return SC&&SC.series&&SC.series.age_moyen?"eff,age_moyen":"eff,dens"`);
+  await ev(`document.querySelector('#gpre [data-g="${two}"]').click();return 1`);
+  const a = await ev(`const t=[...document.querySelectorAll("#chart text")],W=460;return {sel:S.gs.join(),right:t.filter(x=>+x.getAttribute("x")>W-60&&x.getAttribute("text-anchor")!="end"&&x.getAttribute("text-anchor")!="middle").length,
+    titles:t.filter(x=>x.getAttribute("y")=="12").length,leg:document.querySelectorAll("#gleg li").length,b100:document.querySelector("#b100").checked,hash:location.hash.includes("g=")}`);
+  if (!(a.sel === two && a.right >= 3 && a.titles === 2 && a.leg === 2 && !a.b100 && a.hash)) throw new Error("deux axes " + JSON.stringify(a));
+  await ev(`const g=document.querySelector("#gs-pop");if(!g)throw new Error("population absente");g.click();return 1`);
+  const b = await ev(`const t=document.querySelector("#b100");return {n:S.gs.length,checked:t.checked,disabled:t.disabled,title:[...document.querySelectorAll("#chart text")].some(x=>x.textContent.startsWith("indice")),leg:document.querySelectorAll("#gleg li").length}`);
+  await ev(`document.querySelector('#gpre [data-g="eff"]').click();return 1`);
+  if (!(b.n === 3 && b.checked && b.disabled && b.title && b.leg === 3)) throw new Error("base 100 " + JSON.stringify(b));
+  return `${two} : 2 axes ; +population : base 100`;
+});
+await check("R34", "chronologique : repères datés ; un clic sur une année règle le curseur d'année", async () => {
+  await ev(mode("chrono"));
+  const n = await ev(`return document.querySelectorAll('#rv-chrono .tl button[data-y]').length`);
+  await ev(`document.querySelector('#rv-chrono .tl button[data-y="2035"]').click();return 1`);
+  const r = await ev(`return [S.y,document.querySelector("#yrange").value,document.querySelector("#yv").textContent,location.hash.includes("y=2035"),!!document.querySelector('#rv-chrono li.on button[data-y="2035"]')]`);
+  await ev(`setYear(2050);return 1`); await ev(mode("graph"));
+  if (!(n >= 5 && r[0] === 2035 && r[1] === "2035" && r[2] === "2035" && r[3] && r[4])) throw new Error(n + " repères " + JSON.stringify(r));
+  return `${n} repères`;
 });
 await check("R30","mobile 390 px : rien ne déborde à droite, sélecteur de profession, leviers accessibles", async () => {
   await open("", 390, 844);
@@ -241,16 +271,18 @@ if (OPTION1) {
     if (r.includes(false)) throw new Error(JSON.stringify(r));
   });
   // liste classée retirée (décision du 2026-11-14) ; à la place : le panneau de droite ne défile jamais horizontalement
-  await check("O03", "option 1 : panneau de droite sans défilement horizontal (Territoire et comparaison, Expert flux et leviers)", async () => {
-    await ev(`select("D63");return 1`); await idle(); await ev(`addCmp();return 1`);
+  await check("O03", "option 1 : panneau Résultat sans défilement horizontal, dans chaque mode", async () => {
+    await ev(`select("D63");return 1`); await idle(); await ev(`addCmp();PIN=[];return 1`); await ev(`document.querySelector("#xpin")?.click();return 1`);
     const over = [];
-    for (const [t, sub] of [["terr"], ["xp", "flux"], ["xp", "lev"]]) {
-      await ev(`document.querySelector('[data-tab="${t}"]').click();${sub ? `document.querySelector('#xp nav [data-t="${sub}"]').click();` : ""}return 1`);
+    for (const m of ["graph", "chrono", "flux", "cmp", "data"]) {
+      await ev(mode(m));
+      if (m === "graph") await ev(`document.querySelector('#gpre [data-g="eff,dens,pop"]')?.click();return 1`);
+      if (m === "chrono") await ev(`document.querySelector("#yby").open=true;return 1`);
       await ev(`await new Promise(r=>setTimeout(r,150));return 1`);
-      const o = await ev(`const p=[...document.querySelectorAll("#side .panel")].find(x=>!x.hidden);return p.scrollWidth-p.clientWidth`);
-      if (o > 1) over.push(`${t}${sub ? "/" + sub : ""} +${o}px`);
+      const o = await ev(`const p=document.querySelector("#terrpanel");return p.scrollWidth-p.clientWidth`);
+      if (o > 1) over.push(`${m} +${o}px`);
     }
-    await ev(`S.cmp=[];writeHash();renderCmp();return 1`);
+    await ev(`S.cmp=[];PIN=[];S.gs=["eff"];writeHash();renderCmp();setMode("graph");return 1`);
     if (over.length) throw new Error(over.join(", ")); return ev(`return "panneau "+Math.round(document.querySelector("#side").getBoundingClientRect().width)+" px"`);
   });
   await check("O06", "option 1 : panneau de gauche sans défilement horizontal (réglages fins et sources dépliés)", async () => {
@@ -266,9 +298,8 @@ if (OPTION1) {
     if (!r.inside || Math.abs(r.dx) > 40) throw new Error(JSON.stringify(r)); return `décalage ${r.dx} px`;
   });
   await check("O08", "option 1 : chiffres nationaux — sans territoire la fiche montre la France ; bascule territoire ↔ France", async () => {
-    const st = () => ev(`return JSON.stringify({h3:document.querySelector("#card h3")?.textContent,terr:S.terr,CS,tab:TAB})`);
+    const st = () => ev(`return JSON.stringify({h3:document.querySelector("#card h3")?.textContent,terr:S.terr,CS,mode:S.r})`);
     const step = async (name, cond) => { try { await until(cond); } catch { throw new Error(name + " " + await st()); } };
-    await ev(`document.querySelector('[data-tab="terr"]').click();return 1`);
     await step("France sans territoire", `document.querySelector("#card h3")?.textContent==="France"`);
     await ev(`select("D63");return 1`); await idle(); await step("territoire ouvert", `document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"`);
     await ev(`document.querySelector('#card [data-cs="fr"]').click();return 1`); await step("bascule France", `document.querySelector("#card h3")?.textContent==="France"&&F&&F.scn.at(-1)>50000`);
@@ -283,9 +314,31 @@ if (OPTION1) {
     return keep === "D63" && g > 0 ? `territoire conservé ; France : zoom ${fr.zoom}, 0 grisé ; retour : ${g} grisés` : false;
   });
   await check("O04", "option 1 : légende avec repère du territoire ouvert", async () => { await ev(`select("D63");return 1`); await idle(); return ev(`const m=document.querySelector("#mark");return getComputedStyle(m).display!=="none"&&m.textContent.includes("Puy-de-Dôme")`); });
-  await check("O05", "option 1 : onglets Territoire et comparaison, Expert ; la comparaison est sous la fiche", async () => {
-    if (!(await ev(`return !!document.querySelector("#terrpanel #card")&&!!document.querySelector("#terrpanel #cmp")&&!document.querySelector('[data-tab="cmp"]')`))) throw new Error("fiche et comparaison non réunies");
-    for (const t of ["xp", "terr"]) { await ev(`document.querySelector('[data-tab="${t}"]').click();return 1`); if (!(await ev(`return document.querySelector('[data-tab="${t}"]').getAttribute("aria-selected")==="true"`))) throw new Error(t); }
+  // panneau « Résultat » sans onglets ; l'assistant hors du panneau, en fenêtre modale (2026-11-14)
+  await check("O05", "option 1 : Résultat sans onglets, modes qui changent la vue ; assistant en fenêtre modale, Échap la ferme", async () => {
+    const s0 = await ev(`return [document.querySelector("#side h2")?.textContent,!document.querySelector("#tabs,[data-tab],#side #askq"),!document.querySelector("#askdlg").open]`);
+    if (s0[0] !== "Résultat" || !s0[1] || !s0[2]) throw new Error("structure " + JSON.stringify(s0));
+    for (const m of ["chrono", "flux", "cmp", "data", "graph"]) {
+      await ev(mode(m));
+      const v = await ev(`return [...document.querySelectorAll("#terrpanel .rview")].filter(x=>!x.hidden).map(x=>x.dataset.m).join()+"|"+S.r+"|"+(location.hash.includes("r=")?new URLSearchParams(location.hash.slice(1)).get("r"):"graph")`);
+      if (v !== `${m}|${m}|${m}`) throw new Error("mode " + m + " : " + v);
+    }
+    const t0 = await ev(`return S.terr`);
+    await ev(`document.querySelector("#askbtn").click();return 1`); await until(`document.querySelector("#askdlg").open`, 3000);
+    const d = await ev(`const g=document.querySelector("#askdlg");return [g.getAttribute("aria-modal"),document.getElementById(g.getAttribute("aria-labelledby"))?.textContent,g.contains(document.activeElement),document.querySelector("#askbtn").getAttribute("aria-expanded")]`);
+    await cdp("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
+    await cdp("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
+    await until(`!document.querySelector("#askdlg").open`, 3000);
+    const e = await ev(`return [document.activeElement?.id,S.terr]`);
+    if (!(d[0] === "true" && /Assistant/.test(d[1] || "") && d[2] && d[3] === "true" && e[0] === "askbtn" && e[1] === t0)) throw new Error(JSON.stringify({ d, e, t0 }));
+    return "modale ouverte puis fermée par Échap, focus rendu au bouton";
+  });
+  await check("O09", "option 1 : panneau Résultat replié — seulement « Résultat », un clic le déplie", async () => {
+    await ev(`document.querySelector("#cardfold").click();return 1`);
+    const t = await ev(`const s=document.querySelector("#side");return [s.classList.contains("closed"),s.innerText.replace(/[›‹\\s]+/g," ").trim()]`);
+    await ev(`document.querySelector("#side").click();return 1`);
+    const open = await ev(`return !document.querySelector("#side").classList.contains("closed")`);
+    if (!(t[0] && t[1] === "Résultat" && open)) throw new Error(JSON.stringify([t, open]));
   });
 }
 

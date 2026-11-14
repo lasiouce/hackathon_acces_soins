@@ -26,7 +26,7 @@ html.xl{font-size:18.75px}   /* racine du DSFR (16 px) : ses images à taille fi
 html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--text-default-grey)}
 [hidden]{display:none!important}
 /* le DSFR ne pose pas de box-sizing global : les blocs de la page et la liste déroulante comptent bordure et marge intérieure */
-#app,#levers,#side,.panel,#legend,#scenhead,#yr,#nl,#toast,#tip,#askf,#asklog,.chathead,.fr-select{box-sizing:border-box}
+#app,#levers,#side,.panel,#legend,#scenhead,#yr,#nl,#toast,#tip,#askf,#asklog,.chathead,#askdlg,.fr-select{box-sizing:border-box}
 .num{font-variant-numeric:tabular-nums}
 p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses marges elle-même */
 .fold{width:2.5rem;height:2.5rem;flex:none;border:0;box-shadow:inset 0 0 0 1px var(--border-default-grey);background:var(--paper);color:var(--sel);cursor:pointer;font-size:1.1rem;line-height:1;display:grid;place-items:center}
@@ -54,8 +54,11 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #yr button:hover{background:var(--wash)}
 #yr input{flex:1;min-width:0;accent-color:var(--act)}
 #yr b{font-size:1.15rem;min-width:2.8rem;text-align:right;color:var(--ink)}
-/* fil d'Ariane posé sur la carte, en haut à gauche */
-#crumb{position:absolute;left:.8rem;top:.8rem;z-index:2;max-width:calc(100% - 9.5rem);background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.25rem .5rem;display:flex;flex-wrap:wrap;align-items:center;gap:0 .2rem;white-space:nowrap;color:var(--mute);font-size:.87rem}
+/* en haut à gauche de la carte : le fil d'Ariane, puis le bouton de l'assistant (décision du 2026-11-14 : bouton visible, fenêtre dédiée) */
+#maptl{position:absolute;left:.8rem;top:.8rem;z-index:2;max-width:calc(100% - 4.6rem);display:flex;flex-direction:column;align-items:flex-start;gap:.6rem}
+#askbtn{box-shadow:0 2px 8px 0 rgba(0,0,18,.28);max-width:100%}
+#askbtn svg{flex:none;margin-right:.55rem}
+#crumb{max-width:100%;background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.25rem .5rem;display:flex;flex-wrap:wrap;align-items:center;gap:0 .2rem;white-space:nowrap;color:var(--mute);font-size:.87rem}
 #crumb button{border:0;background:none;padding:.2rem .3rem;cursor:pointer;color:var(--text-default-grey);text-decoration:underline;text-underline-offset:2px}
 #crumb b{padding:.2rem .3rem;color:var(--sel);font-weight:400}
 #crumb i{font-style:normal}
@@ -81,6 +84,14 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #levers.closed>header{flex-direction:column;border:0;padding:.6rem .3rem}
 #levers.closed h2,#levers.closed .body,#levers.closed #scenhead{display:none}
 #levers.closed #levsum,#side.closed #sidesum{display:block;writing-mode:vertical-rl;transform:rotate(180deg);font-weight:700;white-space:nowrap;margin:.8rem auto}
+/* panneau replié bien visible (retour de test 2026-11-14 : le panneau droit replié n'était pas vu) : barre bleu France,
+   filet sur le bord côté carte, bouton plein, libellé en bleu ; toute la barre déplie le panneau */
+#levers.closed,#side.closed{background:var(--background-action-low-blue-france);cursor:pointer}
+#levers.closed{box-shadow:inset -4px 0 0 var(--border-plain-blue-france)}
+#side.closed{box-shadow:inset 4px 0 0 var(--border-plain-blue-france)}
+#levers.closed:hover,#side.closed:hover{background:var(--background-action-low-blue-france-hover)}
+#levers.closed .fold,#side.closed .fold{background:var(--background-action-high-blue-france);color:var(--text-inverted-blue-france);box-shadow:none}
+#levers.closed #levsum,#side.closed #sidesum{color:var(--text-action-high-blue-france)}
 #nlf .nlrow{display:flex;gap:.4rem;align-items:flex-end}
 #nlf .fr-input{flex:1;min-width:0;margin:0}
 #nlf .fr-label{margin-bottom:.4rem}
@@ -124,17 +135,19 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #mapwrap{position:relative;flex:1 1 auto;min-height:12rem;background:var(--sea)}
 #map{position:absolute;inset:0}
 /* légende réduite (demande du 2026-11-14) : bascule d'indicateur et gamme ; le titre reste pour les lecteurs d'écran */
-#legend{position:absolute;left:.8rem;bottom:.8rem;width:min(28rem,calc(100% - 4.6rem));background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
-#var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:wrap}
+#legend{position:absolute;left:.8rem;bottom:.8rem;width:auto;min-width:min(22rem,calc(100% - 4.6rem));max-width:min(34rem,calc(100% - 4.6rem));background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
+#var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:nowrap}   /* les trois indicateurs sur une ligne (demande du 2026-11-14) */
+#var .fr-tag{white-space:nowrap}
 #var .fr-tag{margin:0}
-#var .vi{display:inline-flex;align-items:center;gap:.1rem}
+#defbtn{margin-top:.35rem;display:inline-flex;align-items:center;gap:.3rem}
+#defbtn::before{content:"▸";font-size:.75rem;transition:transform .15s}#defbtn[aria-expanded=true]::before{transform:rotate(90deg)}
+#defbox{margin-top:.4rem;background:var(--background-alt-blue-france);border-left:3px solid var(--border-plain-blue-france);padding:.5rem .7rem}
+#deftxt{margin:0;font-size:.85rem;line-height:1.4;color:var(--text-default-grey)}
 /* icône d'information (DSFR, info-line) à la place du point d'interrogation, couleur d'action */
-#var .info{color:var(--text-action-high-blue-france);min-height:1.75rem;max-height:1.75rem;max-width:1.75rem;padding:.25rem .375rem}
-#var .info::before{-webkit-mask-image:url(dsfr/icons/system/fr--info-line.svg);mask-image:url(dsfr/icons/system/fr--info-line.svg)}
 /* bascules à choix unique (indicateur, échelle de la fiche, mode expert) : étiquette pleine, sans la coche du DSFR */
-:is(#var,#card .scope,#xp nav) .fr-tag[aria-pressed=true]::after{display:none}
-:is(#var,#card .scope,#xp nav) .fr-tag[aria-pressed=true]:not(:disabled){background-image:none;background-color:var(--background-active-blue-france)}
-:is(#var,#card .scope,#xp nav) .fr-tag[aria-pressed=true]:not(:disabled):hover{background-image:none;background-color:var(--background-active-blue-france-hover)}
+:is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]::after{display:none}
+:is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]:not(:disabled){background-image:none;background-color:var(--background-active-blue-france)}
+:is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]:not(:disabled):hover{background-image:none;background-color:var(--background-active-blue-france-hover)}
 #lt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* gamme continue, comme la carte (interpolation de RAMP entre −B et +B) ; graduations posées à leur valeur exacte */
 .rrow{display:flex;align-items:flex-start;gap:.6rem}
@@ -149,10 +162,6 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #ticks span::before{content:"";position:absolute;left:50%;top:-.3rem;width:1px;height:.25rem;background:var(--mute)}
 #ticks span:first-child::before{left:0}#ticks span:last-child::before{left:auto;right:0}
 #legend .note{font-size:.8rem}
-/* accès au chat : icône à gauche des boutons de zoom */
-#askbtn{position:absolute;right:4rem;top:.8rem;width:2.5rem;height:2.5rem;background:var(--paper);color:var(--sel);border:0;box-shadow:0 2px 6px 0 rgba(0,0,18,.16);cursor:pointer;display:grid;place-items:center;z-index:2}
-#askbtn:hover{background:var(--wash)}
-#askbtn[aria-pressed=true]{background:var(--act);color:var(--text-inverted-blue-france)}
 /* panneau Scénario simplifié : nom du paramètre, valeur, curseur */
 /* familles de leviers en accordéons DSFR indépendants : politiques ouvertes au chargement, contexte replié */
 #levfam .fr-accordion{margin:0}
@@ -173,22 +182,57 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #zoom button+button{border-top:1px solid var(--hair)}
 #zoom button:hover{background:var(--wash)}
 
-/* ---------- panneau Territoire (droite) : onglets Territoire, Comparer, Expert ---------- */
+/* ---------- panneau Résultat (droite) : un seul panneau, sans onglets (décision du 2026-11-14) ;
+   la fiche du territoire en tête, puis un sélecteur de modes de visualisation ---------- */
 #side{width:var(--rw);border-left:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
-#side>header{display:flex;align-items:flex-end;gap:.6rem;padding:.5rem .8rem 0;border-bottom:1px solid var(--rule)}
-#tabs{display:flex;gap:.25rem;flex:1;flex-wrap:wrap}
-#tabs button{border:0;background:var(--background-action-low-blue-france);padding:.45rem .8rem;cursor:pointer;color:var(--text-title-grey);font-weight:700;font-size:.93rem;box-shadow:inset 0 -1px 0 var(--border-default-grey)}
-#tabs button:hover{background:var(--background-action-low-blue-france-hover)}
-#tabs button[aria-selected=true]{background:var(--paper);color:var(--sel);box-shadow:inset 0 2px 0 var(--border-active-blue-france),inset 1px 0 0 var(--border-default-grey),inset -1px 0 0 var(--border-default-grey)}
-#side>header .fold{margin-bottom:.35rem}
+#side>header{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem .8rem .6rem 1.1rem;border-bottom:1px solid var(--hair)}
+#side h2{margin:0;font-size:1.25rem;line-height:1.5rem}
 #sidesum{display:none}
-body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #side.closed{width:4rem}
 #side.closed>header{flex-direction:column;align-items:center;border:0;padding:.6rem .3rem}
-#side.closed #tabs,#side.closed .panel{display:none!important}
+#side.closed h2,#side.closed .panel{display:none!important}
 .panel{flex:1;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;padding:.9rem 1.1rem 1.2rem}
-#cmppanel{margin-top:1.4rem;border-top:2px solid var(--border-plain-blue-france);padding-top:.9rem}
 #cmppanel>.h4{font-size:1.1rem}
+/* modes de visualisation : contrôle segmenté DSFR (boutons radio) ; à la ligne si le panneau est étroit */
+#rmode{display:block;margin:1.1rem 0 .9rem}
+#rmode .fr-segmented__elements{flex-wrap:wrap;width:fit-content;max-width:100%}
+.rview>*+*{margin-top:.9rem}
+.rview .h4{margin-bottom:.3rem}
+/* Graphique : courbes superposables */
+#gpre{margin:0}
+#gpre li{line-height:1}
+#gpre .fr-tag{margin:0 .1rem .4rem 0}
+#chart{width:100%;display:block}
+#gleg{list-style:none;margin:0;padding:0;display:grid;gap:.35rem;font-size:.87rem}
+#gleg li{padding:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 .5rem;align-items:baseline}
+#gleg li svg{align-self:start;margin-top:.4rem}
+#gleg small{display:block;color:var(--mute);font-size:.78rem}
+#gset{border:0;margin:0;padding:0;min-width:0}
+#gset legend{font-size:.87rem;font-weight:700;color:var(--ink);padding:0;margin-bottom:.3rem}
+#gser{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}
+#gser .fr-checkbox-group{margin:0}
+#gser .fr-checkbox-group input[type=checkbox]~label{padding:.3rem 0;font-size:.9rem}
+#gser .fr-checkbox-group--sm input[type=checkbox]{top:.55rem}
+.sw{display:inline-block;width:1.1rem;height:3px;background:var(--c);margin-right:.45rem;flex:none}
+#gb100{margin-top:.6rem}
+#gb100 .fr-toggle__label{font-weight:400}
+/* Chronologique : frise des repères, l'année affichée en évidence */
+.tl{list-style:none;margin:0;padding:0 0 0 1rem;border-left:2px solid var(--border-default-grey)}
+.tl li{position:relative;padding:0}.tl li::marker{content:none}
+.tl li::before{content:"";position:absolute;left:calc(-1rem - 7px);top:1rem;width:12px;height:12px;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 2px var(--border-plain-blue-france)}
+.tl li.on::before{background:var(--background-action-high-blue-france)}
+.tl li.obs::before{box-shadow:inset 0 0 0 2px var(--border-default-grey)}
+.tl :is(button,.it){display:grid;grid-template-columns:3.2rem minmax(0,1fr);gap:.05rem .7rem;width:100%;text-align:left;border:0;background:none;padding:.55rem .6rem;font:inherit;color:inherit}
+.tl button{cursor:pointer}
+.tl button:hover{background:var(--background-default-grey-hover)}
+.tl li.on button{background:var(--background-action-low-blue-france)}
+.tl .ty{font-weight:700;font-size:1.05rem;color:var(--ink);grid-row:1/span 2}
+.tl .tt{font-weight:700;font-size:.93rem;color:var(--ink)}
+.tl .tv{color:var(--mute);font-size:.85rem}
+#yby>summary{cursor:pointer;color:var(--sel);font-size:.93rem}
+#yby table{margin-top:.5rem}
+#yby tr.on td{background:var(--background-action-low-blue-france);font-weight:700}
+#yby td button{border:0;background:none;padding:0;cursor:pointer;color:var(--sel);text-decoration:underline;text-underline-offset:2px;font:inherit}
 #card header{display:flex;justify-content:space-between;gap:.5rem}
 #card h3{margin:0;font-size:1.6rem;line-height:1.15;text-wrap:balance}
 #card .sub{color:var(--mute);font-size:.87rem}
@@ -201,21 +245,22 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #card .x{border:0;background:none;cursor:pointer;padding:.2rem;color:var(--sel);align-self:flex-start}
 #card .scope{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
 #card .scope .fr-tag{margin:0}
-#chart{width:100%;display:block}
 .flows{display:grid;gap:.35rem}
 .flow{display:grid;grid-template-columns:7rem 1fr auto;align-items:center;gap:.5rem;font-size:.93rem}
 .flow .bar{height:.55rem;background:var(--wash);position:relative}
 .flow .bar i{position:absolute;top:0;bottom:0;background:var(--sel)}
 .flow .bar:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--text-title-grey)}
 .flow output{text-align:right}
+.cardact{padding-top:.7rem}
 .cardact .fr-btns-group{margin:0}
 .empty h3{margin:.2rem 0 .4rem;font-size:1.2rem}
 .empty p{color:var(--mute);margin:0}
-#cmppanel table,#xbody table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.87rem}
-#cmppanel th,#cmppanel td,#xbody th,#xbody td{padding:.3rem .35rem;border-top:1px solid var(--hair);text-align:right;white-space:nowrap}
-#cmppanel th,#xbody th{color:var(--mute);font-weight:400;border-top:0}
-#cmppanel th:first-child,#cmppanel td:first-child,#xbody th:first-child,#xbody td:first-child{text-align:left}
-#xbody td.wrap,#pins td.wrap{white-space:normal;text-align:left;min-width:11rem}
+#side table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.87rem}
+#side th,#side td{padding:.3rem .35rem;border-top:1px solid var(--hair);text-align:right;white-space:nowrap}
+#side th{color:var(--mute);font-weight:400;border-top:0}
+#side th:first-child,#side td:first-child{text-align:left}
+#xbody td.wrap{white-space:normal;text-align:left;min-width:11rem}
+#pins td{white-space:normal}#pins tr.plv td{border-top:0;padding-top:0;color:var(--mute);font-size:.8rem;text-align:left}
 #cmppanel td:first-child,#xbody td{white-space:normal}   /* libellés et fourchettes « a – b » : à la ligne plutôt que hors du panneau (les nombres, à espace insécable, ne se coupent pas) */
 .levs .lv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.1rem .8rem;padding:.55rem 0;border-top:1px solid var(--hair);font-size:.87rem}
 .levs code{font-size:.8rem;color:var(--mute);overflow-wrap:anywhere}
@@ -224,13 +269,16 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 #cmppanel .x,#pins [data-rm]{border:0;background:none;cursor:pointer;padding:.1rem .3rem;color:var(--sel)}
 #pins .row{margin:.6rem 0}
 #pins .fr-btns-group{margin:0}
-#xp nav{display:flex;gap:.4rem;margin-bottom:.8rem}
-#xp nav .fr-tag{margin:0}
 #lat{margin-top:.8rem;font-size:.8rem;color:var(--mute)}
-/* assistant de simulation (interface de chatbot) : il traduit une politique en leviers et explique ; il ne calcule rien */
-#ask.panel{display:flex;flex-direction:column;padding:0;overflow:hidden}
-#ask[hidden]{display:none!important}
-.chathead{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.1rem;border-bottom:1px solid var(--hair)}.chathead b{flex:1;font-size:1rem}
+/* assistant de simulation (interface de chatbot) : il traduit une politique en leviers et explique ; il ne calcule rien.
+   Fenêtre modale dédiée, posée sur la colonne de la carte (décision du 2026-11-14) ; plein écran sur mobile */
+#askdlg{position:fixed;inset:auto;left:max(1rem,calc(50vw - 24rem));top:5rem;transform:none;margin:0;padding:0;border:0;width:min(48rem,calc(100vw - 2rem));height:min(52rem,calc(100dvh - 6rem));max-width:none;max-height:none;
+  background:var(--paper);color:var(--text-default-grey);box-shadow:0 6px 18px 0 rgba(0,0,18,.24);overflow:hidden}
+#askdlg[open]{display:flex;flex-direction:column}
+#askdlg::backdrop{background:rgba(22,22,22,.48)}
+.chathead{display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem .65rem 1.1rem;border-bottom:1px solid var(--hair)}
+.chathead h2{flex:1;margin:0;font-size:1.25rem;line-height:1.5rem;display:flex;align-items:center;gap:.5rem;color:var(--ink)}
+.chathead .fr-btn--close{margin-left:0}
 #asklog{flex:1;min-height:0;overflow:auto;padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:1rem;font-size:.95rem}
 #askwelcome .wt{font-size:1.5rem;font-weight:700;line-height:1.25;margin:.3rem 0 .4rem;color:var(--ink)}
 #askwelcome .wh{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin:1.2rem 0 .45rem}
@@ -285,6 +333,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
   html,body{overflow-x:hidden;overflow-y:auto;height:auto}
   #app{display:block;height:auto}
   #crumb,#save span{display:none}
+  #askdlg{inset:0!important;width:100%!important;height:100dvh!important;left:0!important;top:0!important}
+  #side.closed h2{display:block!important}#side.closed #sidesum{display:none!important}
   #app>.fr-header .fr-header__body-row{flex-wrap:wrap}#app>.fr-header .fr-header__tools{flex:1 1 100%;padding-bottom:.4rem}
   #search{width:auto;flex:1 1 10rem}#search kbd{display:none}
   #levers.closed #scenhead{display:grid;padding-top:0}   /* mobile : profession et année restent visibles, panneau replié */
@@ -294,9 +344,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
   #levers.closed #levsum,#side.closed #sidesum{writing-mode:horizontal-tb;transform:none;margin:0;flex:1}
   #mapwrap{height:58dvh;flex:none}
   .panel{overflow:visible}
-  #asklog{max-height:70vh}
-  #app{display:flex;flex-direction:column}#app>.fr-header{order:-3}#levers{order:-2}body.askon #side{order:-1}   /* mobile : l'assistant d'abord */
-  #legend{width:calc(100% - 4.6rem)}
+  #app{display:flex;flex-direction:column}#app>.fr-header{order:-3}#levers{order:-2}
+  #legend{width:calc(100% - 4.6rem)}#var{flex-wrap:wrap}
   #legend .note{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -350,41 +399,70 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
 <main id="center">
   <div id="mapwrap">
     <div id="map" aria-label="Carte des départements"></div>
-    <nav id="crumb" aria-label="Fil d'Ariane"></nav>
-    <button id="askbtn" aria-pressed="false" aria-label="Assistant de simulation" title="Assistant de simulation : proposer une politique, poser une question"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/><path d="M5 6.2h6M5 8.2h4"/></svg></button>
+    <div id="maptl">
+      <nav id="crumb" aria-label="Fil d'Ariane"></nav>
+      <!-- assistant hors du panneau Résultat (décision du 2026-11-14) : bouton principal sur la carte, fenêtre modale dédiée -->
+      <button type="button" id="askbtn" class="fr-btn" aria-haspopup="dialog" aria-expanded="false" title="Décrire une politique ou poser une question : l'assistant la traduit en leviers, le jumeau calcule"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/><path d="M5 6.2h6M5 8.2h4"/></svg>Assistant de simulation</button>
+    </div>
     <div id="zoom">
       <button id="zin" aria-label="Zoomer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg></button>
       <button id="zout" aria-label="Dézoomer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10"/></svg></button>
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur">
-        <!-- chaque indicateur suivi d'une icône « i » : un clic déplie sa bulle (infobulle DSFR au clic, pas au survol) -->
-        <span class="vi"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Évolution 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button type="button" class="fr-btn--tooltip fr-btn info" aria-describedby="tt-evo">Définition : évolution</button></span>
-        <span class="vi"><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button type="button" class="fr-btn--tooltip fr-btn info" aria-describedby="tt-ecart">Définition : écart au tendanciel</button></span>
-        <span class="vi"><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button type="button" class="fr-btn--tooltip fr-btn info" aria-describedby="tt-dens">Définition : densité</button></span>
-        <!-- bulles : définition de chaque indicateur, complétée par la valeur France du moment (legend()) -->
-        <span class="fr-tooltip fr-placement" id="tt-evo" role="tooltip" aria-hidden="true"></span>
-        <span class="fr-tooltip fr-placement" id="tt-ecart" role="tooltip" aria-hidden="true"></span>
-        <span class="fr-tooltip fr-placement" id="tt-dens" role="tooltip" aria-hidden="true"></span></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button></div>
       <div id="lt"></div>
       <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
+      <!-- définition facultative de l'indicateur affiché (décision du 2026-11-14) : fermée par défaut, état mémorisé dans le navigateur -->
+      <button type="button" class="fr-link fr-link--sm" id="defbtn" aria-expanded="false" aria-controls="defbox">Comment lire cet indicateur ?</button>
+      <div id="defbox" hidden><p id="deftxt"></p></div>
     </div>
   </div>
 </main>
 
-<aside id="side" aria-label="Territoire, comparaison et mode expert">
-  <header><div id="tabs" role="tablist"><button role="tab" data-tab="ask" aria-selected="true">Assistant</button><button role="tab" data-tab="terr" aria-selected="false">Territoire et comparaison</button><button role="tab" data-tab="xp" aria-selected="false">Expert</button></div>
-    <span id="sidesum"></span>
-    <button class="fold" id="cardfold" aria-label="Replier le territoire" aria-expanded="true">›</button></header>
-  <!-- Territoire et comparaison réunis (décision du 2026-11-14) : la fiche, puis les territoires comparés et les scénarios épinglés -->
-  <div class="panel" id="terrpanel" role="tabpanel">
+<aside id="side" aria-labelledby="sideh">
+  <header><h2 id="sideh">Résultat</h2><span id="sidesum" aria-hidden="true">Résultat</span>
+    <button class="fold" id="cardfold" aria-label="Replier le résultat" aria-expanded="true">›</button></header>
+  <!-- panneau Résultat, sans onglets (décision du 2026-11-14) : la fiche du territoire, puis un mode de visualisation au choix -->
+  <div class="panel" id="terrpanel">
     <div id="card" aria-live="polite"></div>
-    <section id="cmppanel" aria-labelledby="cmph"><h3 class="h4" id="cmph">Comparer</h3><p class="note" style="margin:0 0 .6rem">Territoires comparés, même scénario.</p><div id="cmp"></div><div id="pins"></div></section>
+    <fieldset class="fr-segmented fr-segmented--sm fr-segmented--no-legend" id="rmode">
+      <legend class="fr-segmented__legend">Mode de visualisation</legend>
+      <div class="fr-segmented__elements">
+        <div class="fr-segmented__element"><input value="graph" type="radio" id="rm-graph" name="rmode" checked><label class="fr-label" for="rm-graph">Graphique</label></div>
+        <div class="fr-segmented__element"><input value="chrono" type="radio" id="rm-chrono" name="rmode"><label class="fr-label" for="rm-chrono">Chronologique</label></div>
+        <div class="fr-segmented__element"><input value="flux" type="radio" id="rm-flux" name="rmode"><label class="fr-label" for="rm-flux">Flux</label></div>
+        <div class="fr-segmented__element"><input value="cmp" type="radio" id="rm-cmp" name="rmode"><label class="fr-label" for="rm-cmp">Comparer</label></div>
+        <div class="fr-segmented__element"><input value="data" type="radio" id="rm-data" name="rmode"><label class="fr-label" for="rm-data">Données</label></div>
+      </div>
+    </fieldset>
+    <section class="rview" id="rv-graph" data-m="graph" aria-label="Graphique">
+      <div><p class="fr-text--xs" style="margin:0 0 .3rem;color:var(--mute)">Superpositions proposées</p><ul class="fr-tags-group" id="gpre" aria-label="Superpositions proposées"></ul></div>
+      <svg id="chart" viewBox="0 0 460 260" role="img" aria-label="Trajectoire"></svg>
+      <ul id="gleg"></ul>
+      <p class="note" id="gnote"></p>
+      <fieldset id="gset"><legend>Courbes superposées</legend><div id="gser"></div>
+        <div class="fr-toggle" id="gb100"><input type="checkbox" class="fr-toggle__input" id="b100" aria-describedby="b100-hint"><label class="fr-toggle__label" for="b100" data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé">Indice base 100 en 2026</label><p class="fr-hint-text" id="b100-hint"></p></div>
+      </fieldset>
+    </section>
+    <section class="rview" id="rv-chrono" data-m="chrono" aria-label="Chronologique" hidden></section>
+    <section class="rview" id="rv-flux" data-m="flux" aria-label="Flux" hidden>
+      <div><p class="h4">Écart en <span class="yl">2050</span>, décomposé par flux</p><div class="flows" id="gflows"></div></div>
+      <div><p class="h4">Flux par année</p><div id="xbody"></div></div>
+    </section>
+    <section class="rview" id="rv-cmp" data-m="cmp" aria-label="Comparer" hidden>
+      <div id="cmppanel"><h3 class="h4" id="cmph">Comparer</h3><p class="note" style="margin:0 0 .6rem">Territoires comparés, même scénario.</p><div id="cmp"></div><div id="pins"></div></div>
+    </section>
+    <section class="rview" id="rv-data" data-m="data" aria-label="Données" hidden>
+      <div><p class="h4">Zonage</p><p class="note" id="zone" style="margin:0"></p></div>
+      <div><p class="h4">Leviers bruts</p><div id="xlev"></div></div>
+      <div id="lat">—</div>
+    </section>
   </div>
-  <div class="panel" id="xp" role="tabpanel" hidden aria-label="Mode expert"><nav><button class="fr-tag fr-tag--sm" data-t="flux" aria-pressed="true">Flux</button><button class="fr-tag fr-tag--sm" data-t="lev" aria-pressed="false">Leviers</button></nav><div id="xbody"></div><div id="lat">—</div></div>
-  <div class="panel" id="ask" role="region" hidden aria-label="Assistant de simulation">
-  <div class="chathead"><b>Assistant de simulation</b><button type="button" id="asknew" class="fr-btn fr-btn--tertiary fr-btn--sm">Nouvelle conversation</button></div>
+</aside>
+</div>
+<dialog id="askdlg" aria-labelledby="askh" aria-modal="true">
+  <div class="chathead"><h2 id="askh"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" style="color:var(--sel)"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/><path d="M5 6.2h6M5 8.2h4"/></svg>Assistant de simulation</h2><button type="button" id="asknew" class="fr-btn fr-btn--tertiary fr-btn--sm">Nouvelle conversation</button><button type="button" id="askx" class="fr-btn fr-btn--close" title="Fermer l'assistant">Fermer</button></div>
   <div id="asklog" aria-live="polite"><div id="askwelcome">
     <p class="wt">Que voulez-vous simuler ?</p>
     <p class="st" id="askst" data-d="Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.">Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.</p>
@@ -401,9 +479,8 @@ body.askon #side:not(.closed){width:max(var(--rw),min(46rem,42vw))}
     <div class="cards mini"><button type="button" class="fr-tag">Pourquoi ce résultat ?</button><button type="button" class="fr-tag">Quelle confiance accorder à ce chiffre ?</button><button type="button" class="fr-tag">Quels départements ont la densité la plus faible en 2050 ?</button><button type="button" class="fr-tag">Comment le jumeau calcule-t-il ?</button></div>
   </div></div>
   <form id="askf" autocomplete="off"><textarea id="askq" class="fr-input" rows="1" maxlength="1000" placeholder="Décrivez une politique ou posez une question…" aria-label="Votre message"></textarea><button class="fr-btn" aria-label="Envoyer">Envoyer</button></form>
-  <p class="askfoot">Projection sous hypothèses · chaque nombre vient du jumeau et est vérifié · mots de grandeur fixés par le lexique</p></div>
-</aside>
-</div>
+  <p class="askfoot">Projection sous hypothèses · chaque nombre vient du jumeau et est vérifié · mots de grandeur fixés par le lexique</p>
+</dialog>
 <div id="toast" role="status"></div>
 <div id="nl" role="dialog" aria-modal="true" aria-labelledby="nlh"></div>
 <div id="tip"></div>
@@ -422,17 +499,31 @@ const fmt=n=>Math.round(n).toLocaleString("fr-FR");
 const pct=x=>(x>=0?"+":"−")+Math.abs(x*100).toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";
 const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 
-const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],y:2050};
+// panneau Résultat (décision du 2026-11-14) : modes de visualisation, gardés dans le lien (r=…, défaut graph)
+const RMODES=["graph","chrono","flux","cmp","data"];
+// Graphique : catalogue des courbes superposables. Effectif, densité et population viennent toujours de /api/scenario ;
+// âge moyen, part des 60 ans et plus, entrées et sorties seulement si l'API sert `series` (sinon elles ne sont pas proposées).
+// Couleurs de données : bleu pétrole, bistre et teintes voisines, jamais rouge ni vert.
+const GS={eff:{l:"Effectif",u:"professionnels",c:"#0E4D64"},dens:{l:"Densité pour 100 000 habitants",u:"pour 100 000 hab.",c:"#8C5A1B"},
+  pop:{l:"Population",u:"habitants",c:"#6B7075"},age_moyen:{l:"Âge moyen",u:"ans",c:"#6E3F7F",d:1},part_60p:{l:"Part des 60 ans et plus",u:"%",c:"#3D4F9E",d:1},
+  entrees:{l:"Entrées annuelles",u:"professionnels / an",c:"#2F6A8A"},sorties:{l:"Sorties annuelles",u:"professionnels / an",c:"#B88A4E"}};
+// superpositions proposées (seules celles dont toutes les courbes existent sont affichées)
+const GPRE=[["Effectif seul",["eff"]],["Effectif + âge moyen",["eff","age_moyen"]],["Effectif + part des 60 ans et +",["eff","part_60p"]],
+  ["Effectif + densité",["eff","dens"]],["Entrées et sorties",["entrees","sorties"]],["Effectif + entrées et sorties",["eff","entrees","sorties"]],
+  ["Effectif + population",["eff","pop"]],["Effectif, densité et population",["eff","dens","pop"]]];
+const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],y:2050,r:"graph",gs:["eff"],b100:false};
 let META,GEO,REGL,regOf={},focusReg=null,carte=null,map,bbox={},names={},lat=[];
-let F=null,SC=null,TAB="ask",XT="flux",PIN=[];
+let F=null,SC=null,PIN=[];
 
 // ---------- état ↔ URL ----------
 function readHash(){const h=new URLSearchParams(location.hash.slice(1));
   if(h.get("p"))S.prof=h.get("p");if(h.get("l"))try{S.lvHash=Object.fromEntries(h.get("l").split(",").map(x=>x.split(":")));}catch{}if(h.get("v"))S.v=h.get("v");
   if(h.get("t"))S.terr=h.get("t");if(h.get("z"))S.xl=h.get("z")=="1";if(h.get("c"))S.cmp=h.get("c").split(",").filter(Boolean);
-  const y=+h.get("y");if(y>=2026&&y<=2050)S.y=y;}
+  const y=+h.get("y");if(y>=2026&&y<=2050)S.y=y;
+  if(RMODES.includes(h.get("r")))S.r=h.get("r");if(h.get("g")){const g=h.get("g").split(",").filter(k=>k in GS);if(g.length)S.gs=g;}S.b100=h.get("b")=="1";}
 function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv).map(([k,v])=>k+":"+(typeof v=="boolean"?+v:v)).join(","),v:S.v});
-  if(S.terr)h.set("t",S.terr);if(S.xl)h.set("z","1");if(S.cmp.length)h.set("c",S.cmp.join(","));if(S.y!=2050)h.set("y",S.y);history.replaceState(null,"","#"+h);if(META)crumb();}
+  if(S.terr)h.set("t",S.terr);if(S.xl)h.set("z","1");if(S.cmp.length)h.set("c",S.cmp.join(","));if(S.y!=2050)h.set("y",S.y);
+  if(S.r!="graph")h.set("r",S.r);if(S.gs.join()!="eff")h.set("g",S.gs.join(","));if(S.b100)h.set("b","1");history.replaceState(null,"","#"+h);if(META)crumb();}
 
 // ---------- démarrage ----------
 (async()=>{
@@ -446,8 +537,7 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
   if(!META.professions[S.prof]){toast("Lien : profession inconnue, retour aux kinés");S.prof="kines";}
   closeCardContent();
   buildProfs();buildPanels();buildMap();buildSearch();buildLevers();buildAsk();buildYear();
-  showTab("ask");document.activeElement?.blur();   // sans clavier surgi sur mobile ; interface principale (décision du 2026-11-14) : la conversation est ouverte au chargement
-  $("#xp nav").onclick=e=>{const t=e.target.closest("button");if(!t)return;XT=t.dataset.t;$("#xp nav").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===t));renderExpert();};
+  buildResult();setMode(S.r,false);document.activeElement?.blur();   // sans clavier surgi sur mobile ; l'assistant est fermé au chargement (décision du 2026-11-14 : bouton sur la carte)
   $("#nlf").onsubmit=e=>{e.preventDefault();const t=$("#nlq").value.trim();if(t)interpret(t);};
   if(innerWidth<=700)foldPanel("#levers","#fold",true);   // mobile : la carte d'abord
 })();
@@ -466,15 +556,20 @@ function applyProf(){document.documentElement.style.setProperty("--prof",PCOL[S.
 
 // ---------- panneaux dépliables et onglets ----------
 function foldPanel(p,b,closed){const el=$(p),bt=$(b),c=closed??!el.classList.contains("closed");el.classList.toggle("closed",c);bt.setAttribute("aria-expanded",!c);
-  const what={"#levers":"le scénario","#side":"le territoire"}[p];bt.setAttribute("aria-label",(c?"Déplier ":"Replier ")+what);
+  const what={"#levers":"le scénario","#side":"le résultat"}[p];bt.setAttribute("aria-label",(c?"Déplier ":"Replier ")+what);
   bt.textContent=p=="#levers"?(c?"›":"‹"):(c?"‹":"›");}
-function showTab(t){TAB=t;document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab==t));
-  $("#terrpanel").hidden=t!="terr";$("#xp").hidden=t!="xp";$("#ask").hidden=t!="ask";
-  document.body.classList.toggle("xpon",t=="xp");document.body.classList.toggle("askon",t=="ask");$("#askbtn").setAttribute("aria-pressed",t=="ask");
-  if($("#side").classList.contains("closed"))foldPanel("#side","#cardfold",false);renderExpert();renderPins();if(t=="ask")askOpen();}
+// mode de visualisation du panneau Résultat : une seule vue montrée, calculée à la demande à partir de la fiche affichée (F)
+function setMode(m,user=true){S.r=RMODES.includes(m)?m:"graph";const r=document.querySelector(`#rmode input[value="${S.r}"]`);if(r)r.checked=true;
+  document.querySelectorAll("#terrpanel .rview").forEach(v=>v.hidden=v.dataset.m!=S.r);
+  if(user&&$("#side").classList.contains("closed"))foldPanel("#side","#cardfold",false);
+  renderView();if(user)writeHash();}
+function renderView(){switch(S.r){case"graph":drawGraph();break;case"chrono":renderChrono();break;case"flux":renderFlux();break;
+  case"cmp":renderCmp();renderPins();break;case"data":renderData();break;}}
 function buildPanels(){
   $("#fold").onclick=()=>foldPanel("#levers","#fold");$("#cardfold").onclick=()=>foldPanel("#side","#cardfold");
-  $("#tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(b)showTab(b.dataset.tab);};
+  // panneau replié : un clic n'importe où sur sa barre le déplie (hors bouton, et hors profession et année laissées visibles sur mobile)
+  $("#levers").addEventListener("click",e=>{if($("#levers").classList.contains("closed")&&!e.target.closest(".fold,#scenhead"))foldPanel("#levers","#fold",false);});
+  $("#side").addEventListener("click",e=>{if($("#side").classList.contains("closed")&&!e.target.closest(".fold"))foldPanel("#side","#cardfold",false);});
   // panneau replié, onglet élargi ou A+ : la carte reprend la place ; vue France tant que l'utilisateur·rice n'a pas déplacé la carte
   new ResizeObserver(()=>{if(!map)return;map.resize();if(!S.terr&&!userMoved)fitFrance(0);}).observe($("#mapwrap"));
   // bascule de la fiche : « France entière » recadre la carte sur la France, sans grisé ; le territoire reste ouvert et la bascule le rouvre
@@ -520,8 +615,9 @@ function buildMap(){
 let userMoved=false;
 function fitFrance(ms=800){if(!map)return;try{map.fitBounds(bbox.FR,{padding:pad(),duration:ms});}catch(e){}}
 // la carte n'occupe que la colonne centrale : marges fixes, plus la hauteur de la légende en bas
-function pad(){const l=$("#legend"),h=$("#mapwrap").clientHeight,small=innerWidth<=700;
-  return {left:small?12:24,right:small?56:64,top:small?12:24,bottom:Math.min(Math.round(h*.45),(l?l.offsetHeight:0)+(small?16:28))};}
+// en haut : sous le fil d'Ariane et le bouton de l'assistant
+function pad(){const l=$("#legend"),h=$("#mapwrap").clientHeight,small=innerWidth<=700,tl=$("#maptl");
+  return {left:small?12:24,right:small?56:64,top:Math.min(Math.round(h*.3),(tl?tl.offsetTop+tl.offsetHeight:0)+(small?8:16)),bottom:Math.min(Math.round(h*.45),(l?l.offsetHeight:0)+(small?16:28))};}
 // évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
 // densité : professionnels (× activité) pour 100 000 habitants, en écart à la densité France (Insee Omphale 2022)
 // sy/by/py : valeurs à l'année du curseur S.y (posées par derive)
@@ -533,7 +629,7 @@ function derive(c){const i=yIdx(c.years||[2026,2050]);   // valeurs à S.y, par 
   for(const d of Object.values(c.deps)){d.sy=d.s?d.s[i]:d.s50;d.by=d.b?d.b[i]:d.b50;d.py=d.p?d.p[i]:d.p50;}
   const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("sy")/T("s26")-1;c.natD=T("sy")*(c.activite??1)/T("py");}
 function setYear(y){S.y=+y;$("#yrange").value=S.y;document.querySelectorAll(".yl,#yv").forEach(e=>e.textContent=S.y);
-  if(carte){derive(carte);paint();renderCmp();}if(META)levState();if(F&&F.prof===S.prof)renderCard(F);renderExpert();writeHash();}
+  if(carte){derive(carte);paint();renderCmp();}if(META)levState();if(F&&F.prof===S.prof)renderCard(F);else renderView();writeHash();}
 let yTimer=null;
 function buildYear(){const r=$("#yrange"),b=$("#yplay");r.oninput=()=>setYear(r.value);setYear(S.y);
   b.onclick=()=>{if(yTimer){clearInterval(yTimer);yTimer=null;b.textContent="▶";b.setAttribute("aria-label","Faire défiler les années");return;}
@@ -551,7 +647,7 @@ function colorOf(x){const B=brk().at(-1),t=Math.max(0,Math.min(1,(x/B+1)/2))*(RA
 const fmtV=d=>S.v=="evo"?(val(d)>=0?"+":"−")+Math.abs(Math.round(val(d)*100))+" pts":pct(raw(d));
 
 function legend(){
-  $("#lt").textContent=(S.v=="evo"?`Évolution ${carte.y26} → ${S.y}, en points d'écart à la France (${pct(carte.nat)})`
+  $("#lt").textContent=(S.v=="evo"?`Variation de l'effectif ${carte.y26} → ${S.y}, en points d'écart à la France (${pct(carte.nat)})`
     :S.v=="dens"?`Densité ${S.y} pour 100 000 habitants, écart à la moyenne France (${Math.round(carte.natD*1e5)} pour 100 000)`:`Effectif libéral ${S.y}, écart scénario − tendanciel`)
     +(carte.origin<carte.y26?` · observé jusqu'en ${carte.origin}, ${carte.y26} déjà projeté`:"");
   // même gamme que colorOf : 7 couleurs réparties de −B à +B ; chaque graduation est posée à sa position exacte
@@ -559,10 +655,10 @@ function legend(){
   const B=brk().at(-1),b=[-B,-B/2,0,B/2,B];
   $("#ticks").innerHTML=b.map(x=>`<span style="left:${(x/B+1)/2*100}%">${(x>0?"+":x<0?"−":"")+Math.abs(Math.round(x*100))}</span>`).join("");
   $("#unit").textContent=S.v=="evo"?"pts":"%";
-  // infobulles des indicateurs : définition, puis la valeur France à l'année affichée
-  $("#tt-evo").textContent=`Variation de l'effectif libéral entre ${carte.y26} et ${S.y}, lue par rapport à la France (${pct(carte.nat)} sur la période). 0 : même évolution que la France ; +10 pts : 10 points au-dessus de l'évolution nationale. Pétrole : au-dessus de la moyenne nationale ; bistre : en dessous.`;
-  $("#tt-ecart").textContent=`Effet du scénario réglé : effectif libéral du scénario comparé au tendanciel (même projection, sans nouvelle politique), en ${S.y}, en %. 0 : le scénario ne change rien sur ce territoire. Sans levier modifié, la carte est uniforme.`;
-  $("#tt-dens").textContent=`Professionnels libéraux (× activité moyenne) pour 100 000 habitants en ${S.y}, population Insee Omphale 2022, comparés à la densité France (${Math.round(carte.natD*1e5)} pour 100 000). Négatif : densité inférieure à la moyenne nationale.`;
+  // définition de l'indicateur affiché, avec la valeur France à l'année affichée (encadré facultatif sous la gamme)
+  $("#deftxt").textContent=S.v=="evo"?`Variation de l'effectif libéral entre ${carte.y26} et ${S.y}, lue par rapport à la France (${pct(carte.nat)} sur la période), en points. 0 : même variation que la France. Pétrole : au-dessus de la moyenne nationale ; bistre : en dessous.`
+    :S.v=="ecart"?`Effet du scénario réglé : effectif libéral du scénario comparé au tendanciel (même projection, sans nouvelle politique), en ${S.y}, en %. 0 : le scénario ne change rien sur ce territoire ; sans levier modifié, la carte est uniforme.`
+    :`Professionnels libéraux (× activité moyenne) pour 100 000 habitants en ${S.y} (population Insee Omphale 2022), comparés à la densité France (${Math.round(carte.natD*1e5)} pour 100 000), en %. Négatif : densité inférieure à la moyenne nationale.`;
 }
 // repère du territoire ouvert sur la gamme de la légende
 function mark(){const m=$("#mark"),T=cardT(),d=!T||T=="FR"||!carte?null:T.startsWith("D")?carte.deps[T.slice(1)]:carte.reg?.[T];
@@ -609,6 +705,10 @@ function buildLevers(){
   document.querySelectorAll("#var button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v==S.v));
   $("#var").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;   // après la bascule DSFR : l'état final est réécrit ici
     S.v=b.dataset.v;document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x===b));writeHash();if(carte){paint();renderCmp();}});
+  // encadré « Comment lire cet indicateur ? » : ouvert ou fermé selon le dernier choix (stockage local, facultatif)
+  const db=$("#defbtn"),dx=$("#defbox"),defOpen=o=>{db.setAttribute("aria-expanded",o);dx.hidden=!o;try{localStorage.setItem("carte.def",o?"1":"0");}catch{}};
+  let d0=false;try{d0=localStorage.getItem("carte.def")=="1";}catch{}defOpen(d0);
+  db.onclick=()=>defOpen(dx.hidden);
   $("#save").onclick=async()=>{writeHash();try{await navigator.clipboard.writeText(location.href);toast("Lien du scénario copié");}catch{toast("Lien dans la barre d'adresse");}};
 }
 // une question par famille, valeurs en phrase ; le curseur principal visible, les réglages fins sous « Plus de réglages »
@@ -727,7 +827,9 @@ function buildSearch(){
   res.addEventListener("mousedown",e=>{const b=e.target.closest("button");if(b&&hits[b.dataset.i].id)go(hits[b.dataset.i]);});
   q.addEventListener("blur",()=>setTimeout(()=>{hits=[];draw();},120));
   const go=h=>{q.value=h.name;hits=[];draw();q.blur();select(h.id);};
-  addEventListener("keydown",e=>{if(e.key=="/"&&document.activeElement!==q){e.preventDefault();q.focus();}const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)&&document.activeElement.type!="range";
+  addEventListener("keydown",e=>{if($("#askdlg").open)return;   // assistant ouvert : Échap le ferme (géré par la fenêtre), rien d'autre
+    const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)&&document.activeElement.type!="range";
+    if(e.key=="/"&&document.activeElement!==q&&!typing){e.preventDefault();q.focus();}
     if(e.key=="Escape"||(e.key=="Backspace"&&!typing)){if($("#nl").classList.contains("on"))return;const p=parent(S.terr);if(S.terr&&S.terr!="FR"){e.preventDefault();p=="FR"?backToFrance():select(p);}}});
 }
 
@@ -750,7 +852,7 @@ function select(id,fly=true,push=true){if(id=="FR")return backToFrance(push);if(
 }
 function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();userMoved=false;fitFrance();}
 function closeCardContent(){const c=$("#card");c.classList.remove("on");delete c.dataset.t;F=null;
-  c.innerHTML=`<div class="empty"><h3>France entière</h3><p>Chargement des chiffres nationaux… Cliquez une région sur la carte ou cherchez un territoire pour ses chiffres.</p></div>`;sideSum();}
+  c.innerHTML=`<div class="empty"><h3>France entière</h3><p>Chargement des chiffres nationaux… Cliquez une région sur la carte ou cherchez un territoire pour ses chiffres.</p></div>`;if(META)renderView();}
 // échelle des chiffres de la fiche : le territoire ouvert, ou la France entière (option « chiffres nationaux »)
 let CS="terr",CREQ=0;
 const cardT=()=>CS=="fr"||!S.terr?"FR":S.terr;
@@ -758,13 +860,10 @@ function loadCard(){const T=cardT(),tk=++CREQ;
   if(T===(S.terr||"FR")&&SC){renderCard(SC);return;}   // SC : scénario du territoire ouvert, ou de la France sans territoire
   fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${T}`).then(r=>r.json()).then(f=>{if(tk!==CREQ)return;if(f.error)return toast(f.error);renderCard(f);});}
 function closeCard(){closeCardContent();S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
-function sideSum(){const s=$("#sidesum");if(!s)return;if(!F){s.textContent="France entière";return;}
-  const i=yIdx(F.years);s.textContent=`${names[cardT()]} · ${sg(F.scn[i]-F.base[i])} en ${F.years[i]}`;}
 
 function renderCard(f){
   F=f;const T=cardT(),c=$("#card"),y=f.years,i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
   const s26=f.scn[i26],s50=f.scn[n],b50=f.base[n],k=f.k,lo=s50*(1-k*(Yn-f.origin)),hi=s50*(1+k*(Yn-f.origin));
-  const dep=T.startsWith("D")?T.slice(1):null,zone=dep&&f.regul_deps.includes(dep);
   if(!c.classList.contains("on")||c.dataset.t!==T||c.dataset.s!==(S.terr||"")||c.dataset.p!==f.prof){
     c.dataset.t=T;c.dataset.s=S.terr||"";c.dataset.p=f.prof;
     // bascule « chiffres nationaux » : visible dès qu'un territoire est ouvert ; sans territoire, la fiche montre la France
@@ -774,64 +873,155 @@ function renderCard(f){
       <section class="kpis"><div><span>Effectif ${y[i26]}</span><b class="num" data-k="s26">0</b></div>
         <div><span>Effectif <span class="yl">${Yn}</span></span><b class="num" data-k="s50">0</b><em class="num" data-k="rg"></em></div>
         <div><span>Écart au tendanciel</span><b class="num" data-k="ec">0</b><em class="num" data-k="ecp"></em></div></section>
-      <section><p class="h4">Trajectoire</p><svg id="chart" viewBox="0 0 460 250" role="img" aria-label="Trajectoire observée, tendancielle et du scénario, avec fourchette"></svg>
-        <p class="note" data-k="band"></p></section>
-      <section><p class="h4">Repères</p><div class="flows" data-k="rep"></div></section>
-      <section><p class="h4">Écart en <span class="yl">${Yn}</span>, décomposé par flux</p><div class="flows" data-k="flows"></div></section>
-      <section><p class="h4">Zonage</p><p class="note" data-k="zone" style="margin:0"></p></section>
-      <section class="cardact"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" onclick="addCmp()">Ajouter à la comparaison</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" onclick="exportCard()">Exporter la fiche (CSV)</button></li></ul></section>`;
+      <div class="cardact"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" onclick="addCmp()">Ajouter à la comparaison</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" onclick="exportCard()">Exporter la fiche (CSV)</button></li></ul></div>`;
     c.classList.add("on");
   }
   const q=s=>c.querySelector(`[data-k=${s}]`);
   tween(q("s26"),s26,fmt);tween(q("s50"),s50,fmt);tween(q("ec"),s50-b50,v=>(v>=0?"+":"−")+fmt(Math.abs(v)));
   q("ecp").textContent=b50?pct(s50/b50-1):"";q("rg").textContent=`fourchette ${fmt(lo)} – ${fmt(hi)}`;
-  q("band").textContent=`Trait plein : observé. Tirets : tendanciel. Hachures : fourchette indicative ≈ 8 cas sur 10, pente d'erreur de backtest ${(k*100).toLocaleString("fr-FR",{maximumFractionDigits:2})} %/an × horizon. Aucun backtest n'existe à 2050 : extrapolation.`;
-  const fl=Object.entries(f.flows),mx=Math.max(1,...fl.map(([,v])=>Math.abs(v[n])));
-  q("flows").innerHTML=fl.length?fl.map(([k,v])=>{const x=v[n],w=Math.abs(x)/mx*50;
-    return `<div class="flow"><span>${FLOWLBL[k]||k}</span><div class="bar"><i style="left:${x<0?50-w:50}%;width:${w}%"></i></div><output class="num">${(x>=0?"+":"−")+fmt(Math.abs(x))}</output></div>`}).join("")
-    :`<p class="note" style="margin:0">Aucun écart : le scénario est égal au tendanciel (places en formation × 1,00).</p>`;
-  const inReg=id=>T=="FR"?true:T.startsWith("R")?regOf["D"+id]==T:T=="D"+id;
-  const regd=f.regul_deps.filter(inReg),ndep=T.startsWith("R")?(META.territories.find(r=>r.id==T)?.deps||[]).length:null;
-  q("zone").textContent=dep?(zone?"Département régulé : au moins la moitié des communes en « remplacement seul » (zonage actuel).":"Département non régulé : moins de la moitié des communes en « remplacement seul » (zonage actuel). La régulation n'a pas d'effet ici.")
-    :`Départements régulés${ndep?` dans la région : ${regd.length} sur ${ndep}`:` : ${regd.length}`}${regd.length?" ("+regd.map(d=>names["D"+d]||d).join(", ")+")":" — la régulation n'a pas d'effet ici"}.`;
-  q("rep").innerHTML=[2030,2035,2040,2050].filter(Y=>y.includes(Y)).map(Y=>{const j=y.indexOf(Y),h=k*(Y-f.origin),v=f.scn[j];
-    return `<div class="flow"><span>${Y}</span><span class="num">≈ ${fmt(v)}</span><output class="num">${fmt(v*(1-h))} – ${fmt(v*(1+h))}${f.dens_scn?` · ${Math.round(f.dens_scn[j])} pour 100 000 hab.`:""}</output></div>`}).join("");
-  chart(f,i26,Yn);sideSum();
+  renderView();
 }
 const tw=new WeakMap();
 function tween(el,to,f){const from=tw.get(el)??to*.96,t0=performance.now();tw.set(el,to);
   const step=t=>{const p=Math.min(1,(t-t0)/280),e=1-Math.pow(1-p,3);el.textContent=f(from+(to-from)*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+const band=(f,i)=>{const h=f.k*(f.years[i]-f.origin);return [f.scn[i]*(1-h),f.scn[i]*(1+h)];};   // fourchette indicative : scn × (1 ± k × horizon)
 
-function chart(f,i26,Ysel=2050){
-  const W=460,H=250,P={l:64,r:24,t:8,b:20},y0=Math.min(f.obs[0]?.[0]??f.origin,f.origin),y1=2050;
-  const lo=f.scn.map((v,i)=>v*(1-f.k*(f.years[i]-f.origin))),hi=f.scn.map((v,i)=>v*(1+f.k*(f.years[i]-f.origin)));
-  const all=[...lo,...hi,...f.base,...f.obs.map(o=>o[1])],mn=Math.min(...all)*.97,mxv=Math.max(...all)*1.02;
-  const X=y=>P.l+(y-y0)/(y1-y0)*(W-P.l-P.r),Y=v=>P.t+(1-(v-mn)/(mxv-mn))*(H-P.t-P.b);
-  const path=(ys,vs)=>vs.map((v,i)=>(i?"L":"M")+X(ys[i]).toFixed(1)+" "+Y(v).toFixed(1)).join("");
-  const band=path(f.years,hi)+f.years.slice().reverse().map((y,i)=>"L"+X(y).toFixed(1)+" "+Y(lo[lo.length-1-i]).toFixed(1)).join("")+"Z";
-  const ticks=[mn,(mn+mxv)/2,mxv].map(v=>`<text x="${P.l-6}" y="${Y(v)+3}" text-anchor="end">${fmt(v)}</text>`).join("");
-  const xt=[y0,f.origin,2035,2050].filter((v,i,a)=>a.indexOf(v)==i&&v>=y0).map(y=>`<text x="${X(y)}" y="${H-4}" text-anchor="middle">${y}</text>`).join("");
-  $("#chart").innerHTML=`<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line y2="5" stroke="${SCN}" stroke-opacity=".45" stroke-width="1.2"/></pattern></defs>
-    <style>text{font:12px Marianne,arial,sans-serif;fill:#666}</style>${ticks}${xt}
-    <line x1="${P.l}" x2="${W-P.r}" y1="${H-P.b}" y2="${H-P.b}" stroke="${INK}"/>
-    <line x1="${X(2026)}" x2="${X(2026)}" y1="${P.t}" y2="${H-P.b}" stroke="#DDDDDA" stroke-dasharray="2 3"/>
-    <path d="${band}" fill="url(#hatch)"/>
-    ${Ysel<2050?`<line x1="${X(Ysel)}" x2="${X(Ysel)}" y1="${P.t}" y2="${H-P.b}" stroke="${INK}" stroke-width="1"/><text x="${X(Ysel)+4}" y="${P.t+12}" style="fill:${INK}">${Ysel}</text>`:""}
-    <path d="${path(f.obs.map(o=>o[0]),f.obs.map(o=>o[1]))}" fill="none" stroke="${INK}" stroke-width="2"/>
-    <path d="${path(f.years,f.base)}" fill="none" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3"/>
-    <path d="${path(f.years,f.scn)}" fill="none" stroke="${SCN}" stroke-width="2.4"/>
-    <text x="${W-P.r}" y="${Y(f.scn.at(-1))-6}" text-anchor="end" style="fill:${SCN}">scénario</text>
-    <text x="${W-P.r}" y="${Y(f.base.at(-1))+14}" text-anchor="end">tendanciel</text>`;
-}
+// ---------- Graphique : courbes superposables ----------
+// séries disponibles pour la fiche f, valeurs telles que servies par l'API (la part des 60 ans et plus passe de 0–1 en %)
+function gData(f){const o={},sr=f.series||{},sm=f.series_meta||{};
+  o.eff={base:f.base,scn:f.scn,obs:f.obs,band:true,src:`DREES, RPPS (observé jusqu'en ${f.origin}) ; jumeau v2 (projeté)`};
+  if(Array.isArray(f.dens_scn))o.dens={base:f.dens_base,scn:f.dens_scn,src:`effectif${f.activite!=1?` × activité ${String(f.activite).replace(".",",")}`:""} pour 100 000 habitants, Insee Omphale 2022`};
+  if(Array.isArray(f.pop))o.pop={scn:f.pop,single:true,src:`Insee Omphale 2022, ${phrase("pop_scen",f.pop_scen||"central")}`};
+  for(const k of ["age_moyen","part_60p","entrees","sorties"]){const x=sr[k];if(!x||!(Array.isArray(x.scn)||Array.isArray(x.base)))continue;
+    const m=sm[k]||{},all=[...(x.scn||[]),...(x.base||[])].filter(v=>v!=null),mul=k=="part_60p"&&all.length&&Math.max(...all)<=1.5?100:1;
+    const sc=a=>Array.isArray(a)?a.map(v=>v==null?null:v*mul):null;
+    o[k]={base:sc(x.base),scn:sc(x.scn)||sc(x.base),obs:Array.isArray(x.obs)?x.obs.map(([yy,v])=>[yy,v*mul]):null,single:!x.scn||!x.base,
+      l:m.label,u:k=="part_60p"?"%":m.unit,src:m.source||""};}
+  return o;}
+const gL=(k,D)=>D[k]?.l||GS[k].l,gU=(k,D)=>D[k]?.u||GS[k].u;
+const gF=(k,v)=>v==null?"—":(GS[k].d?v.toLocaleString("fr-FR",{minimumFractionDigits:1,maximumFractionDigits:1}):fmt(v))+(k=="part_60p"?" %":"");
+// graduations « rondes »
+function nice(lo,hi,n=4){if(!(hi>lo)){const d=Math.abs(hi)*.05||1;lo-=d;hi+=d;}const raw=(hi-lo)/n,mag=10**Math.floor(Math.log10(raw)),st=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=raw);
+  const a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st,t=[];for(let v=a;v<=b+st/2;v+=st)t.push(+v.toFixed(10));return {lo:a,hi:b,t,st};}
+const tickF=(v,st)=>Math.abs(v)>=1e6?(v/1e6).toLocaleString("fr-FR",{maximumFractionDigits:2})+" M":v.toLocaleString("fr-FR",{maximumFractionDigits:st<1?1:0});
+let GSIG="";
+// contrôles du graphique : reconstruits seulement quand l'ensemble des courbes disponibles change
+function graphCtl(av,D){const sig=av.join()+"|"+av.map(k=>gL(k,D)).join();if(sig===GSIG)return;GSIG=sig;
+  $("#gpre").innerHTML=GPRE.filter(([,ks])=>ks.every(k=>av.includes(k))).map(([t,ks])=>`<li><button type="button" class="fr-tag fr-tag--sm" data-g="${ks.join()}" aria-pressed="false">${t}</button></li>`).join("");
+  $("#gser").innerHTML=av.map(k=>`<div class="fr-checkbox-group fr-checkbox-group--sm"><input type="checkbox" id="gs-${k}" value="${k}"><label class="fr-label" for="gs-${k}"><i class="sw" style="--c:${GS[k].c}" aria-hidden="true"></i>${esc(gL(k,D))}</label></div>`).join("");}
+function syncCtl(sel,b100,forced){
+  $("#gpre").querySelectorAll("[data-g]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.g===sel.join()));
+  $("#gser").querySelectorAll("input").forEach(i=>i.checked=sel.includes(i.value));
+  const t=$("#b100");t.checked=b100;t.disabled=forced;
+  $("#b100-hint").textContent=forced?"Plus de deux unités : chaque courbe est lue en indice, 100 en 2026, sur un seul axe.":"Pour comparer des évolutions d'unités différentes sur un seul axe.";}
+function buildResult(){
+  $("#rmode").addEventListener("change",e=>{if(e.target.name=="rmode")setMode(e.target.value);});
+  // superpositions proposées : choix unique, l'état final est réécrit après la bascule DSFR
+  $("#gpre").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;S.gs=b.dataset.g.split(",");S.b100=false;drawGraph();writeHash();});
+  $("#gser").addEventListener("change",e=>{const ks=[...$("#gser").querySelectorAll("input:checked")].map(i=>i.value);
+    if(!ks.length){e.target.checked=true;toast("Au moins une courbe reste affichée");return;}S.gs=Object.keys(GS).filter(k=>ks.includes(k));drawGraph();writeHash();});
+  $("#b100").addEventListener("change",e=>{S.b100=e.target.checked;drawGraph();writeHash();});
+  // Chronologique : un clic sur une année l'affiche partout (curseur d'année)
+  $("#rv-chrono").addEventListener("click",e=>{const b=e.target.closest("button[data-y]");if(!b)return;const y=+b.dataset.y,inTable=!!b.closest("table");
+    setYear(y);const nb=$("#rv-chrono").querySelector(`${inTable?"table ":".tl "}button[data-y="${y}"]`);if(nb)nb.focus();});}
+function drawGraph(){const f=F,svg=$("#chart");if(!svg)return;
+  if(!f){svg.innerHTML="";$("#gleg").innerHTML="";$("#gnote").textContent="Calcul en cours…";return;}
+  const D=gData(f),av=Object.keys(GS).filter(k=>D[k]);graphCtl(av,D);
+  let sel=S.gs.filter(k=>D[k]);if(!sel.length)sel=["eff"];
+  // règle des axes : une unité par axe ; deux unités → axes gauche et droit ; au-delà → indice base 100 en 2026, un seul axe
+  const units=[...new Set(sel.map(k=>gU(k,D)))],forced=units.length>2,b100=S.b100||forced;syncCtl(sel,b100,forced);
+  const ys=f.years,i0=Math.max(0,ys.indexOf(f.origin)),n=yIdx(ys),Ysel=ys[n];
+  const W=460,H=260,two=!b100&&units.length==2,P={l:56,r:two?56:16,t:24,b:22};
+  const ref=k=>{const d=D[k];return (d.base||d.scn)[i0];};
+  const tf=(k,v)=>v==null?null:b100?(ref(k)?v/ref(k)*100:null):v;
+  const ax=k=>b100?0:units.indexOf(gU(k,D));
+  // valeurs par axe, pour l'échelle
+  const vals=[[],[]];for(const k of sel){const d=D[k],a=vals[ax(k)];
+    for(const arr of [d.base,d.scn])if(arr)arr.forEach(v=>{const t=tf(k,v);if(t!=null)a.push(t);});
+    if(d.obs)d.obs.forEach(o=>{const t=tf(k,o[1]);if(t!=null)a.push(t);});
+    if(d.band)ys.forEach((_,i)=>band(f,i).forEach(v=>a.push(tf(k,v))));}
+  const sc=vals.map(v=>v.length?nice(Math.min(...v),Math.max(...v)):null);
+  const obsY=sel.flatMap(k=>(D[k].obs||[]).map(o=>o[0])),x0=Math.min(ys[0],...obsY),x1=ys.at(-1);
+  const X=y=>P.l+(y-x0)/(x1-x0||1)*(W-P.l-P.r),Y=(v,a)=>P.t+(1-(v-sc[a].lo)/(sc[a].hi-sc[a].lo||1))*(H-P.t-P.b);
+  const path=(yy,vv,a)=>{let d="",pen=false;yy.forEach((y,i)=>{const v=vv[i];if(v==null||!isFinite(v)){pen=false;return;}d+=(pen?"L":"M")+X(y).toFixed(1)+" "+Y(v,a).toFixed(1);pen=true;});return d;};
+  let g=`<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line y2="5" stroke="${GS.eff.c}" stroke-opacity=".45" stroke-width="1.2"/></pattern></defs>
+    <style>text{font:12px Marianne,arial,sans-serif;fill:#666}</style>`;
+  // graduations et grille (axe de gauche), graduations de droite, années
+  g+=sc[0].t.map(v=>`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v,0)}" y2="${Y(v,0)}" stroke="#EEEEEA"/><text x="${P.l-6}" y="${Y(v,0)+4}" text-anchor="end">${tickF(v,sc[0].st)}</text>`).join("");
+  if(two&&sc[1])g+=sc[1].t.map(v=>`<text x="${W-P.r+6}" y="${Y(v,1)+4}">${tickF(v,sc[1].st)}</text>`).join("");
+  if(b100)g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(100,0)}" y2="${Y(100,0)}" stroke="${INK}" stroke-width=".8"/>`;
+  g+=[x0,f.origin,2035,2050].filter((v,i,a)=>a.indexOf(v)==i&&v>=x0&&v<=x1).map(y=>`<text x="${X(y)}" y="${H-5}" text-anchor="middle">${y}</text>`).join("");
+  g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${H-P.b}" y2="${H-P.b}" stroke="${INK}"/><line x1="${X(f.origin)}" x2="${X(f.origin)}" y1="${P.t}" y2="${H-P.b}" stroke="#DDDDDA" stroke-dasharray="2 3"/>`;
+  // titres d'axes : l'unité, en couleur de la courbe quand l'axe n'en porte qu'une
+  const axT=a=>{const ks=sel.filter(k=>ax(k)==a);return {t:b100?"indice, 100 en "+f.origin:gU(ks[0],D),c:ks.length==1&&!b100?GS[ks[0]].c:INK};};
+  const tL=axT(0);g+=`<text x="2" y="12" style="fill:${tL.c};font-weight:700">${esc(tL.t)}</text>`;
+  if(two){const tR=axT(1);g+=`<text x="${W-2}" y="12" text-anchor="end" style="fill:${tR.c};font-weight:700">${esc(tR.t)}</text>`;}
+  // courbes : fourchette (hachures), tendanciel (tirets), observé (trait fin), scénario (trait épais)
+  for(const k of sel){const d=D[k],a=ax(k),c=GS[k].c,T=arr=>arr.map(v=>tf(k,v));
+    if(d.band){const lo=ys.map((_,i)=>tf(k,band(f,i)[0])),hi=ys.map((_,i)=>tf(k,band(f,i)[1]));
+      g+=`<path d="${path(ys,hi,a)}${ys.slice().reverse().map((y,i)=>"L"+X(y).toFixed(1)+" "+Y(lo[lo.length-1-i],a).toFixed(1)).join("")}Z" fill="url(#hatch)"/>`;}
+    if(d.base&&!d.single)g+=`<path d="${path(ys,T(d.base),a)}" fill="none" stroke="${c}" stroke-width="1.4" stroke-dasharray="5 3"/>`;
+    if(d.obs&&d.obs.length)g+=`<path d="${path(d.obs.map(o=>o[0]),d.obs.map(o=>tf(k,o[1])),a)}" fill="none" stroke="${c}" stroke-width="1.6"/>`;
+    g+=`<path d="${path(ys,T(d.scn),a)}" fill="none" stroke="${c}" stroke-width="${d.single?1.8:2.6}"/>`;}
+  // repère de l'année affichée, et la valeur du scénario de chaque courbe à cette année
+  g+=`<line x1="${X(Ysel)}" x2="${X(Ysel)}" y1="${P.t}" y2="${H-P.b}" stroke="${INK}" stroke-width="1"/><text x="${X(Ysel)+(Ysel>2044?-4:4)}" y="${H-P.b-6}" text-anchor="${Ysel>2044?"end":"start"}" style="fill:${INK};font-weight:700">${Ysel}</text>`;
+  for(const k of sel){const v=tf(k,D[k].scn[n]);if(v!=null)g+=`<circle cx="${X(Ysel)}" cy="${Y(v,ax(k))}" r="3.2" fill="${GS[k].c}" stroke="#fff" stroke-width="1"/>`;}
+  svg.innerHTML=g;
+  const side=k=>b100?"":two?(ax(k)?", axe de droite":", axe de gauche"):"";
+  svg.setAttribute("aria-label",`${names[cardT()]||"France"}, ${f.label}, ${x0}–${x1} : `+sel.map(k=>`${gL(k,D)} (${b100?"indice 100 en "+f.origin:gU(k,D)}${side(k)}), ${Ysel} : ${gF(k,D[k].scn[n])}`).join(" ; ")+".");
+  // légende sous le graphique : trait, nom, unité et axe, valeurs à l'année affichée (telles que servies), source
+  $("#gleg").innerHTML=sel.map(k=>{const d=D[k],c=GS[k].c;
+    const sw=`<svg width="30" height="10" aria-hidden="true"><line x1="0" x2="13" y1="5" y2="5" stroke="${c}" stroke-width="${d.single?2:3}"/>${d.base&&!d.single?`<line x1="16" x2="30" y1="5" y2="5" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 2"/>`:""}</svg>`;
+    const v=d.single?`${Ysel} : ${gF(k,d.scn[n])}`:`${Ysel} : scénario ${gF(k,d.scn[n])}${d.base?` · tendanciel ${gF(k,d.base[n])}`:""}`;
+    return `<li>${sw}<span><b>${esc(gL(k,D))}</b> <span style="color:var(--mute)">(${esc(gU(k,D))}${side(k)})</span> — ${v}${d.src?`<small>${esc(d.src)}</small>`:""}</span></li>`;}).join("");
+  $("#gnote").textContent=`Trait épais : scénario. Tirets : tendanciel (même projection, sans nouvelle politique). Trait fin avant ${f.origin} : observé.`
+    +(sel.includes("eff")?` Hachures : fourchette indicative de l'effectif, ≈ 8 cas sur 10, pente d'erreur de backtest ${(f.k*100).toLocaleString("fr-FR",{maximumFractionDigits:2})} %/an × horizon ; aucun backtest n'existe à 2050 : extrapolation.`:"")
+    +(b100?` Indice : chaque courbe divisée par sa valeur ${f.origin} (tendanciel), × 100.`:"");}
+
+// ---------- Chronologique : repères datés ; un clic affiche l'année ----------
+function renderChrono(){const el=$("#rv-chrono"),f=F;if(!el)return;if(!f){el.innerHTML="<p class='note'>Calcul en cours…</p>";return;}
+  const ys=f.years,dn=Array.isArray(f.dens_scn),M=new Map(),add=(y,t)=>{if(!M.has(y))M.set(y,[]);M.get(y).push(t);};
+  add(f.decision,f.origin==f.decision?`Décision du scénario · dernière année observée`:`Décision du scénario`);
+  if(f.origin!=f.decision)add(f.origin,"Dernière année observée");
+  if(f.first_effect&&ys.includes(f.first_effect))add(f.first_effect,`Premier effet d'une hausse des places en formation (délai de ${f.lag} ans)`);
+  for(const Y of [2030,2035,2040,2045,2050])if(ys.includes(Y))add(Y,"Repère");
+  if(!M.has(S.y))add(S.y,"Année affichée");
+  const it=y=>{const i=ys.indexOf(y),s=f.scn[i],b=f.base[i],[lo,hi]=band(f,i);
+    return `scénario ${fmt(s)} (fourchette ${fmt(lo)} – ${fmt(hi)}) · écart au tendanciel ${sg(s-b)}${b?` (${pct(s/b-1)})`:""}${dn?` · ${Math.round(f.dens_scn[i])} pour 100 000 hab.`:""}`;};
+  const o0=f.obs?.[0];
+  const rows=[...M.entries()].sort((a,b)=>a[0]-b[0]).map(([y,ts])=>{const lab=ts.length>1?ts.filter(t=>t!="Repère").join(" · "):ts[0];
+    return `<li class="${y==S.y?"on":""}"><button type="button" data-y="${y}" ${y==S.y?'aria-current="true"':""}><span class="ty num">${y}</span><span class="tt">${esc(lab)}${y==S.y&&lab!="Année affichée"?" · année affichée":""}</span><span class="tv num">${it(y)}</span></button></li>`;}).join("");
+  const first=o0?`<li class="obs"><div class="it"><span class="ty num">${o0[0]}</span><span class="tt">Premier effectif observé (RPPS)</span><span class="tv num">${fmt(o0[1])}</span></div></li>`:"";
+  el.innerHTML=`<div><p class="h4">Repères dans le temps</p><p class="note" style="margin:0 0 .6rem">${esc(names[cardT()]||"France")} · ${esc(f.label)} · scénario réglé. Cliquer une année l'affiche sur la carte et dans la fiche.</p>
+    <ol class="tl">${first}${rows}</ol></div>
+    <details id="yby"><summary>Année par année, ${ys[0]}–${ys.at(-1)}</summary><table><tr><th>Année</th><th>Tendanciel</th><th>Scénario</th><th>Écart</th>${dn?"<th>Densité</th>":""}</tr>
+    ${ys.map((y,i)=>`<tr class="${y==S.y?"on":""}"><td><button type="button" data-y="${y}" aria-label="Afficher ${y}">${y}</button></td><td>${fmt(f.base[i])}</td><td>${fmt(f.scn[i])}</td><td>${sg(f.scn[i]-f.base[i])}</td>${dn?`<td>${Math.round(f.dens_scn[i])}</td>`:""}</tr>`).join("")}</table>
+    ${dn?`<p class="note">Densité du scénario, pour 100 000 habitants (Insee Omphale 2022).</p>`:""}</details>`;
+  if(renderChrono.open)$("#yby").open=true;$("#yby").addEventListener("toggle",e=>renderChrono.open=e.target.open);}
+
+// ---------- Flux : écart décomposé (barres) et flux par année (tableau) ----------
+function renderFlux(){const f=F,el=$("#gflows");if(!el)return;if(!f){el.innerHTML="<p class='note'>Calcul en cours…</p>";$("#xbody").innerHTML="";return;}
+  const n=yIdx(f.years),fl=Object.entries(f.flows),mx=Math.max(1,...fl.map(([,v])=>Math.abs(v[n])));
+  el.innerHTML=fl.length?fl.map(([k,v])=>{const x=v[n],w=Math.abs(x)/mx*50;
+    return `<div class="flow"><span>${FLOWLBL[k]||XFL[k]||k}</span><div class="bar"><i style="left:${x<0?50-w:50}%;width:${w}%"></i></div><output class="num">${(x>=0?"+":"−")+fmt(Math.abs(x))}</output></div>`}).join("")
+    :`<p class="note" style="margin:0">Aucun écart : le scénario est égal au tendanciel (aucun levier modifié).</p>`;
+  renderExpert();}
+// ---------- Données : zonage, leviers bruts, latence ----------
+function renderData(){const f=F,z=$("#zone");if(!z)return;renderExpert();if(!f){z.textContent="";return;}
+  const T=cardT(),dep=T.startsWith("D")?T.slice(1):null,zone=dep&&f.regul_deps.includes(dep);
+  const inReg=id=>T=="FR"?true:T.startsWith("R")?regOf["D"+id]==T:T=="D"+id;
+  const regd=f.regul_deps.filter(inReg),ndep=T.startsWith("R")?(META.territories.find(r=>r.id==T)?.deps||[]).length:null;
+  z.textContent=dep?(zone?"Département régulé : au moins la moitié des communes en « remplacement seul » (zonage actuel).":"Département non régulé : moins de la moitié des communes en « remplacement seul » (zonage actuel). La régulation n'a pas d'effet ici.")
+    :`Départements régulés${ndep?` dans la région : ${regd.length} sur ${ndep}`:` : ${regd.length}`}${regd.length?" ("+regd.map(d=>names["D"+d]||d).join(", ")+")":" — la régulation n'a pas d'effet ici"}.`;}
 
 // ---------- comparer / exporter ----------
-function addCmp(t=F?cardT():S.terr){if(t&&!S.cmp.includes(t)){S.cmp=[...S.cmp,t].slice(-4);writeHash();renderCmp();toast("Ajouté à la comparaison, sous la fiche");
-  $("#cmppanel").scrollIntoView({behavior:"smooth",block:"start"});}}
+function addCmp(t=F?cardT():S.terr){if(t&&!S.cmp.includes(t)){S.cmp=[...S.cmp,t].slice(-4);writeHash();toast("Ajouté à la comparaison");
+  setMode("cmp");$("#rmode").scrollIntoView({behavior:"smooth",block:"start"});}}
 function renderCmp(){
   $("#cmph").textContent=`Comparer${S.cmp.length?" · "+S.cmp.length+" territoire"+(S.cmp.length>1?"s":""):""}`;
   const el=$("#cmp");if(!carte)return;
   if(!S.cmp.length){el.innerHTML=`<p class="note" style="margin:0 0 .6rem">Aucun territoire ajouté : bouton « Ajouter à la comparaison » de la fiche, jusqu'à 4.</p>`;return;}
-  el.innerHTML=`<table><tr><th>Territoire</th><th>2026</th><th>${S.y}</th><th>${S.v=="evo"?"Évolution":S.v=="dens"?"Densité vs France":"Écart tend."}</th><th>Écart ${S.y}</th><th></th></tr>`+S.cmp.map(id=>{const ds=id=="FR"?Object.keys(carte.deps):id.startsWith("R")?(META.territories.find(r=>r.id==id)?.deps||[]).map(d=>d.id.slice(1)):[id.slice(1)];
+  el.innerHTML=`<table><tr><th>Territoire</th><th>2026</th><th>${S.y}</th><th>${S.v=="evo"?"Variation":S.v=="dens"?"Densité vs France":"Écart tend."}</th><th>Écart ${S.y}</th><th></th></tr>`+S.cmp.map(id=>{const ds=id=="FR"?Object.keys(carte.deps):id.startsWith("R")?(META.territories.find(r=>r.id==id)?.deps||[]).map(d=>d.id.slice(1)):[id.slice(1)];
     const a=ds.map(d=>carte.deps[d]).filter(Boolean),sum=k=>a.reduce((s,d)=>s+d[k],0),agg={s26:sum("s26"),s50:sum("s50"),b50:sum("b50"),p50:sum("p50"),sy:sum("sy"),by:sum("by"),py:sum("py")};
     return `<tr><td>${names[id]||id}</td><td>${fmt(agg.s26)}</td><td>${fmt(agg.sy)}</td><td>${pct(raw(agg))}</td><td>${sg(agg.sy-agg.by)}</td>
       <td><button class="x" aria-label="Retirer" onclick="S.cmp=S.cmp.filter(x=>x!='${id}');writeHash();renderCmp()"><svg aria-hidden="true" width="10" height="10" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></td></tr>`}).join("")+`</table>`;
@@ -883,12 +1073,12 @@ function applyNL(){const r=NLR;if(!r)return;$("#nl").classList.remove("on");
   if(r.territoire&&r.territoire!=="FR"&&r.territoire!==S.terr)select(r.territoire);else if(r.territoire=="FR"&&S.terr)closeCard();
   toast("Scénario appliqué : les leviers sont modifiables dans le panneau Scénario");}
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("#nl").classList.contains("on"))closeNL();});
-// Mode expert : les mêmes réponses du jumeau (/api/scenario), montrées brutes ; aucun calcul propre à la page sauf la fourchette
+// Flux et Données (ex-mode expert) : les mêmes réponses du jumeau (/api/scenario), montrées brutes ; aucun calcul propre à la page sauf la fourchette
 const XFL={entrees:"Entrées (formation)",etrangers:"Diplômés étrangers",sorties:"Sorties (retraite, départs)",regulation:"Régulation",plancher:"Plancher (effectif ≥ 0)"};
 const XY=[2030,2035,2040,2045,2050];
-function renderExpert(){if(!document.body.classList.contains("xpon")||!META)return;const b=$("#xbody"),G=SC;
-  const T=S.terr&&S.terr!="FR"?S.terr:"FR",where=`${names[T]||"France"} · ${G?G.label:""}`;
-  if(XT=="flux"){if(!G){b.innerHTML="<p>Calcul en cours…</p>";return;}
+function renderExpert(){if(!META||(S.r!="flux"&&S.r!="data"))return;const G=F||SC;
+  const T=F?cardT():S.terr&&S.terr!="FR"?S.terr:"FR",where=`${names[T]||"France"} · ${G?G.label:""}`;
+  if(S.r=="flux"){const b=$("#xbody");if(!G){b.innerHTML="<p>Calcul en cours…</p>";return;}
     const ys=XY.filter(y=>G.years.includes(y)),ix=ys.map(y=>G.years.indexOf(y));
     const row=(l,a,c="")=>`<tr${c}><td>${l}</td>${ix.map(i=>`<td>${a(i)}</td>`).join("")}</tr>`;
     b.innerHTML=`<p style="margin:0 0 .5rem"><b>${where}</b> — écart cumulé au tendanciel, par flux (professionnels)</p><table><tr><th>Flux</th>${ys.map(y=>`<th>${y}</th>`).join("")}</tr>
@@ -898,17 +1088,18 @@ function renderExpert(){if(!document.body.classList.contains("xpon")||!META)retu
       ${G.pop?row(`Habitants (Omphale, ${phrase("pop_scen",G.pop_scen)})`,i=>fmtN(G.pop[i]))+row("Densité pour 100 000, tendanciel",i=>Math.round(G.dens_base[i]))+row(`Densité pour 100 000, scénario${G.activite!=1?" (× activité "+G.activite+")":""}`,i=>Math.round(G.dens_scn[i])):""}</table>
       <p class="note">Origine des données ${G.origin}, décision ${G.decision}, premier effet d'une hausse des places ${G.first_effect} (délai ${G.lag} ans). Fourchette : pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon, extrapolée au-delà d'environ 10 ans. Version du code ${META.version||"?"}.</p>`;}
   // un levier sur deux lignes (nom et valeur, puis paramètre et statut) : tient dans le panneau sans défilement horizontal
-  if(XT=="lev")b.innerHTML=`<div class="levs">${META.levers.map(l=>`<div class="lv"><b>${esc(LBL[l.k]||l.label)}${isDef(l)?"":" (modifié)"}</b>
+  if(S.r=="data")$("#xlev").innerHTML=`<div class="levs">${META.levers.map(l=>`<div class="lv"><b>${esc(LBL[l.k]||l.label)}${isDef(l)?"":" (modifié)"}</b>
       <span class="v num">${esc(typeof S.lv[l.k]=="boolean"?(S.lv[l.k]?"oui":"non"):S.lv[l.k])} ${esc(l.unit||"")}</span>
       <code>${esc(l.param||"")}</code><span class="st">${esc(l.status||"")}</span>
       <p>Délai : ${esc(l.delai||"—")} · source : ${esc(l.source||"non renseignée")}</p></div>`).join("")}</div>
     <p class="note">Un seul territoire par levier aujourd'hui : les places peuvent être limitées à la région ouverte ; les autres leviers sont nationaux (régulation : départements zonés). Estimateur : jumeau stock-flux à taux locaux, seul branché sur la carte.</p>`;
 }
-// scénarios épinglés : dans l'onglet Comparer, avec les territoires
+// scénarios épinglés : dans le mode Comparer, avec les territoires
 function renderPins(){const b=$("#pins");if(!b||!META)return;const G=SC;
   b.innerHTML=`<p class="h4" style="margin-top:1.2rem">Scénarios épinglés</p><div class="row"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" id="xpin" ${!G||PIN.length>=3?"disabled":""}>Épingler le scénario affiché</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" id="xjson" ${!G?"disabled":""}>Exporter en JSON</button></li>${PIN.length?`<li><button class="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" id="xclr">Tout retirer</button></li>`:""}</ul></div>
-    ${PIN.length?`<table><tr><th>Scénario</th><th>Territoire</th><th>2035</th><th>2050</th><th>Écart 2050</th><th>Leviers</th><th></th></tr>
-    ${PIN.map((p,i)=>`<tr><td>${i+1}. ${esc(p.label)}</td><td>${esc(p.terrName)}</td><td>${fmtN(p.v2035)}</td><td>${fmtN(p.v2050)}</td><td>${sg(p.d2050)}</td><td class="wrap">${esc(p.lev||"tendanciel")}</td><td><button data-rm="${i}" aria-label="Retirer le scénario ${i+1}">×</button></td></tr>`).join("")}</table>`
+    ${PIN.length?`<table><tr><th>Scénario</th><th>Territoire</th><th>2035</th><th>2050</th><th>Écart 2050</th><th></th></tr>
+    ${PIN.map((p,i)=>`<tr><td>${i+1}. ${esc(p.label)}</td><td>${esc(p.terrName)}</td><td>${fmtN(p.v2035)}</td><td>${fmtN(p.v2050)}</td><td>${sg(p.d2050)}</td><td><button data-rm="${i}" aria-label="Retirer le scénario ${i+1}">×</button></td></tr>
+      <tr class="plv"><td colspan="6">Leviers : ${esc(p.lev||"tendanciel")}</td></tr>`).join("")}</table>`
     :"<p class='note' style='margin:0'>Aucun scénario épinglé. Jusqu'à 3, pour les comparer côte à côte (même ou autre profession, même ou autre territoire).</p>"}
     <p class="note">Les valeurs épinglées sont figées au moment de l'épinglage ; l'export JSON contient le scénario affiché et les scénarios épinglés, avec la version du code.</p>`;
   $("#xpin").onclick=()=>{if(SC&&PIN.length<3){PIN.push(snap());renderPins();}};$("#xjson").onclick=exportJSON;
@@ -924,7 +1115,7 @@ function exportJSON(){if(!SC)return;const o={genere:new Date().toISOString(),ver
   affiche:snap(),epingles:PIN};
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:"application/json"}));
   a.download=`scenario_${S.prof}_${S.terr||"FR"}.json`;a.click();}
-const _levState=levState;levState=function(){_levState();renderExpert();if(TAB=="terr")renderPins();const n=changedN();$("#levsum").textContent=n?`Scénario · ${n} levier${n>1?"s":""} modifié${n>1?"s":""}`:"Scénario · tendance";};
+const _levState=levState;levState=function(){_levState();if(S.r=="data")renderExpert();if(S.r=="cmp")renderPins();const n=changedN();$("#levsum").textContent=n?`Scénario · ${n} levier${n>1?"s":""} modifié${n>1?"s":""}`:"Scénario · tendance";};
 let tt;function toast(m,ms=2200){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),ms);}
 // fil d'Ariane : France › région › département (› commune, à venir)
 function parent(id){return !id||id=="FR"?null:id.startsWith("D")?regOf[id]||"FR":"FR";}
@@ -944,7 +1135,7 @@ function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof
   for(const l of META.levers)if(!["pop_scen","activite"].includes(l.k)||l.k in c.leviers)setL(l,l.k in c.leviers?c.leviers[l.k]:l.default);
   if(c.annee>=2026&&c.annee<=2050)setYear(c.annee);levState();
   // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
-  if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();toast("Scénario du chatbot affiché sur la carte");}
+  if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();askHide();toast("Scénario de l'assistant affiché sur la carte");}
 // la démarche, rendue visible : ce que l'assistant a compris (leviers, horizon, territoire), lu dans le calcul lancé
 function askPlan(c,o){if(o)return askObj(o);if(!c)return"";const lv=Object.entries(c.leviers||{}).map(([k,v])=>{const l=LV(k);if(!l)return null;
     let t;try{t=phrase(k,v);}catch{t=null;}
@@ -1024,9 +1215,20 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
   ASK.busy=false;log.scrollTop=log.scrollHeight;}
 async function askOpen(){if(!ASK.checked){ASK.checked=true;try{const e=await fetch("/api/agent/etat").then(r=>r.json());ASK.modele=e.modele||null;
   $("#askst").textContent=(e.disponible?$("#askst").dataset.d+" "+e.message:e.message);$("#askf button").disabled=!e.disponible;}catch{}}$("#askq").focus();}
-function buildAsk(){
-  // icône de chat sur la carte : ouvre le panneau à droite, un second clic revient à la fiche
-  $("#askbtn").onclick=()=>showTab(TAB=="ask"?"terr":"ask");
+// fenêtre modale dédiée (décision du 2026-11-14) : posée sur la colonne de la carte, plein écran sur mobile ;
+// Échap, « Fermer » ou un clic hors de la fenêtre la ferment, le focus revient au bouton de la carte
+function askPlace(){const d=$("#askdlg");if(innerWidth<=700){d.style.left=d.style.top=d.style.width=d.style.height="";return;}
+  const r=$("#mapwrap").getBoundingClientRect(),w=Math.min(768,innerWidth-32),h=Math.max(Math.min(420,innerHeight-32),Math.min(r.height-24,880,innerHeight-r.top-12));
+  d.style.width=w+"px";d.style.height=h+"px";d.style.left=Math.round(Math.max(16,Math.min(innerWidth-w-16,r.left+r.width/2-w/2)))+"px";d.style.top=Math.round(Math.max(8,Math.min(r.top+12,innerHeight-h-8)))+"px";}
+function askShow(){const d=$("#askdlg");if(d.open)return;askPlace();d.showModal();$("#askbtn").setAttribute("aria-expanded","true");askOpen();}
+function askHide(){const d=$("#askdlg");if(!d.open)return;d.close();$("#askbtn").focus({preventScroll:true});}
+function buildAsk(){const d=$("#askdlg");
+  $("#askbtn").onclick=askShow;$("#askx").onclick=askHide;
+  d.addEventListener("close",()=>{$("#askbtn").setAttribute("aria-expanded","false");$("#askbtn").focus({preventScroll:true});});
+  d.addEventListener("cancel",e=>{e.preventDefault();askHide();});
+  d.addEventListener("keydown",e=>{if(e.key=="Escape"){e.preventDefault();e.stopPropagation();askHide();}});
+  d.addEventListener("click",e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)askHide();});
+  addEventListener("resize",()=>{if(d.open)askPlace();});
   askWire();}
 // ---------- interface de chatbot : accueil (scénarios à essayer), saisie multiligne, nouvelle conversation ----------
 function askGrow(){const q=$("#askq");q.style.height="auto";q.style.height=Math.min(140,q.scrollHeight)+"px";}

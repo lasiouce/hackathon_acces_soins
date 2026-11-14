@@ -96,11 +96,14 @@ indépendant), et chaque sortie le rappelle.
 [DSFR](https://www.systeme-de-design.gouv.fr/) 1.15.4 (Système de design de l'État, copie locale dans
 `v2/prototype-carte/dsfr/`, licence Etalab 2.0, réservé aux sites de l'État). La carte garde sa gamme bistre ↔ pétrole,
 jamais rouge ni vert. Aucun build ni framework : HTML, CSS et JavaScript, comme avant. Le scénario est à gauche : la profession (liste déroulante) et l'année affichée
-en tête, puis les leviers par famille. La carte est au centre, avec le fil d'Ariane posé dessus. À droite, trois onglets :
-Assistant, Territoire et comparaison (la fiche, puis les territoires comparés et les scénarios épinglés), Expert. Les deux panneaux latéraux se replient, et la carte s'ouvre centrée sur la France.
+en tête, puis les leviers par famille. La carte est au centre, avec le fil d'Ariane posé dessus. À droite, le panneau « Résultat » : la fiche du
+territoire, puis cinq modes de visualisation (Graphique à courbes superposables, dont effectif + âge moyen ;
+Chronologique ; Flux ; Comparer ; Données). L'assistant de simulation s'ouvre dans une fenêtre sur la carte, par le
+bouton « Assistant de simulation ». Les deux panneaux latéraux se replient en une barre bleue (un clic la déplie), et la carte s'ouvre centrée sur la France.
 
-- **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,
-  ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Une infobulle définit chaque indicateur.
+- **Carte des départements et des régions**, au choix : variation de l'effectif 2026 → 2050, écart au tendanciel,
+  ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Sous la légende, « Comment lire cet indicateur ? » déplie sa
+  définition (facultatif, fermé par défaut).
   La carte est colorée par département ; un clic ouvre le département, et sa région s'ouvre par le fil
   d'Ariane ou la recherche. Recalcul après chaque réglage en
   environ 50 ms (mesuré).
@@ -143,7 +146,7 @@ La recette iso-fonctionnelle vérifie chaque fonction dans Chrome headless, sans
 plus et d'un serveur lancé sur une version à jour :
 
 ```bash
-node v2/prototype-carte/recette.mjs --option1   # 39 contrôles sur 40 ; R25 (bouton A+) absent de cette mise en page
+node v2/prototype-carte/recette.mjs --option1   # 42 contrôles sur 43 ; R25 (bouton A+) absent de cette mise en page
 ```
 
 L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle reste dans l'historique git :

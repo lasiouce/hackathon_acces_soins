@@ -2448,6 +2448,8 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- ~~**Carte : afficher la définition des indicateurs, de manière facultative**~~ **Tranchée le 2026-11-14 : encadré
+  dépliable sous la légende** (entrée « Carte : définition des indicateurs dans un encadré facultatif »).
 - ~~**Assistant : objectif chiffré → leviers**~~ **Construit le 2026-11-14** (entrée « Assistant : objectifs → mélanges de leviers… »).
 - ~~**Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement**~~ **Tranchée le 2026-11-14 : ouvert
   au chargement** (entrée « Option 1 : la conversation ouverte au chargement… »). (relevé le 2026-11-14 en fusionnant
@@ -3525,6 +3527,8 @@ ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'�
 
 ## 2026-11-14 — Squelette : la conversation est ouverte au chargement de la carte
 
+**Remplacé le 2026-11-14** par l'entrée « Carte : panneau Résultat à modes de visualisation, assistant en fenêtre modale » : l'assistant s'ouvre dans une fenêtre modale par un bouton sur la carte, fermée au chargement.
+
 **Décision.** Le panneau « Questions » s'ouvre au chargement (ordinateur : à droite ; mobile : en bas), refermable par
 le bouton « Questions » ou la croix. Aucun autre changement de mise en page : la refonte attend l'équipe UX.
 **Pourquoi.** L'utilisateur·rice : « on avait dit que c'était la nouvelle interface principale pour l'utilisateur » ; un
@@ -3544,6 +3548,8 @@ de la page option 1 afficherait « Serveur injoignable. ».
 devient l'interface principale »).
 
 ## 2026-11-14 — Option 1 : la conversation ouverte au chargement, premier onglet, colonne élargie
+
+**Remplacé le 2026-11-14** par l'entrée « Carte : panneau Résultat à modes de visualisation, assistant en fenêtre modale » : l'assistant s'ouvre dans une fenêtre modale par un bouton sur la carte, fermée au chargement.
 
 **Décision.** Dans `index-option1.html`, l'onglet **Questions** est le premier de la colonne de droite et il est ouvert
 au chargement ; quand il est affiché, la colonne passe de 27 rem à `max(27 rem, min(34 rem, 38 vw))`. L'icône sur la
@@ -3944,7 +3950,11 @@ démo sur grand écran où le panneau Scénario, plus long, oblige à défiler p
   2026-11-14** (demande : « N'affiche pas les infobulles au survol. Mets un petit icône informations et déplie la bulle
   sur le bouton ») : une icône « i » (DSFR `fr-btn--tooltip`, icône `fr--info-line`) suit chaque bouton. Un clic sur
   l'icône déplie la bulle, sans changer d'indicateur. Chaque bulle donne la définition de l'indicateur, puis la valeur
-  France à l'année affichée.
+  France à l'année affichée. **Retiré le 2026-11-14** (demande : « Remplace "Évolution" avec "Variation de
+  l'effectif". Supprime les infobulles ») : plus d'icône ni de bulle. Une autre façon d'afficher ces définitions, de
+  manière facultative, est à choisir (voir `## Open / not yet decided`). Le bouton « Évolution 2026 → AAAA » devient
+  **« Variation de l'effectif 2026 → AAAA »**, ainsi que le titre de légende lu par les lecteurs d'écran et la colonne
+  « Variation » du tableau Comparer.
   - **Évolution** : variation de l'effectif libéral depuis 2026, en points d'écart à l'évolution France.
   - **Écart au tendanciel** : scénario comparé au tendanciel, en %. La carte est uniforme sans levier modifié.
   - **Densité** : professionnels × activité pour 100 000 habitants (Insee Omphale 2022), en écart à la densité France.
@@ -3990,3 +4000,152 @@ clic sur le département amène sur la région, trouve quelque chose de plus erg
 **Ce qui le renverserait.** Une recette par personas où la vue France en départements redevient illisible (retour UAT
 n° 2, « on voit tout ») : la maille Régions repasserait alors par défaut. Ou une autre lecture de « l'échelle en bas à
 gauche » que les graduations de la légende.
+
+## 2026-11-14 — Carte : définition des indicateurs dans un encadré facultatif sous la légende
+
+**Décision.**
+- Sous la gamme de la légende, un lien DSFR « Comment lire cet indicateur ? » déplie un court encadré, puis le replie.
+- L'encadré définit **l'indicateur affiché seulement**, avec la valeur France à l'année affichée. Son texte suit le
+  changement d'indicateur et d'année.
+- Il est **fermé par défaut**. Le dernier choix (ouvert ou fermé) est gardé dans le stockage local du navigateur. C'est un
+  confort de lecture, pas un état du scénario : il n'entre pas dans le lien.
+- Il remplace les infobulles retirées le même jour.
+- Options écartées : fenêtre « Lire la carte » (elle masque la carte pendant la lecture) et ligne de définition
+  masquable (visible par défaut).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « As-tu un autre moyen d'afficher ces informations de manière
+facultative », puis le choix « Encadré sous la légende » parmi trois propositions.
+**Ce qui le renverserait.** Une recette par personas où l'encadré n'est pas trouvé, ou bien où il masque une zone utile
+de la carte une fois ouvert.
+
+## 2026-11-14 — Carte : panneaux repliés mis en évidence ; indicateurs sur une ligne
+
+**Décision.**
+- **Panneau latéral replié** (Scénario à gauche, Territoire à droite) :
+  - barre bleu France clair, avec un filet bleu de 4 px côté carte ;
+  - bouton de dépli plein, en bleu France ;
+  - résumé vertical en bleu ;
+  - **toute la barre déplie le panneau** au clic. Sur mobile, la profession et l'année laissées visibles restent
+    utilisables sans déplier.
+- **Les trois indicateurs de la légende sur une ligne** sur ordinateur. Sur mobile, ils passent encore à la ligne faute
+  de place. La légende s'ajuste à son contenu, dans la limite de 34 rem.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Mets en évidence les panneaux latéraux lorsqu'ils sont repliés. Un
+user test n'a pas vu celui de droite. », puis « Mets les 3 boutons sur une ligne ».
+**Ce qui le renverserait.** Un nouveau test utilisateur où le panneau replié reste inaperçu : il faudrait alors une
+étiquette horizontale (« Territoire › »), voire ne plus permettre de replier le panneau droit.
+
+## 2026-11-14 — Levier « diplômés étrangers » de 0 à 2 ; séries annuelles d'âge, d'entrées et de sorties dans `/api/scenario`
+
+**Décision.**
+- **Levier `etrangers.multiplicateur`** : la plage passe de **[0,5 ; 2] à [0 ; 2]** (pas de 0,1, défaut 1, statut toujours
+  « supposé », source « fiche param-age-entree-exercice (plage supposée × [0 ; 2]) »). 0 signifie qu'aucun diplômé à
+  l'étranger n'est accueilli.
+  - Le paramètre du jumeau acceptait déjà [0 ; 3].
+  - Les endroits suivants lisent la nouvelle borne ou l'ont reçue : serveur, schéma des outils du chatbot, description
+    de l'outil agent.
+  - Endroits laissés à [0,5 ; 2] ou au-dessus de 1, volontairement :
+    - plage Sobol de `v2/sensibilite/leviers.py` ;
+    - bornes de recherche d'objectif de `chatbot/passerelle/requetes.py` ([1 ; 2], hausses seulement) ;
+    - copie figée `chatbot/vendor/`.
+  - Effet à 0, 2050, France : dentistes 40 763 contre 67 616 en tendanciel (−40 %), kinés 115 588 contre 159 951,
+    infirmiers 329 077 contre 334 045. Le flux étranger supposé pèse lourd chez les dentistes (≈ 1 300 par an).
+- **`/api/scenario` renvoie `series` et `series_meta`**, annuels sur `years`, tendanciel (`base`) et scénario (`scn`), pour
+  un département, une région ou la France :
+  - `age_moyen` (ans) : approché aux centres des tranches de 5 ans (< 25 → 22 ; 65+ → 69,5). Observé RPPS en `obs`.
+  - `part_60p` (fraction ; `facteur: 100` pour l'affichage) : tranches 60–64 et 65+, dérivation exacte. Observé en `obs`.
+  - `entrees` et `sorties` (professionnels / an) : parties positives et négatives des flux du registre, hors
+    vieillissement et plancher. La valeur de l'année d'origine est `null`. Il n'y a pas d'observé : le RPPS ne donne que
+    des stocks.
+  - **Cohérence** : Δeffectif − (entrées − sorties) = flux « plancher » du moteur, qui ramène à zéro les cellules
+    négatives. Il vaut 0,06 à 0,13 par an aux petites échelles, et jusqu'à ≈ 93 par an pour les infirmiers France
+    (≈ 1 % des entrées). Il n'est pas compté dans les entrées, pour ne pas fabriquer d'installations.
+  - Latence : + 1 à 4 ms par requête (kinés D63 ≈ 12 ms ; infirmiers France ≈ 48 ms).
+- `v2/jumeau/check.py` n'a pas pu être rejoué : données brutes absentes de la machine.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Borne pour accueil étranger à modifier de 0 à 2 », et un mode graphique
+qui superpose « effectif + âge » et d'autres combinaisons. Les séries sont dérivées de l'état par âge du jumeau, sans
+donnée inventée.
+**Ce qui le renverserait.** Une source qui borne le flux étranger par profession (la plage reste supposée). Ou un
+plancher qui dépasse quelques % des entrées : il faudrait alors l'afficher comme un flux à part.
+
+**Écart relevé, non traité.**
+- L'interface masque le levier pour les pharmaciens (« aucun flux de diplômés étrangers publié »).
+- Pourtant le moteur leur applique un flux étranger d'environ 240 par an : 0 change leur effectif 2050 de −4 424.
+- Il faut décider si ce flux est sourcé ou s'il doit être mis à zéro. Prix : ≈ 30 min d'enquête.
+
+## 2026-11-14 — Carte : panneau Résultat à modes de visualisation, assistant en fenêtre modale
+
+**Décision.**
+- **Panneau droit « Résultat »**, un seul panneau sans onglet. Les onglets Assistant, « Territoire et comparaison » et
+  Expert sont retirés.
+  - En tête : la fiche du territoire (nom, bascule territoire ↔ France entière, trois chiffres clés), avec « Ajouter à la
+    comparaison » et « Exporter la fiche (CSV) ».
+  - Dessous, un sélecteur DSFR (`fr-segmented`) de **cinq modes**, gardé dans le lien (`r=`) :
+    - **Graphique** (par défaut) ;
+    - **Chronologique** ;
+    - **Flux** : barres de décomposition et tableau par année, venus de l'Expert ;
+    - **Comparer** : territoires comparés et scénarios épinglés ;
+    - **Données** : zonage, leviers bruts avec paramètre et source, latence.
+  - Flux et Données suivent l'échelle de la fiche (territoire ou France).
+- **Graphique : courbes superposables.**
+  - Catalogue : Effectif (observé, tendanciel, scénario, fourchette), Densité pour 100 000, Population (Omphale), et, depuis
+    `series`, Âge moyen, Part des 60 ans et plus, Entrées annuelles, Sorties annuelles.
+  - Les courbes se choisissent par cases à cocher et par **8 superpositions proposées** :
+    - Effectif seul ;
+    - Effectif + âge moyen ;
+    - Effectif + part des 60 ans et + ;
+    - Effectif + densité ;
+    - Entrées et sorties ;
+    - Effectif + entrées et sorties ;
+    - Effectif + population ;
+    - Effectif, densité et population.
+  - Une superposition n'est proposée que si toutes ses courbes existent.
+  - **Règle des axes** : un axe par unité. Deux unités donnent un axe à gauche et un à droite, titrés. À partir de trois
+    unités, l'« indice base 100 en 2026 » sur un seul axe est imposé. La base 100 peut aussi être choisie à la main. Le
+    choix est gardé dans le lien (`g=`, `b=1`).
+  - Tracé : tendanciel en tirets, scénario en trait épais, observé en trait fin, fourchette hachurée (effectif
+    seulement), repère à l'année affichée.
+  - La légende donne, pour chaque courbe, la valeur à l'année affichée et la source.
+  - Couleurs de la direction A : jamais rouge ni vert.
+- **Chronologique** : jalons datés.
+  - Jalons : premier observé, décision, premier effet (avec son délai), puis tous les 5 ans. Pour chacun : scénario,
+    fourchette, écart et densité.
+  - Un clic sur un jalon règle le curseur d'année.
+  - Un tableau « Année par année » dépliable complète la vue.
+- **Panneau droit replié** : seulement « Résultat », sans chiffre. Cela remplace le résumé territoire · écart. La mise en
+  évidence en bleu et le clic qui déplie restent.
+- **Assistant hors du panneau.**
+  - Un bouton DSFR principal « Assistant de simulation », avec icône, est placé en haut à gauche de la carte, sous le fil
+    d'Ariane.
+  - Il ouvre une fenêtre modale (`<dialog>`) au-dessus de la colonne de la carte, plein écran sur mobile.
+  - Échap ou un clic à côté la ferme ; le focus revient au bouton.
+  - La fenêtre est **fermée au chargement**. Cela remplace « conversation ouverte au chargement » et « l'assistant
+    d'abord » sur mobile.
+  - « Afficher ce scénario sur la carte » ferme la fenêtre.
+- **Autres changements.**
+  - « Ajouter à la comparaison » bascule sur le mode Comparer.
+  - Les scénarios épinglés montrent leurs leviers sur une seconde ligne, ce qui supprimait un défilement horizontal de
+    115 px.
+  - Correctifs pris en passant : Échap ne remonte plus d'un niveau de territoire quand la fenêtre est ouverte, et « / »
+    tapé dans un champ ne saute plus vers la recherche.
+- **Recette** `--option1` : **42/43** contre le serveur à jour (R25, bouton A+, écart connu).
+  - Contrôles adaptés : R09, R21, R23, R24, R32, O03, O05, O08.
+  - Contrôles ajoutés :
+    - R33 : deux axes, puis base 100 ;
+    - R34 : un jalon règle l'année ;
+    - O09 : le panneau replié ne montre que « Résultat ».
+  - R14 : p95 196 ms.
+- Réalisé par deux agents en parallèle :
+  - données (Sonnet) : borne et séries, voir l'entrée « Levier diplômés étrangers de 0 à 2 » ;
+  - interface (Opus).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Enlève les onglets du menu de droite que tu renommeras Résultat. Définis
+plusieurs toggles […] graphique, chronologique, autres […] superposer plusieurs courbes (effectif + âge…) […]. Enlève
+les stats actuelles de l'onglet lorsqu'il est replié. Sors l'assistant AI du menu Résultat […] bouton bien plus visible
+sur la carte […] une modale dédiée ».
+- Le conflit avec « conversation ouverte au chargement » a été signalé avant le travail. Choix : fenêtre modale fermée
+  au chargement, car une modale ouverte d'office masquerait la carte.
+**Ce qui le renverserait.**
+- Une recette par personas où l'assistant n'est plus trouvé, ou bien est jugé secondaire.
+- Des axes doubles mal lus : il faudrait alors des petits multiples alignés sur l'année plutôt qu'une superposition.
