@@ -50,7 +50,8 @@ lesquels de ces paramètres méritent une recherche de source plus fine, et quel
 
 \section{Travaux existants}
 La méthode des effets élémentaires de \citet{morris1991} crible à faible coût les entrées d'un modèle déterministe
-par des plans un-facteur-à-la-fois randomisés. Les indices de \citet{sobol2001} rapportent la variance partielle
+par des plans un-facteur-à-la-fois randomisés ; la mesure $\mu^*$ (moyenne des effets élémentaires absolus) vient
+de \citet{campolongo2007}. Les indices de \citet{sobol2001} rapportent la variance partielle
 due à une entrée (ou à un groupe) à la variance totale de la sortie. L'indice total, qui inclut toutes les
 interactions, s'estime par le plan et l'estimateur comparés par \citet{saltelli2010} ; nous utilisons l'estimateur
 de \citet{jansen1999} pour l'indice total et celui de \citet{saltelli2010} pour le premier ordre. À notre
@@ -108,7 +109,7 @@ tendanciel.}\label{tab:fac}
 \end{table}
 
 \subsection{Morris puis Sobol}
-\textbf{Morris} : $r = 30$ trajectoires, $p = 4$ niveaux, pas $\Delta = 2/3$ ; on rapporte $\mu^*$, moyenne des
+\textbf{Morris} : $r = 30$ trajectoires, $p = 4$ niveaux, pas $\Delta = 2/3$ ; on rapporte $\mu^*$ \citep{campolongo2007}, moyenne des
 effets élémentaires absolus, en \% de $Y$ tendanciel. \textbf{Sobol} : matrices $A$, $B$ et $A_B^{(i)}$
 ($N = 2048$, soit $N(k+2)$ runs), $Y$ centré,
 \[
