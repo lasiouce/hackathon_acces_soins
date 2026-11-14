@@ -6,3 +6,4 @@
 | 2026-11-14 | [Axe 2 : dynamique des systèmes, modèles à agents, multi-états](2026-11-14-axe2-familles-sd-abm.md) | multi-états privé ↔ public promu ; boucle B1 et agents à règles estimées en attente ; agents à règles calées tués |
 | 2026-11-14 | [Projection communale calibrée](2026-11-14-axe2-communes.md) | K promue puis rejetée au banc N4 ; K2 (repli) rejetée ; K3 proposée |
 | 2026-11-14 | [Agent qui interprète les sorties du jumeau](2026-11-14-agent-interprete.md) | construit ; mesure en attente de clé |
+| 2026-11-14 | [Assistant : objectif → leviers, politique hors modèle → mélange](2026-11-14-assistant-objectifs.md) | plan, en attente d'accord |
