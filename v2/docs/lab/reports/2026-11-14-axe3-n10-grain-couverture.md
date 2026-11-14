@@ -138,3 +138,45 @@ CD 21 / 11 / 11 ; IDE 21 / 11 / 11 ; MK 51 / 21 / 21.
 - **Axe 2** : son modèle commune ⊂ EPCI ⊂ département doit faire mieux que
   ces bandes empiriques, surtout pour les unités de plus de 50
   professionnels.
+
+---
+
+## Jugement du modèle K3 de l'axe 2 (même protocole, sans modification)
+Soumission : `v2/methodes/out/n10_soumission_k3.parquet` (commit a042415 ;
+K3 inscrit à 08:41 avant passage). Jugement :
+`PYTHONPATH=v2 uv run --with scipy python -c "from validation.grain import judge; judge('v2/methodes/out/n10_soumission_k3.parquet','axe2_k3')"`
+→ `out/grain_axe2_k3_couverture.csv`, `grain_axe2_k3_results.json`.
+Mêmes valeurs observées, même exclusion des sauts à la commune, unités à 0 à
+l'origine écartées ; appariées : CD 44 928 / 51 455, IDE 98 435 / 120 575,
+MK 68 491 / 87 156 (l'écart : unités exclues pour saut ou à 0 à l'origine).
+
+**Verdict : K3 ne passe N10 à aucun grain, mais il en approche.**
+
+| Profession | Grain | Couverture globale | Classes hors [75 ; 85] % |
+|---|---|---|---|
+| Dentistes | commune | 72,2 % | 5 sur 8 (1–2 : 69 % ; 11–100 : 69–73 % ; > 200 : 85,4 %) |
+| | BV | 75,1 % | 3 (1–2 : 67 % ; 51–200 : 70–73 %) |
+| | EPCI | 75,5 % | 3 (1–2 : 62 % ; 51–200 : 73 %) |
+| Infirmiers | commune | 83,2 % | 3 (11–50 : 85–89 % ; 101–200 : 91 %) — **trop larges** |
+| | BV | 85,3 % | 5 (6–50 : 86–88 % ; 1–2 : 71 % ; > 200 : 71 %) |
+| | EPCI | 84,8 % | 3 (11–50 : 87 % ; > 200 : 70 %) |
+| Kinés | commune | 76,4 % | 3 (21–50 : 74 % ; > 100 : 61–66 %) |
+| | BV | 78,1 % | 2 (1–2 : 73,7 % ; 3–5 : 74,6 %) |
+| | **EPCI** | 77,6 % | **1 seule** (1–2 : 73,0 %, 259 EPCI) |
+
+**Lecture.**
+- Par rapport aux estimateurs de référence (22 à 59 % au-delà de 100
+  professionnels), **K3 corrige l'essentiel de la sous-couverture des
+  grandes unités** : l'erreur départementale commune aux communes était bien
+  la pièce manquante.
+- Il reste deux défauts de forme : **IDE trop larges** dans les classes
+  moyennes (85–91 %), **dentistes trop étroits** presque partout (69–73 %).
+- **Kinés à l'EPCI** : une seule classe hors bande, de 2 points, sur 259
+  EPCI. Au sens du protocole, c'est un échec ; c'est le cas le plus proche
+  d'un passage.
+
+**Conséquence.** L'affichage reste au département pour IDE, MK et CD. Une
+version K4 qui corrige la largeur par profession (IDE plus étroit, CD plus
+large) devra être inscrite **avant** son passage ; ce jugement montre la
+cible, ce qui l'expose au risque de sur-ajustement : un passage serait à
+confirmer sur les origines 2021 et suivantes, ou sur le dépôt 2027.

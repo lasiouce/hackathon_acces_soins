@@ -129,3 +129,45 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def judge(path: str, label: str) -> dict:
+    """Jugement N10 d'une soumission (profession, grain, unit, origin, h, pred, q10, q90) : mêmes unités,
+    mêmes valeurs observées, même exclusion des sauts à la commune, mêmes classes et mêmes seuils."""
+    sub = pd.read_parquet(path)
+    sub = sub[(sub.h == H) & sub.origin.isin(JUDGED)]
+    res, tabs = {}, []
+    for prof in sorted(sub.profession.unique()):
+        r = records(prof)
+        ref = r[r.est == "persistance"][["grain", "unit", "origin", "n0", "actual", "cls"]]
+        m = sub[sub.profession == prof].merge(ref, on=["grain", "unit", "origin"], how="inner")
+        m = m[m.n0 >= 1]
+        m["in"] = (m.actual >= m.q10) & (m.actual <= m.q90)
+        agg = m.groupby(["grain", "cls"], observed=True).agg(n=("in", "size"), couv=("in", "mean")).reset_index()
+        byo = m.groupby(["grain", "cls", "origin"], observed=True)["in"].mean().groupby(["grain", "cls"]).agg(["min", "max"]).reset_index()
+        agg = agg.merge(byo, on=["grain", "cls"]).assign(profession=prof)
+        tabs.append(agg)
+        res[prof] = {"apparie": int(len(m)), "soumis": int((sub.profession == prof).sum())}
+        for g in GRAINS:
+            a = agg[(agg.grain == g) & (agg.n >= MIN_JUDGED)]
+            ce = m[(m.grain == g) & m.origin.isin([2014, 2016, 2018, 2020])]
+            vals = []
+            for o in sorted(ce.origin.unique()):
+                d = ce[ce.origin == o]
+                vals.append(n_min(size_errors(d.pred.set_axis(d.unit), d.actual.set_axis(d.unit), d.n0.set_axis(d.unit))))
+            need = min(3, len(vals))
+            nm = next((b for b in BINS[:-1] if sum(v <= b for v in vals) >= need), None) if vals else None
+            res[prof][g] = {"fiable": bool(len(a) and a.couv.between(0.75, 0.85).all()), "classes_jugees": int(len(a)),
+                            "couverture_globale": float(m[m.grain == g]["in"].mean()),
+                            "classes_hors_bande": a[~a.couv.between(0.75, 0.85)][["cls", "couv", "n"]]
+                            .astype({"cls": str}).to_dict("records"),
+                            "N_min": None if nm is None or np.isinf(nm) else float(nm), "origines_N_min": len(vals)}
+        res[prof]["grain_le_plus_fin_fiable"] = next((g for g in GRAINS if res[prof][g]["fiable"]),
+                                                     "département (aucun grain fin calibré)")
+    T = pd.concat(tabs, ignore_index=True)
+    T.to_csv(OUT / f"grain_{label}_couverture.csv", index=False)
+    (OUT / f"grain_{label}_results.json").write_text(json.dumps(res, indent=1, ensure_ascii=False, default=float))
+    with pd.option_context("display.width", 220):
+        print(T.pivot_table(index="cls", columns=["profession", "grain"], values="couv", observed=False).round(3).to_string())
+    print(json.dumps(res, indent=1, ensure_ascii=False, default=float))
+    return res
