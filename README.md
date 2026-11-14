@@ -92,8 +92,10 @@ indépendant), et chaque sortie le rappelle.
 
 ## Ce que fait l'outil
 
-**La carte de décision** (`v2/prototype-carte/`, http://localhost:8767) : trois colonnes fixes, habillage « sémiologie
-graphique » (fond blanc, gamme bistre ↔ pétrole). Le scénario est à gauche, la carte au centre, la fiche à droite (onglets
+**La carte de décision** (`v2/prototype-carte/`, http://localhost:8767) : trois colonnes fixes, habillage
+[DSFR](https://www.systeme-de-design.gouv.fr/) 1.15.4 (Système de design de l'État, copie locale dans
+`v2/prototype-carte/dsfr/`, licence Etalab 2.0, réservé aux sites de l'État). La carte garde sa gamme bistre ↔ pétrole,
+jamais rouge ni vert. Aucun build ni framework : HTML, CSS et JavaScript, comme avant. Le scénario est à gauche, la carte au centre, la fiche à droite (onglets
 Assistant, Territoire, Comparer, Expert). Les deux panneaux latéraux se replient, et la carte s'ouvre centrée sur la France.
 
 - **Carte des départements et des régions**, au choix : évolution 2026 → 2050, écart au tendanciel,

@@ -2463,7 +2463,8 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   - **2. Svelte 5 + Vite + MapLibre** : même contrat, composants testables ; utile pour la
     couche personas, risqué avant H-6 (≈ 1,5 à 2 jours).
   - **Habillage**, au choix sur 1 ou 2 : l'actuel, ou la direction A (Bertin) du
-    2026-11-14. Le DSFR reste réservé à un hébergement par un service de l'État.
+    2026-11-14. Le DSFR reste réservé à un hébergement par un service de l'État. **Levé le 2026-11-14** :
+    habillage DSFR adopté (entrée « Carte : habillage DSFR »).
   - **Écartées** : Dash ou Panel (aller-retour serveur à chaque réglage ; Streamlit déjà
     supprimé) et deck.gl (utile seulement au grain communal, que l'affichage n'a pas encore).
   - Le curseur d'année sur la carte n'est pas iso-fonctionnel : `/api/carte` ne rend que 2026
@@ -3337,8 +3338,9 @@ fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/cart
 **Décision.**
 - La refonte de la carte suit l'**option 1** (même pile HTML + MapLibre, sans build, colonnes
   fixes) avec l'habillage de la **direction A** :
-  - fond blanc, encre noire, police Atkinson Hyperlegible ;
-  - gamme bistre ↔ bleu pétrole, jamais rouge ni vert.
+  - ~~fond blanc, encre noire, police Atkinson Hyperlegible ;~~ **remplacé le 2026-11-14** par l'habillage DSFR
+    (entrée « Carte : habillage DSFR ») ;
+  - gamme bistre ↔ bleu pétrole, jamais rouge ni vert (gardée pour les données).
 - **Trois panneaux dépliables** :
   - **Scénario** à gauche ; replié, il devient une barre de 60 px avec le nombre de leviers
     modifiés ;
@@ -3860,3 +3862,43 @@ kinés France +20 % : inchangé (places +15 % et étrangers ×1,8).
 - Rendu : 60,05 s, 1920×1080.
 
 **Ce qui le renverserait.** Des chiffres de la carte qui changent : il faut alors recapturer et mettre à jour les encarts. Ou un horizon du modèle étendu au-delà de 2050.
+
+## 2026-11-14 — Carte : habillage DSFR (Système de design de l'État), sans React
+
+**Décision.**
+- L'habillage de la carte (`v2/prototype-carte/index.html`) passe au **DSFR 1.15.4** (`@gouvfr/dsfr`, licence
+  Etalab 2.0, publié le 2026-10-12).
+  - Il **remplace** la partie « habillage » de l'entrée « Carte : option 1 en direction A (Bertin) retenue » :
+    fond blanc, encre noire, police Atkinson Hyperlegible.
+  - La mise en page de l'option 1 reste : trois colonnes, panneaux dépliables, onglets.
+  - La sémiologie des **données** de la direction A reste : gamme bistre ↔ bleu pétrole, jamais rouge ni vert,
+    couleurs des professions. Le DSFR habille l'interface, pas la carte choroplèthe.
+- **Même pile, sans build ni React.**
+  - Le DSFR est du CSS et du JavaScript sans framework. `react-dsfr` n'est qu'une surcouche.
+  - La v1.15.4 est copiée dans `v2/prototype-carte/dsfr/`, servie par `server.py` comme les autres fichiers
+    statiques, sans CDN. Seuls les fichiers utiles sont copiés : CSS et JS minifiés, polices Marianne, icônes
+    citées par la CSS, favicon.
+- **Composants DSFR utilisés** : en-tête (bloc-marque et nom du service), boutons, champs, liste
+  déroulante, interrupteurs, curseurs (`fr-range`), étiquettes sélectionnables (`fr-tag`) pour les professions,
+  l'indicateur, l'échelle de la fiche et le mode expert, tableaux.
+- **Composants laissés en interne**, faute d'équivalent DSFR sans conflit :
+  - onglets du panneau droit, combobox de recherche, dialogue d'interprétation, curseur d'année ;
+  - ils sont restylés avec les variables de couleur du DSFR.
+- **Compatibilité JavaScript.** Le JS du DSFR bascule `aria-pressed` au clic sur une étiquette `fr-tag`. Les
+  sélections exclusives sont donc écoutées sur le conteneur (après le JS DSFR), qui réécrit l'état final.
+- **Racine à 16 px**, celle du DSFR, au lieu de 15 px. À 15 px, ses images à taille fixe étaient rognées (piste de
+  l'interrupteur). Les panneaux suivent la largeur d'écran (`vw`) ; la recette sans défilement horizontal passe.
+- **`box-sizing: border-box`** posé seulement sur les blocs de la page et `fr-select`. Le DSFR n'en pose pas de
+  global, et en poser un modifierait ses composants.
+- **Correctif à part, sans lien avec le DSFR : relance du premier calcul.** En Chrome headless, la première requête
+  `/api/carte` est parfois annulée au chargement (2 fois sur 4 sur la page d'avant). La page restait alors vide.
+  Elle relance le calcul tant qu'aucun résultat n'est arrivé.
+- **Recette** `node v2/prototype-carte/recette.mjs --option1` : 39/40, comme avant. R25 (bouton A+ absent de
+  l'option 1) est l'écart déjà connu.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « Je souhaite intégrer le design system de l'état à
+l'application », puis, après le rappel que le DSFR est réservé aux sites de l'État : « Ok pour les droits
+d'auteur. Commence le refacto ». L'hébergement par un service de l'État est donc tenu pour acquis ; il levait la
+réserve des entrées « trois directions artistiques » et « Refonte de l'interface de la carte ».
+**Ce qui le renverserait.** Un hébergement hors d'un service de l'État : retour à la direction A (commit
+précédent). Ou une recette (`recette.mjs --option1`) qui régresse sous 39/40 à cause de l'habillage.
