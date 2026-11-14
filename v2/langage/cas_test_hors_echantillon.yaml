@@ -1,5 +1,5 @@
 # Écrit à l'aveugle (sans voir le glossaire ni le compilateur), 2026-11-14 ; ne pas modifier après évaluation.
-# Bornes tirées de v2/prototype/server.py (LEVIERS_UI) : quotas 0.7–1.5, etrangers 0.5–2.0, part_zones 0–1,
+# Bornes tirées de v2/prototype/server.py (LEVIERS_UI) : quotas 0.7–1.5, etrangers 0–2.0, part_zones 0–1,
 # retraite 0–3 ans (pas 0.5), cumul 0.5–2.0, precoces 0.5–1.5 ; dest ∈ {salariat, sortie, voisine}.
 # Codes territoire : FR, R<code région INSEE>, D<code département>.
 

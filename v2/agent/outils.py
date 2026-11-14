@@ -205,7 +205,7 @@ _LEVIERS_SCHEMA = {
     "properties": {
         "quotas": {"type": "number", "description": "Places en formation, × niveau actuel (0,7 à 1,5 ; 1,2 = +20 %)"},
         "quotas_region": {"type": "boolean", "description": "Hausse des places seulement dans la région affichée"},
-        "etrangers": {"type": "number", "description": "Diplômés étrangers accueillis, × (0,5 à 2)"},
+        "etrangers": {"type": "number", "description": "Diplômés étrangers accueillis, × (0 à 2)"},
         "regul": {"type": "boolean", "description": "Installation régulée (remplacement d'un départ seulement)"},
         "part_zones": {"type": "number", "description": "Part des zones régulées (0 à 1)"},
         "dest": {"type": "string", "enum": ["salariat", "sortie", "voisine"], "description": "Où vont les entrants bloqués"},

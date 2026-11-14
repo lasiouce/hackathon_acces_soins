@@ -67,7 +67,7 @@ LEVIERS_UI = [
     dict(k="quotas_region", famille="former", type="toggle", param="entrees.multiplicateur", default=0,
          label="… seulement dans la région affichée", delai="lent"),
     dict(k="etrangers", famille="attirer", type="range", param="etrangers.multiplicateur", label="Diplômés étrangers accueillis",
-         min=0.5, max=2.0, step=0.1, default=1.0, fmt="x", delai="moyen : 1 à 3 ans"),
+         min=0.0, max=2.0, step=0.1, default=1.0, fmt="x", delai="moyen : 1 à 3 ans"),
     dict(k="regul", famille="installer", type="toggle", param="regulation.zones", default=0,
          label="Installation régulée (remplacement d'un départ seulement)", delai="rapide"),
     dict(k="part_zones", famille="installer", type="range", param="regulation.part_zones", label="Part des zones régulées",
@@ -243,16 +243,65 @@ class Model:
             b = [float(self.base.states[y].N[m1].sum()) if y > self.o else self.obs_total([dep], self.o) for y in my]
             s_ = [float(scn.states[y].N[m2].sum()) if y > self.o else b[i] for i, y in enumerate(my)]
             rows.append({"dep": dep, "id": "D" + dep, "name": g.loc[dep, "dep_name"], "base": b, "scn": s_})
+        series, series_meta = self.series(scn, masks, deps, years)
         hist = sorted(self.obs[self.obs.index.get_level_values(0).isin(deps)].groupby(level=1).sum().items())
         return {"prof": self.prof, "label": PROFS[self.prof], "origin": self.o, "decision": max(self.o, DECISION),
                 "lag": LAG[self.prof], "first_effect": max(self.o, DECISION) + LAG[self.prof] + 1,
                 "years": years, "base": base, "scn": sc, "obs": [[int(y), float(n)] for y, n in hist],
-                "flows": flows, "k": self.k, "modele": self.modele, "matrix": {"years": my, "rows": rows},
+                "flows": flows, "series": series, "series_meta": series_meta, "k": self.k, "modele": self.modele, "matrix": {"years": my, "rows": rows},
                 "regul_deps": zones().get(self.prof, []), "ms": round(ms, 1),
                 # contexte : habitants (scénario Omphale choisi) et densité pour 100 000 ; activité appliquée au scénario seul
                 "pop": (pop := pop_series(lv["pop_scen"], deps, years)), "pop_scen": lv["pop_scen"], "activite": lv["activite"],
                 "dens_base": [b / p * 1e5 if p else None for b, p in zip(base, pop)],
                 "dens_scn": [s_ * lv["activite"] / p * 1e5 if p else None for s_, p in zip(sc, pop)]}
+
+    def series(self, scn, masks, deps, years):
+        """Séries annuelles de la carte, même territoire et mêmes années que base / scn : âge moyen, part des 60 ans et plus,
+        entrées et sorties du stock libéral. Tout vient de l'état N[cellule, tranche d'âge] et du registre du jumeau."""
+        o, ages = self.o, self.est.state.ages
+        mid = np.array([(a + (ages[i + 1] if i + 1 < len(ages) else a + 10)) / 2 - 0.5 for i, a in enumerate(ages)])
+        mid[0] = (ages[1] - 1 + 20) / 2           # première tranche « moins de 25 ans » : entrée en exercice supposée à 20 ans
+        old = ages >= 60
+        st0 = self.est.state
+        m0 = ((st0.cells.sector == "prive") & st0.cells.territory.isin(deps)).to_numpy()
+        out = {k: {"base": [], "scn": []} for k in ("age_moyen", "part_60p", "entrees", "sorties")}
+        for key, tr in (("base", self.base), ("scn", scn)):
+            mk = masks[id(tr)]
+            flow_in, flow_out = np.zeros(len(years)), np.zeros(len(years))
+            for y, f, _, v in tr.ledger:
+                if f in ("vieillissement", "plancher"):
+                    continue
+                v = np.asarray(v)
+                if v.ndim != 1 or len(v) != len(mk):
+                    continue
+                v = v[mk]
+                flow_in[y - o] += v[v > 0].sum()
+                flow_out[y - o] -= v[v < 0].sum()
+            for i, y in enumerate(years):
+                x = (st0.N[m0] if y == o else tr.states[y].N[mk]).sum(axis=0)
+                n = x.sum()
+                out["age_moyen"][key].append(round(float(x @ mid / n), 2) if n > 0 else None)
+                out["part_60p"][key].append(round(float(x[old].sum() / n), 4) if n > 0 else None)
+                out["entrees"][key].append(None if y == o else round(float(flow_in[i]), 1))
+                out["sorties"][key].append(None if y == o else round(float(flow_out[i]), 1))
+        # observé : même définition (privé, territoire), tranches d'âge du RPPS
+        t = self.t[(self.t.sector == "prive") & self.t.dep.isin(deps)] if "dep" in self.t else None
+        if t is not None and len(t):
+            w = t.assign(a=t.age_lo.map(dict(zip(ages, mid)))).groupby("year").apply(
+                lambda g: pd.Series({"age": (g.a * g.n).sum() / g.n.sum(), "p60": g.n[g.age_lo >= 60].sum() / g.n.sum()}),
+                include_groups=False)
+            out["age_moyen"]["obs"] = [[int(y), round(float(r.age), 2)] for y, r in w.iterrows()]
+            out["part_60p"]["obs"] = [[int(y), round(float(r.p60), 4)] for y, r in w.iterrows()]
+        src = "RPPS 2012–2026 (DREES / ANS), jumeau v2 : "
+        meta = {"age_moyen": {"label": "Âge moyen", "unit": "ans",
+                              "source": src + "centres des tranches d'âge de 5 ans (moins de 25 ans : 20–24 ; 65 ans et plus : 65–74, centre 69,5), approché"},
+                "part_60p": {"label": "Part des 60 ans et plus", "unit": "%", "facteur": 100,
+                             "source": src + "tranches 60–64 et 65 ans et plus, valeurs en fraction (0–1)"},
+                "entrees": {"label": "Entrées dans l'effectif libéral", "unit": "professionnels / an",
+                            "source": src + "formés en France, diplômés étrangers et autres entrées nettes du registre des flux (hors vieillissement)"},
+                "sorties": {"label": "Sorties de l'effectif libéral", "unit": "professionnels / an",
+                            "source": src + "cessations, retraites et autres sorties nettes du registre des flux (hors vieillissement)"}}
+        return out, meta
 
     def obs_total(self, deps, y) -> float:
         o = self.obs
