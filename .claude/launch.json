@@ -43,6 +43,28 @@
         "/private/tmp/claude-501/-Users-jojo-Documents-progdinh-sevel-hackathon-sante/4d68be9b-f161-44f8-ad1f-8055dd2206cc/scratchpad/da"
       ],
       "port": 8765
+    },
+    {
+      "name": "decision",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "python",
+        "v2/prototype/server.py",
+        "8766"
+      ],
+      "port": 8766
+    },
+    {
+      "name": "decision-carte",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "python",
+        "v2/prototype-carte/server.py",
+        "8767"
+      ],
+      "port": 8767
     }
   ]
 }

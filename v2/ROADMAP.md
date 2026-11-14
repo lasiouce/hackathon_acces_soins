@@ -230,6 +230,14 @@ le mesurer. Chaque axe a un critère d'acceptation vérifiable.
   qu'un levier modifie.
 - **Fait quand :** une méthode bat la meilleure référence sur le banc, avec
   un protocole fixé avant de voir les résultats (axe 3).
+- **État (2026-11-14) : banc lancé.** Cinq variantes ont été
+  pré-inscrites avant le banc.
+  - Le shrinkage hiérarchique dép → région → national bat la référence
+    stock-flux : 8,57 % contre 8,68 % de MAPE dép. à h = 5, Δ −0,11 pt,
+    IC 95 % [−0,21 ; −0,02] au privé, reproduit sur l'ancien périmètre.
+  - Âges simples à égalité. Rétention des 60 ans et plus en tendance
+    pire.
+  - Voir le [rapport](docs/lab/reports/2026-11-14-axe2-methodes.md).
 
 ### Axe 3 — Méthodologie de validation
 - **Question.** Comment montrer qu'un modèle et un levier sont justes,
@@ -312,6 +320,15 @@ profession de la phase 1.
   - registre de 32 leviers.
 - **Résultats K1 et filière :** mesurés sur l'**ancien périmètre** (libéral
   + mixte). Le banc est à relancer sur le nouveau.
+
+## 6 bis. Livrable de chaque axe : un prétirage arXiv (2026-11-14)
+- Chaque axe (0 à 5) rédige un article de recherche au format prétirage
+  arXiv dans `v2/papers/axeN-<sujet>/`, à partir de `v2/papers/template/`.
+- Plan imposé : introduction, travaux existants, données, méthode,
+  résultats, validation et menaces à la validité, reproductibilité,
+  conclusion.
+- Chaque nombre est étiqueté (mesuré, dérivé, supposé) et la bibliographie
+  ne contient que des références vérifiées.
 
 ## 7. Ordre de travail (validé le 2026-11-14)
 1. **Tout de suite, en parallèle :**

@@ -59,5 +59,39 @@ restent valables : on les reprend ici au moment où on les traite.
 | Reprise observatoire → axe 3 : mondes simulés (A1), fourchette par pente (A3), robustesse du classement (A4), ER1319 (A7) | ~2 h | reprise observatoire | 2026-11-14 | open |
 | Reprise observatoire → axe 4 : zonage data.gouv en contrôle croisé (C1), estimations de population 1975–2026 (C2), Omphale « Population âgée » (C3), cellules masquées (C6) | ~1 h | reprise observatoire | 2026-11-14 | open |
 | Borne r ≤ 1,2 des 55+ (observatoire) : reproduit-elle l'emballement des entrées de K1 ? Tester sur un monde simulé | ~20 min | reprise observatoire | 2026-11-14 | open |
-| Revue adversariale indépendante des corrections du jumeau (même workflow, 9 agents) | ~3 min machine | lancement axes 2 et 5 | 2026-11-14 | open |
+| Revue adversariale indépendante des corrections du jumeau (même workflow, 9 agents) | ~3 min machine | lancement axes 2 et 5 | 2026-11-14 | closed 2026-11-14 : 4 défauts bloquants (reports/2026-11-14-revue-adversariale-axe0-v2.md) |
 | Choisir une direction artistique pour l'observatoire (A, B ou C) et la soumettre à son auteur | 10 min, temps humain | DA observatoire | 2026-11-14 | open |
+| Axe 2 : inscrire puis passer au banc N1 la variante A2 + A1b (shrinkage hiérarchique + âges simples), proposée par défaut mais pas encore confirmatoire | ~5 min Claude + ~3 min machine | axe 2, banc N1 | 2026-11-14 | open |
+| Axe 2 : dépôt de prévisions 2027–2030 pour A0 et A2 (seul test hors échantillon non contaminé par K1) | ~10 min | axe 2, banc N1 | 2026-11-14 | open |
+| Axe 2 → N2 : A0 et B4 (r ≤ 1,2) divergent de +23 % pour les dentistes en 2050 ; trancher par la reproduction DD76 | ~30 min | axe 2, B4 | 2026-11-14 | open |
+| Axe 2 : IC de Δ(A2 − A0) tenant compte de la corrélation entre origines (bootstrap par blocs dép × origine) ; la borne haute actuelle est −0,02 (privé) et −0,002 (ancien) | ~20 min | axe 2, banc N1 | 2026-11-14 | open |
+| Axe 2 : banc N1 avec les variantes min / max de la part privée (axe 4) ; les SF privées sont à 13–14 % de MAPE | ~5 min machine | axe 2, banc N1 | 2026-11-14 | open |
+| Contrat du jumeau (signalé par l'axe 2, non corrigé) : `Shift` n'accepte pas de fraction par cellule ; A1a passe par un `Add` à somme nulle | décision axe 0, ~20 min | axe 2 | 2026-11-14 | open |
+| Contrat du jumeau (signalé par l'axe 2, non corrigé) : `stock_flow_rates` n'est pas injectable ; changer le calibrage oblige à remplacer `sorties` et `entrees` (leviers renommés `methodes_*`, mécanisme retraite recopié) | décision axe 0, ~30 min | axe 2 | 2026-11-14 | open |
+| Axe 2 : A1a coûte +1,23 s par profession à la commune jusqu'en 2050 (mesuré) ; optimiser ou réserver A1b ; les tranches CartoSanté cassent l'hypothèse de largeur 5 de la tranche du bas | ~30 min | axe 2 | 2026-11-14 | open |
+| Axe 2 : logit d'installation (A4) avec un attribut daté par département (population Insee 1975–2026, C2) | ~1 h | axe 2 | 2026-11-14 | open |
+| Axe 2 : modèle bayésien / espace-état (A5) à la commune, sous le protocole N4 | ~2 h | axe 2 | 2026-11-14 | open |
+| Axe 2 : série d'inscrits par université avant 2020, pour tester C5 en variation (pas seulement en niveau) | ~1 h de recherche de données | axe 2, C5 | 2026-11-14 | open |
+| Axe 2 : diplômés étrangers par profession, avec une source primaire (série ouverte par lieu de diplôme) | ~1 h | axe 2, candidat 3 | 2026-11-14 | open |
+| Seconde revue : corriger les défauts 1–4 du jumeau (retraite 65+, régulation non conservative, trajectory qui écrase le scénario de base, valeurs non validées) | ~1–2 h | seconde revue | 2026-11-14 | open |
+| Prototype : borner les curseurs et masquer les chiffres retraite et régulation tant que les défauts restent ouverts | ~15 min | seconde revue | 2026-11-14 | closed 2026-11-14 : retraite et régulation suspendues (UI + serveur, 400), quotas bornés à [0,7 ; 1,5], profession validée |
+| Axe 2 : réaligner `methodes_sorties.decalage_retraite` (copie du mécanisme `sorties`, biais 65+ relevé par la seconde revue du jumeau) après la correction de l'axe 0 | ~10 min | revue axe 0 v2 | 2026-11-14 | open |
+| `fit_rates` (v1) suppose un vieillissement de 1/5 par an ; pour des tranches de largeurs variables (communes), un calibrage à fractions par tranche est à écrire | ~30 min | 2e revue axe 0 | 2026-11-14 | open |
+| Troisième revue adversariale du jumeau (lève ou non « leviers retraite et régulation non citables ») | ~3 min machine | 2e corrections axe 0 | 2026-11-14 | open |
+| Produit : relire en entier les 6 pages sources du rapport produit (chiffres lus en extrait seulement) | ~20 min Claude | rapport produit | 2026-11-14 | open |
+| Produit : seuil de secret statistique sur les sorties communales (ex. n ≥ 11), condition de signature n° 5 et RGPD | ~30 min | rapport produit | 2026-11-14 | open |
+| Produit : réconcilier IDE 2050 avec DREES ER1319 (821 000) et notre « libéral » avec le RPPS, condition n° 4 | ~1 h | rapport produit | 2026-11-14 | open |
+| Produit : AIPD ou note de non-applicabilité RGPD à l'échelle communale | ~1 h rédaction + DPO, temps humain | rapport produit | 2026-11-14 | open |
+| Produit : modèle économique « commun libre EUPL + prestation par ARS < 60 k€ HT » proposé, non décidé par l'équipe | 10 min, temps humain | rapport produit | 2026-11-14 | open |
+| Produit : porteur institutionnel et ARS pilote (lettre d'intention, relecture DREES) | semaines, temps humain | rapport produit | 2026-11-14 | open |
+| Infirmiers exclus du jumeau tant que la table public / privé (BTS) n'a ni âge ni sexe : ratisser secteur × âge × sexe par département (hypothèse secteur ⟂ âge·sexe, à tester sur le croisement national) | ~20 min | axe 4, prétirage | 2026-11-14 | open |
+| Troisième revue → axe 0 : bornes contournables (empilement, NaN), rétention > 1 via un événement, aller-retour JSON, retraite avec plusieurs tranches 65+ (phase 2) | ~1 h | troisième revue | 2026-11-14 | open |
+| Tester la règle « entrées ≤ sorties » de la régulation contre une référence indépendante (C2/C4 ne la testent pas) | ~30 min | troisième revue | 2026-11-14 | open |
+| Flux d'installation et de cessation par commune (CartoSanté *_flux ou autre) : la donnée qui débloque le choix discret | ~1 h | état de l'art méthodes | 2026-11-14 | open |
+| UAT : rejouer la V2 carte avec 1 persona à la fois dans un onglet isolé, captures sur disque | ~30–40 min | rapport UAT | 2026-11-14 | open |
+| UAT : latence V2 perçue au premier plan, en rafale (critère < 100 ms ; seuil à définir pour un geste continu ou un changement isolé) | ~5 min + décision | rapport UAT | 2026-11-14 | open |
+| UAT : sélecteur d'horizon (2035…) absent en V1 comme en V2, constat le plus grave | ~30 min | rapport UAT | 2026-11-14 | open |
+| UAT : fiche exportable (V2 n'a qu'un CSV, sans sources ni hypothèses) | ~45 min | rapport UAT | 2026-11-14 | open |
+| UAT : densité pour 100 000 habitants (population Insee/Omphale), avant ou après la démo ? | ~45–90 min + décision | rapport UAT | 2026-11-14 | open |
+| UAT : délai d'effet affiché 2032 ou 2033 selon le testeur, pour le même scénario (V1), à expliquer | ~10 min | rapport UAT | 2026-11-14 | open |
+| Retour utilisateur carte : zoom région puis département, cases plus grandes, limites ARS séparées, DROM en encarts | transmis à proto-carte | retour direct | 2026-11-14 | open |

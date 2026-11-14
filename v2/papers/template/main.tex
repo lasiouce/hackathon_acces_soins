@@ -1,0 +1,36 @@
+\documentclass[11pt]{article}
+\input{../template/preamble}
+
+\title{TITRE : une phrase qui porte le résultat principal}
+\author[1]{Équipe hackathon-santé}
+\author[1]{Claude (Anthropic), assistant de recherche}
+\affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
+\date{Prétirage, version du \today{} --- non relu par des pairs}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Contexte, question, méthode, résultat chiffré (avec sa provenance), limite principale. 150 à 250 mots.
+\end{abstract}
+\begin{otherlanguage}{english}
+\begin{abstract}
+English abstract (same content).
+\end{abstract}
+\end{otherlanguage}
+\noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; \ldots
+
+\section{Introduction}      % question, pourquoi elle compte pour la décision publique, contributions (liste)
+\section{Travaux existants} % sources citées et vérifiées uniquement (DREES, Insee, IRDES, littérature)
+\section{Données}           % chaque jeu : producteur, millésime, grain, licence, contrôles
+\section{Méthode}           % équations, hypothèses nommées, ce que chaque levier modifie
+\section{Résultats}         % chiffres du rapport v2/docs/lab/reports/, étiquetés \mesure / \derive / \suppose
+\section{Validation et menaces à la validité} % protocole pré-enregistré (axe 3), ce qui pourrait rendre le résultat faux
+\section{Reproductibilité}  % commandes exactes, graines, versions des données et du code
+\section{Conclusion}        % ce que ça change pour les autres axes, questions ouvertes avec leur coût
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\appendix
+\section{Annexes}
+\end{document}

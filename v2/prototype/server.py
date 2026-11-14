@@ -42,6 +42,12 @@ PROFS = {"sages-femmes": "Sages-femmes", "dentistes": "Chirurgiens-dentistes", "
 MISSING = {"infirmiers": "table public / privé sans âge ni sexe (axe 4) : non projetables par le jumeau"}
 LAG = {"pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}   # app/levers.py (supposé)
 DECISION = 2026
+# Leviers suspendus tant que les défauts de la seconde revue du jumeau sont ouverts
+# (v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0-v2.md) : retraite (tranche 65+), régulation (non conservative).
+# Réactivés après la troisième revue (2026-11-14) : plus de défaut bloquant dans le jumeau ; conservation
+# vérifiée (total tous secteurs scénario − tendanciel ≤ 0,5 personne en 2050 pour CD, MK, SF).
+SUSPENDUS: dict = {}
+BORNES = {"quotas": (0.7, 1.5), "retraite": (-2.0, 3.0)}
 H = 2050
 REG = ("vieillissement", "sorties", "entrees", "regulation")
 REGIONS = {"11": "Île-de-France", "24": "Centre-Val de Loire", "27": "Bourgogne-Franche-Comté", "28": "Normandie",
@@ -119,9 +125,14 @@ class Model:
             deps = list(g.index)
         deps = [d for d in deps if d in set(self.cells.territory)]
         c = self.cells
-        mask = ((c.sector == "prive") & c.territory.isin(deps)).to_numpy()
+        # les cellules dépendent du scénario (la régulation ajoute un secteur « bloques ») : masque par trajectoire
+        def mk(tr, dep_list):
+            cc = tr.states[H].cells
+            return ((cc.sector == "prive") & cc.territory.isin(dep_list)).to_numpy()
+        mb, ms_ = mk(self.base, deps), mk(scn, deps)
+        masks = {id(self.base): mb, id(scn): ms_}
         years = list(range(self.o, H + 1))
-        tot = lambda tr, y: float(tr.states[y].N[mask].sum()) if y > self.o else self.obs_total(deps, self.o)
+        tot = lambda tr, y: float(tr.states[y].N[masks[id(tr)]].sum()) if y > self.o else self.obs_total(deps, self.o)
         base = [tot(self.base, y) for y in years]
         sc = [tot(scn, y) for y in years]
         flows = {}
@@ -129,16 +140,16 @@ class Model:
             for y, f, _, v in tr.ledger:
                 if f == "vieillissement":
                     continue
-                flows.setdefault(f, np.zeros(len(years)))[y - self.o] += sign * float(np.asarray(v)[mask].sum())
+                flows.setdefault(f, np.zeros(len(years)))[y - self.o] += sign * float(np.asarray(v)[masks[id(tr)]].sum())
         flows = {f: np.cumsum(v).round(1).tolist() for f, v in flows.items() if np.abs(v).sum() > 1e-6}
         # matrice : départements du territoire (ou tous) × années, écart relatif et niveau
         my = [y for y in years if (y - self.o) % 3 == 0 or y == H]
         rows = []
         show = deps if len(deps) > 1 else [d for d in g.index[g.region == g.loc[deps[0], "region"]] if d in set(c.territory)]
         for dep in show:
-            m = ((c.sector == "prive") & (c.territory == dep)).to_numpy()
-            b = [float(self.base.states[y].N[m].sum()) if y > self.o else self.obs_total([dep], self.o) for y in my]
-            s_ = [float(scn.states[y].N[m].sum()) if y > self.o else b[i] for i, y in enumerate(my)]
+            m1, m2 = mk(self.base, [dep]), mk(scn, [dep])
+            b = [float(self.base.states[y].N[m1].sum()) if y > self.o else self.obs_total([dep], self.o) for y in my]
+            s_ = [float(scn.states[y].N[m2].sum()) if y > self.o else b[i] for i, y in enumerate(my)]
             rows.append({"dep": dep, "id": "D" + dep, "name": g.loc[dep, "dep_name"], "base": b, "scn": s_})
         hist = sorted(self.obs[self.obs.index.get_level_values(0).isin(deps)].groupby(level=1).sum().items())
         return {"prof": self.prof, "label": PROFS[self.prof], "origin": self.o, "decision": max(self.o, DECISION),
@@ -190,11 +201,20 @@ class Handler(SimpleHTTPRequestHandler):
         q = {k: v[0] for k, v in parse_qs(u.query).items()}
         try:
             if u.path == "/api/meta":
-                return self.send_json({"professions": PROFS, "missing": MISSING, "territories": territories()})
+                return self.send_json({"professions": PROFS, "missing": MISSING, "suspended": SUSPENDUS, "territories": territories()})
             if u.path == "/api/scenario":
-                m = model(q.get("prof", "kines"))
-                return self.send_json(m.answer(float(q.get("quotas", 1)), float(q.get("retraite", 0)),
-                                               q.get("regul", "0") == "1", q.get("terr", "FR")))
+                prof = q.get("prof", "kines")
+                if prof not in PROFS:
+                    return self.send_json({"error": f"profession inconnue {prof!r}"}, 400)
+                quotas = float(q.get("quotas", 1))
+                lo, hi = BORNES["quotas"]
+                if not lo <= quotas <= hi:
+                    return self.send_json({"error": f"quotas hors bornes [{lo} ; {hi}] : {quotas}"}, 400)
+                retraite = float(q.get("retraite", 0))
+                lo, hi = BORNES["retraite"]
+                if not lo <= retraite <= hi:
+                    return self.send_json({"error": f"retraite hors bornes [{lo} ; {hi}] : {retraite}"}, 400)
+                return self.send_json(model(prof).answer(quotas, retraite, q.get("regul", "0") == "1", q.get("terr", "FR")))
         except Exception as e:  # le prototype montre l'erreur plutôt que de planter
             return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
         return super().do_GET()

@@ -587,6 +587,8 @@ passerelles, ce qui le rend directement utilisable par le module
 
 ## 2026-11-14 — Corrections du contrat du jumeau après la revue adversariale
 
+*Complété le 2026-11-14 par « Seconde série de corrections » : destination par défaut `bloques` (remplace `public`), levier retraite B1 (remplace la parité v1 du test C7).*
+
 **Décision.** Ces règles complètent le contrat (`v2/jumeau/`). Elles
 corrigent les 6 défauts de la
 [revue](reports/2026-11-14-revue-adversariale-axe0.md) et 2 des 3
@@ -798,7 +800,348 @@ politique choisie.
 **Ce qui le renverserait.** Un besoin de versionner les données traitées.
 Dans ce cas, on passerait par Git LFS ou un dépôt de données séparé.
 
+## 2026-11-14 — Prototype de l'écran de décision (direction A), servi par le jumeau
+
+**Décision.**
+- Prototype dans `v2/prototype/` : `server.py`, un serveur Python qui
+  appelle le jumeau, et `index.html`, en direction A.
+- **Pas de moteur dupliqué en TypeScript.** La fluidité vient de requêtes
+  annulables et de courbes interpolées. Mesuré : 3 à 32 ms dans le jumeau,
+  50 à 120 ms aller-retour.
+- Simplifications assumées et affichées dans l'écran : grain
+  départemental ; régulation approchée au département (≥ 50 % des
+  communes en « remplacement seul ») ; fourchette par pente nationale ;
+  infirmiers exclus.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « prototype A ». Ce
+prototype répond aux critères d'interface inscrits plus bas sous Open.
+**Ce qui le renverserait.** Un recalcul au-dessus d'environ 200 ms à
+l'échelle communale. Il faudrait alors une grille précalculée.
+
+## 2026-11-14 — Le jumeau ne passe pas la seconde revue : leviers retraite et régulation non citables
+
+**Décision.**
+- Les chiffres du jumeau qui dépendent des leviers **retraite** ou
+  **régulation**, ou d'un scénario passé à `trajectory()` sur une variante
+  filière, **ne sont pas cités** tant que les 4 défauts bloquants de la
+  [seconde revue](reports/2026-11-14-revue-adversariale-axe0-v2.md) restent
+  ouverts.
+- Le tendanciel et le levier quotas sur StockFlowLocal restent
+  utilisables.
+- **Écart avec une décision inscrite** : l'entrée « Reprise de
+  l'observatoire » a adopté le correctif retraite e/(1+Δe), et le code ne
+  l'applique pas. La décision reste valable ; le code est en retard.
+
+**Pourquoi.** Seconde revue : 6 constats sur 6 confirmés (mesuré).
+**Ce qui le renverserait.** Une troisième revue sans défaut bloquant.
+
+## 2026-11-14 — Prototype : leviers retraite et régulation suspendus, quotas bornés
+
+**Décision.**
+- Dans `v2/prototype/`, les leviers retraite et régulation sont désactivés
+  dans l'interface, avec leur raison affichée, et refusés par le serveur
+  (code 400).
+- Les quotas sont bornés à [0,7 ; 1,5]. Une profession inconnue est
+  refusée.
+- Vérifié dans le navigateur : retraite, régulation, quotas = 110 et
+  « dentiste » sont rejetés ; quotas 1,2 sur le Puy-de-Dôme est accepté.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 (« oui, borner »), après la
+seconde revue du jumeau.
+**Ce qui le renverserait.** Les défauts 1 et 2 de la seconde revue
+corrigés et confirmés par une troisième revue. On réactive alors les deux
+leviers.
+
+## 2026-11-14 — Seconde série de corrections du jumeau (seconde revue adversariale)
+
+**Décision.** Corrige les 4 défauts bloquants de la
+[seconde revue](reports/2026-11-14-revue-adversariale-axe0-v2.md) et ses
+2 constats non vérifiés. Le code est dans `v2/jumeau/` ; chaque correction
+a un test qui échoue avant et passe après (mutations rejouées).
+1. **Levier retraite = B1** (décision « Reprise de l'observatoire »), dans
+   `modules/sorties.py` :
+   - 65 ans et plus : e' = e/(1 + Δe) ;
+   - 60–64 : e × (1 − Δ/5) ; 55–59 : e × (1 − Δ/10) ;
+   - tranches à solde positif inchangées ;
+   - montée en charge de 3 mois par an via `evenement_retraite(Δ,
+     décision)`.
+   - **Remplace** le masque v1 `e[60–69] × (1 − Δ/5)`. La parité avec la
+     v1 est abandonnée pour ce levier, parce que la v1 porte le défaut. Le
+     test C7 compare au séjour attendu (+Δ ans en 65+), plus à la v1.
+2. **Destination par défaut de la régulation : secteur `bloques`.**
+   - Il est créé vide par `Regulation.prepare`. Ses cellules suivent la
+     démographie du privé (règle de repli), si bien que la régulation
+     déplace sans créer ni supprimer.
+   - **Remplace** la destination `public` : avec un historique public, les
+     taux publics faisaient varier le total (+254 dentistes, −474 kinés),
+     un écart qui venait de l'hypothèse de destination et non du
+     mécanisme.
+   - `destination = "public"` reste possible et son effet est publié (C2).
+   - La sortie « libéral » (privé) ne compte pas `bloques`.
+3. **Un scénario se pose sur le scénario de base.** `Scenario.over(base)`
+   fusionne les paramètres (le scénario passé prime) et ajoute ses
+   événements à ceux de la base. `trajectory()` et `twin_of(…, scenario)`
+   l'utilisent, si bien que la filière d'une variante n'est plus perdue.
+4. **Le scénario est validé sur ses valeurs.**
+   - Chaque valeur de sélecteur doit exister dans l'état, par exemple
+     `'dentiste'` ou `6` sont refusés.
+   - `Param.bounds` borne les valeurs, et `validate` refuse une valeur hors
+     plage, y compris le résultat d'un `mul` ou d'un `add`. Bornes posées :
+     - quotas [0, 3] ;
+     - `decalage_retraite` [0, 5] ;
+     - `cumul_multiplicateur` [0, 5] ;
+     - parts [0, 1].
+5. **Constats non vérifiés, traités :**
+   - `ctx.delta` d'un producteur muet rend 0, et celui d'un flux Pool lève
+     une TypeError explicite ; `ctx.pool_out` donne accès aux comptes du
+     vivier, dont les diplômés.
+   - `fit_rates` suppose toujours un vieillissement de 1/5 : c'est noté
+     dans le ledger, non corrigé.
+
+**Pourquoi.** La seconde revue a confirmé ses 6 constats en exécutant le
+code. Le masque retraite contredisait une décision inscrite.
+**Rejeté :**
+- Garder `public` comme destination par défaut : le total dépendrait
+  d'une hypothèse non sourcée.
+- Corriger le levier retraite côté v1 : la v1 est figée.
+
+**Ce qui le renverserait.**
+- Une source sur la destination réelle des entrants bloqués (axe 1).
+- Une troisième revue qui trouve un défaut bloquant.
+
+**Conséquences pour les autres axes.**
+- Les chiffres retraite de l'axe 5 et du prototype sont à recalculer. Le
+  module `sensibilite/retraite_b1.py` est désormais le comportement par
+  défaut, à la montée en charge près.
+- La régulation du prototype conserve désormais le total.
+
+## 2026-11-14 — Chaque axe de recherche produit un prétirage au format arXiv
+
+**Décision.**
+- Le livrable de chaque axe est un **article de recherche mis en forme
+  comme un prétirage arXiv** : `v2/papers/axeN-<sujet>/main.tex`, avec ses
+  `refs.bib` et `figures/`.
+- Format commun : `v2/papers/template/` (préambule partagé, plan,
+  bibliographie vérifiée). Source TeX autonome (pdfLaTeX), en français
+  avec un résumé anglais.
+- Chaque nombre porte sa provenance (mesuré, dérivé, supposé) et vient
+  d'un rapport de `v2/docs/lab/reports/`. Les rapports restent le
+  registre ; l'article les met en forme.
+- **Défauts retenus sans demande explicite, à confirmer** : la langue
+  (français) et les auteurs (« Équipe hackathon-santé » et Claude comme
+  assistant de recherche).
+- Aucun moteur TeX n'est installé : la compilation attend
+  `brew install tectonic` (accord à demander).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « le but de chaque axe de
+recherche est de construire des sortes de papier de recherche […] comme un
+preprint arXiV ».
+**Ce qui le renverserait.** Une autre cible : revue, mémoire ou rapport
+DREES.
+
+## 2026-11-14 — Écran de décision V2 : carte plein écran (`v2/prototype-carte/`)
+
+**Décision.**
+- Nouvel écran dans `v2/prototype-carte/`, modèle d'interaction
+  d'InvestHub HCMC : carte MapLibre plein écran, recherche, leviers
+  repliables, fiche flottante au clic, comparer / lien / export CSV.
+- Serveur : importe `v2/prototype/server.py` sans le modifier ; ajoute
+  `/geo` et `/api/carte` (101 départements en un appel), quotas bornés par
+  la même règle [0,7 ; 1,5] ; retraite et régulation restent refusés.
+- Couleur « évolution » lue en points d'écart à l'évolution nationale
+  (sinon carte monochrome) ; gamme ocre ↔ bleu, ni rouge ni vert ; une
+  couleur fixe par profession.
+- Mesuré : réponse perçue p50 53 ms, p95 66 ms, max 87 ms (n = 35).
+
+**Pourquoi.** Demande de l'utilisateur·rice (V1 « trop proche d'un PDF »),
+via la session v2. Rapport :
+[2026-11-14-prototype-carte](reports/2026-11-14-prototype-carte.md).
+**Ce qui le renverserait.** Une réponse perçue au-dessus de 150 ms au
+grain communal : il faudrait une grille précalculée.
+- **Ajout du 2026-11-14 (retour UAT, « better zooming on the regions…,
+  boxes slightly bigger »)** : limites régionales tracées dès la vue
+  France ; premier clic = région, second = département (Maj + clic :
+  département) ; panneaux et textes agrandis. Latence non re-mesurée.
+- **Ajout du 2026-11-14 (retour UAT n° 2, « on voit tout et c'est très
+  difficile de s'en sortir »)** : vue France colorée par région ARS
+  (agrégat), limites départementales masquées sous le zoom 6,3, liseré
+  d'espacement entre régions ; départements visibles en zoomant ou dans la
+  région ouverte.
+
+## 2026-11-14 — Axe 3, N5 : mondes simulés à vérité connue, ajoutés au protocole (gel 03:46)
+
+**Décision.**
+- Un 5e niveau de validation : 7 mondes simulés (reprise de l'observatoire,
+  A1), générateur en âges simples agrégé comme le RPPS, 20 réplications,
+  graine 20261114 + réplication.
+- Critère : dans un monde qui respecte les hypothèses de l'estimateur
+  (M1 équilibre, M3 bruit), |erreur nationale| ≤ 1 % à 15 ans ; dans un
+  monde qui les viole (M4–M7), le signe du biais prédit d'avance est
+  observé dans ≥ 16 réplications sur 20.
+- Protocole : [N5](reports/2026-11-14-axe3-n5-mondes-simules.md), copie
+  immuable dans `v2/validation/preregistered/`, SHA-256 `1046545b17c0`.
+- Il est gelé **après** le lancement de N3 mais **avant** tout calcul sur
+  un monde simulé. L'article de l'axe 3 le dit.
+- **Accepte** l'inscription des variantes de l'axe 2 en fin de
+  `registry.py` (entrée « Axe 2 : 5 variantes pré-inscrites ») : le
+  protocole N1 l'impose, et les lignes de l'axe 3 sont intactes.
+
+**Pourquoi.** Consigne de la session v2 (2026-11-14) : ajouter les mondes
+simulés. Un backtest ne sépare pas erreur de modèle, bruit et changement du
+monde ; un monde simulé, si.
+**Ce qui le renverserait.** Le kill test de l'axe 2 (18 mondes) montre que
+le biais d'âge n'a pas de signe fixe : la prédiction de signe de M4 peut
+tomber. Ce serait un résultat, pas une raison de changer le protocole.
+
+## 2026-11-14 — Troisième revue : plus de défaut bloquant dans le jumeau ; leviers du prototype réactivés
+
+**Décision.**
+- Les leviers retraite et régulation sont réactivés dans le prototype,
+  avec des bornes côté serveur : quotas [0,7 ; 1,5], retraite [−2 ; 3],
+  NaN refusé. Cela remplace l'entrée « leviers suspendus ».
+- Leurs chiffres redeviennent citables avec deux réserves écrites :
+  - la régulation est approchée au département ;
+  - le test de la règle « entrées ≤ sorties » reste non vérifié (troisième
+    revue, constat non réfuté), à lever avant tout prétirage.
+- La règle « les axes 2 et 5 attendent » est levée.
+
+**Pourquoi.** [Troisième revue](reports/2026-11-14-revue-adversariale-axe0-v3.md) :
+aucun défaut bloquant dans le jumeau, conservation mesurée (≤ 0,5
+personne). Le défaut bloquant du prototype est corrigé.
+**Ce qui le renverserait.** Un défaut bloquant trouvé par une revue
+ultérieure ou par le banc de l'axe 3.
+
+## 2026-11-14 — Axe 1 : panel de 14 politiques jouables, avec plages proposées
+
+**Décision.**
+- Le catalogue de l'axe 1 est traduit en un **panel de 14 politiques
+  publiques**. Chacune donne :
+  - l'hyperparamètre qu'elle déplace et le paramètre du jumeau visé ;
+  - le statu quo ;
+  - une plage jouable proposée ;
+  - la preuve de l'effet.
+- Le panel figure dans le [rapport axe 1](reports/2026-11-14-axe1-hyperparametres.md),
+  § « Panel de politiques jouables », et dans le prétirage
+  `v2/papers/axe1-hyperparametres/`.
+- **Plages sourcées ou dérivées :**
+  - abandon IFSI de 0,056 à 0,105 par an (dérivé de ρ) ;
+  - places × [0,8 ; 1,2] (DD76) ;
+  - cumul × [0,5 ; 2] (plan de l'axe 5) ;
+  - report de la retraite de 0 à 2 ans.
+- **Plages supposées :** postes d'internat ±20 %, DES odontologie de 100 à
+  160, diplômés étrangers × [0,5 ; 2], durée d'obligation de 0 à 3 ans,
+  θ ∈ [0,5 ; 1].
+- Les défauts de `formation.abandon` (0 → 0,105 pour les IDE) et de
+  `sorties.part_cumul` (0,10 médecins → valeurs par profession) sont
+  **proposés** à l'axe 0, qui possède le code, par message du 2026-11-14.
+  L'axe 1 ne modifie pas `v2/jumeau/`.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : le but est de permettre au
+décideur de « jouer dans l'interface graphique sur un grand panel de
+politiques publiques applicables ».
+**Ce qui le renverserait.** L'axe 5 montrant qu'une politique ne déplace
+pas N(2050) : elle resterait au panel, mais sans priorité de sourçage.
+
+## 2026-11-14 — Axe 3 : prétirage `v2/papers/axe3-validation/` (choix de rédaction)
+
+**Décision.**
+- L'article présente les **cinq** niveaux (N1–N4 gelés à 02:54, N5 à 03:46)
+  et dit que N5 a été gelé après le lancement de N3.
+- **N3 IDE est rapporté tel quel : levier non validé** (T1, p = 0,043).
+  Les analyses de Rambachan & Roth et de tendance prolongée sont dans une
+  sous-section marquée exploratoire.
+- **N1 :** le premier passage confirmatoire est celui de l'axe 2 (rapport
+  axe 2), cité comme tel ; l'axe 3 ne l'a pas relancé.
+- **Comparateur externe de N3 :** IRDES QES n° 270 (DiD sur le zonage 2011,
+  2006–2016), lu par l'axe 1.
+- **Références vérifiées en texte intégral dans cette session :**
+  Conseil d'État n° 357594 et Rambachan & Roth (2023, RES 90(5), 2555–2591,
+  définition de Δ^RM(M̄) lue p. 9). Les autres viennent de bibliographies
+  déjà vérifiées par les autres axes.
+- Figure en pgfplots dans la source (pas d'image), avec `\usetikzlibrary{babel}`
+  ajouté dans `main.tex` ; le préambule commun n'est pas modifié.
+- Source non compilée (aucun moteur TeX installé).
+
+**Pourquoi.** Consigne de la session v2 (2026-11-14) : un prétirage par axe,
+chaque nombre avec sa provenance, références lues seulement.
+**Ce qui le renverserait.** Une compilation qui échoue, ou un second test
+N3 pré-enregistré qui passe (l'article serait alors révisé).
+
+## 2026-11-14 — Programme de l'axe 2 : modèles en boîte blanche sur la structure par cohortes
+
+**Décision.**
+- L'axe 2 suit le programme de
+  [l'état de l'art](explorations/2026-11-14-etat-de-lart-methodes.md), dans
+  cet ordre :
+  1. modèle âge-période-cohorte bayésien des sorties ;
+  2. cohortes par composantes en bayésien hiérarchique (commune ⊂
+     département ⊂ région) ;
+  3. logit conditionnel d'installation, la régulation devenant un ensemble
+     de choix restreint ;
+  4. réconciliation MinT entre échelles ;
+  5. validation par CRPS, PIT, calibration par simulation et mondes
+     simulés.
+- **Critère d'acceptation de chaque modèle** : un statisticien extérieur
+  le vérifie en une demi-journée à partir du prétirage seul. Pour cela :
+  - les équations tiennent sur une page ;
+  - chaque paramètre a un a priori écrit, une source de données et un
+    sens ;
+  - la calibration par simulation est faite ;
+  - les contrôles prédictifs a posteriori sont faits ;
+  - le modèle est évalué hors échantillon contre les références naïves,
+    selon le protocole de l'axe 3 ;
+  - le code, les graines et les données sont ouverts.
+- Toute référence est lue en texte intégral avant d'être citée.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « recherche méthodologique
+poussée […] SURTOUT PAS BOITE NOIRE, vérifiable et validable par n'importe
+quel statisticien », puis « Oui, axe 2 ».
+**Ce qui le renverserait.** Un modèle du programme qui ne bat pas le
+stock-flux à taux locaux sur le banc. Dans ce cas, il reste comme variante
+documentée, sans devenir le défaut.
+
+## 2026-11-14 — Règle de commit des sessions de recherche
+
+**Décision.** Chaque session commite son travail dès qu'il est **validé**,
+c'est-à-dire dès qu'une de ces conditions est remplie :
+- ses critères d'acceptation passent ;
+- un rapport est classé ;
+- un prétirage compile ;
+- pour le jumeau, une revue est passée.
+
+Règles, parce que toutes les sessions partagent la même copie de travail
+sur `main` :
+- `git add` **uniquement des chemins nommés que la session possède**
+  (table « Qui possède quoi »), avec ses rapports, ses fiches et son
+  dossier `v2/papers/axeN-…/`. **Jamais** `git add -A` ni `git add .`.
+- Les fichiers partagés (`v2/docs/lab/decisions.md`, `open.md`,
+  `Home.md`, `v2/ROADMAP.md`, `.claude/`) sont commités par la session
+  coordinatrice (v2).
+- Avant chaque commit, `git diff --cached --stat` vérifie que rien de
+  `data/`, `v2/data/raw|processed/` ni aucun fichier des organisateurs
+  n'est indexé. Le `.gitignore` les exclut déjà ; on vérifie quand même.
+- Message en français, `axeN : …`, avec la ligne d'attribution
+  Co-Authored-By.
+- **Pas de push** sans demande explicite. Pas de changement de branche.
+- Si `.git/index.lock` existe : attendre et réessayer, ne jamais le
+  supprimer.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-14 : « pour chaque sous-session,
+quand qqch est validé, n'hésite pas à commit ».
+**Ce qui le renverserait.** Un conflit d'index répété entre sessions. On
+passerait alors à des worktrees par axe.
+
 ## Open / not yet decided
+- ~~**Programme méthodologique « boîte blanche »**~~ *décidé le 2026-11-14, voir l'entrée « Programme de l'axe 2 ».* (proposé le 2026-11-14,
+  [état de l'art](explorations/2026-11-14-etat-de-lart-methodes.md)).**
+  Même structure par cohortes, mais estimée en bayésien hiérarchique :
+  - APC de Poisson pour les sorties ;
+  - logit conditionnel pour l'installation ;
+  - réconciliation MinT entre échelles ;
+  - CRPS, PIT et SBC pour la validation.
+
+  En attente de l'accord de l'utilisateur·rice pour en faire le programme
+  de l'axe 2.
 - **Exigence d'interface (utilisateur·rice, 2026-11-14) : « très fluide
   visuellement, un véritable outil d'aide à la décision ».** Traduction
   proposée, en critères vérifiables :
@@ -890,3 +1233,92 @@ confirmatoire seulement une variante inscrite avant son premier passage.
 le banc, parce que ce serait choisir après avoir vu.
 **Ce qui le renverserait.** L'axe 3 qui refuse l'inscription hors de son
 fichier. On déplacerait alors les entrées, avec leur heure.
+
+## 2026-11-14 — Axe 2 : shrinkage hiérarchique dép → région → national adopté (A2)
+
+**Décision.** Le calibrage par défaut rétrécit les taux du département
+vers la région, puis la région vers le national, avec k = 200 aux deux
+niveaux (`methodes`, option `hier`). C'est l'ingrédient d'estimation par
+défaut des prochaines variantes. Les leviers restent ceux de `sorties` et
+`entrees` ; k est un réglage d'estimation, pas un levier.
+**Pourquoi.** Banc N1, MAPE dép. h = 5
+([rapport](reports/2026-11-14-axe2-methodes.md)) :
+- privé : 8,57 % contre 8,68 % (A0), Δ −0,11 pt, IC 95 %
+  [−0,21 ; −0,02] ;
+- ancien périmètre : −0,10 [−0,21 ; −0,002].
+
+C'est le seul gain reproduit sur les deux périmètres. Il bat aussi la
+tendance (gagne, IC 99 % compris).
+**Rejeté :** régler k sur le banc, parce que ce serait choisir après avoir
+vu.
+**Ce qui le renverserait.**
+- Le dépôt 2027 où A2 ne bat pas A0.
+- Un IC qui tient compte de la corrélation entre origines et qui couvre 0.
+
+## 2026-11-14 — Axe 2 : âges fins (A1a, A1b) à égalité au banc ; A1b adopté pour la structure par âge, A1a réservé au département
+
+**Décision.**
+- **A1b**, l'état en âges simples (20 à 74 ans et plus) désagrégé à
+  l'origine, est la variante d'âges retenue.
+  - Au banc, il est à égalité avec A0 sur le total : +0,03 au privé,
+    −0,03 sur l'ancien périmètre, IC couvrant 0.
+  - Sur 18 mondes simulés, il divise par 3 l'erreur sur les 60 ans et
+    plus : 2,1 % contre 7,0 % à h = 5, et 5,9 % contre 18,9 % au pire.
+- **A1a**, désagrégé chaque année, est un peu moins bon que A0 au privé
+  (+0,09 [+0,01 ; +0,18]) et coûte +1,23 s par profession à la commune.
+  Il n'est pas retenu.
+- Hypothèses supposées :
+  - tranche « moins de 25 » = 20–24 ans ;
+  - tranche 65+ de largeur 10 ;
+  - entrées uniformes dans la tranche.
+
+**Pourquoi.** Le vieillissement uniforme biaise la part des seniors
+jusqu'à 19 % (mesuré, ordre de grandeur cité par l'observatoire, E4). Ce
+biais ne se voit pas sur le total à 5 ans, parce que la rétention ajustée
+l'absorbe dans la fenêtre. Les leviers retraite, eux, agissent sur les
+âges.
+**Ce qui le renverserait.** Une source en âges simples (RPPS individuel)
+qui contredit la désagrégation linéaire.
+
+## 2026-11-14 — Axe 2 : rejetés pour la prévision (A3, combinaison, B4, C5) ; en attente (A4, A5) ; tuée pour N1 (A6)
+
+**Décision.**
+- **Rejetée, A3** (rétention des 60 ans et plus en tendance) : pire
+  qu'A0, +0,33 pt au privé et +0,76 pt sur l'ancien périmètre. La
+  prédiction « réduit le biais national PH et CD » est falsifiée (PH
+  −0,15 → +2,28 %).
+  - Les variantes adoptées n'ont pas de tendance (`trend60` désactivé) :
+    la rétention y est stationnaire.
+  - Le levier `methodes_sorties.tendance_60plus` (λ, 1 dans la variante
+    A3 inscrite) reste disponible quand `trend60` est activé. Il sert de
+    scénario « on travaille plus longtemps » ; ce n'est pas une
+    hypothèse de prévision.
+- **Rejetée, la combinaison A123** : égale au privé (+0,06), pire sur
+  l'ancien périmètre (+0,50), entraînée par A3.
+- **Rejeté, B4** (borne r ≤ 1,2 de l'observatoire) :
+  - meilleur au privé (−0,35), pire sur l'ancien périmètre (+0,53) ;
+  - 27 à 47 % des cellules de 35 ans et plus y ont r > 1, d'où une
+    croissance composée de +0,1 à +0,9 pt/an d'ici 2050 (dentistes : +23 %
+    d'effectif en 2050 par rapport à A0) ;
+  - c'est un piège partiel, pas l'emballement de K1 (+3,5 %/an).
+- **Rejeté pour la prévision, C5** (entrées par région de formation) : la
+  part du stock prédit la part régionale des entrées avec r = 0,996,
+  contre 0,64 (CD) et 0,94 (PH) pour la part étudiante. On le garde comme
+  futur mécanisme de levier régional.
+- **En attente :**
+  - A4, logit de l'installation : avec effets fixes, il égale les parts
+    observées ; il faut un attribut daté ;
+  - A5, modèle bayésien ou espace-état : au département, il ≈ A2 ; il
+    relève de N4.
+- **Tuée pour N1, A6** (microsimulation) : même espérance que le
+  stock-flux.
+- **Non testés, diplômés étrangers CD** : aucune série ouverte par lieu de
+  diplôme.
+
+**Pourquoi.** Banc N1 et diagnostics du
+[rapport](reports/2026-11-14-axe2-methodes.md). Les verdicts a priori
+viennent de la [dérivation](derivations/2026-11-14-axe2-methodes.md).
+**Ce qui le renverserait.**
+- Pour B4 : N2 (DD76 à 2050) favorable à B4.
+- Pour C5 : une série d'inscrits par université avant 2020 qui prédit les
+  *variations* d'entrées.

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offre de soins libérale — scénarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Direction A · sémiologie graphique. Jetons : à terme dans design/tokens.json (Figma). */
+  :root {
+    --ground: #FFFFFF; --panel: #F5F6F4; --ink: #111315; --ink-2: #43484D; --ink-3: #757B80;
+    --rule: #111315; --hair: rgba(17,19,21,.13);
+    --up-1: #D6E7EC; --up-2: #A9CCD7; --up-3: #4F92A8; --up-4: #0E4D64;     /* écart positif : pétrole */
+    --dn-1: #EDE5D8; --dn-2: #D9C8AC; --dn-3: #B39468; --dn-4: #7A5C33;     /* écart négatif : bistre */
+    --base: #9AA0A5; --focus: #0E4D64;
+    --font: 'Atkinson Hyperlegible', system-ui, sans-serif;
+    --t: 180ms cubic-bezier(.16,1,.3,1);
+  }
+  * { box-sizing: border-box; }
+  html { font-variant-numeric: tabular-nums; }
+  ::selection { background: var(--up-4); color: #fff; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 15px/1.45 var(--font); }
+  header.top { display: flex; align-items: center; gap: 24px; padding: 14px 28px; border-bottom: 2px solid var(--rule); flex-wrap: wrap; }
+  header.top h1 { font-size: 1.05rem; margin: 0; font-weight: 700; }
+  .profs { display: flex; gap: 2px; flex-wrap: wrap; }
+  .profs button { font: inherit; font-size: .9rem; background: none; border: 0; padding: 6px 10px; cursor: pointer; color: var(--ink-2); border-bottom: 2px solid transparent; transition: color var(--t), border-color var(--t); }
+  .profs button:hover { color: var(--ink); }
+  .profs button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--up-4); font-weight: 700; }
+  .profs button:disabled { color: var(--ink-3); cursor: not-allowed; text-decoration: line-through; }
+  select { font: inherit; padding: 6px 8px; border: 1px solid var(--hair); border-radius: 3px; background: #fff; color: var(--ink); }
+  .terr { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: .9rem; }
+  .crumb { color: var(--ink-3); }
+  .crumb b { color: var(--ink); }
+
+  main { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: calc(100vh - 60px); }
+  aside { background: var(--panel); padding: 22px 22px 28px; border-right: 1px solid var(--hair); }
+  aside h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); margin: 0 0 14px; }
+  .lever { padding: 14px 0 16px; border-top: 1px solid var(--hair); }
+  .lever label { display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; font-size: .95rem; gap: 10px; }
+  .lever output { font-weight: 700; color: var(--up-4); min-width: 4.5ch; text-align: right; }
+  .lever .note { font-size: .78rem; color: var(--ink-2); margin-top: 6px; }
+  .lever .flag { font-size: .76rem; color: var(--dn-4); margin-top: 4px; }
+  input[type=range] { width: 100%; margin: 10px 0 0; accent-color: var(--up-4); }
+  .switch { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: .9rem; }
+  .switch input { width: 18px; height: 18px; accent-color: var(--up-4); }
+  .reset { margin-top: 18px; font: inherit; font-size: .85rem; background: none; border: 1px solid var(--ink); padding: 7px 12px; border-radius: 3px; cursor: pointer; transition: background var(--t), color var(--t); }
+  .reset:hover { background: var(--ink); color: #fff; }
+
+  section.view { padding: 26px 32px 40px; min-width: 0; }
+  .headline { font-size: 1.55rem; line-height: 1.25; margin: 0 0 4px; max-width: 46ch; font-weight: 400; }
+  .headline b { font-weight: 700; }
+  .headline .gap { font-weight: 700; color: var(--up-4); transition: color var(--t); }
+  .headline .gap.neg { color: var(--dn-4); }
+  .sub { color: var(--ink-2); font-size: .88rem; margin: 0 0 18px; }
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: 28px; align-items: start; }
+  #chart { width: 100%; height: auto; display: block; overflow: visible; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: .78rem; color: var(--ink-2); margin-top: 6px; }
+  .legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 6px; }
+  h3 { font-size: 1rem; margin: 0 0 10px; }
+  .flows .row { display: grid; grid-template-columns: 7.5rem 1fr 4.6rem; align-items: center; gap: 8px; font-size: .86rem; margin-bottom: 8px; }
+  .flows .track { position: relative; height: 16px; }
+  .flows .track::before { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; border-left: 1px solid var(--ink); }
+  .flows .bar { position: absolute; top: 0; height: 100%; transition: left var(--t), width var(--t); }
+  .flows .val { text-align: right; font-weight: 700; }
+  .flows .sum { border-top: 1px solid var(--ink); padding-top: 8px; font-weight: 700; }
+  .flows p { font-size: .78rem; color: var(--ink-2); margin: 10px 0 0; }
+
+  .matrix { margin-top: 34px; }
+  .mhead { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+  .mhead h3 { margin: 0; }
+  .mhead .sort { display: flex; gap: 4px; font-size: .82rem; }
+  .mhead .sort button { font: inherit; background: none; border: 1px solid var(--hair); padding: 3px 8px; border-radius: 3px; cursor: pointer; color: var(--ink-2); }
+  .mhead .sort button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
+  .mtable { position: relative; font-size: .78rem; }
+  .mrow { display: grid; grid-template-columns: 11rem repeat(var(--n), minmax(18px, 1fr)) 5.5rem; gap: 2px; align-items: center; height: 20px; position: absolute; left: 0; right: 0; transition: transform 420ms cubic-bezier(.16,1,.3,1); cursor: pointer; }
+  .mrow:hover .name { text-decoration: underline; }
+  .mrow.sel .name { font-weight: 700; }
+  .mrow .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mrow i { display: block; height: 16px; transition: background-color var(--t); }
+  .mrow .end { text-align: right; font-weight: 700; padding-left: 6px; }
+  .mcols { display: grid; grid-template-columns: 11rem repeat(var(--n), minmax(18px, 1fr)) 5.5rem; gap: 2px; font-size: .72rem; color: var(--ink-2); margin-bottom: 4px; }
+  .scale { display: flex; align-items: center; gap: 4px; font-size: .72rem; color: var(--ink-2); margin-top: 10px; }
+  .scale i { width: 26px; height: 10px; display: inline-block; }
+  footer { font-size: .74rem; color: var(--ink-3); padding: 18px 32px 26px; border-top: 1px solid var(--hair); line-height: 1.5; }
+  .err { color: var(--dn-4); font-weight: 700; }
+  @media (max-width: 980px) { main { grid-template-columns: 1fr; } aside { border-right: 0; border-bottom: 1px solid var(--hair); } .grid2 { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media print { aside, .profs, .terr select, .sort { display: none; } main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Offre de soins libérale · scénarios 2050</h1>
+  <nav class="profs" id="profs" aria-label="Profession"></nav>
+  <div class="terr"><span class="crumb" id="crumb"></span><select id="terr" aria-label="Territoire"></select></div>
+</header>
+<main>
+  <aside aria-label="Leviers">
+    <h2>Leviers de politique publique</h2>
+    <div class="lever">
+      <label for="quotas">Places en formation <output id="o-quotas">+0 %</output></label>
+      <input type="range" id="quotas" min="0.7" max="1.5" step="0.05" value="1">
+      <div class="note" id="n-quotas"></div>
+    </div>
+    <div class="lever">
+      <label for="retraite">Âge de cessation d'activité <output id="o-retraite">+0 an</output></label>
+      <input type="range" id="retraite" min="-2" max="3" step="0.5" value="0">
+      <div class="note" id="n-retraite"></div>
+    </div>
+    <div class="lever">
+      <label for="regul">Installation régulée</label>
+      <div class="switch"><input type="checkbox" id="regul"><span>conventionnement seulement en remplacement d'un départ</span></div>
+      <div class="note" id="n-regul"></div>
+    </div>
+    <button class="reset" id="reset">Revenir à la tendance</button>
+  </aside>
+
+  <section class="view" aria-live="polite">
+    <p class="headline" id="headline">Chargement du jumeau…</p>
+    <p class="sub" id="sub"></p>
+    <div class="grid2">
+      <div class="chart">
+        <svg id="chart" viewBox="0 0 720 330" role="img" aria-label="Évolution de l'effectif, observé, tendance et scénario"></svg>
+        <div class="legend">
+          <span><i style="border-color:var(--ink)"></i>observé</span>
+          <span><i style="border-color:var(--base)"></i>tendance (aucun levier)</span>
+          <span><i style="border-color:var(--up-4);border-top-style:dashed"></i>scénario</span>
+          <span><svg width="22" height="10" style="vertical-align:middle;margin-right:6px"><rect width="22" height="10" fill="url(#hatch-l)"/></svg>fourchette indicative</span>
+        </div>
+      </div>
+      <div class="flows" id="flows">
+        <h3 id="flows-title">D'où vient l'écart</h3>
+        <div id="flows-rows"></div>
+        <p>Écart scénario − tendance, cumulé depuis l'origine, par flux du jumeau. La somme des flux donne l'écart exact. Cliquez une année sur le graphique pour la changer.</p>
+      </div>
+    </div>
+
+    <div class="matrix">
+      <div class="mhead">
+        <h3 id="m-title">Écart au scénario tendanciel, par département</h3>
+        <div class="sort" id="mode">
+          <button data-m="gap" aria-pressed="true">écart au tendanciel</button>
+          <button data-m="evo" aria-pressed="false">évolution depuis l'origine</button>
+        </div>
+        <div class="sort" id="sort">
+          <button data-k="gap" aria-pressed="true">par écart 2050</button>
+          <button data-k="size" aria-pressed="false">par effectif 2050</button>
+          <button data-k="name" aria-pressed="false">par nom</button>
+        </div>
+      </div>
+      <div class="mcols" id="mcols"></div>
+      <div class="mtable" id="mtable"></div>
+      <div class="scale" id="mscale"></div>
+    </div>
+  </section>
+</main>
+<footer id="foot">
+  « Libéral » = secteur privé, lucratif ou non (tout employeur public exclu), décision du 2026-11-14. Sources : DREES RPPS 2012–2026 × secteur d'activité (v2/data/processed/secteur_stock.parquet, part privée centrale), zonage conventionnel CartoSanté (extrait 2026-11-14).
+  Modèle : jumeau v2, estimateur stock-flux à taux locaux. Fourchette : pente d'erreur de backtest × horizon × 1,6, extrapolée ; aucun backtest n'existe au-delà d'environ 10 ans.
+  Régulation approchée au département (≥ 50 % des communes en remplacement seul). Prototype de recherche : chiffres non validés, à ne pas citer.
+</footer>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <pattern id="hatch-l" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#0E4D64" stroke-width="1.1"/></pattern>
+</defs></svg>
+
+<script>
+const $ = s => document.querySelector(s);
+const fmt = n => Math.round(n).toLocaleString('fr-FR');
+const sgn = n => (n >= 0 ? '+' : '−') + Math.abs(Math.round(n)).toLocaleString('fr-FR');
+const pct = (n, d = 1) => (n >= 0 ? '+' : '−') + Math.abs(n * 100).toFixed(d).replace('.', ',') + ' %';
+const FLOW = { entrees: 'Entrées', sorties: 'Sorties (cessations)', regulation: 'Régulation', plancher: 'Plancher à zéro' };
+const S = { prof: 'kines', terr: 'FR', quotas: 1, retraite: 0, regul: false, year: 2050, sort: 'gap', mode: 'gap', data: null, shown: null, meta: null };
+
+// ---------- données ----------
+let ctrl = null, pending = false;
+async function load() {
+  if (ctrl) ctrl.abort();
+  ctrl = new AbortController();
+  const q = new URLSearchParams({ prof: S.prof, terr: S.terr, quotas: S.quotas, retraite: S.retraite, regul: S.regul ? 1 : 0 });
+  const t0 = performance.now();
+  try {
+    const r = await fetch('/api/scenario?' + q, { signal: ctrl.signal });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    d.rtt = performance.now() - t0;
+    S.data = d; render();
+  } catch (e) { if (e.name !== 'AbortError') $('#headline').innerHTML = `<span class="err">${e.message}</span>`; }
+}
+function schedule() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; load(); }); }
+
+// ---------- rendu ----------
+function terrName(id) {
+  if (id === 'FR') return 'France';
+  for (const r of S.meta.territories) { if (r.id === id) return r.name; for (const d of r.deps || []) if (d.id === id) return d.name; }
+  return id;
+}
+function regionOf(id) { return S.meta.territories.find(r => (r.deps || []).some(d => d.id === id)); }
+
+function render() {
+  const d = S.data, i = d.years.indexOf(S.year), last = d.years.length - 1;
+  const b = d.base[last], s = d.scn[last], g = s - b, h = 2050 - d.origin, k = d.k * h;
+  const neutral = S.quotas === 1 && S.retraite === 0 && !S.regul;
+  $('#headline').innerHTML = neutral
+    ? `<b>${terrName(S.terr)}</b>, ${d.label.toLowerCase()} libéraux en 2050 : <b>≈ ${fmt(b)}</b> selon la tendance, contre ${fmt(d.obs.at(-1)[1])} en ${d.origin}.`
+    : `<b>${terrName(S.terr)}</b>, 2050 : <span class="gap ${g < 0 ? 'neg' : ''}">${sgn(g)} ${d.label.toLowerCase()} libéraux</span> par rapport à la tendance (${pct(g / b)}), soit ≈ ${fmt(s)}.`;
+  $('#sub').textContent = `Fourchette indicative du scénario en 2050 : ${fmt(s * (1 - k))} – ${fmt(s * (1 + k))}. Origine des données ${d.origin} · décision ${d.decision} · recalcul ${Math.round(d.rtt)} ms (jumeau ${d.ms} ms).`;
+  $('#n-quotas').textContent = `Premier effet sur les installations : ${d.first_effect} (formation ≈ ${d.lag} ans, supposé). Rien ne change avant.`;
+  const nz = d.regul_deps.length;
+  $('#n-retraite').textContent = `Cessations retardées de Δ an(s) à partir de ${d.decision + 1}, avec une montée progressive.`;
+  $('#regul').disabled = !nz;
+  $('#n-regul').textContent = nz ? `${nz} département(s) approché(s) : au moins la moitié des communes en « remplacement seul » (${d.regul_deps.join(', ')}). Les entrants bloqués quittent le libéral (destination supposée).` : 'Aucun zonage conventionnel pour cette profession.';
+  chart(d); flows(d, i); matrix(d);
+}
+
+// ---------- graphique (avec interpolation) ----------
+const W = 720, Hh = 330, M = { l: 54, r: 16, t: 14, b: 30 };
+let prevY = null, anim = 0;
+function chart(d) {
+  const years = d.obs.map(o => o[0]).concat(d.years.slice(1));
+  const x0 = years[0], x1 = 2050, h = y => y - d.origin;
+  const band = d.scn.map((v, j) => [v * (1 - d.k * h(d.years[j])), v * (1 + d.k * h(d.years[j]))]);
+  const all = d.obs.map(o => o[1]).concat(d.base, band.flat());
+  let lo = Math.min(...all), hi = Math.max(...all); const pad = (hi - lo) * .08; lo = Math.max(0, lo - pad); hi += pad;
+  const target = { lo, hi, base: d.base, scn: d.scn, band };
+  const from = prevY && prevY.base.length === d.base.length ? prevY : target;
+  const t0 = performance.now(); cancelAnimationFrame(anim);
+  const step = now => {
+    const u = Math.min(1, (now - t0) / 220), e = 1 - Math.pow(1 - u, 3), L = (a, b) => a + (b - a) * e;
+    const cur = { lo: L(from.lo, lo), hi: L(from.hi, hi), base: d.base.map((v, j) => L(from.base[j], v)),
+      scn: d.scn.map((v, j) => L(from.scn[j], v)), band: band.map((v, j) => [L(from.band[j][0], v[0]), L(from.band[j][1], v[1])]) };
+    draw(d, cur, x0, x1); prevY = cur;
+    if (u < 1) anim = requestAnimationFrame(step); else prevY = target;
+  };
+  anim = requestAnimationFrame(step);
+}
+function draw(d, c, x0, x1) {
+  const X = y => M.l + (y - x0) / (x1 - x0) * (W - M.l - M.r), Y = v => Hh - M.b - (v - c.lo) / (c.hi - c.lo) * (Hh - M.t - M.b);
+  const path = pts => pts.map((p, j) => (j ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join('');
+  const ys = d.years;
+  const bandP = path(ys.map((y, j) => [y, c.band[j][1]])) + ys.slice().reverse().map((y, j) => 'L' + X(y).toFixed(1) + ' ' + Y(c.band[ys.length - 1 - j][0]).toFixed(1)).join('') + 'Z';
+  const ticks = []; const step = niceStep((c.hi - c.lo) / 5);
+  for (let v = Math.ceil(c.lo / step) * step; v <= c.hi; v += step) ticks.push(v);
+  const yt = [2012, 2020, 2026, 2030, 2040, 2050].filter(y => y >= x0);
+  const sel = S.year;
+  $('#chart').innerHTML = `
+    ${ticks.map(v => `<line x1="${M.l}" x2="${W - M.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(17,19,21,.08)"/><text x="${M.l - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="#757B80">${fmt(v)}</text>`).join('')}
+    ${yt.map(y => `<text x="${X(y)}" y="${Hh - 8}" text-anchor="middle" font-size="11" fill="#757B80">${y}</text>`).join('')}
+    <line x1="${X(d.decision)}" x2="${X(d.decision)}" y1="${M.t}" y2="${Hh - M.b}" stroke="#111315" stroke-width=".8"/>
+    <text x="${X(d.decision) + 5}" y="${M.t + 10}" font-size="11" fill="#43484D">décision</text>
+    ${d.first_effect <= 2050 && S.quotas !== 1 ? `<line x1="${X(d.first_effect)}" x2="${X(d.first_effect)}" y1="${M.t + 16}" y2="${Hh - M.b}" stroke="#0E4D64" stroke-dasharray="2 3"/><text x="${X(d.first_effect) + 5}" y="${M.t + 28}" font-size="11" fill="#0E4D64">1ers diplômés en plus</text>` : ''}
+    <path d="${bandP}" fill="url(#hatch-l)" opacity=".6"/>
+    <path d="${path(ys.map((y, j) => [y, c.base[j]]))}" fill="none" stroke="#9AA0A5" stroke-width="1.6"/>
+    <path d="${path(ys.map((y, j) => [y, c.scn[j]]))}" fill="none" stroke="#0E4D64" stroke-width="2.4" stroke-dasharray="6 4"/>
+    <path d="${path(d.obs)}" fill="none" stroke="#111315" stroke-width="2.4"/>
+    <line x1="${X(sel)}" x2="${X(sel)}" y1="${M.t}" y2="${Hh - M.b}" stroke="#0E4D64" stroke-width="1" opacity=".5"/>
+    <circle cx="${X(sel)}" cy="${Y(c.scn[ys.indexOf(sel)])}" r="4" fill="#0E4D64"/>
+    <rect x="${X(d.origin)}" y="${M.t}" width="${X(2050) - X(d.origin)}" height="${Hh - M.t - M.b}" fill="transparent" id="hit" style="cursor:crosshair"/>`;
+  $('#hit').onclick = ev => {
+    const r = $('#chart').getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W;
+    const y = Math.round(x0 + (px - M.l) / (W - M.l - M.r) * (x1 - x0));
+    S.year = Math.max(d.origin + 1, Math.min(2050, y)); flows(S.data, S.data.years.indexOf(S.year)); draw(S.data, prevY, x0, x1);
+  };
+}
+function niceStep(r) { const p = Math.pow(10, Math.floor(Math.log10(r))); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= r); }
+
+// ---------- décomposition par flux ----------
+function flows(d, i) {
+  $('#flows-title').textContent = `D'où vient l'écart en ${S.year}`;
+  const names = Object.keys(d.flows);
+  const vals = names.map(n => [n, d.flows[n][i]]).filter(v => Math.abs(v[1]) >= .5);
+  const tot = d.scn[i] - d.base[i];
+  const m = Math.max(1, ...vals.map(v => Math.abs(v[1])), Math.abs(tot));
+  const bar = v => { const w = Math.abs(v) / m * 50; return `<span class="bar" style="left:${v >= 0 ? 50 : 50 - w}%;width:${w}%;background:${v >= 0 ? 'var(--up-3)' : 'var(--dn-3)'}"></span>`; };
+  $('#flows-rows').innerHTML = (vals.length ? vals.map(([n, v]) => `<div class="row"><span>${FLOW[n] || n}</span><span class="track">${bar(v)}</span><span class="val">${sgn(v)}</span></div>`).join('')
+    : `<div class="row"><span>Aucun levier actif</span><span class="track"></span><span class="val">0</span></div>`)
+    + `<div class="row sum"><span>Écart total</span><span class="track">${bar(tot)}</span><span class="val">${sgn(tot)}</span></div>`;
+}
+
+// ---------- matrice ordonnable ----------
+function matrix(d) {
+  const M_ = d.matrix, n = M_.years.length;
+  const parent = S.terr === 'FR' ? 'France' : S.terr.startsWith('R') ? terrName(S.terr) : (regionOf(S.terr) || {}).name;
+  const evo = S.mode === 'evo', val = (r, k) => evo ? r.scn[k] / Math.max(1, r.base[0]) - 1 : r.scn[k] / Math.max(1, r.base[k]) - 1;
+  $('#m-title').textContent = `${evo ? `Évolution du scénario depuis ${d.origin}` : 'Écart au tendanciel'}, par département · ${parent}`;
+  $('#mcols').style.setProperty('--n', n);
+  $('#mcols').innerHTML = `<span></span>${M_.years.map(y => `<span>${String(y).slice(2)}</span>`).join('')}<span style="text-align:right">2050</span>`;
+  const rows = M_.rows.map(r => ({ ...r, gap: val(r, n - 1), size: r.scn.at(-1) }));
+  const order = rows.slice().sort(S.sort === 'name' ? (a, b) => a.name.localeCompare(b.name, 'fr') : (a, b) => b[S.sort] - a[S.sort]);
+  const color = v => { const a = Math.abs(v), ramp = v >= 0 ? ['--up-1', '--up-2', '--up-3', '--up-4'] : ['--dn-1', '--dn-2', '--dn-3', '--dn-4'];
+    const th = evo ? [.05, .15, .3] : [.03, .07, .15];
+    return a < .005 ? '#F1F2F0' : `var(${ramp[a < th[0] ? 0 : a < th[1] ? 1 : a < th[2] ? 2 : 3]})`; };
+  const box = $('#mtable'); box.style.setProperty('--n', n); box.style.height = (order.length * 22) + 'px';
+  const existing = new Map([...box.children].map(e => [e.dataset.id, e]));
+  order.forEach((r, j) => {
+    let el = existing.get(r.id);
+    if (!el) { el = document.createElement('div'); el.className = 'mrow'; el.dataset.id = r.id; el.style.transform = `translateY(${j * 22}px)`; box.appendChild(el);
+      el.onclick = () => { S.terr = r.id; $('#terr').value = r.id; crumb(); load(); }; }
+    existing.delete(r.id);
+    el.classList.toggle('sel', S.terr === r.id);
+    el.innerHTML = `<span class="name" title="${r.name}">${r.name}</span>` + r.base.map((b, k) => `<i style="background-color:${color(val(r, k))}" title="${M_.years[k]} : ${pct(val(r, k))}"></i>`).join('') + `<span class="end">${pct(r.gap, 0)}</span>`;
+    requestAnimationFrame(() => el.style.transform = `translateY(${j * 22}px)`);
+  });
+  existing.forEach(e => e.remove());
+  $('#mscale').innerHTML = `${evo ? 'baisse' : 'moins que la tendance'} <i style="background:var(--dn-4)"></i><i style="background:var(--dn-3)"></i><i style="background:var(--dn-2)"></i><i style="background:var(--dn-1)"></i><i style="background:#F1F2F0"></i><i style="background:var(--up-1)"></i><i style="background:var(--up-2)"></i><i style="background:var(--up-3)"></i><i style="background:var(--up-4)"></i> ${evo ? `hausse · seuils 0,5 / 5 / 15 / 30 %` : 'plus que la tendance · seuils 0,5 / 3 / 7 / 15 %'}`;
+}
+
+// ---------- contrôles ----------
+function crumb() {
+  const id = S.terr, r = id.startsWith('D') ? regionOf(id) : null;
+  $('#crumb').innerHTML = id === 'FR' ? '<b>France</b>' : r ? `<a href="#" data-t="FR">France</a> › <a href="#" data-t="${r.id}">${r.name}</a> › <b>${terrName(id)}</b>` : `<a href="#" data-t="FR">France</a> › <b>${terrName(id)}</b>`;
+  $('#crumb').querySelectorAll('a').forEach(a => a.onclick = e => { e.preventDefault(); S.terr = a.dataset.t; $('#terr').value = S.terr; crumb(); load(); });
+}
+async function init() {
+  S.meta = await (await fetch('/api/meta')).json();
+  const profs = $('#profs');
+  Object.entries(S.meta.professions).forEach(([k, v]) => { const b = document.createElement('button'); b.textContent = v; b.dataset.k = k; b.setAttribute('aria-pressed', k === S.prof); profs.appendChild(b); });
+  Object.entries(S.meta.missing || {}).forEach(([k, why]) => { const b = document.createElement('button'); b.textContent = k[0].toUpperCase() + k.slice(1); b.disabled = true; b.title = why; profs.appendChild(b); });
+  profs.onclick = e => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.prof = b.dataset.k; prevY = null;
+    profs.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); load(); };
+  const sel = $('#terr');
+  sel.innerHTML = `<option value="FR">France</option>` + S.meta.territories.slice(1).map(r => `<optgroup label="${r.name}"><option value="${r.id}">${r.name} (région)</option>${r.deps.map(d => `<option value="${d.id}">${d.name}</option>`).join('')}</optgroup>`).join('');
+  sel.onchange = () => { S.terr = sel.value; prevY = null; crumb(); load(); };
+  const q = $('#quotas'), rt = $('#retraite'), rg = $('#regul');
+  q.oninput = () => { S.quotas = +q.value; $('#o-quotas').textContent = pct(S.quotas - 1, 0); schedule(); };
+  rt.oninput = () => { S.retraite = +rt.value; $('#o-retraite').textContent = (S.retraite >= 0 ? '+' : '−') + Math.abs(S.retraite).toString().replace('.', ',') + (Math.abs(S.retraite) > 1 ? ' ans' : ' an'); schedule(); };
+  rg.onchange = () => { S.regul = rg.checked; schedule(); };
+  $('#reset').onclick = () => { q.value = 1; rt.value = 0; rg.checked = false; q.oninput(); rt.oninput(); S.regul = false; schedule(); };
+  $('#sort').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.sort = b.dataset.k;
+    $('#sort').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); matrix(S.data); };
+  $('#mode').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.mode = b.dataset.m;
+    $('#mode').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); matrix(S.data); };
+  crumb(); load();
+}
+init();
+</script>
+</body>
+</html>
