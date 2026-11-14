@@ -83,10 +83,9 @@ class Trajectory:
 def apply(x: np.ndarray, f) -> np.ndarray:
     """Applique un flux à N [cellule, âge] ; renvoie le nouvel N (opérations identiques à sante.model.project)."""
     if isinstance(f, Shift):
-        if np.ndim(f.frac) == 0:
-            prev = np.roll(x, 1, axis=1)
-            prev[:, 0] = 0
-            y = (1.0 - f.frac) * x + f.frac * prev
+        if np.ndim(f.frac) == 0:                         # mêmes opérations que v1 (0,8·x + 0,2·prev), sans np.roll
+            y = (1.0 - f.frac) * x
+            y[:, 1:] += f.frac * x[:, :-1]
             y[:, -1] = x[:, -1] + f.frac * x[:, -2]      # tranche ouverte du haut
             return y
         moved = x * np.asarray(f.frac)[None, :]          # une fraction par tranche (1 / largeur)
@@ -134,8 +133,10 @@ def build(names, registry=None) -> list:
 
 
 def run(state: State, modules: list, scenario: Scenario, until: int, origin: int | None = None,
-        floor: bool = True) -> Trajectory:
-    """floor=False retire le plancher à 0 (le modèle devient linéaire) : sert aux tests de conservation."""
+        floor: bool = True, ledger: bool = True, keep=None) -> Trajectory:
+    """floor=False retire le plancher à 0 (le modèle devient linéaire) : sert aux tests de conservation.
+    ledger=False ne tient pas le registre des flux (chemin rapide : prototype, grandes échelles) ; les ΔN restent
+    calculés pour les flux qu'un module lit (needs / optional). keep : années dont l'état est gardé (None = toutes)."""
     origin = state.year if origin is None else origin
     if {m.name for m in modules} != set(scenario.composition):
         raise ValueError(f"modules fournis {[m.name for m in modules]} ≠ composition du scénario {scenario.composition}")
@@ -145,7 +146,9 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
         x = m.prepare(x, scenario)
     scenario.validate(modules, x.cells)
     rng = np.random.default_rng(scenario.seed)
-    out, ledger = {}, []
+    out, book = {}, []
+    needed = {n for m in modules for n in m.needs + m.optional}
+    keep = None if keep is None else set(keep)
     for m in modules:
         m.begin(x, Context(state.year, origin, scenario, x.cells, rng, len(x.ages)))
     for year in range(state.year + 1, until + 1):
@@ -159,17 +162,22 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
                     x.pool = f.new
                     ctx.pools[f.name] = dict(f.out)
                     for acct, v in f.out.items():
-                        ledger.append((year, f.name, acct, v if hasattr(v, "index") else np.asarray(v, float)))   # Series : par profession
+                        book.append((year, f.name, acct, v if hasattr(v, "index") else np.asarray(v, float)))   # Series : par profession
                     continue
                 new = apply(N, f)
-                d = new - N
-                ctx.deltas[f.name] = ctx.deltas.get(f.name, 0) + d
-                acct = f.to if isinstance(f, Rate) else f.src if isinstance(f, Add) else "interne"
-                ledger.append((year, f.name, acct, d.sum(axis=1)))
+                if ledger or f.name in needed:
+                    d = new - N
+                    if f.name in needed:
+                        ctx.deltas[f.name] = ctx.deltas.get(f.name, 0) + d
+                    if ledger:
+                        acct = f.to if isinstance(f, Rate) else f.src if isinstance(f, Add) else "interne"
+                        book.append((year, f.name, acct, d.sum(axis=1)))
                 N = new
                 x = State(x.cells, x.ages, N, x.year, x.level, x.pool, x._key)
         floored = np.maximum(N, 0) if floor else N
-        ledger.append((year, "plancher", "plancher", (floored - N).sum(axis=1)))
+        if ledger:
+            book.append((year, "plancher", "plancher", (floored - N).sum(axis=1)))
         x = State(x.cells, x.ages, floored, year, x.level, x.pool, x._key)
-        out[year] = x
-    return Trajectory(out, ledger)
+        if keep is None or year in keep:
+            out[year] = x
+    return Trajectory(out, book)

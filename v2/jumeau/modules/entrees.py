@@ -50,13 +50,23 @@ class Entrees(Module):
         self.hist = hist
 
     def step(self, state, ctx):
-        _, inflow, slope = stock_flow_rates(self.hist, state)
-        inflow = ctx.param(self, "flux", base=inflow)
+        _, fitted, slope = stock_flow_rates(self.hist, state)
+        inflow = ctx.param(self, "flux", base=fitted)
         k = 1.0
         if ctx.param(self, "filiere"):
-            k = np.array([scale(p, ctx.origin, ctx.h)[-1] for p in state.cells["profession"]])[:, None]
-        amount = k * (inflow + slope * ctx.h)
+            kp = {p: scale(p, ctx.origin, ctx.h)[-1] for p in state.cells["profession"].unique()}
+            k = state.cells["profession"].map(kp).to_numpy(dtype=float)[:, None]
         m = ctx.param(self, "multiplicateur")
+        if np.ndim(k) == 0 and inflow is fitted and not np.any(slope):   # entrées constantes : calculées une fois
+            ekey = np.asarray(m, float).tobytes()
+            ec = self.__dict__.setdefault("_amount", {})
+            if ekey not in ec or ec[ekey][0] is not fitted:
+                if len(ec) > 32:
+                    ec.clear()
+                a = k * (inflow + slope * ctx.h)
+                ec[ekey] = (fitted, a * (np.reshape(m, (-1, 1)) if np.ndim(m) else m) if np.any(m != 1) else a)
+            return [Add(self.name, ec[ekey][1], src="entrees")]
+        amount = k * (inflow + slope * ctx.h)
         if np.any(m != 1):
             amount = amount * (np.reshape(m, (-1, 1)) if np.ndim(m) else m)
         return [Add(self.name, amount, src="entrees")]

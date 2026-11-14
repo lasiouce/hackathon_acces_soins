@@ -104,38 +104,47 @@ class Sorties(Module):
         self.hist = hist
 
     def step(self, state, ctx):
-        s = ctx.param(self, "retention", base=stock_flow_rates(self.hist, state)[0])
+        base = stock_flow_rates(self.hist, state)[0]
+        s = ctx.param(self, "retention", base=base)
         d, k = ctx.param(self, "decalage_retraite"), ctx.param(self, "cumul_multiplicateur")
         mp = ctx.param(self, "multiplicateur_precoces")
-        if np.any(d != 0) or np.any(k != 1) or np.any(mp != 1):
-            a = state.ages
-            col = lambda v: np.reshape(v, (-1, 1)) if np.ndim(v) else v
-            d = col(d)
-            e = 1.0 - s
-            old = a >= 65
-            if old.sum() > 1 and np.any(d != 0):         # plusieurs tranches ≥ 65 : λ par cellule (séjour + Δ exact)
-                f = float(np.atleast_1d(ctx.param_of("vieillissement", "fraction", 0.2))[0])
-                dd = (np.broadcast_to(np.ravel(d), (len(s),)).astype(float) if np.size(d) > 1
-                      else np.full(len(s), float(np.ravel(d)[0])))
-                key = (id(s), s.shape, f, dd.tobytes())     # s ajusté est le même objet d'une année à l'autre
-                cache = self.__dict__.setdefault("_lam", {})
-                if key not in cache:
-                    if len(cache) > 64:
-                        cache.clear()
-                    cache[key] = lambda_65plus(s[:, old], dd, f)[:, None]
-                lam = cache[key]
-            else:
-                lam = d
-            m6064, m5559 = (a >= 60) & (a < 65), (a >= 55) & (a < 60)     # colonnes seulement (coût ∝ tranches touchées)
-            if np.any(d != 0):
-                e[:, old] = e[:, old] / (1.0 + lam * e[:, old])
-                e[:, m6064] = e[:, m6064] * np.maximum(0.0, 1.0 - d / 5.0)
-                e[:, m5559] = e[:, m5559] * np.maximum(0.0, 1.0 - d / 10.0)
-            if np.any(k != 1):
-                part = col(par_profession(ctx.param(self, "part_cumul"), state.cells.profession))
-                e[:, old] = e[:, old] * np.maximum(0.0, 1.0 - part * (col(k) - 1.0))
-            if np.any(mp != 1):
-                young = a < 60
-                e[:, young] = np.minimum(1.0, e[:, young] * col(mp))
-            s = 1.0 - e
+        if not (np.any(d != 0) or np.any(k != 1) or np.any(mp != 1)):
+            return [Rate(self.name, s, to="sorties")]
+        # Facteur en cache quand s est la rétention ajustée (même objet d'une année à l'autre) : il ne dépend alors
+        # que des valeurs des leviers. Une rétention modifiée par le scénario est recalculée chaque année.
+        fkey = None
+        if s is base:
+            fkey = (np.asarray(d, float).tobytes(), np.asarray(k, float).tobytes(), np.asarray(mp, float).tobytes(),
+                    repr(ctx.param(self, "part_cumul")), repr(ctx.param_of("vieillissement", "fraction", 0.2)))
+            fcache = self.__dict__.setdefault("_factor", {})
+            if fkey in fcache and fcache[fkey][0] is base:
+                return [Rate(self.name, fcache[fkey][1], to="sorties")]
+        a = state.ages
+        col = lambda v: np.reshape(v, (-1, 1)) if np.ndim(v) else v
+        d = col(d)
+        e = 1.0 - s
+        old = a >= 65
+        if old.sum() > 1 and np.any(d != 0):             # plusieurs tranches ≥ 65 : λ par cellule (séjour + Δ exact)
+            f = float(np.atleast_1d(ctx.param_of("vieillissement", "fraction", 0.2))[0])
+            dd = (np.broadcast_to(np.ravel(d), (len(s),)).astype(float) if np.size(d) > 1
+                  else np.full(len(s), float(np.ravel(d)[0])))
+            lam = lambda_65plus(s[:, old], dd, f)[:, None]
+        else:
+            lam = d
+        m6064, m5559 = (a >= 60) & (a < 65), (a >= 55) & (a < 60)     # colonnes seulement (coût ∝ tranches touchées)
+        if np.any(d != 0):
+            e[:, old] = e[:, old] / (1.0 + lam * e[:, old])
+            e[:, m6064] = e[:, m6064] * np.maximum(0.0, 1.0 - d / 5.0)
+            e[:, m5559] = e[:, m5559] * np.maximum(0.0, 1.0 - d / 10.0)
+        if np.any(k != 1):
+            part = col(par_profession(ctx.param(self, "part_cumul"), state.cells.profession))
+            e[:, old] = e[:, old] * np.maximum(0.0, 1.0 - part * (col(k) - 1.0))
+        if np.any(mp != 1):
+            young = a < 60
+            e[:, young] = np.minimum(1.0, e[:, young] * col(mp))
+        s = 1.0 - e
+        if fkey is not None:
+            if len(fcache) > 32:
+                fcache.clear()
+            fcache[fkey] = (base, s)
         return [Rate(self.name, s, to="sorties")]

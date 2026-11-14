@@ -22,6 +22,7 @@ sur le code d'avant (`avant`), quand elle existe : c'est la preuve que le test s
                     exacte avec plusieurs tranches ≥ 65
   C14 leviers branchés (chantier) : identité au tendanciel, effet de chaque levier, délai, région,
                     comparaison aux chiffres cités (DD76, ER 1319, DREES retraite), familles
+  C15 vitesse : 5 professions à la commune ≤ 2 s (bench_commune), chemin rapide = chemin complet
   C11 scénario posé sur la base : trajectory(Scenario()) = predict sur la variante filière ; quotas > 0
   T  temps          recalcul d'un scénario jusqu'en 2050
 """
@@ -541,6 +542,27 @@ def c14_levers():
     return out
 
 
+def c15_speed():
+    """5 professions à la commune (état ventilé par population, ~700 000 cellules), chemin rapide (registre coupé),
+    origine → 2050, scénario retraite + quotas : ≤ 2 s mesurées. Le chemin rapide donne le même état que le chemin
+    complet (écart 0)."""
+    from jumeau import bench_commune as B
+    r = B.main()
+    e = B.dep_estimators()[0]
+    st, hist = B.to_communes(e)
+    sc = B.scenario(e.origin)
+    mods = build(sc.composition)
+    for m in mods:
+        m.fit(hist)
+    full = run(st, mods, sc, H2050).states[H2050].N
+    fast = run(st, mods, sc, H2050, ledger=False, keep=[H2050]).states[H2050].N
+    gap = float(np.abs(full - fast).max())
+    crit("C15", "vitesse à la commune : 5 professions ≤ 2 s", f"{r['seconds']:.2f} s médiane ({r['cells']} cellules, "
+         f"24 ans) ; chemin rapide = chemin complet (écart {gap})", r["seconds"] <= 2.0 and gap == 0,
+         avant="3,99 s mesurées (registre complet, np.roll, sorties et entrées recalculées chaque année)")
+    return dict(r, gap_rapide_complet=gap)
+
+
 def c11_over():
     t = stock_table(["dentistes"])
     _, fit, o, _ = latest_design("dentistes", t)
@@ -680,8 +702,9 @@ def main():
     c12_regulation_params()
     c13_review3()
     leviers = c14_levers()
+    vitesse = c15_speed()
     tm = timing()
-    res = dict(leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
+    res = dict(vitesse_commune=vitesse, leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
                modules={n: [p.__dict__ for p in c.params] for n, c in REGISTRY.items()
                         if n not in ("factice", "espion", "double", "lecteur_diplomes")})
     (OUT / "results.json").write_text(json.dumps(res, indent=1, ensure_ascii=False, default=str))
