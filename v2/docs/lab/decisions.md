@@ -3184,3 +3184,14 @@ vu : **24/30 (80 %, chiffre à citer)** ; territoire et profession 30/30, levier
 **À signaler :** une erreur de mauvais levier (« formés hors de France » → places en formation). L'écran de confirmation la
 rend visible ; c'est la première classe à corriger au tour suivant.
 **Pourquoi.** L'utilisateur·rice : « Yes, round 4 ».
+
+## 2026-11-14 — Compilateur, tour 5 : 83 % sur un cinquième jeu à l'aveugle
+
+**Décision.** Ajouts par classe : « formés / diplômés hors de France » vers les diplômés étrangers (corrige le mauvais levier
+du tour 4), verbes multiplicateurs conjugués (« doublait », « triplerait »), « diviser par N », durée des études (internat)
+non modélisée, racines « facilit-, assoupl-, élarg-, étend- », suppression d'un terme qui avalait la quantité (« an de
+travail »). Mesure sur le jeu 5, jamais vu : **25/30 (83 %, chiffre à citer)** ; profession 30/30, territoire 29/30, leviers
+26/30. Jeux 1 à 4 sans régression (29, 27, 30, 30 sur 30, en échantillon) ; cas d'origine 35/36.
+**À signaler :** deux erreurs de mauvais levier subsistent (« diplômées européennes », « se former en Belgique » → places en
+formation) ; l'écran de confirmation les rend visibles.
+**Pourquoi.** L'utilisateur·rice : « Yes, round 5 ».

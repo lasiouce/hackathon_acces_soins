@@ -67,9 +67,15 @@ toute modification** ; ses échecs servent ensuite à corriger des *classes* d'e
 | glossaire d'origine | jeu 1 | 14/30 (47 %) | 17/30 | 28/30 | 30/30 |
 | + synonymes, fractions, demi-années, quantité par type de levier | jeu 2 | 16/30 (53 %) | 20/30 | 28/30 | 28/30 |
 | + sens le plus proche de la quantité, racines conjuguées, arrondi au pas, « emploi et retraite » | jeu 3 | 21/30 (70 %) | 25/30 | 30/30 | 24/30 |
-| + gentilés, « remplacer un confrère », « % des territoires », « réservée à la région » (et sa négation), comparatif après la quantité, « doublement » | jeu 4 | **24/30 (80 %)** | 25/30 | 30/30 | 30/30 |
+| + gentilés, « remplacer un confrère », « % des territoires », « réservée à la région » (et sa négation), comparatif après la quantité, « doublement » | jeu 4 | 24/30 (80 %) | 25/30 | 30/30 | 30/30 |
+| + « formés hors de France », verbes multiplicateurs conjugués, « diviser par N », internat non modélisé, « facilité », terme qui avalait la quantité | jeu 5 | **25/30 (83 %)** | 26/30 | 30/30 | 29/30 |
 
-**Le chiffre à citer est 80 %** (jeu 4). Échecs du jeu 4 : « doublait » (forme conjuguée de « doubler »), « formés hors de France »
+**Le chiffre à citer est 83 %** (jeu 5). Simple 12/12, négation 4/4, combinée 5/6, non modélisé 3/4, piège 1/4. Échecs :
+« diplômées européennes » et « se former en Belgique » lus comme des places en formation (**mauvais levier**, même classe
+qu'au tour 4 : tout diplôme obtenu hors de France), « quotas … grimper de 25 % » (« grimper » inconnu), sigle « PACA »,
+« 67 ans au lieu de 65 ans et demi » (écart entre deux âges, lu comme 3 ans), « logements pour les étudiantes » non modélisé.
+
+Tour 4 : 80 % (jeu 4). Échecs du jeu 4 : « doublait » (forme conjuguée de « doubler »), « formés hors de France »
 lu comme les places en formation (**mauvais levier**, la classe à corriger d'abord), négation « on n'augmentera pas … ; on mise
 plutôt sur … » qui perd le second levier, « année supplémentaire d'internat » non reconnue comme non modélisée, « facilité de 30 % »
 sans sens, « diviser par quatre » hors des formules. Un jeu 5 mesurera la version suivante.

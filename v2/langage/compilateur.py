@@ -189,6 +189,15 @@ def _quantite_facteur(c: str) -> dict | None:
         n = _nombre(m.group(1) or m.group(2))
         if n:
             return {"type": "facteur", "v": 1 / n if m.group(3) == "moins" else n, "brut": m.group(0)}
+    # verbes multiplicateurs conjugués : « doublait », « triplerait » ; « diviser par quatre »
+    m = re.search(rf"(?<![a-z])divis[a-z]* par ({NUM[1:-1]}|{mots})(?![a-z0-9])", c)
+    if m:
+        n = _nombre(m.group(1))
+        if n:
+            return {"type": "facteur", "v": 1 / n, "brut": m.group(0)}
+    m = re.search(r"(?<![a-z])(doubl|tripl|quadrupl)[a-z]*", c)
+    if m:
+        return {"type": "facteur", "v": {"doubl": 2.0, "tripl": 3.0, "quadrupl": 4.0}[m.group(1)], "brut": m.group(0)}
     # fractions avec un sens : « un bon tiers de plus », « un quart de moins »
     d = _direction(c)
     if d and not _find(c, D["facteurs"]):

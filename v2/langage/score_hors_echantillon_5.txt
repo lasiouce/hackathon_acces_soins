@@ -1,0 +1,8 @@
+exact 25/30 = 83%
+{'simple': '12/12', 'combine': '5/6', 'negation': '4/4', 'non_modelise': '3/4', 'piege': '1/4'}
+{'leviers': '26/30', 'profession': '30/30', 'territoire': '29/30', 'non_modelise': '29/30'}
+- ('h5-18', 'combine', "Combien de kinés en Bretagne en 2040 si les infirmiers et les kinés voient leurs quotas grimper de 25 % et qu'on accueille 20 % de diplômés étrangers en plus ?", {'leviers': ({'etrangers': 1.2}, {'quotas': 1.25, 'etrangers': 1.2})})
+- ('h5-26', 'non_modelise', 'Financer des logements pour les étudiantes sages-femmes et accueillir 30 % de diplômées européennes en plus en Centre-Val de Loire.', {'leviers': ({'quotas': 1.3}, {'etrangers': 1.3}), 'non_modelise': (False, True)})
+- ('h5-27', 'piege', 'Tripler les places en formation infirmière en PACA !', {'territoire': ('FR', 'R93')})
+- ('h5-28', 'piege', 'Les étudiants partis se former en kiné en Belgique : on en ferait revenir 40 % de plus dans le Nord.', {'leviers': ({'quotas': 1.4}, {'etrangers': 1.4})})
+- ('h5-29', 'piege', 'Les dentistes de Gironde partiraient en moyenne à 67 ans au lieu de 65 ans et demi.', {'leviers': ({'retraite': 3.0}, {'retraite': 1.5})})

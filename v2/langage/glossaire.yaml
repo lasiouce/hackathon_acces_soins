@@ -29,7 +29,9 @@ leviers:
              praticiens a diplome hors union europeenne, professionnels etrangers, diplomes hors ue,
              diplomees a l etranger, diplomee a l etranger, diplome a l etranger, formes a l etranger,
              formees a l etranger, venus de l etranger, venues de l etranger, etrangers, etrangeres,
-             etranger, hors union europeenne, hors ue, recrutement international, recruter a l etranger]
+             etranger, hors union europeenne, hors ue, recrutement international, recruter a l etranger,
+             formes hors de france, formees hors de france, forme hors de france, diplomes hors de france,
+             diplomees hors de france, hors de france, formes hors ue, formes a l international, titres etrangers]
     source: "Code de la santé publique, art. L4111-2 (autorisation d'exercice des titulaires de diplômes hors UE, épreuves de vérification des connaissances)"
   regul:
     famille: installer
@@ -60,7 +62,7 @@ leviers:
     termes: [age de depart a la retraite, age de la retraite, age legal, retraite, cessation d activite,
              fin d activite, en activite, age de depart, depart a la retraite, departs a la retraite,
              partir plus tard, partent plus tard, travailler plus longtemps, de travail en plus,
-             annees de travail, an de travail, ans de travail, restent, rester, restant, plus longtemps,
+             de travail, restent, rester, restant, plus longtemps,
              prolonger l activite, carriere plus longue, la carriere, carriere, carrieres, travailler,
              travailleraient, travailleront, travaillent, raccrocher, raccrochent, partiront, partiraient]
     source: "Loi n° 2023-270 du 14 avril 2023 de financement rectificative de la sécurité sociale pour 2023 (report de l'âge légal)"
@@ -107,7 +109,8 @@ directions:
     interdire: 0.0
     zero: 0.0
   racines:             # débuts de mots, toutes conjugaisons
-    hausse: [augment, hauss, accroi, relev, renforc, allong, prolong, multipli, repouss, recul, retard, encourag, favoris]
+    hausse: [augment, hauss, accroi, relev, renforc, allong, prolong, multipli, repouss, recul, retard, encourag, favoris,
+             facilit, assoupl, elarg, etend]
     baisse: [redui, reduc, baiss, diminu, restrei, raccourc, frein]
   plafonner: [plafonner, plafond, au maximum]   # reconnu, sans valeur chiffrée : signalé
 unites:
@@ -265,6 +268,12 @@ non_modelises:
     termes: [salaire, salaires, remuneration, remunerations, revaloriser, revalorisation, honoraires, tarifs,
              tarif, cotation, cotations, grille salariale, primes de salaire]
     raison: "Le jumeau n'estime aucune élasticité des installations, des départs ou des entrées en formation à la rémunération."
+    source: null
+  duree_etudes:
+    libelle: Durée des études (année d'internat ou de formation supplémentaire)
+    termes: [internat, annee d internat, annee supplementaire d internat, allongement des etudes, duree des etudes,
+             annee de formation supplementaire, docteur junior]
+    raison: "Le jumeau ne modélise pas la durée des études : seul le délai entre une hausse des places et les premiers diplômés est pris en compte."
     source: null
   aides_installation:
     libelle: Aides ou primes à l'installation
