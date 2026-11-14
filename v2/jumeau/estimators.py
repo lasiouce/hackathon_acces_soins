@@ -4,9 +4,9 @@ twin_of(V1) fabrique, pour une classe stock-flux de sante.estimators, son équiv
 mêmes options d'ajustement, mais la projection passe par l'état, les modules et le moteur. Le banc
 (sante.backtest) et l'app peuvent ainsi les comparer sans rien savoir du jumeau.
 
-trajectory(until, scenario) construit et calibre la composition **du scénario passé** (mise en cache
-par composition) : un module ajouté au scénario est exécuté, ou une erreur dit pourquoi il ne peut pas
-l'être. Une table avec une colonne `sector` donne un état sectorisé ; `sectors` ajoute des secteurs vides
+trajectory(until, scenario) pose le scénario passé sur le scénario de base (Scenario.over : la filière
+d'une variante n'est pas perdue), puis construit et calibre sa composition (cache par composition) : un
+module ajouté au scénario est exécuté, ou une erreur dit pourquoi il ne peut pas l'être. Une table avec une colonne `sector` donne un état sectorisé ; `sectors` ajoute des secteurs vides
 (ex. destination de la régulation).
 """
 import pandas as pd
@@ -45,13 +45,14 @@ class TwinEstimator(Estimator):
         return self._mods[key]
 
     def trajectory(self, until: int, scenario: Scenario | None = None):
-        scn = scenario or self.scenario
-        key = scn.to_json() if scenario is None else None          # seul le scénario par défaut est mis en cache
-        if key is not None and key in self._traj and max(self._traj[key].states) >= until:
+        """scenario est posé **sur** le scénario de base de l'estimateur (Scenario.over) : ses paramètres
+        priment, ses événements s'ajoutent, la composition et la filière de la base sont gardées s'il n'en dit rien."""
+        scn = self.scenario if scenario is None else scenario.over(self.scenario)
+        key = scn.to_json()
+        if key in self._traj and max(self._traj[key].states) >= until:
             return self._traj[key]
         tr = run(self.state, self.modules(scn), scn, until)
-        if key is not None:
-            self._traj[key] = tr
+        self._traj[key] = tr
         return tr
 
     def predict(self, target):
@@ -65,7 +66,8 @@ class TwinEstimator(Estimator):
 
 def twin_of(v1cls, scenario: Scenario | None = None, sectors: tuple = ()) -> type:
     opts = {"shrink": v1cls.shrink, "inflow_trend": v1cls.inflow_trend, "inflow_recent": v1cls.inflow_recent}
-    scn = scenario or Scenario(name="tendanciel", params={"entrees.filiere": True} if v1cls.pipeline else {})
+    base = Scenario(name="tendanciel", params={"entrees.filiere": True} if v1cls.pipeline else {})
+    scn = base if scenario is None else scenario.over(base)
     return type(f"Twin{v1cls.__name__}", (TwinEstimator,),
                 {"name": f"{v1cls.name} [jumeau]", "assumptions": v1cls.assumptions, "options": opts,
                  "scenario": scn, "sectors": tuple(sectors)})

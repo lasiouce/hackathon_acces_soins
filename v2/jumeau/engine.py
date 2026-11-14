@@ -24,7 +24,9 @@ class Context:
     scenario: Scenario
     cells: pd.DataFrame
     rng: np.random.Generator
+    n_ages: int = 0
     deltas: dict = field(default_factory=dict)     # flux de l'année déjà appliqués : nom -> ΔN [cellule, âge]
+    pools: dict = field(default_factory=dict)      # flux Pool de l'année : nom -> {compte: valeurs}
 
     @property
     def h(self) -> int:
@@ -32,14 +34,34 @@ class Context:
 
     def param(self, module, name, base=None):
         """Valeur résolue pour l'année : base (ajustée) ou défaut, puis surcharges et événements du scénario."""
-        default = module.param(name).value if base is None else base
-        return self.scenario.resolve(f"{module.name}.{name}", default, self.year, self.cells)
+        p = module.param(name)
+        default = p.value if base is None else base
+        key = f"{module.name}.{name}"
+        val = self.scenario.resolve(key, default, self.year, self.cells)
+        if p.bounds is not None and self.scenario.touches(key, self.year) and not isinstance(val, (dict, str, bool)):
+            arr = np.asarray(val, dtype=float)                 # bornes sur la valeur composée, ajustée ou non
+            if not np.isfinite(arr).all() or arr.min() < p.bounds[0] or arr.max() > p.bounds[1]:
+                raise ValueError(f"{key} en {self.year} : valeur composée hors des bornes {p.bounds} "
+                                 f"(min {np.nanmin(arr):.4g}, max {np.nanmax(arr):.4g})")
+        return val
+
+    def param_of(self, module_name: str, name: str, default=None):
+        """Valeur d'un paramètre d'un autre module (surcharges du scénario comprises) ; `default` si non surchargé."""
+        return self.scenario.params.get(f"{module_name}.{name}", default)
 
     def delta(self, module, name) -> np.ndarray:
         """ΔN [cellule, âge] du flux `name` dans l'année ; seulement s'il est déclaré dans module.needs."""
         if name not in module.needs:
             raise KeyError(f"{module.name} lit le flux {name!r} sans le déclarer dans needs")
-        return self.deltas[name]
+        if name in self.pools:
+            raise TypeError(f"{name!r} est un flux de vivier (Pool) : le lire par ctx.pool_out(module, flux, compte)")
+        return self.deltas.get(name, np.zeros((len(self.cells), self.n_ages)))   # producteur muet cette année = 0
+
+    def pool_out(self, module, name, account):
+        """Compte d'un flux Pool de l'année (ex. formation / diplomes) ; seulement s'il est déclaré dans needs."""
+        if name not in module.needs:
+            raise KeyError(f"{module.name} lit le flux {name!r} sans le déclarer dans needs")
+        return self.pools.get(name, {}).get(account)
 
 
 @dataclass
@@ -113,13 +135,16 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
     if {m.name for m in modules} != set(scenario.composition):
         raise ValueError(f"modules fournis {[m.name for m in modules]} ≠ composition du scénario {scenario.composition}")
     check_dependencies(modules)
-    scenario.validate(modules)
-    rng = np.random.default_rng(scenario.seed)
-    x, out, ledger = state.copy(), {}, []
+    x = state.copy()
     for m in modules:
-        m.begin(x, Context(state.year, origin, scenario, x.cells, rng))
+        x = m.prepare(x, scenario)
+    scenario.validate(modules, x.cells)
+    rng = np.random.default_rng(scenario.seed)
+    out, ledger = {}, []
+    for m in modules:
+        m.begin(x, Context(state.year, origin, scenario, x.cells, rng, len(x.ages)))
     for year in range(state.year + 1, until + 1):
-        ctx = Context(year, origin, scenario, x.cells, rng)
+        ctx = Context(year, origin, scenario, x.cells, rng, len(x.ages))
         N = x.N
         for m in modules:
             for f in m.step(x, ctx):
@@ -127,6 +152,7 @@ def run(state: State, modules: list, scenario: Scenario, until: int, origin: int
                     raise ValueError(f"module {m.name!r} rend le flux non déclaré {f.name!r}")
                 if isinstance(f, Pool):
                     x.pool = f.new
+                    ctx.pools[f.name] = dict(f.out)
                     for acct, v in f.out.items():
                         ledger.append((year, f.name, acct, np.asarray(v, float)))
                     continue

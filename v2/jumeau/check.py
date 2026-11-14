@@ -5,15 +5,22 @@ Code de sortie 1 si un critère échoue. Chaque critère porte la valeur mesuré
 sur le code d'avant (`avant`), quand elle existe : c'est la preuve que le test sait échouer.
 
   C1 reproduction   stock-flux v1 réécrit en modules : predict, et par cellule × âge × année → 2050
-  C2 composition    un scénario passé par twin_of exécute ses modules (régulation : effet non nul)
+  C2 composition    un scénario passé par twin_of exécute ses modules ; régulation sur l'état réel (public
+                    de l'axe 4) : effet non nul dans les zones, total inchangé sans plancher
   C3 plug-in        module factice déposé hors du paquet, exécuté par twin_of ; module inconnu refusé
   C4 démographie    régulation vers un public vide, mêmes taux : le total ne bouge pas (déplacement pur)
   C5 dépendances    composition sans le flux lu, lecture non déclarée, double producteur : refusés
   C6 scénario       clé mal orthographiée, opération ou axe inconnus : refusés ; aller-retour JSON identique
-  C7 leviers        retraite + 1 an et quotas × 1,1 contre le vrai chemin v1 (app/levers.project_flow)
+  C7 leviers        quotas × 1,1 contre le vrai chemin v1 (app/levers.project_flow) ; retraite contre le
+                    séjour attendu (B1 : + Δ ans en 65+, 60–64 × (1 − Δ/5), 55–59 × (1 − Δ/10), montée 3 mois/an)
   C8 agrégation     commune -> dep -> rég -> national exact ; unité non rattachée refusée ; écart au RPPS mesuré
   C9 reproductible  deux runs sur les mêmes instances ne partagent pas d'état (formation)
   C10 vieillissement tranches de largeurs différentes : fractions par tranche, total conservé
+  C12 paramètres sourcés de l'axe 1 (θ, répartition, exemption, abandon, cumul)
+  C13 troisième revue : bornes composées et ajustées, JSON + over, événements non numériques, règle
+                    « entrées ≤ sorties » contre une formule indépendante, bloqués jamais négatifs, retraite
+                    exacte avec plusieurs tranches ≥ 65
+  C11 scénario posé sur la base : trajectory(Scenario()) = predict sur la variante filière ; quotas > 0
   T  temps          recalcul d'un scénario jusqu'en 2050
 """
 import json
@@ -32,7 +39,9 @@ from jumeau.engine import apply, build, run
 from jumeau.estimators import twin_of
 from jumeau.history import History, sector_table
 from jumeau.module import REGISTRY, Module, Shift, discover
+from jumeau.engine import Context
 from jumeau.modules.entrees import evenement_quotas
+from jumeau.modules.sorties import Sorties, evenement_retraite
 from jumeau.modules.formation import pool_drees
 from jumeau.modules.vieillissement import fractions
 from jumeau.scenario import Event, Scenario
@@ -45,6 +54,7 @@ PROFS = ["sages-femmes", "dentistes", "pharmaciens", "kines", "infirmiers-libera
 H2050 = 2050
 ZONES = ["06", "13", "34", "66", "83"]        # illustration (densité kiné élevée), pas le zonage conventionnel
 REG = ("vieillissement", "sorties", "entrees", "regulation")
+SALARIAT = {"voisine": 0.0, "salariat": 1.0, "sortie": 0.0}     # mécanisme visible au département (C2, C4)
 RESULTS = []
 
 
@@ -98,24 +108,49 @@ def kine_sector(public_history: bool):
     if not public_history:
         t = t[t.sector == "prive"]
     o = int(t.year.max())
-    return twin_of(V1.StockFlowLocal, Scenario(modules=REG), sectors=("public",))().fit(t, (o - 5, o), o)
+    return twin_of(V1.StockFlowLocal, Scenario(modules=REG))().fit(t, (o - 5, o), o)
 
 
 def c2_composition():
+    """Kinés et dentistes, état réel à 2 secteurs (axe 4). La régulation doit réduire le privé des zones et,
+    sans plancher, laisser le total inchangé (destination par défaut : secteur `bloques`, démographie du privé)."""
+    out = {}
+    zlist = {"kines": ZONES, "dentistes": ZONES}
+    for prof in ["kines", "dentistes"]:
+        t = sector_table([prof])
+        o = int(t.year.max())
+        est = twin_of(V1.StockFlowLocal, Scenario(modules=REG))().fit(t, (o - 5, o), o)
+        reg_scn = Scenario("régulation", params={"regulation.zones": {prof: zlist[prof]},
+                                                 "regulation.repartition": SALARIAT}, modules=REG)
+        res = {}
+        for floor in (False, True):
+            b = run(est.state, est.modules(reg_scn), Scenario(modules=REG), H2050, floor=floor)
+            r = run(est.state, est.modules(reg_scn), reg_scn, H2050, floor=floor)
+            c = r.states[H2050].cells
+            zp = ((c.sector == "prive") & c.territory.isin(zlist[prof])).to_numpy()
+            cb = b.states[H2050].cells
+            zpb = ((cb.sector == "prive") & cb.territory.isin(zlist[prof])).to_numpy()
+            res[floor] = dict(d_total=float(r.states[H2050].N.sum() - b.states[H2050].N.sum()),
+                              d_prive_zones=float(r.states[H2050].N[zp].sum() - b.states[H2050].N[zpb].sum()),
+                              bloques_2050=float(r.states[H2050].N[(c.sector == "bloques").to_numpy()].sum()),
+                              moved=float(sum(np.clip(x, 0, None).sum() for _, f, _, x in r.ledger if f == "regulation")))
+        pub = Scenario("régulation vers le public", params={"regulation.zones": {prof: zlist[prof]},
+                                                             "regulation.repartition": SALARIAT,
+                                                             "regulation.destination": "public"}, modules=REG)
+        rp = run(est.state, est.modules(pub), pub, H2050, floor=False).states[H2050].N.sum()
+        res["destination_public_d_total"] = float(rp - run(est.state, est.modules(pub), Scenario(modules=REG), H2050,
+                                                                floor=False).states[H2050].N.sum())
+        out[prof] = res
     est = kine_sector(public_history=True)
-    base = est.trajectory(H2050, Scenario(modules=REG))
-    reg = est.trajectory(H2050, Scenario("régulation kinés", params={"regulation.zones": {"kines": ZONES}}, modules=REG))
-    c = reg.states[H2050].cells
-    zp = ((c.sector == "prive") & c.territory.isin(ZONES)).to_numpy()
-    pub = (c.sector == "public").to_numpy()
-    d = float(reg.states[H2050].N[zp].sum() - base.states[H2050].N[zp].sum())
-    err = raises(lambda: est.trajectory(2030, Scenario(params={"regulation.zones": {"kines": ZONES}})))
-    crit("C2", "les modules du scénario passent par twin_of", f"privé dans les zones 2050 : {d:+.0f} ; "
-         f"régulation hors composition → {err}", d < 0 and err is not None, avant="écart 0,0 avec le tendanciel")
-    return dict(prive_zones_base=float(base.states[H2050].N[zp].sum()), prive_zones_regul=float(reg.states[H2050].N[zp].sum()),
-                public_base=float(base.states[H2050].N[pub].sum()), public_regul=float(reg.states[H2050].N[pub].sum()),
-                total_base=float(base.states[H2050].N.sum()), total_regul=float(reg.states[H2050].N.sum()),
-                moved=float(sum(np.clip(x, 0, None).sum() for _, f, _, x in reg.ledger if f == "regulation")))
+    err = raises(lambda: est.trajectory(2030, Scenario(params={"regulation.zones": {"kines": ZONES}},
+                                                       modules=("vieillissement", "sorties", "entrees"))))
+    ok = all(v[False]["d_prive_zones"] < 0 and abs(v[False]["d_total"]) < 1e-6 for v in out.values()) and err is not None
+    crit("C2", "régulation exécutée par twin_of, sans créer ni supprimer (état réel, 2 secteurs)",
+         " ; ".join(f"{p} : privé des zones {v[False]['d_prive_zones']:+.0f}, Δ total sans plancher {v[False]['d_total']:+.1e} "
+                    f"(avec plancher {v[True]['d_total']:+.2f}) ; vers le public : {v['destination_public_d_total']:+.0f}"
+                    for p, v in out.items()) + f" ; hors composition → {err is not None}",
+         ok, avant="1re revue : écart 0,0 avec le tendanciel ; 2e revue : Δ total +254 dentistes, −474 kinés")
+    return out
 
 
 DUMMY = '''
@@ -160,10 +195,11 @@ def c4_demography():
     out = {}
     for floor in (False, True):
         tot = []
-        for scn in (Scenario(modules=REG), Scenario(params={"regulation.zones": {"kines": ZONES}}, modules=REG)):
+        for scn in (Scenario(modules=REG), Scenario(params={"regulation.zones": {"kines": ZONES},
+                                                            "regulation.repartition": SALARIAT}, modules=REG)):
             tot.append(run(est.state, est.modules(scn), scn, H2050, floor=floor).states[H2050].N.sum())
         out[floor] = float(tot[1] - tot[0])
-    crit("C4", "la régulation déplace sans créer (public vide, taux de repli)", f"Δ total 2050 sans plancher "
+    crit("C4", "la régulation déplace sans créer (privé seul, destination vide en repli)", f"Δ total 2050 sans plancher "
          f"{out[False]:+.1e} ; avec plancher {out[True]:+.3f} personne ; {est.hist.borrowed} cellules en repli",
          abs(out[False]) < 1e-6, avant="+822 kinés en 2050")
 
@@ -173,6 +209,15 @@ class Espion(Module):
 
     def step(self, state, ctx):
         ctx.delta(self, "sorties")
+        return []
+
+
+class Diplomes(Module):
+    name, order, needs = "lecteur_diplomes", 6, ("formation",)
+
+    def step(self, state, ctx):
+        self.lu = ctx.pool_out(self, "formation", "diplomes")
+        ctx.delta(self, "formation")
         return []
 
 
@@ -192,8 +237,19 @@ def c5_dependencies():
     _, fit, o, _ = latest_design("sages-femmes", t)
     est = twin_of(V1.StockFlowLocal)().fit(t, fit, o)
     c = raises(lambda: est.trajectory(o + 1, Scenario(modules=("vieillissement", "sorties", "espion", "entrees"))), KeyError)
+    REGISTRY.setdefault("lecteur_diplomes", Diplomes)
+    from jumeau.modules.formation import pool_drees
+    st = est.state.copy()
+    st.pool = pool_drees()
+    comp = ("formation", "lecteur_diplomes", "vieillissement", "sorties", "entrees")
+    mods = build(comp)
+    for m in mods:
+        m.fit(est.hist)
+    d = raises(lambda: run(st, mods, Scenario(modules=comp), o + 1), TypeError)
+    lu = getattr(mods[1], "lu", None)
     crit("C5", "dépendances déclarées et vérifiées", f"sans `sorties` → {a} | double producteur → {b is not None} | "
-         f"lecture non déclarée → {c is not None}", all([a, b, c]),
+         f"lecture non déclarée → {c is not None} | flux Pool par ctx.delta → {d is not None}, par ctx.pool_out → "
+         f"{None if lu is None else round(float(lu.sum()))} diplômés", all([a, b, c, d]) and lu is not None,
          avant="régulation sans `sorties` : tous les entrants bloqués, sans erreur")
 
 
@@ -205,17 +261,24 @@ def c6_scenario():
     badop = raises(lambda: est.trajectory(2030, Scenario(events=[Event("sorties.decalage_retraite", o + 1, 1.0, "pow")])))
     axis = raises(lambda: est.trajectory(2030, Scenario(events=[Event("sorties.decalage_retraite", o + 1, 1.0,
                                                                       selector={"departement": "13"})])))
+    sel_val = [raises(lambda sel=sel: est.trajectory(2030, Scenario(events=[Event("sorties.decalage_retraite", o + 1, 1.0,
+                                                                                   selector=sel)])))
+               for sel in ({"profession": "dentiste"}, {"territory": 6})]
+    bound = raises(lambda: est.trajectory(2030, Scenario(events=[evenement_quotas(110, o, 6)])))
     scn = Scenario("retraite + quotas", events=[Event("sorties.decalage_retraite", o + 1, 1.0, selector={"territory": ["13", "75"]}),
                                                 evenement_quotas(1.1, o, 6)], seed=7)
     back = Scenario.from_json(scn.to_json())
     gap = float(np.abs(est.trajectory(H2050, scn).states[H2050].N - est.trajectory(H2050, back).states[H2050].N).max())
     crit("C6", "scénario validé et sérialisable", f"faute de frappe → {typo} | opération → {badop is not None} | "
-         f"axe → {axis is not None} | aller-retour JSON écart {gap}",
-         all([typo, badop, axis]) and gap == 0 and back.to_json() == scn.to_json(),
-         avant="clé mal orthographiée ignorée : résultat = tendanciel")
+         f"axe → {axis is not None} | 'dentiste' → {sel_val[0]} | territoire 6 → {sel_val[1] is not None} | "
+         f"quotas × 110 → {bound} | aller-retour JSON écart {gap}",
+         all([typo, badop, axis, bound] + sel_val) and gap == 0 and back.to_json() == scn.to_json(),
+         avant="1re revue : clé mal orthographiée ignorée ; 2e revue : {'profession': 'dentiste'} et {'territory': 6} → "
+               "tendanciel, quotas × 110 → +5 085 033 dentistes")
 
 
 def c7_levers():
+    """Quotas : contre le vrai chemin v1. Retraite : contre le séjour attendu (B1), pas contre la v1, qui porte le défaut."""
     sys.path.insert(0, "app")
     import levers as LV
     t = stock_table(["dentistes"])
@@ -223,18 +286,160 @@ def c7_levers():
     v1 = V1.StockFlowLocal().fit(t, fit, o)
     est = twin_of(V1.StockFlowLocal)().fit(t, fit, o)
     years = list(range(o + 1, H2050 + 1))
-    out = {}
-    for lab, vals, scn in [("retraite + 1 an", {"retirement": 1.0}, Scenario(events=[Event("sorties.decalage_retraite", o + 1, 1.0)])),
-                           ("quotas × 1,1 (L = 6)", {"entries": 1.1}, Scenario(events=[evenement_quotas(1.1, o, LV.LAG["dentistes"])]))]:
-        a = LV.project_flow(v1, "dentistes", H2050, vals)
-        b = est.trajectory(H2050, scn).totals(("territory",))
-        b.index.name = a.index.name
-        out[lab] = dict(gap=float((a[years] - b.reindex(a.index)[years]).abs().max().max()),
-                        effet_2050_pct=float(100 * (a[H2050].sum() / est.trajectory(H2050).states[H2050].N.sum() - 1)))
-    crit("C7", "leviers = chemin v1 (app/levers.project_flow)",
-         " ; ".join(f"{k} : écart max {v['gap']}, effet {v['effet_2050_pct']:+.2f} %" for k, v in out.items()),
-         all(v["gap"] < 1e-9 for v in out.values()), avant="quotas : +226 dentistes en 2050 (un an trop tôt)")
-    return out
+    a = LV.project_flow(v1, "dentistes", H2050, {"entries": 1.1})
+    b = est.trajectory(H2050, Scenario(events=[evenement_quotas(1.1, o, LV.LAG["dentistes"])])).totals(("territory",))
+    b.index.name = a.index.name
+    q_gap = float((a[years] - b.reindex(a.index)[years]).abs().max().max())
+    # retraite : état à tranche ouverte 65+ (axe 4, dentistes), taux de sortie avant / après le levier
+    ts = sector_table(["dentistes"])
+    os_ = int(ts.year.max())
+    es = twin_of(V1.StockFlowLocal)().fit(ts, (os_ - 5, os_), os_)
+    mod = es.modules(es.scenario)[[m.name for m in es.modules(es.scenario)].index("sorties")]
+    ages = es.state.ages
+    dev = {}
+    for d in (1.0, 2.0, 5.0):
+        scn = Scenario(params={"sorties.decalage_retraite": d})
+        ctx = Context(os_ + 1, os_, scn, es.state.cells, np.random.default_rng(0), len(ages))
+        e0 = 1 - mod.step(es.state, Context(os_ + 1, os_, Scenario(), es.state.cells, np.random.default_rng(0), len(ages)))[0].factor
+        e1 = 1 - mod.step(es.state, ctx)[0].factor
+        top, m6064, m5559 = ages >= 65, (ages >= 60) & (ages < 65), (ages >= 55) & (ages < 60)
+        pos = e0[:, top] > 0
+        stay = (1 / e1[:, top][pos] - 1 / e0[:, top][pos])
+        dev[d] = dict(sejour_65plus_moyen=float(stay.mean()), ecart_max_sejour=float(np.abs(stay - d).max()),
+                      ratio_60_64=float(np.nanmax(np.abs(e1[:, m6064] - e0[:, m6064] * max(0, 1 - d / 5)))),
+                      ratio_55_59=float(np.nanmax(np.abs(e1[:, m5559] - e0[:, m5559] * max(0, 1 - d / 10)))))
+    ramp = [ev.value for ev in evenement_retraite(1.0, o)]
+    ok = q_gap < 1e-9 and all(v["ecart_max_sejour"] < 1e-9 and v["ratio_60_64"] < 1e-12 and v["ratio_55_59"] < 1e-12
+                               for v in dev.values()) and ramp == [0.25, 0.5, 0.75, 1.0]
+    eff = {d: float(100 * (es.trajectory(H2050, Scenario(params={"sorties.decalage_retraite": d})).states[H2050].N.sum()
+                           / es.trajectory(H2050).states[H2050].N.sum() - 1)) for d in (1.0, 2.0)}
+    crit("C7", "leviers : quotas = v1, retraite = séjour attendu",
+         f"quotas × 1,1 : écart max {q_gap:.1e} ; retraite : séjour en 65+ +{dev[1.0]['sejour_65plus_moyen']:.3f} / "
+         f"+{dev[2.0]['sejour_65plus_moyen']:.3f} / +{dev[5.0]['sejour_65plus_moyen']:.3f} an pour Δ = 1 / 2 / 5 "
+         f"(écart max {max(v['ecart_max_sejour'] for v in dev.values()):.1e}) ; montée {ramp} ; effet 2050 Δ = 1 : "
+         f"{eff[1.0]:+.2f} %, Δ = 2 : {eff[2.0]:+.2f} %", ok,
+         avant="quotas +226 (un an trop tôt) ; retraite : séjour 65+ +1,31 an pour Δ = 1, infini pour Δ ≥ 5")
+    return dict(quotas_gap=q_gap, retraite=dev, effet_2050_pct=eff, montee=ramp)
+
+
+def c12_regulation_params():
+    """Paramètres sourcés de l'axe 1 : θ, répartition des bloqués, exemption, voisins ; défauts abandon et cumul."""
+    from jumeau.module import par_profession
+    from jumeau.modules.formation import Formation
+    from jumeau.modules.sorties import Sorties as So
+    est = kine_sector(public_history=True)
+    o = est.origin
+    z = {"regulation.zones": {"kines": ZONES}}
+
+    def first_year(extra, floor=False, until=None):
+        scn = Scenario(params={**z, **extra}, modules=REG).over(est.scenario)
+        return run(est.state, est.modules(scn), scn, until or o + 1, floor=floor)
+
+    moved = lambda tr: float(sum(np.clip(x, 0, None).sum() for _, f, _, x in tr.ledger if f == "regulation"))
+    m1 = moved(first_year({"regulation.repartition": SALARIAT, "regulation.theta": 1.0}))
+    m08 = moved(first_year({"regulation.repartition": SALARIAT, "regulation.theta": 0.8}))
+    mex = moved(first_year({"regulation.repartition": SALARIAT, "regulation.theta": 1.0,
+                            "regulation.part_exemptee": {"kines": 0.5, "*": 0.0}}))
+    base = run(est.state, est.modules(Scenario(modules=REG)), Scenario(modules=REG), H2050, floor=False)
+    dflt = first_year({}, until=H2050)                                   # défaut : 100 % voisine, au département
+    d_default = float(np.abs(dflt.states[H2050].N - base.states[H2050].N).max())
+    so = first_year({"regulation.repartition": {"voisine": 0.0, "salariat": 0.0, "sortie": 1.0}})      # année o + 1
+    gone = float(sum(x.sum() for _, f, _, x in so.ledger if f == "regulation_sortie"))
+    d_tot = float(so.states[o + 1].N.sum() - base.states[o + 1].N.sum())
+    import dataclasses
+    com = dataclasses.replace(est.state, level="com")
+    no_vois = raises(lambda: run(com, est.modules(Scenario(params=z, modules=REG)), Scenario(params=z, modules=REG).over(est.scenario), o + 1))
+    bad_rep = raises(lambda: first_year({"regulation.repartition": {"voisine": 0.5, "salariat": 0.2, "sortie": 0.0}}))
+    bad_ab = raises(lambda: est.trajectory(o + 1, Scenario(params={"sorties.part_cumul": {"*": 1.5}})))
+    ab = par_profession(Formation.param("abandon").value, ["infirmiers", "dentistes"])
+    pc = par_profession(So.param("part_cumul").value, ["infirmiers-liberaux", "sages-femmes", "dentistes"])
+    ok = (abs(m08 / m1 - 0.8) < 1e-12 and abs(mex / m1 - 0.5) < 1e-12 and d_default == 0 and gone < 0
+          and abs(d_tot - gone) < 1e-6 and all([no_vois, bad_rep, bad_ab])
+          and abs(ab[0] - (1 - 0.718 ** (1 / 3))) < 1e-4 and ab[1] == 0 and list(pc) == [0.015, 0.008, 0.047])
+    crit("C12", "paramètres sourcés (axe 1) câblés : θ, répartition, exemption, abandon, cumul",
+         f"θ 0,8 / 1 → {m08 / m1:.3f} des bloqués ; exemption 50 % → {mex / m1:.3f} ; défaut 100 % voisine au "
+         f"département → écart {d_default} ; 100 % sortie, année 1 → Δ total {d_tot:+.1f} = compte {gone:+.1f} ; commune sans "
+         f"voisins → {no_vois is not None} ; répartition ≠ 1 → {bad_rep is not None} ; part 1,5 → {bad_ab is not None} ; "
+         f"abandon IDE {ab[0]:.4f}, autres {ab[1]} ; cumul IDE/SF/CD {[float(v) for v in pc]}", ok,
+         avant="abandon 0, cumul 0,10 pour toutes les professions, plafond strict, destination unique")
+    return dict(theta_ratio=m08 / m1, exempt_ratio=mex / m1, sortie_d_total=d_tot, abandon=list(ab), part_cumul=list(pc))
+
+
+def c13_review3():
+    from jumeau.engine import apply
+    from jumeau.modules.sorties import sejour_65plus
+    t = stock_table(["dentistes"])
+    _, fit, o, _ = latest_design("dentistes", t)
+    est = twin_of(V1.StockFlowLocal)().fit(t, fit, o)
+    stacked = raises(lambda: est.trajectory(o + 1, Scenario(events=[Event("entrees.multiplicateur", o + 1, 3.0, "mul")
+                                                                    for _ in range(5)])))
+    nan = raises(lambda: est.trajectory(o + 1, Scenario(events=[Event("entrees.multiplicateur", o + 1, float("nan"))])))
+    ret = raises(lambda: est.trajectory(o + 1, Scenario(events=[Event("sorties.retention", o + 1, 1.3, "mul")])))
+    ks = kine_sector(public_history=True)
+    scn = Scenario.from_json(Scenario(params={"regulation.zones": {"kines": ZONES}}).to_json())
+    after = scn.over(ks.scenario)
+    json_ok = "regulation" in after.composition
+    zones_ev = raises(lambda: ks.trajectory(o + 1, Scenario(events=[Event("regulation.zones", o + 1, 1.0)])))
+    # règle « entrées ≤ sorties » : une année à la main, puis comparaison à une formule indépendante
+    reg_scn = Scenario(params={"regulation.zones": {"kines": ZONES}, "regulation.repartition": SALARIAT,
+                               "regulation.theta": 1.0}, modules=REG).over(ks.scenario)
+    mods = ks.modules(reg_scn)
+    x = ks.state.copy()
+    for m in mods:
+        x = m.prepare(x, reg_scn)
+    ctx = Context(ks.origin + 1, ks.origin, reg_scn, x.cells, np.random.default_rng(0), len(x.ages))
+    N = x.N
+    for m in mods[:-1]:
+        for f in m.step(x.__class__(x.cells, x.ages, N, x.year, x.level, x.pool, x._key), ctx):
+            new = apply(N, f)
+            ctx.deltas[f.name] = new - N
+            N = new
+    mv = mods[-1].step(x.__class__(x.cells, x.ages, N, x.year, x.level, x.pool, x._key), ctx)[0]
+    c = x.cells
+    reg = ((c.profession == "kines") & c.territory.isin(ZONES) & (c.sector == "prive")).to_numpy()
+    e_pos = np.clip(ctx.deltas["entrees"], 0, None).sum(1)
+    exits = -ctx.deltas["sorties"].sum(1)
+    expected = np.where(reg, np.maximum(e_pos - exits, 0), 0)
+    got = np.zeros(len(c))
+    np.add.at(got, mv.src, mv.amount.sum(1))
+    rule_gap = float(np.abs(got - expected).max())
+    kept = e_pos[reg] - got[reg]
+    rule_ok = rule_gap < 1e-9 and (kept <= exits[reg] + 1e-9).all() and (mv.amount >= 0).all()
+    # bloqués jamais négatifs avant plancher, jusqu'en 2050
+    tr = run(ks.state, mods, reg_scn, H2050, floor=False)
+    neg = min(float(st.N[(st.cells.sector == "bloques").to_numpy()].min()) for st in tr.states.values())
+    # retraite avec plusieurs tranches ≥ 65 (spécialistes, tranches v1 65–69, 70–74, 75+)
+    tsp = stock_table(["specialistes"])
+    _, fsp, osp, _ = latest_design("specialistes", tsp)
+    esp = twin_of(V1.StockFlowLocal)().fit(tsp, fsp, osp)
+    mod = esp.modules(esp.scenario)[[m.name for m in esp.modules(esp.scenario)].index("sorties")]
+    a65 = esp.state.ages >= 65
+    mk = lambda scn: Context(osp + 1, osp, scn, esp.state.cells, np.random.default_rng(0), len(esp.state.ages))
+    s0 = mod.step(esp.state, mk(Scenario()))[0].factor[:, a65]
+    s2 = mod.step(esp.state, mk(Scenario(params={"sorties.decalage_retraite": 2.0})))[0].factor[:, a65]
+    okc = (1 - s0[:, -1]) > 0
+    dstay = sejour_65plus(s2[okc], 0.2) - sejour_65plus(s0[okc], 0.2)
+    multi_gap = float(np.abs(dstay - 2.0).max())
+    ok = all([stacked, nan, ret, zones_ev]) and json_ok and rule_ok and neg >= -1e-9 and multi_gap < 1e-6
+    crit("C13", "troisième revue : bornes, JSON, règle de régulation, retraite multi-tranches",
+         f"×3 empilé 5 fois → {stacked is not None} ; NaN → {nan is not None} ; rétention ×1,3 → {ret is not None} ; "
+         f"JSON + over garde la régulation {json_ok} ; événement sur zones → {zones_ev is not None} ; règle entrées ≤ "
+         f"sorties : écart à la formule {rule_gap:.1e} sur {int(reg.sum())} cellules ; bloqués min {neg:.2e} ; "
+         f"retraite Δ = 2, {int(a65.sum())} tranches ≥ 65 : écart de séjour max {multi_gap:.1e}", ok,
+         avant="×243 → +14 317 % ; rétention > 1 ; JSON perdait la régulation ; séjour ≠ +Δ ; règle non testée ; "
+               "entrées négatives déplacées ; événement sur zones → plantage")
+
+
+def c11_over():
+    t = stock_table(["dentistes"])
+    _, fit, o, _ = latest_design("dentistes", t)
+    est = twin_of(V1.StockFlowLocalPipeline)().fit(t, fit, o)
+    p = float(est.predict(H2050).sum())
+    b = float(est.trajectory(H2050, Scenario()).states[H2050].N.sum())
+    q = float(est.trajectory(H2050, Scenario(events=[evenement_quotas(1.1, o, 6)])).states[H2050].N.sum())
+    crit("C11", "un scénario se pose sur le scénario de base (variante filière)",
+         f"predict {p:.1f} ; trajectory(Scenario()) {b:.1f} ; quotas × 1,1 : {100 * (q / b - 1):+.2f} %",
+         abs(b / p - 1) < 1e-12 and q > b, avant="trajectory(Scenario()) 82 374 contre predict 102 987 ; quotas → −15,2 %")
 
 
 def c8_aggregation():
@@ -316,8 +521,9 @@ def timing(reps=5):
     ts = []
     for _ in range(reps):
         t0 = time.perf_counter()
-        for e in ests:
-            e.trajectory(H2050, scn(e.origin))
+        for e in ests:                                   # run() direct : trajectory() met en cache par scénario
+            sc = scn(e.origin).over(e.scenario)
+            run(e.state, e.modules(sc), sc, H2050)
         ts.append(time.perf_counter() - t0)
     out = dict(dep_7_professions_s=float(np.median(ts)), dep_cells=int(sum(len(e.state.cells) for e in ests)))
     e = ests[PROFS.index("kines")]
@@ -359,10 +565,13 @@ def main():
     agg = c8_aggregation()
     c9_reproducible()
     c10_ageing()
+    c11_over()
+    c12_regulation_params()
+    c13_review3()
     tm = timing()
-    res = dict(criteres=RESULTS, regulation_kines=regul, leviers=levers, agregation=agg, temps=tm,
+    res = dict(criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
                modules={n: [p.__dict__ for p in c.params] for n, c in REGISTRY.items()
-                        if n not in ("factice", "espion", "double")})
+                        if n not in ("factice", "espion", "double", "lecteur_diplomes")})
     (OUT / "results.json").write_text(json.dumps(res, indent=1, ensure_ascii=False, default=str))
     failed = [r["id"] for r in RESULTS if not r["ok"]]
     print("échecs :", failed or "aucun")

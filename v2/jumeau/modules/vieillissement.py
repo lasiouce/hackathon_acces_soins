@@ -24,7 +24,8 @@ class Vieillissement(Module):
     order = 10
     params = (Param("fraction", 0.2, "par an (scalaire ou une valeur par tranche)",
                     "tranches quinquennales du RPPS (1/5 an⁻¹)", "2012–2026", "mesuré",
-                    "Part d'une tranche qui passe à la suivante en un an, hypothèse d'âges uniformes dans la tranche."),)
+                    "Part d'une tranche qui passe à la suivante en un an, hypothèse d'âges uniformes dans la tranche.",
+                    (0.0, 1.0)),)
 
     def step(self, state, ctx):
         f = ctx.param(self, "fraction")

@@ -7,6 +7,7 @@ Un module :
                      que chaque besoin est produit par un module placé avant lui, run() que chaque flux
                      rendu est déclaré. Par défaut produces = (name,).
   fit(hist)          optionnel : calibre ses paramètres sur l'historique observé (années <= origine)
+  prepare(state, scn) optionnel : complète l'état avant le run (ex. secteur de destination vide)
   begin(state, ctx)  optionnel : remet son état interne à zéro au début de chaque run
   step(state, ctx)   lit l'état, renvoie une liste de flux typés ; ne modifie jamais l'état lui-même
 
@@ -47,6 +48,7 @@ class Param:
     vintage: str
     status: str
     doc: str = ""
+    bounds: tuple | None = None    # (min, max) admissibles ; Scenario.validate refuse une valeur hors plage
 
     def __post_init__(self):
         if self.status not in STATUTS:
@@ -103,6 +105,10 @@ class Module:
     def fit(self, hist) -> None:
         pass
 
+    def prepare(self, state, scenario):
+        """Optionnel : rend l'état dont le module a besoin (ex. cellules d'un secteur de destination). Par défaut inchangé."""
+        return state
+
     def begin(self, state, ctx) -> None:
         pass
 
@@ -112,6 +118,24 @@ class Module:
     @classmethod
     def param(cls, name) -> Param:
         return next(p for p in cls.params if p.name == name)
+
+
+def par_profession(value, professions) -> np.ndarray:
+    """Valeur d'un paramètre par profession : scalaire, ou dict {profession: valeur} avec "*" pour les autres.
+    Une clé couvre aussi ses variantes (« infirmiers » couvre « infirmiers-liberaux »). Sans clé ni "*" : erreur."""
+    uniq, inv = np.unique(np.asarray(list(professions), dtype=object).astype(str), return_inverse=True)
+    if not isinstance(value, dict):
+        return np.full(len(inv), float(value))
+    out = []
+    for p in uniq:                                       # une recherche par profession distincte, pas par cellule
+        keys = [k for k in value if k != "*" and (p == k or p.startswith(k + "-"))]
+        if keys:
+            out.append(float(value[max(keys, key=len)]))
+        elif "*" in value:
+            out.append(float(value["*"]))
+        else:
+            raise KeyError(f"pas de valeur pour la profession {p!r} (clés : {sorted(value)})")
+    return np.array(out)[inv]
 
 
 REGISTRY: dict[str, type] = {}

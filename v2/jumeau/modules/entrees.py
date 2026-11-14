@@ -29,7 +29,7 @@ class Entrees(Module):
         Param("filiere", False, "booléen", "DREES, inscrits par année d'étude (990_drees_mmop2)", "2020–2025", "mesuré",
               "Entrées proportionnelles à la cohorte en formation (CD, PH, spécialistes)."),
         Param("multiplicateur", 1.0, "× niveau actuel", "Loi OTSS 2019 ; arrêtés d'objectifs 2021 et 2026", "2026",
-              "supposé", "Effet d'un changement de quotas sur les entrées, après le délai de formation."),
+              "supposé", "Effet d'un changement de quotas sur les entrées, après le délai de formation.", (0.0, 3.0)),
     )
 
     def fit(self, hist):
