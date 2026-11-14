@@ -154,6 +154,28 @@ relative par classe, sur des pseudo-prévisions dans la fenêtre.
   classes de plus de 100 sont à 57–62 %.
 - Le verdict appartient à N10 (axe 3).
 
+## K4 : inscrit avant passage, jugement et confirmation confiés à l'axe 3
+- **N10 a jugé K3** (axe 3) : aucun grain ne passe.
+  - Les IDE sont trop larges dans les classes moyennes (85–91 %).
+  - Les CD sont trop étroits (69–73 %).
+  - Les kinés à l'EPCI sont les plus proches : une seule classe hors bande
+    (1–2 : 73,0 %).
+- **K4 = K3 avec deux changements de mécanisme**, sans facteur réglé sur
+  ce jugement :
+  - les erreurs viennent des 2 pseudo-origines les plus récentes ;
+  - l'erreur départementale et l'erreur locale sont tirées dans la même
+    pseudo-origine.
+  - Voir la [dérivation, § K4](../derivations/2026-11-14-axe2-communes.md).
+- **Fichiers.**
+  - `v2/methodes/out/n10_soumission_k4.parquet` : 2014–2020, h = 5.
+  - `v2/methodes/out/n10_confirmation_k4_2021h4.parquet` : origine 2021,
+    h = 4, réservée.
+  - Code : `v2/methodes/communes_k4.py`, environ 1 min machine. Les
+    parquets ne sont pas versionnés : ils se régénèrent.
+- **L'axe 2 n'a regardé aucune des deux couvertures de K4.** Un passage sur
+  2014–2020 ne vaudra que s'il est confirmé sur 2021, ou par le dépôt
+  2027.
+
 ## Ce que ça change (dérivé)
 1. **La bande d'une commune a deux parties.**
    - Une partie **locale** : de type Poisson, indépendante entre communes.

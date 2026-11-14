@@ -149,3 +149,38 @@ communes**. Une bande par classe de taille ne la porte pas.
   [75 ; 85] % dans chaque classe de taille.
 - **Prédiction (supposée).** La couverture des classes > 50 passe de
   56–72 % (K2) à plus de 75 %. Les petites classes restent dans la bande.
+
+## K4 (ajout du 2026-11-14, inscrit avant tout passage, après le jugement N10 de K3)
+**Contexte.** Le jugement de K3 par N10 est connu : IDE trop larges en
+classes moyennes, CD trop étroits. K4 est donc **exposé au sur-ajustement**.
+Pour le limiter, il ne règle **aucun facteur** sur ce jugement. Il ne change
+que deux mécanismes, justifiés par une cause et non par le résultat :
+1. **Récence.** Les erreurs viennent des **2 pseudo-origines les plus
+   récentes** seulement (ℓ = 0, 1), au lieu de 5.
+   - Cause : l'erreur n'est pas stationnaire. Les entrées des IDE se sont
+     stabilisées après 2018, donc les erreurs anciennes sont plus grandes.
+     Les CD ont des entrées plus variables depuis l'afflux de diplômés
+     étrangers (24 % des actifs, axe 4).
+2. **Tirage conjoint.** Chaque tirage choisit **une** pseudo-origine ℓ, puis
+   prend l'erreur départementale et l'erreur locale **dans cette même
+   pseudo-origine**.
+   - Cause : en les tirant indépendamment, K3 mélange des périodes de
+     volatilité différentes.
+   - Une classe qui compte moins de 50 erreurs dans ℓ est fusionnée avec
+     ses voisines, puis avec les autres ℓ.
+
+Le point et le reste sont inchangés (K3).
+
+**Confirmation hors échantillon (règle du 2026-11-14).**
+- Origine **2021**, h = **4** (cible 2025), jamais regardée pour un modèle
+  communal. Proposée à l'axe 3.
+- Même critère : couverture dans [75 ; 85] % dans chaque classe de
+  taille.
+- Un passage sur 2014–2020 ne compte que s'il est confirmé ici, ou par le
+  dépôt 2027.
+
+**Prédiction (supposée).**
+- IDE : couverture des classes 11–50 ramenée sous 85 %.
+- CD : couverture des classes 11–100 au-dessus de 75 %.
+- Kinés à l'EPCI : la classe 1–2 reste juste sous 75 %, puisque K4 ne
+  change rien pour les petites unités.
