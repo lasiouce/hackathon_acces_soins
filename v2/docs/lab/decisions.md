@@ -1710,7 +1710,132 @@ d'un abstract en anglais, ni de relu par les pairs etc, juste c'est un recap sci
 complet de ce qui a été fait ».
 **Ce qui le renverserait.** Une soumission réelle à arXiv ou à une revue.
 
+## 2026-11-14 — Axe 5 : fourchettes départementales et seuil « assez sûr pour décider »
+
+**Décision.**
+- **Composante (a) au département** : (P95 − P5) / N tendanciel à 2050,
+  sur 500 tirages de la connaissance seule, décisions au statu quo.
+- **Composante (b) au département** : pente de l'APE ∝ h, par
+  département, sur le banc N1 (N ≥ 30 à l'origine), × 1,6 × h. Les deux
+  composantes ne sont jamais additionnées.
+- **Seuil « assez sûr pour décider »** (dérivé) : la largeur (a) d'un
+  département est inférieure à deux fois l'effet national à 2050 de
+  quotas × 1,2, mesuré par profession. Le levier le plus fort se distingue
+  alors de la bande de connaissance.
+  - Quatre classes : < seuil, 1–2×, 2–4×, > 4×.
+  - Le seuil porte sur (a) seulement : (b) n'existe pas au-delà de
+    h = 10.
+- **Carte.**
+  - Fond v1 `app/assets/departements-avec-outre-mer.geojson`, hexagone
+    seulement (DROM dans le tableau).
+  - Rampe bleue ordinale (skill dataviz).
+  - Formats : SVG pour le rapport, TikZ pour le prétirage, car pdfLaTeX
+    n'inclut pas le SVG.
+
+**Pourquoi.** Consigne de la session v2 : une carte de la largeur relative
+qui montre où le modèle est assez sûr pour décider. Le seuil se rattache à
+l'effet d'un levier mesuré, plutôt qu'à un pourcentage arbitraire.
+**Ce qui le renverserait.** Un autre levier de référence que les quotas
+± 20 %, par exemple l'amplitude de l'interface (0,7 à 1,5) : le seuil
+changerait.
+
+## 2026-11-14 — Axe 1 : SAE et PMI comme sources de recoupement de la part privée des salariés
+
+**Décision.**
+- La part privée des salariés hospitaliers est recoupée avec deux sources
+  indépendantes du RPPS :
+  - la **SAE** de la DREES (bases statistiques 2023-2025, bordereaux Q20 et
+    Q23, statut juridique de l'établissement) ;
+  - les **séries longues des salariés hospitaliers** (SIASP + BTS).
+- Les sages-femmes de la catégorie RPPS « Prévention » sont rapprochées de
+  l'enquête PMI de la DREES.
+- Résultats, *mesurés* (fiche `param-part-privee-salaries-sae`) :
+
+  | Profession | RPPS | SAE |
+  |---|---|---|
+  | Sages-femmes | 17,4 % | 19,8 % |
+  | Kinés | 44,4 % | 44,3 % |
+  | Pharmaciens | 17,4 % | 29,4 % |
+
+  « Prévention » compte 1 383 sages-femmes, contre 1 423 en PMI.
+- **Ce n'est pas un changement de la source du jumeau.** Celle-ci reste
+  la décision de l'axe 4. Deux propositions lui sont faites (open.md) :
+  - pharmaciens : retenir la SAE ou l'Ordre plutôt que le RPPS ;
+  - sages-femmes : classer « Prévention » en public, ce qui réduit l'écart
+    de 2 601 à 1 272.
+
+**Pourquoi.** L'axe 5 classe la part privée des salariés ambigus en premier
+facteur d'incertitude (ST 0,91 SF, 0,48 PH à 2050).
+**Ce qui le renverserait.** Un appariement individuel RPPS × employeur
+montrant que la SAE double-compte les multi-employeurs du privé.
+
+## 2026-11-14 — Axe 3, N7 : addendum pré-enregistré (gel 04:37), DiD dans les bassins de vie, stabilité, bande « pente », réconciliation DREES
+
+**Décision.**
+- Protocole [N7](reports/2026-11-14-axe3-n7-addendum.md), SHA-256
+  `06ba47b91647`, gelé avant tout calcul qui le concerne ; N1 à N6
+  inchangés (empreintes revérifiées).
+- **A.** DiD au grain du **bassin de vie 2022** (cellule BV × zone, Y ≥ 5
+  en 2008, grappes = départements, CR1). Déclaré **second test** du levier
+  IDE. Mêmes tests et seuils que N3.
+- **B.** Verdict N1 par origine (2016, 2018, 2021), tous les estimateurs
+  du registre ; « stable » = même signe de Δ aux trois origines ; τ de
+  Kendall rapporté. Le verdict poolé de N1 reste celui qui compte.
+- **C.** Bande « pente d'erreur » à armes égales : log N ~ N(log prédit,
+  (s·h)²), s = RMS(e/h′) sur les paires passées ; CRPS gaussien.
+- **D.** Cible ER 1319 (infirmiers libéraux, tendanciel) ; réconciliation
+  des dentistes par valeurs de Shapley sur 3 facteurs (périmètre, origine
+  et fenêtre, niveau des entrées), résidu ≤ 25 %.
+
+**Pourquoi.** Consigne de nuit de la session v2 ; un ajout se fait par un
+nouveau protocole daté.
+**Ce qui le renverserait.** Rien sur la forme ; chaque ajout ultérieur sera
+un nouveau protocole.
+
+## 2026-11-14 — Axe 3, nuit : levier IDE toujours non validé ; aucune bande calibrée ; moteur biaisé par le bruit ; aucun chiffre 2050 citable
+
+**Décision (verdicts des protocoles, appliqués tels quels).**
+- **N3 second test (BV)** : T1 p = 0,025 et placebo de date +2,6 %
+  [+0,1 ; +5,1] → design invalide ; effet −32 % [−37 ; −27]. Le levier IDE
+  **reste non validé**. Kinés : tendances p = 0,059 au BV (échoue), écart
+  des pentes +3,3 pts/an [+0,8 ; +5,8].
+- **N1 stabilité** : au privé, le défaut gagne seulement à l'origine 2021
+  (égalité en 2016 et 2018) ; τ ≤ 0,29. Affirmation admise : « meilleur que
+  la tendance à l'origine 2021, égal ailleurs ». Ancien périmètre : stable.
+- **N5** échoue : bruit de Poisson → MAPE dép. 10,2 % contre 5,7 % de
+  plancher, biais national positif ; cohorte nombreuse lue comme des
+  entrées (60+ −34 % à h = 5). M1, M6, M7 passent ; M5 de bon signe mais
+  −19,8 % (prédit −12,4 ± 3).
+- **N6** : aucune bande calibrée (bande empirique trop étroite, couverture
+  « 80 % » de 56 à 70 %) ; à l'origine 2021, la persistance a le meilleur
+  CRPS. **SBC** : rétention sans biais, **entrées biaisées vers le haut**
+  (p = 3·10⁻⁴⁶).
+- **N7-C** : tous les modèles battent la naïve en CRPS, mais la bande
+  linéaire en h est **trop large** (« 80 % » couvre ~96 %).
+- **N2-A** (forme affaiblie, entrées plates) échoue : −14 à −17 % sous DD76
+  en 2050 ; la variante filière (exploratoire) le dépasse de 14–15 %.
+  **ER 1319** échoue (−25 % en 2050), mais l'observé 2023 est déjà 5,9 %
+  sous ER 1319. **Dentistes** : écart à DD76 expliqué (Shapley : origine
+  et fenêtre +13,1 k, entrées récentes +11,7 k, périmètre −1,9 k ; résidu
+  16 %).
+- Conséquences : **aucun chiffre 2050 citable** ; **aucune bande publiable
+  sous son niveau nominal** ; le mécanisme `min(r, 1)` + excédent en
+  entrées est la cause commune de M3, M4 et de l'échec SBC.
+
+**Pourquoi.** Rapports [N5](reports/2026-11-14-axe3-n5-mondes-simules.md),
+[N6](reports/2026-11-14-axe3-n6-probabiliste.md),
+[N7](reports/2026-11-14-axe3-n7-addendum.md),
+[N2](reports/2026-11-14-axe3-n2-long-terme.md).
+**Ce qui le renverserait.** Un nouveau protocole qui passe (bande en √h,
+entrées séparées de la rétention, contrôle synthétique pour N3).
+
 ## Open / not yet decided
+- **Boucles de rétroaction non linéaires** (analyse transmise le 2026-11-14 :
+  [inputs/2026-11-14-analyse-boucles-retroaction.md](inputs/2026-11-14-analyse-boucles-retroaction.md)).
+  Gardée comme référence ; « pas maintenant ». La conduite proposée est notée dans le fichier :
+  - tester le signe empiriquement d'abord ;
+  - estimer la boucle densité → installations dans le logit plutôt que de la supposer ;
+  - garder la boucle charge → départs en scénario de stress.
 - **Leviers de demande (transferts de tâches : vaccination en officine,
   IPA, accès direct au kiné)** : ajouter un module de besoin, ou les
   laisser hors du périmètre ? Question posée le 2026-11-14.
@@ -1975,3 +2100,38 @@ choisir entre gaussien et Poisson « honnêtement ».
 
 **Ce qui le renverserait.** Une version avec des entrées probabilistes
 (étape 2) dont la bande est calibrée et qui bat A0 en MAPE.
+
+## 2026-11-14 — Axe 2, étape 2 : cohortes bayésiennes (C1) adoptées comme prévision par défaut proposée ; Laplace sur θ (C2) rejeté
+
+**Décision.**
+- **C1 est la variante par défaut proposée**, pour le point comme pour la
+  bande. C1 = APC des sorties, plus des entrées en niveau local national ×
+  des parts départementales hiérarchiques, avec θ fixé. A0 reste la
+  référence.
+- **C2 est rejeté.** La propagation de θ par Laplace ne gagne rien : la
+  couverture à 80 % passe de 77,6 à 76,0 %, pour un ajustement environ
+  2 fois plus coûteux.
+- Le MCMC complet reste fermé tant que la calibration par simulation ne
+  montre pas d'échec.
+
+**Pourquoi.** Banc ([rapport](reports/2026-11-14-axe2-cohortes-bayesiennes.md)),
+inscrit à 04:41 :
+- **N1.** 7,73 % contre 8,68 %, Δ −0,95 [−1,51 ; −0,47]. Le gain tient sans
+  les cellules vues par le pilote (7,52 contre 8,52). C1 bat A0 dans 17
+  cellules sur 22.
+- **N6.** Égalité en CRPS avec la persistance probabiliste. Couverture à
+  80 % de 73,5 % (juste sous [75 ; 85]) et à 50 % de 45,9 % (dans la
+  bande).
+- **Toutes origines (hors protocole).** Couverture à 80 % de 77,6 %, à
+  50 % de 50,0 %.
+- **Verdicts par profession.**
+  - CD, IDE, SF : bat.
+  - MK, PH : égale.
+  - En N6, PH échoue.
+
+**Écart signalé.** Le pilote a vu les cibles 2026 (origine 2021) des CD et
+des SF avant l'inscription, et la forme des variances du niveau a été
+corrigée ensuite (dérivation § Écart).
+**Ce qui le renverserait.**
+- Le dépôt 2027–2030 où C1 ne bat pas A0.
+- Le gain qui continue de décroître sur les origines récentes (CD, PH).
