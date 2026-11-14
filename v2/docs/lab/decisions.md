@@ -2448,6 +2448,9 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
+  en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
+  de 100 %. Prix : renommage ≈ 10 min ; premières entrées ≈ 2 h.
 - ~~**Carte : afficher la définition des indicateurs, de manière facultative**~~ **Tranchée le 2026-11-14 : encadré
   dépliable sous la légende** (entrée « Carte : définition des indicateurs dans un encadré facultatif »).
 - ~~**Assistant : objectif chiffré → leviers**~~ **Construit le 2026-11-14** (entrée « Assistant : objectifs → mélanges de leviers… »).
@@ -3342,7 +3345,8 @@ fichiers suivis, sans aucune donnée brute** : serveur prêt en 10 s, `/api/cart
   fixes) avec l'habillage de la **direction A** :
   - ~~fond blanc, encre noire, police Atkinson Hyperlegible ;~~ **remplacé le 2026-11-14** par l'habillage DSFR
     (entrée « Carte : habillage DSFR ») ;
-  - gamme bistre ↔ bleu pétrole, jamais rouge ni vert (gardée pour les données).
+  - ~~gamme bistre ↔ bleu pétrole, jamais rouge ni vert (gardée pour les données).~~ **Remplacé le 2026-11-15** pour la
+    carte par la gamme DSFR orange ↔ vert (entrée « Carte : dégradé DSFR orange ↔ vert »).
 - **Trois panneaux dépliables** :
   - **Scénario** à gauche ; replié, il devient une barre de 60 px avec le nombre de leviers
     modifiés ;
@@ -3879,6 +3883,8 @@ kinés France +20 % : inchangé (places +15 % et étrangers ×1,8).
   - La mise en page de l'option 1 reste : trois colonnes, panneaux dépliables, onglets.
   - La sémiologie des **données** de la direction A reste : gamme bistre ↔ bleu pétrole, jamais rouge ni vert,
     couleurs des professions. Le DSFR habille l'interface, pas la carte choroplèthe.
+    **Remplacé le 2026-11-15** pour la carte choroplèthe : gamme DSFR orange ↔ vert (entrée « Carte : dégradé DSFR
+    orange ↔ vert »). Les courbes des graphiques gardent leurs couleurs.
 - **Même pile, sans build ni React.**
   - Le DSFR est du CSS et du JavaScript sans framework. `react-dsfr` n'est qu'une surcouche.
   - La v1.15.4 est copiée dans `v2/prototype-carte/dsfr/`, servie par `server.py` comme les autres fichiers
@@ -4108,7 +4114,9 @@ plancher qui dépasse quelques % des entrées : il faudrait alors l'afficher com
     seulement), repère à l'année affichée.
   - La légende donne, pour chaque courbe, la valeur à l'année affichée et la source.
   - Couleurs de la direction A : jamais rouge ni vert.
-- **Chronologique** : jalons datés.
+- ~~**Chronologique** : jalons datés.~~ **Retiré le 2026-11-15** (demande : « enlève la chronologie dans les résultats ») ;
+  remplacé par « Pyramide des âges » (entrée « Carte : pyramide des âges, taux d'installation, trois entrées vers
+  l'assistant »).
   - Jalons : premier observé, décision, premier effet (avec son délai), puis tous les 5 ans. Pour chacun : scénario,
     fourchette, écart et densité.
   - Un clic sur un jalon règle le curseur d'année.
@@ -4149,3 +4157,156 @@ sur la carte […] une modale dédiée ».
 **Ce qui le renverserait.**
 - Une recette par personas où l'assistant n'est plus trouvé, ou bien est jugé secondaire.
 - Des axes doubles mal lus : il faudrait alors des petits multiples alignés sur l'année plutôt qu'une superposition.
+
+## 2026-11-15 — Carte : dégradé DSFR orange ↔ vert (remplace « jamais rouge ni vert »)
+
+**Décision.**
+- La carte choroplèthe et sa légende passent à une gamme divergente faite de couleurs du DSFR, en 7 points :
+  - warning-425 `#b34000` ;
+  - orange terre battue 850 `#fcc0b0` ;
+  - un intermédiaire ;
+  - neutre `#EEEEEA` ;
+  - un intermédiaire ;
+  - vert émeraude 850 `#6fe49d` ;
+  - success-425 `#18753c`.
+- Bas de l'échelle (en dessous de la moyenne nationale, baisse) : côté orange. Haut de l'échelle : côté vert.
+- Les tons « warning 850 » et « success 850 / 925 » demandés n'existent pas dans les couleurs système du DSFR 1.15
+  (seulement 425, 950, 975). Les tons 850 retenus viennent de la palette illustrative, avec les tons système 425 aux
+  extrémités pour garder du contraste.
+- Les textes qui nomment les couleurs sont mis à jour : « Vert : au-dessus de la moyenne nationale ; orange : en
+  dessous ».
+- **Remplace** la règle « jamais rouge ni vert » pour la carte.
+  - Cette règle venait de la direction A, puis avait été gardée par l'entrée « Carte : habillage DSFR ».
+  - Les mots restent neutres, mais orange ↔ vert peut se lire comme mauvais ↔ bon. L'utilisateur·rice l'a choisi en
+    connaissance de cause.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « Change le dégradé de couleur pour la carte, prends les couleurs du DS, en
+allant de warning 850 jusqu'à succès 925 ou 850 », puis, entre quatre propositions, « Illustratif 850 ».
+- Le conflit avec « jamais rouge ni vert » a été signalé avant le choix, ainsi que l'absence des tons 850/925 dans les
+  couleurs système.
+**Ce qui le renverserait.**
+- Une recette par personas ou une relecture du lexique où la carte est lue comme un jugement (« vert = bien »). Retour
+  possible : bistre ↔ pétrole, ou une gamme DSFR bleu ↔ orange.
+- Un test de daltonisme deutéranope où les deux extrémités se confondent.
+
+## 2026-11-15 — API : pyramide des âges ; diplômés et taux d'installation (infirmiers seulement, hypothèse)
+
+**Décision.**
+- **`pyramide`** dans `/api/scenario`, pour un département, une région ou la France.
+  - Tranches du jumeau : < 25, puis 25–29 à 60–64 par 5 ans, puis 65+.
+  - Effectifs par tranche pour chaque année, tendanciel et scénario, plus l'observé RPPS privé de l'année d'origine.
+  - La somme des tranches égale l'effectif à 0,25 professionnel près (arrondi).
+- **Nouvelles séries** dans `series` : `diplomes`, `installes_diplomes`, `taux_installation` (fraction ; `facteur: 100`).
+  - Les **diplômés n'existent qu'à l'échelle France** : le vivier de formation du jumeau n'a pas d'axe territorial. Pour
+    un département ou une région, la série et le taux sont ceux de la France, signalés dans `note`.
+  - **Niveau des diplômés.** Il est lu dans DREES jeu 491 via `jumeau.vivier.ecoles()` quand `data/raw/` est présent.
+    Sinon, repli sur `DIPLOMES_FICHES` : infirmiers seulement, moyenne 2023–2025 = 25 161, fiche
+    `param-ide-rendement-diplomes`. Ce niveau est tenu constant, multiplié par le levier quotas.
+  - **`installes_diplomes`** = part formée en France des entrées positives du registre, soit (1 − part étrangère, fiche
+    `param-diplomes-etrangers-flux`) × entrées, plus le flux `lien_formation`. C'est approché : les entrées RPPS mêlent
+    premières installations, retours et changements de secteur, donc le taux peut dépasser 100 %.
+  - **Le taux est une hypothèse, pas une observation.** Il est constant dans le temps et insensible au levier quotas,
+    qui multiplie diplômés et installés par le même facteur. Infirmiers France : **36,6 %**.
+  - **Absent, valeurs `null`** : sages-femmes, dentistes, pharmaciens (aucun niveau de diplômés cité dans le dépôt), et
+    kinés sur cette machine (`data/raw/drees/491_*.xlsx` absent ; le code les remplira si le fichier est présent).
+- Latence inchangée, à la variance près : kinés D63 ≈ 13 ms, infirmiers France ≈ 47 ms.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « afficher le % de gens qui s'installent comparé au nb de diplômés »,
+et une autre méthode d'affichage du résultat. La pyramide des âges a été proposée à la place de la chronologie.
+**Ce qui le renverserait.** Une série ouverte de diplômés par profession et par région (DREES 491 complet, ou inscrits
+DREES 990 pour dentistes et pharmaciens) : le taux deviendrait observé et territorial. D'ici là, le taux affiché ne doit
+pas être présenté comme un résultat.
+
+## 2026-11-15 — Carte : pyramide des âges, taux d'installation, trois entrées vers l'assistant
+
+**Décision.**
+- **Résultat.**
+  - « Chronologique » est retiré. Un lien `r=chrono` ouvre le mode Graphique.
+  - Nouveau mode **« Pyramide des âges »** (`r=pyr`), proposé à la place.
+    - Une barre par tranche d'âge à l'année affichée, les plus âgés en haut.
+    - Scénario en barre pleine, tendanciel en contour en tirets, dernière année observée en trait fin.
+    - Effectif et part de chaque tranche affichés ; la pyramide suit le curseur d'année.
+    - Le mode est masqué si l'API ne sert pas `pyramide`.
+- **Taux d'installation des diplômés.**
+  - Trois courbes dans le catalogue du Graphique : diplômés de l'année, diplômés installés en libéral, taux
+    d'installation.
+  - Deux superpositions : « Diplômés et installations » et « Taux d'installation des diplômés ».
+  - Une ligne sous les chiffres clés de la fiche, seulement si la valeur existe.
+  - **Sous l'échelle France, la courbe des diplômés n'est pas proposée** : c'est un chiffre national, qui côtoierait des
+    installés locaux. Cela masque aussi la superposition « Diplômés et installations ».
+  - Données : infirmiers seulement pour l'instant (voir l'entrée API du même jour).
+- **Assistant : trois entrées vers la même fenêtre**, chacune avec son accueil.
+  - **« Aide au scénario »**, à côté du titre Scénario. Accueil « Définir un scénario » : suggestions construites sur la
+    profession, le territoire et l'année.
+  - **« Aide à la lecture »**, à côté du titre Résultat. Accueil « Interpréter le résultat » : rappel de ce qui est
+    affiché et questions d'interprétation.
+  - **Bouton de la carte en bas à droite**, au-dessus de l'attribution, avec l'icône DSFR `question-answer-line`. Accueil
+    général. Il se réduit à son icône quand la légende prend la largeur.
+  - Les boutons des panneaux (icône `chat-3-line`) sont masqués quand leur panneau est replié. Le focus revient au bouton
+    d'ouverture.
+  - Cela remplace l'emplacement en haut à gauche, sous le fil d'Ariane (entrée « Résultat à modes »).
+- **Couleurs.**
+  - Les barres de Flux et le classement de l'assistant prennent les couleurs de la carte : vert positif, orange négatif.
+  - Les courbes des graphiques gardent la palette de la direction A.
+  - Les deux tons intermédiaires de la gamme de la carte sont les 925 du DSFR : `#fddfd8` et `#9ef9be`.
+- Sous 1180 px de large, les trois indicateurs de la légende repassent sur deux lignes : à 1100 px, ils se
+  chevauchaient. C'est une exception à « indicateurs sur une ligne ».
+- **Recette** `--option1` : **45/46** contre le serveur à jour (R25, bouton A+, écart connu).
+  - R34 porte maintenant sur la pyramide et sur `r=chrono`.
+  - Ajouts : R35 (gamme), R36 (trois entrées, trois accueils, focus), R37 (taux d'installation).
+  - Une option `--maquette` remplit des séries fictives quand le serveur ne les sert pas.
+- Réalisé par deux agents en parallèle : données (Sonnet) et interface (Opus).
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « enlève la chronologie […] afficher le % de gens qui s'installent comparé
+au nb de diplômés. Propose une autre méthode d'affichage […] rajoute un bouton pour l'ouvrir depuis l'interface
+scénario, à côté du titre […] le même bouton côté résultat […] garder le bouton sur la carte, repositionne-le en bas à
+droite avec une icône adaptée du design system ».
+**Ce qui le renverserait.** Le fichier DREES 491 déposé dans `data/raw/drees/` : le taux s'afficherait alors aussi pour
+les kinés et les sages-femmes. Et une recette par personas où la pyramide n'aide pas à décider.
+
+## 2026-11-15 — Données brutes : DREES 491 téléchargé, 990 déplacé ; taux d'installation des kinés au-dessus de 100 %
+
+**Décision.**
+- **DREES jeu 491**, « La formation aux professions de santé — Séries longues 1966-2025 ».
+  - Téléchargé depuis data.drees.solidarites-sante.gouv.fr (pièce jointe `la_formation_aux_professions_de_sante_series_longues_1966_2025xlsx`), le 2026-11-15.
+  - SHA-256 `aba93c473d19bcbc571ae70e1e735ea301ed9a73f984cdcb84c812f62e4317bd`, 121 774 octets.
+  - Rangé dans `data/raw/drees/491_formation_series_longues_1966_2025.xlsx`, ignoré par git.
+  - `jumeau.vivier.ecoles()` le lit : diplômés 2021–2025 des infirmiers, kinés et sages-femmes. Les infirmiers
+    retrouvent les valeurs de la fiche `param-ide-rendement-diplomes`.
+- **`990_drees_mmop2_f.xlsx`** (fichier fourni à l'équipe) a été déplacé de `chatbot/vendor/…/v2/data/` vers
+  `data/raw/`. C'est le chemin lu par `v2/sante/pipeline.py`, `v2/methodes/c5.py` et `v2/jumeau/check.py`.
+- La note SIES 2025-31 et `fiche_kines_D64.csv` ne sont lus par aucun code. Ils restent dans `chatbot/vendor/`, non
+  ignorés par git : ne pas les ajouter.
+- **Taux d'installation, France, 2035** : infirmiers 36,6 % ; sages-femmes 57,9 % ; **kinés 107 %** (3 152 installés
+  pour 2 947 diplômés). Dentistes et pharmaciens : aucun diplômé dans le jeu 491, taux absent.
+  - Au-dessus de 100 %, le chiffre n'a pas de sens comme taux.
+  - « Installés » compte toutes les entrées RPPS formées en France : premières installations, retours, passages du
+    salariat au libéral. Le taux mesure donc une **entrée en libéral rapportée aux diplômés**, pas un taux
+    d'installation des diplômés de l'année.
+- `v2/jumeau/check.py` échoue toujours : il demande aussi `data/raw/990_drees_mmop2_2526.xlsx`, fichier fourni à l'équipe
+  qui n'est pas sur la machine et qu'on ne télécharge pas.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « Télécharge le fichier manquant et déplace ceux nécessaires ».
+**Ce qui le renverserait.** Une série de premières installations en libéral par année de diplôme, qui permettrait un
+vrai taux. D'ici là : renommer l'indicateur, ou le borner à l'affichage (voir `## Open`).
+
+## 2026-11-15 — Carte : gamme éclaircie, bornes aux tons DSFR 850
+
+**Décision.**
+- La gamme de la carte s'arrête aux tons demandés : **orange terre battue 850 `#fcc0b0`** en bas et **vert émeraude 850
+  `#6fe49d`** en haut. Il n'y a plus de ton système 425 sombre aux extrémités.
+- Les 7 points : `#fcc0b0` · `#fddfd8` (925) · `#fee9e5` (950) · `#f6f6f6` (gris 975) · `#c3fad5` (950) · `#9ef9be`
+  (925) · `#6fe49d`.
+- Pour la borne verte, le 850 est retenu plutôt que le 925 : sa clarté est symétrique de l'orange 850.
+- **Gris hors territoire** : `#F3F3F1` devient le gris DSFR 925 `#E5E5E5`. Sinon il se confondait avec le centre de la
+  gamme, devenu presque blanc.
+- Les barres de Flux et le classement de l'assistant suivent les nouvelles bornes (`--pos`, `--neg`).
+- **Remplace** les extrémités 425 de l'entrée « Carte : dégradé DSFR orange ↔ vert ».
+- Contrepartie : les écarts forts sont moins contrastés. Les valeurs restent lisibles dans l'infobulle de survol, la
+  fiche et la légende.
+- La recette R35 contrôle les nouvelles bornes.
+
+**Pourquoi.** L'utilisateur·rice, 2026-11-15 : « je veux que les valeurs que je t'ai données soient les bornes […] je veux
+que les couleurs soient plus claires. Ce n'est pas confortable pour les yeux ».
+**Ce qui le renverserait.** Une recette où deux classes voisines ne se distinguent plus à l'œil, notamment au
+vidéoprojecteur. Il faudrait alors des paliers discrets plutôt qu'un dégradé continu.

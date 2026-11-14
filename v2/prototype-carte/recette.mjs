@@ -2,7 +2,8 @@
 // Usage (serveur de la carte lancé) : node v2/prototype-carte/recette.mjs [url] [--option1] [--only=R30,O02] [--captures=dossier]
 //   url par défaut http://localhost:8767/ (l'option 1 depuis la bascule du 2026-11-14) ; --option1 ajoute les contrôles
 //   propres à cette mise en page (panneaux, défilement horizontal, cadrage France, chiffres nationaux) ;
-//   --only ne lance que les contrôles listés ; --captures enregistre deux captures (1440×900 et 390×844, Puy-de-Dôme, places +20 %).
+//   --only ne lance que les contrôles listés ; --maquette complète /api/scenario de `pyramide` et des séries diplômés / installés / taux
+//   quand le serveur ne les sert pas encore (valeurs factices, pour tester l'interface seulement) ; --captures enregistre deux captures (1440×900 et 390×844, Puy-de-Dôme, places +20 %).
 // Aucune dépendance : Chrome piloté par le protocole DevTools, WebSocket natif de Node ≥ 22.
 import { spawn } from "node:child_process";
 import { mkdtempSync, readFileSync, writeFileSync, existsSync, rmSync } from "node:fs";
@@ -14,6 +15,17 @@ const URL0 = args.find(a => !a.startsWith("--")) || "http://localhost:8767/";
 const OPTION1 = args.includes("--option1");
 const ONLY = args.find(a => a.startsWith("--only="))?.slice(7).split(",");
 const CAPTURES = args.find(a => a.startsWith("--captures="))?.slice(11);
+const MAQUETTE = args.includes("--maquette");
+// valeurs factices ajoutées seulement si le serveur ne sert pas déjà le champ
+const MOCK = `(()=>{const of=window.fetch;window.fetch=async(u,o)=>{const r=await of(u,o);if(typeof u!=="string"||!u.includes("/api/scenario"))return r;
+  const d=await r.clone().json();if(d.error)return r;const sh=[.04,.12,.14,.13,.12,.11,.1,.09,.08,.07],mk=a=>a.map(v=>sh.map(s=>Math.round(v*s)));
+  if(!d.pyramide)d.pyramide={tranches:["moins de 25","25–29","30–34","35–39","40–44","45–49","50–54","55–59","60–64","65 et plus"],base:mk(d.base),scn:mk(d.scn),obs:{[d.origin]:sh.map(s=>Math.round(d.base[0]*s))},source:"maquette de recette"};
+  d.series=d.series||{};d.series_meta=d.series_meta||{};const dp=d.years.map((y,i)=>Math.round(d.base[0]*.03*(1+i*.01)));
+  if(!d.series.taux_installation){d.series.diplomes={base:dp,scn:dp};d.series.installes_diplomes={base:dp.map(v=>Math.round(v*.6)),scn:dp.map(v=>Math.round(v*.62))};
+    d.series.taux_installation={base:dp.map(()=>.6),scn:dp.map((_,i)=>.6+i*.002)};
+    d.series_meta.diplomes={label:"Diplômés",unit:"professionnels / an",source:"maquette"};d.series_meta.installes_diplomes={label:"Diplômés installés en libéral",unit:"professionnels / an",source:"maquette"};
+    d.series_meta.taux_installation={label:"Taux d'installation des diplômés",unit:"fraction",facteur:100,source:"maquette",note:"taux de la région (maquette)"};}
+  return new Response(JSON.stringify(d),{headers:{"Content-Type":"application/json"}});};})();`;
 const CHROME = process.env.CHROME || ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/google-chrome", "/usr/bin/chromium"].find(existsSync);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -75,6 +87,7 @@ async function check(id, name, fn) {
 const mapPoint = `const r=document.querySelector("#map").getBoundingClientRect(),p=map.project([2.6,46.8]);return [r.left+p.x,r.top+p.y]`;
 
 await cdp("Runtime.enable"); await cdp("Page.enable");
+if (MAQUETTE) await cdp("Page.addScriptToEvaluateOnNewDocument", { source: MOCK });
 await open();
 
 await check("R01", "chargement : 5 professions, ≥ 96 départements colorés, aucune erreur", async () => {
@@ -116,9 +129,9 @@ await check("R08", "recherche : « puy » → Puy-de-Dôme, Entrée ouvre la fic
 // fiche répartie (2026-11-14) : en tête effectifs, fourchette et actions ; trajectoire, repères, flux et zonage dans leurs modes
 await check("R09", "fiche : effectifs, fourchette, trajectoire, repères, flux, zonage, actions", async () => {
   const seen = {};
-  for (const m of ["graph", "chrono", "flux", "data"]) { await ev(mode(m)); seen[m] = await ev(`const v=document.querySelector("#rv-${m}");return !v.hidden&&v.textContent`); }
+  for (const m of ["graph", "flux", "data"]) { await ev(mode(m)); seen[m] = await ev(`const v=document.querySelector("#rv-${m}");return !v.hidden&&v.textContent`); }
   const k = await ev(`const c=document.querySelector("#card"),t=c.textContent;return [t.includes("Effectif 2050"),t.includes("fourchette"),document.querySelectorAll("#chart path").length>=4,!!c.querySelector('[onclick="addCmp()"]'),!!c.querySelector('[onclick="exportCard()"]')]`);
-  k.push(!!seen.chrono && seen.chrono.includes("Repères"), !!seen.flux && seen.flux.includes("par flux"), !!seen.data && seen.data.includes("Département non régulé"));
+  k.push(!!seen.flux && seen.flux.includes("par flux"), !!seen.data && seen.data.includes("Département non régulé"));
   await ev(mode("graph")); if (k.includes(false)) throw new Error(JSON.stringify(k));
 });
 await check("R10", "fil d'Ariane : France › Auvergne-Rhône-Alpes › Puy-de-Dôme, cliquable", async () => {
@@ -240,14 +253,81 @@ await check("R33", "graphique : superposition à deux axes, puis base 100 au-del
   if (!(b.n === 3 && b.checked && b.disabled && b.title && b.leg === 3)) throw new Error("base 100 " + JSON.stringify(b));
   return `${two} : 2 axes ; +population : base 100`;
 });
-await check("R34", "chronologique : repères datés ; un clic sur une année règle le curseur d'année", async () => {
-  await ev(mode("chrono"));
-  const n = await ev(`return document.querySelectorAll('#rv-chrono .tl button[data-y]').length`);
-  await ev(`document.querySelector('#rv-chrono .tl button[data-y="2035"]').click();return 1`);
-  const r = await ev(`return [S.y,document.querySelector("#yrange").value,document.querySelector("#yv").textContent,location.hash.includes("y=2035"),!!document.querySelector('#rv-chrono li.on button[data-y="2035"]')]`);
-  await ev(`setYear(2050);return 1`); await ev(mode("graph"));
-  if (!(n >= 5 && r[0] === 2035 && r[1] === "2035" && r[2] === "2035" && r[3] && r[4])) throw new Error(n + " repères " + JSON.stringify(r));
-  return `${n} repères`;
+// « Chronologique » retiré (2026-11-15) : un lien r=chrono retombe sur Graphique ; « Pyramide des âges » si l'API sert `pyramide`
+await check("R34", "pyramide des âges : barres à l'année affichée, suit le curseur ; sinon mode masqué ; r=chrono → Graphique", async () => {
+  const c = await ev(`return [!document.querySelector("#rm-chrono"),!document.querySelector("#rv-chrono")]`);
+  if (c.includes(false)) throw new Error("mode chronologique encore présent");
+  await ev(`select("D63");return 1`); await idle(); await until(`F&&document.querySelector("#card h3")?.textContent==="Puy-de-Dôme"`);
+  const has = await ev(`return pyrOK(F)`);
+  const vis = await ev(`return !document.querySelector("#rm-pyr").closest(".fr-segmented__element").hidden`);
+  let info;
+  if (!has) { if (vis) throw new Error("mode pyramide visible sans données"); info = "pyramide non servie : mode masqué"; }
+  else {
+    if (!vis) throw new Error("mode pyramide masqué alors que l'API la sert");
+    await ev(mode("pyr"));
+    const a = await ev(`const v=document.querySelector("#rv-pyr");return {hid:v.hidden,n:v.querySelectorAll("#pyrsvg rect").length,nt:F.pyramide.tranches.length,t:v.querySelector(".h4").textContent,role:v.querySelector("#pyrsvg").getAttribute("role"),aria:v.querySelector("#pyrsvg").getAttribute("aria-label"),hash:new URLSearchParams(location.hash.slice(1)).get("r")}`);
+    await ev(`setYear(2035);return 1`); await ev(`await new Promise(r=>setTimeout(r,200));return 1`);
+    const b = await ev(`const v=document.querySelector("#rv-pyr");return {t:v.querySelector(".h4").textContent,aria:v.querySelector("#pyrsvg").getAttribute("aria-label")}`);
+    await ev(`setYear(2050);return 1`);
+    if (!(!a.hid && a.n >= a.nt && a.t.includes("2050") && a.role === "img" && a.aria.includes("2050") && a.hash === "pyr" && b.t.includes("2035") && b.aria !== a.aria)) throw new Error(JSON.stringify({ a, b }));
+    info = `${a.nt} tranches, 2050 puis 2035`;
+  }
+  await open("p=kines&t=D63&r=chrono"); await until(`S.terr==="D63"&&F`);
+  const f = await ev(`return [S.r,!document.querySelector("#rv-graph").hidden,document.querySelector("#rm-graph").checked]`);
+  if (!(f[0] === "graph" && f[1] && f[2])) throw new Error("r=chrono " + JSON.stringify(f));
+  return info + " ; r=chrono → Graphique";
+});
+// gamme de la carte (2026-11-15) : DSFR, orange (warning-425) en dessous ↔ vert (success-425) au-dessus ; légende = carte
+await check("R35", "gamme DSFR : extrémités orange / vert, légende et carte sur la même gamme, texte « Comment lire » à jour", async () => {
+  const r = await ev(`const B=brk().at(-1),ids=Object.keys(carte.deps).slice(0,12);
+    const same=ids.every(id=>{const d=carte.deps[id],s=map.getFeatureState({source:"d",id});return s.dim||s.c===colorOf(val(d));});
+    const bg=getComputedStyle(document.querySelector("#ramp")).backgroundImage;
+    return {r0:RAMP[0],r6:RAMP.at(-1),lo:colorOf(-B),hi:colorOf(B),same,bg0:bg.includes("rgb(252, 192, 176)"),bg6:bg.includes("rgb(111, 228, 157)"),n:RAMP.length}`);
+  await ev(`document.querySelector('[data-v="evo"]').click();return 1`);
+  const t = await ev(`return document.querySelector("#deftxt").textContent`);
+  if (!(r.r0 === "#fcc0b0" && r.r6 === "#6fe49d" && r.lo === "#fcc0b0" && r.hi === "#6fe49d" && r.same && r.bg0 && r.bg6 && r.n === 7 && /Vert : au-dessus/.test(t) && /orange : en dessous/.test(t) && !/bistre|pétrole/i.test(t))) throw new Error(JSON.stringify({ r, t }));
+  return "7 couleurs, #fcc0b0 → #6fe49d (tons DSFR 850)";
+});
+// assistant (2026-11-15) : trois entrées vers la même fenêtre ; accueil selon l'entrée ; Échap ferme et rend le focus au bouton d'origine
+await check("R36", "assistant : boutons Scénario, Résultat et carte ; accueils distincts ; Échap rend le focus au bouton d'origine", async () => {
+  const out = {};
+  for (const id of ["askscn", "askres", "askbtn"]) {
+    await ev(`document.querySelector("#${id}").click();return 1`); await until(`document.querySelector("#askdlg").open`, 3000);
+    out[id] = await ev(`return document.querySelector("#askwt").textContent+"|"+document.querySelectorAll("#asksug button").length+"|"+document.querySelector("#${id}").getAttribute("aria-expanded")`);
+    await cdp("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
+    await cdp("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
+    await until(`!document.querySelector("#askdlg").open`, 3000);
+    out[id] += "|" + (await ev(`return document.activeElement?.id`));
+  }
+  const h = Object.values(out).map(x => x.split("|"));
+  const ok = h.every((x, i) => +x[1] >= 3 && x[2] === "true" && x[3] === ["askscn", "askres", "askbtn"][i]) && new Set(h.map(x => x[0])).size === 3
+    && /scénario/i.test(h[0][0]) && /interpr/i.test(h[1][0]);
+  const pos = await ev(`const b=document.querySelector("#askbtn").getBoundingClientRect(),w=document.querySelector("#mapwrap").getBoundingClientRect(),l=document.querySelector("#legend").getBoundingClientRect();
+    return {br:b.right>w.left+w.width/2&&b.bottom>w.top+w.height/2,overlap:!(b.right<=l.left||b.left>=l.right||b.bottom<=l.top||b.top>=l.bottom)}`);
+  if (!ok || !pos.br || pos.overlap) throw new Error(JSON.stringify({ out, pos }));
+  return h.map(x => x[0]).join(" / ");
+});
+// diplômés, installations et taux d'installation (2026-11-15) : si l'API sert les séries (non nulles). Kinés : le serveur ne connaît
+// pas leurs diplômés (séries nulles, rien d'affiché) ; infirmiers : séries servies (diplômés et taux au niveau France)
+// taux d'installation (2026-11-15) : DREES 491 donne les diplômés des infirmiers, kinés et sages-femmes, pas des dentistes
+// ni des pharmaciens ; la courbe des diplômés (chiffre national) n'est proposée qu'à l'échelle France
+await check("R37", "taux d'installation des diplômés : rien sans données (dentistes) ; diplômés seulement à l'échelle France (infirmiers)", async () => {
+  const prof = async p => { await ev(`const s=document.querySelector('#profsel');s.value="${p}";s.dispatchEvent(new Event("change"));return 1`); await idle(); await until(`F&&F.prof==="${p}"`); };
+  await ev(`select("D63");return 1`); await idle(); await ev(mode("graph"));
+  await prof("dentistes");
+  const d = await ev(`return [!gData(F).taux_installation,!document.querySelector('#gpre [data-g="taux_installation"]'),document.querySelector('#card [data-k="tx"]').hidden]`);
+  if (d.includes(false)) throw new Error("affiché sans données (dentistes) " + JSON.stringify(d));
+  await prof("infirmiers");
+  const dep = await ev(`return {tx:!!gData(F).taux_installation,dip:!!gData(F).diplomes,pre:!!document.querySelector('#gpre [data-g="taux_installation"]'),dippre:!!document.querySelector('#gpre [data-g="diplomes,installes_diplomes"]')}`);
+  if (!dep.tx) { await prof("kines"); return "séries non servies : rien d'affiché"; }
+  if (dep.dip || dep.dippre || !dep.pre) throw new Error("département : " + JSON.stringify(dep));
+  await ev(`document.querySelector('#gpre [data-g="taux_installation"]').click();return 1`);
+  const b = await ev(`return {leg:document.querySelector("#gleg").textContent,hash:location.hash.includes("g=taux_installation"),kpi:document.querySelector('#card [data-k="tx"]').hidden?"":document.querySelector('#card [data-k="tx"]').textContent}`);
+  await ev(`document.querySelector('#card [data-cs="fr"]').click();return 1`); await idle();
+  const fr = await ev(`return !!document.querySelector('#gpre [data-g="diplomes,installes_diplomes"]')`);
+  await ev(`document.querySelector('#gpre [data-g="eff"]').click();return 1`); await prof("kines");
+  if (!(/%/.test(b.leg) && b.hash && /Diplômés installés en libéral : \d+ %/.test(b.kpi) && fr)) throw new Error(JSON.stringify({ b, fr }));
+  return b.kpi.slice(0, 60) + " ; diplômés proposés en France seulement";
 });
 await check("R30","mobile 390 px : rien ne déborde à droite, sélecteur de profession, leviers accessibles", async () => {
   await open("", 390, 844);
@@ -255,7 +335,10 @@ await check("R30","mobile 390 px : rien ne déborde à droite, sélecteur de pro
   return ev(`const out=[...document.querySelectorAll("body *")].filter(e=>{if(e.closest(".maplibregl-map"))return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);
       return r.width>0&&r.height>0&&s.visibility!=="hidden"&&r.right>innerWidth+1;}).map(e=>e.id?"#"+e.id:e.tagName.toLowerCase()+(e.className&&typeof e.className=="string"?"."+e.className.split(" ")[0]:"")).slice(0,8);
     const fold=document.querySelector("#fold"),fr=fold&&fold.getBoundingClientRect();
-    const k=[out.length===0,getComputedStyle(document.querySelector("#profsel")).display!=="none",!!fr&&fr.width>0&&fr.right<=innerWidth];
+    // bouton de l'assistant sur la carte : visible, dans la carte, sans recouvrir la légende
+    const ab=document.querySelector("#askbtn").getBoundingClientRect(),lg=document.querySelector("#legend").getBoundingClientRect(),mw=document.querySelector("#mapwrap").getBoundingClientRect();
+    const k=[out.length===0,getComputedStyle(document.querySelector("#profsel")).display!=="none",!!fr&&fr.width>0&&fr.right<=innerWidth,
+      ab.width>0&&ab.right<=mw.right&&ab.bottom<=mw.bottom&&(ab.right<=lg.left||ab.left>=lg.right||ab.bottom<=lg.top||ab.top>=lg.bottom)];
     if(k.includes(false))throw new Error(JSON.stringify(k)+" débordent : "+out.join(", "));return 1`);
 });
 
@@ -274,10 +357,10 @@ if (OPTION1) {
   await check("O03", "option 1 : panneau Résultat sans défilement horizontal, dans chaque mode", async () => {
     await ev(`select("D63");return 1`); await idle(); await ev(`addCmp();PIN=[];return 1`); await ev(`document.querySelector("#xpin")?.click();return 1`);
     const over = [];
-    for (const m of ["graph", "chrono", "flux", "cmp", "data"]) {
+    const pyr = await ev(`return pyrOK(F)`);
+    for (const m of ["graph", ...(pyr ? ["pyr"] : []), "flux", "cmp", "data"]) {
       await ev(mode(m));
       if (m === "graph") await ev(`document.querySelector('#gpre [data-g="eff,dens,pop"]')?.click();return 1`);
-      if (m === "chrono") await ev(`document.querySelector("#yby").open=true;return 1`);
       await ev(`await new Promise(r=>setTimeout(r,150));return 1`);
       const o = await ev(`const p=document.querySelector("#terrpanel");return p.scrollWidth-p.clientWidth`);
       if (o > 1) over.push(`${m} +${o}px`);
@@ -318,7 +401,8 @@ if (OPTION1) {
   await check("O05", "option 1 : Résultat sans onglets, modes qui changent la vue ; assistant en fenêtre modale, Échap la ferme", async () => {
     const s0 = await ev(`return [document.querySelector("#side h2")?.textContent,!document.querySelector("#tabs,[data-tab],#side #askq"),!document.querySelector("#askdlg").open]`);
     if (s0[0] !== "Résultat" || !s0[1] || !s0[2]) throw new Error("structure " + JSON.stringify(s0));
-    for (const m of ["chrono", "flux", "cmp", "data", "graph"]) {
+    const pyr = await ev(`return pyrOK(F)`);
+    for (const m of [...(pyr ? ["pyr"] : []), "flux", "cmp", "data", "graph"]) {
       await ev(mode(m));
       const v = await ev(`return [...document.querySelectorAll("#terrpanel .rview")].filter(x=>!x.hidden).map(x=>x.dataset.m).join()+"|"+S.r+"|"+(location.hash.includes("r=")?new URLSearchParams(location.hash.slice(1)).get("r"):"graph")`);
       if (v !== `${m}|${m}|${m}`) throw new Error("mode " + m + " : " + v);
@@ -356,5 +440,5 @@ if (CAPTURES) {
 ws.close(); chrome.kill(); try { rmSync(prof, { recursive: true, force: true }); } catch {}
 const ok = R.filter(r => r[1] === "OK").length;
 for (const [id, st, name, info] of R) console.log(`${st === "OK" ? "✓" : "✗"} ${id} ${name}${info ? "  — " + info : ""}`);
-console.log(`\n${ok}/${R.length} contrôles passés · ${URL0}${OPTION1 ? " · option 1" : ""}`);
+console.log(`\n${ok}/${R.length} contrôles passés · ${URL0}${OPTION1 ? " · option 1" : ""}${MAQUETTE ? " · maquette (pyramide et séries factices)" : ""}`);
 process.exit(ok === R.length ? 0 : 1);

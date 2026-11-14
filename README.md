@@ -97,9 +97,11 @@ indépendant), et chaque sortie le rappelle.
 `v2/prototype-carte/dsfr/`, licence Etalab 2.0, réservé aux sites de l'État). La carte garde sa gamme bistre ↔ pétrole,
 jamais rouge ni vert. Aucun build ni framework : HTML, CSS et JavaScript, comme avant. Le scénario est à gauche : la profession (liste déroulante) et l'année affichée
 en tête, puis les leviers par famille. La carte est au centre, avec le fil d'Ariane posé dessus. À droite, le panneau « Résultat » : la fiche du
-territoire, puis cinq modes de visualisation (Graphique à courbes superposables, dont effectif + âge moyen ;
-Chronologique ; Flux ; Comparer ; Données). L'assistant de simulation s'ouvre dans une fenêtre sur la carte, par le
-bouton « Assistant de simulation ». Les deux panneaux latéraux se replient en une barre bleue (un clic la déplie), et la carte s'ouvre centrée sur la France.
+territoire, puis cinq modes de visualisation (Graphique à courbes superposables, dont effectif + âge moyen et, pour
+les infirmiers, le taux d'installation des diplômés ; Pyramide des âges ; Flux ; Comparer ; Données). La carte va de
+l'orange (en dessous de la moyenne nationale) au vert (au-dessus), en couleurs du DSFR. L'assistant de simulation
+s'ouvre dans une fenêtre par trois boutons : « Aide au scénario », « Aide à la lecture » et l'icône en bas à droite de
+la carte. Les deux panneaux latéraux se replient en une barre bleue (un clic la déplie), et la carte s'ouvre centrée sur la France.
 
 - **Carte des départements et des régions**, au choix : variation de l'effectif 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Sous la légende, « Comment lire cet indicateur ? » déplie sa
@@ -146,7 +148,7 @@ La recette iso-fonctionnelle vérifie chaque fonction dans Chrome headless, sans
 plus et d'un serveur lancé sur une version à jour :
 
 ```bash
-node v2/prototype-carte/recette.mjs --option1   # 42 contrôles sur 43 ; R25 (bouton A+) absent de cette mise en page
+node v2/prototype-carte/recette.mjs --option1   # 45 contrôles sur 46 ; R25 (bouton A+) absent de cette mise en page
 ```
 
 L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle reste dans l'historique git :
