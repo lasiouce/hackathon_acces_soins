@@ -49,6 +49,15 @@ Second essai hors échantillon (branchement dans la carte, 2026-11-14) : « en r
 réguler » / « supprimer la régulation » **activaient** la régulation, « maisons de santé » tombait en « pas compris ».
 Corrigés (formes verbales, marqueurs de négation, entrée `exercice_coordonne`) ; cas de test inchangés, toujours 35/36.
 
+## Taux hors échantillon (2026-11-14) — le chiffre à citer
+`evaluer_hors_echantillon.py` sur `cas_test_hors_echantillon.yaml` (30 phrases écrites à l'aveugle par un agent qui n'a vu
+ni le glossaire ni le compilateur) : **14/30 (47 %)** en correspondance exacte. Par champ : leviers 17/30, profession 28/30,
+territoire 30/30, non modélisé 29/30. Par catégorie : simple 4/12, combinée 1/6, négation 4/4, non modélisé 2/4, piège 3/4.
+Défauts dominants : tournures sans terme du glossaire (« un bon tiers », « diplômées à l'étranger », « l'âge de départ »,
+« départs anticipés », « réduire le numerus apertus », « un an de travail en plus », « venir … étrangers »), demi-années
+arrondies, deuxième levier d'une phrase combinée perdu, « dans la région seulement ». Le glossaire **n'a pas été ajusté** sur
+ces cas : le jeu reste hors échantillon pour la prochaine version. Sortie complète : `score_hors_echantillon.txt`.
+
 ## Dans la carte
 `v2/prototype-carte/server.py` expose `GET /api/interpret?q=…&prof=…&terr=…` (profession et territoire affichés
 servent de défaut). La carte montre « Ce que j'ai compris / Pas encore dans le modèle / Pas compris / À noter » et

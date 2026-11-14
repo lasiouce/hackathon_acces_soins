@@ -195,6 +195,16 @@ body.cmpon #card{max-height:calc((100vh - 190px)/1.15)}
   #card{left:8px;right:8px;width:auto!important;min-width:0!important;top:auto;bottom:8px;max-height:70vh!important;zoom:1!important}
   #cmp{display:none}
 }
+/* mode expert : tiroir à droite, tableaux bruts */
+#xp{display:none;position:fixed;right:16px;bottom:16px;width:min(780px,calc(100vw - 500px));max-height:min(62vh,640px);z-index:25;flex-direction:column;font-size:12.5px}
+body.xpon #xp{display:flex}body.xpon #legend{display:none!important}
+#xp header{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}#xp nav{display:flex;gap:4px;flex:1}
+#xp nav button,#xbody button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:3px 9px;cursor:pointer}
+#xp nav button[aria-pressed=true]{background:var(--ground);font-weight:600}
+#xbody{overflow:auto;padding:10px 14px}#xbody table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+#xbody th,#xbody td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}#xbody th:first-child,#xbody td:first-child{text-align:left}
+#xbody td.wrap{white-space:normal;text-align:left;min-width:180px}#xbody .note{color:var(--mute);margin:8px 0 0}#xbody .row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+@media (max-width:700px){#xp{left:8px;right:8px;width:auto;bottom:8px;max-height:70vh}#xbtn{display:none}}
 #nlf{margin-bottom:10px}#nlf .h4{display:block;margin-bottom:4px}
 .nlrow{display:flex;gap:6px}.nlrow input{flex:1;min-width:0;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 8px}
 .nlrow button,#nl .acts button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 10px;cursor:pointer}
@@ -233,6 +243,7 @@ body.levopen #legend{display:none}
   <div id="profs" class="float" style="position:static" role="group" aria-label="Profession"></div>
   <div class="spacer"></div>
   <div id="actions"><button class="btn" id="txt" title="Taille du texte" aria-pressed="false">A+</button>
+    <button class="btn" id="xbtn" title="Flux, paramètres, sources, comparaison de scénarios, export JSON" aria-pressed="false">Expert</button>
     <button class="btn" id="save" title="Copie un lien qui restaure ce scénario"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2L8 3.8"/><path d="M9.5 6.5a3 3 0 0 0-4.2 0L2.7 9.1a3 3 0 0 0 4.2 4.2L8 12.2"/></svg>Enregistrer le scénario</button>
   </div>
 </div>
@@ -261,6 +272,9 @@ body.levopen #legend{display:none}
 <aside id="card" class="float" aria-live="polite"></aside>
 <div id="cmp" class="float"></div>
 <div id="toast" class="float"></div>
+<aside id="xp" class="float" aria-label="Mode expert"><header><b>Mode expert</b><nav>
+  <button data-t="flux" aria-pressed="true">Flux</button><button data-t="lev">Leviers</button><button data-t="cmp">Scénarios</button></nav>
+  <button class="icon" id="xclose" aria-label="Fermer le mode expert">×</button></header><div id="xbody"></div></aside>
 <div id="nl" class="float" role="dialog" aria-modal="true" aria-labelledby="nlh"></div>
 <div id="tip"></div>
 
@@ -296,6 +310,9 @@ function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv
   names.FR="France";bbox.FR=[-7.8,41.3,9.6,51.1];   // inclut les encarts DROM à l'ouest
   if(!META.professions[S.prof]){toast("Lien : profession inconnue, retour aux kinés");S.prof="kines";}
   buildProfs();buildMap();buildSearch();buildLevers();
+  $("#xbtn").onclick=()=>{const on=document.body.classList.toggle("xpon");$("#xbtn").setAttribute("aria-pressed",on);renderExpert();};
+  $("#xclose").onclick=()=>$("#xbtn").click();
+  $("#xp nav").onclick=e=>{const t=e.target.closest("button");if(!t)return;XT=t.dataset.t;$("#xp nav").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===t));renderExpert();};
   $("#nlf").onsubmit=e=>{e.preventDefault();const t=$("#nlq").value.trim();if(t)interpret(t);};
   if(innerWidth<=700){$("#levers").classList.add("closed");$("#fold").setAttribute("aria-expanded",false);$("#fold").setAttribute("aria-label","Déplier les leviers");$("#fold").style.transform="rotate(180deg)";}   // mobile : la carte d'abord
   document.body.classList.toggle("levopen",!$("#levers").classList.contains("closed"));
@@ -659,6 +676,44 @@ function applyNL(){const r=NLR;if(!r)return;$("#nl").classList.remove("on");
   if(r.territoire&&r.territoire!=="FR"&&r.territoire!==S.terr)select(r.territoire);else if(r.territoire=="FR"&&S.terr)closeCard();
   toast("Scénario appliqué : les leviers sont modifiables ci-dessous");}
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("#nl").classList.contains("on"))closeNL();});
+// Mode expert : les mêmes réponses du jumeau (/api/scenario), montrées brutes ; aucun calcul propre à la page sauf la fourchette
+const XFL={entrees:"Entrées (formation)",etrangers:"Diplômés étrangers",sorties:"Sorties (retraite, départs)",regulation:"Régulation",plancher:"Plancher (effectif ≥ 0)"};
+const XY=[2030,2035,2040,2045,2050];let XT="flux",PIN=[];
+function renderExpert(){if(!document.body.classList.contains("xpon")||!META)return;const b=$("#xbody"),G=SC;
+  const T=S.terr&&S.terr!="FR"?S.terr:"FR",where=`${names[T]||"France"} · ${G?G.label:""}`;
+  if(XT=="flux"){if(!G){b.innerHTML="<p>Calcul en cours…</p>";return;}
+    const ys=XY.filter(y=>G.years.includes(y)),ix=ys.map(y=>G.years.indexOf(y));
+    const row=(l,a,c="")=>`<tr${c}><td>${l}</td>${ix.map(i=>`<td>${a(i)}</td>`).join("")}</tr>`;
+    b.innerHTML=`<p><b>${where}</b> — écart cumulé au tendanciel, par flux (professionnels)</p><table><tr><th>Flux</th>${ys.map(y=>`<th>${y}</th>`).join("")}</tr>
+      ${Object.entries(G.flows).map(([k,v])=>row(XFL[k]||k,i=>sg(v[i]))).join("")}
+      ${row("<b>Écart total</b>",i=>`<b>${sg(G.scn[i]-G.base[i])}</b>`)}${row("Tendanciel",i=>fmtN(G.base[i]))}${row("Scénario",i=>fmtN(G.scn[i]))}
+      ${row("Fourchette ≈ 8/10",i=>{const h=G.k*(G.years[i]-G.origin);return fmtN(G.scn[i]*(1-h))+" – "+fmtN(G.scn[i]*(1+h))})}</table>
+      <p class="note">Origine des données ${G.origin}, décision ${G.decision}, premier effet d'une hausse des places ${G.first_effect} (délai ${G.lag} ans). Fourchette : pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon, extrapolée au-delà d'environ 10 ans. Version du code ${META.version||"?"}.</p>`;}
+  if(XT=="lev")b.innerHTML=`<table><tr><th>Levier</th><th>Valeur</th><th>Unité</th><th>Paramètre du jumeau</th><th>Délai</th><th>Statut</th><th>Source</th></tr>
+    ${META.levers.map(l=>`<tr><td>${esc(LBL[l.k]||l.label)}${isDef(l)?"":" <b>●</b>"}</td><td>${esc(typeof S.lv[l.k]=="boolean"?(S.lv[l.k]?"oui":"non"):S.lv[l.k])}</td><td>${esc(l.unit||"")}</td>
+      <td><code>${esc(l.param||"")}</code></td><td class="wrap">${esc(l.delai||"")}</td><td>${esc(l.status||"")}</td><td class="wrap">${esc(l.source||"non renseignée")}</td></tr>`).join("")}</table>
+    <p class="note">● : modifié. Un seul territoire par levier aujourd'hui : les places peuvent être limitées à la région ouverte ; les autres leviers sont nationaux (régulation : départements zonés). Estimateur : jumeau stock-flux à taux locaux, seul branché sur la carte.</p>`;
+  if(XT=="cmp"){const now=G?snap():null;
+    b.innerHTML=`<div class="row"><button id="xpin" ${!G||PIN.length>=3?"disabled":""}>Épingler le scénario affiché</button><button id="xjson" ${!G?"disabled":""}>Exporter en JSON</button>${PIN.length?`<button id="xclr">Tout retirer</button>`:""}</div>
+      ${PIN.length?`<table><tr><th>Scénario</th><th>Territoire</th><th>2035</th><th>2050</th><th>Écart 2050</th><th>Leviers</th><th></th></tr>
+      ${PIN.map((p,i)=>`<tr><td>${i+1}. ${esc(p.label)}</td><td>${esc(p.terrName)}</td><td>${fmtN(p.v2035)}</td><td>${fmtN(p.v2050)}</td><td>${sg(p.d2050)}</td><td class="wrap">${esc(p.lev||"tendanciel")}</td><td><button data-rm="${i}">×</button></td></tr>`).join("")}</table>`
+      :"<p>Aucun scénario épinglé. Jusqu'à 3, pour les comparer côte à côte (même ou autre profession, même ou autre territoire).</p>"}
+      <p class="note">Les valeurs épinglées sont figées au moment de l'épinglage ; l'export JSON contient le scénario affiché et les scénarios épinglés, avec la version du code.</p>`;
+    $("#xpin").onclick=()=>{if(now&&PIN.length<3){PIN.push(now);renderExpert();}};$("#xjson").onclick=exportJSON;
+    if($("#xclr"))$("#xclr").onclick=()=>{PIN=[];renderExpert();};b.querySelectorAll("[data-rm]").forEach(x=>x.onclick=()=>{PIN.splice(+x.dataset.rm,1);renderExpert();});}
+}
+function snap(){const G=SC,T=S.terr&&S.terr!="FR"?S.terr:"FR",at=y=>G.scn[G.years.indexOf(y)],i=G.years.length-1;
+  return {label:G.label,prof:S.prof,terr:T,terrName:names[T]||"France",leviers:{...S.lv},
+    lev:META.levers.filter(l=>!isDef(l)).map(l=>LBL[l.k]+" : "+phrase(l.k,S.lv[l.k])).join(" ; "),
+    v2035:at(2035),v2050:G.scn[i],d2050:G.scn[i]-G.base[i],origin:G.origin,k:G.k,years:G.years,base:G.base,scn:G.scn,flows:G.flows};}
+function exportJSON(){if(!SC)return;const o={genere:new Date().toISOString(),version_code:META.version||"?",
+  definition:"libéral = secteur privé, lucratif ou non ; tout employeur public exclu",modele:"jumeau v2, stock-flux à taux locaux",
+  fourchette:"scn × (1 ± k × (année − origine)), ≈ 8 cas sur 10, extrapolée au-delà d'environ 10 ans",
+  leviers_meta:META.levers.map(({k,param,unit,status,source,delai,min,max,default:d})=>({k,param,unit,status,source,delai,min,max,defaut:d})),
+  affiche:snap(),epingles:PIN};
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:"application/json"}));
+  a.download=`scenario_${S.prof}_${S.terr||"FR"}.json`;a.click();}
+const _levState=levState;levState=function(){_levState();renderExpert();};
 let tt;function toast(m,ms=2200){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),ms);}
 // fil d'Ariane : France › région › département (› commune, à venir)
 function parent(id){return !id||id=="FR"?null:id.startsWith("D")?regOf[id]||"FR":"FR";}

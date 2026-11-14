@@ -1,0 +1,19 @@
+exact 14/30 = 47%
+{'simple': '4/12', 'combine': '1/6', 'negation': '4/4', 'non_modelise': '2/4', 'piege': '3/4'}
+{'leviers': '17/30', 'profession': '28/30', 'territoire': '30/30', 'non_modelise': '29/30'}
+- ('s02', 'simple', 'Et si on formait un bon tiers de kinés en plus ?', {'leviers': ({}, {'quotas': 1.35})})
+- ('s03', 'simple', "Doubler le nombre d'infirmières diplômées à l'étranger qu'on accueille.", {'leviers': ({}, {'etrangers': 2.0})})
+- ('s04', 'simple', "Repousser de deux ans l'âge de départ des pharmaciens.", {'leviers': ({}, {'retraite': 2.0})})
+- ('s07', 'simple', 'Diviser par deux les départs anticipés des kinés avant 60 ans.', {'leviers': ({}, {'precoces': 0.5})})
+- ('s09', 'simple', 'Les dentistes à Clermont-Ferrand si on réduit le numerus apertus de 15 %.', {'leviers': ({}, {'quotas': 0.85})})
+- ('s10', 'simple', 'Un an de travail en plus pour les infirmiers libéraux dans le Nord.', {'leviers': ({}, {'retraite': 1.0})})
+- ('s11', 'simple', 'Faire venir 50 % de pharmaciens étrangers de plus en Occitanie.', {'leviers': ({}, {'etrangers': 1.5})})
+- ('s12', 'simple', 'Ouvrir des places de formation de kinés uniquement en Auvergne-Rhône-Alpes, +25 %.', {'leviers': ({'quotas': 1.25}, {'quotas': 1.25, 'quotas_region': 1.0})})
+- ('c01', 'combine', "Pour les infirmiers : 20 % de places en plus en IFSI et un report de la retraite d'un an et demi.", {'leviers': ({'quotas': 1.2, 'retraite': 1.0}, {'quotas': 1.2, 'retraite': 1.5})})
+- ('c03', 'combine', 'Sages-femmes à Lyon : deux fois plus de diplômées étrangères et moins de départs précoces, disons -30 %.', {'leviers': ({'precoces': 0.7}, {'etrangers': 2.0, 'precoces': 0.7})})
+- ('c04', 'combine', "Pharmaciens : on régule l'installation, les recalés vont au salariat, et on favorise le cumul emploi-retraite (+20 %).", {'leviers': ({'regul': 1.0}, {'regul': 1.0, 'cumul': 1.2})})
+- ('c05', 'combine', "Dentistes en Normandie : +30 % d'étudiants formés dans la région seulement, et les praticiens restent deux ans de plus.", {'leviers': ({'quotas': 1.3, 'quotas_region': 1.0}, {'quotas': 1.3, 'quotas_region': 1.0, 'retraite': 2.0})})
+- ('c06', 'combine', 'Infirmiers à Marseille : installation régulée dans 30 % des zones, ceux qui sont bloqués quittent le métier, et 10 % de formés en plus.', {'leviers': ({'regul': 1.0, 'part_zones': 0.3}, {'regul': 1.0, 'part_zones': 0.3, 'dest': 'sortie', 'quotas': 1.1})})
+- ('m01', 'non_modelise', "Si les pharmaciens peuvent vacciner, combien d'infirmiers à Clermont-Ferrand en 2035 ?", {'profession': ('pharmaciens', 'infirmiers')})
+- ('m04', 'non_modelise', "Une aide au logement de 500 euros pour les jeunes kinés qui s'installent dans la Creuse, et 20 % de places en formation en plus.", {'non_modelise': (False, True)})
+- ('p04', 'piege', "Réguler l'installation des infirmiers et des kinés à Strasbourg.", {'profession': ('infirmiers', None)})

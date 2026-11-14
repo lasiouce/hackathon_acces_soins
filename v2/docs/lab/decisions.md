@@ -2402,6 +2402,30 @@ des deux dépôts invérifiable.
 **Ce qui le renverserait.** Une variante qui passe N10 et une origine
 réservée, puis son dépôt.
 
+## 2026-11-14 — Axe 5 : statu quo SF et MK corrigé (abandon de formation du jumeau gardé)
+
+**Décision.**
+- **Défaut corrigé.** `leviers.py` forçait `formation.abandon` à 0 hors
+  IDE.
+  - Le jumeau `b64ce56` a pourtant des abandons sourcés : SF 0,033 et MK
+    0,016 par an.
+  - Le statu quo de l'axe 5 ajoutait donc des diplômés : +11,5 % pour les
+    SF (21 176 contre 18 991) et +3,3 % pour les MK en 2050 (mesuré).
+  - Correctif : hors IDE, l'abandon reste à la valeur du jumeau. Seul
+    l'abandon IFSI est un levier.
+  - Les sorties SF et MK de la relance de 08:33 sont remplacées. CD, PH et
+    IDE ne sont pas touchés.
+- **Constat après la correction de 2013 (IDE).** La bande backtest
+  départementale des IDE passe de ±460 % à ±37 % (médiane, mesuré).
+
+**Pourquoi.** Un statu quo qui n'égale pas le tendanciel du jumeau fausse
+les niveaux et les effets relatifs. Le contrôle est désormais explicite :
+le statu quo de `leviers.Model` égale `trajectory(LEVIERS)` à 1 personne
+près.
+**Ce qui le renverserait.** Un nouveau paramètre par profession dans le
+jumeau, réécrit à tort par le scénario de l'axe 5. À vérifier à chaque
+relance.
+
 ## Open / not yet decided
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
@@ -3083,3 +3107,34 @@ légende passe à droite (masquée seulement quand la fiche occupe ce côté) ; 
 se chevauchaient à 1280×720, 1440×900 et 1920×1080 ; plus aucun chevauchement après déplacement. Tests de non-régression
 (profession, région, export France, lien invalide, mobile, phrases) : aucune erreur JavaScript.
 **Limite.** À 1280×720, la légende à droite couvre le sud-est et la Corse.
+
+## 2026-11-14 — Compilateur langage naturel : 47 % hors échantillon ; seuil de la décision atteint, choix laissé à l'utilisateur·rice
+
+**Décision.** Le taux à citer est **14/30 (47 %)** sur 30 phrases écrites à l'aveugle (agent sans accès au glossaire ni au
+compilateur), et non 35/36 (97 %, en échantillon). Le glossaire n'est pas ajusté sur ce jeu, qui reste hors échantillon.
+Territoire 30/30 et négations 4/4 tiennent ; les leviers (17/30) échouent surtout sur des tournures absentes du glossaire et
+sur le second levier des phrases combinées. L'écran de confirmation de la carte reste obligatoire : rien n'est appliqué sans
+relecture.
+**Pourquoi.** La décision du compilateur prévoyait : « un taux de correspondance trop bas → ajouter une étape de modèle de
+langage, évaluée sur le même jeu ». 47 % est trop bas pour une démo sans confirmation.
+**Ouvert.** Étendre le glossaire (puis un nouveau jeu à l'aveugle) ou ajouter une étape de modèle de langage pour l'analyse
+seulement : à décider.
+
+## 2026-11-14 — Carte : mode expert (flux par année, leviers bruts, 3 scénarios épinglés, export JSON)
+
+**Décision.** Un bouton « Expert » ouvre un tiroir à droite, sur les mêmes réponses du jumeau : (1) écart au tendanciel par
+flux en 2030–2050, avec tendanciel, scénario et fourchette ; (2) chaque levier avec valeur, unité, paramètre du jumeau,
+délai, statut et source ; (3) jusqu'à 3 scénarios épinglés côte à côte, toutes professions et tous territoires ; (4) un
+export JSON (scénario affiché, épinglés, métadonnées des leviers, version du code).
+**Non fait, et dit dans l'écran :** territoire par levier (seules les places peuvent être limitées à la région ouverte),
+verrou d'estimateur (un seul estimateur branché sur la carte), rampe réglable (les délais sont ceux du jumeau).
+**Pourquoi.** Périmètre « décideur technique » demandé par l'utilisateur·rice ; vérifié en Chromium headless (onglets,
+épinglage France + Puy-de-Dôme, JSON téléchargé, aucune erreur JavaScript).
+
+## 2026-11-14 — Correction : l'écart dentistes « 76 000 contre 62 000 » n'existe pas
+
+**Décision.** 76 000 était la projection tendancielle 2050 ; l'effectif privé 2026 est 47 347, sous le total RPPS tous modes
+de 48 690 (1er janvier 2026, mesuré). Aucun double compte (rapport `reports/2026-11-14-reconciliation-dentistes.md`). Les
+quatre autres professions ont aussi un privé 2026 inférieur à leur total. La phrase de la synthèse est corrigée ; le chiffre de
+62 000 n'a pas de source retrouvée.
+**Pourquoi.** L'erreur venait de la session v2 (comparaison d'une valeur 2050 à un total 2026).
