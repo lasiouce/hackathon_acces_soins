@@ -38,10 +38,10 @@ from jumeau.scenario import FAMILLES, LEVIERS, Scenario  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 PROFS = {"sages-femmes": "Sages-femmes", "dentistes": "Chirurgiens-dentistes", "pharmaciens": "Pharmaciens",
-         "kines": "Masseurs-kinésithérapeutes"}
-# Infirmiers exclus : v2/data/processed/secteur_stock.parquet ne les a qu'en « Ensemble » (ni âge ni sexe),
-# ce que le jumeau ne peut pas projeter (open.md).
-MISSING = {"infirmiers": "table public / privé sans âge ni sexe (axe 4) : non projetables par le jumeau"}
+         "kines": "Masseurs-kinésithérapeutes", "infirmiers": "Infirmiers"}
+# Infirmiers : table axe 4 par secteur × âge × sexe (SNDS libéraux + BTS salariés, 2013-2023), branchée dans
+# jumeau.history.sector_table ; totaux vérifiés contre les sources (critère C18 du jumeau).
+MISSING = {}
 LAG = {"pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}   # app/levers.py (supposé)
 DECISION = 2026
 # Leviers suspendus tant que les défauts de la seconde revue du jumeau sont ouverts

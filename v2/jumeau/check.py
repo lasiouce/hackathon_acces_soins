@@ -25,6 +25,7 @@ sur le code d'avant (`avant`), quand elle existe : c'est la preuve que le test s
   C15 vitesse : 5 professions à la commune ≤ 2 s (bench_commune), chemin rapide = chemin complet
   C16 vivier réel (DREES 491) : reconstitution des diplômés, identité, effet, backtests contre la persistance
   C17 diplômés à l'étranger : entrée dans la tranche de 28 ans, total inchangé
+  C18 infirmiers par secteur (axe 4) : totaux = SNDS + BTS, projetables
   C11 scénario posé sur la base : trajectory(Scenario()) = predict sur la variante filière ; quotas > 0
   T  temps          recalcul d'un scénario jusqu'en 2050
 """
@@ -662,6 +663,33 @@ def c17_age_etrangers():
     return dict(tranche=int(ages[band]), total=total)
 
 
+def c18_infirmiers():
+    """Infirmiers dans sector_table : totaux par dep × année = SNDS libéraux (v1) + BTS salariés (v1), privé ⊇ libéraux ;
+    projetables par le jumeau (2 secteurs) jusqu'en 2050."""
+    t = sector_table(["infirmiers"])
+    s = pd.read_parquet("data/processed/stock.parquet")
+    lib = s[(s.profession == "infirmiers-liberaux") & ~s.dep.isin(["999", "20"])].groupby(["dep", "year"]).n.sum()
+    sal = pd.read_parquet("data/processed/stock_nurses_salaried.parquet")
+    sal = sal[~sal.dep.isin(["999", "20"])].groupby(["dep", "year"]).n.sum()
+    src = (lib + sal).dropna()
+    got = t.groupby(["dep", "year"]).n.sum()
+    j = pd.concat([got, src], axis=1, keys=["jumeau", "sources"]).dropna()
+    gap = float((j.jumeau - j.sources).abs().max())
+    prv = t[t.sector == "prive"].groupby(["dep", "year"]).n.sum()
+    lib_ok = bool(((prv - lib).dropna() >= -1e-9).all())
+    o = int(t.year.max())
+    est = twin_of(V1.StockFlowLocal)().fit(t, (o - 5, o), o)
+    tr = est.trajectory(H2050)
+    c = tr.states[H2050].cells
+    p2050 = float(tr.states[H2050].N[(c.sector == "prive").to_numpy()].sum())
+    crit("C18", "infirmiers par secteur (axe 4) cohérents avec SNDS + BTS, projetables",
+         f"{len(j)} dep × années, écart max {gap:.1e} ; privé ⊇ libéraux {lib_ok} ; {o} : privé "
+         f"{t[(t.year == o) & (t.sector == 'prive')].n.sum():.0f}, public {t[(t.year == o) & (t.sector == 'public')].n.sum():.0f} ; "
+         f"privé 2050 (tendanciel) {p2050:.0f}", gap < 1e-6 and lib_ok and len(j) >= 1000 and p2050 > 0,
+         avant="infirmiers absents de sector_table (table sans âge ni sexe)")
+    return dict(gap=gap, n=len(j), prive_2050=p2050)
+
+
 def c11_over():
     t = stock_table(["dentistes"])
     _, fit, o, _ = latest_design("dentistes", t)
@@ -804,8 +832,9 @@ def main():
     vitesse = c15_speed()
     viv = c16_vivier()
     age = c17_age_etrangers()
+    inf = c18_infirmiers()
     tm = timing()
-    res = dict(vivier_reel=viv, age_etrangers=age, vitesse_commune=vitesse, leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
+    res = dict(infirmiers=inf, vivier_reel=viv, age_etrangers=age, vitesse_commune=vitesse, leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
                modules={n: [p.__dict__ for p in c.params] for n, c in REGISTRY.items()
                         if n not in ("factice", "espion", "double", "lecteur_diplomes")})
     (OUT / "results.json").write_text(json.dumps(res, indent=1, ensure_ascii=False, default=str))

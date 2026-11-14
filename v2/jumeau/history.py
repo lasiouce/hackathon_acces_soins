@@ -69,16 +69,39 @@ def stock_flow_rates(hist: History, state) -> tuple:
     return hist._cache[key]
 
 
+INFIRMIERS = "v2/data/processed/infirmiers_secteur_age_sexe.parquet"
+SOURCE_INFIRMIERS = ("axe 4, v2/data/build_infirmiers.py : libéraux SNDS (dep × âge × sexe) + salariés BTS DREES/Insee "
+                     "(dep × secteur) croisés avec âge × sexe sous indépendance (H_ind)")
+
+
+def infirmiers_table() -> pd.DataFrame:
+    """Infirmiers par secteur (prive / public) × dep × âge × sexe, 2013-2023 (axe 4). Les libéraux sont tous privés ;
+    les salariés sont ventilés par le BTS. 2012 est exclu : les salariés n'y sont pas observés (BTS à partir de 2013)."""
+    d = pd.read_parquet(INFIRMIERS)
+    d = d[(d.year >= 2013) & ~d.dep.isin(["999", "20"])]
+    return (d.assign(profession="infirmiers", sector=d.statut)
+            .groupby(["profession", "sector", "dep", "sex", "age_lo", "year"], as_index=False).n.sum())
+
+
 def sector_table(professions, variant: str = "central") -> pd.DataFrame:
     """profession, sector (prive / public), dep, sex, age_lo, year, n. variant : central | min | max
-    (part privée des salariés ambigus). Kinés : RPPS seul (ADELI rompt la série, règle v1)."""
-    d = pd.read_parquet("v2/data/processed/secteur_stock.parquet")
-    d = d[d.profession.isin(professions) & (d.age_band != "Ensemble") & (d.sex != "Ensemble")
-          & ~d.dep.isin(["999", "20"]) & ((d.profession != "kines") | (d.source == "RPPS"))]
-    p = {"central": d.p_central, "min": (d.statut == "prive").astype(float),
-         "max": (d.statut != "public").astype(float)}[variant]
-    lo = d.age_band.str.lower().str.extract(r"(\d+)")[0].astype(int)
-    lo = lo.where(~d.age_band.str.lower().str.startswith("moins"), 0)
-    base = d.assign(age_lo=lo)[["profession", "dep", "sex", "age_lo", "year"]]
-    t = pd.concat([base.assign(sector="prive", n=d.n * p), base.assign(sector="public", n=d.n * (1 - p))])
-    return t.groupby(["profession", "sector", "dep", "sex", "age_lo", "year"], as_index=False).n.sum()
+    (part privée des salariés ambigus). Kinés : RPPS seul (ADELI rompt la série, règle v1).
+    Infirmiers : table de l'axe 4 (infirmiers_table) ; le secteur y est déjà tranché par le BTS, `variant` est sans
+    effet pour eux."""
+    professions = list(professions)
+    parts = []
+    if "infirmiers" in professions:
+        parts.append(infirmiers_table())
+    rest = [p for p in professions if p != "infirmiers"]
+    if rest:
+        d = pd.read_parquet("v2/data/processed/secteur_stock.parquet")
+        d = d[d.profession.isin(rest) & (d.age_band != "Ensemble") & (d.sex != "Ensemble")
+              & ~d.dep.isin(["999", "20"]) & ((d.profession != "kines") | (d.source == "RPPS"))]
+        p = {"central": d.p_central, "min": (d.statut == "prive").astype(float),
+             "max": (d.statut != "public").astype(float)}[variant]
+        lo = d.age_band.str.lower().str.extract(r"(\d+)")[0].astype(int)
+        lo = lo.where(~d.age_band.str.lower().str.startswith("moins"), 0)
+        base = d.assign(age_lo=lo)[["profession", "dep", "sex", "age_lo", "year"]]
+        t = pd.concat([base.assign(sector="prive", n=d.n * p), base.assign(sector="public", n=d.n * (1 - p))])
+        parts.append(t.groupby(["profession", "sector", "dep", "sex", "age_lo", "year"], as_index=False).n.sum())
+    return pd.concat(parts, ignore_index=True)
