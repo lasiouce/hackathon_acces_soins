@@ -104,3 +104,47 @@ l'uniformité des valeurs PIT, condition nécessaire mais pas suffisante
 | Écrire `probabilistic.py` (CRPS, PIT, couverture), tester sur données synthétiques | ~30 min Claude |
 | Lancer sur la variante par défaut et les naïfs | ~10 min Claude + ~1 min machine |
 | SBC, après le générateur N5 | ~45 min Claude + ~5 min machine |
+
+---
+
+## Résultat (ajouté après calcul, 2026-11-14)
+`PYTHONPATH=v2 uv run --with scipy python -m validation.probabilistic` (~4 s)
+→ `v2/validation/out/prob_*`. Erreurs du banc N1 produites par l'axe 2
+(même code `validation.forecast`, `v2/methodes/out/erreurs_prive.parquet`,
+`apc_erreurs.parquet`), périmètre privé.
+
+**N6, bande empirique au même horizon** (h = 5 : origine 2021 seulement,
+SF, CD, PH ; 279 cellules par estimateur, comme dérivé avant calcul) :
+
+| Estimateur | CRPS log | Δ vs persistance [IC 95 %] | Couv. 50 % | Couv. 80 % |
+|---|---|---|---|---|
+| naive_persistance (meilleure naïve) | **0,0633** | — | 34,8 % | 66,0 % |
+| naive_tendance | 0,0661 | +0,0029 égalité | 43,0 % | 70,3 % |
+| jumeau_taux_locaux | 0,0731 | +0,0098 [+0,0037 ; +0,0161] **perd** | 32,3 % | 56,6 % |
+| axe2_shrink_hier | 0,0726 | +0,0093 perd | 32,6 % | 55,6 % |
+| axe2_apc (bande empirique) | 0,0691 | +0,0058 perd | 36,2 % | 68,1 % |
+
+Aucune bande n'est calibrée : toutes sont **trop étroites**, et l'histogramme
+PIT est chargé à droite (réel au-dessus de la bande) : les erreurs de
+l'origine 2016 (cible 2021) étaient plus petites que celles de 2021 → 2026.
+
+**Tirages propres de l'APC** (« estimateur qui rend des tirages ») : non
+relancés cette nuit. L'axe 2 a déjà mesuré, avec 100 tirages et toutes les
+origines, une couverture de **50 %** pour l'intervalle « 80 % » (rapport
+axe 2, `apc_probabiliste`) : sa bande est elle aussi trop étroite.
+
+**SBC** (200 mondes M3, L = 99, bootstrap de Poisson ; contrôle : le calcul
+numpy reproduit `fit_rates` à 3·10⁻¹⁶) :
+
+| Paramètre | p (χ², 19 ddl) | Rang moyen / L | Verdict (p ≥ 0,0017) |
+|---|---|---|---|
+| s40, s45, s50, s55, s60 | 0,54 ; 0,67 ; 0,94 ; 0,14 ; 0,64 | 0,49–0,53 | **passent** |
+| entrées annuelles | **3·10⁻⁴⁶** | **0,22** | **échoue** |
+
+Les taux de rétention sont estimés sans biais et le bootstrap de Poisson
+mesure bien leur incertitude. **Les entrées sont biaisées vers le haut par le
+bruit** (rang de la vérité bas : les tirages la dépassent) : même cause que
+M3 dans N5.
+
+**Verdict N6 :** aucune bande calibrée ; sur la seule origine jugeable, la
+persistance a le meilleur CRPS ; les entrées du stock-flux échouent la SBC.

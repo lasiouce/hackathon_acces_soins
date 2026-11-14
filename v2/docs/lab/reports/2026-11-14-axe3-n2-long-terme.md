@@ -127,3 +127,37 @@ affirmations à 2050. Par exemple, une rétention > 1 qui se capitalise
 | Lancer L1–L3 sur `TwinEstimator` dès que la composition par défaut est stable | ~15 min Claude |
 | Construire le scénario `dd76_tendanciel` (entrées par quota décalées, taux 2016–2020) et lancer la partie A | ~1 h Claude |
 | Ajouter infirmiers (ER n°1319, 2021→2050, +37 %) comme 4e cible, en ratios | ~20 min |
+
+---
+
+## Résultat partiel (ajouté après calcul, 2026-11-14) : partie A en entrées plates
+`PYTHONPATH=v2 uv run --with scipy python -m validation.dd76` (~23 s) →
+`v2/validation/out/dd76_results.json`.
+
+**Écart à l'hypothèse du protocole.** Le protocole impose des entrées « par
+quota, tenues au niveau 2016–2020, décalées de la durée des études ». Faute
+de série ouverte des quotas 2016–2020 dans nos données, A a été lancé avec
+les **entrées nettes moyennes 2016–2020, plates** (taux nationaux, tous
+modes, origine 2020). C'est une version affaiblie, déclarée comme telle.
+
+| Profession | Ratio 2030 nous / DD76 | 2040 | 2050 | Forme | Verdict |
+|---|---|---|---|---|---|
+| Dentistes | −3,3 % | −9,4 % | **−14,1 %** | — | échoue |
+| Pharmaciens | — | −10,6 % | **−15,0 %** | creux en 2030 (−5 %) : passe | échoue |
+| Sages-femmes | −7,9 % | −14,5 % | **−17,4 %** | plateau : passe | échoue |
+
+**Exploratoire** (après avoir vu A) : la variante « entrées par la filière »
+(`StockFlowLocalPipeline`, inscrits DREES 2020–2024) donne, en ratio 2050,
+1,68 (CD) et 1,29 (PH), contre 1,48 et 1,12 pour DD76 : **elle dépasse
+DD76 de 14 à 15 %**. DD76 se situe entre nos deux variantes. Attention : la
+filière utilise des inscrits connus après 2020, donc une information future
+pour une origine 2020.
+
+**ER 1319 et dentistes :** voir le rapport [N7](2026-11-14-axe3-n7-addendum.md)
+(D1 échoue, −25 % en 2050 ; D2 passe, résidu 16 %).
+
+**Verdict N2-A :** échoue sous sa forme affaiblie. Aucun chiffre 2050 n'est
+citable. Le moteur suit les entrées qu'on lui donne : à 2050, l'hypothèse
+d'entrées domine tout (de −15 % à +15 % autour de DD76 selon la variante).
+
+Cas limites L1–L3 sur le jumeau : non lancés cette nuit (ledger).

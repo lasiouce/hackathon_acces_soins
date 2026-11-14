@@ -259,3 +259,12 @@ deux ans et demi de régulation, puis cesse de décrocher.
 | Pré-enregistrer θ pour E2 (kinés) et le lancer : premier module validé de bout en bout si l'IC contient 1 | ~15 min |
 | Dater le jeu Atlasanté c987d0e2 (comparer à un arrêté ARS 2012 publié, une région) | ~30 min |
 | Lire les textes primaires (avenants 1 et 3 IDE, arrêté du 21/12/2011) pour les dates d'effet | ~30 min |
+
+---
+
+## Second test (2026-11-14, nuit) : au grain communal
+Pré-enregistré dans [N7](2026-11-14-axe3-n7-addendum.md) § A, avant calcul.
+Comparaison dans les bassins de vie 2022 : T1 **p = 0,025** et placebo de date
+**+2,6 % [+0,1 ; +5,1]** → design toujours invalide ; effet −32,2 %
+[−37,2 ; −27,3]. Kinés : tendances p = 0,059 (échoue), écart des pentes
++3,3 pts/an [+0,8 ; +5,8].

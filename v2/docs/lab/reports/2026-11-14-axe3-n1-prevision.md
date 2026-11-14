@@ -154,3 +154,13 @@ Soit Δ = MAPE(candidat) − MAPE(meilleure naïve), à h = 5, poolée.
 | Lancer le banc sur la variante par défaut du jumeau, ancien périmètre | ~10 min Claude + ~1 min machine |
 | Écrire le premier dépôt 2027–2030 | ~5 min, dès que le jumeau est stable |
 | Relancer sur le périmètre « privé » quand l'axe 4 livre la séparation | ~10 min |
+
+---
+
+## Passages (ajouté 2026-11-14)
+- **Premier passage confirmatoire** : axe 2, périmètre privé ; défaut 8,68 %
+  contre 9,30 % (tendance), Δ −0,63 [−0,97 ; −0,27], gagne
+  ([rapport axe 2](2026-11-14-axe2-methodes.md)).
+- **Stabilité par origine** ([N7](2026-11-14-axe3-n7-addendum.md) § B) : au
+  privé, égalité en 2016 et 2018, victoire en 2021 seulement ; τ de Kendall
+  entre classements ≤ 0,29. La clause « classement instable » s'applique.

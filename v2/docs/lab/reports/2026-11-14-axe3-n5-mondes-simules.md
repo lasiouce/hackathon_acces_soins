@@ -73,3 +73,41 @@ Reprise de l'élément A1 de l'observatoire de l'équipe
 | Item | Cost |
 |---|---|
 | Écrire le générateur et lancer M1–M7 sur la variante par défaut | ~1 h Claude + ~2 min machine |
+
+---
+
+## Résultat (ajouté après calcul, 2026-11-14)
+`PYTHONPATH=v2 uv run --with scipy python -m validation.worlds all` (~40 s)
+→ `v2/validation/out/worlds_n5.csv`, `worlds_all.json`. Estimateur :
+variante par défaut (stock-flux à taux locaux, v1, identique au jumeau).
+
+**Deux précisions d'exécution, faites avant de lire les résultats** (le
+protocole ne les fixait pas) : (1) M4 — la cohorte nombreuse a 55–60 ans **à
+l'origine** (donc 44–49 ans au début de l'historique) ; (2) M4 est jugé à
+h = 5, horizon où la cohorte est dans les 60 ans et plus.
+
+| Monde | Prédiction | Mesuré (20 réplications) | Verdict |
+|---|---|---|---|
+| M1 équilibre | \|err. nat.\| ≤ 1 % à h = 15 | max 4·10⁻¹⁴ % | **passe** |
+| M3 bruit de Poisson | \|err. nat.\| ≤ 1 % ; MAPE dép. ≈ plancher ±2 pts | 9 réplications sur 20 sous 1 % (moyenne +0,51 %, max 3,59 %) ; MAPE dép. h = 15 **10,2 %** contre plancher **5,7 %** | **échoue** (lecture stricte) |
+| M2 cohorte creuse | documenté | −6,4 % national à h = 15 ; 60+ +41 % à h = 10 | — |
+| M4 cohorte nombreuse | 60+ surestimés (≥ 16/20) | 60+ **sous**-estimés −34,5 % à h = 5 (0/20 positifs) ; national +3,0 % | **échoue** (signe contraire) |
+| M5 entrées +3 %/an | sous-estimation ; \|écart à −12,4 %\| ≤ 3 pts | −19,8 % (20/20) ; écart 7,4 pts | signe **passe**, ampleur **échoue** |
+| M6 saut des entrées | sous-estimation | −8,7 % (20/20) | **passe** |
+| M7 report du départ | sous-estimation | −3,3 % (20/20) ; 60+ −37 % | **passe** |
+
+**Lecture.**
+- Le moteur est exact quand ses hypothèses tiennent sans bruit (M1).
+- **Le bruit le biaise vers le haut** (M3) : `min(r, 1)` coupe le bruit vers
+  le bas, et l'excédent au-dessus de 1 devient une entrée permanente. La SBC
+  (rapport N6) le confirme sur les entrées.
+- **Le même mécanisme lit le passage d'une cohorte comme des entrées** (M4) :
+  la tranche qui reçoit la cohorte a r > 1, d'où une entrée fictive
+  constante (national +3 %) et des 60+ mal placés. La prédiction de signe,
+  reprise de l'observatoire, tombe ; l'axe 2 avait vu que ce biais n'a pas de
+  signe fixe.
+- Les entrées plates sous-estiment toute croissance des entrées, plus fort
+  que l'observatoire ne l'annonçait (M5).
+
+**Verdict N5 : échoue** (M3 et M4). Le moteur par défaut n'est pas sûr dès
+que les données sont bruitées ou que la pyramide n'est pas stationnaire.
