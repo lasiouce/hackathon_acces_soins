@@ -174,6 +174,30 @@ jouer, dans l'interface, sur un grand panel de politiques applicables.
   goulot est le code (axe 0) et la levée de la suspension sur la régulation
   et la retraite, pas la documentation.
 
+## Re-priorisation d'après l'axe 5 (2026-11-14, nuit)
+
+Source : [axe 5](2026-11-14-axe5-sensibilite.md), indices de Sobol totaux
+(ST) et Morris (μ*), sur N privé national à 2050. Ces valeurs sont mesurées
+par l'axe 5 sur le jumeau.
+
+| Rang | Ce qui mérite plus de sourçage | Pourquoi (axe 5, mesuré) | Fiches axe 1 concernées | Action |
+|---|---|---|---|---|
+| 1 | **Part privée des salariés ambigus** (SF surtout, puis PH, CD, MK) | ST 0,91 SF, 0,48 PH, 0,26 CD ; μ* 23 % SF | [[param-ph-part-privee-biologie]], [[param-ph-part-privee-etablissements]] (+ fiches `data-secteur-*` de l'axe 4) | recherche SAE lancée cette nuit : voir [[param-part-privee-salaries-sae]] si elle aboutit |
+| 2 | **Transmission formation → entrées** : rendement, abandon, évaporation, délai | quotas ST 0,19 à 0,61 ; filière ST 0,55 CD, 0,32 PH | [[param-ide-rendement-diplomes]], [[param-ide-abandon-1a]], [[param-ide-abandon-promotion]], [[param-ph-taux-inscription-diplomes]] (2015, à rafraîchir), [[param-ph-internat-postes]], [[param-cd-specialisation-des]], [[param-age-entree-exercice]] ; diplômés étrangers ([[param-diplomes-etrangers-flux]]) | utile **seulement quand l'axe 2 branche formation → N** |
+| 3 | Âges fins dans les tranches | ST 0,20 IDE, 0,12 MK | aucune (structure par âge, axe 2) | hors axe 1 |
+| 4 | Âge de retraite et cessation | ST ≤ 0,04, sauf IDE 2030 (0,14) | [[param-mk-age-retraite]], [[param-cessation-par-age]] | faible priorité |
+| — | **Ne plus approfondir** | cumul : μ* ≤ 0,25 % de N, ST < 0,01 | [[param-cumul-emploi-retraite]] | ligne du ledger « cumul par caisse » fermée |
+| — | **Indécidable** (pas de point d'entrée) | — | régulation (8 fiches), θ, ψ, obligation MK, mortalité | après l'axe 2 ; ce n'est pas un zéro |
+
+**Lecture pour le panel de politiques.**
+- Les leviers à effet mesuré fort sont les **quotas**, avec un μ* de 15 à
+  19 % de N à 2050. Le **report de la retraite** suit, avec un μ* de 2 à 4 %.
+- Le **cumul emploi-retraite** reste dans le panel, puisque c'est une
+  politique réelle, mais son effet est négligeable. L'interface doit le
+  dire.
+- La **régulation**, politique emblématique, n'est pas classable tant que
+  le jumeau ne tourne pas à la commune.
+
 ## ⚑ What could make it wrong
 - **Filières pharmacie.**
   - φ décrit la *section d'inscription*, pas l'employeur. Une partie de
