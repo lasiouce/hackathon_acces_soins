@@ -68,6 +68,11 @@ SECTEUR = {
     "Autres secteurs": "ambigu:inconnu",
 }
 
+# Exceptions par profession, mesurées : SF en « Prévention » = PMI (employeur public). DREES, séries longues du
+# personnel de PMI : 1 423 SF au 31/12/2024, pour 1 383 SF en « Prévention » au RPPS 2026 (fiche axe 1
+# param-part-privee-salaries-sae). Décision axe 4 du 2026-11-14.
+OVERRIDE = {("sages-femmes", "Prévention"): ("public", 0.0, "DREES séries PMI (1 423 SF en PMI, 31/12/2024)")}
+
 # BTS infirmiers salariés : secteur déjà public / privé
 BTS_SECTEUR = {"1": ("Hôpital public", "public", "salarie_hosp"), "2": ("Hôpital privé", "prive", "salarie_hosp"),
                "3": ("Social ou médico-social public", "public", "autre_salarie"),
@@ -152,6 +157,10 @@ def load_drees(stem: str, profession: str, source: str, shares: pd.DataFrame):
     out.loc[salarie, "p_central"] = out.loc[salarie, "secteur"].map(lambda s: pc[s][0])
     out["p_source"] = "libéral ou mixte"
     out.loc[salarie, "p_source"] = out.loc[salarie, "secteur"].map(lambda s: pc[s][1])
+    for (prof, sect), (statut, p, src) in OVERRIDE.items():
+        if prof == profession:
+            m = salarie & (out["secteur"] == sect)
+            out.loc[m, ["statut", "p_central", "p_source"]] = [statut, p, src]
     check = out.groupby("year")["n"].sum().rename("sum_detailed").to_frame()
     check["national_total"] = [float(national[f"effectif_{y}"]) for y in check.index]
     check["profession"], check["source"] = profession, source

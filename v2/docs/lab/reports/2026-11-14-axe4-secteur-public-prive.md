@@ -18,6 +18,12 @@ tags: [data, axe4, secteur, public-prive]
 > (= privé) 2026 passe, pour les sages-femmes, de 12 475 – 26 428 à **12 059 – 14 660** (centrale 12 912). Les
 > infirmiers (BTS) sont séparés sans ambiguïté : **277 788** privés en 2023.
 
+> **Mise à jour du 2026-11-14 (soir).** SF salariées en « Prévention » (PMI) classées publiques, d'après la DREES
+> (1 423 SF en PMI au 31/12/2024, mesure axe 1) : fourchette SF 2026 **12 059 – 13 331 (centrale 12 819)**,
+> largeur 1 272. Pharmaciens hospitaliers : variante SAE à +1 116 privés (voir
+> [flux communaux](2026-11-14-axe4-flux-communaux.md) et decisions.md). Les tableaux ci-dessous restent ceux du
+> premier calcul.
+
 ## Question
 Sans séparation public / privé chez les salariés, la sortie « libéral » 2026 n'était connue qu'en fourchette
 ([decisions.md](../decisions.md), « Libéral = secteur privé »). Toutes les sorties du jumeau en dépendent.
