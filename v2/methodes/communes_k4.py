@@ -63,13 +63,13 @@ def pool(errs, lag, i):
     return np.array(e)
 
 
-def run(origins, h, path):
+def run(origins, h, path, future=False):
     t0, out = time.time(), []
     for prof in PROFS:
         N, years, geo = load_v2(prof)
         tot = N.sum(1)
         for o in origins:
-            if o + h > years[-1]:
+            if o + h > years[-1] and not future:
                 continue
             errs = errors_by_lag(N, years, geo, o, h)
             if not errs:
@@ -109,3 +109,18 @@ if __name__ == "__main__":
     run(range(2014, 2021), 5, OUT / "n10_soumission_k4.parquet")
     run([2021], 4, OUT / "n10_confirmation_k4_2021h4.parquet")
     sys.exit(0)
+
+
+def depot():
+    """Dépôt communal de K4 (règle N11) : origine = dernière année observée (2025), cibles 2027 et 2028."""
+    import hashlib
+    path = Path("v2/validation/depot/k4_communes_2026-11-14.parquet")
+    parts = []
+    for h in (2, 3):
+        tmp = OUT / f"_depot_k4_h{h}.parquet"
+        run([2025], h, tmp, future=True)
+        parts.append(pd.read_parquet(tmp).assign(cible=2025 + h))
+        tmp.unlink()
+    d = pd.concat(parts, ignore_index=True)
+    d.to_parquet(path, index=False)
+    print(path, len(d), hashlib.sha256(path.read_bytes()).hexdigest()[:12], flush=True)
