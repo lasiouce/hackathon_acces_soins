@@ -438,6 +438,31 @@ exactement l'écart du département 13\mesure{}.
 gardé le 13 novembre 2026 (\num{752993} personnes)\mesure{}. À partir de deux instantanés, on calculera des
 entrées et sorties brutes par commune. La fréquence d'archivage reste à décider.
 
+\subsection{Données pour une projection communale}\label{sec:res-projcom}
+\paragraph{Pharmaciens par commune et par an.} Aucune source ouverte ne les donne avant l'Annuaire de 2026. Nous
+les reconstituons en deux parts, calées chaque année sur la DREES par département.
+\begin{itemize}
+  \item Officine : officines FINESS de la commune multipliées par le ratio départemental pharmaciens / officine.
+  \item Hors officine : total départemental réparti selon les parts communales de l'Annuaire 2026, tenues
+  fixes\suppose{}.
+\end{itemize}
+Le test, fixé avant le calcul, compare la part officine reconstituée pour 2026 aux pharmaciens d'officine de
+l'Annuaire. L'erreur absolue relative médiane vaut 16,1\,\% par commune (seuil 25\,\%) et 10,7\,\% par
+EPCI (seuil 10\,\%)\mesure{} : \textbf{le test échoue de peu}. Le ratio départemental ne tient qu'en moyenne.
+
+\paragraph{Sages-femmes.} Aucun historique communal ouvert n'a été trouvé. Cinq routes ont été essayées :
+\begin{itemize}
+  \item trois jeux CartoSanté, dont les lignes ne suivent pas les années ;
+  \item ameli, qui s'arrête au département ;
+  \item l'Annuaire, qui n'est qu'un instantané.
+\end{itemize}
+Le passé communal ne peut qu'être modélisé, à partir des parts de 2026.
+
+\paragraph{Passage et grain.} Une table relie \num{39227} codes communes, actuels, anciens ou d'arrondissement,
+au géocode du jumeau, à l'EPCI, au bassin de vie, au département et à la région. Les médianes de privés par EPCI
+vont de 2,5 (sages-femmes) à 53 (infirmiers)\mesure{}. Ce n'est qu'une condition nécessaire : le protocole N10
+de l'axe~3 conclut qu'aucun grain sous le département n'est fiable avec les estimateurs actuels.
+
 \section{Validation et menaces à la validité}\label{sec:menaces}
 \paragraph{Contrôles contre des totaux connus.}
 \begin{itemize}
@@ -510,6 +535,8 @@ uv run python v2/data/build_infirmiers.py # ~2 s
 uv run python v2/data/build_finess_histo.py # ~15 s
 uv run python v2/data/build_flux.py      # ~20 s
 uv run python v2/data/build_attributs.py # ~1 min
+uv run python v2/data/build_pharmaciens.py # ~5 s
+uv run python v2/data/build_passage.py   # ~10 s
 uv run python v2/data/archive_annuaire.py --local
 \end{verbatim}
 \begin{itemize}
@@ -546,7 +573,8 @@ uv run python v2/data/archive_annuaire.py --local
   naturelle sur le zonage infirmier dispose de la génération dite de 2012 au même format.
   \item \textbf{Filière de formation.} L'artefact 2025 doit être corrigé avant toute projection 2030+. Le flux
   des diplômés hors de France a désormais un ordre de grandeur.
-  \item \textbf{Axe~2.} Le grain du modèle hiérarchique est fixé par profession.
+  \item \textbf{Axe~2.} Les données du modèle hiérarchique sont prêtes. Le grain affiché reste le département tant
+  que le modèle ne passe pas N10.
 \end{itemize}
 
 \paragraph{Questions ouvertes, avec leur coût} (registre \texttt{v2/docs/lab/open.md}) :
