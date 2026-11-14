@@ -1,0 +1,5 @@
+axe2_apc             MAPE 8.74 vs naive_tendance 9.30 Δ -0.56 [-0.91;-0.20] gagne | vs A0 +0.07 [-0.03;+0.16] | h1 True nat True
+jumeau_taux_locaux   MAPE 8.68 vs naive_tendance 9.30 Δ -0.63 [-0.97;-0.27] gagne | vs A0 +0.00 [+0.00;+0.00] | h1 True nat True
+axe2_retention60     MAPE 9.00 vs naive_tendance 9.30 Δ -0.30 [-0.67;+0.08] égalité | vs A0 +0.33 [+0.23;+0.42] | h1 True nat True
+{"crps_relatif_%": {"axe2_apc": 8.743532959490796, "axe2_retention60": 9.003415958691816, "jumeau_taux_locaux": 8.677075972486357, "naive_persistance": 9.915830739686857, "naive_tendance": 9.303422137256836, "axe2_apc (tirages)": 6.817943968435881}, "couverture80": 0.5019455252918288, "couverture90": 0.5977626459143969, "pit_histogramme_10": [594, 154, 150, 107, 122, 128, 117, 109, 159, 416], "n": 2056}
+exit 0

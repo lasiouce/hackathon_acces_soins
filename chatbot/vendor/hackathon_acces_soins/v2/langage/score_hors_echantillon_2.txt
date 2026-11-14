@@ -1,0 +1,6 @@
+exact 27/30 = 90%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '3/4', 'piege': '2/4'}
+{'leviers': '30/30', 'profession': '28/30', 'territoire': '29/30', 'non_modelise': '30/30'}
+- ('h2-26', 'non_modelise', 'Revaloriser de 10 % les honoraires des kinés et autoriser les pharmaciens à vacciner.', {'profession': ('kines', None)})
+- ('h2-28', 'piege', 'Retraite repoussée de 4 ans pour les dentistes et les sages-femmes.', {'profession': ('dentistes', None)})
+- ('h2-29', 'piege', 'Moitié moins de départs avant 60 ans chez les infirmiers en Bretagne et en Normandie.', {'territoire': ('R53', 'FR')})

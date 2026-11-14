@@ -1,0 +1,150 @@
+# Cas de test du compilateur, écrits AVANT le code (2026-11-14) et non ajustés ensuite.
+# leviers : seulement les valeurs différentes du défaut (l'évaluateur complète par les défauts).
+# territoire : code serveur (FR, R84, D63). profession : clé serveur ou null.
+# non_modelise : identifiants de politiques non modélisées attendues (ordre indifférent).
+# categorie : simple | combine | hors_bornes | non_modelise | lexique | ambigu
+cas:
+  - id: 1
+    categorie: simple
+    texte: "Augmenter de 20 % le numerus apertus des kinés"
+    attendu: {leviers: {quotas: 1.2}, profession: kines, territoire: FR, non_modelise: []}
+  - id: 2
+    categorie: simple
+    texte: "Je veux 10 % de places en plus dans les IFSI"
+    attendu: {leviers: {quotas: 1.1}, profession: infirmiers, territoire: FR, non_modelise: []}
+  - id: 3
+    categorie: simple
+    texte: "Doubler l'accueil des diplômés étrangers chez les dentistes"
+    attendu: {leviers: {etrangers: 2.0}, profession: dentistes, territoire: FR, non_modelise: []}
+  - id: 4
+    categorie: simple
+    texte: "Reculer de deux ans l'âge de départ à la retraite des pharmaciens"
+    attendu: {leviers: {retraite: 2.0}, profession: pharmaciens, territoire: FR, non_modelise: []}
+  - id: 5
+    categorie: simple
+    texte: "Un départ pour une arrivée pour les infirmières libérales"
+    attendu: {leviers: {regul: true}, profession: infirmiers, territoire: FR, non_modelise: []}
+  - id: 6
+    categorie: simple
+    texte: "Encourager le cumul emploi-retraite : +50 % chez les sages-femmes"
+    attendu: {leviers: {cumul: 1.5}, profession: sages-femmes, territoire: FR, non_modelise: []}
+  - id: 7
+    categorie: simple
+    texte: "Réduire de moitié les départs anticipés des masseurs-kinésithérapeutes"
+    attendu: {leviers: {precoces: 0.5}, profession: kines, territoire: FR, non_modelise: []}
+  - id: 8
+    categorie: simple
+    texte: "Combien de kinés dans le Puy-de-Dôme en 2040 ?"
+    attendu: {leviers: {}, profession: kines, territoire: D63, non_modelise: []}
+  - id: 9
+    categorie: simple
+    texte: "Plus 15 % de quotas pour les chirurgiens-dentistes en Bretagne"
+    attendu: {leviers: {quotas: 1.15}, profession: dentistes, territoire: R53, non_modelise: []}
+  - id: 10
+    categorie: simple
+    texte: "Baisser de 10 % les places en formation de maïeutique"
+    attendu: {leviers: {quotas: 0.9}, profession: sages-femmes, territoire: FR, non_modelise: []}
+  - id: 11
+    categorie: combine
+    texte: "Pour les kinés en Auvergne-Rhône-Alpes : 20 % de places en plus en IFMK et un an de plus avant la retraite"
+    attendu: {leviers: {quotas: 1.2, retraite: 1.0}, profession: kines, territoire: R84, non_modelise: []}
+  - id: 12
+    categorie: combine
+    texte: "Régulation à l'installation sur la moitié des zones, les infirmiers bloqués partent vers une zone voisine"
+    attendu: {leviers: {regul: true, part_zones: 0.5, dest: voisine}, profession: infirmiers, territoire: FR, non_modelise: []}
+  - id: 13
+    categorie: combine
+    texte: "Augmenter les quotas de 30 % seulement dans la région, pour les sages-femmes du Rhône"
+    attendu: {leviers: {quotas: 1.3, quotas_region: true}, profession: sages-femmes, territoire: D69, non_modelise: []}
+  - id: 14
+    categorie: combine
+    texte: "Pharmaciens en Occitanie : doubler le cumul emploi-retraite et 50 % de PADHUE en plus"
+    attendu: {leviers: {cumul: 2.0, etrangers: 1.5}, profession: pharmaciens, territoire: R76, non_modelise: []}
+  - id: 15
+    categorie: combine
+    texte: "Conventionnement sélectif pour les kinés, les bloqués quittent la profession, et 10 % de quotas en moins"
+    attendu: {leviers: {regul: true, dest: sortie, quotas: 0.9}, profession: kines, territoire: FR, non_modelise: []}
+  - id: 16
+    categorie: combine
+    texte: "Infirmiers de Gironde : moins 20 % de départs avant 60 ans et 2 ans de plus en activité"
+    attendu: {leviers: {precoces: 0.8, retraite: 2.0}, profession: infirmiers, territoire: D33, non_modelise: []}
+  - id: 17
+    categorie: hors_bornes
+    texte: "Augmenter de 80 % le numerus apertus des dentistes"
+    attendu: {leviers: {quotas: 1.5}, profession: dentistes, territoire: FR, non_modelise: []}
+  - id: 18
+    categorie: hors_bornes
+    texte: "Tripler les diplômés étrangers chez les infirmiers"
+    attendu: {leviers: {etrangers: 2.0}, profession: infirmiers, territoire: FR, non_modelise: []}
+  - id: 19
+    categorie: hors_bornes
+    texte: "Repousser la retraite des kinés de 5 ans"
+    attendu: {leviers: {retraite: 3.0}, profession: kines, territoire: FR, non_modelise: []}
+  - id: 20
+    categorie: hors_bornes
+    texte: "Diviser par deux les places en formation des pharmaciens"
+    attendu: {leviers: {quotas: 0.7}, profession: pharmaciens, territoire: FR, non_modelise: []}
+  - id: 21
+    categorie: hors_bornes
+    texte: "Supprimer les départs anticipés des sages-femmes"
+    attendu: {leviers: {precoces: 0.5}, profession: sages-femmes, territoire: FR, non_modelise: []}
+  - id: 22
+    categorie: non_modelise
+    texte: "Les pharmaciens peuvent vacciner : combien de pharmaciens à Clermont-Ferrand en 2035 ?"
+    attendu: {leviers: {}, profession: pharmaciens, territoire: D63, non_modelise: [vaccination_officine]}
+  - id: 23
+    categorie: non_modelise
+    texte: "Obligation d'exercer deux ans en zone sous-dotée pour les jeunes dentistes"
+    attendu: {leviers: {}, profession: dentistes, territoire: FR, non_modelise: [obligation_zone]}
+  - id: 24
+    categorie: non_modelise
+    texte: "Une prime à l'installation de 50 000 euros pour les kinés"
+    attendu: {leviers: {}, profession: kines, territoire: FR, non_modelise: [aides_installation]}
+  - id: 25
+    categorie: non_modelise
+    texte: "Accès direct au kiné et développement de la téléconsultation"
+    attendu: {leviers: {}, profession: kines, territoire: FR, non_modelise: [acces_direct, teleconsultation]}
+  - id: 26
+    categorie: non_modelise
+    texte: "Plus d'infirmiers en pratique avancée et 10 % de places en plus en IFSI"
+    attendu: {leviers: {quotas: 1.1}, profession: infirmiers, territoire: FR, non_modelise: [ipa]}
+  - id: 27
+    categorie: non_modelise
+    texte: "Créer une 4e année de médecine générale et étendre les CESP"
+    attendu: {leviers: {}, profession: null, territoire: FR, non_modelise: [quatrieme_annee_mg, cesp]}
+  - id: 28
+    categorie: lexique
+    texte: "Lutter contre le désert médical dans la Creuse en augmentant de 20 % les quotas d'infirmiers"
+    attendu: {leviers: {quotas: 1.2}, profession: infirmiers, territoire: D23, non_modelise: []}
+  - id: 29
+    categorie: lexique
+    texte: "L'accès aux soins est médiocre dans le Cantal, la pénurie de kinés est catastrophique : doubler les diplômés étrangers"
+    attendu: {leviers: {etrangers: 2.0}, profession: kines, territoire: D15, non_modelise: []}
+  - id: 30
+    categorie: lexique
+    texte: "Les zones sur-dotées en infirmiers doivent être régulées : un départ pour une arrivée"
+    attendu: {leviers: {regul: true}, profession: infirmiers, territoire: FR, non_modelise: []}
+  - id: 31
+    categorie: ambigu
+    texte: "Il faut plus de soignants"
+    attendu: {leviers: {}, profession: null, territoire: FR, non_modelise: []}
+  - id: 32
+    categorie: ambigu
+    texte: "Former davantage de kinés dans le Nord"
+    attendu: {leviers: {}, profession: kines, territoire: D59, non_modelise: []}
+  - id: 33
+    categorie: ambigu
+    texte: "Retraite des infirmiers"
+    attendu: {leviers: {}, profession: infirmiers, territoire: FR, non_modelise: []}
+  - id: 34
+    categorie: ambigu
+    texte: "Augmenter les quotas des kinés et des infirmiers de 10 %"
+    attendu: {leviers: {quotas: 1.1}, profession: kines, territoire: FR, non_modelise: []}
+  - id: 35
+    categorie: simple
+    texte: "Moitié moins de diplômés étrangers accueillis chez les pharmaciens d'officine"
+    attendu: {leviers: {etrangers: 0.5}, profession: pharmaciens, territoire: FR, non_modelise: []}
+  - id: 36
+    categorie: combine
+    texte: "Dentistes à Lyon : réguler l'installation sur 30 % des zones, entrants bloqués vers le salariat"
+    attendu: {leviers: {regul: true, part_zones: 0.3, dest: salariat}, profession: dentistes, territoire: D69, non_modelise: []}

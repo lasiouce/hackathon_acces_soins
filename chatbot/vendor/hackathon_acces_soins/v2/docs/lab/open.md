@@ -1,0 +1,171 @@
+---
+type: ledger
+aliases: [Questions ouvertes v2]
+---
+
+# Questions ouvertes — v2
+
+Les questions encore ouvertes du ledger v1 (`../../../docs/lab/open.md`)
+restent valables : on les reprend ici au moment où on les traite.
+
+| Question | Prix | Soulevée par | Date | Statut |
+|---|---|---|---|---|
+| Séparer public / privé dans « salarié hospitalier » et « autre salarié » (RPPS détaillé par secteur d'activité, SAE, BTS pour les infirmiers) ; sans ça, la sortie « libéral » des SF va de 12 475 à 26 428 | ~1 h, explore-and-report | recadrage « libéral » | 2026-11-14 || fait 2026-11-14 : SF 12 059 – 14 660, [rapport](reports/2026-11-14-axe4-secteur-public-prive.md) |
+| Relancer le banc (K1 + filière) sur le nouveau périmètre « libéral » (privé) | ~20 min après la séparation public/privé | recadrage « libéral » | 2026-11-14 | open |
+| Zonage conventionnel par commune × profession en géocodes (statut remplacement seul / obligation d'exercice), millésime actuel | ~30 min | recadrage granularité | 2026-11-14 || fait 2026-11-14 : `v2/data/processed/zonage_commune.parquet`, [rapport](reports/2026-11-14-axe4-zonage-commune.md) |
+| Validation à 2050 : reproduire le tendanciel DREES n°76 (CD, SF, PH) avec leurs hypothèses, écart en % | ~2 h | horizon 2050 | 2026-11-14 | open |
+| Injecter les diplômés du vivier (`formation`) dans N via filières → installation, à la place du flux ajusté ; comparer au banc | ~1 h (axe 2) | jumeau axe 0 | 2026-11-14 | open |
+| Dynamique du secteur public dans le jumeau : aujourd'hui une cellule publique créée vide a s = 1, I = 0 (aucune sortie) ; il faut des taux une fois la séparation public/privé faite | ~30 min après l'axe 4 | jumeau axe 0 | 2026-11-14 | fermé 2026-11-14 : taux publics ajustés sur secteur_stock (axe 4) ; repli explicite sinon (décision « Corrections du contrat ») |
+| État communal projetable : CartoSanté n'a ni sexe ni tranches quinquennales (< 40, 40–49, 50–54, 55–59, 60+) ; il faut un vieillissement à largeurs variables ou une ventilation dep → commune | ~45 min | jumeau axe 0 | 2026-11-14 | open |
+| Plancher à 0 hérité de la v1 : il crée 0,02 à 0,43 % de N(2050) selon la profession (SF max), là où les entrées nettes ajustées sont négatives ; le traiter comme une sortie au lieu de tronquer ? | ~20 min | jumeau axe 0 | 2026-11-14 | open |
+| Sensibilité de N(2050) à l'ordre des modules (permuter sorties/entrées/régulation) | ~15 min | jumeau axe 0 | 2026-11-14 | open |
+| Recalcul à la taille commune pour 5 professions × 2 secteurs : 0,61 s mesuré pour 1 profession × 2 secteurs, ≈ 3,0 s extrapolé, au-dessus des 2 s supposés ; mesurer sur l'état communal réel, puis vectoriser si besoin | ~20 min | jumeau axe 0 | 2026-11-14 | open |
+| Corriger les défauts bloquants 1–4 du jumeau et réécrire ses critères d'acceptation pour qu'ils puissent échouer | ~1–2 h | revue adversariale axe 0 | 2026-11-14 | open |
+| Vérifier les 3 constats non réfutés (conservation identitaire, vieillissement 1/5 pour les tranches communales, état des modules entre runs) | ~10 min | revue adversariale axe 0 | 2026-11-14 | open |
+| Axe 3 N3 : 2e test IDE pré-enregistré (borne Rambachan & Roth à M̄ fixé d'avance, ou contrôle synthétique) après l'échec de T1 (p = 0,043) | ~30 min Claude | axe 3 N3 | 2026-11-14 | open |
+| Axe 3 N3 : pré-enregistrer θ (part contraignante du plafond) pour E2 kinés et le lancer ; premier module validé de bout en bout si l'IC contient 1 | ~15 min | axe 3 N3 | 2026-11-14 | open |
+| Dater le zonage Atlasanté c987d0e2 (2012 ou révision 2014 ?) en le comparant à un arrêté ARS publié ; conditionne E1 et E2 | ~30 min | axe 3 N3 | 2026-11-14 | open |
+| Textes primaires des dates d'effet : avenant 1 IDE (2009), avenant 3 IDE (arrêté 25/11/2011, zonage arrêté 21/12/2011), date du rezonage IDE post-avenant 6 (supposé 2020), absence de régulation dentaire avant 2025 (supposée) | ~30 min | axe 3 N3 | 2026-11-14 | open |
+| Axe 3 N1 : lancer le banc pré-enregistré sur `jumeau_taux_locaux` (ancien périmètre) et écrire le premier dépôt de prévisions 2027–2030 | ~15 min Claude + ~1 min machine | axe 3 N1 | 2026-11-14 | open |
+| Axe 3 N2 : lancer L1–L3 sur `TwinEstimator` ; construire le scénario `dd76_tendanciel` et lancer la partie A | ~1 h 15 Claude | axe 3 N2 | 2026-11-14 | open |
+| Axe 3 N4 : lancer avec l'oracle départemental (erreur de répartition seule) | ~15 min Claude + ~1 min machine | axe 3 N4 | 2026-11-14 | open |
+| Ventiler « autre secteur » des pharmaciens salariés (5 805 en 2026, part privée supposée 0,5) : sections de l'Ordre (B, C, D, G, H) vs secteurs DREES ; c'est l'essentiel de la fourchette « libéral » PH (60 005 – 67 219) | ~1 h | axe 4, secteur | 2026-11-14 | open |
+| Parts privées FINESS en établissements, pas en salariés : pondérer par effectifs (SAE, BTS par catégorie juridique) pour les centres de santé (6 694 dentistes) et le médico-social (2 200 kinés) | ~1 h 30 | axe 4, secteur | 2026-11-14 | open |
+| Écart DREES / Ordre sur la part privée des pharmaciens hospitaliers : 17 % (DREES, salariés ESPIC + lucratif) vs 28,6 % (Ordre, inscriptions section H) ; définir laquelle le jumeau suit | ~30 min | axe 4 × axe 1 | 2026-11-14 | open |
+| Double compte infirmiers libéraux (SNDS) × salariés (BTS) dans la sortie privée 277 788 (2023) : mesurer le recouvrement | ~30 min | axe 4, secteur | 2026-11-14 | open |
+| Brancher `v2/data/processed/secteur_stock.parquet` dans l'état du jumeau (secteur ∈ prive / public / ambigu), à la place du proxy libéral + mixte de `jumeau/check.py` | ~30 min | axe 4 → axe 0 | 2026-11-14 | open |
+| Dater le zonage CartoSanté actuel par région (arrêtés ARS) : le service ne publie pas de millésime ; kinés : 2 826 géocodes « non prioritaires » (nouveau zonage) coexistent avec 10 « sur-dotés » (ancien) | ~1 h (17 ARS) | axe 4, zonage | 2026-11-14 | open |
+| Zonages intermédiaires (générations 2018–2023) et 1re génération 2008–2011 : aucun jeu ouvert trouvé par commune ; sans eux, l'historique n'a que 2012 et « actuel » | ~1 h de recherche, issue incertaine | axe 4, zonage | 2026-11-14 | open |
+| Axe 1 : ouvrir les arrêtés de méthodologie du zonage (IDE 10/01/2020 ; SF, MK, CD 2024) et le texte au JO de l'avenant 7 SF ; seuls les guides ARS les citent | ~30 min | axe 1 | 2026-11-14 | open |
+| Axe 1 : l'avenant 11 IDE (signé le 31/03/2026) modifie-t-il la règle en zone sur-dotée ou celle des deux tiers ? | ~20 min | axe 1 | 2026-11-14 | open |
+| Axe 1 : effet chiffré de la régulation SF, MK, CD (aucune publication) ; DiD par commune sur le zonage, protocole N3 | ~3 h par profession | axe 1 → axe 3 | 2026-11-14 | open |
+| Axe 1 : destination des entrants bloqués ψ (commune voisine, remplacement, salariat, sortie) ; proxy : primo-installations dans les communes limitrophes des zones régulées, avant/après | ~4 h | axe 1 | 2026-11-14 | open |
+| Axe 1 : taux de dérogation à la régulation SF, MK, IDE (QE AN 14558 et 14922 sans réponse) | ~30 min de veille | axe 1 | 2026-11-14 | open |
+| Axe 1 : cessation par âge x_p(a) non publiée par la DREES ; la mesurer sur `stock.parquet` (taux apparent par cohorte au-dessus de 40 ans ; classe 65 ans et plus ouverte) | ~1 h | axe 1 → axe 0/2 | 2026-11-14 | open |
+| Axe 1 : ε_PH récent (diplômés non inscrits à l'Ordre) : primo-inscrits de l'Ordre / inscrits en 6e année (fichier local) ; ouvrir aussi l'Ordre « Projections démographiques 2050 » | ~30 min | axe 1 | 2026-11-14 | open |
+| Axe 1 : postes de DES odontologie par DES pour 2012-2017, 2019-2022 et 2025 (arrêtés CNG ; Légifrance bloque le téléchargement automatique) | ~20 min, humain | axe 1 | 2026-11-14 | open |
+| Axe 1 : part de l'option « 2 ans en établissement » contre « 2 ans en zone sous-dotée » chez les nouveaux kinés (art. 4.1.1, premiers diplômés en 2027) | non mesurable avant 2028 | axe 1 | 2026-11-14 | open |
+| Axe 1 : cumul emploi-retraite par caisse, millésime récent (CARCDSF, CAVP, CARPIMKO ; COR 2016 = données 2015) | ~30 min | axe 1 | 2026-11-14 | closed 2026-11-14 : sans objet, l'axe 5 mesure un effet négligeable du cumul (μ* ≤ 0,25 %, ST < 0,01) |
+| Levier retraite : la tranche ouverte 65+ reçoit un multiplicateur permanent, ce qui peut surestimer l'effet (bug relevé dans le dépôt Evolution-soin, même structure chez nous). Mesurer le séjour moyen en 65+ pour +1 et +3 ans | ~15 min | lecture dépôt Evolution-soin | 2026-11-14 | open |
+| Mondes simulés (vérité connue) comme niveau de validation supplémentaire de l'axe 3 | ~1 h | lecture dépôt Evolution-soin | 2026-11-14 | open |
+| DREES ER1319 (projections infirmières 2021–2050, ligne libéral, API) comme comparaison à 2050 | ~20 min | lecture dépôt Evolution-soin | 2026-11-14 | open |
+| Registre d'événements : ouvrir le texte primaire (Légifrance) des 12 lignes à source secondaire de `v2/data/events.csv` | ~45 min | axe 4, événements | 2026-11-14 | open |
+| Dates d'effet de l'avenant 7 kinés par ARS (la date du JO, 25/08/2023, n'est qu'une borne) ; même travail que la datation du zonage | ~1 h | axe 4, événements | 2026-11-14 | open |
+| Bornes min / max des objectifs numerus apertus 2021–2025 et bilan ONDPS (site peps.sante.gouv.fr refusé) | ~30 min | axe 4, événements | 2026-11-14 | open |
+| Cause de l'artefact Paris Cité dans les inscrits 2025-26 (683 en 2e année d'odontologie au lieu de ~190) ; corriger l'entrée du pipeline avant toute projection 2030+ | 15 min + attente DREES | axe 4, événements | 2026-11-14 | open |
+| Écart CartoSanté (communes) vs RPPS (dép.) en 2025 : kinés −5,4 % (Marseille absente, −2 084 dans le 13), dentistes −2,8 % ; à corriger avant toute projection communale | ~30 min | revue axe 0 (C8) | 2026-11-14 | open |
+| Nouvelle revue adversariale du jumeau après corrections (lève ou non « axes 2 et 5 attendent ») | ~3 min machine | corrections axe 0 | 2026-11-14 | open |
+| Reprise observatoire → axe 0 : levier retraite (B1), convention de date (B2), pièges des entrées (B6), tests de propriétés (A6) | ~1,5 h | reprise observatoire | 2026-11-14 | open |
+| Reprise observatoire → axe 3 : mondes simulés (A1), fourchette par pente (A3), robustesse du classement (A4), ER1319 (A7) | ~2 h | reprise observatoire | 2026-11-14 | open |
+| Reprise observatoire → axe 4 : zonage data.gouv en contrôle croisé (C1), estimations de population 1975–2026 (C2), Omphale « Population âgée » (C3), cellules masquées (C6) | ~1 h | reprise observatoire | 2026-11-14 | open |
+| Borne r ≤ 1,2 des 55+ (observatoire) : reproduit-elle l'emballement des entrées de K1 ? Tester sur un monde simulé | ~20 min | reprise observatoire | 2026-11-14 | open |
+| Revue adversariale indépendante des corrections du jumeau (même workflow, 9 agents) | ~3 min machine | lancement axes 2 et 5 | 2026-11-14 | closed 2026-11-14 : 4 défauts bloquants (reports/2026-11-14-revue-adversariale-axe0-v2.md) |
+| Choisir une direction artistique pour l'observatoire (A, B ou C) et la soumettre à son auteur | 10 min, temps humain | DA observatoire | 2026-11-14 | open |
+| Axe 2 : inscrire puis passer au banc N1 la variante A2 + A1b (shrinkage hiérarchique + âges simples), proposée par défaut mais pas encore confirmatoire | ~5 min Claude + ~3 min machine | axe 2, banc N1 | 2026-11-14 | open |
+| Axe 2 : dépôt de prévisions 2027–2030 pour A0 et A2 (seul test hors échantillon non contaminé par K1) | ~10 min | axe 2, banc N1 | 2026-11-14 | open |
+| Axe 2 → N2 : A0 et B4 (r ≤ 1,2) divergent de +23 % pour les dentistes en 2050 ; trancher par la reproduction DD76 | ~30 min | axe 2, B4 | 2026-11-14 | open |
+| Axe 2 : IC de Δ(A2 − A0) tenant compte de la corrélation entre origines (bootstrap par blocs dép × origine) ; la borne haute actuelle est −0,02 (privé) et −0,002 (ancien) | ~20 min | axe 2, banc N1 | 2026-11-14 | open |
+| Axe 2 : banc N1 avec les variantes min / max de la part privée (axe 4) ; les SF privées sont à 13–14 % de MAPE | ~5 min machine | axe 2, banc N1 | 2026-11-14 | open |
+| Contrat du jumeau (signalé par l'axe 2, non corrigé) : `Shift` n'accepte pas de fraction par cellule ; A1a passe par un `Add` à somme nulle | décision axe 0, ~20 min | axe 2 | 2026-11-14 | open |
+| Contrat du jumeau (signalé par l'axe 2, non corrigé) : `stock_flow_rates` n'est pas injectable ; changer le calibrage oblige à remplacer `sorties` et `entrees` (leviers renommés `methodes_*`, mécanisme retraite recopié) | décision axe 0, ~30 min | axe 2 | 2026-11-14 | open |
+| Axe 2 : A1a coûte +1,23 s par profession à la commune jusqu'en 2050 (mesuré) ; optimiser ou réserver A1b ; les tranches CartoSanté cassent l'hypothèse de largeur 5 de la tranche du bas | ~30 min | axe 2 | 2026-11-14 | open |
+| Axe 2 : logit d'installation (A4) avec un attribut daté par département (population Insee 1975–2026, C2) | ~1 h | axe 2 | 2026-11-14 | open |
+| Axe 2 : modèle bayésien / espace-état (A5) à la commune, sous le protocole N4 | ~2 h | axe 2 | 2026-11-14 | open |
+| Axe 2 : série d'inscrits par université avant 2020, pour tester C5 en variation (pas seulement en niveau) | ~1 h de recherche de données | axe 2, C5 | 2026-11-14 | open |
+| Axe 2 : diplômés étrangers par profession, avec une source primaire (série ouverte par lieu de diplôme) | ~1 h | axe 2, candidat 3 | 2026-11-14 | open |
+| Seconde revue : corriger les défauts 1–4 du jumeau (retraite 65+, régulation non conservative, trajectory qui écrase le scénario de base, valeurs non validées) | ~1–2 h | seconde revue | 2026-11-14 | open |
+| Prototype : borner les curseurs et masquer les chiffres retraite et régulation tant que les défauts restent ouverts | ~15 min | seconde revue | 2026-11-14 | closed 2026-11-14 : retraite et régulation suspendues (UI + serveur, 400), quotas bornés à [0,7 ; 1,5], profession validée |
+| Axe 2 : réaligner `methodes_sorties.decalage_retraite` (copie du mécanisme `sorties`, biais 65+ relevé par la seconde revue du jumeau) après la correction de l'axe 0 | ~10 min | revue axe 0 v2 | 2026-11-14 | open |
+| `fit_rates` (v1) suppose un vieillissement de 1/5 par an ; pour des tranches de largeurs variables (communes), un calibrage à fractions par tranche est à écrire | ~30 min | 2e revue axe 0 | 2026-11-14 | open |
+| Troisième revue adversariale du jumeau (lève ou non « leviers retraite et régulation non citables ») | ~3 min machine | 2e corrections axe 0 | 2026-11-14 | open |
+| Produit : relire en entier les 6 pages sources du rapport produit (chiffres lus en extrait seulement) | ~20 min Claude | rapport produit | 2026-11-14 | open |
+| Produit : seuil de secret statistique sur les sorties communales (ex. n ≥ 11), condition de signature n° 5 et RGPD | ~30 min | rapport produit | 2026-11-14 | open |
+| Produit : réconcilier IDE 2050 avec DREES ER1319 (821 000) et notre « libéral » avec le RPPS, condition n° 4 | ~1 h | rapport produit | 2026-11-14 | open |
+| Produit : AIPD ou note de non-applicabilité RGPD à l'échelle communale | ~1 h rédaction + DPO, temps humain | rapport produit | 2026-11-14 | open |
+| Produit : modèle économique « commun libre EUPL + prestation par ARS < 60 k€ HT » proposé, non décidé par l'équipe | 10 min, temps humain | rapport produit | 2026-11-14 | open |
+| Produit : porteur institutionnel et ARS pilote (lettre d'intention, relecture DREES) | semaines, temps humain | rapport produit | 2026-11-14 | open |
+| Infirmiers exclus du jumeau tant que la table public / privé (BTS) n'a ni âge ni sexe : ratisser secteur × âge × sexe par département (hypothèse secteur ⟂ âge·sexe, à tester sur le croisement national) | ~20 min | axe 4, prétirage | 2026-11-14 | open |
+| Troisième revue → axe 0 : bornes contournables (empilement, NaN), rétention > 1 via un événement, aller-retour JSON, retraite avec plusieurs tranches 65+ (phase 2) | ~1 h | troisième revue | 2026-11-14 | open |
+| Tester la règle « entrées ≤ sorties » de la régulation contre une référence indépendante (C2/C4 ne la testent pas) | ~30 min | troisième revue | 2026-11-14 | open |
+| Flux d'installation et de cessation par commune (CartoSanté *_flux ou autre) : la donnée qui débloque le choix discret | ~1 h | état de l'art méthodes | 2026-11-14 | open |
+| UAT : rejouer la V2 carte avec 1 persona à la fois dans un onglet isolé, captures sur disque | ~30–40 min | rapport UAT | 2026-11-14 | open |
+| UAT : latence V2 perçue au premier plan, en rafale (critère < 100 ms ; seuil à définir pour un geste continu ou un changement isolé) | ~5 min + décision | rapport UAT | 2026-11-14 | open |
+| UAT : sélecteur d'horizon (2035…) absent en V1 comme en V2, constat le plus grave | ~30 min | rapport UAT | 2026-11-14 | open |
+| UAT : fiche exportable (V2 n'a qu'un CSV, sans sources ni hypothèses) | ~45 min | rapport UAT | 2026-11-14 | open |
+| UAT : densité pour 100 000 habitants (population Insee/Omphale), avant ou après la démo ? | ~45–90 min + décision | rapport UAT | 2026-11-14 | open |
+| UAT : délai d'effet affiché 2032 ou 2033 selon le testeur, pour le même scénario (V1), à expliquer | ~10 min | rapport UAT | 2026-11-14 | open |
+| Retour utilisateur carte : zoom région puis département, cases plus grandes, limites ARS séparées, DROM en encarts, milieu de l'échelle de couleur (blanc) qui se confond avec le fond gris | transmis à proto-carte | retour direct | 2026-11-14 | open |
+| Table de voisinage communale (commune régulée → commune voisine non régulée) pour la part « voisine » de `regulation.repartition` | ~30 min (axe 4) | défauts axe 1 | 2026-11-14 | open |
+| MK : obligation d'exercer 2 ans en zone sous-dotée pour les diplômés à partir de 2027 ; demande de suivre l'ancienneté d'installation des cohortes dans l'état | ~1 h | fiche param-mk-regul-regle | 2026-11-14 | open |
+| Part des dentistes spécialistes (ODF, CO, MBD) parmi les entrants, pour `regulation.part_exemptee` (Ordre, RPPS par spécialité) | ~20 min (axe 1) | fiche param-cd-regul-regle | 2026-11-14 | open |
+| Axe 3 N6 : écrire `v2/validation/probabilistic.py` (CRPS sur log N, PIT, couverture) et lancer sur la variante par défaut et les naïfs (h = 5 : origine 2021, SF/CD/PH seulement) | ~40 min Claude + ~1 min machine | axe 3 N6 | 2026-11-14 | open |
+| Axe 3 N6 : SBC des taux de rétention et des entrées sur 200 mondes N5 (après le générateur N5) | ~45 min Claude + ~5 min machine | axe 3 N6 | 2026-11-14 | open |
+| Kinés quotas +20 % en 2050 : le jumeau donne maintenant +19 110 (+11,9 %), le rapport du prototype cite +8 645 (+5,4 %) mesuré avant les corrections ; mettre à jour ce rapport et expliquer l'écart (doublement de l'effet) | ~20 min | pitch animé | 2026-11-14 | open |
+| Axe 2, étape 2 : cohortes par composantes bayésiennes, avec des entrées probabilistes (sans elles, la bande APC couvre 50 % au lieu de 80 %) | ~1 j | axe 2, étape 1 | 2026-11-14 | open |
+| Axe 2 / axe 3 : référence naïve probabiliste (pente d'erreur par horizon) pour comparer les CRPS à armes égales (APC 6,82 % contre 8,68 % pour A0 ponctuel) | ~30 min | axe 2, étape 1 | 2026-11-14 | open |
+| Axe 2 : propager l'incertitude des hyperparamètres θ de l'APC (Laplace sur log θ) et mesurer le gain de couverture | ~45 min | axe 2, étape 1 | 2026-11-14 | open |
+| Axe 2 : calibration par simulation de l'APC sur 5 professions × 2 sexes, 200 jeux, θ ré-estimé (aujourd'hui : 1 plan, 40 jeux) | ~40 min machine | axe 2, étape 1 | 2026-11-14 | open |
+| Archiver l'Annuaire Santé chaque mois (seule voie ouverte vers des flux d'installation individuels par commune, pour le logit de l'axe 2) | ~30 min + temps du monde | axe 4, grain communal | 2026-11-14 | open |
+| Proxy du logit : installations nettes des moins de 40 ans par commune et année (CartoSanté, IDE / MK / CD, 2004–2025) | ~45 min | axe 4, grain communal | 2026-11-14 | open |
+| Pharmacies par commune 2004–2025 (FINESS historique, 195 Mo, cat. 620) : ouvertures et fermetures d'officines | ~1 h | axe 4, grain communal | 2026-11-14 | open |
+| Sages-femmes : aucune histoire communale ouverte (CartoSanté `sf_popage` illisible) ; signaler l'erreur de métadonnées à Atlasanté | 15 min + attente | axe 4, grain communal | 2026-11-14 | open |
+| H_ind infirmiers non testable sur l'âge (BTS sans croisement secteur × âge) : chercher une source (SAE par âge ?) | ~45 min, issue incertaine | axe 4, grain communal | 2026-11-14 | open |
+| Intégrer le flux « diplômés hors France » à la filière : 24,4 % des dentistes et 32,5 % des kinés actifs sans DE français (stock) ; il faut un flux annuel (Ordre, ONDPS) | ~1 h | axe 4 → axe 1 | 2026-11-14 | open |
+| Retraite + 1 an : +3,02 % d'IDE libéraux en 2050 contre ≈ +1 % cité par la DREES (via l'axe 1) ; vérifier la source et la structure par âge des IDE (SNDS) | ~30 min | leviers axe 0 | 2026-11-14 | fermé 2026-11-14 : non comparable (DREES : > 60 ans, tous modes, plafond 67 ans, dès 2020), audit des sources axe 1 |
+| Vivier réel par profession (inscrits IFSI, MK, SF ; jeu DREES 491) à la place du vivier relatif stationnaire de `formation` | ~45 min (axe 4 + axe 0) | leviers axe 0 | 2026-11-14 | open |
+| Âge d'entrée des diplômés à l'étranger (28 ans, DD76) au lieu de la répartition des entrées ajustées | ~20 min | leviers axe 0 | 2026-11-14 | open |
+| Mettre la variante `lien_formation.mode = vivier` au banc N1 de l'axe 3 (plusieurs origines, pré-enregistré) : 7,40 % contre 7,82 % de MAPE IDE sur une seule origine | ~30 min | vivier réel axe 0 | 2026-11-14 | open |
+| Projeter l'abandon en formation IDE (en hausse depuis 2018 : ρ 0,84 → 0,72) au lieu de le tenir constant ; le vivier perd contre la persistance sur les diplômés 2019-2025 | ~45 min | vivier réel axe 0 | 2026-11-14 | open |
+| État communal réel projetable (au lieu de la ventilation par population du banc de vitesse) | ~1 h | chemin rapide axe 0 | 2026-11-14 | open |
+| Axe 1 → axe 4 : part privée des pharmaciens hospitaliers. RPPS 17,4 % contre SAE 2025 29,4 % (mesuré) et Ordre 28,6 %, alors que les deux sources concordent pour les SF (17,4 / 19,8 %) et les MK (44,4 / 44,3 %). Choisir la source du jumeau (1er facteur d'incertitude de l'axe 5 pour les PH, ST 0,48). Fiche param-part-privee-salaries-sae | ~1 h | axe 1 (audit nuit) | 2026-11-14 | open |
+| Axe 1 → axe 4 : classer « Prévention » en public pour les SF (RPPS 1 383 ≈ PMI 1 423 au 31/12/2024). L'écart min–max SF passe de 2 601 à 1 272 (−51 %, dérivé). Décision de l'axe 4 | ~15 min | axe 1 (audit nuit) | 2026-11-14 | open |
+| Axe 1 → axe 4 : SF « Autre secteur » (796, part supposée 0,5), 63 % du résidu ambigu une fois la PMI classée ; source à trouver | ~1 h | axe 1 (audit nuit) | 2026-11-14 | open |
+| Axe 3 N2-A fidèle : série ouverte des quotas 2016–2020 (numerus clausus CD, PH, SF) pour reproduire DD76 avec entrées par quota décalées | ~45 min | axe 3 nuit | 2026-11-14 | open |
+| Axe 3 : niveau d'entrées de référence pour les chiffres 2050 (moyenne de fenêtre → CD 62 k ; 2 dernières années → 81 k) : **décision de l'utilisateur·rice** | temps humain | axe 3 N7-D | 2026-11-14 | open |
+| Axe 2/0 : séparer entrées et rétention (abandonner « excédent de r > 1 = entrée ») ; N5 M3/M4 et SBC montrent le biais | ~2 h | axe 3 N5/N6 | 2026-11-14 | open |
+| Axe 3 : bande en √h (ou empirique par h, toutes origines) pré-enregistrée, puis test de couverture | ~30 min | axe 3 N7-C | 2026-11-14 | done 2026-11-14 : N8 calibrée (49 % / 76 %), à confirmer en 2027 |
+| Axe 5 : la composante (b) « pente APE × 1,6 × h » est probablement trop large à h = 5 (N7-C : bande linéaire en h couvre ~96 % pour 80 %) ; à vérifier sur sa propre construction | ~20 min | axe 3 N7-C | 2026-11-14 | open |
+| Axe 3 N3 : 3e test du levier IDE (contrôle synthétique par BV), pré-enregistré et déclaré | ~1 h | axe 3 N7-A | 2026-11-14 | open |
+| Axe 3 N2 : cas limites L1–L3 sur `TwinEstimator` | ~15 min | axe 3 N2 | 2026-11-14 | done 2026-11-14 : passent (5 professions) |
+| Paris / Lyon en arrondissements dans `build_commune.py` : modification en cours NON commitée ; le total national 2025 gonfle (dentistes 41 515 contre 38 801 attendus) → double compte à trouver avant de commiter `build_commune.py` et `build_attributs.py` | ~30 min | axe 4, flux communaux | 2026-11-14 || fait 2026-11-14 : clé Paris erronée (« 750 » au lieu de « 751 ») ; table = v1 + écart du dép. 13 |
+| Fréquence d'archivage de l'Annuaire (`v2/data/archive_annuaire.py`) : aucune tâche planifiée créée, à décider par l'équipe ; premier instantané 2026-11-13 | décision | axe 4, flux communaux | 2026-11-14 | open |
+| Axe 2 : dépôt de prévisions 2027–2030 de C1 (cohortes bayésiennes) et A0, seul test non contaminé ; le pilote a vu l'origine 2021 de CD et SF | ~15 min | axe 2, étape 2 | 2026-11-14 | open |
+| Axe 2 : le gain de C1 sur A0 décroît sur les origines récentes (CD, PH : +0,4 et +1,2 pt en 2021) ; tester un niveau local amorti, à inscrire avant | ~1 h | axe 2, étape 2 | 2026-11-14 | open |
+| Axe 2 : grain EPCI ou bassin de vie (IDE, MK, PH) sous N4 : parts communales dans le département | ~3 h | axe 2, étape 2 | 2026-11-14 | open |
+| Axe 3 → axe 2 : générateur N5 (`worlds.py`) pour refaire la calibration par simulation sur les mondes M3 | ~1 h axe 3 + ~1 h | axe 2, étape 2 | 2026-11-14 | open |
+| IFSI, perte ÷ 2 : +15,6 % d'IDE libéraux en 2050 dans le jumeau contre ≈ +7,9 % d'effectifs pour la DREES (audit axe 1) ; expliquer le facteur 2 (part libérale des diplômés, k appliqué aux entrées nettes positives ?) | ~45 min | correction audit axe 1 | 2026-11-14 | open |
+| Diplômés à l'étranger : mesurer un flux d'entrées en activité (annuaire RPPS, diplôme étranger × année de première activité) pour choisir entre défaut (CD 1 300) et variante basse (665) ; la concordance avec DD76 sur les quotas en dépend (+6,3 % contre +9,1 %) | ~45 min (axe 4) | flux étrangers axe 0 | 2026-11-14 | open |
+| Axe 3 N4 : relancer N_min avec la projection départementale réelle (au lieu de l'oracle) | ~15 min | axe 3 N4 | 2026-11-14 | open |
+| Axe 3 : écrire le dépôt des prévisions 2027–2030 (défaut + bande √h), avec empreinte, avant le RPPS 2027 | ~15 min | axe 3 N1/N8 | 2026-11-14 | done 2026-11-14 : SHA-256 ca036374d216 ; scorer en juillet 2027 |
+| Décision de l'utilisateur·rice : le dépôt GitHub `evolutionsoin2026`, cité par les axes 2 et 3, est **privé**, donc invérifiable par un lecteur. Le rendre public, l'archiver, ou le citer comme source interne avec son SHA ? | 5 min, utilisateur·rice | audit nuit (axe 1) | 2026-11-14 | closed 2026-11-14 : l'utilisateur·rice précise que c'est le travail d'un collègue ; ses arguments sont intégrés dans le texte des articles des axes 2 et 3 et de la synthèse, sans citer le dépôt |
+| Diplômés étrangers : lauréats hors UE (procédure d'autorisation d'exercice, arrêtés CNG) pour CD, PH, SF ; série RPPS des entrées en activité par pays de diplôme | ~30 min + ~1 h | audit nuit (axe 1) | 2026-11-14 | open |
+| Retraite : faire tourner le jumeau sur le champ DREES (tous modes, décalage d'1 an des plus de 60 ans, effet en 2020-2021) pour comparer à +1 % (ER 1062/1075) | ~30 min | audit nuit (axe 1 → axe 0) | 2026-11-14 | open |
+| Axe 5 → axe 4 : la composante backtest (b) au département vaut ±460 % pour les IDE privés (pente APE médiane 10,4 %/an, contre 1–3 %/an ailleurs), alors que la série nationale est lisse : vérifier la ventilation dép. × âge × sexe sous H_ind (`infirmiers_secteur_age_sexe.parquet`) | ~1 h | axe 5, partie 2 | 2026-11-14 | open |
+| Axe 5 : varier H_ind (ventilation des IDE privés) comme facteur « données » ; sans lui, la part « connaissance » des IDE (0,12) est sous-estimée | ~30 min + ~1 h machine | axe 5, partie 2 | 2026-11-14 | open |
+| Axe 5 : doubler N de la partie 2 (512 → 1024) pour départager deux leviers à ±0,05 (IC max actuel 0,12–0,17) | ~1 h 30 machine | axe 5, convergence | 2026-11-14 | open |
+| Axe 5 : indices de Sobol par département (régulation, part privée et shrink y pèsent localement ; au national, régulation ST ≤ 0,01) | ~2 h machine | axe 5, partie 2 | 2026-11-14 | open |
+| Axe 0 : vectoriser le vivier pandas du module `formation` (60 % du temps d'un run LEVIERS, 0,12–0,7 s par run mesuré) | ~1 h | axe 5, profilage | 2026-11-14 | open |
+| **Décision utilisateur·rice** : quelle amplitude jouable sert de référence aux parts « décision / connaissance » et au seuil « assez sûr » ? Axe 5 : quotas ±20 % (DD76) ; interface : 0,7–1,5. Défaut recommandé : ±20 % (sourcé) | 5 min, temps humain | axe 5, partie 2 | 2026-11-14 | fermé 2026-11-14 : DD76 (±20 %), choix de l'utilisateur·rice |
+| Axe 1 : l'item « cumul emploi-retraite par caisse, millésime récent » peut être fermé : cumul ST ≤ 0,01, μ* ≤ 0,25 % à 2050 (axe 5) | 0 | axe 5 | 2026-11-14 | open |
+| Gabarit des prétirages : sous tectonic (XeTeX), les guillemets « » tapés en dur sortent en « ń ż » avec le préambule commun ; `\enquote{}` les rend correctement (corrigé dans axe5, vérifier les autres articles) | ~10 min | axe 5, prétirage | 2026-11-14 | open |
+| Axe 3, N2 : la tolérance ±3 % à 2050 est bien plus étroite que les deux fourchettes de l'axe 5 (propagation −17 à +34 %, backtest ±9 à ±66 %) ; garder, élargir ou reformuler la tolérance | ~15 min + décision | axe 5 | 2026-11-14 | open |
+| Pharmaciens hospitaliers : part privée 16,6 % (RPPS, centrale) contre 29,4 % (SAE) et 28,6 % (Ordre) ; variante SAE +1 116 privés en 2026 ; réconcilier (PUI médico-sociales ? multi-inscriptions ?) | ~1 h | axe 4 × axe 1 | 2026-11-14 | open |
+| Axe 3 : vérifier en texte intégral la source de « diviser un score propre par y le rend impropre » (Gneiting & Ranjan 2011, JBES 29(3) ; Lerch et al. 2017) avant de la citer | ~15 min | audit axe 1 / axe 3 N6 | 2026-11-14 | open |
+| Axe 3 N9 : B2 avec flux bruts d'installation (Annuaire Santé archivé, axe 4) au lieu du solde, pré-enregistré | ~1 h | axe 3 N9 | 2026-11-14 | open |
+| Axe 2 : traitement bayésien complet de σ_u, σ_v (niveau national des entrées) et τ_r (a priori demi-normaux ; grille ou MCMC), puis calibration par simulation 5 × 2 × 200 à refaire (aujourd'hui L_T échoue 10/10, δ 3/10) | ~2 h Claude + ~4 h machine | axe 2, SBC étape 2 | 2026-11-14 | open |
+| Axe 2 : multi-états de Markov privé ↔ public ↔ sortie (transitions nettes, a priori hiérarchique), kill test N1 sur le total privé | ~3 h Claude + ~1 h machine | dérivation SD/ABM | 2026-11-14 | open |
+| Axe 2 : modèle à agents à règles estimées (logit) pour la régulation par commune, après l'étape 3 ; doit reproduire le signe de N3 | ~2 h après le logit | dérivation SD/ABM | 2026-11-14 | open |
+| Axe 4 : archiver l'Annuaire Santé à chaque extraction (au moins 3 instantanés), pour rendre des règles d'agents estimables | ~10 min par extraction | dérivation SD/ABM | 2026-11-14 | open |
+| Axe 3 N10 : juger le modèle hiérarchique commune ⊂ EPCI ⊂ département de l'axe 2 sur N10 (couverture par classe, 3 grains) dès sa soumission | ~20 min | axe 3 N10 | 2026-11-14 | done 2026-11-14 : K3 ne passe à aucun grain ; MK EPCI à une classe près |
+| Pharmaciens communaux : parts hors officine tenues fixes à 2026 ; erreur médiane 10,7 % à l'EPCI (seuil 10 %) sur la composante officine ; tester un ratio pharmaciens / officine par taille d'officine (chiffre d'affaires non ouvert ?) | ~1 h | axe 4, projection communale | 2026-11-14 | open |
+| Sages-femmes : historique communal non disponible en données ouvertes (5 routes testées, ~40 min) ; seule voie, l'archivage de l'Annuaire | temps du monde | axe 4, projection communale | 2026-11-14 | open |
+| Projection communale : K3 = bande locale (K2) ⊕ part × tirages du total départemental de C1, après passage RPPS privé → CartoSanté libéral ; à inscrire avant le banc N4 | ~2 h Claude | chantier communal | 2026-11-14 | open |
+| Axe 4 : table de passage RPPS privé ↔ CartoSanté libéral par département × année (nécessaire à K3) | ~1 h | chantier communal | 2026-11-14 | open |
+| Projection communale : même banc à l'EPCI et au bassin de vie (N4 le prévoit) | ~30 min | chantier communal | 2026-11-14 | open |
+| Vérifier dans les notices Insee (Omphale, seuil de ~50 000 habitants pour les zones à façon) et DREES (Hippocrate, DD76 : national, variantes régionales passées) le grain le plus fin des modèles de référence ; cité de mémoire le 2026-11-14 | ~20 min | question de l'utilisateur·rice | 2026-11-14 | open |
+| Axe 3 : juger la soumission K3 (`v2/methodes/out/n10_soumission_k3.parquet`) avec N10 (grain.py) | ~20 min | chantier communal | 2026-11-14 | open |
+| Compilateur en langage naturel : jeu de cas indépendant, écrit par quelqu'un d'autre (le 97 % actuel porte sur des cas écrits avec le glossaire) | ~30 min, temps humain | v2/langage | 2026-11-14 | open |
+| Glossaire : références juridiques à relire par un·e juriste (sources « null ») | ~30 min, temps humain | v2/langage | 2026-11-14 | open |
+| Axe 5 : le verdict « décision contre connaissance » en 2050 dépend de l'amplitude jouable (DD76 : PH 0,38 contre 0,61 ; interface : 0,65 contre 0,31) et de la version du jumeau (avant b64ce56 : SF et CD du côté de la connaissance) ; à relancer à chaque changement du jumeau ou de `secteur_stock` | ~1 h machine par relance | axe 5, relance 09:30 | 2026-11-14 | open |
+| Axe 5 → axe 4 : le défaut ±460 % (IDE, backtest départemental) venait de l'axe 5 (année 2012 sans salariés), pas de H_ind ; corrigé, ±37 % ; la ligne « vérifier la ventilation … sous H_ind » peut être fermée | 0 | axe 5, relance 09:30 | 2026-11-14 | open |
+| Axe 5 : pharmaciens, écart de 0,085 entre N = 256 et N = 512 sur les indices de la partie 2 (critère : 0,05) ; doubler N pour les PH | ~45 min machine | axe 5, convergence | 2026-11-14 | open |

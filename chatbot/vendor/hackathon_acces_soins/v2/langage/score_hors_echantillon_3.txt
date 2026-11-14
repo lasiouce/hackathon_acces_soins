@@ -1,0 +1,3 @@
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}

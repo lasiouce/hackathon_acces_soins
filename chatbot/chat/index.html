@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialoguer avec le jumeau</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<style>
+:root{--bg:#fff;--fg:#1d2330;--muted:#5f6878;--line:#e3e6ec;--soft:#f5f7fa;--accent:#2457a6;--accent-soft:rgba(36,87,166,.14);
+  --base:#8a93a3;--obs:#1d2330;--user:#eef3fb;--warn:#8a5a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13161c;--fg:#e6e9ef;--muted:#a0a8b6;--line:#2a2f39;--soft:#1b1f27;
+  --accent:#7ea6e8;--accent-soft:rgba(126,166,232,.18);--base:#8f98a8;--obs:#e6e9ef;--user:#1d2636;--warn:#e0b45a}}
+:root[data-theme="dark"]{--bg:#13161c;--fg:#e6e9ef;--muted:#a0a8b6;--line:#2a2f39;--soft:#1b1f27;--accent:#7ea6e8;
+  --accent-soft:rgba(126,166,232,.18);--base:#8f98a8;--obs:#e6e9ef;--user:#1d2636;--warn:#e0b45a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{max-width:900px;margin:auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+h1{font-size:17px;margin:0;font-weight:650}
+.badge{font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.badge.llm{border-color:var(--accent);color:var(--accent)}
+.sp{flex:1}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--soft);color:var(--fg);border-radius:8px;padding:6px 12px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+button:disabled{opacity:.5;cursor:default}
+main{max-width:900px;margin:auto;padding:16px 16px 140px}
+.perimetre{font-size:13px;color:var(--muted);margin:0 0 16px}
+.msg{margin:14px 0}
+.user{background:var(--user);border-radius:12px;padding:10px 14px;margin-left:15%;}
+.assistant .texte p{margin:.4em 0}.assistant .texte ul{margin:.3em 0;padding-left:1.3em}
+.assistant .texte table{border-collapse:collapse;font-size:13px}.assistant .texte td,.assistant .texte th{border:1px solid var(--line);padding:3px 6px}
+.chart{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:var(--bg)}
+.chart h3{font-size:14px;margin:0}.chart .st{font-size:12px;color:var(--muted);margin:2px 0 6px}
+.chart .cv{position:relative;height:260px}
+details.trace{font-size:12.5px;color:var(--muted);margin-top:6px}
+details.trace summary{cursor:pointer}
+.appel{border-left:2px solid var(--line);padding:2px 8px;margin:6px 0}
+.appel.err{border-color:var(--warn)}
+.appel code{font-size:11.5px;white-space:pre-wrap;word-break:break-word;display:block;color:var(--fg);opacity:.85}
+.meta{font-size:12px;color:var(--muted)}
+.verif{font-size:12px;margin-top:4px}.verif.bloquee,.verif.corrigee{color:var(--warn)}
+.attente{color:var(--muted);font-style:italic}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.sugg button{font-size:13px;background:var(--bg);text-align:left}
+form{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--line)}
+form .in{max-width:900px;margin:auto;padding:10px 16px 14px;display:flex;gap:8px}
+textarea{flex:1;font:inherit;resize:none;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--soft);color:var(--fg);min-height:44px;max-height:160px}
+.err{color:var(--warn)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <h1>Dialoguer avec le jumeau</h1><span id="mode" class="badge">…</span><span class="sp"></span>
+  <button id="reset" type="button">Nouvelle conversation</button>
+</div></header>
+<main>
+  <p class="perimetre">Effectif « libéral » (secteur privé, tout employeur public exclu) de cinq professions, par département, jusqu'en 2050.
+  Chaque nombre vient du jumeau ; le détail des calculs lancés est sous chaque réponse. Projection sous hypothèses, pas une prévision.</p>
+  <div id="fil"></div>
+  <div id="accueil" class="sugg"></div>
+</main>
+<form id="f"><div class="in">
+  <textarea id="q" rows="1" placeholder="Ex. : combien de kinés libéraux dans le Puy-de-Dôme en 2035 si on forme 20 % de plus ?"></textarea>
+  <button class="primary" id="go">Envoyer</button>
+</div></form>
+<script>
+const SUGG = [
+  "Combien de kinés libéraux dans le Puy-de-Dôme en 2035 si on augmente de 20 % les places en formation ?",
+  "Que sait faire ce modèle, et que ne sait-il pas faire ?",
+  "Comment augmenter de 20 % la densité des dentistes en Île-de-France en 2050 ?",
+  "Compare, pour les infirmiers en Bretagne en 2040 : +20 % de places, ou report de 2 ans de la retraite.",
+  "Quel est l'effet du nombre de dentistes diplômés à l'étranger sur l'effectif national en 2050 ? Teste de ×0,5 à ×2.",
+  "Quels départements d'Occitanie auront la densité de sages-femmes libérales la plus basse en 2040 ?",
+  "Et si on régulait l'installation des kinés, les refusés partant vers le salariat ?",
+  "Quels paramètres rendent la projection des pharmaciens la plus incertaine ?",
+  "Les maisons de santé augmenteraient-elles le nombre d'infirmiers dans la Creuse ?",
+  "Combien de médecins généralistes à Lyon en 2035 ?"];
+let SID = null; try { SID = sessionStorage.getItem("sid"); } catch (e) {}
+if (!SID) { SID = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)); try { sessionStorage.setItem("sid", SID); } catch (e) {} }
+const $ = s => document.querySelector(s), fil = $("#fil");
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt = n => n == null ? "—" : Math.round(n).toLocaleString("fr-FR");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+fetch("/api/etat").then(r => r.json()).then(e => {
+  const m = $("#mode");
+  if (e.mode === "indisponible") { m.textContent = "modèle indisponible"; m.title = e.erreur; return; }
+  m.textContent = (e.mode === "llm" ? `IA : ${e.modele}` : "Mode déterministe (sans clé d'API)") + ` · modèle ${e.version_modele.commit}`;
+  m.className = "badge " + e.mode;
+  m.title = (e.mode === "llm" ? "Le modèle de langage interprète et rédige ; le jumeau calcule ; chaque nombre est vérifié." : "Compilateur à glossaire de l'équipe : une phrase -> un réglage de leviers.")
+    + (e.version_modele.code_modifie_localement ? " ⚠ Code du modèle modifié localement." : "");
+}).catch(() => { $("#mode").textContent = "serveur injoignable"; });
+
+function accueil() {
+  $("#accueil").innerHTML = "";
+  SUGG.forEach(s => { const b = document.createElement("button"); b.type = "button"; b.textContent = s; b.onclick = () => envoyer(s); $("#accueil").append(b); });
+}
+accueil();
+
+function bulle(cls, html) { const d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html; fil.append(d); d.scrollIntoView({block: "end", behavior: "smooth"}); return d; }
+
+function graph(g, parent) {
+  const box = document.createElement("div"); box.className = "chart";
+  box.innerHTML = `<h3>${esc(g.titre)}</h3><div class="st">${esc(g.sous_titre || "")}</div><div class="cv"><canvas></canvas></div>`;
+  parent.append(box);
+  const ctx = box.querySelector("canvas"), A = css("--accent"), B = css("--base"), O = css("--obs"), S = css("--accent-soft"), M = css("--muted"), L = css("--line");
+  const opts = {responsive: true, maintainAspectRatio: false, animation: false, interaction: {mode: "index", intersect: false},
+    plugins: {legend: {labels: {color: M, boxWidth: 12, filter: i => !i.text.startsWith("_")}},
+              tooltip: {callbacks: {label: c => c.dataset.label.startsWith("_") ? null : `${c.dataset.label} : ${fmt(c.parsed.y ?? c.parsed.x)}`}}},
+    scales: {x: {ticks: {color: M}, grid: {color: L}}, y: {ticks: {color: M, callback: v => fmt(v)}, grid: {color: L}}}};
+  if (g.type === "projection") {
+    const ys = g.annees, obs = Object.fromEntries(g.observe);
+    const labels = [...new Set([...g.observe.map(o => o[0]), ...ys])].sort((a, b) => a - b);
+    const at = (arr) => labels.map(y => { const i = ys.indexOf(y); return i < 0 ? null : arr[i]; });
+    new Chart(ctx, {type: "line", data: {labels, datasets: [
+      {label: "_bas", data: at(g.bande.map(b => b[0])), borderWidth: 0, pointRadius: 0, fill: false},
+      {label: "Fourchette du scénario", data: at(g.bande.map(b => b[1])), borderWidth: 0, pointRadius: 0, backgroundColor: S, fill: "-1"},
+      {label: "Tendanciel", data: at(g.tendanciel), borderColor: B, borderDash: [5, 4], pointRadius: 0, borderWidth: 2},
+      {label: "Scénario", data: at(g.scenario), borderColor: A, pointRadius: 0, borderWidth: 2.5},
+      {label: "Observé (RPPS)", data: labels.map(y => obs[y] ?? null), borderColor: O, backgroundColor: O, pointRadius: 2.5, borderWidth: 1.5, showLine: true}]},
+      options: opts});
+  } else if (g.type === "comparaison") {
+    const pal = [A, "#b07b2c", "#7a5ba8", "#2c8a8a", "#a85b7a", "#6b7a2c"];
+    new Chart(ctx, {type: "line", data: {labels: g.tendanciel.annees, datasets: [
+      {label: "Tendanciel", data: g.tendanciel.valeurs, borderColor: B, borderDash: [5, 4], pointRadius: 0, borderWidth: 2},
+      ...g.scenarios.map((s, i) => ({label: s.nom, data: s.valeurs, borderColor: pal[i % pal.length], pointRadius: 0, borderWidth: 2.2}))]}, options: opts});
+  } else if (g.type === "barres") {
+    new Chart(ctx, {type: "bar", data: {labels: g.etiquettes, datasets: [
+      {label: "Scénario", data: g.valeurs, backgroundColor: A},
+      {label: "Fourchette basse", data: g.bas, backgroundColor: S},
+      {label: "Fourchette haute", data: g.haut, backgroundColor: S}]},
+      options: {...opts, plugins: {...opts.plugins, subtitle: {display: true, text: `Tendanciel : ${fmt(g.reference)}`, color: M}}}});
+  } else if (g.type === "objectif") {
+    box.querySelector(".cv").style.height = Math.max(200, 34 * g.etiquettes.length + 60) + "px";
+    new Chart(ctx, {type: "bar", data: {labels: g.etiquettes, datasets: [
+      {label: "Valeur atteinte", data: g.valeurs, backgroundColor: g.suffit.map(x => x ? A : S), borderColor: A, borderWidth: 1}]},
+      options: {...opts, indexAxis: "y", interaction: {mode: "nearest", intersect: true},
+        plugins: {...opts.plugins, legend: {display: false},
+          subtitle: {display: true, text: `Cible : ${g.cible.toLocaleString("fr-FR")} · référence : ${g.reference.toLocaleString("fr-FR")} · plein = suffit seul, clair = ne suffit pas`, color: M}},
+        scales: {x: {ticks: {color: M}, grid: {color: L}, suggestedMax: g.cible * 1.05}, y: {ticks: {color: M}, grid: {display: false}}}}});
+  } else if (g.type === "classement") {
+    box.querySelector(".cv").style.height = Math.max(180, 26 * g.etiquettes.length + 50) + "px";
+    new Chart(ctx, {type: "bar", data: {labels: g.etiquettes, datasets: [{label: g.sous_titre, data: g.valeurs, backgroundColor: A}]},
+      options: {...opts, indexAxis: "y", interaction: {mode: "nearest", intersect: true},
+        plugins: {...opts.plugins, subtitle: {display: g.reference != null, text: `Moyenne des départements du périmètre : ${fmt(g.reference)}`, color: M}},
+        scales: {x: {ticks: {color: M}, grid: {color: L}}, y: {ticks: {color: M}, grid: {display: false}}}}});
+  }
+}
+
+function trace(appels, d) {
+  if (!appels || !appels.length) return;
+  const t = document.createElement("details"); t.className = "trace";
+  t.innerHTML = `<summary>Calculs lancés sur le jumeau (${appels.length})</summary>` + appels.map(a =>
+    `<div class="appel ${a.erreur ? "err" : ""}"><b>${esc(a.outil)}</b> · ${esc(a.resume)} · ${a.ms} ms<code>${esc(JSON.stringify(a.entree))}</code></div>`).join("");
+  d.append(t);
+}
+
+async function envoyer(texte) {
+  texte = texte.trim(); if (!texte) return;
+  $("#accueil").innerHTML = "";
+  bulle("user", esc(texte));
+  const d = bulle("assistant", `<div class="attente">Le jumeau calcule…</div>`);
+  $("#go").disabled = true; $("#q").value = ""; autosize();
+  try {
+    const r = await fetch("/api/chat", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({session: SID, message: texte})});
+    const j = await r.json();
+    if (j.erreur) { d.innerHTML = `<div class="err">Erreur : ${esc(j.erreur)}</div>`; return; }
+    d.innerHTML = `<div class="texte">${DOMPurify.sanitize(marked.parse(j.texte || ""))}</div>`;
+    (j.graphiques || []).slice(0, 4).forEach(g => graph(g, d));
+    trace(j.appels, d);
+    const v = j.verification || {statut: "ok"};
+    const vb = document.createElement("div"); vb.className = "verif " + v.statut;
+    vb.textContent = {ok: "✓ Chaque nombre de cette réponse vient d'un résultat du modèle.",
+      corrigee: `✓ Réponse corrigée par la vérification automatique (nombres retirés : ${(v.non_rattaches || []).join(", ")}).`,
+      bloquee: "⚠ Réponse bloquée par la vérification automatique."}[v.statut] || "";
+    if (j.mode === "llm" && vb.textContent) d.append(vb);
+    if (j.mode !== "llm") { const b = $("#mode"); b.textContent = b.textContent.replace(/^IA : [^·]+/, "Mode déterministe (sans clé d'API) "); b.className = "badge deterministe"; }
+    const m = document.createElement("div"); m.className = "meta";
+    m.textContent = `${j.mode === "llm" ? "Interprété par IA" : "Interprété par le glossaire"}${(j.appels || []).length ? ", calculé par le jumeau" : ", aucun calcul lancé"} · ${j.duree_s} s`;
+    d.append(m);
+    d.scrollIntoView({block: "start", behavior: "smooth"});
+  } catch (e) {
+    d.innerHTML = `<div class="err">Serveur injoignable : ${esc(e.message)}</div>`;
+  } finally { $("#go").disabled = false; $("#q").focus(); }
+}
+
+const autosize = () => { const q = $("#q"); q.style.height = "auto"; q.style.height = Math.min(160, q.scrollHeight) + "px"; };
+$("#q").addEventListener("input", autosize);
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); envoyer($("#q").value); } });
+$("#f").addEventListener("submit", e => { e.preventDefault(); envoyer($("#q").value); });
+$("#reset").onclick = async () => {
+  await fetch("/api/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({session: SID})}).catch(() => {});
+  fil.innerHTML = ""; accueil();
+};
+</script>
+</body>
+</html>

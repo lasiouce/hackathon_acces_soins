@@ -1,0 +1,3 @@
+[submodule "vendor/hackathon_acces_soins"]
+	path = vendor/hackathon_acces_soins
+	url = https://github.com/progdinh/hackathon_acces_soins.git

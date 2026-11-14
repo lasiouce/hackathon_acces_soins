@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitch jumeau soins</title>
+<!--
+  Prototype de pitch animé, 3 minutes. Source du contenu :
+  ../2026-11-14-pitch.md et ../../reports/2026-11-14-produit.md.
+  Architecture : SCENES = [{id, duree_s, enter()}] ; un minuteur global
+  avance les scènes ; ← → espace pour piloter à la main, P pour pause.
+  Chaque chiffre affiché a sa source dans data-source (vérifiable au survol).
+-->
+<style>
+:root{--bg:#f7f6f2;--fg:#1d1d1b;--mute:#6b6a64;--acc:#1f6f8b;--acc2:#c2702a;--line:#d9d6cc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--fg:#efede6;--mute:#9a988f;--acc:#5fb3cf;--acc2:#e3964f;--line:#33322e}}
+:root[data-theme="dark"]{--bg:#141413;--fg:#efede6;--mute:#9a988f;--acc:#5fb3cf;--acc2:#e3964f;--line:#33322e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:18px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+.scene{position:absolute;inset:0;padding:6vh 16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;pointer-events:none}
+.scene.on{opacity:1;transform:none;pointer-events:auto}
+h1{font-size:clamp(28px,5vw,56px);margin:.2em 0;letter-spacing:-.01em}
+h2{font-size:clamp(22px,3.4vw,38px);margin:.2em 0}
+.big{font-size:clamp(48px,11vw,140px);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.mute{color:var(--mute)}
+.acc{color:var(--acc)}.acc2{color:var(--acc2)}
+.row{display:flex;gap:6vw;flex-wrap:wrap;justify-content:center}
+.src{font-size:13px;color:var(--mute);margin-top:2em}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px 18px;max-width:260px;text-align:left;opacity:0;transform:translateY(8px);transition:.5s}
+.card.on{opacity:1;transform:none}
+.card b{display:block;margin-bottom:4px}
+svg{width:min(860px,100%);height:auto}
+.axis{stroke:var(--line)}
+.base{stroke:var(--mute);fill:none;stroke-width:2.5}
+.scen{stroke:var(--acc);fill:none;stroke-width:3.5;stroke-dasharray:1200;stroke-dashoffset:1200;transition:stroke-dashoffset 3.5s ease}
+.scen.go{stroke-dashoffset:0}
+#bar{position:fixed;left:0;bottom:0;height:4px;background:var(--acc);width:0}
+#hud{position:fixed;right:12px;bottom:10px;font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<!-- 1. Constat (30 s) -->
+<section class="scene" id="s1">
+  <p class="mute">Infirmières en France, 2021 → 2050</p>
+  <div class="row">
+    <div><div class="big acc" data-count="37" data-suffix=" %" data-prefix="+">0</div><p>effectif</p></div>
+    <div><div class="big acc2" data-count="50" data-suffix=" %" data-prefix="+">0</div><p>besoins</p></div>
+  </div>
+  <h2 class="fade" style="margin-top:1em">≈ 80 000 infirmières d'écart</h2>
+  <h2 class="mute">Et dans <span class="acc">ma</span> commune ?</h2>
+  <p class="src" data-source="DREES ER1319">Source : DREES, Études et résultats n° 1319, déc. 2024</p>
+</section>
+
+<!-- 2. Ce qui existe (20 s) -->
+<section class="scene" id="s2">
+  <h1>Aujourd'hui : une photo.<br><span class="acc">Il faut un film.</span></h1>
+  <div class="row" style="margin-top:3vh">
+    <div class="card"><b>CartoSanté</b>> 300 indicateurs, le présent, sans projection</div>
+    <div class="card"><b>DREES</b>Projections nationales, statiques</div>
+    <div class="card"><b>Observatoires régionaux</b>Études sur commande, des mois</div>
+    <div class="card"><b>Plateformes génériques</b>Pas de modèle démographique métier</div>
+  </div>
+</section>
+
+<!-- 3. Démo (50 s) -->
+<section class="scene" id="s3">
+  <h2>Kinés, quotas de formation <span class="acc">+20 %</span></h2>
+  <svg viewBox="0 0 860 340" id="demo" aria-label="Kinés du secteur privé : tendanciel et scénario quotas +20 %, 2017–2050"></svg>
+  <p class="mute" id="demo-note">Recalcul : 3 à 32 ms. Écart décomposé par flux : entrées, départs.</p>
+  <p class="src">Kinés du secteur privé, France. Observé 2017–2026, jumeau ensuite (export du 2026-11-14, kines_quotas120.json).</p>
+</section>
+
+<!-- 4. Confiance (40 s) -->
+<section class="scene" id="s4">
+  <h1>Pourquoi nous faire confiance</h1>
+  <div class="row" style="margin-top:3vh">
+    <div class="card"><b>Données ouvertes</b>Source, millésime, unité, incertitude pour chaque paramètre</div>
+    <div class="card"><b>Backtest</b>Erreur à 5 ans ≈ 8,6 % au département, contre une méthode naïve</div>
+    <div class="card"><b>Logiciel libre</b>Auditable, réversible</div>
+    <div class="card"><b>Honnêteté</b>Retraite et régulation : en validation, pas montrées</div>
+  </div>
+</section>
+
+<!-- 5. Modèle (20 s) -->
+<section class="scene" id="s5">
+  <h1>Un commun numérique</h1>
+  <p style="font-size:22px">Code libre, porté par une institution<br>
+  <span class="mute">puis</span> une prestation par ARS : paramétrage, formation, mise à jour annuelle</p>
+</section>
+
+<!-- 6. Demande (20 s) -->
+<section class="scene" id="s6">
+  <h1>Ce que nous demandons</h1>
+  <h2><span class="acc">Une ARS pilote</span> · <span class="acc2">une relecture de la DREES</span></h2>
+  <p class="mute" style="font-size:22px">Chiffrer chaque décision de formation et d'installation, avant de la prendre.<br>Anticiper où l'accès sera moindre.</p>
+</section>
+
+<div id="bar"></div><div id="hud"></div>
+
+<script>
+// Trajectoires réelles du jumeau, exportées de v2/prototype/server.py (voir DEMO.source).
+const DEMO={"origin": 2026, "first_effect": 2032, "years": [2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050], "source": "v2/prototype/server.py, model('kines').answer(quotas=1.2, retraite=0, regul=False, terr='FR'), 2026-11-14", "base": [101946, 105228, 108449, 111610, 114711, 117751, 120727, 123637, 126477, 129244, 131935, 134549, 137081, 139531, 141897, 144177, 146371, 148478, 150497, 152428, 154271, 156028, 157698, 159283, 160783], "scn": [101946, 105228, 108449, 111610, 114711, 117751, 121815, 125810, 129732, 133575, 137335, 141008, 144592, 148083, 151478, 154776, 157975, 161074, 164071, 166965, 169757, 172445, 175031, 177513, 179893], "obs": [[2017, 76164], [2018, 80678], [2019, 81081], [2020, 83238], [2021, 86429], [2022, 88597], [2023, 91816], [2024, 95241], [2025, 98701], [2026, 101946]]};
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e}
+const fmt=n=>Math.round(n).toLocaleString('fr-FR').replace(/\u202f/g,' ');
+function drawDemo(){
+  const g=document.getElementById('demo');g.replaceChildren();
+  const x0=70,x1=820,y0=290,y1=40,ya=2017,yb=2050;
+  const all=[...DEMO.obs.map(o=>o[1]),...DEMO.scn,...DEMO.base],lo=0,hi=Math.ceil(Math.max(...all)/50000)*50000;
+  const X=y=>x0+(y-ya)/(yb-ya)*(x1-x0),Y=n=>y0-(n-lo)/(hi-lo)*(y0-y1);
+  g.append(el('line',{class:'axis',x1:x0,y1:y0,x2:x1,y2:y0}));
+  for(let v=50000;v<=hi;v+=50000){g.append(el('line',{x1:x0,y1:Y(v),x2:x1,y2:Y(v),stroke:'var(--line)','stroke-width':.5}));
+    g.append(el('text',{x:x0-8,y:Y(v)+4,'text-anchor':'end','font-size':12,fill:'var(--mute)'},fmt(v/1000)+' k'))}
+  for(const y of [2017,DEMO.origin,DEMO.first_effect,2050])g.append(el('text',{x:X(y),y:y0+22,'text-anchor':'middle','font-size':13,fill:'currentColor'},y));
+  g.append(el('line',{x1:X(DEMO.first_effect),y1:y1,x2:X(DEMO.first_effect),y2:y0,stroke:'var(--line)','stroke-dasharray':'4 4'}));
+  g.append(el('text',{x:X(DEMO.first_effect)+6,y:y1+12,'font-size':12,fill:'var(--mute)'},'premiers diplômés en plus'));
+  const path=pts=>'M'+pts.map(([y,n])=>X(y).toFixed(1)+','+Y(n).toFixed(1)).join('L');
+  g.append(el('path',{d:path(DEMO.obs),fill:'none',stroke:'currentColor','stroke-width':2.5}));
+  g.append(el('path',{class:'base',d:path(DEMO.years.map((y,i)=>[y,DEMO.base[i]]))}));
+  const sc=el('path',{class:'scen',d:path(DEMO.years.map((y,i)=>[y,DEMO.scn[i]]))});g.append(sc);
+  const L=sc.getTotalLength();sc.style.strokeDasharray=L;sc.style.strokeDashoffset=L;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{sc.style.transition='stroke-dashoffset 3.5s ease';sc.style.strokeDashoffset=0}));
+  const b=DEMO.base.at(-1),s=DEMO.scn.at(-1),d=s-b;
+  g.append(el('text',{x:x1,y:Y(b)+18,'text-anchor':'end','font-size':13,fill:'var(--mute)'},'tendanciel '+fmt(b)));
+  const lbl=el('text',{x:x1,y:Y(s)-10,'text-anchor':'end','font-size':18,'font-weight':700,fill:'var(--acc)',opacity:0},
+    '+'+fmt(d)+' (+'+(d/b*100).toFixed(1).replace('.',',')+' %)');
+  g.append(lbl);setTimeout(()=>{lbl.style.transition='opacity .6s';lbl.setAttribute('opacity',1)},3600);
+  g.append(el('text',{x:X(2021),y:Y(DEMO.obs.at(-1)[1])-14,'font-size':12,fill:'var(--mute)'},'observé'));
+}
+// Durées en secondes ; total = 180 (3 min).
+const SCENES=[
+  {id:'s1',d:30,enter:s=>countUp(s)},
+  {id:'s2',d:20,enter:s=>stagger(s)},
+  {id:'s3',d:50,enter:()=>drawDemo()},
+  {id:'s4',d:40,enter:s=>stagger(s)},
+  {id:'s5',d:20},
+  {id:'s6',d:20},
+];
+const TOTAL=SCENES.reduce((a,s)=>a+s.d,0);
+let i=0,t0=performance.now(),paused=false,pauseAt=0;
+
+function countUp(s){s.querySelectorAll('[data-count]').forEach(el=>{
+  const n=+el.dataset.count,start=performance.now();
+  (function f(now){const k=Math.min(1,(now-start)/1500);
+    el.textContent=(el.dataset.prefix||'')+Math.round(n*k)+(el.dataset.suffix||'');
+    if(k<1)requestAnimationFrame(f)})(start)})}
+function stagger(s){const c=s.querySelectorAll('.card');c.forEach(x=>x.classList.remove('on'));
+  c.forEach((x,k)=>setTimeout(()=>x.classList.add('on'),300+k*450))}
+function startOf(k){return SCENES.slice(0,k).reduce((a,s)=>a+s.d,0)}
+function show(k){i=Math.max(0,Math.min(SCENES.length-1,k));
+  document.querySelectorAll('.scene').forEach(e=>e.classList.remove('on'));
+  const s=document.getElementById(SCENES[i].id);s.classList.add('on');SCENES[i].enter&&SCENES[i].enter(s)}
+function go(k){show(k);t0=performance.now()-startOf(i)*1000;if(paused)pauseAt=performance.now()}
+function tick(now){
+  const el=((paused?pauseAt:now)-t0)/1000;
+  if(!paused&&i<SCENES.length-1&&el>=startOf(i+1))show(i+1);
+  document.getElementById('bar').style.width=Math.min(100,el/TOTAL*100)+'%';
+  const m=Math.floor(el/60),s=Math.floor(el%60);
+  document.getElementById('hud').textContent=`${i+1}/${SCENES.length} · ${m}:${String(s).padStart(2,'0')} / 3:00${paused?' · pause':''}`;
+  requestAnimationFrame(tick)}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')go(i+1);
+  else if(e.key==='ArrowLeft')go(i-1);
+  else if(e.key.toLowerCase()==='p'){if(paused){t0+=performance.now()-pauseAt;paused=false}else{paused=true;pauseAt=performance.now()}}});
+addEventListener('click',()=>go(i+1));
+show(0);requestAnimationFrame(tick);
+</script>
+</body>
+</html>

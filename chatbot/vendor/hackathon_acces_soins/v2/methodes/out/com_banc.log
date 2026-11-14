@@ -1,0 +1,39 @@
+1/12 · infirmiers-liberaux 2014 · α=0.93 β=0.0978 · couverture80 0.911 · 2 s
+2/12 · infirmiers-liberaux 2016 · α=0.61 β=0.1283 · couverture80 0.916 · 5 s
+3/12 · infirmiers-liberaux 2018 · α=0.07 β=0.1724 · couverture80 0.900 · 8 s
+4/12 · infirmiers-liberaux 2020 · α=0.23 β=0.1262 · couverture80 0.911 · 10 s
+5/12 · kines 2014 · α=nan β=nan · couverture80 0.852 · 11 s
+6/12 · kines 2016 · α=1.13 β=0.0114 · couverture80 0.889 · 13 s
+7/12 · kines 2018 · α=1.07 β=0.0106 · couverture80 0.876 · 16 s
+8/12 · kines 2020 · α=1.23 β=0.0087 · couverture80 0.879 · 18 s
+9/12 · dentistes 2014 · α=nan β=nan · couverture80 0.918 · 19 s
+10/12 · dentistes 2016 · α=0.59 β=0.0025 · couverture80 0.915 · 20 s
+11/12 · dentistes 2018 · α=0.00 β=1.0000 · couverture80 0.969 · 22 s
+12/12 · dentistes 2020 · α=0.00 β=1.0000 · couverture80 0.963 · 25 s
+                                   n  communes  couverture  passe
+profession          cls                                          
+dentistes           1–2      12613.0     13318       0.947  False
+                    3–5       5667.0      5968       0.950  False
+                    6–10      2421.0      2586       0.936  False
+                    11–20     1158.0      1256       0.922  False
+                    21–50      652.0       756       0.862  False
+                    51–100     134.0       163       0.822   True
+                    101–200     49.0        56       0.875  False
+                    >200        20.0        28       0.714  False
+infirmiers-liberaux 1–2      14548.0     16090       0.904  False
+                    3–5      12531.0     13946       0.899  False
+                    6–10      7062.0      7745       0.912  False
+                    11–20     3591.0      3857       0.931  False
+                    21–50     1664.0      1732       0.961  False
+                    51–100     436.0       443       0.984  False
+                    101–200    195.0       195       1.000  False
+                    >200        78.0        79       0.987  False
+kines               1–2      13295.0     14575       0.912  False
+                    3–5       8335.0      9489       0.878  False
+                    6–10      3964.0      4735       0.837   True
+                    11–20     1966.0      2506       0.785   True
+                    21–50     1093.0      1383       0.790   True
+                    51–100     245.0       323       0.759   True
+                    101–200    108.0       153       0.706  False
+                    >200        46.0        61       0.754   True
+{"K": {"infirmiers-liberaux 2014": 51, "infirmiers-liberaux 2016": 51, "infirmiers-liberaux 2018": null, "infirmiers-liberaux 2020": null, "kines 2014": 51, "kines 2016": 51, "kines 2018": 51, "kines 2020": 51, "dentistes 2014": 101, "dentistes 2016": 51, "dentistes 2018": 21, "dentistes 2020": 21}, "defaut_oracle": {"infirmiers-liberaux 2014": 21, "infirmiers-liberaux 2016": 21, "infirmiers-liberaux 2018": 11, "infirmiers-liberaux 2020": 11, "kines 2014": 21, "kines 2016": 21, "kines 2018": 51, "kines 2020": 51, "dentistes 2014": 11, "dentistes 2016": 11, "dentistes 2018": 21, "dentistes 2020": 21}, "defaut_sans_oracle": {"infirmiers-liberaux 2014": 51, "infirmiers-liberaux 2016": 21, "infirmiers-liberaux 2018": null, "infirmiers-liberaux 2020": null, "kines 2014": 51, "kines 2016": 51, "kines 2018": 51, "kines 2020": 21, "dentistes 2014": 101, "dentistes 2016": 21, "dentistes 2018": 21, "dentistes 2020": 21}, "persistance": {"infirmiers-liberaux 2014": 201, "infirmiers-liberaux 2016": 21, "infirmiers-liberaux 2018": 11, "infirmiers-liberaux 2020": 11, "kines 2014": 51, "kines 2016": 21, "kines 2018": 51, "kines 2020": 51, "dentistes 2014": 51, "dentistes 2016": 21, "dentistes 2018": 21, "dentistes 2020": 21}}

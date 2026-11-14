@@ -1,0 +1,249 @@
+profession dentistes                infirmiers                 kines               
+grain         bv2022 commune   epci     bv2022 commune   epci bv2022 commune   epci
+cls                                                                                
+1–2            0.673   0.691  0.616      0.711   0.817  0.611  0.737   0.764  0.730
+3–5            0.761   0.773  0.753      0.840   0.832  0.823  0.746   0.769  0.777
+6–10           0.772   0.757  0.755      0.864   0.840  0.841  0.793   0.760  0.770
+11–20          0.780   0.728  0.788      0.879   0.852  0.874  0.793   0.772  0.783
+21–50          0.776   0.724  0.837      0.861   0.891  0.874  0.783   0.740  0.772
+51–100         0.728   0.690  0.729      0.836   0.791  0.839  0.788   0.791  0.802
+101–200        0.696   0.752  0.732      0.785   0.908  0.823  0.831   0.660  0.764
+>200           0.800   0.854  0.835      0.707   0.814  0.699  0.764   0.613  0.779
+{
+ "dentistes": {
+  "apparie": 44928,
+  "soumis": 51455,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7220615303707599,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.691142614806737,
+     "n": 16506
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.7279457125231339,
+     "n": 1621
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.7235693501454898,
+     "n": 1031
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.6897810218978102,
+     "n": 274
+    },
+    {
+     "cls": ">200",
+     "couv": 0.8536585365853658,
+     "n": 41
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.750982493747767,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6725543478260869,
+     "n": 1472
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.7275985663082437,
+     "n": 279
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.696,
+     "n": 125
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7551989520222695,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.6158940397350994,
+     "n": 755
+    },
+    {
+     "cls": "51–100",
+     "couv": 0.729050279329609,
+     "n": 358
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.7319587628865979,
+     "n": 194
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "infirmiers": {
+  "apparie": 98435,
+  "soumis": 120575,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.8317857969597984,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.8524277541440516,
+     "n": 6817
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8905249679897568,
+     "n": 3124
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.9082125603864735,
+     "n": 414
+    }
+   ],
+   "N_min": null,
+   "origines_N_min": 4
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.8527808069792803,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7105263157894737,
+     "n": 38
+    },
+    {
+     "cls": "6–10",
+     "couv": 0.8642191142191142,
+     "n": 1716
+    },
+    {
+     "cls": "11–20",
+     "couv": 0.8785380599065677,
+     "n": 3639
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8609611231101512,
+     "n": 3704
+    },
+    {
+     "cls": ">200",
+     "couv": 0.7066381156316917,
+     "n": 467
+    }
+   ],
+   "N_min": 201.0,
+   "origines_N_min": 4
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 7,
+   "couverture_globale": 0.8478757423481041,
+   "classes_hors_bande": [
+    {
+     "cls": "11–20",
+     "couv": 0.8737506575486585,
+     "n": 1901
+    },
+    {
+     "cls": "21–50",
+     "couv": 0.8737710117348557,
+     "n": 3153
+    },
+    {
+     "cls": ">200",
+     "couv": 0.6987951807228916,
+     "n": 581
+    }
+   ],
+   "N_min": 201.0,
+   "origines_N_min": 4
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ },
+ "kines": {
+  "apparie": 68491,
+  "soumis": 87156,
+  "commune": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.763769142947128,
+   "classes_hors_bande": [
+    {
+     "cls": "21–50",
+     "couv": 0.740072202166065,
+     "n": 2216
+    },
+    {
+     "cls": "101–200",
+     "couv": 0.6597014925373135,
+     "n": 335
+    },
+    {
+     "cls": ">200",
+     "couv": 0.6129032258064516,
+     "n": 124
+    }
+   ],
+   "N_min": 201.0,
+   "origines_N_min": 3
+  },
+  "bv2022": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7810877021068103,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7367387033398821,
+     "n": 509
+    },
+    {
+     "cls": "3–5",
+     "couv": 0.7462295081967213,
+     "n": 1525
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "epci": {
+   "fiable": false,
+   "classes_jugees": 8,
+   "couverture_globale": 0.7756547300908605,
+   "classes_hors_bande": [
+    {
+     "cls": "1–2",
+     "couv": 0.7297297297297297,
+     "n": 259
+    }
+   ],
+   "N_min": 21.0,
+   "origines_N_min": 3
+  },
+  "grain_le_plus_fin_fiable": "département (aucun grain fin calibré)"
+ }
+}

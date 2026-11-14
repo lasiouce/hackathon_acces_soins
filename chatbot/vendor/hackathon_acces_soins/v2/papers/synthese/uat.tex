@@ -1,0 +1,152 @@
+% Interface et tests utilisateurs (UAT), écrit à la main à partir des rapports v2/docs/lab/reports/ :
+% 2026-11-14-prototype-decision.md, -prototype-carte.md, -uat-interface.md, -accueil-personas.md, -produit.md
+\part{Interface et tests utilisateurs}
+
+\section{Deux prototypes branchés sur le jumeau}
+\begin{itemize}
+  \item \textbf{V1, l'écran de décision} (\texttt{v2/prototype/}). C'est une page servie par un
+        petit serveur Python qui appelle le jumeau ; aucun moteur n'est dupliqué en
+        JavaScript. Elle montre :
+        \begin{itemize}
+          \item l'écart au scénario tendanciel, décomposé exactement par flux (entrées,
+                diplômés étrangers, sorties, régulation) ;
+          \item le délai d'effet de chaque levier ;
+          \item une fourchette dessinée en hachures ;
+          \item une matrice département × année qu'on peut retrier.
+        \end{itemize}
+        Neuf leviers du jumeau y sont rangés en quatre familles : \emph{former},
+        \emph{attirer}, \emph{installer}, \emph{retenir}. Chacun porte deux badges, son délai
+        d'effet et son niveau de preuve (sourcé ou supposé).
+        \begin{itemize}
+          \item Exemple vérifié : kinés, places en formation $+20$~\%, diplômés étrangers
+                $\times 1{,}5$, cessation reportée d'un an et régulation vers le salariat. On
+                obtient $+25\,007$ professionnels en 2050 par rapport à la tendance
+                ($+15{,}6$~\%), dont entrées $+20\,665$, étrangers $+14\,765$, régulation
+                $-10\,773$ et sorties $+339$ (\mesure).
+          \item Recalcul : 77~ms aller-retour (\mesure).
+        \end{itemize}
+  \item \textbf{V2, la carte} (\texttt{v2/prototype-carte/}). C'est une carte MapLibre plein
+        écran. Un mouvement de levier recolore les 101 départements et met à jour la fiche en
+        53~ms en médiane, 66~ms au 95\textsuperscript{e} centile et 87~ms au maximum
+        ($n=35$, \mesure), sous la cible de 150~ms.
+\end{itemize}
+
+\section{Méthode des tests utilisateurs}
+Les tests ont été conduits par des \textbf{agents qui jouent des personas}, pas par de vrais
+utilisateurs. C'est leur principale limite.
+\begin{itemize}
+  \item \textbf{Cinq personas} : une directrice générale d'ARS, l'administration centrale
+        (DGOS), un·e élu·e, un utilisateur mobile et un testeur adversarial. Chacun avait une
+        mission chronométrée.
+  \item \textbf{Vérification de chaque constat} par un second agent chargé de le réfuter :
+        46 agents pour la V1, 44 pour la V2.
+  \item \textbf{Classement} des constats par gravité $\times$ fréquence.
+  \item \textbf{Durées} : estimées par les agents, pas mesurées. Seules les latences en
+        millisecondes sont mesurées.
+\end{itemize}
+
+\section{Résultats}
+\paragraph{V1.}
+\begin{itemize}
+  \item 11 tâches réussies sur 22, et 6 échecs.
+  \item 38 constats confirmés sur 40.
+  \item Les échecs les plus graves :
+        \begin{itemize}
+          \item \textbf{lire l'effectif d'une année intermédiaire} (2035) : il n'existe pas de
+                sélecteur d'horizon ;
+          \item \textbf{descendre jusqu'à la commune} : la projection s'arrête au
+                département ;
+          \item \textbf{exporter une fiche} avec ses sources et ses hypothèses.
+        \end{itemize}
+\end{itemize}
+
+\paragraph{V2.} Verdict « à porter en démo », mais la recette est \textbf{faussée} : les cinq
+personas ont partagé un seul onglet de navigateur, faute de pouvoir en ouvrir d'autres. Au
+moins 4 échecs sur 6 viennent de ce protocole, et non du produit. Les latences d'environ 1~s
+observées ont été réfutées : elles venaient d'un onglet en arrière-plan.
+
+\paragraph{Écran d'accueil.} Les trois personas principaux refusent l'accueil actuel (une
+carte de France, les leviers ouverts, aucun chiffre avant un clic).
+\begin{itemize}
+  \item \textbf{Ce qu'ils veulent, tous les trois} :
+        \begin{itemize}
+          \item une phrase avec un chiffre dès l'ouverture (« kinés libéraux en ARA : 13\,240
+                en 2026, environ 20\,100 en 2050 au tendanciel ») ;
+          \item les leviers repliés derrière « Simuler une politique » ;
+          \item la fourchette toujours visible ;
+          \item le périmètre dit en clair.
+        \end{itemize}
+  \item \textbf{Ce qui les divise : le point d'entrée.}
+        \begin{itemize}
+          \item l'ARS veut entrer par sa région ;
+          \item l'élu·e par son territoire, jusqu'à la commune ;
+          \item l'Administration par la France entière, avec sources, millésime et version du
+                modèle.
+        \end{itemize}
+  \item \textbf{Synthèse proposée} : un champ unique « Quel territoire ? » sur une carte
+        estompée, et deux modes, « simple » (des phrases) et « expert » (flux, sources,
+        export), sur un même modèle.
+\end{itemize}
+
+\paragraph{Retours directs de l'utilisateur·rice sur la carte.}
+\begin{itemize}
+  \item un zoom plus fort sur régions et départements ;
+  \item des cases et des encarts plus grands ;
+  \item des limites de régions ARS mieux séparées ;
+  \item les départements et régions d'outre-mer en encarts ;
+  \item un milieu de gamme de couleur qui ne se confond pas avec le fond.
+\end{itemize}
+Ils ont été intégrés au fil de sept itérations.
+
+\section{État de la carte après les tests}
+La page refondue a remplacé l'ancienne après correction des défauts graves (P0) et importants (P1) de la seconde recette :
+fiche reconstruite au changement de profession, rendu mobile, export portant définition, sources, millésimes, leviers et
+version du code, repères 2030 / 2035 / 2040 / 2050, lecture de la régulation par région. Vérification en navigateur sans
+interface (Chromium), pas par une nouvelle recette de personas.
+\begin{itemize}
+  \item \textbf{Une phrase devient un scénario.} Un compilateur déterministe à glossaire traduit une phrase
+        (« augmenter de 20~\% les places de kinés dans le Puy-de-Dôme ») en réglage des leviers, sans jamais calculer.
+        Un écran montre ce qui a été compris, ce qui n'est pas dans le modèle (avec la raison) et ce qui n'a pas été
+        compris ; rien n'est appliqué sans confirmation. Mesuré sur des jeux de 30 phrases écrites à l'aveugle par un
+        agent qui n'a vu ni le glossaire ni le code, chaque jeu noté avant correction : 47, 53, 70, 80, 83 puis 70~\%
+        de phrases entièrement justes (\mesure). Le chiffre à citer est d'environ 77~\% (jeux 5 et 6), avec un écart
+        type d'environ $\pm 8$ points par jeu : le gain par tour a plafonné.
+  \item \textbf{Les curseurs restent visibles} sous la phrase, un par famille ; les réglages secondaires sont repliés.
+  \item \textbf{Mode expert} : écart par flux et par année, chaque levier avec sa valeur, son paramètre, son délai,
+        son statut et sa source, trois scénarios épinglés côte à côte, export JSON.
+  \item \textbf{Densité pour 100\,000 habitants} (Insee, Omphale 2022, trois scénarios de population) : vue de carte,
+        fiche et mode expert. Kinés, France, 2026 : 150,7 pour 100\,000 (\mesure). Une hypothèse d'activité par
+        professionnel (équivalents temps plein) est \suppose{} : aucune série ouverte n'a été vérifiée.
+\end{itemize}
+
+\section{Direction artistique}
+Trois directions ont été proposées : sémiologie graphique (Bertin), gamme de signalisation, et
+topographie en isolignes. La direction « sémiologie graphique » a été prototypée :
+\begin{itemize}
+  \item fond blanc ;
+  \item une seule gamme de couleur par variable, jamais rouge ni verte (le lexique neutre rendu
+        visible) ;
+  \item l'incertitude en hachures ;
+  \item une matrice qu'on peut réordonner.
+\end{itemize}
+Pour que les designers de l'équipe puissent reprendre la direction artistique dans Figma, une
+source unique de \emph{tokens} au format W3C est proposée, où les directions deviendraient des
+\emph{modes} d'une même collection. Elle n'est pas encore construite.
+
+\section{Produit}
+L'outil n'est \textbf{pas achetable en l'état} : sur 8 conditions de signature recensées,
+aucune n'est remplie complètement. La voie réaliste est celle d'un commun numérique libre,
+porté par une institution (DREES, une ARS pilote, beta.gouv), puis de prestations de moins de
+60~k€ HT par ARS (seuil de dispense de procédure au 1\textsuperscript{er} avril 2026, cité
+dans le rapport produit).
+
+\section{Menaces à la validité}
+\begin{itemize}
+  \item Les personas sont des agents, pas des utilisateurs réels ; les durées sont estimées.
+  \item La recette V2 a été faussée par l'onglet partagé, et aucune capture n'a été écrite sur
+        disque.
+  \item Les prototypes ont changé pendant les tests.
+  \item Les chiffres de la V1 antérieurs aux corrections du jumeau ne sont plus valables (par
+        exemple, quotas $+20$~\% chez les kinés : $+19\,110$ et non $+8\,645$), et le rapport
+        le signale.
+\end{itemize}

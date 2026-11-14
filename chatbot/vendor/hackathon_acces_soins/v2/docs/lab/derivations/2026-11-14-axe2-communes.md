@@ -1,0 +1,242 @@
+---
+type: derivation
+date: 2026-11-14
+author: axe 2
+question: Comment projeter l'effectif libéral à la commune avec une bande à 80 % qui couvre environ 80 % des cas, dans chaque classe de taille ?
+status: 1 promue (K, cohortes hiérarchiques + variance prédictive estimée dans la fenêtre) · 1 en attente (arbre gaussien complet) · 1 tuée (C1 tel quel à la commune)
+---
+
+# Projection communale calibrée : commune ⊂ EPCI ⊂ département ⊂ région
+
+**Dérivé :** 2026-11-14, environ 15 minutes. Chantier « projection communale
+fiable » (decisions.md).
+
+## Problème
+- **Objectif.** Une bande à 80 % qui couvre entre 75 et 85 % des cas, **dans
+  chaque classe de taille** du protocole N4 (classes 3–5 et au-dessus), à
+  h = 5.
+  - On ne cherche pas l'étroitesse : le bruit de Poisson est irréductible.
+  - En second, le P80 de |erreur| par classe, et N_min, contre le défaut
+    de N4 : total départemental × part tenue, avec l'oracle du total
+    départemental réel.
+- **Contraintes.**
+  - Recalcul compatible avec l'axe 0 : 1,02 s par scénario à la commune
+    (C15).
+  - Boîte blanche ; données ≤ origine.
+- **Données.** CartoSanté (libéraux, au 31/12) : 16 078 communes, 5 tranches
+  (< 40, 40–49, 50–54, 55–59, 60+), sans sexe.
+  - IDE de 2004 à 2025, MK de 2005 à 2025, CD de 2006 à 2025.
+  - C'est le fichier du protocole N4 (`data/processed/stock_commune.parquet`).
+  - Table de passage commune → EPCI → département → région :
+    `v2/data/processed/commune_geo.parquet` (axe 4).
+
+## Structure
+- **Une commune de N professionnels a un bruit annuel de l'ordre de √N.**
+  À N = 5, l'écart-type relatif vaut ±45 % (dérivé).
+  - La bande d'une petite commune est donc dominée par ce bruit, pas par
+    l'incertitude des paramètres.
+  - **La calibration est d'abord un problème de variance** : la moyenne
+    compte peu sous N ≈ 20.
+- **L'âge compte à la commune.** Une commune de 3 infirmiers de plus de
+  60 ans les perd en 5 ans. Une part tenue (défaut N4) ne le voit pas ; un
+  modèle de cohortes le voit.
+- **Rétrécissement.** Une commune a trop peu de personnes pour estimer ses
+  propres taux.
+  - Sa rétention et sa part des entrées sont rétrécies vers l'EPCI, puis
+    le département, la région et le national : moyenne a posteriori sous
+    un a priori en pseudo-effectifs.
+- **La variance prédictive a deux parties.**
+  - Une part de Poisson, en αμ.
+  - Une part de surdispersion, en βμ² : déménagements, chocs locaux,
+    erreur du total départemental.
+  - α et β se mesurent **dans la fenêtre** : on ajuste le même modèle à une
+    origine o − h, on projette jusqu'à o, et l'on régresse le carré du
+    résidu sur μ et μ². Aucune donnée postérieure à l'origine n'entre.
+
+## Modèle K (une page)
+Pour chaque profession, et pour chaque commune c, tranche a et année τ :
+
+- **Vieillissement.**
+  B(a, τ) = (1 − f_a)·N(a, τ−1) + f_{a−1}·N(a−1, τ−1).
+  - f = (1/15, 1/10, 1/5, 1/5, 0) : la tranche « < 40 » est traitée comme
+    25–39 ans, supposé.
+- **Rétention.** r_{c,a} = Σ_τ N(a, τ) / Σ_τ B(a, τ), sur la fenêtre de
+  6 ans.
+  - Elle est rétrécie à chaque niveau ℓ : r_ℓ = (num_ℓ + k·r_parent) /
+    (den_ℓ + k), avec k = 200 (comme A2), dans l'ordre région ← national,
+    département ← région, EPCI ← département, commune ← EPCI.
+  - s = min(1, r).
+- **Flux net.** e_{c,a,τ} = N(a, τ) − s_{c,a}·B(a, τ). Au département,
+  E_{d,a}(τ) = Σ_c e : on prend son niveau local (filtre de Kalman, comme
+  C1), prolongé à plat.
+- **Part de la commune dans les entrées du département.**
+  - q_e = (S_e + k_q·π_e) / (S_d + k_q), puis
+    q_c = (S_c + k_q·q_e·π_{c|e}) / (S_e + k_q·q_e) × q_e.
+  - S est la somme du flux net sur la fenêtre ; π est la part du stock de
+    la tranche à l'origine. On prend k_q = 20 personnes, supposé.
+  - Les parts somment à 1 dans le département. Si S_d ≤ 0 : parts au
+    prorata du stock.
+- **Projection.** N(a, τ) = s·B(a, τ) + q_{c,a}·L_{d,a}, avec un plancher à
+  0. On obtient μ_c(o + h).
+- **Distribution prédictive.**
+  - Var = α_h·μ + β_h·μ², mesurés dans la fenêtre.
+  - Loi binomiale négative si Var > μ, Poisson sinon. Bande de P10 à P90.
+- **Paramètres qu'un levier modifie.**
+  - Le multiplicateur des entrées, appliqué à L_d.
+  - La rétention des 60 ans et plus.
+  - La régulation, qui fermera des communes dans le logit de l'étape 3.
+
+## Ansätze
+- **K : promue.** C'est le modèle ci-dessus.
+- **Arbre gaussien complet (en attente).** Mêmes niveaux, mais τ_ℓ par
+  vraisemblance marginale exacte (propagation sur l'arbre) et une loi a
+  posteriori par commune.
+  - On n'y passe que si K échoue à calibrer **à cause des moyennes**,
+    c'est-à-dire si la couverture est correcte dans les grandes classes et
+    biaisée dans les petites.
+- **C1 tel quel à la commune (tuée).**
+  - Pas de sexe, et des tranches inégales dans CartoSanté.
+  - Une loi a posteriori par commune ferait des centaines de milliers de
+    paramètres en factorisation dense.
+  - Et la calibration par simulation de l'étape 2 met déjà en défaut ses
+    variances.
+
+## Kill tests (pré-écrits)
+| Test | Résultat qui tue | Prix |
+|---|---|---|
+| Couverture de la bande à 80 % par classe (≥ 3–5), origines 2014 à 2020, h = 5 | hors de [75 ; 85] % dans plus de 2 classes sur 7 pour une profession | ~5 min machine |
+| P80 de \|erreur\| par classe, contre le défaut de N4 sans oracle | pire dans toutes les classes ≥ 11 | inclus |
+| Temps de projection à la commune (une profession, jusqu'en 2050) | > 1 s | ~1 min |
+
+## Prédictions écrites avant le banc (supposées)
+- **Couverture à 80 %** entre 75 et 85 % dans au moins 5 classes sur 7,
+  pour chaque profession. Le risque est dans les grandes classes (> 100),
+  où la part d'erreur du total départemental domine et où peu de communes
+  servent à estimer β.
+- **P80 de K** au plus égal à celui du défaut sans oracle dans les classes
+  ≥ 11. Grâce à l'âge, il passe sous le défaut avec oracle dans au moins
+  une classe.
+
+## K3 (ajout du 2026-11-14, inscrit avant tout passage)
+Le diagnostic de K et K2 a trouvé que **l'erreur du total départemental est
+commune aux communes d'un département et domine dans les grandes
+communes**. Une bande par classe de taille ne la porte pas.
+
+- **Point.** Part communale tenue × total départemental de K. C'est le
+  point de K2.
+- **Distribution prédictive (S = 200 tirages)**, pour la commune c du
+  département d :
+  X_c = (p_c + ½)·exp(ε_d + η_c) − ½, tronqué à 0.
+  - **ε_d**, l'erreur du total départemental : un seul tirage par
+    département et par tirage, donc **commun à ses communes**. Il est
+    rééchantillonné parmi les erreurs log(réel/projeté) des totaux
+    départementaux de K sur des pseudo-prévisions dans la fenêtre (cibles ≤
+    origine).
+  - **η_c**, l'erreur locale : rééchantillonnée, par classe de taille,
+    parmi les erreurs log((réel + ½)/(part tenue × total réel + ½)) des
+    mêmes pseudo-prévisions, total départemental exact compris. On fusionne
+    avec les classes voisines sous 20 erreurs.
+  - Pseudo-origines : o − 5 − ℓ, avec ℓ = 0 à 4, tant que la fenêtre de 6
+    ans tient dans les données.
+- **Grains BV et EPCI.** On somme les tirages communaux, ce qui garde la
+  corrélation départementale. Le point est la somme des points.
+- **Données.** Celles de N10 : `v2/data/processed/commune_stock.parquet`
+  (axe 4, Marseille par arrondissements).
+  - Les lignes « Total (reste …) », sans âge, sont réparties sur les
+    tranches de la commune, au prorata de son stock connu de l'année
+    (supposé).
+- **Critère.** Celui de N10, jugé par l'axe 3 : couverture dans
+  [75 ; 85] % dans chaque classe de taille.
+- **Prédiction (supposée).** La couverture des classes > 50 passe de
+  56–72 % (K2) à plus de 75 %. Les petites classes restent dans la bande.
+
+## K4 (ajout du 2026-11-14, inscrit avant tout passage, après le jugement N10 de K3)
+**Contexte.** Le jugement de K3 par N10 est connu : IDE trop larges en
+classes moyennes, CD trop étroits. K4 est donc **exposé au sur-ajustement**.
+Pour le limiter, il ne règle **aucun facteur** sur ce jugement. Il ne change
+que deux mécanismes, justifiés par une cause et non par le résultat :
+1. **Récence.** Les erreurs viennent des **2 pseudo-origines les plus
+   récentes** seulement (ℓ = 0, 1), au lieu de 5.
+   - Cause : l'erreur n'est pas stationnaire. Les entrées des IDE se sont
+     stabilisées après 2018, donc les erreurs anciennes sont plus grandes.
+     Les CD ont des entrées plus variables depuis l'afflux de diplômés
+     étrangers (24 % des actifs, axe 4).
+2. **Tirage conjoint.** Chaque tirage choisit **une** pseudo-origine ℓ, puis
+   prend l'erreur départementale et l'erreur locale **dans cette même
+   pseudo-origine**.
+   - Cause : en les tirant indépendamment, K3 mélange des périodes de
+     volatilité différentes.
+   - Une classe qui compte moins de 50 erreurs dans ℓ est fusionnée avec
+     ses voisines, puis avec les autres ℓ.
+
+Le point et le reste sont inchangés (K3).
+
+**Confirmation hors échantillon (règle du 2026-11-14).**
+- Origine **2021**, h = **4** (cible 2025), jamais regardée pour un modèle
+  communal. Proposée à l'axe 3.
+- Même critère : couverture dans [75 ; 85] % dans chaque classe de
+  taille.
+- Un passage sur 2014–2020 ne compte que s'il est confirmé ici, ou par le
+  dépôt 2027.
+
+**Prédiction (supposée).**
+- IDE : couverture des classes 11–50 ramenée sous 85 %.
+- CD : couverture des classes 11–100 au-dessus de 75 %.
+- Kinés à l'EPCI : la classe 1–2 reste juste sous 75 %, puisque K4 ne
+  change rien pour les petites unités.
+
+## K5 (ajout du 2026-11-14, inscrit avant tout passage, à la demande de l'utilisateur·rice)
+**Contexte.** K3 et K4 tiraient les erreurs passées telles quelles. Leur
+largeur reproduisait le niveau d'erreur propre à chaque profession sur la
+fenêtre, et ce niveau ne s'est pas reproduit ensuite : IDE trop larges, CD
+trop étroits (jugements N10 et N11 de l'axe 3, connus avant cette
+inscription).
+
+**Modèle de la largeur (loi explicite).** Pour la profession p et la
+commune c du département d :
+
+    log((n_c + ½)/(p_c + ½)) = b_p + σ_D,p·z_d + √(φ_p/(n0_c + ½) + κ_p)·z_c,   z ~ N(0, 1)
+
+- Le terme z_d est **commun aux communes d'un département**, comme dans
+  K3.
+- σ_L²(n) = φ/(n + ½) + κ : φ est une surdispersion de type Poisson, κ un
+  plancher (déménagements, chocs).
+- **Estimation dans la fenêtre**, sur toutes les pseudo-origines
+  (ℓ = 0 à 4) :
+  - b et σ_D sont la moyenne et l'écart-type des erreurs départementales ;
+  - φ et κ sont estimés par maximum de vraisemblance gaussien sur les
+    erreurs locales, écrêtées aux centiles 1 et 99 (règle fixée ici).
+- **Mise en commun entre professions.** C'est le seul changement de
+  principe. log σ_D, log φ et log κ sont **rétrécis de moitié** vers leur
+  moyenne sur les trois professions, à la même origine (poids 0,5 ;
+  supposé).
+  - Raison : avec 1 à 5 pseudo-origines, l'échelle d'erreur propre à une
+    profession est estimée sur trop peu de périodes. La moyenne des
+    professions est un a priori plus stable.
+  - b n'est pas mis en commun : un biais est propre à la profession.
+- **Tirages.** S = 200 ; on somme les tirages pour les grains BV et EPCI.
+  Le point est celui de K3.
+
+**Jugement.**
+- N10 (2014–2020, h = 5), déjà vu par l'axe 2 à travers les jugements de
+  K3 et K4.
+- Puis une origine réservée, proposée à l'axe 3 : **2022, h = 3**
+  (cible 2025). C'est une confirmation partielle, puisque 2025 a déjà
+  été vue comme cible.
+- Enfin un dépôt communal (préfixe `axe2_`, avec préavis à l'axe 3).
+
+**Prédiction (supposée).**
+- La couverture globale de chaque profession se rapproche de 80 % : IDE
+  sous 83 %, CD au-dessus de 74 %.
+- Au moins un grain passe N10 pour les kinés.
+
+### K5 : écart avant passage (2026-11-14)
+- **Ce qui change.** σ_D est estimé par un **écart-type robuste**,
+  1,4826 × la médiane des écarts absolus à la médiane, au lieu de
+  l'écart-type ordinaire. Le centre b devient la **médiane**.
+- **Pourquoi.** Le diagnostic des paramètres a montré σ_D brut = 1,74 pour
+  les CD, origine 2018. Quelques départements à très petit total ont des
+  erreurs log extrêmes. La mise en commun aurait transmis cette valeur aux
+  autres professions : σ_D des IDE serait passé de 0,175 à 0,245.
+- **Ce qui n'a pas été regardé.** Aucune couverture, ni sur 2014–2020 ni
+  sur la réservée. Le fichier généré avant cet écart est remplacé.

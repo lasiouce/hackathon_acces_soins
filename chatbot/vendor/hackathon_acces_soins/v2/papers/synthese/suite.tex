@@ -1,0 +1,103 @@
+% Ce qui reste à faire, écrit à la main à partir de v2/docs/lab/open.md (99 questions ouvertes au
+% 14 novembre 2026) et des rapports d'axe. Coûts en temps de travail estimé (\suppose), sauf mention.
+\part{Ce qui reste à faire}
+
+\section{Par axe}
+\paragraph{Axe 0, le jumeau.}
+\begin{itemize}
+  \item \textbf{Vitesse à la commune.} Il faut environ 6,8~s par scénario (extrapolé) pour une
+        cible de 2~s, ce qui bloque le zoom de l'ARS jusqu'à la commune. Coût : environ 2~h.
+  \item \textbf{Vivier réel.} Utiliser les effectifs réels en formation par profession, au
+        lieu d'un vivier relatif supposé.
+  \item \textbf{Diplômés étrangers} : un âge d'entrée propre.
+  \item \textbf{Obligation d'exercice} : à brancher quand le modèle d'installation de l'axe~2
+        existera.
+\end{itemize}
+
+\paragraph{Axe 1, les hyperparamètres.}
+\begin{itemize}
+  \item \textbf{Lire en texte intégral toutes les sources citées}, et vérifier chaque nombre.
+        L'état de l'art méthodologique n'a été lu qu'en résumé.
+  \item \textbf{Trouver un flux annuel de diplômés étrangers.} On ne connaît aujourd'hui que
+        des parts de stock : 24~\% des dentistes et 33~\% des kinés n'ont pas de diplôme
+        d'État français (\mesure).
+  \item \textbf{Expliquer l'écart sur la retraite} : le jumeau donne $+3$~\% chez les
+        infirmiers, contre environ $+1$~\% cité par la DREES.
+  \item \textbf{Re-prioriser le sourçage} à partir des indices de l'axe~5.
+\end{itemize}
+
+\paragraph{Axe 2, les méthodes.}
+\begin{itemize}
+  \item \textbf{Projection communale : arrêtée en attente des données 2027.} Les modèles communaux K3, K4 et K5,
+        chacun inscrit avant son passage, ont échoué au critère N10 (couverture de 75 à 85~\% dans chaque classe de
+        taille) ou à leur confirmation hors échantillon. L'affichage reste au département ; les dépôts K4, K5 et C1
+        seront notés sur les effectifs 2027.
+  \item \textbf{Étape 3} : un logit conditionnel d'installation, qui attend les flux
+        communaux de l'axe~4.
+  \item \textbf{Étapes 4 et 5} : la réconciliation MinT entre échelles, et la calibration par
+        simulation sur les cinq professions.
+\end{itemize}
+
+\paragraph{Axe 3, la validation.}
+\begin{itemize}
+  \item \textbf{Exécuter N6} : CRPS, PIT et couverture, contre une référence naïve elle aussi
+        probabiliste.
+  \item \textbf{Calibration par simulation} sur 200 mondes simulés.
+  \item \textbf{N1 sur plusieurs origines}, pour vérifier la stabilité du classement des
+        estimateurs.
+  \item \textbf{Dentistes : écart signalé, puis levé.} Le chiffre de 76\,000 est la projection
+        tendancielle \emph{2050}, pas l'effectif 2026 : en 2026, le jumeau compte 47\,347 dentistes
+        dans le privé, sous le total RPPS tous modes de 48\,690 au 1\textsuperscript{er} janvier 2026
+        (\mesure ; rapport \texttt{2026-11-14-reconciliation-dentistes.md}). Le chiffre de 62\,000
+        attribué à la DREES n'a pas de source retrouvée.
+\end{itemize}
+
+\paragraph{Axe 4, les données.}
+\begin{itemize}
+  \item \textbf{Installations par commune.} Archiver chaque mois l'Annuaire Santé, la seule voie
+        ouverte vers des flux individuels. En attendant, construire un substitut à partir de
+        CartoSanté : les installations nettes des moins de 40~ans, de 2004 à 2025.
+  \item \textbf{Officines} : ouvertures et fermetures par commune, d'après l'historique FINESS.
+  \item \textbf{Trous restants} : pas d'historique communal pour les sages-femmes, et pas de
+        croisement âge $\times$ secteur pour les infirmiers.
+\end{itemize}
+
+\paragraph{Axe 5, la sensibilité.}
+\begin{itemize}
+  \item \textbf{Amplitude de référence fixée} à celle de la DREES (quotas $\pm 20$~\%) : en 2050, la décision pèse
+        plus que l'incertitude pour les infirmiers (0,89), les kinés (0,81) et les sages-femmes (0,59), à égalité pour
+        les dentistes, moins pour les pharmaciens (0,38 contre 0,61).
+  \item \textbf{Étendre les indices de Sobol aux 12 leviers branchés}, pour séparer la part de
+        variance qui vient de la décision de celle qui vient de notre ignorance.
+  \item \textbf{Cartographier les fourchettes 2050 par département.}
+  \item \textbf{Classer les sources d'incertitude} selon le coût pour les réduire.
+\end{itemize}
+
+\section{Pour l'interface}
+Faits depuis les tests : repères 2030 à 2050 dans la fiche, fiche exportable avec sources et hypothèses, densité pour
+100\,000 habitants, phrase en langage naturel, mode expert. Restent :
+\begin{enumerate}
+  \item une \textbf{recette rejouée sur la carte finale}, un persona par onglet, captures sur disque ;
+  \item la \textbf{densité au grain infra-départemental}, à partir de la population communale ;
+  \item l'\textbf{écran d'accueil} « Quel territoire ? », avec les modes simple et expert ;
+  \item des \textbf{libellés sans jargon}, et des erreurs réseau signalées ;
+  \item les \textbf{tokens W3C}, pour reprendre la direction artistique dans Figma.
+\end{enumerate}
+
+\section{Décisions qui reviennent à l'équipe}
+\begin{itemize}
+  \item \textbf{Compilateur : modèle de langage ou non ?} L'approche à glossaire plafonne vers 77~\% ; la décision
+        prévoit, dans ce cas, un modèle de langage pour l'analyse de la phrase seule (jamais le calcul), évalué sur
+        les mêmes jeux écrits à l'aveugle.
+  \item \textbf{Un module de besoin ?} Les leviers de transfert de tâches (vaccination en
+        officine, infirmiers en pratique avancée, accès direct au kiné) ne changent pas
+        l'effectif. Ils changent le besoin auquel il répond. C'est pourtant l'exemple même du
+        sujet : « combien de spécialistes en 2035 si les pharmaciens peuvent vacciner ? ».
+        Sans module de besoin, ces leviers n'ont aucun effet dans le jumeau.
+  \item \textbf{Archiver l'Annuaire Santé chaque mois} : c'est une tâche planifiée, qui
+        demande l'accord de l'équipe.
+  \item \textbf{Garder les quatre familles de leviers} (former, attirer, installer, retenir),
+        ou en choisir d'autres.
+  \item \textbf{Phase 2} (cardiologie, dermatologie, ophtalmologie) : à démarrer une fois les
+        axes 0 à 3 terminés pour au moins une profession de la phase 1.
+\end{itemize}
