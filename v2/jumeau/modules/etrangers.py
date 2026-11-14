@@ -6,9 +6,10 @@ positives de l'année, puis on la multiplie.
   part_p = min(1, flux_p / Σ I⁺_p)   I⁺ = entrées nettes positives ajustées (sante.model.fit_rates), toutes
                                       cellules de la profession dans l'état (l'état doit couvrir la profession)
   ajout  = part_p · entrées⁺ · (m − 1)
-La part formée en France, (1 − part_p) · entrées⁺, est celle que suit `lien_formation`. Hypothèse : les
-diplômés à l'étranger se répartissent entre territoires, sexes et âges comme les entrées ajustées (supposé ;
-DD76 donne un âge moyen d'entrée de 28 ans, non utilisé ici).
+La part formée en France, (1 − part_p) · entrées⁺, est celle que suit `lien_formation`.
+Âge : l'ajout entre dans la tranche qui contient `age_entree` (28 ans, DD76, tableaux 12-13 : âge moyen des
+diplômés à l'étranger à l'entrée, SF et CD ; repris pour MK, supposé). Territoires et sexes : comme les entrées
+ajustées (supposé). Le total ajouté par cellule est inchangé ; seule sa répartition par âge change.
 Flux (DD76, tableaux 12-13 ; ER 1075 pour MK), par an : SF 70 · CD 665 · MK 1 175 ; PH et IDE : non publié
 → 0, le levier est sans effet pour eux (dit, pas caché).
 """
@@ -44,6 +45,9 @@ class Etrangers(Module):
         Param("multiplicateur", 1.0, "× flux observé", "fiche param-age-entree-exercice (plage supposée × [0,5 ; 2])",
               "—", "supposé", "Reconnaissance des diplômes, procédures d'autorisation d'exercice.", (0.0, 3.0),
               "attirer"),
+        Param("age_entree", 28.0, "ans", "DREES, Les Dossiers n° 76 (2021), tableaux 12 et 13 (SF, CD : 28 ans)",
+              "RPPS 2020", "sourcé", "Âge d'entrée des diplômés à l'étranger ; l'ajout va dans la tranche qui le "
+              "contient. MK : valeur SF/CD reprise, supposé.", (18.0, 70.0)),
     )
 
     def fit(self, hist):
@@ -53,7 +57,10 @@ class Etrangers(Module):
         m = ctx.param(self, "multiplicateur")
         if np.all(np.asarray(m) == 1):
             return []
-        share = part_etrangere(self.hist, state, ctx.param(self, "flux"))[:, None]
-        e_pos = np.clip(ctx.delta(self, "entrees"), 0, None)
-        mm = np.reshape(m, (-1, 1)) if np.ndim(m) else m
-        return [Add(self.name, share * e_pos * (mm - 1.0), src="diplomes_etranger")]
+        share = part_etrangere(self.hist, state, ctx.param(self, "flux"))
+        e_pos = np.clip(ctx.delta(self, "entrees"), 0, None).sum(axis=1)
+        mm = np.ravel(m) if np.ndim(m) else m
+        band = int(np.searchsorted(state.ages, ctx.param(self, "age_entree"), side="right") - 1)
+        amount = np.zeros_like(state.N)
+        amount[:, max(band, 0)] = share * e_pos * (mm - 1.0)
+        return [Add(self.name, amount, src="diplomes_etranger")]

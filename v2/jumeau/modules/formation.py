@@ -21,7 +21,9 @@ from jumeau.module import Add, Module, Param, Pool, par_profession, register
 
 # Abandon annuel équivalent, infirmiers : 1 − ρ^(1/3) avec ρ = diplômés(t+3) / inscrits en 1re année(t) = 0,718
 # (entrée 2022, DREES jeu 491, fiche axe 1 param-ide-rendement-diplomes) ; niveau 2009-2018 : ρ ≈ 0,84 → 0,056.
-ABANDON = {"infirmiers": 1 - 0.718 ** (1 / 3), "*": 0.0}
+# Kinés, sages-femmes : 1 − ρ^(1/L), ρ moyen des diplômés 2023-2025 rapportés aux inscrits en 1re année L ans plus tôt
+# (DREES 491, jumeau.vivier.abandon_annuel, L = 4) : dérivé de mesures. Autres professions : 0, supposé.
+ABANDON = {"infirmiers": 1 - 0.718 ** (1 / 3), "kines": 0.0158, "sages-femmes": 0.0331, "*": 0.0}
 # Durée des études L_p (années) : délais de app/levers.LAG (v1), supposés.
 DUREE = {"specialistes": 10, "pharmaciens": 6, "dentistes": 6, "sages-femmes": 5, "kines": 5, "infirmiers": 3}
 
@@ -34,8 +36,9 @@ class Formation(Module):
         Param("abandon", ABANDON, "par an, par profession",
               "DREES, enquête Écoles, jeu 491 (séries longues 1966-2025), via fiches axe 1 param-ide-rendement-diplomes "
               "et param-ide-abandon-1a", "entrée 2022 (mise à jour 29/10/2026)", "sourcé",
-              "IDE : 1 − 0,718^(1/3) ≈ 0,105 / an, dérivé d'un rendement mesuré (redoublements compris). Autres "
-              "professions : 0, supposé (pas de source ; le « 30 % » IDE n'avait pas de source primaire). "
+              "IDE : 1 − 0,718^(1/3) ≈ 0,105 / an, dérivé d'un rendement mesuré (redoublements compris). MK 0,016 et "
+              "SF 0,033 / an, dérivés de la même série (diplômés 2023-2025, L = 4). Autres professions : 0, supposé "
+              "(le « 30 % » IDE n'avait pas de source primaire). "
               "Plage IDE : 0,056 (niveau 2009-2018) à 0,105. Se fixe par `params` (dict par profession).",
               (0.0, 1.0), "former"),
         Param("capacite", 1.0, "× première année du début du run", "arrêtés d'objectifs 2021 et 2026 ; DD76 (±20 %)",
@@ -43,12 +46,31 @@ class Formation(Module):
               (0.0, 3.0), "former"),
         Param("duree", DUREE, "années, par profession", "app/levers.LAG (v1)", "—", "supposé",
               "Durée des études du vivier relatif.", (1.0, 15.0)),
+        Param("vivier", "relatif", "relatif | reel", "DREES jeu 491 (IDE, MK, SF) ; DREES 990 (CD, PH)",
+              "2008-2025", "mesuré",
+              "reel : vivier initial = inscrits observés (jumeau.vivier.pool_ecoles, pool_drees) ; relatif : vivier "
+              "stationnaire. Sans effet sur N tant que lien_formation est en mode « levier »."),
     )
 
     def begin(self, state, ctx):
         """Vivier initial (scénario) et vivier de référence, remis à zéro à chaque run."""
         if state.pool is not None and not state.pool.empty:
             self._pool = state.pool.copy()
+        elif ctx.param(self, "vivier") == "reel":
+            from jumeau.vivier import pool_ecoles
+            profs = sorted(state.cells.profession.unique())
+            ab = dict(zip(profs, par_profession(ctx.param(self, "abandon"), profs)))
+            parts = [pool_ecoles(state.year, profs, ab)]
+            drees = pool_drees(min(state.year, 2025))
+            parts.append(drees[drees.index.get_level_values(0).isin(profs)])
+            covered = set(pd.concat(parts).index.get_level_values(0))
+            rest = [p for p in profs if p not in covered]
+            if rest:                                     # professions sans série d'inscrits : vivier relatif
+                a0 = par_profession(self.param("abandon").value, rest)
+                L = par_profession(ctx.param(self, "duree"), rest).astype(int)
+                parts.append(pd.Series({(p, k): (1 - a) ** (k - 1) for p, a, l in zip(rest, a0, L)
+                                        for k in range(1, l + 1)}, dtype=float).rename_axis(["profession", "k"]))
+            self._pool = pd.concat(parts).sort_index()
         else:
             profs = sorted(state.cells.profession.unique())
             a0 = par_profession(self.param("abandon").value, profs)
@@ -92,7 +114,13 @@ class LienFormation(Module):
     name = "lien_formation"
     order = 35
     needs = ("entrees", "formation")
-    params = ()
+    params = (
+        Param("mode", "levier", "levier | vivier", "DREES jeu 491 (diplômés observés, IDE, MK, SF)", "2008-2025",
+              "supposé",
+              "levier : k = diplômés / diplômés de référence (= 1 au tendanciel ; seul l'écart de scénario compte). "
+              "vivier : k = diplômés du vivier / diplômés observés en moyenne sur la fenêtre d'ajustement, pour IDE, "
+              "MK et SF (les entrées suivent les cohortes réellement en formation) ; autres professions : k = 1."),
+    )
 
     def fit(self, hist):
         self.hist = hist
@@ -103,7 +131,13 @@ class LienFormation(Module):
         g0 = ctx.pool_out(self, "formation", "diplomes_reference")
         if g is None or g0 is None:
             return []
-        ratio = (g / g0.where(g0 > 0)).fillna(1.0)
+        if ctx.param(self, "mode") == "vivier":
+            from jumeau.vivier import LIGNES, diplomes_observes
+            fy = range(self.hist.fit_years[0], self.hist.fit_years[1] + 1)
+            covered = [p for p in g.index if any(p == b or p.startswith(b + "-") for b in LIGNES)]
+            ratio = pd.Series({p: g[p] / diplomes_observes(p, fy) for p in covered}, dtype=float)
+        else:
+            ratio = (g / g0.where(g0 > 0)).fillna(1.0)
         k = state.cells.profession.map(ratio).fillna(1.0).to_numpy()[:, None]
         if np.all(k == 1.0):
             return []
@@ -124,4 +158,6 @@ def pool_drees(year: int | None = None) -> pd.Series:
             continue
         x = e[(e.type_de_diplome == dip) & (e.year == year) & e.k.isin(ks)]
         rows.update({(prof, int(k)): float(n) for k, n in zip(x.k, x.n)})
+    if not rows:                                         # année hors de la série 990 (2020-2025)
+        return pd.Series([], index=pd.MultiIndex.from_tuples([], names=["profession", "k"]), dtype=float)
     return pd.Series(rows).rename_axis(["profession", "k"])

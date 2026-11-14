@@ -1,14 +1,11 @@
 \documentclass[11pt]{article}
-% Le préambule commun charge babel avec [french] seul ; le résumé anglais (otherlanguage{english})
-% a besoin de la langue english chargée. On l'ajoute ici sans modifier le préambule commun.
-\PassOptionsToPackage{english}{babel}
 \input{../template/preamble}
 
 \title{Un jumeau numérique de l'offre de soins à contrat vérifiable :\\
 le stock-flux reproduit à l'écart nul, et des critères d'acceptation qui savent échouer}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
-\date{Prétirage, version du \today{} --- non relu par des pairs}
+\date{Version du \today}
 
 \begin{document}
 \maketitle
@@ -30,34 +27,11 @@ des critères d'acceptation passait par construction. Deux revues adversariales 
 montré, avec 6\mesure{} puis 4\mesure{} défauts bloquants confirmés en exécutant le code. Nous avons
 donc réécrit chaque critère pour qu'il puisse échouer, et vérifié qu'il échoue quand on réintroduit
 le défaut (mutation). Une troisième revue ne trouve plus de défaut bloquant ; ses défauts importants
-sont corrigés à leur tour. Les 13\mesure{} critères passent ; un scénario se recalcule en
-22 à 36\mesure{}~ms au département. La principale limite est le passage à la commune : environ
-6,8\derive{}~s extrapolés pour cinq professions et deux secteurs, au-dessus de la cible de
-2\suppose{}~s.
+sont corrigés à leur tour. Douze leviers sont branchés, et le vivier en formation est relié aux
+inscrits réels (DREES). Les 17\mesure{} critères passent. Un scénario se recalcule en 21\mesure{}~ms au
+département, et en 1,4 à 1,6\mesure{}~s pour cinq professions à l'échelle de la commune (environ
+\num{700000} cellules), sous la cible de 2\suppose{}~s.
 \end{abstract}
-\begin{otherlanguage}{english}
-\begin{abstract}
-Projecting France's private-sector health workforce by territory up to 2050 needs a shared substrate
-onto which methods, parameters, data and validation protocols can plug without contradicting one
-another. We describe that substrate, a digital twin built from three objects:
-\begin{itemize}
-  \item a state $N[\text{profession},\text{sector},\text{territory},\text{sex},\text{age}]$ plus a
-        training pipeline;
-  \item plug-in flow modules that declare sourced parameters and their dependencies;
-  \item validated, serialisable scenarios made of hyperparameters and dated events.
-\end{itemize}
-Rewritten as three modules, the existing stock-flow model reproduces the reference implementation
-with a gap of $0.0$\mesure{} persons over 140\mesure{} comparisons and \num{355248}\mesure{}
-cell~$\times$~age~$\times$~year values to 2050. A first set of acceptance criteria passed by
-construction. Two successive adversarial reviews showed this, confirming 6\mesure{} and then
-4\mesure{} blocking defects by running the code. We therefore rewrote each criterion so that it can
-fail, and checked that it does fail when the defect is reinserted (mutation). A third review found no
-blocking defect left; its important findings were fixed in turn. All 13\mesure{} criteria pass, and a
-scenario recomputes in 22--36\mesure{}~ms at département level. The main limitation is the move to
-commune level: about 6.8\derive{}~s extrapolated for five professions and two sectors, above the
-2\suppose{}~s target.
-\end{abstract}
-\end{otherlanguage}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; jumeau numérique ;
 modèle stock-flux ; architecture en greffons ; tests de mutation ; revue adversariale.
 
@@ -82,7 +56,7 @@ menés en parallèle :
 Sans un objet commun, chaque axe recoderait la dynamique à sa façon, et les résultats ne seraient
 pas comparables.
 
-L'axe~0, objet de ce prétirage, fournit cet objet commun. La question est double :
+L'axe~0, objet de ce document, fournit cet objet commun. La question est double :
 \begin{enumerate}
   \item un contrat de modules peut-il porter le modèle existant \emph{à l'identique}, tout en
         acceptant d'autres méthodes sans modifier aucun fichier ?
@@ -96,7 +70,7 @@ L'axe~0, objet de ce prétirage, fournit cet objet commun. La question est doubl
         déclarées et vérifiées, et le registre des flux est tenu par cellule (section~\ref{sec:methode}).
   \item La réécriture du modèle stock-flux de référence en modules, avec un écart \emph{nul} à
         l'implémentation d'origine. La v1 sert d'oracle figé (section~\ref{sec:resultats}).
-  \item Treize critères d'acceptation écrits pour pouvoir échouer. Chacun est accompagné de la valeur
+  \item Dix-sept critères d'acceptation écrits pour pouvoir échouer. Chacun est accompagné de la valeur
         mesurée sur le code fautif, et quatre d'entre eux d'une mutation rejouée.
   \item Le récit de trois revues adversariales : ce qu'elles ont trouvé, et ce que cela dit des tests
         « vrais par construction » (section~\ref{sec:validation}).
@@ -311,6 +285,15 @@ C13 & Bornes sur la valeur composée et sur les paramètres ajustés ; JSON + \t
 règle « entrées $\le$ sorties » : écart $7\cdot10^{-15}$\mesure{} à une formule indépendante ;
 retraite à 3 tranches $\ge 65$ : écart de séjour $10^{-14}$\mesure{} & $\times243 \to +14\,317$~\% ;
 règle non testée ; séjour $\ne +\Delta$ \\
+C14 & 12 leviers en 4 familles : identité au tendanciel (0,0) ; capacité dentistes $\times1{,}2$
+$\to +9{,}1$\mesure{}~\% en 2050 (DD76 cite $\pm12$-13~\%) ; quotas régionaux sans effet hors
+région & leviers absents \\
+C15 & 5 professions à la commune (\num{698212} cellules) : 1,35 à 1,57\mesure{}~s ; chemin rapide
+= chemin complet (écart 0) & 3,99\mesure{}~s \\
+C16 & Vivier réel (DREES 491) : diplômés IDE modélisés \num{25385} contre \num{25249} observés
+(2024) ; identité en mode levier & vivier relatif seul \\
+C17 & Diplômés à l'étranger entrés dans la tranche de 28~ans ; total inchangé & répartis sur tous
+les âges \\
 \bottomrule
 \end{tabular}
 \caption{Critères d'acceptation de l'axe~0 (\texttt{jumeau.check}, code de sortie~1 en cas
@@ -329,13 +312,27 @@ et la sensibilité relèvent de l'axe~5.
 
 \paragraph{Temps de recalcul jusqu'en 2050.}
 \begin{itemize}
-  \item de 22 à 36\mesure{}~ms pour 7 professions au département (\num{1410} cellules), sur une
-        machine partagée avec d'autres sessions ;
-  \item à la taille commune (une profession, \num{35047} territoires, données répliquées) :
-        0,57\mesure{}~s pour un secteur et 1,36\mesure{}~s pour deux (0,78~s avant les corrections
-        de la troisième revue) ;
-  \item pour cinq professions et deux secteurs : environ 6,8\derive{}~s par extrapolation, au-dessus
-        des 2\suppose{}~s visés.
+  \item 21\mesure{}~ms pour 7 professions au département (\num{1410} cellules) ;
+  \item 5 professions, 2 secteurs, état ventilé par la population sur \num{35000} communes
+        (\num{698212} cellules), 24 ans : 3,99\mesure{}~s au départ, puis 1,35 à 1,57\mesure{}~s
+        après optimisation (machine partagée).
+\end{itemize}
+Le profil mesuré avant tout changement attribuait le temps au registre des flux (1,1~s), aux passes
+d'application (1,0~s), aux sorties recalculées chaque année (0,8~s) et aux entrées (0,5~s). Le chemin
+rapide garde les mêmes opérations flottantes, mais ne tient pas le registre, calcule le vieillissement
+sans copie et met en cache les facteurs constants d'une année à l'autre. Il donne le même état que le
+chemin complet (écart 0).
+
+\paragraph{Vivier réel.} Le vivier part des inscrits en 1re année de la DREES (jeu 491). Les diplômés
+d'infirmiers qu'il reconstitue suivent les observations à 0,5~\% près en 2024 et 2025. Deux mesures en
+limitent la portée :
+\begin{itemize}
+  \item sur les diplômés 2019--2025, avec un abandon calibré sur 2016--2018, la persistance fait mieux
+        que le vivier (MAPE IDE 3,2\mesure{}~\% contre 8,4\mesure{}~\%), parce que l'abandon a
+        augmenté ;
+  \item sur le stock d'IDE libéraux de 2018 à 2023, le mode « vivier » fait un peu mieux que le
+        stock-flux local (7,40\mesure{} contre 7,82\mesure{}~\% de MAPE par département), sur une
+        seule origine, sans pré-enregistrement.
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
@@ -467,10 +464,10 @@ attendue ou un invariant, y joindre sa valeur sur le code fautif, et rejouer la 
 
 \paragraph{Questions ouvertes, avec leur coût} (temps de travail estimé, \suppose) :
 \begin{itemize}
-  \item troisième revue adversariale : environ 3~min de machine ;
-  \item recalcul sur un état communal réel, avec vectorisation si nécessaire : environ 20~min ;
+  \item mode « vivier » au banc N1 de l'axe~3, sur plusieurs origines : environ 30~min ;
+  \item abandon en formation projeté plutôt que constant : environ 45~min ;
+  \item état communal réel projetable : environ 1~h ;
   \item calibrage à fractions par tranche pour les communes : environ 30~min ;
-  \item diplômés du vivier reliés aux entrées : environ 1~h ;
   \item plancher converti en sortie explicite : environ 20~min.
 \end{itemize}
 

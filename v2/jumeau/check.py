@@ -23,6 +23,8 @@ sur le code d'avant (`avant`), quand elle existe : c'est la preuve que le test s
   C14 leviers branchés (chantier) : identité au tendanciel, effet de chaque levier, délai, région,
                     comparaison aux chiffres cités (DD76, ER 1319, DREES retraite), familles
   C15 vitesse : 5 professions à la commune ≤ 2 s (bench_commune), chemin rapide = chemin complet
+  C16 vivier réel (DREES 491) : reconstitution des diplômés, identité, effet, backtests contre la persistance
+  C17 diplômés à l'étranger : entrée dans la tranche de 28 ans, total inchangé
   C11 scénario posé sur la base : trajectory(Scenario()) = predict sur la variante filière ; quotas > 0
   T  temps          recalcul d'un scénario jusqu'en 2050
 """
@@ -47,7 +49,7 @@ from jumeau.modules.entrees import evenement_quotas
 from jumeau.modules.sorties import Sorties, evenement_retraite
 from jumeau.modules.formation import pool_drees
 from jumeau.modules.vieillissement import fractions
-from jumeau.scenario import Event, Scenario
+from jumeau.scenario import LEVIERS as LEVIERS_, Event, Scenario
 from jumeau.state import Geography, State
 
 OUT = Path("v2/artifacts/a0_jumeau")
@@ -563,6 +565,97 @@ def c15_speed():
     return dict(r, gap_rapide_complet=gap)
 
 
+def c16_vivier():
+    """Vivier réel (DREES 491) : reconstitution des diplômés, identité en mode levier, effet en mode vivier,
+    professions sans série inchangées ; backtest des diplômés et du stock IDE contre la persistance (exploratoire)."""
+    from jumeau import vivier as V
+    out, oks = {}, []
+    ti = stock_table(["infirmiers-liberaux"])
+    oi = int(ti.year.max())
+    ei = twin_of(V1.StockFlowLocal)().fit(ti, (oi - 5, oi), oi)
+    base = ei.trajectory(H2050)
+    reel = Scenario(modules=LEVIERS_, params={"formation.vivier": "reel"})
+    tr = ei.trajectory(H2050, reel)
+    out["identite_reel_levier"] = float(np.abs(tr.states[H2050].N - base.states[H2050].N).max())
+    g = {y: float(x.iloc[0]) for y, f, a, x in tr.ledger if a == "diplomes"}
+    obs = V.ecoles().set_index(["profession", "year"]).diplomes
+    out["diplomes_modele_vs_obs"] = {y: (g[y], float(obs[("infirmiers", y)])) for y in (oi + 1, oi + 2)}
+    rec = max(abs(m / o_ - 1) for m, o_ in out["diplomes_modele_vs_obs"].values())
+    viv = ei.trajectory(H2050, Scenario(modules=LEVIERS_, params={"formation.vivier": "reel",
+                                                                   "lien_formation.mode": "vivier"}))
+    out["mode_vivier_ide_2050_pct"] = 100 * (viv.states[H2050].N.sum() / base.states[H2050].N.sum() - 1)
+    tc = stock_table(["dentistes"])
+    oc = int(tc.year.max())
+    ec = twin_of(V1.StockFlowLocal)().fit(tc, (oc - 5, oc), oc)
+    vc = ec.trajectory(H2050, Scenario(modules=LEVIERS_, params={"formation.vivier": "reel", "lien_formation.mode": "vivier"}))
+    out["dentistes_sans_serie_491"] = float(np.abs(vc.states[H2050].N - ec.trajectory(H2050).states[H2050].N).max())
+    oks += [out["identite_reel_levier"] == 0, rec < 0.02, out["mode_vivier_ide_2050_pct"] != 0,
+            out["dentistes_sans_serie_491"] == 0]
+    # backtest des diplômés 2019-2025, abandon calibré sur 2016-2018 seulement
+    bt = {}
+    e = V.ecoles().set_index(["profession", "year"])
+    for p, L in V.DUREE_ECOLE.items():
+        a = V.abandon_annuel(p, (2016, 2018))
+        o_ = e.loc[p].diplomes
+        ins = e.loc[p].inscrits1
+        yrs = [y for y in range(2019, 2026) if not np.isnan(o_.get(y, np.nan))]
+        pred = np.array([ins[y - L] * (1 - a) ** L for y in yrs])
+        naive = o_[2018] if not np.isnan(o_[2018]) else o_[2017]
+        bt[p] = dict(mape_vivier=float(100 * np.mean(np.abs(pred / o_[yrs].to_numpy() - 1))),
+                     mape_persistance=float(100 * np.mean(np.abs(naive / o_[yrs].to_numpy() - 1))))
+    out["backtest_diplomes_2019_2025"] = bt
+    # backtest du stock IDE libéraux, origine 2018 → 2023 (exploratoire, non pré-enregistré)
+    t18 = ti[ti.year <= 2023]
+    a18 = V.abandon_annuel("infirmiers", (2016, 2018))
+    actual = t18[t18.year == 2023].groupby("dep").n.sum()
+    keep = t18[t18.year == 2018].groupby("dep").n.sum() >= 30
+    res = {}
+    for lab, scn in [("stock-flux local", None),
+                     ("vivier", Scenario(modules=LEVIERS_, params={"formation.vivier": "reel", "lien_formation.mode": "vivier",
+                                                                   "formation.abandon": {"infirmiers": a18, "*": 0.0}}))]:
+        est = twin_of(V1.StockFlowLocal)().fit(t18, (2013, 2018), 2018)
+        x = est.trajectory(2023, scn).states[2023]
+        pred = pd.Series(x.N.sum(1)).groupby(x.cells.territory.to_numpy()).sum()
+        ape = (pred / actual - 1).abs()[keep[keep].index] * 100
+        res[lab] = dict(mape=float(ape.mean()), national_pct=float(100 * (pred.sum() / actual.sum() - 1)))
+    out["backtest_stock_ide_2018_2023"] = res
+    crit("C16", "vivier réel (DREES 491) branché",
+         f"reel + levier = tendanciel ({out['identite_reel_levier']}) ; diplômés IDE modèle / observés "
+         + ", ".join(f"{y} : {m:.0f}/{o_:.0f}" for y, (m, o_) in out["diplomes_modele_vs_obs"].items())
+         + f" ; mode vivier IDE 2050 {out['mode_vivier_ide_2050_pct']:+.2f} % ; dentistes (pas de série 491) écart "
+         f"{out['dentistes_sans_serie_491']} ; backtest diplômés 2019-2025 (MAPE vivier / persistance) : "
+         + ", ".join(f"{p} {v['mape_vivier']:.1f}/{v['mape_persistance']:.1f} %" for p, v in bt.items())
+         + " ; stock IDE 2018→2023 (MAPE dép.) : " + ", ".join(f"{k} {v['mape']:.2f} %" for k, v in res.items()),
+         all(oks), avant="vivier relatif stationnaire, sans lien aux inscrits réels")
+    return out
+
+
+def c17_age_etrangers():
+    """Diplômés à l'étranger : l'ajout entre dans la tranche de 28 ans, total inchangé."""
+    from jumeau.modules.etrangers import FLUX
+    t = sector_table(["dentistes"])
+    o = int(t.year.max())
+    est = twin_of(V1.StockFlowLocal)().fit(t, (o - 5, o), o)
+    tr = run(est.state, est.modules(Scenario(modules=LEVIERS_)), Scenario(modules=LEVIERS_, params={
+        "etrangers.multiplicateur": 2.0}).over(est.scenario), o + 1)
+    from jumeau.engine import Context
+    ages = est.state.ages
+    band = int(np.searchsorted(ages, 28, side="right") - 1)
+    mod = [m for m in est.modules(Scenario(modules=LEVIERS_)) if m.name == "etrangers"][0]
+    total = float(sum(x.sum() for _, f, _, x in tr.ledger if f == "etrangers"))
+    # recalcul direct de la répartition par âge sur une année
+    sc = Scenario(modules=LEVIERS_, params={"etrangers.multiplicateur": 2.0}).over(est.scenario)
+    ctx = Context(o + 1, o, sc, est.state.cells, np.random.default_rng(0), len(ages))
+    ctx.deltas["entrees"] = np.clip(est.hist._cache[("rates", len(est.state.cells))][1], 0, None)
+    amt = mod.step(est.state, ctx)[0].amount
+    other = float(np.abs(np.delete(amt, band, axis=1)).max())
+    ok = abs(total - FLUX["dentistes"]) < 1e-6 and other == 0 and amt[:, band].sum() > 0
+    crit("C17", "diplômés à l'étranger entrés à 28 ans", f"tranche {ages[band]}+ seule (hors tranche : {other}) ; "
+         f"ajout année 1 = {total:.1f} = flux CD {FLUX['dentistes']:.0f} × (2 − 1)", ok,
+         avant="ajout réparti comme les entrées ajustées (tous âges)")
+    return dict(tranche=int(ages[band]), total=total)
+
+
 def c11_over():
     t = stock_table(["dentistes"])
     _, fit, o, _ = latest_design("dentistes", t)
@@ -703,8 +796,10 @@ def main():
     c13_review3()
     leviers = c14_levers()
     vitesse = c15_speed()
+    viv = c16_vivier()
+    age = c17_age_etrangers()
     tm = timing()
-    res = dict(vitesse_commune=vitesse, leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
+    res = dict(vivier_reel=viv, age_etrangers=age, vitesse_commune=vitesse, leviers_branches=leviers, criteres=RESULTS, regulation=regul, leviers=levers, agregation=agg, temps=tm,
                modules={n: [p.__dict__ for p in c.params] for n, c in REGISTRY.items()
                         if n not in ("factice", "espion", "double", "lecteur_diplomes")})
     (OUT / "results.json").write_text(json.dumps(res, indent=1, ensure_ascii=False, default=str))
