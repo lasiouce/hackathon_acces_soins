@@ -2448,6 +2448,10 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Carte option 1 : chat fermé derrière une icône, ou ouvert au chargement** (relevé le 2026-11-14 en fusionnant
+  `main` dans la PR #3). `index-option1.html` ouvre le chat par une icône sur la carte (demande de l'utilisateur·rice) ;
+  la décision « Squelette : la conversation est ouverte au chargement de la carte » ouvre le panneau au chargement de
+  `index.html`, interface principale. Non reporté sur l'option 1 en attendant l'arbitrage. Prix : ≈ 15 min.
 - ~~**Refonte de l'interface de la carte, à fonctions égales**~~ **Tranchée le 2026-11-14** : option 1,
   direction A (voir l'entrée « Carte : option 1 en direction A (Bertin) retenue »). (Question posée le 2026-11-14 :
   « proposer d'autres solutions capables de reprendre iso fonctionnel l'existant avec des
@@ -3513,6 +3517,13 @@ ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'�
 `chatbot/chat/verif.py` (unité de référence), à voir avec Juliette.
 **Limites.** Un seul passage par configuration, sur un jeu écrit par l'auteur de l'agent ; la justesse qualitative
 (phrases) n'est pas mesurée, seulement relue pour le lexique ; coût non mesuré (le chatbot ne renvoie pas l'usage).
+
+## 2026-11-14 — Squelette : la conversation est ouverte au chargement de la carte
+
+**Décision.** Le panneau « Questions » s'ouvre au chargement (ordinateur : à droite ; mobile : en bas), refermable par
+le bouton « Questions » ou la croix. Aucun autre changement de mise en page : la refonte attend l'équipe UX.
+**Pourquoi.** L'utilisateur·rice : « on avait dit que c'était la nouvelle interface principale pour l'utilisateur » ; un
+panneau fermé par défaut contredisait la décision précédente. Vérifié dans le navigateur (ordinateur et mobile).
 
 ## 2026-11-14 — Carte option 1 : chat relayé vers `chatbot/`, comme `index.html` (fusion de `main`)
 
