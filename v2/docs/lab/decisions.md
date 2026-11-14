@@ -3372,3 +3372,25 @@ de l'utilisateur·rice (« Commit sans mesure »). Vérifié sans clé : `/api/a
 **Mesures.** `carte()` passe à environ 100 ms (kinés 106 ms, infirmiers 98 ms, toutes années), réponse 78 ko. Sous le seuil de 150 ms de la décision « écran carte ». Valeur 2050 inchangée (Puy-de-Dôme, kinés : 1 731).
 
 **Ce qui le renverserait.** Un passage au grain communal (le volume × 25 années imposerait une grille précalculée), ou un retour UAT montrant que le curseur fait lire les années lointaines comme plus sûres que les proches.
+
+## 2026-11-14 — Chatbot intégré à la carte (prototype) : relais vers `chatbot/`, Claude Haiku 5.5, glossaire sans clé
+
+**Décision.**
+- Le panneau « Questions » de la carte relaie vers le chatbot de `chatbot/` (passerelle en lecture seule, port 8770, et
+  agent, port 8768 ; code de Juliette Konop, poussé dans le dépôt le 2026-11-14). **Un seul moteur** : `v2/agent/` est
+  gelé, la carte ne l'appelle plus ; seul son contrôle du lexique (`garde_fous.lexique`) est appliqué aux réponses.
+- La passerelle interroge **le dépôt actuel** (`JUMEAU_REPO=..`), pas la copie figée `chatbot/vendor/` (`426422c`).
+- **Modèle : `claude-haiku-5-5`** (choix de l'utilisateur·rice), `CHAT_FALLBACKS=0` (pas de repli serveur pour Haiku).
+  Sans clé : mode glossaire (sans IA) du chatbot.
+- Contexte de la carte (profession, territoire, leviers modifiés, année, « densités pour 100 000 habitants ») ajouté à la
+  question en mode IA seulement ; le glossaire lit la phrase seule.
+- Lexique : « pas une prévision » et ses variantes ne sont plus signalés (formule recommandée par le lexique).
+**Pourquoi.** L'utilisateur·rice : « commençons un premier prototype de chatbot intégré », puis « on utilisera haiku5.5 ».
+Le challenge du même jour (§ Open) demandait un seul moteur ; celui de `chatbot/` est le plus isolé et testé.
+**Vérifié.** Sans clé : kinés ARA 2035 +20 % → « environ 17 100, entre 15 300 et 18 900 » (glossaire, 0,1 s). Avec clé
+(Haiku 5.5) : même question en 12,7 s ; depuis la carte, « Pourquoi ce résultat ? » rattaché au scénario affiché, 6,9 s,
+écart par flux (+525 entrées, −2 sorties), délai (2032), statut « supposé » et sources ; vérification « ok » ; ordinateur
+et mobile, sans erreur JavaScript. Trois questions, pas une mesure.
+**Non fait.** Taux sur les 22 questions (`open.md`) ; nettoyage de `chatbot/vendor/` (77 Mo) et du `.bundle`, à voir avec
+Juliette ; la tolérance ±6 % de `chatbot/chat/verif.py` reste en place.
+**Remplace** l'usage de `v2/agent/` par la carte (décision « Agent conversationnel… » du 2026-11-14).
