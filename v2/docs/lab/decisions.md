@@ -3394,3 +3394,39 @@ et mobile, sans erreur JavaScript. Trois questions, pas une mesure.
 **Non fait.** Taux sur les 22 questions (`open.md`) ; nettoyage de `chatbot/vendor/` (77 Mo) et du `.bundle`, à voir avec
 Juliette ; la tolérance ±6 % de `chatbot/chat/verif.py` reste en place.
 **Remplace** l'usage de `v2/agent/` par la carte (décision « Agent conversationnel… » du 2026-11-14).
+
+## 2026-11-14 — L'agent conversationnel devient l'interface principale ; squelette fonctionnel en attendant l'UX
+
+**Décision.** L'agent conversationnel (chatbot de `chatbot/`, relayé par la carte) est l'**interface principale** avec
+l'utilisateur·rice. La mise en page (conversation au centre, à côté, ou seule) **attend les propositions des UX designers
+de l'équipe** ; d'ici là, le panneau « Questions » de la carte reste le squelette fonctionnel, sans refonte.
+**Remplace** « personas et application : couche ultérieure » (recadrage du 2026-11-14, `docs/lab/profile.md`, annoté) et
+la ligne « En attendant : aucun travail nouveau sur le moteur » du challenge (§ Open) : la qualité des réponses compte
+désormais pour l'usage. La question « LLM ou glossaire » reste mesurable (§ Open), mais le mode IA est le mode par défaut.
+**Pourquoi.** L'utilisateur·rice : « maintenant l'agent conversationnel est l'interface avec l'utilisateur principale »,
+puis « on va attendre les propositions des ux designers de la team, on va juste avoir pour l'instant un squelette
+fonctionnel ».
+
+## 2026-11-14 — Chatbot intégré : première mesure sur les 22 questions (Claude Haiku 5.5)
+
+**Mesure** (`v2/agent/evaluer_chatbot.py`, relais de la carte → `chatbot/`, mode IA, une session par question ;
+`v2/agent/score_chatbot.txt`, réponses dans `reponses_chatbot.jsonl`) :
+| Critère | Résultat |
+|---|---|
+| Réponses entièrement ancrées, règle stricte (précision affichée) | **21/22** ; nombres ancrés 260/261 (99,6 %) |
+| Non bloquées par la vérification du chatbot (±6 %) | 22/22 (12 « ok », 10 « corrigée ») |
+| Sans terme du lexique interdit | 18/22 ; les 4 occurrences sont des négations ou des refus (« pas des « déserts médicaux » », « non des prévisions », « ne peut pas dire si … un manque », « pas d'avis sur ce qu'il faut faire ») : **0 jugement** à la relecture |
+| Hors périmètre signalé quand attendu | 5/5 |
+| Flux nommés quand attendu | 5/5 |
+| Latence | médiane 7,4 s, max 15,6 s |
+Le seul nombre non ancré : « 2040 » dans un exemple de question suggéré (q20).
+**Premier passage** (16:55, même jeu) : 13/22 ancrées. Les écarts venaient de la mesure, pas des réponses : « 100 000 »
+(unité « pour 100 000 habitants ») et les nombres du périmètre (prompt système du chatbot) n'étaient pas comptés comme
+sources. Corrigé dans `evaluer_chatbot.py` avant le second passage ; lexique : « non (d')une prévision » ajouté aux
+formules permises.
+**Défaut observé.** Sans contexte de la carte, la vérification du chatbot (±6 %) retire « 100 000 » des réponses et la
+densité devient « 201,4 kinés par habitant rapporté à la population » (q01, premier passage). Le relais de la carte
+ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'évite dans la carte ; correctif durable dans
+`chatbot/chat/verif.py` (unité de référence), à voir avec Juliette.
+**Limites.** Un seul passage par configuration, sur un jeu écrit par l'auteur de l'agent ; la justesse qualitative
+(phrases) n'est pas mesurée, seulement relue pour le lexique ; coût non mesuré (le chatbot ne renvoie pas l'usage).

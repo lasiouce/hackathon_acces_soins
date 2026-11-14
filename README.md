@@ -109,7 +109,9 @@ indépendant), et chaque sortie le rappelle.
   `chatbot/` (Claude Haiku 5.5 avec une clé, glossaire sans clé), avec le contexte affiché (profession,
   territoire, leviers, année). Il explique l'écart par flux, le délai d'effet, la fourchette et le statut des
   leviers ; il **ne calcule rien**, et les nombres non rattachés à un résultat sont corrigés puis bloqués.
-  Taux sur le jeu de 22 questions (`v2/agent/questions.yaml`) **pas encore mesurés**. `v2/agent/` (premier agent)
+  Mesuré sur 22 questions avec Haiku 5.5 : 21/22 réponses entièrement ancrées (260/261 nombres), hors périmètre
+  signalé 5/5, flux nommés 5/5, médiane 7,4 s (`v2/agent/score_chatbot.txt`). Interface principale ; mise en page
+  en attente de l'équipe UX. `v2/agent/` (premier agent)
   est gelé ; seul son contrôle du lexique sert.
 - **Hypothèses de contexte** : scénario de population Insee (central, bas, haut) et activité moyenne
   par professionnel (équivalents temps plein, supposée).

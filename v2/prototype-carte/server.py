@@ -213,7 +213,7 @@ class Handler(V1.Handler):
             return self.send_json({"error": r.get("erreur") or "Chatbot non lancé (port 8768)."}, 503)
         lx = _lexique(r.get("texte", ""))
         return self.send_json({"reponse": r.get("texte", ""), "mode": r.get("mode"), "verification": r.get("verification"),
-                               "lexique": lx, "appels": [{"outil": a["outil"], "resume": a.get("resume")} for a in r.get("appels", [])],
+                               "lexique": lx, "appels": [{"outil": a["outil"], "resume": a.get("resume"), "entree": a.get("entree")} for a in r.get("appels", [])],
                                "secondes": r.get("duree_s")})
 
 
