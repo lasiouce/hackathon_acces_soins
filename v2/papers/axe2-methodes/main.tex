@@ -115,10 +115,17 @@ une incertitude propagée et un partage d'information entre zones. Notre shrinka
 version déterministe et sans incertitude.
 
 \paragraph{Ce dont nous partons.} Un observatoire construit par un membre de
-l'équipe~\cite{evolutionsoin2026} utilise un stock-flux voisin, avec un shrinkage département $\to$
-région $\to$ national (poids 200) et des taux de maintien bornés à $[0{,}5\,;\,1{,}2]$. Son audit
-signale que le vieillissement uniforme dans la tranche biaise l'effectif des 60 ans et plus de +8 à +19\,\% sur
-des mondes simulés (chiffre cité). Nous testons ces trois éléments.
+l'équipe, travail interne non publié, propose trois choix que nous reprenons comme hypothèses à
+tester :
+\begin{itemize}
+\item un stock-flux voisin du nôtre, avec un shrinkage département $\to$ région $\to$ national
+  (poids 200) ;
+\item des taux de maintien bornés à $[0{,}5\,;\,1{,}2]$ ;
+\item un signalement : le vieillissement uniforme dans la tranche d'âge biaise l'effectif des
+  60~ans et plus de +8 à +19\,\% sur des mondes simulés. Ce chiffre a été rapporté par son
+  auteur ; nous ne l'avons pas reproduit.
+\end{itemize}
+Nous testons ces trois éléments.
 
 \paragraph{Ce que nous ne citons pas encore.} Un état de l'art interne au
 projet\footnote{\texttt{v2/docs/lab/explorations/2026-11-14-etat-de-lart-methodes.md}.} a repéré
@@ -174,7 +181,7 @@ rétrécis vers le national : $r = (\text{num} + k\,r_{\text{nat}})/(\text{den} 
         $a \ge 60$, où $b$ est la pente nationale des ratios annuels sur la fenêtre et $\bar t$ son
         milieu ; $\lambda = 1$.
   \item[A123.] A1a + A2 + A3, combinaison pré-spécifiée.
-  \item[B4 (diagnostic, non candidat).] Schéma de l'observatoire~\cite{evolutionsoin2026} : $r = 1$
+  \item[B4 (diagnostic, non candidat).] Schéma de l'observatoire interne décrit plus haut : $r = 1$
         et entrées = résidus moyens sur 5 ans dans les tranches de moins de 35 ans ; ailleurs $r$
         rétréci département $\to$ région $\to$ national et borné à $[0{,}5\,;\,1{,}2]$, sans entrée
         absolue.
