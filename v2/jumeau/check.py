@@ -506,7 +506,11 @@ def c14_levers():
                     "regulation.part_zones": {"kines": pz, "*": 1.0}}, modules=REG).over(ks.scenario), ks.origin + 1)
         mv[pz] = float(sum(np.clip(x, 0, None).sum() for _, f, _, x in tr.ledger if f == "regulation"))
     out["part_zones_deplaces_annee1"] = mv
-    oks.append(mv[0.0] == 0 and 0 < mv[0.6] < mv[1.0])
+    one = raises(lambda: run(ks.state, ks.modules(Scenario(modules=REG)), Scenario(
+        params={"regulation.zones": {"kines": ZONES[:1]}, "regulation.repartition": SALARIAT,
+                "regulation.part_zones": {"kines": 0.4, "*": 1.0}}, modules=REG).over(ks.scenario), ks.origin + 1))
+    out["une_zone_part_arrondie_a_0"] = one
+    oks.append(mv[0.0] == 0 and 0 < mv[0.6] < mv[1.0] and one is None)
     # h. retraite + 1 an, comparée au repère DREES (≈ +1 % d'effectif par an de décalage, cité)
     ret = {}
     for p in ("kines", "infirmiers-liberaux"):

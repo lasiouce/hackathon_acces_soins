@@ -84,11 +84,12 @@ class Regulation(Module):
         c = state.cells
         reg = np.zeros(len(c), bool)
         pz = ctx.param(self, "part_zones")
+        kept = {}
         for prof, geo in zones.items():
-            keep = list(geo)[:int(round(float(par_profession(pz, [prof])[0]) * len(geo)))]
-            reg |= (c.profession == prof).to_numpy() & c.territory.isin(keep).to_numpy()
-        if not reg.any() and all(float(par_profession(pz, [p])[0]) == 0 for p in zones):
-            return []                                    # régulation retirée par part_zones = 0
+            kept[prof] = list(geo)[:int(round(float(par_profession(pz, [prof])[0]) * len(geo)))]
+            reg |= (c.profession == prof).to_numpy() & c.territory.isin(kept[prof]).to_numpy()
+        if not any(kept.values()):
+            return []                                    # aucune zone gardée (part_zones = 0, ou arrondi à 0 zone)
         reg &= (c.sector == ctx.param(self, "secteur_regule")).to_numpy()
         src = np.flatnonzero(reg)
         if src.size == 0:
