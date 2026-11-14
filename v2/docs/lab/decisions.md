@@ -2448,6 +2448,30 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Interprétation conversationnelle : agent LLM ou réponses déterministes, et un seul moteur** (challenge du 2026-11-14,
+  `lab:challenge-design`). Choix contesté : l'agent LLM `v2/agent/` (décision du 2026-11-14 « Agent conversationnel… »)
+  comme moteur d'interprétation, en parallèle de `julietteknp/AI_interface_acces_soin_hackaton` (`jumeau-chat`, même
+  rôle, dépôt séparé, sous-module figé sur `426422c`).
+  - **Contrainte, en unités.** Ce que la couche sert : part des réponses utiles (chiffre + fourchette + flux quand on
+    demande pourquoi, « pas dans le modèle » quand il faut), part des nombres ancrés (cible 100 %), latence (< 30 s),
+    coût (< 0,20 $ par question), et surtout des **heures-personnes** (budget 480 h) : le profil (recadrage du
+    2026-11-14) range les personas et l'application en couche ultérieure ; la couche ne sert aucun des trois
+    indicateurs principaux (backtest, reproduction DREES, validité des leviers).
+  - **Dérivé de zéro.** Le moins cher qui répond : compilateur à glossaire + phrases à trous sur les sorties du
+    jumeau. Ancrage 100 % par construction, 0 $, sans clé. Il **existe déjà et est testé** : mode déterministe de
+    `jumeau-chat` (projection, objectif « atteindre », hors périmètre, ville → département). Il ne sait pas répondre
+    aux questions libres (« pourquoi », « quelle confiance », comparaison ouverte) ; le compilateur seul plafonne à
+    environ 77 % de phrases bien comprises (décision « tour 6 »).
+  - **Comparaison.** Aucun des deux modes LLM n'est mesuré (pas de clé). Deux moteurs LLM font double emploi.
+    `jumeau-chat` est plus isolé et testé et a plus d'outils ; `v2/agent` a la vérification à la précision affichée
+    (la tolérance ±6 % de `jumeau-chat` accepte tout entier entre ≈ 12 450 et 20 000 pour kinés ARA 2035, dérivé),
+    le contrôle du lexique et le contexte de la carte.
+  - **Verdict : indécidable sans mesure** sur LLM contre déterministe. Mesure : les 22 questions de
+    `v2/agent/questions.yaml` dans les deux modes, notées sur l'utilité (grille ci-dessus) avec la règle d'ancrage
+    stricte. Prix : ~30 min Claude + ~10 min machine + ~3 $, une clé d'API, l'accord pour lancer `jumeau-chat`.
+    Issues : déterministe à 10 points ou moins du LLM en utilité → la carte branche le déterministe, pas de LLM ;
+    LLM nettement meilleur → un seul moteur LLM (`jumeau-chat` + règle stricte + lexique), `v2/agent` réduit au panneau.
+  - **En attendant :** aucun travail nouveau sur le moteur de `v2/agent` ; quelle que soit l'issue, un seul moteur.
 - **Refonte du panneau Leviers de la carte**, transmise le 2026-11-14 par la session UAT et
   dite validée par l'utilisateur·rice. Le panneau est jugé « un peu cryptique et crowded ».
   Les points :
