@@ -1,0 +1,48 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "app",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "--directory",
+        "app",
+        "streamlit",
+        "run",
+        "main.py",
+        "--server.headless",
+        "true",
+        "--server.port",
+        "8501"
+      ],
+      "port": 8501
+    },
+    {
+      "name": "observatoire",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "/private/tmp/claude-501/-Users-jojo-Documents-progdinh-sevel-hackathon-sante/4d68be9b-f161-44f8-ad1f-8055dd2206cc/scratchpad/evolution-soin/web",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3000"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "da",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8765",
+        "--directory",
+        "/private/tmp/claude-501/-Users-jojo-Documents-progdinh-sevel-hackathon-sante/4d68be9b-f161-44f8-ad1f-8055dd2206cc/scratchpad/da"
+      ],
+      "port": 8765
+    }
+  ]
+}
