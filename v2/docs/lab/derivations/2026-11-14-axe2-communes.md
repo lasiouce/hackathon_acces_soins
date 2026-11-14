@@ -184,3 +184,59 @@ Le point et le reste sont inchangés (K3).
 - CD : couverture des classes 11–100 au-dessus de 75 %.
 - Kinés à l'EPCI : la classe 1–2 reste juste sous 75 %, puisque K4 ne
   change rien pour les petites unités.
+
+## K5 (ajout du 2026-11-14, inscrit avant tout passage, à la demande de l'utilisateur·rice)
+**Contexte.** K3 et K4 tiraient les erreurs passées telles quelles. Leur
+largeur reproduisait le niveau d'erreur propre à chaque profession sur la
+fenêtre, et ce niveau ne s'est pas reproduit ensuite : IDE trop larges, CD
+trop étroits (jugements N10 et N11 de l'axe 3, connus avant cette
+inscription).
+
+**Modèle de la largeur (loi explicite).** Pour la profession p et la
+commune c du département d :
+
+    log((n_c + ½)/(p_c + ½)) = b_p + σ_D,p·z_d + √(φ_p/(n0_c + ½) + κ_p)·z_c,   z ~ N(0, 1)
+
+- Le terme z_d est **commun aux communes d'un département**, comme dans
+  K3.
+- σ_L²(n) = φ/(n + ½) + κ : φ est une surdispersion de type Poisson, κ un
+  plancher (déménagements, chocs).
+- **Estimation dans la fenêtre**, sur toutes les pseudo-origines
+  (ℓ = 0 à 4) :
+  - b et σ_D sont la moyenne et l'écart-type des erreurs départementales ;
+  - φ et κ sont estimés par maximum de vraisemblance gaussien sur les
+    erreurs locales, écrêtées aux centiles 1 et 99 (règle fixée ici).
+- **Mise en commun entre professions.** C'est le seul changement de
+  principe. log σ_D, log φ et log κ sont **rétrécis de moitié** vers leur
+  moyenne sur les trois professions, à la même origine (poids 0,5 ;
+  supposé).
+  - Raison : avec 1 à 5 pseudo-origines, l'échelle d'erreur propre à une
+    profession est estimée sur trop peu de périodes. La moyenne des
+    professions est un a priori plus stable.
+  - b n'est pas mis en commun : un biais est propre à la profession.
+- **Tirages.** S = 200 ; on somme les tirages pour les grains BV et EPCI.
+  Le point est celui de K3.
+
+**Jugement.**
+- N10 (2014–2020, h = 5), déjà vu par l'axe 2 à travers les jugements de
+  K3 et K4.
+- Puis une origine réservée, proposée à l'axe 3 : **2022, h = 3**
+  (cible 2025). C'est une confirmation partielle, puisque 2025 a déjà
+  été vue comme cible.
+- Enfin un dépôt communal (préfixe `axe2_`, avec préavis à l'axe 3).
+
+**Prédiction (supposée).**
+- La couverture globale de chaque profession se rapproche de 80 % : IDE
+  sous 83 %, CD au-dessus de 74 %.
+- Au moins un grain passe N10 pour les kinés.
+
+### K5 : écart avant passage (2026-11-14)
+- **Ce qui change.** σ_D est estimé par un **écart-type robuste**,
+  1,4826 × la médiane des écarts absolus à la médiane, au lieu de
+  l'écart-type ordinaire. Le centre b devient la **médiane**.
+- **Pourquoi.** Le diagnostic des paramètres a montré σ_D brut = 1,74 pour
+  les CD, origine 2018. Quelques départements à très petit total ont des
+  erreurs log extrêmes. La mise en commun aurait transmis cette valeur aux
+  autres professions : σ_D des IDE serait passé de 0,175 à 0,245.
+- **Ce qui n'a pas été regardé.** Aucune couverture, ni sur 2014–2020 ni
+  sur la réservée. Le fichier généré avant cet écart est remplacé.

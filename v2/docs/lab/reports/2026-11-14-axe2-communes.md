@@ -207,6 +207,28 @@ relative par classe, sur des pseudo-prévisions dans la fenêtre.
   - C'est l'hypothèse « l'erreur passée prédit l'erreur future » qui
     échoue, pas la structure départementale + locale.
 
+## K5 : loi explicite de la largeur, mise en commun entre professions (inscrit avant passage)
+- **Modèle.** L'erreur relative suit une loi log-normale de variance
+  σ_D² (commune au département) + φ/(n0 + ½) + κ.
+  - Ces paramètres sont estimés dans la fenêtre : σ_D par un écart-type
+    robuste, φ et κ par maximum de vraisemblance.
+  - log σ_D, log φ et log κ sont rétrécis de moitié vers la moyenne des
+    trois professions ([dérivation, § K5](../derivations/2026-11-14-axe2-communes.md)).
+- **Écart avant passage.** L'écart-type de σ_D est devenu robuste, après
+  le diagnostic σ_D = 1,74 (CD, 2018). Aucune couverture n'avait été
+  regardée.
+- **Paramètres obtenus (mesurés).**
+  - σ_D : de 0,05 à 0,09.
+  - φ : de 0,31 à 0,52. Le bruit local est inférieur au Poisson pur :
+    φ < 1.
+  - κ : de 0,002 à 0,04.
+- **Fichiers.**
+  - `v2/methodes/out/n10_soumission_k5.parquet` : 2014–2020, h = 5.
+  - `n10_reservee_k5_2022h3.parquet` : origine 2022, h = 3, réservée.
+  - Code : `v2/methodes/communes_k5.py`, environ 1 min.
+- **Jugement.** Confié à l'axe 3. L'axe 2 n'a regardé aucune couverture de
+  K5.
+
 ## Ce que ça change (dérivé)
 1. **La bande d'une commune a deux parties.**
    - Une partie **locale** : de type Poisson, indépendante entre communes.
