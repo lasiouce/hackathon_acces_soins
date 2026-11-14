@@ -3430,3 +3430,10 @@ ajoute « densités pour 100 000 habitants » au contexte en mode IA, ce qui l'�
 `chatbot/chat/verif.py` (unité de référence), à voir avec Juliette.
 **Limites.** Un seul passage par configuration, sur un jeu écrit par l'auteur de l'agent ; la justesse qualitative
 (phrases) n'est pas mesurée, seulement relue pour le lexique ; coût non mesuré (le chatbot ne renvoie pas l'usage).
+
+## 2026-11-14 — Squelette : la conversation est ouverte au chargement de la carte
+
+**Décision.** Le panneau « Questions » s'ouvre au chargement (ordinateur : à droite ; mobile : en bas), refermable par
+le bouton « Questions » ou la croix. Aucun autre changement de mise en page : la refonte attend l'équipe UX.
+**Pourquoi.** L'utilisateur·rice : « on avait dit que c'était la nouvelle interface principale pour l'utilisateur » ; un
+panneau fermé par défaut contredisait la décision précédente. Vérifié dans le navigateur (ordinateur et mobile).

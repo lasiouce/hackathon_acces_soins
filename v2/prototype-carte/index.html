@@ -799,8 +799,11 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
   }catch(e){st.textContent="Serveur injoignable.";}
   ASK.busy=false;log.scrollTop=log.scrollHeight;}
 function buildAsk(){
-  $("#askbtn").onclick=async()=>{const on=document.body.classList.toggle("askon");$("#askbtn").setAttribute("aria-pressed",on);
-    if(on){try{const e=await fetch("/api/agent/etat").then(r=>r.json());$("#askst").textContent=(e.disponible?e.message+" ":e.message)+(e.disponible?"Chaque nombre vient du modèle et est vérifié.":"");$("#askf button").disabled=!e.disponible;}catch{}$("#askq").focus();}};
+  // interface principale (décision du 2026-11-14) : la conversation est ouverte au chargement, refermable
+  const open=async(on,focus=true)=>{document.body.classList.toggle("askon",on);$("#askbtn").setAttribute("aria-pressed",on);
+    if(on){try{const e=await fetch("/api/agent/etat").then(r=>r.json());$("#askst").textContent=(e.disponible?e.message+" ":e.message)+(e.disponible?"Chaque nombre vient du modèle et est vérifié.":"");$("#askf button").disabled=!e.disponible;}catch{}if(focus)$("#askq").focus();}};
+  $("#askbtn").onclick=()=>open(!document.body.classList.contains("askon"));
+  open(true,false);
   $("#askclose").onclick=()=>$("#askbtn").click();
   $("#askf").onsubmit=e=>{e.preventDefault();const q=$("#askq").value;$("#askq").value="";askSend(q);};
   $("#askchips").onclick=e=>{const b=e.target.closest("button");if(b)askSend(b.textContent);};}
