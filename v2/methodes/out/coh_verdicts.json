@@ -1,0 +1,543 @@
+{
+ "N1": {
+  "jumeau_taux_locaux": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_apc": 8.743532959490798,
+    "axe2_cohortes_c1": 7.731522843045128,
+    "axe2_cohortes_c2": 7.731522843045128,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.6263461647704798,
+   "ci": [
+    -0.9716440140278575,
+    -0.2700434880930045
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "delta_vs_A0": 0.0,
+   "ci95_vs_A0": [
+    0.0,
+    0.0
+   ]
+  },
+  "axe2_apc": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_apc": 8.743532959490798,
+    "axe2_cohortes_c1": 7.731522843045128,
+    "axe2_cohortes_c2": 7.731522843045128,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -0.5598891777660384,
+   "ci": [
+    -0.9145041827964712,
+    -0.2024528152518811
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "delta_vs_A0": 0.06645698700444136,
+   "ci95_vs_A0": [
+    -0.025650560048097005,
+    0.15648117642157539
+   ]
+  },
+  "axe2_cohortes_c1": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_apc": 8.743532959490798,
+    "axe2_cohortes_c1": 7.731522843045128,
+    "axe2_cohortes_c2": 7.731522843045128,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -1.5718992942117085,
+   "ci": [
+    -2.1749535273088125,
+    -0.9852126942102786
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "delta_vs_A0": -0.9455531294412287,
+   "ci95_vs_A0": [
+    -1.5126420314405415,
+    -0.465271518343659
+   ]
+  },
+  "axe2_cohortes_c2": {
+   "best_naive": "naive_tendance",
+   "mape": {
+    "axe2_apc": 8.743532959490798,
+    "axe2_cohortes_c1": 7.731522843045128,
+    "axe2_cohortes_c2": 7.731522843045128,
+    "jumeau_taux_locaux": 8.677075972486357,
+    "naive_persistance": 9.915830739686857,
+    "naive_tendance": 9.303422137256836
+   },
+   "delta": -1.5718992942117085,
+   "ci": [
+    -2.1749535273088125,
+    -0.9852126942102786
+   ],
+   "issue": "gagne",
+   "precision_nationale": true,
+   "limite_h1_ok": true,
+   "delta_vs_A0": -0.9455531294412287,
+   "ci95_vs_A0": [
+    -1.5126420314405415,
+    -0.465271518343659
+   ]
+  }
+ },
+ "N6": {
+  "jumeau_taux_locaux": {
+   "crps_log": 0.07322502756899185,
+   "meilleure_naive": "naive_persistance",
+   "crps_naive": 0.06232925619847696,
+   "delta": 0.010895771370514895,
+   "ci95": [
+    0.00539322479470743,
+    0.0158983318427465
+   ],
+   "issue": "perd",
+   "couverture80": 0.5448028673835126,
+   "couverture50": 0.3046594982078853,
+   "calibre80": false,
+   "calibre50": false,
+   "pit10": [
+    13,
+    10,
+    5,
+    6,
+    10,
+    15,
+    38,
+    25,
+    44,
+    113
+   ],
+   "n": 279,
+   "cellules": [
+    [
+     "dentistes",
+     "2021"
+    ],
+    [
+     "pharmaciens",
+     "2021"
+    ],
+    [
+     "sages-femmes",
+     "2021"
+    ]
+   ]
+  },
+  "axe2_apc": {
+   "crps_log": 0.06645667178235255,
+   "meilleure_naive": "naive_persistance",
+   "crps_naive": 0.06232925619847696,
+   "delta": 0.004127415583875596,
+   "ci95": [
+    0.00015528929206488838,
+    0.008520819364344316
+   ],
+   "issue": "perd",
+   "couverture80": 0.5412186379928315,
+   "couverture50": 0.3225806451612903,
+   "calibre80": false,
+   "calibre50": false,
+   "pit10": [
+    41,
+    12,
+    21,
+    12,
+    18,
+    19,
+    22,
+    18,
+    30,
+    86
+   ],
+   "n": 279,
+   "cellules": [
+    [
+     "dentistes",
+     "2021"
+    ],
+    [
+     "pharmaciens",
+     "2021"
+    ],
+    [
+     "sages-femmes",
+     "2021"
+    ]
+   ]
+  },
+  "axe2_cohortes_c1": {
+   "crps_log": 0.06537884368781836,
+   "meilleure_naive": "naive_persistance",
+   "crps_naive": 0.06232925619847696,
+   "delta": 0.003049587489341407,
+   "ci95": [
+    -0.0005995689839219147,
+    0.006499187167627841
+   ],
+   "issue": "égalité",
+   "couverture80": 0.7347670250896058,
+   "couverture50": 0.45878136200716846,
+   "calibre80": false,
+   "calibre50": true,
+   "pit10": [
+    7,
+    14,
+    15,
+    16,
+    27,
+    27,
+    33,
+    41,
+    32,
+    67
+   ],
+   "n": 279,
+   "cellules": [
+    [
+     "dentistes",
+     "2021"
+    ],
+    [
+     "pharmaciens",
+     "2021"
+    ],
+    [
+     "sages-femmes",
+     "2021"
+    ]
+   ]
+  },
+  "axe2_cohortes_c2": {
+   "crps_log": 0.0653830198939579,
+   "meilleure_naive": "naive_persistance",
+   "crps_naive": 0.06232925619847696,
+   "delta": 0.0030537636954809377,
+   "ci95": [
+    -0.0006283131513724327,
+    0.0066337081505025855
+   ],
+   "issue": "égalité",
+   "couverture80": 0.7168458781362007,
+   "couverture50": 0.4767025089605735,
+   "calibre80": false,
+   "calibre50": true,
+   "pit10": [
+    8,
+    11,
+    16,
+    21,
+    22,
+    30,
+    29,
+    38,
+    35,
+    69
+   ],
+   "n": 279,
+   "cellules": [
+    [
+     "dentistes",
+     "2021"
+    ],
+    [
+     "pharmaciens",
+     "2021"
+    ],
+    [
+     "sages-femmes",
+     "2021"
+    ]
+   ]
+  },
+  "exclues": "cellules sans 20 erreurs passées : toutes sauf origine 2021 pour SF, CD, PH (h = 5)"
+ },
+ "secondaire": {
+  "axe2_apc": {
+   "couverture80_toutes_origines": 0.5111867704280155,
+   "couverture50_toutes_origines": 0.29523346303501946,
+   "crps_log_toutes_origines": 0.06482659996001804,
+   "couverture80_par_profession": {
+    "dentistes": 0.482,
+    "infirmiers-liberaux": 0.513,
+    "kines": 0.584,
+    "pharmaciens": 0.716,
+    "sages-femmes": 0.256
+   },
+   "pit10": [
+    594,
+    166,
+    149,
+    114,
+    128,
+    125,
+    113,
+    108,
+    164,
+    395
+   ],
+   "n": 2056
+  },
+  "axe2_cohortes_c1": {
+   "couverture80_toutes_origines": 0.7757782101167315,
+   "couverture50_toutes_origines": 0.5,
+   "crps_log_toutes_origines": 0.056690290520760266,
+   "couverture80_par_profession": {
+    "dentistes": 0.687,
+    "infirmiers-liberaux": 0.81,
+    "kines": 0.693,
+    "pharmaciens": 0.868,
+    "sages-femmes": 0.766
+   },
+   "pit10": [
+    171,
+    196,
+    207,
+    197,
+    226,
+    228,
+    197,
+    181,
+    172,
+    281
+   ],
+   "n": 2056
+  },
+  "axe2_cohortes_c2": {
+   "couverture80_toutes_origines": 0.7602140077821011,
+   "couverture50_toutes_origines": 0.5029182879377432,
+   "crps_log_toutes_origines": 0.056594204794860985,
+   "couverture80_par_profession": {
+    "dentistes": 0.682,
+    "infirmiers-liberaux": 0.753,
+    "kines": 0.634,
+    "pharmaciens": 0.86,
+    "sages-femmes": 0.764
+   },
+   "pit10": [
+    194,
+    186,
+    200,
+    199,
+    198,
+    236,
+    201,
+    177,
+    173,
+    292
+   ],
+   "n": 2056
+  }
+ },
+ "par_profession": {
+  "dentistes": {
+   "axe2_apc": {
+    "mape_delta_vs_A0": -0.280280928578966,
+    "ci95": [
+     -0.49610163203455965,
+     -0.057996743071872824
+    ],
+    "N1": "bat",
+    "crps_delta_vs_naive": 0.004639224543748599,
+    "ci95_crps": [
+     -0.001430420963726163,
+     0.011199083558782573
+    ],
+    "N6": "égale",
+    "couverture80": 0.41
+   },
+   "axe2_cohortes_c1": {
+    "mape_delta_vs_A0": -0.9171094671205058,
+    "ci95": [
+     -1.4472596267854634,
+     -0.44092590975277907
+    ],
+    "N1": "bat",
+    "crps_delta_vs_naive": -0.00495965347704691,
+    "ci95_crps": [
+     -0.012843568806342628,
+     0.0027040548554103008
+    ],
+    "N6": "égale",
+    "couverture80": 0.65
+   },
+   "axe2_cohortes_c2": {
+    "mape_delta_vs_A0": -0.9171094671205058,
+    "ci95": [
+     -1.4472596267854634,
+     -0.44092590975277907
+    ],
+    "N1": "bat",
+    "crps_delta_vs_naive": -0.005231873678969143,
+    "ci95_crps": [
+     -0.01292011644471554,
+     0.0023462529776904994
+    ],
+    "N6": "égale",
+    "couverture80": 0.65
+   }
+  },
+  "infirmiers-liberaux": {
+   "axe2_apc": {
+    "mape_delta_vs_A0": -0.3462220082574028,
+    "ci95": [
+     -0.5237162068650085,
+     -0.16044216301575798
+    ],
+    "N1": "bat"
+   },
+   "axe2_cohortes_c1": {
+    "mape_delta_vs_A0": -0.9642119978669372,
+    "ci95": [
+     -1.4768014352266183,
+     -0.4320209573355329
+    ],
+    "N1": "bat"
+   },
+   "axe2_cohortes_c2": {
+    "mape_delta_vs_A0": -0.9642119978669372,
+    "ci95": [
+     -1.4768014352266183,
+     -0.4320209573355329
+    ],
+    "N1": "bat"
+   }
+  },
+  "kines": {
+   "axe2_apc": {
+    "mape_delta_vs_A0": 0.1529098773967439,
+    "ci95": [
+     -0.03857698125489917,
+     0.3620472755299144
+    ],
+    "N1": "égale"
+   },
+   "axe2_cohortes_c1": {
+    "mape_delta_vs_A0": 0.042790340879820477,
+    "ci95": [
+     -1.389100314358897,
+     1.194668327804166
+    ],
+    "N1": "égale"
+   },
+   "axe2_cohortes_c2": {
+    "mape_delta_vs_A0": 0.042790340879820477,
+    "ci95": [
+     -1.389100314358897,
+     1.194668327804166
+    ],
+    "N1": "égale"
+   }
+  },
+  "pharmaciens": {
+   "axe2_apc": {
+    "mape_delta_vs_A0": 0.4083655425004862,
+    "ci95": [
+     0.12806060524526225,
+     0.6985012673545679
+    ],
+    "N1": "échoue",
+    "crps_delta_vs_naive": -0.007072398470001202,
+    "ci95_crps": [
+     -0.011091552910633457,
+     -0.003051422290405518
+    ],
+    "N6": "bat",
+    "couverture80": 0.7821782178217822
+   },
+   "axe2_cohortes_c1": {
+    "mape_delta_vs_A0": -0.08687616191327407,
+    "ci95": [
+     -0.382870036474433,
+     0.2102843316686448
+    ],
+    "N1": "égale",
+    "crps_delta_vs_naive": 0.008267976854306754,
+    "ci95_crps": [
+     0.003241830564126749,
+     0.013404185251092165
+    ],
+    "N6": "échoue",
+    "couverture80": 0.7326732673267327
+   },
+   "axe2_cohortes_c2": {
+    "mape_delta_vs_A0": -0.08687616191327407,
+    "ci95": [
+     -0.382870036474433,
+     0.2102843316686448
+    ],
+    "N1": "égale",
+    "crps_delta_vs_naive": 0.009482291766169666,
+    "ci95_crps": [
+     0.004452027503759445,
+     0.014693572704408126
+    ],
+    "N6": "échoue",
+    "couverture80": 0.7227722772277227
+   }
+  },
+  "sages-femmes": {
+   "axe2_apc": {
+    "mape_delta_vs_A0": 0.2632170296573406,
+    "ci95": [
+     0.15590423919269467,
+     0.3784418496412208
+    ],
+    "N1": "échoue",
+    "crps_delta_vs_naive": 0.014815420677879318,
+    "ci95_crps": [
+     0.005013117081930565,
+     0.02550134894560404
+    ],
+    "N6": "échoue",
+    "couverture80": 0.3974358974358974
+   },
+   "axe2_cohortes_c1": {
+    "mape_delta_vs_A0": -1.9880682367972256,
+    "ci95": [
+     -3.831369157854216,
+     -0.4501510236727546
+    ],
+    "N1": "bat",
+    "crps_delta_vs_naive": 0.005840439090764385,
+    "ci95_crps": [
+     -0.001621226737320905,
+     0.012850017665915389
+    ],
+    "N6": "égale",
+    "couverture80": 0.8461538461538461
+   },
+   "axe2_cohortes_c2": {
+    "mape_delta_vs_A0": -1.9880682367972256,
+    "ci95": [
+     -3.831369157854216,
+     -0.4501510236727546
+    ],
+    "N1": "bat",
+    "crps_delta_vs_naive": 0.004910872999242297,
+    "ci95_crps": [
+     -0.002435285228242186,
+     0.01215548886898887
+    ],
+    "N6": "égale",
+    "couverture80": 0.7948717948717948
+   }
+  }
+ }
+}

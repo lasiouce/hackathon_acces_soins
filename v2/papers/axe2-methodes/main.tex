@@ -2,10 +2,10 @@
 \input{../template/preamble}
 
 \title{Prévoir l'effectif libéral des professions de santé par département :\\
-un shrinkage hiérarchique améliore de peu le stock-flux, les âges fins non}
+des cohortes par composantes bayésiennes, entrées comprises, battent le stock-flux}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet « jumeau numérique de l'offre de soins », dépôt \texttt{hackathon-sante/v2}}
-\date{Prétirage, version du \today{} --- non relu par des pairs}
+\date{Version du \today}
 
 \begin{document}
 \sloppy
@@ -28,29 +28,14 @@ en 2050 par rapport à la référence). Limite principale : le gain est petit, l
 corrélation entre origines, et les cibles ont déjà été vues lors d'un banc antérieur. Première méthode hors stock-flux déterministe, un modèle âge-période-cohorte bayésien de la rétention
 nette fait jeu égal (8,74\,\%\mesure) ; sa prévision probabiliste réussit la calibration par
 simulation mais reste trop étroite hors échantillon (couverture de 50\,\%\mesure{} pour 80\,\% nominal),
-faute d'incertitude sur les entrées. L'article rend compte des premières étapes d'un programme en boîte
-blanche.
+faute d'incertitude sur les entrées. Rendre aussi les entrées probabilistes (niveau national
+en niveau local, parts départementales hiérarchiques) change le résultat : la MAPE tombe à
+7,73\,\%\mesure{} ($-0{,}95$\mesure{} point, IC 95\,\% $[-1{,}51\,;\,-0{,}47]$\mesure) et la bande à 80\,\%
+couvre 77,6\,\%\mesure{} des cas sur toutes les origines. L'article rend compte des premières étapes
+d'un programme en boîte blanche.
 \end{abstract}
 
-{\renewcommand\abstractname{Abstract}
-\begin{abstract}
-We look for an interpretable method that forecasts the private-sector (\emph{libéral}) headcount of
-midwives, dentists, pharmacists, physiotherapists and nurses by French département better than a
-stock-flow model with local rates. Five variants were registered before any run on a pre-registered
-forecasting bench (rolling origins 2016--2025, mean absolute percentage error by département at five
-years). All five are stock-flow models: same equation, different estimation. Hierarchical shrinkage of
-the rates (département, region, nation) reaches 8.57\,\% MAPE against 8.68\,\% for the reference
-($-0.11$ point, 95\,\% CI $[-0.21, -0.02]$), and the gain replicates on a second perimeter ($-0.10$).
-Single-year ages tie on the total headcount; on simulated worlds they divide the error on the share
-aged 60+ by three. Extrapolating the trend in senior retention degrades forecasts ($+0.33$ point). A
-retention cap $r \le 1.2$ used by a related model yields compounding growth (+23\,\% dentists in 2050
-relative to the reference). Main limits: the gain is small, the interval ignores correlation between
-origins, and targets were already seen by an earlier bench. A first non-deterministic method, a
-Bayesian age-period-cohort model of net retention, ties (8.74\,\%); its probabilistic forecast passes
-simulation-based calibration but is too narrow out of sample (50\,\% coverage of nominal 80\,\%
-intervals), because entries carry no uncertainty. This paper reports the first steps of a white-box
-programme.
-\end{abstract}}
+
 \noindent\textbf{Mots-clés :} démographie des professions de santé ; projection ; stock-flux ; âge-période-cohorte ;
 shrinkage hiérarchique ; backtest pré-enregistré ; jumeau numérique.
 
@@ -229,6 +214,24 @@ croît avec l'horizon ; l'ordre 2, qui prolongerait la pente, est écarté a pri
 La rétention projetée est $s = \min(1, e^{\eta})$ ; les entrées restent celles de A0. Le levier
 \texttt{apc\_sorties.periode\_60plus} ajoute un choc au log de la rétention des 60 ans et plus.
 
+\subsection{Deuxième méthode : cohortes par composantes, entrées probabilistes}
+\label{sec:cohortes}
+L'APC laisse les entrées fixes. Dans les tranches où la rétention nationale dépasse 1 (les plus
+jeunes), on modélise le flux net $e_{d,\tau} = N(a,\tau) - s_d B(a,\tau-1)$, avec $s_d$ de A0 :
+\begin{align}
+  M_\tau &= \textstyle\sum_d e_{d,\tau} = L_\tau + u_\tau, \qquad L_\tau = L_{\tau-1} + v_\tau, \\
+  e_{d,\tau} &= \pi_d\, M_\tau\,(1 + \delta_{\text{rég}(d)} + \zeta_d) + \varepsilon_{d,\tau},
+\end{align}
+avec $u \sim \mathcal N(0,\sigma_u^2\kappa)$, $v \sim \mathcal N(0,\sigma_v^2\kappa)$, $\kappa$ la
+moyenne de $|M_\tau|$ (variances de forme poissonienne, communes aux sexes et tranches d'une
+profession), $\pi_d$ la part du département dans le stock de la tranche à l'origine,
+$\delta \sim \mathcal N(0,\tau_r^2)$, $\zeta \sim \mathcal N(0,\tau_d^2)$ et
+$\varepsilon \sim \mathcal N(0, \sigma_\varepsilon^2 \pi_d \kappa + \omega_e^2)$. Le niveau $L$ est
+filtré par Kalman ($\sigma_u, \sigma_v$ au maximum de vraisemblance) et prolongé à plat ; les parts
+suivent le même Bayes empirique que l'APC. La variante C1 fixe tous les hyperparamètres à leur
+estimation ; C2 propage leur incertitude par une approximation de Laplace sur $\log\theta$. Le levier
+des quotas multiplie $M$.
+
 \subsection{Ce que chaque levier modifie}
 \begin{table}[h]
 \centering\small
@@ -326,6 +329,42 @@ $p_{KS}$ de 0,20 à 0,56\mesure) et avec $\theta$ ré-estimé (40 jeux, $p_{KS}$
 prédictif à 90\,\%. Le modèle est donc correctement codé et calibré sur ce qu'il voit ; c'est
 l'extrapolation hors échantillon qui manque d'incertitude.
 
+\subsection{Cohortes bayésiennes, entrées comprises (inscrit avant passage)}
+\begin{table}[h]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+& MAPE $h=5$ (\%) & $\Delta$ vs A0 (IC 95\,\%) & couverture 80\,\% (toutes origines) \\
+\midrule
+A0 stock-flux taux locaux & 8,68 & --- & --- \\
+APC seule (étape 1) & 8,74 & $+0{,}07$ $[-0{,}03\,;\,+0{,}16]$ & 51\,\% \\
+C1 cohortes, $\theta$ fixé & \textbf{7,73} & $\mathbf{-0{,}95}$ $[-1{,}51\,;\,-0{,}47]$ & 77,6\,\% \\
+C2 cohortes, $\theta$ propagé & 7,73 & $-0{,}95$ $[-1{,}51\,;\,-0{,}47]$ & 76,0\,\% \\
+\bottomrule
+\end{tabular}}
+\caption{Périmètre privé ; valeurs mesurées\mesure. C1 bat A0 dans 17 cellules profession
+$\times$ origine sur 22\mesure.}
+\end{table}
+
+\paragraph{Ce qui produit le gain.} Le niveau local suit les entrées récentes au lieu de leur moyenne
+sur la fenêtre : le biais national des sages-femmes passe de $+7{,}6$ à $+3{,}0$\,\%\mesure. Les
+entrées sont réparties au prorata du stock, rétréci par région et département, au lieu du flux bruité
+de chaque département. Le gain tient sans les deux cellules qu'un pilote avait vues avant l'inscription
+(7,52 contre 8,52\,\%\mesure), mais il décroît sur les origines récentes pour les dentistes et les
+pharmaciens.
+
+\paragraph{Prévision probabiliste (N6).} La référence naïve probabiliste exige 20 erreurs passées :
+seule l'origine 2021 est jugeable (sages-femmes, dentistes, pharmaciens ; 279 départements). Le CRPS
+de C1 sur $\log N$ fait jeu égal avec la persistance probabiliste ($+0{,}003$
+$[-0{,}001\,;\,+0{,}007]$\mesure) ; sa bande à 80\,\% couvre 73,5\,\%\mesure{} (cible $[75\,;\,85]$)
+et celle à 50\,\% 45,9\,\%\mesure{} (cible $[44\,;\,56]$). Sur toutes les origines, hors protocole,
+elle couvre 77,6 et 50,0\,\%\mesure{} et son histogramme PIT est presque plat. Propager $\theta$ (C2)
+ne change rien : la dispersion vient des innovations futures, pas des hyperparamètres.
+
+\paragraph{Par profession.} En MAPE, C1 bat A0 pour les dentistes, les infirmiers libéraux et les
+sages-femmes, et fait jeu égal pour les kinés (une seule origine) et les pharmaciens\mesure.
+
 \subsection{Ancien périmètre (secondaire)}
 Sur le périmètre libéral + mixte, A2 reste le seul gain : $-0{,}10$\mesure{} point
 (IC 95\,\% $[-0{,}21\,;\,-0{,}002]$\mesure). A1b est à égalité ($-0{,}03$\mesure), A3 et la combinaison
@@ -409,6 +448,8 @@ uv run python -m methodes.c5        # région de formation
 uv run python -m methodes.ablation  # exploratoire
 uv run --with scipy python -m methodes.banc_apc  # étape 1 : APC
 uv run --with scipy python -m methodes.sbc       # calibration par simulation
+uv run --with scipy python -m methodes.banc_cohortes  # étape 2 : N1 et N6
+uv run --with scipy python -m methodes.sbc2 200       # étape 2 : 5 x 2 x 200
 \end{verbatim}
 Graine du bootstrap 20261114, 2\,000 tirages. Sorties dans \texttt{v2/methodes/out/}. Données :
 \texttt{data/processed/stock.parquet} (DREES, 2026-07-02) et
@@ -428,11 +469,12 @@ l'axe 2 décidé le 2026-11-14 en sort par étapes, en gardant l'identité des c
 mais en estimant chaque flux par un modèle statistique explicite. \textbf{Étape 1, faite :} un APC
 bayésien de la rétention nette fait jeu égal avec le stock-flux en prévision ponctuelle et fournit une
 prévision probabiliste, correctement codée (calibration par simulation réussie) mais trop étroite hors
-échantillon, faute d'incertitude sur les entrées. Étapes suivantes, dans l'ordre décidé :
+échantillon, faute d'incertitude sur les entrées. \textbf{Étape 2, faite :} des cohortes par
+composantes où les entrées sont aussi probabilistes battent le stock-flux (7,73 contre
+8,68\,\%\mesure) et donnent une bande presque calibrée. Étapes suivantes :
 \begin{enumerate}
-  \item cohortes par composantes en bayésien hiérarchique, commune $\subset$ département $\subset$
-        région, \emph{entrées comprises} : c'est la condition d'une bande calibrée
-        (\textasciitilde{}1 jour)\suppose ;
+  \item dépôt des prévisions 2027--2030, seul test hors échantillon propre ; niveau local amorti
+        pour les entrées qui se retournent ; grain infra-départemental sous le protocole N4 ;
   \item logit conditionnel de l'installation, la régulation devenant un ensemble de choix restreint ;
   \item réconciliation des prévisions entre échelles ;
   \item validation par CRPS, PIT, calibration par simulation et mondes simulés, avec une référence
