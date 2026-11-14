@@ -1,10 +1,10 @@
 \documentclass[11pt]{article}
 \input{../template/preamble}
 
-\title{Vingt-sept hyperparamètres sourcés pour un jumeau numérique de l'offre de soins \enquote{libérale}~: catalogue, statut de preuve et lien aux leviers de politique publique}
+\title{Vingt-neuf hyperparamètres sourcés et audités pour un jumeau numérique de l'offre de soins \enquote{libérale}~: catalogue, statut de preuve et panel de politiques publiques}
 \author[1]{Équipe hackathon-santé}
 \affil[1]{Projet \enquote{jumeau numérique de l'offre de soins}, dépôt \texttt{hackathon-sante/v2}}
-\date{Prétirage, version du \today{} --- non relu par des pairs}
+\date{Version du \today}
 
 \begin{document}
 \maketitle
@@ -17,59 +17,35 @@ pour cinq professions (sages-femmes, chirurgiens-dentistes, pharmaciens,
 masseurs-kinésithérapeutes, infirmiers) sur quatre mécanismes propres à chaque
 profession : régulation conventionnelle de l'installation, filières en
 pharmacie, spécialisation en odontologie, abandon en études infirmières.
-Nous y ajoutons les paramètres de sortie communs.
+Nous y ajoutons les sorties, la part privée des salariés hospitaliers et le
+flux de diplômés étrangers.
 
-Le catalogue compte 27~hyperparamètres : 19~sourcés, 1~mesuré, 1~supposé et
-6~non mesurables à ce jour. Un seul effet causal de la régulation est
-publié : $\num{-25.57}$ infirmières libérales pour \num{100000}~habitants en
-zone sur-dotée, par rapport aux zones intermédiaires~\cite{irdes270}.
+Le catalogue compte 29~hyperparamètres : 20~sourcés, 2~mesurés, 1~supposé et
+6~non mesurables à ce jour. Toutes les citations du projet ont été relues en
+texte intégral : 469~citations, dont 382~confirmées, 55~corrigées et
+32~non vérifiables. Un seul effet causal de la régulation est publié :
+$\num{-25.57}$ infirmières libérales pour \num{100000}~habitants en zone
+sur-dotée, par rapport aux zones intermédiaires~\cite{irdes270}.
 
-Deux affirmations courantes ne résistent pas aux sources.
+Trois résultats changent le modèle.
 \begin{itemize}
-\item Le \enquote{30~\% d'abandon} en institut de formation en soins
-  infirmiers (IFSI) n'a pas de source primaire. Ce que la DREES mesure, c'est
-  un rendement diplômés / entrants passé de \num{0.84}\derive{} à
-  \num{0.72}\derive{}.
-\item L'obligation d'exercer deux ans en zone sous-dotée vise les
-  kinésithérapeutes, et non les dentistes.
+\item Le \enquote{30~\% d'abandon en première année} d'IFSI n'a pas de
+  source primaire. Le rendement diplômés / entrants mesuré sur les données
+  de la DREES est passé de \num{0.84}\mesure{} à \num{0.72}\mesure.
+\item Dans les établissements de santé, la part privée des sages-femmes
+  salariées vaut 19,8~\%\mesure{} dans la SAE, comme dans le RPPS. Celle
+  des pharmaciens vaut 29,4~\%\mesure{}, contre 17~\% dans le RPPS.
+\item Le flux de diplômés étrangers est sous-estimé dans les projections
+  anciennes. Il atteint environ \num{1300} dentistes et \num{2200}
+  kinésithérapeutes par an.
 \end{itemize}
-Nous traduisons enfin 14~politiques publiques en réglages de ces
-hyperparamètres, pour l'interface du décideur. Huit ont un point d'entrée
-dans le code du jumeau ; trois sont jouables aujourd'hui.
-Limite principale : aucun effet chiffré de la régulation n'existe pour les
-sages-femmes, les kinésithérapeutes ou les dentistes, ni sur la destination
-des entrants bloqués.
+
+Ces paramètres alimentent un panel de 14~politiques publiques, dont 9 sont
+jouables dans l'interface du décideur. Limite principale : aucun effet
+chiffré de la régulation n'existe pour les sages-femmes, les
+kinésithérapeutes ou les dentistes, ni sur la destination des entrants
+bloqués.
 \end{abstract}
-% Le préambule commun ne charge que babel[french] : l'environnement otherlanguage{english}
-% du gabarit échouerait à la compilation. On renomme seulement le titre du résumé.
-{\renewcommand{\abstractname}{Abstract}
-\begin{abstract}
-A digital twin of the French health workforce simulates public policies by
-setting hyperparameters. Each one needs a value, a primary source, a vintage
-and an uncertainty. We build this catalogue for five professions (midwives,
-dentists, pharmacists, physiotherapists, nurses). It covers four
-profession-specific mechanisms: contractual regulation of new practices,
-career tracks in pharmacy, dental specialisation, and attrition in nursing
-school. It also covers the exit parameters shared by all professions.
-
-The catalogue holds 27 hyperparameters: 19 sourced, 1 measured, 1 assumed
-and 6 not yet measurable. Only one causal estimate of regulation is
-published: $-25.57$ self-employed nurses per 100{,}000 inhabitants in
-over-supplied areas relative to intermediate areas~\cite{irdes270}.
-
-Two common claims fail against the sources. The ``30\,\% attrition'' figure
-in nursing school has no primary source; what the DREES data measure is a
-graduates-to-entrants ratio that fell from 0.84 to 0.72. The two-year
-obligation to practise in under-served areas applies to physiotherapists,
-not to dentists.
-
-Finally, we map 14 public policies onto these hyperparameters for the
-decision-maker's interface. Eight have an entry point in the twin's code;
-three can be played today.
-
-Main limitation: no quantified effect of regulation exists for midwives,
-physiotherapists or dentists, nor on where blocked entrants go.
-\end{abstract}}
 \noindent\textbf{Mots-clés :} démographie des professions de santé ;
 jumeau numérique ; régulation de l'installation ; zonage conventionnel ;
 abandon en formation ; hyperparamètres sourcés.
@@ -99,7 +75,8 @@ d'hyperparamètres. Les modèles de référence ne suffisent pas.
 \begin{itemize}
 \item Omphale (Insee) projette la population.
 \item Les projections de la DREES par profession~\cite{dd76,er1062,er1075,er1319}
-  ne paramètrent que la formation, la cessation et les diplômés étrangers.
+  paramètrent la formation, la cessation, les reprises, les transitions de
+  mode d'exercice, les changements de région et les diplômés étrangers.
 \end{itemize}
 Aucun des deux n'expose les mécanismes propres à chaque profession sur
 lesquels portent les politiques récentes : régulation conventionnelle de
@@ -112,7 +89,7 @@ mesurables ?
 
 \paragraph{Contributions.}
 \begin{enumerate}
-\item Un catalogue de 27~fiches. Chacune donne un mécanisme, une valeur,
+\item Un catalogue de 29~fiches. Chacune donne un mécanisme, une valeur,
   une unité, une incertitude, une source primaire, un millésime et un statut
   de preuve. Les fiches sont dans \texttt{v2/docs/lab/fiches/param-*.md}.
 \item Pour la régulation, les textes conventionnels exacts des quatre
@@ -127,6 +104,8 @@ mesurables ?
   série longue de la DREES, avec son script.
 \item La correspondance entre chaque hyperparamètre, le module du jumeau qui
   le lit et le levier de politique publique qui le déplace.
+\item Un audit en texte intégral de toutes les sources citées par le
+  projet, avec un registre d'une ligne par citation.
 \end{enumerate}
 
 \section{Travaux existants}
@@ -152,7 +131,7 @@ jusqu'en 2050~\cite{er1319}.
 
 \paragraph{Évaluation de la régulation.}
 L'IRDES~\cite{irdes270} estime par différence de différences l'effet du
-zonage infirmier de 2012 sur la période 2006--2016. C'est la seule
+zonage infirmier, expérimenté en 2008--2009 et généralisé en 2012, sur la période 2006--2016. C'est la seule
 estimation causale chiffrée que nous ayons trouvée.
 \begin{itemize}
 \item L'IGAS~\cite{igas2023} constate une baisse des disparités pour les
@@ -279,8 +258,8 @@ DREES~\cite{dd76}. Elle inclut décès, retraite et départs.
 
 \subsection{Catalogue}
 
-Le tableau~\ref{tab:catalogue} donne les 27~hyperparamètres. Répartition
-par statut : 19~sourcés, 1~mesuré, 1~supposé, 6~non mesurables.
+Le tableau~\ref{tab:catalogue} donne les 29~hyperparamètres. Répartition
+par statut : 20~sourcés, 2~mesurés, 1~supposé, 6~non mesurables.
 
 \begin{table}[p]
 \centering\scriptsize
@@ -296,9 +275,9 @@ regul-theta-fuite & IDE & régulation & $\theta = \num{0.80}$ $[\num{0.74} ; \nu
 sf-regul-regle & SF & régulation & sur-dotée : 1 pour 1 ; 12,2~\%\derive{} de la population (avenant 4, 2018~\cite{avenant4sf}) & So \\
 sf-regul-effet & SF & régulation & direction seulement (disparités en baisse, 2016--2019~\cite{igas2023}) & NM \\
 mk-regul-regle & MK & régulation & non prioritaire : 1 pour 1 ; 26,5~\%\derive{} de la population (avenant 7, 2023~\cite{avenant7mk}) & So \\
-mk-obligation-exercice & MK & installation & 2 ans en zone (très) sous-dotée ou 2 ans en établissement ; premiers diplômés concernés en 2027~\cite{avenant7mk} & So \\
+mk-obligation-exercice & MK & installation & 2 ans en zone (très) sous-dotée ou 2 ans en établissement ; premiers diplômés concernés vers 2027--2028\derive{}~\cite{avenant7mk} & So \\
 mk-regul-effet & MK & régulation & non chiffré & NM \\
-cd-regul-regle & CD & régulation & non prioritaire : 1 pour 1 ; 4,8~\%\derive{} de la population ; spécialistes exemptés ; effet au 1/1/2025~\cite{conventioncd2023} & So \\
+cd-regul-regle & CD & régulation & non prioritaire : 1 pour 1 ; 4,8~\%\derive{} de la population ; spécialistes dérogatoires (art. 35.5) ; effet au 1/1/2025~\cite{conventioncd2023} & So \\
 cd-regul-effet & CD & régulation & non chiffré ; borne haute d'environ 5~\%\derive{} du flux & NM \\
 regul-report-entrants & 4 prof. & régulation & $\psi$ : qualitatif seulement (report en bordure, remplacement~\cite{irdes270,ccomptes2024}) & NM \\
 \midrule
@@ -306,11 +285,11 @@ regul-report-entrants & 4 prof. & régulation & $\psi$ : qualitatif seulement (r
 ph-filiere-primo-inscrits & PH & filières & D 71,0 ; H 9,5 ; B 8,6 ; G 5,7 ; E 3,5 ; A 1,2 ; C 0,4~\% de \num{3044} primo-inscrits (1/1/2026~\cite{cnop2025}) & So \\
 ph-part-privee-biologie & PH & transitions & $s_G$~=~55,8~\%\derive{} (1/1/2026~\cite{cnop2025}) & So \\
 ph-part-privee-etablissements & PH & transitions & $s_H$~=~28,6~\%\derive{} des inscriptions (Ordre~\cite{cnop2025}) ; 17~\% selon la DREES (axe~4) & So \\
-ph-internat-postes & PH & filières & \num{746} postes (biologie \num{266}, pharmacie hospitalière \num{480}, rentrée 2025~\cite{cnop2024}) ; environ 14~\%\derive{} d'une promotion & So \\
+ph-internat-postes & PH & filières & \num{746} postes (biologie \num{266}, pharmacie hospitalière \num{480}, rentrée 2025~\cite{arrete2024pharma}) ; environ 19~\%\derive{} d'une promotion & So \\
 ph-taux-inscription-diplomes & PH & abandon & 32,8~\% de diplômés non inscrits à 3~ans (2015~\cite{cnop2016}) & So \\
 \midrule
 \multicolumn{5}{l}{\emph{Spécialisation en odontologie}} \\
-cd-specialisation-des & CD & filières & 9,2~\%\derive{} d'une promotion ; ODF 52, CO 25, MBD 44 postes (2024--2025~\cite{arrete2024odonto}) & So \\
+cd-specialisation-des & CD & filières & 9,1~\%\derive{} d'une promotion ; ODF 52, CO 25, MBD 44 postes (2024--2025~\cite{arrete2024odonto}) & So \\
 cd-stock-specialistes & CD & filières & ODF \num{2465}, CO \num{222}, MBD \num{100}, omnipraticiens \num{43242} (2022~\cite{oncd2022}) & So \\
 \midrule
 \multicolumn{5}{l}{\emph{Abandon en études infirmières}} \\
@@ -325,6 +304,10 @@ age-entree-exercice & toutes & installation & SF 24, CD 26, PH 27 à 29~ans (RPP
 cumul-emploi-retraite & toutes & sorties & CD 4,7 ; PH 1,8 ; MK et IDE 1,5 ; SF 0,8~\%\derive{} (2015~\cite{cor2016}) & So \\
 mk-age-retraite & MK & sorties & 66,8 à 67,3~ans (2019--2023~\cite{cnomk2024}) & So \\
 ph-sorties-ordre & PH & sorties & \num{3902} radiations en 2024 ; 18,4~\% de 60~ans et plus~\cite{cnop2024} & So \\
+\midrule
+\multicolumn{5}{l}{\emph{Ajoutés après l'audit et le classement de l'axe~5}} \\
+part-privee-salaries-sae & SF, PH, MK, CD & transitions & part privée des salariés d'établissements de santé : SF 19,8 ; PH 29,4 ; MK 44,3 ; CD 2,2~\%\mesure{} (SAE 2025~\cite{sae708}) & Me \\
+diplomes-etrangers-flux & toutes & installation & CD \num{1300}, MK \num{2200}\derive, IDE 400, PH 240\derive, SF 80\derive{} par an~\cite{dd76,er1075,er1319,cnomk2024} & So \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -351,7 +334,7 @@ d'habitants~\cite{zonagesdatagouv}.
   sur-dotée doit réaliser les deux tiers de son activité dans sa zone
   d'installation~\cite{avenant6ide}.
 \item \textbf{Dentistes.} Les spécialistes (orthopédie dento-faciale,
-  chirurgie orale, médecine bucco-dentaire) sont exemptés~\cite{conventioncd2023}.
+  chirurgie orale, médecine bucco-dentaire) peuvent y déroger (art.~35.5) ; c'est une dérogation, pas une exemption automatique~\cite{conventioncd2023}.
 \item \textbf{Kinésithérapeutes.} Ceux qui entrent en formation à partir
   de 2023 doivent, pour être conventionnés, choisir entre deux options~\cite{avenant7mk} :
   \begin{itemize}
@@ -360,7 +343,14 @@ d'habitants~\cite{zonagesdatagouv}.
   \item justifier de deux ans d'exercice en établissement.
   \end{itemize}
   Le Conseil d'État a rejeté les recours contre cette règle~\cite{ce488665}.
-  La note de cadrage du projet l'attribuait à tort aux dentistes.
+  La note de cadrage du projet l'attribuait à tort aux dentistes. Le texte
+  parle d'\enquote{établissement sanitaire ou médico-social}, sans préciser
+  public ou privé. Les premiers diplômés concernés arriveraient vers
+  2027--2028\derive.
+\item \textbf{Kinésithérapeutes, historique.} Une régulation de 2012 a été
+  annulée en partie par le Conseil d'État en 2014. Une régulation en zone
+  sur-dotée existait aussi depuis l'avenant~5 de 2018~\cite{ccomptes2024},
+  que l'avenant~7 renomme \enquote{non prioritaire}.
 \end{itemize}
 
 \paragraph{Effet mesuré.}
@@ -411,8 +401,12 @@ Le défaut proposé est la valeur de la DREES, cohérente avec le stock du
 RPPS ; l'Ordre fournit la borne haute.
 
 \paragraph{Internat.}
-L'internat ouvre \num{746}~postes à la rentrée 2025~\cite{cnop2024}, soit
-environ 14~\%\derive{} d'une promotion.
+L'internat ouvre \num{746}~postes à la rentrée 2025~\cite{arrete2024pharma},
+soit environ 19~\%\derive{} d'une promotion de \num{3901} étudiants de
+sixième année. Rapportés aux \num{536}~internes inscrits en première année
+(\mesure), on obtient 14~\%\derive{}. Le fichier d'inscription masque
+probablement les petits effectifs : en 2018, 497~postes étaient pourvus sur
+498 ouverts~\cite{cng2018}.
 
 \paragraph{Diplômés non inscrits.}
 Le taux de diplômés non inscrits à l'Ordre à trois ans était de 32,8~\% en
@@ -425,15 +419,18 @@ Le concours national offre \num{121}~postes de DES en 2024--2025 : \num{52}
 en orthopédie dento-faciale, \num{25} en chirurgie orale et \num{44} en
 médecine bucco-dentaire~\cite{arrete2024odonto}. L'année précédente en
 offrait \num{120}~\cite{arrete2023odonto}, et 2018 en offrait
-\num{110}~\cite{cng2018}.
+\num{110}~\cite{cng2018}. L'arrêté de 2026 en ouvre \num{140} pour
+2026--2027 : 51, 39 et 50~\cite{arrete2026odonto}.
 
-Rapportés aux \num{1322}~places en deuxième année quatre ans plus tôt, ces
-postes représentent 9,2~\%\derive{} d'une promotion. Le décalage de quatre
+Rapportés aux places en deuxième année quatre ans plus tôt, environ
+\num{1332}\derive{}, ces postes représentent 9,1~\%\derive{} d'une
+promotion. L'arrêté de 2020 n'a pas pu être lu ; le dénominateur est déduit
+de la hausse de 8,5~\% jusqu'à \num{1446} places en 2022. Le décalage de quatre
 ans est \emph{supposé}\suppose{}.
 
 \paragraph{Stock de spécialistes.}
 Le stock d'orthodontistes est stable : \num{2441} en 2019 et \num{2465} en
-2022~\cite{oncd2022}. Les spécialistes, exemptés de régulation, forment donc
+2022~\cite{oncd2022}. Les spécialistes, qui peuvent déroger à la régulation, forment donc
 un sous-stock de 6~\%\derive{} qu'il faut séparer des omnipraticiens dans le
 module de régulation.
 
@@ -506,76 +503,201 @@ La finalité du projet est de laisser le décideur jouer, dans l'interface,
 sur un large panel de politiques applicables. Chaque politique doit donc se
 traduire en réglage d'un hyperparamètre du catalogue.
 
-Le tableau~\ref{tab:leviers} couvre 14~politiques, regroupées en 12~lignes (la régulation des quatre professions tient en une ligne). Il donne pour chacune :
+Le tableau~\ref{tab:leviers} couvre 14~politiques, regroupées en 12~lignes :
+la régulation des quatre professions tient en une ligne. Il donne pour
+chacune :
 \begin{itemize}
 \item le paramètre déplacé ;
 \item la plage jouable proposée ;
 \item la preuve disponible de l'effet ;
-\item l'existence ou non d'un point d'entrée dans le code du jumeau à la
-  date du prétirage.
+\item l'existence d'un point d'entrée dans le code du jumeau, à la date de
+  cette version.
 \end{itemize}
 
 \paragraph{Ce qu'il montre.}
 \begin{itemize}
-\item Huit politiques ont un point d'entrée dans le code.
-\item Trois sont jouables dès maintenant : abandon en IFSI, places en
-  formation, cumul emploi-retraite. Deux d'entre elles ont un défaut à
-  corriger.
-\item Les leviers retraite et régulation existent, mais sont suspendus
-  après la seconde revue du jumeau.
-\item Six politiques demandent un module encore absent (installation
-  communale, filières) ou un flux séparé.
+\item Neuf politiques sont jouables : régulation (quatre professions),
+  abandon en IFSI, places en formation, cumul emploi-retraite, report de la
+  retraite et diplômés étrangers. L'interface les range en quatre familles :
+  former, attirer, installer, retenir.
+\item Cinq ne le sont pas :
+  \begin{itemize}
+  \item la règle des deux tiers, les postes d'internat en pharmacie, les DES
+    en odontologie et la rétention des diplômés en pharmacie, faute de
+    module ;
+  \item l'obligation d'exercice, faute de modèle d'installation communale.
+  \end{itemize}
 \end{itemize}
-Le goulot du panel est donc le code, pas la documentation des paramètres.
 
 \begin{table}[htbp]
 \centering\scriptsize
-\caption{Panel de politiques publiques jouables. Code : \textbf{oui} = point d'entrée actif ; \textbf{susp.} = module présent, levier suspendu ; \textbf{non} = module absent.}\label{tab:leviers}
-\begin{tabular}{p{3.6cm}p{2.9cm}p{2.6cm}p{3.2cm}p{0.8cm}}
+\caption{Panel de politiques publiques. Code : \textbf{oui} = point d'entrée actif dans le jumeau ; \textbf{non} = module absent. ST : indice de Sobol total sur l'effectif national à 2050, mesuré par l'axe~5.}\label{tab:leviers}
+\begin{tabular}{p{3.3cm}p{2.5cm}p{2.4cm}p{3.1cm}p{1.2cm}p{0.6cm}}
 \toprule
-Politique & Hyperparamètre & Plage jouable & Preuve de l'effet & Code \\
+Politique & Hyperparamètre & Plage jouable & Preuve de l'effet & ST 2050 & Code \\
 \midrule
-Réguler l'installation (IDE, SF, MK, CD) par liste de communes & règle $E\le X$, $\theta_p$, $\psi_{p,d}$ & 0 à 100~\% des communes ; $\theta\in[\num{0.5};1]$\suppose & IDE seulement~\cite{irdes270} & susp. \\
-Étendre la régulation aux dentistes spécialistes & exemption CD & oui / non & aucune & non \\
-Règle des deux tiers en périphérie (IDE) & règle d'activité & oui / non & aucune & non \\
-Obligation d'exercice en zone sous-dotée, étendue au-delà des MK & durée par profession & 0 à 3~ans\suppose & observable après 2027 & non \\
-Réduire l'abandon en IFSI & $\rho_{\mathrm{IDE}}$, soit \num{0.056} à \num{0.105} par an\derive & niveaux 2009--2018 à 2022 & équivalent à +14~\% de places~\cite{er1319} & oui \\
-Places en formation & capacité & $\times[\num{0.8};\num{1.2}]$ & $\pm$12 à 13~\% à 2050~\cite{dd76} & oui \\
-Postes d'internat en pharmacie & $\varphi_G$, $\varphi_H$ & $\pm$20~\%\suppose & mécanique & non \\
-Postes de DES en odontologie & part de spécialistes & 100 à 160\suppose & mécanique & non \\
-Retenir les diplômés en pharmacie & taux d'inscription & 20 à 35~\%~\cite{cnop2016} & aucune & non \\
-Plafonner ou encourager le cumul emploi-retraite & part en cumul & $\times[\num{0.5};2]$ (axe~5) & aucune propre & oui \\
-Reporter l'âge de départ & décalage de retraite & 0 à 2~ans & +1~\% d'effectif par an~\cite{er1062,er1075} & susp. \\
-Diplômés étrangers & flux d'entrée & $\times[\num{0.5};2]$\suppose & variante DREES~\cite{dd76} & partiel \\
+Réguler l'installation (IDE, SF, MK, CD) par liste de communes & règle $E\le X$, $\theta_p$, $\psi_{p,d}$ & 0 à 100~\% des zones ; $\theta\in[\num{0.5};1]$\suppose & IDE seulement~\cite{irdes270} & $\le$\num{0.01} (redistribue) & oui \\
+Étendre la régulation aux dentistes spécialistes & part dérogatoire CD & 0 à 1 & aucune & $\le$\num{0.011} & oui \\
+Règle des deux tiers en périphérie (IDE) & règle d'activité & oui / non & aucune & --- & non \\
+Obligation d'exercice en zone sous-dotée, étendue au-delà des MK & durée par profession & 0 à 3~ans\suppose & observable après 2027 & --- & non \\
+Réduire l'abandon en IFSI & $\rho_{\mathrm{IDE}}$, soit \num{0.056} à \num{0.105} par an\derive & niveaux 2009--2018 à 2022 & perte $\div 2$ $\approx$ +14~\% de places~\cite{er1319} & \num{0.07} & oui \\
+Places en formation & capacité, quotas & $\times[\num{0.8};\num{1.2}]$ & $\pm$9 (CD), 12 (SF), 13~\% (PH) à 2050~\cite{dd76} & \num{0.14} à \num{0.39} & oui \\
+Postes d'internat en pharmacie & $\varphi_G$, $\varphi_H$ & $\pm$20~\%\suppose & mécanique & --- & non \\
+Postes de DES en odontologie & part de spécialistes & 100 à 160\suppose & mécanique & --- & non \\
+Retenir les diplômés en pharmacie & taux d'inscription & 10 à 33~\%~\cite{cnop2016} & aucune & --- & non \\
+Plafonner ou encourager le cumul emploi-retraite & part en cumul & $\times[\num{0.5};2]$ & aucune propre & \num{0.00} & oui \\
+Reporter l'âge de départ & décalage de retraite & 0 à 2~ans & +1~\% du tendanciel pour 1~an~\cite{er1062,er1075} & $\le$\num{0.01} & oui \\
+Diplômés étrangers & flux d'entrée & $\times[\num{0.5};2]$\suppose & flux observés (fiche) & MK \num{0.27} ; CD \num{0.17} & oui \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Priorisation par l'analyse de sensibilité (axe~5)}
 
-Le classement de Morris puis de Sobol de l'axe~5 n'est pas encore publié à
-la date de ce prétirage ; il sera intégré à la version suivante. Son plan
-déclaré permet déjà trois constats.
+L'axe~5 classe les facteurs par indices de Sobol sur l'effectif privé
+national à 2050 (valeurs mesurées sur le jumeau par l'axe~5).
+
+\paragraph{Partie~1 : incertitudes.}
+La variance vient surtout de trois sources :
 \begin{itemize}
-\item Il inclut deux paramètres de ce catalogue : la part en cumul
-  emploi-retraite, tirée entre $0,5$ et $2$ fois la valeur de la fiche, et
-  le décalage de la retraite, de $0$ à $2$~ans.
-\item Il exclut par construction la formation et la régulation. Le jumeau
-  tourne au département, alors que le zonage est communal, et le vivier en
-  formation n'alimente pas l'effectif.
-\item Il ne pourra donc pas classer $\rho_{\mathrm{IDE}}$, $\theta_p$ ni
-  $\psi_{p,d}$. Les sourcer plus finement reste à justifier par une analyse
-  au niveau communal.
+\item la part privée des salariés ambigus : ST \num{0.91} pour les SF et
+  \num{0.48} pour les PH ;
+\item le lien entre formation et entrées : la filière pèse \num{0.55} pour
+  les CD et \num{0.32} pour les PH ;
+\item la fenêtre d'ajustement : \num{0.53} pour les MK et les IDE.
 \end{itemize}
+Le cumul emploi-retraite ne déplace rien ($\mu^* \le 0,25~\%$ de l'effectif).
+
+\paragraph{Partie~2 : leviers branchés.}
+En 2050, la décision pèse plus que la connaissance pour les IDE
+(\num{0.88} contre \num{0.12}) et les MK (\num{0.71} contre \num{0.15}).
+C'est l'inverse pour les SF (\num{0.41} contre \num{0.57}) et les CD
+(\num{0.41} contre \num{0.59}).
+
+\paragraph{Conséquences pour ce catalogue.}
+\begin{enumerate}
+\item \textbf{Part privée des salariés.} C'est la priorité de sourçage :
+  elle a été traitée dans cette version, voir ci-dessous.
+\item \textbf{Formation $\to$ entrées} ($\rho$, $\varepsilon_{\mathrm{PH}}$,
+  internat, DES). L'effort n'est utile qu'une fois ce lien branché et
+  validé au banc (axe~2).
+\item \textbf{Diplômés étrangers.} Ils pèsent \num{0.27} pour les MK et
+  \num{0.17} pour les CD. Le flux a été actualisé dans cette version.
+\item \textbf{Ne plus approfondir} : le cumul emploi-retraite, $\theta$, la
+  destination des entrants bloqués et la part dérogatoire, tous à ST
+  $\le$ \num{0.011} au niveau national.
+\end{enumerate}
+Ces facteurs agissent sur la répartition entre communes, que l'axe~5 ne
+mesure pas. Leur ST nul ne dit rien de leur effet local.
+
+\subsection{Part privée des salariés hospitaliers (SAE et PMI)}
+
+\paragraph{Hôpital.}
+La SAE 2025~\cite{sae708} donne la part privée des salariés des
+établissements de santé, en personnes au 31/12, privé lucratif et non
+lucratif réunis (tableau~\ref{tab:sae}). Elle est stable sur 2023--2025.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Part privée des salariés des établissements de santé : SAE 2025 et RPPS 2026\mesure.}\label{tab:sae}
+\begin{tabular}{lrrrr}
+\toprule
+Profession & Public & Privé (PNL + PL) & SAE & RPPS (secteurs hospitaliers) \\
+\midrule
+Sages-femmes & \num{13737} & \num{3389} & 19,8~\% & 17,4~\% \\
+Pharmaciens & \num{6327} & \num{2639} & 29,4~\% & 17,4~\% \\
+Kinésithérapeutes & \num{7619} & \num{6062} & 44,3~\% & 44,4~\% \\
+Dentistes & \num{1892} & \num{43} & 2,2~\% & 3,4~\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les deux sources concordent pour les SF et les MK, à 2 points près. Pour
+les PH, la SAE rejoint l'Ordre (28,6~\%) et s'écarte du RPPS. Le choix de
+la source revient à l'axe~4.
+
+\paragraph{Hors hôpital.}
+Les sages-femmes que le RPPS classe en \enquote{Prévention} sont
+\num{1383}\mesure. La PMI en compte \num{1423} au
+31/12/2024~\cite{dreespmi}, soit 3~\%\derive{} d'écart. La PMI est un
+service départemental, donc un employeur public. Classer cette catégorie en
+public réduirait l'écart min--max de la sortie \enquote{libérale} des SF de
+\num{2601} à \num{1272}\derive{} (soit $-51~\%$).
+
+\subsection{Flux de diplômés étrangers}
+
+\paragraph{Ce que montrent les sources récentes.}
+Elles dépassent nettement les hypothèses des projections antérieures.
+\begin{itemize}
+\item \textbf{Dentistes.} \num{665} entrées par an sur 2016--2020~\cite{dd76}.
+  Les données de l'Ordre relayées par des questions parlementaires donnent
+  \num{1313} nouveaux inscrits en 2022, dont 19 hors UE. Les décisions
+  européennes de reconnaissance sont du même ordre :
+  \num{1309}~\cite{regprof}.
+\item \textbf{Kinésithérapeutes.} \num{1175} en 2015~\cite{er1075}, contre
+  \num{2528} autorisations en 2023 et un stock de diplômés hors France qui
+  croît de \num{2212}\derive{} par an~\cite{cnomk2024}.
+\end{itemize}
+
+\paragraph{Valeurs proposées.}
+\num{1300} (CD), \num{2200}\derive{} (MK), 400 (IDE, hypothèse
+DREES~\cite{er1319}), 240\derive{} (PH) et 80\derive{} (SF) par an. Les
+définitions diffèrent d'une source à l'autre : primo-inscription, entrée
+en activité, autorisation, reconnaissance.
 
 \section{Validation et menaces à la validité}
 
+\paragraph{Audit des sources en texte intégral.}
+Chaque citation du projet a été relue dans sa source primaire, en texte
+intégral, par six lots indépendants : les fiches et les articles des
+axes~0 à 5, ainsi que l'état de l'art. Il y a 469~citations au total
+(tableau~\ref{tab:audit}). Les registres, avec une ligne par citation et
+l'URL lue, sont dans \texttt{v2/docs/lab/reports/2026-11-14-audit-sources.md}.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Audit des sources en texte intégral : verdicts par lot.}\label{tab:audit}
+\begin{tabular}{lrrrr}
+\toprule
+Lot & Citations & Confirmées & Corrigées & Non vérifiables \\
+\midrule
+Régulation (axe~1) & 93 & 80 & 8 & 5 \\
+Pharmacie, odontologie (axe~1) & 62 & 53 & 8 & 1 \\
+DREES, IFSI, sorties (axes~0, 1, 3) & 55 & 41 & 11 & 3 \\
+Méthodes (axes~0, 2, 3, 5) & 54 & 39 & 9 & 6 \\
+Événements (axe~4) & 93 & 76 & 9 & 8 \\
+Données (axe~4) & 112 & 93 & 10 & 9 \\
+\midrule
+Total & 469 & 382 & 55 & 32 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Aucune correction ne renverse une conclusion. Trois d'entre elles changent
+un chiffre de cet article :
+\begin{itemize}
+\item quotas $\pm$20~\% : l'effet est de $\pm$9~\% (CD), $\pm$12~\%
+  (SF) et $\pm$13~\% (PH) à 2050~\cite{dd76}, et non \enquote{$\pm$12 à
+  13~\%} ;
+\item retraite : la DREES mesure +1~\% par rapport au tendanciel pour un an
+  de décalage des plus de 60~ans, dès 2020~\cite{er1062,er1075}. Ce n'est
+  pas un rythme annuel, et ce n'est pas comparable en l'état aux +3~\% du
+  jumeau pour les IDE libéraux en 2050 ;
+\item internat en pharmacie : 19~\% d'une promotion en postes, et non
+  14~\%.
+\end{itemize}
+
 \paragraph{Ce qui est validé.}
-Deux recoupements sont faits.
+Trois recoupements sont faits.
 \begin{itemize}
 \item Le rendement $\rho$ reproduit la valeur publiée par la DREES pour
   l'entrée 2018 (81,4~\%\mesure{} contre 81~\%~\cite{er1266}).
 \item Le zonage data.gouv concorde avec l'extraction CartoSanté de l'axe~4.
+  Les parts de population comptent Paris, Lyon et Marseille par
+  arrondissement ; avec les communes seules, on obtient IDE 26,1~\%,
+  MK 24,4~\% et CD 2,2~\%\derive.
+\item La part privée hospitalière des SF et des MK concorde entre la SAE et
+  le RPPS ; celle des PH ne concorde pas.
 \end{itemize}
 L'effet de la régulation infirmière sert de cible au protocole N3 de
 l'axe~3, qui n'est pas validé à ce jour.
@@ -599,6 +721,11 @@ l'axe~3, qui n'est pas validé à ce jour.
   2011 et sur 2006--2016 ; rien de chiffré ne couvre l'après-2019.
 \item \textbf{Millésimes anciens.} Le cumul emploi-retraite et le taux
   d'inscription des pharmaciens datent de 2015.
+\item \textbf{Définitions du flux étranger.} Les sources mesurent des
+  objets différents : primo-inscription, entrée en activité, autorisation,
+  décision de reconnaissance. Leurs rapports sont inconnus.
+\item \textbf{SAE.} Les multi-employeurs y sont comptés une fois par
+  établissement, et les non-réponses sont imputées.
 \end{enumerate}
 
 \section{Reproductibilité}
@@ -613,7 +740,11 @@ l'axe~3, qui n'est pas validé à ce jour.
 
 \paragraph{Ce qui se recalcule.}
 \begin{itemize}
-\item \textbf{Rendement $\rho$.} C'est le seul calcul propre. Il se
+\item \textbf{Part privée des salariés (SAE).} Le script est reproduit
+  dans la fiche \texttt{param-part-privee-salaries-sae}. Il lit les
+  bordereaux Q20 et Q23 et le fichier d'identification des bases
+  statistiques SAE 2025~\cite{sae708}.
+\item \textbf{Rendement $\rho$.} Il se
   reproduit avec le script de l'annexe~\ref{app:script}, à partir du
   fichier \enquote{Séries longues -- 1966-2025} de la DREES~\cite{drees491}.
 \item \textbf{Parts de zonage.} Elles se recalculent sur
@@ -626,7 +757,7 @@ Aucune graine n'intervient : aucun calcul n'est aléatoire.
 \section{Conclusion}
 
 \paragraph{Ce que l'axe~1 apporte.}
-Il fournit au jumeau 21~paramètres dotés d'une valeur sourcée, mesurée ou
+Il fournit au jumeau 23~paramètres dotés d'une valeur sourcée, mesurée ou
 supposée explicite. Il désigne aussi six paramètres que personne ne mesure
 encore.
 
@@ -634,15 +765,23 @@ encore.
 \begin{itemize}
 \item \textbf{Axe~0, module de régulation.} Il doit intégrer :
   \begin{itemize}
-  \item l'exemption des spécialistes dentaires ;
+  \item la dérogation des spécialistes dentaires (art.~35.5) ;
   \item la règle des deux tiers pour les infirmiers ;
-  \item l'obligation d'exercice des kinésithérapeutes à partir de 2027 ;
+  \item l'obligation d'exercice des kinésithérapeutes, vers 2027--2028 ;
   \item $\theta_p$ et $\psi_{p,d}$ comme paramètres de scénario.
   \end{itemize}
 \item \textbf{Axe~0, module de formation.} Il lit $\rho_{\mathrm{IDE}}$ au
   lieu d'un abandon supposé.
 \item \textbf{Axe~3.} Il gagne une seconde cible, l'IRDES, et deux
   expériences naturelles à construire : sages-femmes et kinésithérapeutes.
+\item \textbf{Axe~4.} Deux décisions lui reviennent :
+  \begin{itemize}
+  \item choisir la source de la part privée hospitalière des PH (SAE ou
+    RPPS) ;
+  \item classer la catégorie \enquote{Prévention} des SF en public.
+  \end{itemize}
+\item \textbf{Axe~0, module des diplômés étrangers.} Actualiser les flux,
+  en priorité MK et CD, pondérés par l'axe~5.
 \end{itemize}
 
 \paragraph{Questions ouvertes, avec leur coût.}
@@ -654,6 +793,10 @@ encore.
 \item Cessation par âge sur le RPPS : environ 1~h.
 \item Lecture des arrêtés de méthodologie du zonage et de l'avenant~11 des
   infirmiers : environ 50~min.
+\item Lauréats hors UE (procédure d'autorisation d'exercice) pour CD, PH
+  et SF : environ 30~min.
+\item Sages-femmes en \enquote{Autre secteur} (796, 63~\% de l'écart
+  restant) : environ 1~h.
 \end{itemize}
 
 \bibliographystyle{plainnat}

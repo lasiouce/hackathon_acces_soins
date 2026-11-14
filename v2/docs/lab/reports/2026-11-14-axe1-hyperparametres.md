@@ -148,31 +148,39 @@ jouer, dans l'interface, sur un grand panel de politiques applicables.
 
 | # | Politique | Hyperparamètre (fiche) → paramètre du jumeau | Statu quo | Plage jouable proposée | Preuve de l'effet | Jouable aujourd'hui |
 |---|---|---|---|---|---|---|
-| 1 | Réguler l'installation des infirmiers (activer, retirer, étendre les zones) | [[param-ide-regul-regle]], [[param-regul-theta-fuite]], [[param-regul-report-entrants]] → `regulation.zones`, `.destination` | 27,4 % de la population en zone sur-dotée | de 0 à 100 % des communes ; θ ∈ [0,5 ; 1] (supposé) | IRDES, DiD | module présent, levier suspendu (2e revue) |
-| 2 | Idem, sages-femmes | [[param-sf-regul-regle]] | 12,2 % | idem | direction seulement | idem |
-| 3 | Idem, kinés | [[param-mk-regul-regle]] | 26,5 % | idem | aucune | idem |
-| 4 | Idem, dentistes ; étendre ou non aux spécialistes | [[param-cd-regul-regle]] | 4,8 % ; spécialistes dérogatoires | idem ; exemption on/off | aucune | idem ; exemption non codée |
+| 1 | Réguler l'installation des infirmiers (activer, retirer, étendre les zones) | [[param-ide-regul-regle]], [[param-regul-theta-fuite]], [[param-regul-report-entrants]] → `regulation.zones`, `.destination` | 27,4 % de la population en zone sur-dotée | de 0 à 100 % des communes ; θ ∈ [0,5 ; 1] (supposé) | IRDES, DiD | oui : `regulation.part_zones`, `.destination` (« zone voisine » sans effet au département) |
+| 2 | Idem, sages-femmes | [[param-sf-regul-regle]] | 12,2 % | idem | direction seulement | oui (idem) |
+| 3 | Idem, kinés | [[param-mk-regul-regle]] | 26,5 % | idem | aucune | oui (idem) |
+| 4 | Idem, dentistes ; étendre ou non aux spécialistes | [[param-cd-regul-regle]] | 4,8 % ; spécialistes dérogatoires | idem ; exemption on/off | aucune | oui ; spécialistes via `regulation.part_exemptee` 0 à 1 |
 | 5 | Règle des deux tiers d'activité en périphérie (IDE) | [[param-ide-regul-regle]] | en vigueur | on/off | aucune | non (pas de module) |
-| 6 | Obligation d'exercice en zone sous-dotée (MK ; extension à IDE, SF, CD) | [[param-mk-obligation-exercice]] | MK, 2 ans, à partir de 2027 | 0 à 3 ans, par profession | aucune avant 2028 | non (pas de module d'installation communale) |
-| 7 | Réduire l'abandon en IFSI | [[param-ide-rendement-diplomes]] → `formation.abandon` | ≈ 0,105 par an (ρ = 0,72, dérivé) | 0,056 à 0,105 par an (niveaux 2009-2018 à 2022) | ER 1319 : diviser la perte par 2 ≈ +14 % de places | oui (défaut à corriger, actuellement 0) |
-| 8 | Places en formation (IFSI, MK, SF, odontologie, pharmacie) | `formation.capacite`, `entrees.multiplicateur` | 1 | × [0,8 ; 1,2] (DD76 ±20 %) | DD76 : ±9 % (CD), ±12 % (SF), ±13 % (PH) d'effectif à 2050 | oui (quotas bornés à [0,7 ; 1,5] dans le prototype) |
+| 6 | Obligation d'exercice en zone sous-dotée (MK ; extension à IDE, SF, CD) | [[param-mk-obligation-exercice]] | MK, 2 ans, à partir de 2027 | 0 à 3 ans, par profession | aucune avant 2028 | non (attend le logit d'installation de l'axe 2) |
+| 7 | Réduire l'abandon en IFSI | [[param-ide-rendement-diplomes]] → `formation.abandon` | ≈ 0,105 par an (ρ = 0,72, dérivé) | 0,056 à 0,105 par an (niveaux 2009-2018 à 2022) | ER 1319 : diviser la perte par 2 ≈ +14 % de places | oui : `formation.abandon` = 0,105 (IDE) ; MK 0,016, SF 0,033 dérivés par l'axe 0 |
+| 8 | Places en formation (IFSI, MK, SF, odontologie, pharmacie) | `formation.capacite`, `entrees.multiplicateur` | 1 | × [0,8 ; 1,2] (DD76 ±20 %) | DD76 : ±9 % (CD), ±12 % (SF), ±13 % (PH) d'effectif à 2050 | oui : `formation.capacite`, quotas régionaux |
 | 9 | Postes d'internat en pharmacie (biologie, pharmacie hospitalière) | [[param-ph-internat-postes]], [[param-ph-filiere-primo-inscrits]] | 746 postes | ±20 % (supposé) | mécanique (postes) | non (pas de module filières) |
 | 10 | Postes de DES en odontologie | [[param-cd-specialisation-des]] | 121 postes | 100-160 (supposé ; 140 annoncés pour 2026-27) | mécanique | non |
 | 11 | Retenir les diplômés en pharmacie (inscription à l'Ordre) | [[param-ph-taux-inscription-diplomes]] | 32,8 % de non-inscrits (2015) | 10-33 % (2006-2015 observé) | aucune | non |
-| 12 | Cumul emploi-retraite (plafonner, inciter) | [[param-cumul-emploi-retraite]] → `sorties.part_cumul`, `.cumul_multiplicateur` | SF 0,8 · CD 4,7 · PH 1,8 · MK-IDE 1,5 % | × [0,5 ; 2] (plan de l'axe 5) | aucune propre | oui (défaut 0,10 « médecins » à corriger) |
-| 13 | Report de l'âge de départ | [[param-mk-age-retraite]], [[param-cessation-par-age]] → `sorties.decalage_retraite` | 0 | 0 à 2 ans | DREES : +1 % par rapport au tendanciel pour un an de décalage (IDE, MK) | module présent, levier suspendu |
-| 14 | Diplômés étrangers (reconnaissance, EVC) | [[param-age-entree-exercice]] (flux : SF 70, CD 665, MK 1 175 par an en 2015) | flux observés | × [0,5 ; 2] (supposé) | DD76, variante | partiel (`entrees.multiplicateur` global, pas de flux séparé) |
+| 12 | Cumul emploi-retraite (plafonner, inciter) | [[param-cumul-emploi-retraite]] → `sorties.part_cumul`, `.cumul_multiplicateur` | SF 0,8 · CD 4,7 · PH 1,8 · MK-IDE 1,5 % | × [0,5 ; 2] (plan de l'axe 5) | aucune propre | oui : `sorties.cumul_multiplicateur` |
+| 13 | Report de l'âge de départ | [[param-mk-age-retraite]], [[param-cessation-par-age]] → `sorties.decalage_retraite` | 0 | 0 à 2 ans | DREES : +1 % par rapport au tendanciel pour un an de décalage (IDE, MK) | oui : `sorties.decalage_retraite` |
+| 14 | Diplômés étrangers (reconnaissance, EVC) | [[param-age-entree-exercice]] (flux : SF 70, CD 665, MK 1 175 par an en 2015) | flux observés | × [0,5 ; 2] (supposé) | DD76, variante | oui : module `etrangers` (PH et IDE à 0 dans le jumeau ; valeurs proposées par [[param-diplomes-etrangers-flux]]) |
 
-**Ce que cela dit.**
-- **Huit politiques sur quatorze ont un point d'entrée dans le code**
-  (lignes 1-4, 7, 8, 12, 13).
-- **Trois sont jouables dès maintenant** (7, 8, 12), dont deux avec un défaut
-  à corriger. Les valeurs ont été envoyées à l'axe 0 le 2026-11-14.
-- **Les six autres demandent un module** (installation communale, filières)
-  ou un flux séparé.
-- **Le panel « grand » existe donc sur le papier**, avec ses sources. Le
-  goulot est le code (axe 0) et la levée de la suspension sur la régulation
-  et la retraite, pas la documentation.
+**Ce que cela dit** (état du code au 2026-11-14 au matin, décisions
+« Jumeau : leviers branchés » et « Prototype : 9 leviers exposés »).
+- **Neuf politiques sur quatorze sont jouables** : 1 à 4, 7, 8, 12, 13 et 14.
+  Le prototype les expose en quatre familles : Former, Attirer, Installer,
+  Retenir.
+  - Le jumeau ajoute un levier de plus : les départs avant 60 ans, dont
+    l'effet est supposé.
+- **Cinq ne le sont pas** :
+  - la règle des deux tiers, les postes d'internat en pharmacie, les DES
+    en odontologie et la rétention des diplômés en pharmacie, faute de
+    module ;
+  - l'obligation d'exercice, qui attend le logit d'installation de
+    l'axe 2.
+- **Ce que l'axe 5 (partie 2) dit de ces politiques jouables** :
+  - quotas, capacité et diplômés étrangers déplacent le total national ;
+  - la retraite, le cumul et la régulation ne le déplacent pas (ST ≤ 0,01).
+    La régulation agit sur la répartition entre territoires. L'interface
+    doit le dire.
 
 ## Re-priorisation d'après l'axe 5 (2026-11-14, nuit)
 
@@ -188,6 +196,28 @@ par l'axe 5 sur le jumeau.
 | 4 | Âge de retraite et cessation | ST ≤ 0,04, sauf IDE 2030 (0,14) | [[param-mk-age-retraite]], [[param-cessation-par-age]] | faible priorité |
 | — | **Ne plus approfondir** | cumul : μ* ≤ 0,25 % de N, ST < 0,01 | [[param-cumul-emploi-retraite]] | ligne du ledger « cumul par caisse » fermée |
 | — | **Indécidable** (pas de point d'entrée) | — | régulation (8 fiches), θ, ψ, obligation MK, mortalité | après l'axe 2 ; ce n'est pas un zéro |
+
+**Mise à jour avec la partie 2 de l'axe 5 (leviers branchés, N = 512).**
+Valeurs de ST à 2050 mesurées par l'axe 5.
+- **La décision pèse plus que la connaissance** pour les IDE (0,88 contre
+  0,12) et les MK (0,71 contre 0,15). C'est l'inverse pour les SF
+  (0,41 contre 0,57) et les CD (0,41 contre 0,59). Les PH sont à égalité.
+- **Leviers qui déplacent le total national :**
+  - quotas (0,14 à 0,39) et capacité de formation (0,08 à 0,36) ;
+  - **diplômés étrangers : MK 0,27, CD 0,17**. Le flux du jumeau est à
+    actualiser (MK 1 175 → 2 200, CD 665 → 1 300 ; voir
+    [[param-diplomes-etrangers-flux]]). Proposition envoyée à l'axe 0 ;
+  - départs précoces (≤ 0,08) ; abandon IFSI (0,07).
+- **Ne déplacent pas le total :** report de la retraite (≤ 0,01), cumul,
+  part des zones régulées, θ, destination, part exemptée (≤ 0,011). La
+  régulation redistribue entre territoires sans changer le total : son ST
+  nul ne dit rien de l'effet local.
+- **Priorités de sourçage révisées :**
+  1. filière (vivier → entrées) : axe 2 ;
+  2. part privée des salariés ambigus : SAE et PMI faits cette nuit
+     ([[param-part-privee-salaries-sae]]) ;
+  3. **flux de diplômés étrangers** (nouveau : ST 0,27 MK) : fiche faite
+     cette nuit ; reste à chercher les lauréats hors UE (CNG).
 
 **Lecture pour le panel de politiques.**
 - Les leviers à effet mesuré fort sont les **quotas**, avec un μ* de 15 à
