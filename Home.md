@@ -20,7 +20,7 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | | |
 |---|---|
 | Lancer | `uv sync && uv run python v2/prototype-carte/server.py` → http://localhost:8767 ; données traitées commitées ([manifeste](v2/data/processed/MANIFEST.md)) |
-| Carte | ✅ 9 leviers en 4 familles, phrase en langage naturel (≈ 77 % sur jeux à l'aveugle, confirmée avant application), densité pour 100 000 (Omphale 2022), hypothèses population / activité, mode expert, export avec sources |
+| Carte | ✅ option 1 par défaut depuis le 2026-11-14 : 3 colonnes, direction A (Bertin), fiche France et bascule nationale, recette 39/40 · 9 leviers en 4 familles, phrase en langage naturel (≈ 77 % sur jeux à l'aveugle, confirmée avant application), densité pour 100 000 (Omphale 2022), hypothèses population / activité, mode expert, export avec sources |
 | Jumeau (axe 0) | ✅ `v2/jumeau/` : 18 critères sur 18 après 3 revues adversariales ; 15 ms par scénario au département, 1,1 s à la commune (5 professions). `PYTHONPATH=v2 uv run python -m jumeau.check` |
 | Hyperparamètres (axe 1) | ✅ fiches sourcées ; sources à relire en texte intégral |
 | Méthodes (axe 2) | ✅ cohortes bayésiennes : MAPE dép. h=5 7,73 % contre 8,68 % (stock-flux) ; projection communale K3–K5 non confirmée, affichage au département |
