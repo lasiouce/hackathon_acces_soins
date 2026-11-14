@@ -2023,7 +2023,62 @@ dedans. »
 **Ce qui le renverserait.** La publication du dépôt, qui permettrait de le
 citer.
 
+## 2026-11-14 — Axe 3, N9 : boucle densité → installations sans signe établi ; densité → départs confirmée pour les IDE seulement
+
+**Décision.**
+- Protocole [N9](reports/2026-11-14-axe3-n9-boucles.md), gelé à 08:10
+  (SHA-256 `96a39bc087bb`) avant calcul.
+- **B2** (BV × année, 2014–2025, densité décalée de 2 ans, effets fixes
+  département et année, contrôles population, âge, zonages) : **nul** pour
+  IDE (−1,52 [−4,05 ; +1,01]), MK (−1,66 [−3,43 ; +0,11]) et CD
+  (+0,17 [−0,05 ; +0,39]). La densité des autres professions pèse autant ou
+  plus : attractivité générale, pas saturation propre.
+- **B1** (département × année, rétention 45–54 → 50–59 à 5 ans) :
+  **confirmé pour les infirmiers libéraux** (+0,11 [+0,05 ; +0,18], placebo
+  nul) ; nul pour SF, CD, PH, MK.
+- Conséquences : l'axe 2 n'ajoute pas la densité comme covariable
+  **confirmée** du logit d'installation ; la boucle charge → départs reste un
+  scénario de stress « supposé » (seul le signe IDE est mesuré).
+- **Corrections de citation dans l'article** (audit des sources, axe 1),
+  sans toucher aux protocoles gelés : quotas DD76 ±9 / 12 / 13 % (la
+  tolérance de N2 reste « au moins trois fois plus petite ») ; l'impropreté
+  d'un score divisé par y n'est plus attribuée à Gneiting & Raftery 2007, et
+  sa source (Gneiting & Ranjan 2011 ou Lerch et al. 2017) reste à vérifier.
+
+**Pourquoi.** Décision « Tests des boucles de rétroaction » ; consigne de la
+session v2.
+**Ce qui le renverserait.** Des flux bruts d'installation (et non des
+soldes), ou un instrument de la densité, qui feraient apparaître un signe.
+
+## 2026-11-14 — Résultat des tests de boucles (N9) : densité → installations nulle ; densité → rétention confirmée pour les IDE seuls
+
+**Décision.**
+- **B2, densité → installations nettes : nul** pour les IDE, MK et CD (bassin de vie × année,
+  2014-2025, protocole N9 gelé, SHA 96a39bc087bb).
+  - Effets estimés : IDE −1,52 [−4,05 ; +1,01], MK −1,66 [−3,43 ; +0,11],
+    CD +0,17 [−0,05 ; +0,39].
+  - La densité des autres professions pèse autant ou plus : c'est une attractivité générale,
+    pas une saturation.
+  - → Le logit d'installation de l'axe 2 n'a **pas de covariable « densité » confirmée**. La
+    densité y entre au plus comme covariable estimée, **sans a priori de signe**. Pas de
+    sigmoïde.
+- **B1, densité → rétention des 45-54 ans à 5 ans : confirmé pour les IDE libéraux seuls**.
+  - Effet : +0,11 [+0,05 ; +0,18], placebo nul, soit ≈ +8 % de rétention quand la densité
+    double (mesuré, corrélationnel).
+  - Nul pour SF, CD, PH et MK.
+  - → La boucle « départs plus fréquents là où la densité est faible » n'a une base
+    empirique que pour les IDE. On la garde en **scénario étiqueté « estimé, IDE seuls,
+    corrélationnel »**, pas dans le tendanciel. La brancher dans le tendanciel est une
+    décision ouverte.
+
+**Pourquoi.** [Rapport N9](reports/2026-11-14-axe3-n9-boucles.md), commit f1f4f41.
+**Ce qui le renverserait.** Un test causal (expérience naturelle) qui contredit la
+corrélation.
+
 ## Open / not yet decided
+- **Brancher la rétention dépendante de la densité pour les IDE dans le tendanciel ?**
+  L'effet est mesuré (N9 : +0,11 [+0,05 ; +0,18]) mais corrélationnel. Question posée le
+  2026-11-14.
 - **Boucles de rétroaction non linéaires** (analyse transmise le 2026-11-14 :
   [inputs/2026-11-14-analyse-boucles-retroaction.md](inputs/2026-11-14-analyse-boucles-retroaction.md)).
   ~~Gardée comme référence ; « pas maintenant ».~~ **Lancée le 2026-11-14** (« en fait si si »),
