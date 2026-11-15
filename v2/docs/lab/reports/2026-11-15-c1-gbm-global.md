@@ -3,7 +3,7 @@ type: analysis
 date: 2026-11-15
 author: session c1-gbm
 question: Un modèle d'apprentissage automatique global (GBM, MLP), entraîné sur toutes les séries à la fois, bat-il A2 en MAPE départementale à h = 5 ?
-headline: "Rejeté : le GBM global fait 10,15 % de MAPE dép. à h = 5 contre 8,60 % pour A2 (Δ +1,55 pt, IC 95 % [+0,62 ; +2,75]) ; le MLP 20,52 % (Δ +11,92, [+10,54 ; +13,86]) ; aucune profession où l'un des deux gagne"
+headline: "Rejeté contre A2 et contre C1 (7,73 %, modèle servi) : le GBM global fait 10,15 % de MAPE dép. à h = 5 contre 8,60 % pour A2 (Δ +1,55 pt, IC 95 % [+0,62 ; +2,75]) ; le MLP 20,52 % (Δ +11,92, [+10,54 ; +13,86]) ; aucune profession où l'un des deux gagne"
 status: fait (banc N1, périmètre privé, test d'abandon inscrit avant)
 professions: [sages-femmes, dentistes, pharmaciens, kines, infirmiers]
 hypothesis: C1 — l'apprentissage automatique fait-il mieux que les méthodes interprétables ?
@@ -20,6 +20,27 @@ tags: [c1, apprentissage-automatique, gbm, mlp, backtest, N1]
 > - **MLP global :** **20,52 %**, Δ +11,92 pt, IC 95 % [+10,54 ; +13,86].
 > - Aucune profession où l'un des deux bat A2. Le GBM est à égalité pour les
 >   dentistes et les pharmaciens ; il perd ailleurs.
+
+
+> **Correction (2026-11-15, après coup).** Le bon modèle de référence était
+> **C1** (cohortes bayésiennes, `axe2_cohortes_c1`), pas A2. C1 est le modèle
+> servi par la carte et l'assistant ; c'est la meilleure MAPE au banc :
+> **7,73 %**. Le brief disait que A2 était « la meilleure variante », et je
+> ne l'ai pas vérifié dans `decisions.md`. Le test inscrit, contre A2, reste
+> tel quel. Contre C1, le verdict est **rejeté aussi**, et plus nettement.
+> - Δ GBM − C1 = **+2,42 pt**, IC 95 % [+1,49 ; +3,70]. C'est un calcul
+>   exploratoire : les erreurs de C1 viennent du banc de l'axe 2
+>   (`coh_erreurs.parquet`), sur des données qui diffèrent d'au plus 4,5
+>   personnes par cellule.
+> - Par profession, Δ GBM − C1 :
+>
+>   | Profession | Δ GBM − C1 [IC 95 %] | Issue |
+>   |---|---|---|
+>   | Dentistes | [−0,17 ; +1,01] | égalité |
+>   | Pharmaciens | [−0,34 ; +3,65] | égalité |
+>   | Infirmiers | [+1,68 ; +2,95] | perd |
+>   | Kinés | [+0,89 ; +11,99] | perd |
+>   | Sages-femmes | [+3,64 ; +7,22] | perd |
 
 ## Question
 - Un modèle global appris sur toutes les séries (profession × département ×

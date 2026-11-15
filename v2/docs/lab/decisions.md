@@ -4343,3 +4343,10 @@ Mesuré plutôt qu'argumenté. Le GBM égale A2 à un an (2,75 % contre 2,73 %) 
 17,6 % à h = 10). Il dispose de 1 600 à 4 000 départements × années pour apprendre.
 **Ce qui le renverserait.** Un GBM direct à h = 5 ou un GBM sur les résidus de A2, avec validation imbriquée, qui passe
 le même test d'abandon.
+
+**Correction (2026-11-15).**
+- **Le modèle de référence aurait dû être C1** (`axe2_cohortes_c1`, 7,73 %), le modèle servi par la carte et
+  l'assistant (décision « C1 servi par la carte et l'assistant à la place de A0 »), et non A2.
+- Contre C1 aussi, le GBM est **rejeté** (calcul exploratoire, en croisant les erreurs de C1 du banc de l'axe 2) :
+  Δ +2,42 pt, IC 95 % [+1,49 ; +3,70].
+- Le test inscrit contre A2 n'est pas réécrit.
