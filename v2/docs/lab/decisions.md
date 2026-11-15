@@ -5270,3 +5270,21 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   3. transfert (L23) → couverture : « Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ? ».
   Les trois sont compris de bout en bout en mode sans IA (mesuré, `v2/langage/mesures/2026-11-15-assistant-trois-exemples.txt`) ;
   mode IA non vérifié (pas de clé). L'assistant dit « demande de soins de ville », plus « besoin ».
+
+## 2026-11-15 — Carte : libellés du module de besoin alignés sur « demande de soins de ville »
+- **Décision** (fusion de `besoin-assistant`, qui contient `besoin-carte-api`, avec l'accord de l'utilisateur·rice) :
+  la carte applique la règle de libellé de l'entrée « périmètre libéral de DAMIR ».
+  - **Indicateur, infobulle, fiche, export CSV :** « Couverture de la demande de ville » ; définition « offre privée
+    rapportée à la demande de soins de ville estimée (recours remboursé hors hôpital public, pas le besoin de toute
+    la population) ». Il n'y a plus de « besoin » dans les libellés affichés.
+  - **Norme de l'estimateur :** elle reste affichée telle que l'estimateur la déclare, précédée de « (norme
+    déclarée) ».
+  - **Assistant :** il était déjà aligné, « demande de soins de ville » dans `chatbot/`.
+  - **Exemples de l'assistant :** 3, un par cas d'usage (commit `5f264e3`).
+- **Vérifié :**
+  - `tests/couverture.py` : K1 à K6 passent, p95 18,5 ms ;
+  - `besoin.tests` : 15/15 ;
+  - rendu dans le navigateur (pharmaciens, France, 2050 : 1,01) ;
+  - `jumeau.check` : seul C15 (temps) échoue, sous charge.
+- **Corrigé à la fusion :** `Home.md` de la branche `besoin-assistant` contenait des marqueurs de conflit commités ;
+  ils sont retirés, et les trois lignes du journal sont gardées.

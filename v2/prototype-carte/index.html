@@ -414,7 +414,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Indice de couverture : offre libérale rapportée au besoin, référence : 2026 = 1">Couverture <span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture <span class="yl">2050</span></button></div>
       <div id="lt"></div>
       <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
       <!-- définition facultative de l'indicateur affiché (décision du 2026-11-14) : fermée par défaut, état mémorisé dans le navigateur -->
@@ -668,7 +668,7 @@ const fmtV=d=>S.v=="evo"?(val(d)>=0?"+":"−")+Math.abs(Math.round(val(d)*100))+
 
 function legend(){
   $("#lt").textContent=(S.v=="evo"?`Variation de l'effectif ${carte.y26} → ${S.y}, en points d'écart à la France (${pct(carte.nat)})`
-    :S.v=="couv"?(COUV?`Indice de couverture ${S.y}, référence : 2026 = 1 (France ${fC(carte.couvFR.cy)}), écart à 2026 en %`:"Indice de couverture : non disponible pour cette profession")
+    :S.v=="couv"?(COUV?`Couverture de la demande de ville ${S.y}, référence : 2026 = 1 (France ${fC(carte.couvFR.cy)}), écart à 2026 en %`:"Couverture de la demande de ville : non disponible pour cette profession")
     :S.v=="dens"?`Densité ${S.y} pour 100 000 habitants, écart à la moyenne France (${Math.round(carte.natD*1e5)} pour 100 000)`:`Effectif libéral ${S.y}, écart scénario − tendanciel`)
     +(carte.origin<carte.y26?` · observé jusqu'en ${carte.origin}, ${carte.y26} déjà projeté`:"");
   // même gamme que colorOf : 7 couleurs réparties de −B à +B ; chaque graduation est posée à sa position exacte
@@ -681,9 +681,9 @@ function legend(){
     :S.v=="ecart"?`Effet du scénario réglé : effectif libéral du scénario comparé au tendanciel (même projection, sans nouvelle politique), en ${S.y}, en %. 0 : le scénario ne change rien sur ce territoire ; sans levier modifié, la carte est uniforme. Vert : effectif du scénario au-dessus du tendanciel ; orange : en dessous.`
     :`Professionnels libéraux (× activité moyenne) pour 100 000 habitants en ${S.y} (population Insee Omphale 2022), comparés à la densité France (${Math.round(carte.natD*1e5)} pour 100 000), en %. Vert : densité supérieure à la moyenne nationale ; orange : inférieure.`;
 }
-function couvDef(){if(!COUV)return "Indice de couverture : servi pour les sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et infirmiers.";
+function couvDef(){if(!COUV)return "Couverture de la demande de ville : servie pour les sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et infirmiers.";
   const n=COUV.estimateurs.length,f=carte.couvFR;
-  return `Indice de couverture (référence : 2026 = 1) : offre libérale rapportée au besoin estimé, divisée par le même rapport en 2026 sur le même territoire. Ce n'est pas une part du besoin couverte. 1 : même couverture qu'en 2026 ; vert : couverture supérieure à 2026 ; orange : couverture moindre qu'en 2026. Estimateur central ${COUV.central}`
+  return `Couverture de la demande de ville par l'offre privée (référence : 2026 = 1) : offre privée rapportée à la demande de soins de ville estimée (recours remboursé hors hôpital public, pas le besoin de toute la population), divisée par le même rapport en 2026 sur le même territoire. Ce n'est pas une part de la demande satisfaite. 1 : même couverture qu'en 2026 ; vert : couverture supérieure à 2026 ; orange : couverture moindre qu'en 2026. Estimateur central ${COUV.central}`
     +(n>1?` ; fourchette entre ${COUV.estimateurs.join(", ")} : France ${fC(f.clo)} – ${fC(f.chi)} en ${S.y}`+(COUV.fourchette_visible?"":` (les estimateurs concordent à ± ${(COUV.ecart_modeles_2050*50).toLocaleString("fr-FR",{maximumFractionDigits:1})} % en 2050)`):" (un seul estimateur servi pour cette profession : pas de fourchette de modèle)")
     +`. Écart au tendanciel du scénario, France : ${fE(f.ce)}. M4 (accessibilité 2SFCA) : ${COUV.en_attente[0].statut}.`;}
 // repère du territoire ouvert sur la gamme de la légende
@@ -838,7 +838,7 @@ function buildLevFam(){
   if(bad.length)setTimeout(()=>toast("Lien : valeurs ignorées, remises par défaut — "+bad.join(" ; "),6000),300);
   levState();}
 
-// Transferts de tâches : L23 agit sur le besoin (pas sur l'offre), donc sur l'indice de couverture des pharmaciens seulement.
+// Transferts de tâches : L23 agit sur la demande de soins de ville (pas sur l'offre), donc sur l'indice de couverture des pharmaciens seulement.
 // Bornes du mode expert : celles des fiches (k : [0,25 ; 1], fiche L23) ; a : [0 ; 0,05] en temps de MG (supposé).
 function l23HTML(){return `<div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-l23"${L23.on?" checked":""}><label class="fr-toggle__label" for="lv-l23" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">Les pharmaciens vaccinent davantage contre la grippe</label></div>
   <p class="note" id="l23-note"></p>
@@ -857,7 +857,7 @@ function setL23(on,vue){L23.on=on;const t=$("#lv-l23");if(t)t.checked=on;
   renderL23();writeHash();}
 const STAT=s=>s=="mesuré"||s=="sourcé"?s:"supposé";
 function renderL23(){const n=$("#l23-note");if(!n)return;
-  n.textContent=S.prof!="pharmaciens"?"Agit sur le besoin adressé aux pharmaciens (cible) et libère du temps de médecine générale (source) ; sans effet sur la profession affichée.":
+  n.textContent=S.prof!="pharmaciens"?"Agit sur la demande de soins de ville adressée aux pharmaciens (cible) et libère du temps de médecine générale (source) ; sans effet sur la profession affichée.":
     L23.on?"Actif dès 2026 : une part du besoin de vaccination passe de la médecine générale aux pharmaciens ; l'offre ne change pas.":"Inactif : la couverture est celle du tendanciel.";
   const P=COUV?.l23?.params;$("#l23-par").innerHTML=P?P.map(p=>`<li>${esc(p.name)} = ${esc(String(p.value))} ${esc(p.unit)} · <b>${STAT(p.status)}</b> · ${esc(p.source)}</li>`).join(""):"";}
 
@@ -948,8 +948,8 @@ function couvRows(T,Yn){if(!COUV||COUV.prof!==S.prof)return null;const o=T=="FR"
   const tr=COUV.l23?.transferts?.[0],j=COUV.years.indexOf(Yn);
   return {rows,est:COUV.estimateurs,central:COUV.central,mg:tr&&j>=0?{etp:tr.etp_liberes_source[j],actes:tr.actes_mg_liberes[j],recu:tr.etp_recus_cible[j],y:Yn}:null};}
 function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c;if(!c)return;
-  el.innerHTML=c.rows.map(([y,v])=>`Indice de couverture ${y} : <b class="num">${fC(v.cy)}</b> <small>(référence : 2026 = 1 ; ${couvMot(v.cy)} ; écart au tendanciel ${fE(v.ce)}${c.est.length>1?` ; fourchette ${c.est.join(", ")} : ${fC(v.clo)} – ${fC(v.chi)}`:""})</small>`).join("<br>")
-    +`<small>Estimateur central ${c.central} : ${esc(COUV.hypotheses.estimateurs[c.central])}. M4 : ${COUV.en_attente[0].statut}.</small>`
+  el.innerHTML=c.rows.map(([y,v])=>`Couverture de la demande de ville ${y} : <b class="num">${fC(v.cy)}</b> <small>(référence : 2026 = 1 ; ${couvMot(v.cy)} ; écart au tendanciel ${fE(v.ce)}${c.est.length>1?` ; fourchette ${c.est.join(", ")} : ${fC(v.clo)} – ${fC(v.chi)}`:""})</small>`).join("<br>")
+    +`<small>Estimateur central ${c.central} (norme déclarée) : ${esc(COUV.hypotheses.estimateurs[c.central])}. M4 : ${COUV.en_attente[0].statut}.</small>`
     +(c.mg?`<br>Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de vaccins à faire : en ${c.mg.y}, environ <b class="num">${fmt(c.mg.actes)}</b> vaccinations en moins pour eux, soit le temps de travail d'environ ${fmt(c.mg.etp)} médecins à temps plein (France entière). Les pharmaciens reprennent ce travail. <small>Ordre de grandeur : la part de temps que la vaccination prend aux médecins n'est pas mesurée, elle est supposée.</small>`:"");}
 function tween(el,to,f){const from=tw.get(el)??to*.96,t0=performance.now();tw.set(el,to);
   const step=t=>{const p=Math.min(1,(t-t0)/280),e=1-Math.pow(1-p,3);el.textContent=f(from+(to-from)*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
@@ -1121,7 +1121,7 @@ function exportCard(){
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([L.join("\n")],{type:"text/csv"}));
   a.download=`fiche_${S.prof}_${T}.csv`;a.click();
 }
-function couvExport(T){const c=couvRows(T,G_Y());if(!c)return [];const L=[`# Indice de couverture (v2/besoin, référence : 2026 = 1 ; offre libérale / besoin, rapporté à 2026 ; pas une part du besoin couverte) — estimateur central ${c.central} ; estimateurs : ${c.est.join(", ")} ; M4 ${COUV.en_attente[0].statut}`];
+function couvExport(T){const c=couvRows(T,G_Y());if(!c)return [];const L=[`# Couverture de la demande de ville par l'offre privée (v2/besoin, référence : 2026 = 1 ; offre privée / demande de soins de ville, rapporté à 2026 ; pas une part de la demande satisfaite) — estimateur central ${c.central} ; estimateurs : ${c.est.join(", ")} ; M4 ${COUV.en_attente[0].statut}`];
   for(const [y,v] of c.rows)L.push(`#   ${y} : indice ${fC(v.cy)} (tendanciel ${fC(v.cb)}, écart au tendanciel ${fE(v.ce)}${c.est.length>1?`, fourchette ${fC(v.clo)} – ${fC(v.chi)}`:""})`);
   L.push(`#   Norme du besoin : ${COUV.hypotheses.estimateurs[c.central]} ; population ${COUV.hypotheses.population}`);
   if(COUV.l23){L.push(`#   L23 vaccination antigrippale en officine (actif) : ${COUV.l23.note}`);for(const p of COUV.l23.params)L.push(`#     ${p.name} = ${p.value} ${p.unit} ; ${STAT(p.status)} ; ${p.source.replace(/;/g,",")}`);
