@@ -300,11 +300,16 @@ et la question ouverte sur le seuil de diffusion.
   salariés hospitaliers. La sortie 2026 est donc une fourchette (sages-femmes : 12 059 à 14 660).
 - **Pas de projection fiable sous le département.** Les modèles communaux testés (K3 à K5) n'ont pas
   passé la validation pré-enregistrée ; la carte affiche les projections au département.
-- **Module de besoin : squelette seulement.** `v2/besoin/` (axe 0, 2026-11-15) lit la trajectoire du
-  jumeau et produit un besoin M0 (proportionnel à la population), un indice de couverture indexé à 2026
-  et l'opérateur de transferts de tâches. Les paramètres sont des placeholders « supposé », et rien
-  n'est branché dans la carte. Aucun indice de couverture n'est produit pour la médecine générale.
-  Plan : `v2/docs/lab/derivations/2026-11-15-besoin-plan.md`.
+- **Module de besoin : indice de couverture, pas un niveau de besoin.** `v2/besoin/` rapporte l'offre du
+  jumeau à un besoin estimé, indexé à 2026. Six protocoles gelés sur sept sont passés (2026-11-15,
+  `v2/docs/lab/reports/2026-11-15-besoin-etape.md`) : la pondération par l'âge (M1) est retenue pour les cinq
+  professions (dentistes de justesse) ; la saturation du recours (M2b) tombe, donc le besoin non satisfait n'est
+  pas identifié ; la morbidité (M3) ne sert l'indice que pour les infirmiers ; le backtest 2016 → 2025 retient
+  l'âge contre la persistance pour 3 professions sur 4. L'indice spatial M4 échoue à reproduire l'APL DREES en
+  repli vol d'oiseau (ρ 0,66 à 0,77 pour 0,90 exigé) : c'est un indice maison, jamais appelé « APL » ; le passage
+  OSRM est en attente. Pour les transferts de tâches, `k` et l'expansion `m` restent supposés. Aucun indice de
+  couverture n'est produit pour la médecine générale. Les résultats sont sur des branches de passage non
+  fusionnées.
 - Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
   data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
   `v2/besoin/donnees/MANIFEST.md`. Les tables issues de data.ameli.fr (ODbL) ne sont pas versionnées : les
@@ -319,7 +324,7 @@ et la question ouverte sur le seuil de diffusion.
 ## Feuille de route
 
 - Rejouer la recette par personas sur la carte finale.
-- Module de besoin (population × recours par âge, transferts de tâches), après son test d'abandon.
+- Module de besoin : passage OSRM de P-B4, passage de P-B4-PH, branchement dans la carte.
 - Amélioration possible, hors plan : spécialités (cardiologie, dermatologie, ophtalmologie).
 - Noter les dépôts pré-enregistrés sur les effectifs 2027.
 
