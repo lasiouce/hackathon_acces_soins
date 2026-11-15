@@ -4713,3 +4713,23 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :**
   - un texte qui ajoute d'autres régions avant 2019 ;
   - un jeton RFC 3161 invalide à la vérification de la chaîne de certificats.
+
+## 2026-11-15 — Module de besoin, P-B1 : l'âge (M1) est retenu pour IDE, MK et SF ; dentistes et pharmaciens attendent P2
+- **Décision** (session besoin-v2-m1-m3, passage du protocole gelé P-B1,
+  [rapport](reports/2026-11-15-besoin-pb1-age.md)) :
+  - **M1 retenu** (dénominateur servi) pour les **infirmiers** (S₁ = 0 %, ρ = 0,835), les **kinés** (0 %, 0,984) et
+    les **sages-femmes** (1 %, 0,989), sous le profil APL (P1). Le protocole n'abandonne l'âge que si P1 **et** P2
+    concluent à l'abandon : ces trois verdicts sont définitifs.
+  - **Dentistes : en attente de P2.** P1 conclut à l'abandon (S₁ = 93,1 % > 90 %, ρ = 0,998 ≥ 0,98). M1 reste
+    calculé ; si P2 confirme, M0 suffit pour eux.
+  - **Pharmaciens : aucun verdict.** Pas de poids APL ; P2 (Open DAMIR) seul, en attente de l'axe 4. M1 ne les sert
+    pas d'ici là.
+  - **Le module n'est pas réduit à M0** : M2 et M3 sont construits.
+  - **Écarts au protocole, écrits et commités avant calcul** (commit `404d251`) : P2 absent ; N = trajectoire C1
+    servie déterministe (pas une médiane de tirages) ; tranches Omphale 90–94 et 95+ au poids « 90 et plus » ;
+    MK colonne 2023 ; départements à C non fini retirés (1, IDE).
+  - **M1 :** `B₁ = r̄ · Σ pop·ω`, ω APL figé ; r̄ = offre nationale / population standardisée nationale en 2026
+    (supposé, s'annule dans C) en attendant le niveau DAMIR.
+- **Pourquoi :** seuils gelés appliqués tels quels ; résultat recalculé par un chemin pandas indépendant.
+- **Ce qui le renverserait :** P2 pour les dentistes ; une révision des poids APL ; une dérive du recours par âge
+  (L31, hors périmètre).

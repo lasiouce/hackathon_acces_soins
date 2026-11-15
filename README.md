@@ -271,7 +271,8 @@ Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier d
 
 ```bash
 PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
-PYTHONPATH=v2 uv run python -m besoin.tests                 # module de besoin, axe 0 : 7 critères d'identité
+PYTHONPATH=v2 uv run python -m besoin.tests                 # module de besoin : critères d'identité et cas limites
+PYTHONPATH=v2 uv run python -m besoin.validation.pb1        # besoin, P-B1 : âge (M1) contre population (M0)
 PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
 PYTHONPATH=v2 uv run --with scipy python -W ignore -m methodes.budget_erreur   # axe 2 : budget d'erreur
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
@@ -304,6 +305,9 @@ et la question ouverte sur le seuil de diffusion.
   et l'opérateur de transferts de tâches. Les paramètres sont des placeholders « supposé », et rien
   n'est branché dans la carte. Aucun indice de couverture n'est produit pour la médecine générale.
   Plan : `v2/docs/lab/derivations/2026-11-15-besoin-plan.md`.
+  **M1** (recours par âge, poids APL de la DREES) est retenu par P-B1 pour les infirmiers, les kinés et
+  les sages-femmes ; dentistes et pharmaciens attendent le profil Open DAMIR
+  ([rapport](v2/docs/lab/reports/2026-11-15-besoin-pb1-age.md)).
 - Les effectifs sont comptés en têtes. L'activité par professionnel (équivalents temps plein) n'est
   qu'une hypothèse supposée, sans série ouverte vérifiée.
 - Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les
