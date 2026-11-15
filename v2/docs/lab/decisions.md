@@ -2448,6 +2448,7 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Conformité : seuil de diffusion des tables communales publiées, habillage DSFR, licence du code** (ouvert le 2026-11-15, [audit RGPD/AIPD/2017-745](reports/2026-11-15-audit-rgpd-aipd-dm.md)). Constat mesuré : 52,5 % des cellules commune × âge de `commune_stock.parquet`, sur le dépôt public, valent 1 personne (âge d'un professionnel nommable via l'Annuaire Santé). Verdicts dérivés, non juridiques : pas un dispositif médical (2017/745, aucune finalité médicale individuelle) ; AIPD probablement non obligatoire (1 à 2 critères G29), note de non-applicabilité recommandée si un seuil de diffusion est appliqué. Options pour le seuil : masquer ou regrouper les cellules < 5 (≈ 30 min) ; retirer les tables communales du dépôt public et les reconstruire localement (≈ 20 min, mais le clone neuf ne les a plus). DSFR : porteur public réel, ou habillage neutre hors .gouv.fr. Licence : EUPL 1.2 proposée. À trancher par l'équipe.
 - **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
   en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
   de 100 %. Prix : renommage ≈ 10 min ; premières entrées ≈ 2 h.

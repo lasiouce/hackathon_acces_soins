@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Audit RGPD, AIPD, 2017/745](v2/docs/lab/reports/2026-11-15-audit-rgpd-aipd-dm.md) | pas un dispositif médical ; AIPD probablement non obligatoire (1–2 critères G29) ; 52,5 % des cellules commune × âge publiées valent 1 personne ; DSFR hors administration | audit |
 | 2026-11-15 | [Évaluation selon la grille du jury](v2/docs/lab/reports/2026-11-15-jury-grille.md) | 64/100 (54–74) : pertinence 6,5 · IA 7 · prototype 6,5 · faisabilité 5,5 · pitch 6,5 ; le meilleur ratio est la note de conformité RGPD/2017/745 (+3 pts pour 45 min) | recette jury |
 | 2026-11-14 | [Vidéo de présentation V2](v2/video/README.md) | 60 s, un cas d'usage : +20 % de places de kinés (France), lu dans la Manche : 2036 808 (713–902), +34 ; 2046 1 033, +98 ; 2050 1 105 (794–1 416), +121, 246 pour 100 000 hab. | équipe |
 | 2026-11-14 | [Curseur d'année sur la carte](v2/docs/lab/reports/2026-11-14-curseur-annee.md) | 2026 → 2050 année par année, sans recalcul au déplacement ; /api/carte ≈ 100 ms pour 25 années ; 2050 inchangé | équipe |
