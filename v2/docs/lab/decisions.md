@@ -4683,3 +4683,33 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - une durée publiée de l'acte de vaccination ;
   - la note méthodologique de la Cour qui expliquerait le 0 en officine en 2018 et déplacerait t₀ ;
   - la publication des poids MK 2022.
+
+## 2026-11-15 — Module de besoin : P-B1 à P-B6 gelés avec horodatage externe ; 4 régions pour l'expérimentation de 2017
+- **Décision** (axe 3, [rapport](reports/2026-11-15-besoin-axe3-protocoles.md)) :
+  - **Six protocoles gelés avant tout calcul** dans `v2/validation/preregistered/2026-11-15-besoin-p-b*.md`.
+  - **Gel hors de git, une première pour ce dépôt.** Le manifeste SHA-256 `f0936ab2be34…` est horodaté par deux
+    autorités RFC 3161 : FreeTSA à 02:17:19 UTC et DigiCert à 02:17:20 UTC, le 2026-11-15. Il est aussi soumis à
+    OpenTimestamps, dont l'ancrage est en attente.
+  - Seule l'empreinte est partie, avec l'accord de l'utilisateur·rice dans la session. `ots` a été installé par
+    `uv tool`, avec son accord.
+  - **Heure de gel citée : celle du jeton.** Aucun croisement recours × offre avant 02:17:19 UTC.
+  - **Multiplicité :** Bonferroni par profession dans chaque protocole (IC à 98,75 % pour 4 professions). P-B1 et
+    l'indice de P-B3 sont sans inférence. P-B6 a un seul test décisif.
+  - **Règles communes :**
+    - bootstrap des départements, B = 2 000, graine 20261115 ;
+    - P-B6 : bootstrap sauvage par région (12 grappes) et permutation exacte ;
+    - le GBM de P-B5 n'entre que si la borne haute de l'IC de Δ(GBM − M1) est < 0 (règle de C1-GBM), avec des
+      hyperparamètres figés.
+  - **Écarts à la dérivation, déclarés dans les protocoles :**
+    - P-B5 juge 4 professions (pas de pharmaciens dans la patientèle), barre à 3 ;
+    - P-B6 : 12 zones métropolitaines ; `m` sur Open Medic 2014–2018 ; `s(t)` sur DAMIR jusqu'en 2019-20.
+  - **P-B6, régions traitées : 4, pas 6** (Légifrance lu, arrêté du 10/05/2017, NOR AFSS1713194A) :
+    - Auvergne-Rhône-Alpes et Nouvelle-Aquitaine dès 2017-18 ;
+    - Hauts-de-France et Occitanie dès 2018-19, par l'arrêté du **8 juin 2018**, en vigueur le 15/06/2018.
+- **Correction de la passe de littérature.** L'arrêté du 25/09/2018 élargit la **population cible** (art. 3) ; il
+  n'ajoute pas de régions. Le chiffre « six régions » de la Cour des comptes n'est retenu nulle part.
+- **Pourquoi :** le plan (axe 3) et le rapport technique (§ Intégrité) exigent une antériorité opposable hors de git.
+  P-B6 ne pouvait pas être gelé sans la liste des régions traitées.
+- **Ce qui le renverserait :**
+  - un texte qui ajoute d'autres régions avant 2019 ;
+  - un jeton RFC 3161 invalide à la vérification de la chaîne de certificats.
