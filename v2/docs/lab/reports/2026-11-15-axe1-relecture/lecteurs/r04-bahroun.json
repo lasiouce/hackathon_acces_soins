@@ -1,0 +1,96 @@
+{
+  "source": "Bahroun N., Mémoire EHESP 2025 (Memoire123.pdf, dépôt)",
+  "acces": "texte intégral lu",
+  "url_lue": "/private/tmp/claude-501/-Users-jojo-Documents-progdinh-sevel-hackathon-sante--claude-worktrees-axe1-relecture-sources-73fe41/af2fd571-8be9-4a9d-90fd-205442781564/scratchpad/src/bahroun.txt",
+  "commentaire": "Numérotation : page imprimée = index PDF - 8 (PDF 61 = p. 53). Le § 3.3.2 commence p. 52 (PDF 60) ; les bullets dentaires et la note 57 sont p. 53 (PDF 61). Le mémoire ne chiffre aucun effet de la régulation dentaire (ni par l'Etat, ni par les CT, ni par l'AM) : ses chiffres sont des couvertures de zonage (population et communes), pas des effets sur l'offre. Aucun bilan de cette régulation n'est cité. La seule évaluation citée (DREES, p. 36, PDF 44) est qualitative, internationale, sur la régulation à l'installation des médecins ; elle ne donne pas de meilleure valeur pour les dentistes. Pas de meilleure valeur chiffrée trouvée. Ecart à noter pour la fiche : la convention 2023-2028 est citée (p. 48, PDF 56) pour les chirurgiens-dentistes, mais le mémoire ne date pas la règle de succession à cette convention ; et il ne donne pas la date du zonage (il dit seulement que les cartes viennent de CartoSanté, qui recense les arrêtés ARS, et que les ARS peuvent moduler les zonages).",
+  "claims": [
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Effet de la régulation du conventionnement des dentistes en zone non prioritaire : non chiffré",
+      "valeur_fiche": "non chiffré",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "aucun effet chiffré ; note 57 : aucun constat ne peut être établi pour cette profession",
+      "citation": "Aucun constat ne semble pouvoir être établi pour cette profession, dont l'intervention de l'AM en matière de coercition est limitée à 97 communes.",
+      "page": "p. 53, note 57 (PDF 61)",
+      "note": "Confirmé par absence d'effet chiffré dans tout le texte (recherche sur effet, impact, bilan, efficacité, chiffr*)."
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Aucun bilan publié de cette régulation",
+      "valeur_fiche": "aucun bilan publié",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "non mentionné",
+      "citation": "",
+      "page": "",
+      "note": "Le mémoire ne cite aucun bilan de la régulation dentaire, mais il ne dit pas qu'il n'en existe pas. Affirmation de la fiche, non sourcée dans le mémoire."
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Zones non prioritaires : environ 5 % de la population",
+      "valeur_fiche": "≈ 5 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "5 %",
+      "citation": "Pour les chirurgiens-dentistes, 5% de la population et 0,3% des communes.",
+      "page": "p. 53 (PDF 61) ; tableau p. 3 (PDF 11) : part de population en zones très sur-dotées (ou non prioritaires) = 5 %",
+      "note": ""
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Zones non prioritaires : 0,3 % des communes",
+      "valeur_fiche": "0,3 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "0,3 %",
+      "citation": "Pour les chirurgiens-dentistes, 5% de la population et 0,3% des communes.",
+      "page": "p. 53 (PDF 61) ; tableau p. 2 (PDF 10)",
+      "note": ""
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "97 communes concernées (zones non prioritaires)",
+      "valeur_fiche": "97 communes",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "97 communes",
+      "citation": "dont l'intervention de l'AM en matière de coercition est limitée à 97 communes.",
+      "page": "p. 53, note 57 (PDF 61) ; tableau p. 2 (PDF 10) : 97 communes en colonne « très sur-dotées (ou non prioritaires) »",
+      "note": ""
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Mécanisme : en zone non prioritaire, conventionnement accordé seulement en succession d'un CD cessant définitivement son activité dans la zone",
+      "valeur_fiche": "règle de succession",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "règle de succession (tableau 13)",
+      "citation": "qu'au bénéfice d'un chirurgien-dentiste libéral désigné comme assurant la succession du professionnel cessant définitivement son activité dans la zone.",
+      "page": "tableau 13, p. 20 (PDF 28)",
+      "note": ""
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Régulation de la convention 2023 (millésime)",
+      "valeur_fiche": "convention 2023",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "convention nationale 2023-2028 relative aux chirurgiens-dentistes (citée p. 48, PDF 56) ; date d'entrée en vigueur de la règle de zonage non donnée",
+      "citation": "Aucune distinction entre l'installation et la primo-installation n'est présente au sein de la convention nationale 2023-2028 relatives aux chirurgiens-dentistes.",
+      "page": "p. 48 (PDF 56) ; tableau 13, p. 20 (PDF 28)",
+      "note": "La convention 2023-2028 existe dans le mémoire, mais elle n'est pas reliée explicitement à la règle de succession en zone non prioritaire. Le lien est une inférence de la fiche."
+    },
+    {
+      "fiche": "param-cd-regul-effet",
+      "affirmation": "Zonage en vigueur en 2025 (millésime)",
+      "valeur_fiche": "zonage en vigueur en 2025",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "cartes établies à partir de CartoSanté (arrêtés ARS) ; mémoire daté 2025 ; pas de date de zonage",
+      "citation": "Il est à noter que les cartes sont établies à partir de CartoSanté, qui recense les arrêtés des ARS.",
+      "page": "p. 58 (PDF 66)",
+      "note": "Millésime du zonage non précisé. Seule la date du mémoire (2025) est connue."
+    }
+  ]
+}

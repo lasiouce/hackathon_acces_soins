@@ -1,0 +1,118 @@
+{
+  "source": "CNOMK, Démographie des kinésithérapeutes 2024 (rapport 2024, données extraites au 1er janvier 2024)",
+  "acces": "partiel",
+  "url_lue": "/private/tmp/claude-501/-Users-jojo-Documents-progdinh-sevel-hackathon-sante--claude-worktrees-axe1-relecture-sources-73fe41/af2fd571-8be9-4a9d-90fd-205442781564/scratchpad/src/cnomk2024.txt (texte local, 84 pages, URL de la fiche : https://ordremk.fr/wp-content/uploads/2024/11/rapport-de-la-demographie-des-kinesitherapeutes-2024_page_a_page.pdf, non rouverte sur le web)",
+  "commentaire": "Texte local de 84 pages, recherché en entier par mots-clés (nombres, tableaux, diplômes hors France, autorisations), puis lu sur les pages utiles : 27-28 (tableaux 5 à 7), 66, 69, 73-75. Les pages 1-26 et 29-65 n'ont pas été lues en détail. Les deux fiches citent bien les bons tableaux et pages. Hors périmètre de cette source, donc non vérifiés ici : 1 175 diplômés à l'étranger (2015, DREES ER 1075, attribué à ER 1075 dans la fiche), les variantes « cessation décalée » (ER 1062 et 1075) et le défaut bas MK 1 175 de v2/jumeau/modules/etrangers.py (FLUX_BAS, issu d'ER 1075). Le défaut MK 2 200 du code (FLUX, ligne 27) est bien celui de la fiche.",
+  "claims": [
+    {
+      "fiche": "param-mk-age-retraite",
+      "affirmation": "Âge moyen de départ en retraite des kinés libéraux et mixtes : 66,8 à 67,3 ans",
+      "valeur_fiche": "66,8 à 67,3 ans (moyenne), 2019-2023",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "66,8 ; 67,2 ; 66,9 ; 67,3 ; 67,2 (2019 à 2023) : min 66,8, max 67,3",
+      "citation": "Âge moyen (an) 66,8 67,2 66,9 67,3 67,2",
+      "page": "p. 28, tableau 7 (Départ en retraite)",
+      "note": "Plage exacte. La source distingue bien les libéraux et mixtes (p. 27)."
+    },
+    {
+      "fiche": "param-mk-age-retraite",
+      "affirmation": "Âge médian de départ en retraite : 66,2 à 66,5 ans",
+      "valeur_fiche": "médiane 66,2 à 66,5",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "66,4 ; 66,3 ; 66,4 ; 66,5 ; 66,2 (2019 à 2023)",
+      "citation": "Âge médian (an) 66,4 66,3 66,4 66,5 66,2",
+      "page": "p. 28, tableau 7",
+      "note": "Plage exacte."
+    },
+    {
+      "fiche": "param-mk-age-retraite",
+      "affirmation": "657 à 811 départs en retraite par an",
+      "valeur_fiche": "657 à 811 départs par an",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "745 ; 791 ; 671 ; 811 ; 657 (2019 à 2023) : min 657 (2023), max 811 (2022)",
+      "citation": "Effectif (n) 745 791 671 811 657",
+      "page": "p. 28, tableau 7",
+      "note": "Effectifs de départs à la retraite, pas d'inscrits. Voir aussi la note sur le champ ci-dessous."
+    },
+    {
+      "fiche": "param-mk-age-retraite",
+      "affirmation": "Série 2019-2023, rapport 2024",
+      "valeur_fiche": "millésime 2019-2023 (rapport 2024)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Tableau 7 : 2019 à 2023 ; données du Tableau extraites le 1er janvier 2024",
+      "citation": "Départ en retraite 2019 2020 2021 2022 2023",
+      "page": "p. 2 (extraction) et p. 28 (tableau 7)",
+      "note": "Millésime exact. La source dit qu'il faut nuancer les données : motif de radiation déclaratif, réinscription possible (p. 27)."
+    },
+    {
+      "fiche": "param-mk-age-retraite",
+      "affirmation": "Cessations hors retraite : âge moyen de 41,9 à 48,3 ans",
+      "valeur_fiche": "cessations hors retraite à 41,9-48,3 ans en moyenne",
+      "verdict": "ecart",
+      "type_ecart": "champ",
+      "valeur_source": "Cessation d'activité : âge moyen 47,2 ; 48,3 ; 44,6 ; 45,7 ; 41,9 (2019 à 2023). Départ à l'étranger : 31,7 à 33,4 ans (tableau 6).",
+      "citation": "Âge moyen (an) 47,2 48,3 44,6 45,7 41,9",
+      "page": "p. 27, tableau 5 (cessation d'activité) ; tableau 6 (départ à l'étranger) à la même page",
+      "note": "Les valeurs 41,9 et 48,3 sont exactes, mais elles ne couvrent que le motif « cessation d'activité ». Le libellé « hors retraite » élargit à un champ qui comprend aussi les départs à l'étranger (31,7-33,4 ans). Écart mineur, à corriger dans le libellé."
+    },
+    {
+      "fiche": "param-mk-age-retraite",
+      "affirmation": "La retraite est la sortie dominante après 60 ans",
+      "valeur_fiche": "sortie dominante après 60 ans (qualitatif)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Effectifs 2019-2023 : retraite 657 à 811 ; cessation d'activité 206 à 493 ; départ à l'étranger 217 à 333",
+      "citation": "Effectif (n) 745 791 671 811 657",
+      "page": "p. 27-28, tableaux 5 à 7",
+      "note": "La prédominance en effectifs est confirmée. La borne « après 60 ans » n'est pas écrite dans la source : elle se déduit de l'âge moyen de 66 à 67 ans."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "MK : 2 528 autorisations d'exercice (dont CPE) pour 3 321 demandes, 2023",
+      "valeur_fiche": "2 528 autorisations pour 3 321 demandes, 2023",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "3 321 demandes cumulées d'autorisation d'exercice et de CPE en 2023 ; près de 2 528 professionnels diplômés à l'étranger ont bénéficié de ces dispositifs (76,1 % des demandeurs)",
+      "citation": "près de 2 528 professionnels diplômés à l'étranger ont bénéficié de ces dispositifs",
+      "page": "p. 75, section 5",
+      "note": "Valeur et page exactes. La source dit « près de » et « bénéficié de ces dispositifs » (autorisations et CPE), ce que la fiche résume en « autorisations ». Les LPS (18 bénéficiaires en 2023) ne sont pas comptées."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "MK : +2 212 par an net, hausse du stock de diplômés hors France, 2020 à 2024 (dérivé)",
+      "valeur_fiche": "+2 212 par an, net ; 23 728 à 32 574",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Inscrits diplômés hors France : 23 728 au 1er janvier 2020, 32 574 au 1er janvier 2024. Calcul : (32 574 - 23 728) / 4 = 2 211,5, arrondi à 2 212.",
+      "citation": "Au 1er janvier 2024, 32 574 kinésithérapeutes inscrits en France sont titulaires d'un diplôme obtenu hors France",
+      "page": "p. 66 (stock) ; p. 69 (reprise 23 728 à 32 574)",
+      "note": "Dérivation arithmétique exacte. C'est une variation nette de stock, pas un flux brut d'entrées : elle tient compte des sorties et des changements de tableau. Le libellé « net » de la fiche est donc juste."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "32,5 % des MK actifs n'ont pas de diplôme d'État français (stock, renvoi à data-diplomes-hors-france)",
+      "valeur_fiche": "32,5 % des MK actifs",
+      "verdict": "ecart",
+      "type_ecart": "champ",
+      "valeur_source": "30,8 % des inscrits au Tableau au 1er janvier 2024 (26,1 % en 2020) ; le texte ne parle pas d'actifs",
+      "citation": "soit 30,8 % des inscrits au Tableau",
+      "page": "p. 66",
+      "note": "La valeur 32,5 % et le dénominateur « actifs » ne figurent pas dans cette source. La source donne 30,8 % sur les inscrits. La fiche attribue ce chiffre à data-diplomes-hors-france, pas à CNOMK : la vérification ne porte que sur le texte de CNOMK. Le chiffre est à réconcilier avec sa source ou à remplacer par 30,8 % (inscrits)."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "Défaut MK : 2 200 diplômés hors France entrant en exercice par an (dérivé de 2 528 et +2 212, plage 1 700 à 2 500)",
+      "valeur_fiche": "MK 2 200 / an (dérivé)",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "Aucune valeur de 2 200 dans la source. Les deux entrées sont 2 528 (autorisations 2023) et 2 212 (hausse nette du stock). Leur moyenne est 2 370.",
+      "citation": "",
+      "page": "non applicable",
+      "note": "Valeur de jugement, pas une valeur citée : le choix de 2 200 se situe sous la moyenne des deux entrées. Le 2 528 mesure des autorisations AE et CPE, pas toutes les entrées, et la hausse de stock est nette. Le code (v2/jumeau/modules/etrangers.py, FLUX, « kines ») utilise bien 2 200 ; il faut justifier ce choix dans la fiche."
+    }
+  ]
+}

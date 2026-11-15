@@ -1,0 +1,184 @@
+{
+  "source": "IRDES, Questions d'économie de la santé n° 270 (juillet-août 2022), Duchaine, Chevillard, Mousquès",
+  "acces": "partiel",
+  "url_lue": "https://www.irdes.fr/recherche/questions-d-economie-de-la-sante/270-inegalites-territoriales-de-repartition-des-infirmieres-liberales.pdf (texte local irdes270.txt, pages 2 à 6 lues par extraits et contextes, références lues ; page 1 non lue en détail)",
+  "commentaire": "Pages PDF = pages imprimées (vérifié sur les en-têtes). Les tableaux de la page 5 sont OCRisés (« -25,5n » pour -25,57 ; le texte p. 5 donne -25,57 explicitement). Aucune meilleure valeur plus récente dans cette source : la source s'arrête à 2016 et signale elle-même un nouveau zonage depuis 2019 sans le chiffrer. La fiche param-ide-regul-effet-densite cite un « point d'information Cnam du 05/04/2012 » pour les repères avant/après : cette source ne cite aucun document de ce type ; sa seule référence Cnam sur le sujet est Dufour C. (2010), « accord conventionnel d'avril 2009 ». Non vérifié (hors texte IRDES) : la Cour des comptes mai 2024 p. 95, citée par la fiche param-regul-report-entrants.",
+  "claims": [
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Mécanisme : en zone sur-dotée, une installation infirmière ne peut se faire qu'en cas de départ d'une consœur",
+      "valeur_fiche": "installation sur-dotée seulement en succédant à un départ",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "installation dans les espaces sur-dotés ne peut avoir lieu qu'en cas de départ d'une consœur",
+      "citation": "des mesures restrictives stipulant qu'une installation dans les espaces sur-dotés ne peut avoir lieu qu'en cas de départ d'une consœur",
+      "page": "p. 2",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Zonage infirmier : expérimentation dès 2008-2009, généralisé en 2012",
+      "valeur_fiche": "expérimentation dès 2008-2009 ; généralisation 2012",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "initiée en 2008 puis généralisée en 2012 ; expérimentations en 2009 puis pérennisation à partir de 2012",
+      "citation": "une première expérimentation de zonage infirmier a été initiée en 2008 puis généralisée en 2012",
+      "page": "p. 2 ; p. 5",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Zonage de 2011 ; données 2006-2016",
+      "valeur_fiche": "zonage de 2011, données 2006-2016",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "zonage : version initiale Cnam de 2011 (ne tient pas compte des modifications ARS) ; données Sniir-PS 2006 à 2016",
+      "citation": "nous avons utilisé la version initiale de la Caisse nationale de l'Assurance maladie (Cnam) de 2011",
+      "page": "p. 3 (zonage) ; p. 4 (source des données, 2006 à 2016)",
+      "note": "La source précise que le zonage utilisé est celui de 2011 sans les modifications ARS."
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Appariement : 396 zones traitées et 454 témoins",
+      "valeur_fiche": "396 zones traitées, 454 témoins",
+      "verdict": "ecart",
+      "type_ecart": "page",
+      "valeur_source": "396 territoires sur-dotés (traités) ; 454 territoires intermédiaires (témoins)",
+      "citation": "396 territoires sur-dotés (traités) 454 territoires intermédiaires (témoins)",
+      "page": "p. 3 (schéma du processus d'appariement, appariement 2), et non p. 4",
+      "note": "Valeurs exactes ; seule la page est fausse dans la fiche (p. 4 au lieu de p. 3)."
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Sur-dotées vs intermédiaires, IDEL total : -25,57 pour 100 000 hab., p < 0,001",
+      "valeur_fiche": "-25,57 ; p < 0,001",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "-25,57 infirmières pour 100 000 habitants ; *** (< 0,001) au tableau",
+      "citation": "de -25,57 et -18,8 infirmières pour 100 000 habitants (tableau)",
+      "page": "p. 5 (texte et tableau de différence-de-différences)",
+      "note": "Tableau OCRisé en « -25,5n » ; le texte donne -25,57."
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Sur-dotées vs intermédiaires, IDEL moins de 40 ans : -18,8 pour 100 000 hab., p < 0,001",
+      "valeur_fiche": "-18,8 ; p < 0,001",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "-18,80 ; *** au tableau",
+      "citation": "-25,57 et -18,8 infirmières pour 100 000 habitants",
+      "page": "p. 5",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Très sous-dotées vs intermédiaires (incitations) : +4,31 total (p < 0,01) et +4,25 moins de 40 ans (p < 0,001)",
+      "valeur_fiche": "+4,31 / +4,25 ; p < 0,01 / p < 0,001",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "+4,31 ** ; +4,25 ***",
+      "citation": "Très sous dotées vs intermédiaires +4,31 ** +4,25 ***",
+      "page": "p. 5 (tableau)",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Sur-dotées vs intermédiaires, actes AMI / AIS par habitant : -0,66 / -0,35, p < 0,001",
+      "valeur_fiche": "-0,66 / -0,35 ; p < 0,001",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "-0,66 *** (AMI) ; -0,35 *** (AIS)",
+      "citation": "progression significativement plus lente du nombre d'AMI (-0,66) et d'AIS (-0,35) par habitant",
+      "page": "p. 5 (tableau) ; p. 6 (texte)",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "L'écart de densité entre zones très sous-dotées et sur-dotées a été réduit de moitié entre 2006 et 2016 (descriptif)",
+      "valeur_fiche": "réduit de moitié, 2006-2016",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "réduit de moitié entre 2006 et 2016",
+      "citation": "l'écart entre les moyennes des territoires très sous-dotés et sur-dotés s'est réduit de moitié entre 2006 et 2016",
+      "page": "p. 4",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Repères avant/après (point d'information Cnam du 05/04/2012) : zones sur-dotées, effectifs IDEL -3 % sur 2008-2011 (-263 ou -283 selon la reprise)",
+      "valeur_fiche": "-3 % ; -263 ou -283 ; 2008-2011",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Ni les chiffres ni le point d'information Cnam du 05/04/2012 n'apparaissent dans le texte. La seule référence Cnam sur le sujet est Dufour C. (2010), accord avril 2009."
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Repères avant/après : zones très sous-dotées +33,5 % (de 1 056 à 1 410), contre +15,6 % au niveau national",
+      "valeur_fiche": "+33,5 % (1 056 à 1 410) ; national +15,6 %",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Aucun de ces nombres dans le texte ; même remarque que la ligne précédente sur la référence Cnam."
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Rien de chiffré après l'avenant 6 (2019) ; zonage nouveau depuis 2019",
+      "valeur_fiche": "zonage 2019 ; avenant 6",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "un nouveau zonage a été mis en place depuis 2019 pour les infirmières libérales",
+      "citation": "un nouveau zonage a été mis en place depuis 2019 pour les infirmières libérales",
+      "page": "p. 6",
+      "note": "Date confirmée. Le mot « avenant 6 » n'apparaît pas dans le texte (seul « avenant n° 3 » de 2011 est cité, p. 3) : désignation à vérifier sur un autre document."
+    },
+    {
+      "fiche": "param-ide-regul-effet-densite",
+      "affirmation": "Millésime : données 2006-2016, publication 2022",
+      "valeur_fiche": "données 2006-2016 ; publication 2022",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Questions d'économie de la santé n° 270, juillet-août 2022 ; données Sniir-PS, 2006 à 2016",
+      "citation": "Source : Auteurs, Sniir-PS, Assurance maladie - France entière (hors Mayotte), 2006 à 2016.",
+      "page": "p. 4 (source du graphique) ; couverture",
+      "note": ""
+    },
+    {
+      "fiche": "param-regul-report-entrants",
+      "affirmation": "Report vers les zones intermédiaires en bordure des zones sur-dotées, et contournement par le remplacement (IDE)",
+      "valeur_fiche": "qualitatif : report vers zones intermédiaires en bordure ; contournement par remplacement",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "contournement avec l'utilisation du remplacement ou d'installations à leurs marges, profitant alors plutôt aux zones intermédiaires",
+      "citation": "contournement avec l'utilisation du remplacement ou d'installations à leurs marges, profitant alors plutôt aux zones intermédiaires",
+      "page": "p. 6",
+      "note": ""
+    },
+    {
+      "fiche": "param-regul-report-entrants",
+      "affirmation": "Aucune source ne chiffre le nombre de refus ni la ventilation par destination (non chiffré, qualitatif)",
+      "valeur_fiche": "non chiffré",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "aucune valeur chiffrée de refus ou de ventilation dans le texte",
+      "citation": "Si les restrictions d'installations ont un effet rapide, elles font l'objet de contournement",
+      "page": "p. 6",
+      "note": "Constat négatif vérifié sur le texte lu : le report et le contournement sont décrits sans chiffre."
+    },
+    {
+      "fiche": "param-regul-report-entrants",
+      "affirmation": "L'avenant 6 IDE encadre l'activité autour des zones sur-dotées ; deux tiers de l'activité dans la zone d'installation (mémoire EHESP, note 55)",
+      "valeur_fiche": "deux tiers de l'activité dans la zone d'installation ; avenant 6 ; EHESP note 55",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Ni « deux tiers », ni « EHESP », ni « avenant 6 » ni la note 55 dans le texte. Le texte évoque seulement le zonage 2019 et des mesures « visant à éviter les effets de contournements » (p. 6)."
+    }
+  ]
+}

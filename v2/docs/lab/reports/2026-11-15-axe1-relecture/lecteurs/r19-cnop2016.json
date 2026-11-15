@@ -1,0 +1,206 @@
+{
+  "source": "Ordre national des pharmaciens, Éléments démographiques 2016 (données au 1er janvier 2016, année 2015)",
+  "acces": "partiel",
+  "url_lue": "https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf (texte local : scratchpad/src/cnop_2016.txt ; PDF local : scratchpad/src/cnop_2016.bin)",
+  "commentaire": "Texte local complet disponible et interrogé par grep puis lu en contexte pour chaque chiffre. Pagination : les marqueurs « ===== PAGE n ===== » sont des index PDF ; chaque page PDF est une double page imprimée (PDF 4 = imprimées 6-7, PDF 6 = imprimées 10-11, PDF 10 = imprimées 18-19, PDF 24 = imprimées 46-47). Limite : pdftoppm et pdftotext absents, donc les camemberts n'ont été lus que dans l'extraction texte, où les étiquettes sont en désordre ; les attributions de sections issues de graphiques sont marquées en conséquence. Meilleure valeur : aucun taux d'évaporation ni de taux d'inscription des diplômés dans cnop_synthese2024.txt ni cnop_depliant2025.txt (recherche « évapor » sans résultat), donc la valeur 2015 reste la seule sourcée. Les valeurs 2024 et 2025 des fiches (p. ex. 27,7 %, 28,6 %, 2 370 / 5 161, 3 750 / 2 967) ne viennent pas de cette source et ne sont pas vérifiées ici. Par ailleurs, dans cette source, 35 primo-inscrits en section A sur 2 324 valent 1,5 %, ce qui vaut mieux que la part arrondie à 1 %.",
+  "claims": [
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "Taux d'évaporation 2015 = 32,8 %",
+      "valeur_fiche": "32,8 % (2015)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "32,8 %",
+      "citation": "tendance sans précédent à 32,8%, soit 1015 diplômés « évaporés »",
+      "page": "PDF p. 4 (imprimées 6-7), tableau « Taux d'évaporation » 2001-2015",
+      "note": "Ligne 2015 du tableau : inscrits 2 324, NC 3 097, NC décalé 3 090, écart -766, taux -32,8 %."
+    },
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "Unité : 1 − nouveaux inscrits diplômés depuis < 3 ans / numerus clausus de l'année t−6",
+      "valeur_fiche": "1 − nouveaux inscrits diplômés depuis < 3 ans / numerus clausus de l'année t−6",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "numérateur : nouveaux inscrits diplômés depuis moins de trois ans ; dénominateur : postes ouverts au concours 6 ans plus tôt (colonne « numerus clausus en vigueur à l'entrée en formation », décalage de 6 ans)",
+      "citation": "rapport entre le nombre de nouveaux inscrits diplômés depuis moins de trois ans et le nombre de postes ouverts au concours 6 ans plus tôt",
+      "page": "PDF p. 4 (imprimées 6-7)",
+      "note": "Définition vérifiée : le numérateur est le nombre de diplômés inscrits depuis moins de 3 ans, pas le total des inscrits (2 324). Le dénominateur est le NC de t−6, non le NC de l'année : 3 090 et non 3 097. La formule de la fiche est donc exacte. Le 1 − x (et non x) est une transformation de la fiche qui reprend bien le taux d'évaporation de la source."
+    },
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "2015 : 2 076 nouveaux inscrits diplômés depuis moins de 3 ans",
+      "valeur_fiche": "2 076",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "2 076",
+      "citation": "on dénombre 2076 nouveaux inscrits diplômés depuis moins de trois ans",
+      "page": "PDF p. 4 (imprimées 6-7), texte à côté du tableau",
+      "note": ""
+    },
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "Numerus clausus à t−6 pour 2015 = 3 090",
+      "valeur_fiche": "3 090 six ans plus tôt",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "3 090 (NC en vigueur à l'entrée en formation, 2015)",
+      "citation": "2015 2324 3097 3090 0,0% -5,7% -766 -32,8%",
+      "page": "PDF p. 4 (imprimées 6-7), tableau",
+      "note": "Ligne 2015 : la 3e colonne NC est décalée de 6 ans (3 090 = NC 2009). La colonne « NC de l'année » vaut 3 097."
+    },
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "Taux d'évaporation 2014 = 27,8 %",
+      "valeur_fiche": "27,8 % en 2014",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "-27,8 %",
+      "citation": "2014 2465 3095 3090 3,3% 0,5% -625 -27,8%",
+      "page": "PDF p. 4 (imprimées 6-7), tableau",
+      "note": "La source écrit -27,8 % : le signe est négatif dans le tableau, la fiche donne la grandeur."
+    },
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "Taux d'évaporation entre 10 et 26 % sur 2006-2013",
+      "valeur_fiche": "entre 10 et 26 % sur 2006-2013",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "2006 -10,1 % ; 2007 -13,5 % ; 2008 -21,9 % ; 2009 -13,1 % ; 2010 -20,1 % ; 2011 -26,2 % ; 2012 -25,6 % ; 2013 -26,3 %",
+      "citation": "2013 2452 3095 2990 7,2% 5,5% -538 -26,3%",
+      "page": "PDF p. 4 (imprimées 6-7), tableau",
+      "note": "Min 10,1 % (2006), max 26,3 % (2013) : « 26 % » est un arrondi acceptable."
+    },
+    {
+      "fiche": "param-ph-taux-inscription-diplomes",
+      "affirmation": "Enquête de 2015 auprès de 540 non-inscrits ; 31 des 168 thésés occupent un poste sans obligation d'inscription",
+      "valeur_fiche": "540 ; 31 sur 168",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "540 répondants ; 168 répondants ayant soutenu la thèse ; 31 pharmaciens dans des postes ne nécessitant pas d'inscription",
+      "citation": "S'agissant des 168 répondants ayant déjà soutenu la thèse (31%) : 31 pharmaciens occupent des postes qui ne nécessitent pas d'inscription au tableau",
+      "page": "PDF p. 6 (imprimées 10-11), encadré enquête des non-inscrits",
+      "note": "Le texte dit « comme début 2015 … cette année, 540 personnes », sans millésime explicite. 2015 est une lecture probable, pas une date écrite. Les 31 sont des effectifs, pas un pourcentage. Le texte cite 31 % pour les 168 répondants thésés, rapport 168/540."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : total 2 324 nouveaux inscrits (base de la répartition par section)",
+      "valeur_fiche": "Total 2 324",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "2 324",
+      "citation": "En 2015, l'Ordre a compté 2 324 nouveaux inscrits, soit 141 de moins que l'année précédente",
+      "page": "PDF p. 6 (imprimées 10-11)",
+      "note": "La source dit « nouveaux inscrits », la fiche « primo-inscrits » : même population ici."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : section D = 66 %",
+      "valeur_fiche": "D 66 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "66 %",
+      "citation": "Les deux tiers des nouveaux inscrits figurent logiquement au tableau de la section D",
+      "page": "PDF p. 6 (imprimées 10-11)",
+      "note": "Le 66 % est aussi présent dans l'extraction du graphique."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : section H (établissements de santé) = 14 %",
+      "valeur_fiche": "H 14 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "14 %",
+      "citation": "viennent ensuite les pharmaciens des établissements de santé (14%)",
+      "page": "PDF p. 6 (imprimées 10-11)",
+      "note": ""
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : section G (biologie) = 7 %",
+      "valeur_fiche": "G 7 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "7 %",
+      "citation": "1 %2 %9 %1 %14 %7 %66 %",
+      "page": "PDF p. 6 (imprimées 10-11), graphique « répartition par section » (extraction texte)",
+      "note": "Valeur présente dans l'extraction, sans étiquette de section lisible. L'attribution à G repose sur l'ordre du graphique, qui est en désordre dans l'extraction."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : section B (industrie) = 9 %",
+      "valeur_fiche": "B 9 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "9 %",
+      "citation": "les pharmaciens de l'industrie (11%)",
+      "page": "PDF p. 6 (imprimées 10-11)",
+      "note": "Le texte donne l'industrie à 11 % : 9 + 2, ce qui soutient la lecture « +2 % ». Attribution du 9 % par l'ordre du graphique, comme pour G."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : section A (titulaires d'officine) = 1 %",
+      "valeur_fiche": "A 1 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "1 % (soit 35 primo-inscrits, 35/2 324 = 1,5 %)",
+      "citation": "en section A a encore baissé (35 primo inscrits contre 42 en 2014 , 54 en 2013 et 77 en 2012 )",
+      "page": "PDF p. 17 (imprimée 32-33, section A), texte ; graphique PDF p. 6",
+      "note": "Le nombre absolu (35) vaut mieux que le pourcentage arrondi ; 35/2 324 = 1,5 %, donc 1 % est à la limite de l'arrondi. Le texte donne 35 en absolu, à préférer dans la fiche."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : section C (distribution en gros) = 1 %",
+      "valeur_fiche": "C 1 %",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "non attribuable",
+      "citation": "1 %2 %9 %1 %14 %7 %66 %",
+      "page": "PDF p. 6 (imprimées 10-11), graphique (extraction texte)",
+      "note": "Un second « 1 % » apparaît dans le graphique, mais sans étiquette de section dans le texte extrait. La fiche l'attribue à C sans preuve textuelle. À vérifier sur l'image du PDF (pdftoppm absent ici)."
+    },
+    {
+      "fiche": "param-ph-filiere-primo-inscrits",
+      "affirmation": "2015 : « +2 % BC » ajouté à la section B",
+      "valeur_fiche": "+2 % « BC »",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "2 % présent sans étiquette ; industrie 11 % dans le texte",
+      "citation": "les pharmaciens de l'industrie (11%)",
+      "page": "PDF p. 6 (imprimées 10-11)",
+      "note": "L'étiquette « BC » n'apparaît pas dans la source texte. La valeur 11 % pour l'industrie est cohérente avec 9 + 2, mais la fiche ajoute une étiquette « BC » non vérifiée."
+    },
+    {
+      "fiche": "param-ph-part-privee-biologie",
+      "affirmation": "Biologie médicale : part privée environ 60 % (2015)",
+      "valeur_fiche": "environ 60 % en 2015",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "environ 60 %, « stabilisée » dans les dernières années",
+      "citation": "la part des pharmaciens dans le secteur privé domine largement, elle s'est stabilisée autour de 60%",
+      "page": "PDF p. 10 (imprimées 18-19), section G, « répartition par activité et par secteur »",
+      "note": "Source : « stabilisée autour de 60 % dans les dernières années », donc sans année précise. Le chiffre clé 2015 « Nombre d'inscrits privé 4 419 / public 2 650 » donnerait ~62 %, mais les étiquettes sont en désordre dans l'extraction : à ne pas utiliser sans image."
+    },
+    {
+      "fiche": "param-ph-part-privee-etablissements",
+      "affirmation": "2015 : inscriptions section H, privé / public = 36 % / 64 %",
+      "valeur_fiche": "Inscriptions H, privé / public : 36 % / 64 % (2015)",
+      "verdict": "ecart",
+      "type_ecart": "champ",
+      "valeur_source": "postes en PUI 2015 : privé 2 377 / public 4 202, soit 36,1 % ; « 64 % des effectifs » en établissement de soins à dominante publique",
+      "citation": "L'emploi en établissement de soins est à dominante publique avec 64% des effectifs et majoritairement féminin (75%)",
+      "page": "PDF p. 24 (imprimées 46-47), section H, répartition par secteur et tableau « Exercice en PUI »",
+      "note": "Les valeurs 36 % et 64 % sont bien dans la source, mais elles portent sur les postes ou effectifs (emploi) des PUI, pas sur les inscriptions de la section H. Cette source ne donne aucune répartition privé/public des inscriptions de la section H en 2015. Conséquence : la fiche mélange une série 2015 en postes avec des séries 2024 et 2025 en inscriptions (27,7 % puis 28,6 %, série en hausse). Le « −0,7 point/an depuis 2015 » est donc un dérivé sur des séries de natures différentes. Sur les postes seuls (36,1 % en 2015, 30,0 % en 2025 selon la fiche), la baisse est d'environ −0,6 point/an. À corriger : étiqueter la ligne 2015 « postes » et ne pas la comparer aux inscriptions."
+    },
+    {
+      "fiche": "param-ph-part-privee-etablissements",
+      "affirmation": "2015 : postes en PUI, privé 2 377 / public 4 202 (36,1 %)",
+      "valeur_fiche": "2 377 / 4 202 (36,1 %)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Privé 2 377 ; Public 4 202 ; 2377/(2377+4202) = 36,1 %",
+      "citation": "Public 1069 4095 1075 4202 2,6 % ; Privé 1468 2271 1452 2377 4,7 %",
+      "page": "PDF p. 24 (imprimées 46-47), tableau « Répartition par activité - Exercice en PUI »",
+      "note": "Le 36,1 % est un dérivé (calcul de la fiche), vérifié. Le tableau donne aussi les postes 2014 (privé 2 271, public 4 095) et la croissance +4,7 % pour le privé."
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "source": "Avenant n° 7 à la convention nationale des masseurs-kinésithérapeutes (arrêté du 21/08/2023, JO 25/08/2023, NOR SPRS2322893A) ; Conseil d'État 17/07/2024 n° 488665",
+  "acces": "texte intégral lu",
+  "url_lue": "texte local scratchpad/src/mk_avenant7.txt (copie de https://bretagne.paps.sante.fr/media/41875/download, 32 pages PDF, JO texte 28 sur 110) ; décision CE : https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2024-07-17/488665 (WebFetch)",
+  "commentaire": "Pagination : « ===== PAGE n ===== » = index PDF. Le texte local ne donne aucun numéro de page imprimée, seulement « Texte 28 sur 110 » ; la colonne page donne donc l'index PDF. Les deux fiches citent la même source (art. 4.1.1, art. 1.2.1, annexe 3). Les chiffres de zonage observés (26,5 % de la population, 8,1 % des communes, zonage au 20/10/2026) et la note « déduit » sur les premiers diplômés en 2027-2028 viennent de données ou de calculs hors de cet avenant ; ils ne sont pas vérifiés ici. Aucun écart de valeur n'a été trouvé. Les nuances ci-dessous sont des omissions, pas des erreurs.",
+  "claims": [
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "Avenant n° 7 approuvé par arrêté du 21/08/2023, NOR SPRS2322893A, JO du 25/08/2023 (art. 4.1.1 créé par l'avenant)",
+      "valeur_fiche": "arrêté du 21/08/2023 ; NOR SPRS2322893A ; JO du 25/08/2023",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "arrêté du 21 août 2023 ; NOR : SPRS2322893A ; JO 25 août 2023, texte 28 sur 110",
+      "citation": "Arrêté du 21 août 2023 portant approbation de l'avenant no 7 ... NOR : SPRS2322893A",
+      "page": "PDF p.1 (JO texte 28 sur 110)",
+      "note": "Les trois références concordent avec l'en-tête du texte local."
+    },
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "Option 1 : 2 ans d'expérience en établissement sanitaire ou médico-social, 2 240 h (70 % ETP sur 2 ans)",
+      "valeur_fiche": "2 ans en établissement (2 240 h)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "2 ans en établissement sanitaire ou médico-social en France ; 70 % d'un ETP soit 2 240 heures sur 2 ans",
+      "citation": "justifie d'une expérience professionnelle préalable ... de deux ans en établissement sanitaire ou médico-social en France",
+      "page": "PDF p.9 (art. 4.1.1)",
+      "note": "Le texte ne distingue pas public et privé, ce que la fiche indique déjà. Un exercice à 50 % ETP est admis si la durée est allongée jusqu'à 2 240 h (non mentionné dans la fiche)."
+    },
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "Option 2 : engagement à exercer au moins les 2 premières années de conventionnement en zone très sous dotée ou sous dotée",
+      "valeur_fiche": "2 premières années en zone très sous-dotée ou sous-dotée",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "s'engage à exercer au moins les deux premières années de son conventionnement dans une zone très sous dotée ou sous dotée",
+      "citation": "s'engage à exercer au moins les deux premières années de son conventionnement dans une zone « très sous dotée » ou « sous dotée »",
+      "page": "PDF p.9 (art. 4.1.1)",
+      "note": ""
+    },
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "Exercice en zone très sous dotée ou sous dotée : minimum 6 000 actes sur les deux ans",
+      "valeur_fiche": "au moins 6 000 actes sur 2 ans",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "minimum de 6 000 actes réalisés sur les deux ans",
+      "citation": "le masseur-kinésithérapeute doit justifier d'un minimum de 6 000 actes réalisés sur les deux ans",
+      "page": "PDF p.9 (art. 4.1.1)",
+      "note": ""
+    },
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "Les deux options peuvent se combiner",
+      "valeur_fiche": "les deux options peuvent se combiner",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "exercice successif ou concomitant sur la période de deux ans, en partie en établissement et en partie en zone très sous dotée ou sous dotée",
+      "citation": "peut être remplie si le masseur-kinésithérapeute choisit un exercice successif ou concomitant sur la période de deux ans",
+      "page": "PDF p.9 (art. 4.1.1)",
+      "note": "Le texte prévoit une combinaison à l'intérieur de la condition de 2 ans. Il dit « au moins l'une des deux conditions », ce qui permet aussi de les cumuler. Lecture cohérente, pas une citation littérale."
+    },
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "La condition s'applique aux MK entrés en formation à partir de 2023",
+      "valeur_fiche": "MK entrés en formation à partir de 2023",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "s'applique aux masseurs kinésithérapeutes démarrant à compter de l'année 2023 leur formation",
+      "citation": "démarrant à compter de l'année 2023 leur formation conduisant au diplôme de masseur-kinésithérapeute",
+      "page": "PDF p.9 (art. 4.1.1)",
+      "note": "Le millésime est correct. Les dates de premiers diplômés (2027-2028) sont déduites par la fiche et ne sont pas dans le texte."
+    },
+    {
+      "fiche": "param-mk-obligation-exercice",
+      "affirmation": "Avenant validé par le Conseil d'État le 17/07/2024, n° 488665",
+      "valeur_fiche": "CE 17/07/2024 n° 488665, validé",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Décision n° 488665 du 17/07/2024 ; requêtes en annulation de l'arrêté du 21/08/2023 rejetées",
+      "citation": "Les requêtes [...] sont rejetées ; objet : arrêté du 21 août 2023 approuvant l'avenant n° 7",
+      "page": "page web CE (WebFetch)",
+      "note": "Le recours a été rejeté, donc l'arrêté est maintenu. Le Conseil d'État a rejeté les requêtes du Conseil national de l'ordre et de la Fédération nationale des étudiants en kinésithérapie."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Avenant conclu le 13/07/2023, arrêté d'approbation du 21/08/2023, JO du 25/08/2023, texte 28",
+      "valeur_fiche": "conclu le 13/07/2023 ; arrêté 21/08/2023 ; JO 25/08/2023 ; texte 28",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "conclu le 13 juillet 2023 ; arrêté du 21 août 2023 ; JO 25 août 2023, Texte 28 sur 110",
+      "citation": "avenant no 7 ... conclu le 13 juillet 2023",
+      "page": "PDF p.1 (JO texte 28 sur 110)",
+      "note": "La date de signature figure aussi en fin d'annexe (« Fait à Paris le 13 juillet 2023 », PDF p.32)."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Art. 1.2.1 : en zone non prioritaire, conventionnement seulement à la succession d'un confrère cessant définitivement son activité",
+      "valeur_fiche": "en zone non prioritaire : seulement en succession d'une cessation",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "le conventionnement ne peut être accordé ... dans une zone non prioritaire qu'au bénéfice d'un MK assurant la succession d'un confrère cessant définitivement son activité",
+      "citation": "ne peut être accordé ... dans une zone « non prioritaire » qu'au bénéfice d'un masseur-kinésithérapeute assurant la succession d'un confrère cessant définitivement son activité",
+      "page": "PDF p.13 (art. 1.2.1 remplacé, III.1o)",
+      "note": "Le texte ajoute : « sauf cas de dérogations prévues à l'article 1.2.3 ». La fiche ne mentionne pas ces dérogations, ce qui est une omission. Le texte précise aussi « sous réserve de respecter l'article 4.1.1 »."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Cédant : au moins 1 200 actes l'année précédant la cessation",
+      "valeur_fiche": "cédant ≥ 1 200 actes l'année précédente",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "seuil minimum de 1 200 actes au titre de l'année précédant cette cessation d'activité",
+      "citation": "ne peut ouvrir de place de conventionnement dans la zone non prioritaire que si l'activité du cédant représentait un seuil minimum de 1 200 actes",
+      "page": "PDF p.13 (art. 1.2.1)",
+      "note": "Nuance omise par la fiche : sous le seuil, la commission paritaire départementale peut apprécier la situation (congé maternité, parental, départ progressif à la retraite). Un avis est alors rendu."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Successeur désigné dans les 2 ans suivant la cessation",
+      "valeur_fiche": "successeur désigné sous 2 ans",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "délai de deux ans maximum à compter de la cessation de son activité pour désigner un successeur",
+      "citation": "dispose d'un délai de deux ans maximum à compter de la cessation de son activité pour désigner un successeur",
+      "page": "PDF p.13 (art. 1.2.1)",
+      "note": ""
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "La régulation vaut aussi pour l'exercice exclusif à domicile",
+      "valeur_fiche": "la règle vaut aussi pour l'exercice exclusif à domicile",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Le principe de régulation du conventionnement s'applique également aux MK demandant un conventionnement dans le cadre d'un exercice exclusif au domicile",
+      "citation": "Le principe de régulation du conventionnement s'applique également aux masseurs-kinésithérapeutes demandant un conventionnement dans le cadre d'un exercice exclusif au domicile",
+      "page": "PDF p.13 (art. 1.2.1)",
+      "note": ""
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Règle « 1 pour 1 » : entrées conventionnées ≤ cessations définitives",
+      "valeur_fiche": "entrées conventionnées ≤ cessations définitives (1 pour 1)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "succession d'un confrère cessant définitivement son activité ; une cessation ouvre au plus une place",
+      "citation": "ne peut ouvrir de place de conventionnement dans la zone non prioritaire que si ... 1 200 actes",
+      "page": "PDF p.13 (art. 1.2.1)",
+      "note": "Le texte ne dit pas « 1 pour 1 » mot pour mot. C'est une lecture de la règle de succession, qui vaut sauf dérogations de l'art. 1.2.3 (non vérifiées ici)."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Zonage en 4 niveaux (annexe 3, remplacée par l'avenant)",
+      "valeur_fiche": "4 zones : très sous-dotée, sous-dotée, intermédiaire, non prioritaire (annexe 3)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "classées en quatre niveaux de dotation : zones très sous dotées, sous dotées, intermédiaires et non prioritaires",
+      "citation": "Ces zones identifiées sont classées en quatre niveaux de dotation : zones « très sous dotées », zones « sous dotées », zones « intermédiaires » et zones « non prioritaires »",
+      "page": "PDF p.11 (annexe 3, point 1)",
+      "note": ""
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Parts de population cibles : très sous-dotée 15 %, sous-dotée 15 %, intermédiaire 40 %, non prioritaire 30 %",
+      "valeur_fiche": "très sous-dotée 15 % ; sous-dotée 15 % ; intermédiaire 40 % ; non prioritaire 30 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "15 % très sous dotées ; 15 % sous dotées ; 40 % intermédiaires ; 30 % non prioritaires (population française totale)",
+      "citation": "enfin les derniers bassins de vie ... représentant 30 % de la population française sont classés en zones « non prioritaires »",
+      "page": "PDF p.12 (annexe 3, point 3.2) ; cf. art. 1.1.2 p.10 (30 % et 15 %+15 %)",
+      "note": "Les parts sont nationales. Le zonage observé (26,5 % de la population en non prioritaire) n'est pas vérifiable avec ce texte : il vient du fichier de zonage."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Marge d'adaptation régionale de ±2,5 % de la population régionale",
+      "valeur_fiche": "marge ARS de ±2,5 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "une marge d'adaptation maximale de 2,5 % de sa population régionale (en plus ou moins)",
+      "citation": "une marge d'adaptation maximale de 2,5 % de sa population régionale (en plus ou moins)",
+      "page": "PDF p.12-13 (annexe 3, point 4)",
+      "note": "La marge s'applique à chaque type de zone (très sous dotée, non prioritaire)."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "L'avenant 7 renomme la zone « sur-dotée » en « zone non prioritaire »",
+      "valeur_fiche": "renomme la zone « non prioritaire »",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "les mots « zone surdotée », « zone sur-dotée » ... sont remplacés par les mots « zone non prioritaire »",
+      "citation": "les mots : « zone surdotée », « zone sur-dotée » ... sont remplacés par les mots : « zone non prioritaire »",
+      "page": "PDF p.10 (art. II.1o)",
+      "note": ""
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Décision du Conseil d'État du 17/07/2024, n° 488665 : recours rejetés",
+      "valeur_fiche": "CE 17/07/2024 n° 488665 ; recours rejetés",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Les requêtes sont rejetées (art. 1er) ; requêtes contre l'arrêté du 21/08/2023",
+      "citation": "« Les requêtes [...] sont rejetées »",
+      "page": "page web CE (WebFetch)",
+      "note": "Même décision que pour la fiche obligation."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Historique : régulation de 2012 annulée par le Conseil d'État en 2014",
+      "valeur_fiche": "régulation 2012 annulée CE 2014",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "non trouvé dans le texte de l'avenant 7",
+      "citation": "",
+      "page": "",
+      "note": "L'avenant ne parle ni d'une régulation de 2012 ni d'une annulation en 2014. Le seul « 2012 » du texte porte sur un autre sujet (cancer du sein). Source externe nécessaire, non vérifiée ici."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Régulation en zone « sur-dotée » depuis l'avenant 5 (2018)",
+      "valeur_fiche": "zone sur-dotée régulée depuis avenant 5 (2018) ; Cour des comptes 2024 p.95 n.152",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "« Dans les suites de l'avenant no 5 » : seul passage, sur la nomenclature, pas sur la régulation",
+      "citation": "Dans les suites de l'avenant no 5, des travaux de description ont été menés",
+      "page": "PDF p.18 (nomenclature)",
+      "note": "L'avenant 5 est mentionné seulement pour la nomenclature. Le texte ne dit pas que l'avenant 5 instituait une régulation en zone sur-dotée. La note Cour des comptes n'a pas été ouverte (hors périmètre)."
+    },
+    {
+      "fiche": "param-mk-regul-regle",
+      "affirmation": "Méthode : arrêté du 20/03/2024, qui modifie celui du 24/09/2018",
+      "valeur_fiche": "arrêté 20/03/2024 modifiant arrêté 24/09/2018",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "non trouvé dans le texte de l'avenant 7",
+      "citation": "",
+      "page": "",
+      "note": "Ni l'arrêté du 20/03/2024 ni celui du 24/09/2018 n'est cité dans l'avenant 7. Référence à vérifier au JO séparément."
+    }
+  ]
+}

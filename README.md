@@ -174,7 +174,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | Axe | Contenu | État |
 |---|---|---|
 | 0. Jumeau | État unique (profession × secteur × territoire × sexe × âge), modules de flux en plug-ins, scénarios datés | ✅ 18 critères sur 18, 3 revues adversariales |
-| 1. Hyperparamètres | Fiches sourcées : régulation conventionnelle, filières en pharmacie, spécialisation en odontologie, abandon en IFSI… | ✅ fiches, sources à relire en texte intégral |
+| 1. Hyperparamètres | Fiches sourcées : régulation conventionnelle, filières en pharmacie, spécialisation en odontologie, abandon en IFSI… | ✅ fiches relues en texte intégral le 2026-11-15 : 20 confirmées, 8 corrigées, 1 introuvable, aucune valeur du code changée ([rapport](v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md)) |
 | 2. Méthodes | Battre le stock-flux sans boîte noire | ✅ cohortes bayésiennes : MAPE dép. 7,73 % contre 8,68 % ; projection communale (K3 à K5) non confirmée, affichage au département |
 | 3. Validation | Protocoles pré-enregistrés, gelés par SHA-256 (N1 à N12) | ✅ exécutés en grande partie ; dépôts à noter sur les données 2027 |
 | 4. Données | Public / privé, registre de 30 événements datés, zonage par commune, grain communal | ✅ |

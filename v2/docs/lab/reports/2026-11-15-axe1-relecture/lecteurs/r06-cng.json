@@ -1,0 +1,151 @@
+{
+ "source": "Textes CNG (arrêtés 2024 et 2023, statistiques 2018), L'Étudiant 15/05/2020, QE AN n° 13528",
+ "acces": "texte intégral lu",
+ "url_lue": "cng_arrete2024 (texte local) ; cng_internats2018 (texte local) ; arrêté 20/02/2023 : https://www.cng.sante.fr/sites/default/files/media/2023-05/Arr%C3%AAt%C3%A9%20du%2020_02_2023%20offres%20de%20postes%20Concours%20national%20ODT%202023_2024.pdf ; QE : https://questions.assemblee-nationale.fr/dyn/16/questions/QANR5L16QE13528.pdf ; L'Étudiant : https://www.letudiant.fr/etudes/medecine-sante/etudes-de-sante-les-chiffres-du-numerus-clausus-2020-2021-a-la-loupe.html",
+ "commentaire": "Texte intégral lu pour les trois sources arrêtés/QE (PDF saisis via WebFetch, extraits avec pypdf en lecture seule). L'Étudiant lu en texte web (WebFetch), pas en version imprimée. Le texte CNG 2018 lu en local. Non vérifié : la ligne 2026-27 (arrêté du 21/04/2026) et l'arrêté du 13/05/2020 (NOR SSAH2011524A), hors périmètre. Le texte de la fiche sur les 'places en 2e année' repose sur un indicateur (admis / places) que la QE et l'article ne définissent pas de la même façon.",
+ "claims": [
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "2024-25 : ODF 52 postes",
+   "valeur_fiche": "52",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "52",
+   "citation": "TOTAL 52 44 (annexe I, orthopédie dento-faciale)",
+   "page": "PDF p.2 ; JO texte 18 p.1-2",
+   "note": "Lu dans le texte local cng_arrete2024.txt. Source : Arrêté du 15/05/2024 (NOR TSSH2411796A), JO n° 115 du 18/05/2024, texte 18"
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "2024-25 : CO 25 postes",
+   "valeur_fiche": "25",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "25",
+   "citation": "TOTAL 25 (annexe II, chirurgie orale)",
+   "page": "PDF p.2 ; JO texte 18 p.2",
+   "note": "Lu dans le texte local. Somme des lignes CO = 25."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "2024-25 : MBD 44 postes ; total 121",
+   "valeur_fiche": "44 ; 121",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "44 ; 52+25+44=121 (sommes des lignes vérifiées)",
+   "citation": "TOTAL 52 44 (annexe I, médecine bucco-dentaire)",
+   "page": "PDF p.1-2 ; JO texte 18",
+   "note": "Lu dans le texte local."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "2023-24 : ODF 52, CO 24, MBD 44, total 120",
+   "valeur_fiche": "52 / 24 / 44 / 120",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "ODF 52 ; CO 24 ; MBD 44 ; total 24",
+   "citation": "TOTAL 52 44 ; TOTAL 24 (annexe II, chirurgie orale)",
+   "page": "PDF p.1-2 ; JO texte 29 sur 146",
+   "note": "Texte intégral lu (PDF saisi via WebFetch, extrait avec pypdf). Arrêté du 20/02/2023 (NOR SPRH2304784A), JO n° 47 du 24/02/2023, texte 29."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "2018 : ODF 52 / CO 16 / MBD 42 (36 pourvus) / total 110",
+   "valeur_fiche": "52 / 16 / 42 (36 pourvus) / 110",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "Ouverts : CO 16, MBD 42, ODF 52, total 110 ; pourvus : CO 16, MBD 36, ODF 52, total 104",
+   "citation": "Médecine bucco-dentaire 42 36 85,7 ; Ensemble 110 104 94,5",
+   "page": "p.9, tableau 20",
+   "note": "Source : CNG, Statistiques 2018 Internats, p.9. Le total pourvus (104) n'est pas porté dans la fiche, qui ne le donne pas non plus."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "Postes ouverts 2012 / 2014 / 2016 / 2017 = 91 / 110 / 109 / 111",
+   "valeur_fiche": "91 / 110 / 109 / 111",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "2012 91 ; 2014 110 ; 2016 109 ; 2017 111",
+   "citation": "Postes ouverts 40 39 40 45 91 102 110 110 109 111 110",
+   "page": "p.9, tableau 23",
+   "note": "Source : CNG, Statistiques 2018 Internats, p.9."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "Postes ouverts 2008-2011 : 39-45",
+   "valeur_fiche": "39-45",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "2008 40 ; 2009 39 ; 2010 40 ; 2011 45",
+   "citation": "Postes ouverts 40 39 40 45 91 102 110",
+   "page": "p.9, tableau 23",
+   "note": "Source : CNG, Statistiques 2018 Internats, p.9."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "Dénominateur : ≈ 1 332 places en 2e année pour la promotion 2020-21 (ou 1 322 écarté)",
+   "valeur_fiche": "1 332 (2020-21)",
+   "verdict": "ecart",
+   "type_ecart": "valeur",
+   "valeur_source": "1 322 places en 2020-21 (+2 par rapport à l'année précédente)",
+   "citation": "des 1.322 places disponibles en dentaire (+2)",
+   "page": "article, publié le 15/05/2020",
+   "note": "Source primaire pour 2020-21. La fiche écarte 1 322 au profit de 1 332 sans citer ce texte ; l'écart est direct. Avec 1 322, 121/1 322 = 9,15 % (arrondi 9,2 %), pas 9,1 %. L'article n'a pas été lu dans sa version imprimée : texte web extrait par WebFetch, sans PDF."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "QE 13528 : 1 446 admis en 2022-23, hausse de +8,5 % (SNESUP +12 cité pour 2020-21)",
+   "valeur_fiche": "1 446 ; +8,5 %",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "1 446 admis en odontologie en 2022-2023 ; hausse de plus de 8,5 % depuis 2019-2020",
+   "citation": "le nombre d'admis dans la filière odontologie en 2022-2023 était de 1 446 soit une hausse de plus de 8,5 %",
+   "page": "Texte de la réponse, page 1",
+   "note": "Texte intégral lu (PDF saisi via WebFetch, extrait avec pypdf). QE AN n° 13528 (16e lég.), réponse publiée JO juin 2024. Le texte dit « admis » : ce n'est pas forcément le même indicateur que « places en 2e année ». Le texte ne cite pas 2020-21."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "Le dénominateur 2020-21 vaut 1 332, car 1 446 = +8,5 % depuis la base",
+   "valeur_fiche": "base 2020-21 = 1 332",
+   "verdict": "ecart",
+   "type_ecart": "annee",
+   "valeur_source": "base = 2019-2020 (dernière année du numerus clausus) ; 1 446/1,085 = 1 332,7 (calcul, non cité)",
+   "citation": "une hausse de plus de 8,5 % depuis 2019-2020 (dernière année du numerus clausus)",
+   "page": "Texte de la réponse, page 1",
+   "note": "La QE rattache la base à 2019-20, pas à 2020-21. La valeur 1 332 n'est pas dans la QE : c'est une rétro-déduction. L'article du 15/05/2020 donne 1 320 pour 2019-20 (1 322 moins 2) ; les deux sources ne concordent pas sur la base."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "SNESUP : +12 places pour 2020-21 (corrobore 1 332)",
+   "valeur_fiche": "+12",
+   "verdict": "ecart",
+   "type_ecart": "valeur",
+   "valeur_source": "+2 par rapport à l'année précédente",
+   "citation": "des 1.322 places disponibles en dentaire (+2)",
+   "page": "article, publié le 15/05/2020",
+   "note": "Le SNESUP n'a pas été retrouvé ; le seul texte lu (L'Étudiant) donne +2, pas +12. La concordance invoquée n'est pas établie."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "Part d'une promotion 2024 : 9,1 %",
+   "valeur_fiche": "9,1 %",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "121/1 332 = 9,08 % (dérivé)",
+   "citation": "n/a (calcul)",
+   "page": "n/a",
+   "note": "Arithmétique juste avec 1 332. Avec 1 322 (L'Étudiant 2020), 9,15 % : arrondi 9,2 %. La valeur dépend donc du dénominateur, voir ligne 1 322."
+  },
+  {
+   "fiche": "param-cd-specialisation-des",
+   "affirmation": "Part d'une promotion 2023 : 9,1 %",
+   "valeur_fiche": "9,1 %",
+   "verdict": "ecart",
+   "type_ecart": "valeur",
+   "valeur_source": "120/1 332 = 9,01 % (arrondi 9,0 %) ; 9,1 % exige un dénominateur ≤ 1 326",
+   "citation": "n/a (calcul)",
+   "page": "n/a",
+   "note": "Incohérence interne : la fiche utilise 1 332 pour 2024 et affiche 9,1 % pour 2023, ce qui n'est vrai qu'avec un dénominateur ≤ 1 326 (p. ex. 1 322, qui donne 9,08 %). Un seul dénominateur doit servir aux deux années."
+  }
+ ]
+}

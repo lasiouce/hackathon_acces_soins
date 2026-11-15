@@ -1,0 +1,155 @@
+{
+ "source": "DREES 491 séries longues + ER 1266 (PDF lu localement, PyMuPDF)",
+ "items": [
+  {
+   "n": 1,
+   "fiche": "param-ide-abandon-1a (4 694 ; 1 155 ; 2 036)",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "Aucune occurrence dans les onglets lus (extraction openpyxl du classeur 491)",
+   "correction": "Garder la source citée (fichier annuel 2025, tableau 1E), non consultée ; mettre « non vérifié dans le classeur 491 » (supposé jusqu'à lecture du tableau 1E)",
+   "raison": "Absent du classeur séries longues ; la fiche cite un autre fichier, non ouvert ici."
+  },
+  {
+   "n": 2,
+   "fiche": "param-ide-abandon-1a (dénominateur)",
+   "verdict_lecteur": "écart retenu (champ)",
+   "verdict_final": "retenu",
+   "gravite": "libellé ou page",
+   "preuve": "« on rapporte le nombre d'interruptions de l'année N à la somme du nombre d'inscrits à la première session … de l'année N et de la moyenne des … seconde session » — Interruptions_1A ligne 35",
+   "correction": "Libellé : « interruptions de l'année N / (inscrits S1 de N + moyenne des inscrits S2 de N et N-1) » (sourcé)",
+   "raison": "Définition réelle plus complexe que « part des inscrits en 1re année » ; effet de second ordre."
+  },
+  {
+   "n": 3,
+   "fiche": "param-ide-rendement-diplomes (33 972 ; 0,77)",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "change une valeur de fiche",
+   "preuve": "33972 absent du classeur ; 26 020/33 972 = 0,766 (calcul)",
+   "correction": "Marquer 0,77 « non reproductible dans le classeur 491 », ou le retirer s'il n'a pas d'autre source",
+   "raison": "Le dénominateur « nouveaux inscrits » n'existe pas dans Inscrits1ere_an."
+  },
+  {
+   "n": 4,
+   "fiche": "param-ide-rendement-diplomes (redoublants inclus)",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "« Ensemble des inscrits ayant effectué une rentrée à un moment de l'année considérée » — Inscrits1ere_an ligne 3",
+   "correction": "Écrire « inscrits ayant effectué une rentrée » ; « redoublants compris » = supposé (ER 1266 p.4 note 7 dit que le regroupement par promotion ignore redoublements)",
+   "raison": "Non écrit dans la source."
+  },
+  {
+   "n": 5,
+   "fiche": "param-ide-rendement-diplomes (entrées directes 2e/3e année)",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "Aucun onglet 2e/3e année dans le classeur",
+   "correction": "Citer la source réelle de ces séries ou marquer « non vérifié »",
+   "raison": "Hors classeur lu."
+  },
+  {
+   "n": 6,
+   "fiche": "param-ide-rendement-diplomes (taux de passage)",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "Aucune série 2e/3e année dans le classeur",
+   "correction": "Idem item 5",
+   "raison": "Idem."
+  },
+  {
+   "n": 7,
+   "fiche": "formation.py ABANDON sages-femmes 0,0331",
+   "verdict_lecteur": "écart retenu (0,0333)",
+   "verdict_final": "réfuté",
+   "gravite": "libellé ou page",
+   "preuve": "vivier.abandon_annuel : rho = moyenne des ratios annuels diplômés(t)/inscrits(t-L), t = 2023-2025 (.mean() de rendement())",
+   "correction": "Aucune ; préciser dans la fiche « moyenne des ratios annuels » (dérivé)",
+   "raison": "Mon recalcul : ratios 0,867 ; 0,904 ; 0,851 → moyenne 0,8741 → 1-0,8741^(1/4) = 0,0331. Le lecteur a utilisé le ratio des sommes (0,0333) : autre méthode que le code."
+  },
+  {
+   "n": 8,
+   "fiche": "formation.py durée SF L = 4",
+   "verdict_lecteur": "écart retenu (Descriptif 5 ans)",
+   "verdict_final": "réfuté (écart de libellé seulement)",
+   "gravite": "libellé ou page",
+   "preuve": "Descriptif ligne 21 : durée « 5 ans », conditions « 1A PASS / L.AS » ; vivier.py docstring : « 4 années en école après la 1re année commune »",
+   "correction": "Conserver L = 4 (dérivé) ; noter dans la fiche que « 5 ans » du Descriptif inclut l'année PASS/L.AS, et que le Descriptif donne kiné « 4 ans (depuis 2015) » avec condition « 1A L.AS/PASS… » de même forme",
+   "raison": "Inscrits1ere_an SF ≈ 1 000-1 100/an (≈ places en école après la 1re année) ; test empirique des diplômés(t)/inscrits(t-L), 2015-2025 : CV L=3 8,0 % ; L=4 3,7 % ; L=5 5,1 % ; corrélation des différences premières : L=4 +0,46, L=3 -0,51, L=5 -0,56. L=4 est le seul décalage cohérent. Avec L=5 le 0,0224/an serait un taux sur un mauvais appariement. Décision 2026-11-14 (decisions.md l.1679) : « SF 4 (réglementation) ». Réserve : le Descriptif ne dit pas explicitement que le « 5 ans » inclut l'année commune (inférence, moyenne confiance)."
+  },
+  {
+   "n": 9,
+   "fiche": "vivier.abandon_annuel (calcul réel)",
+   "verdict_lecteur": "—",
+   "verdict_final": "précision",
+   "gravite": "libellé ou page",
+   "preuve": "vivier.py l.65-71 : L=DUREE_ECOLE[prof] ; rho=moyenne de rendement(prof,L) sur 2023-2025 ; return 1-min(rho,1)**(1/L)",
+   "correction": "—",
+   "raison": "Moyenne de ratios annuels (non pondérée par les effectifs), plafonnée à 1. Dérivé, pas un ajustement. Le décalage est diplômés année t vs inscrits 1re année t-L (3 ans IDE, 4 MK, 4 SF)."
+  },
+  {
+   "n": 10,
+   "fiche": "param-ide-abandon-1a « quadruplé 2011-2022 »",
+   "verdict_lecteur": "écart retenu (trois fois, 2021)",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page",
+   "preuve": "« 10 % … en première année de formation, elles étaient trois fois moins en 2011 (3 %) » — ER 1266 p.1",
+   "correction": "Écrire « triplé entre 2011 et 2021 (ER 1266, sans annonce de report) ; 3,3 % → 13,1 % en 2022 (491, mesuré, mais rupture de définition en 2022 : toutes interruptions) »",
+   "raison": "Le x4 vient de la série 491 (13,1/3,3 = 3,97) et franchit la rupture 2022 (Interruptions_1A l.32) ; l'ER dit x3 pour 2021."
+  },
+  {
+   "n": 11,
+   "fiche": "param-ide-abandon-1a « saut au passage à Parcoursup (2019) »",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page",
+   "preuve": "« peut-être pour anticiper l'entrée dans Parcoursup en 2019, la forte hausse de cette année-là » — ER p.2 (porte sur les effectifs)",
+   "correction": "Écrire « hausse du taux d'abandon en 1re année de la promotion 2019 (+2,2 points, ER p.4) ; l'ER cite Parcoursup à propos des effectifs seulement, pas comme cause de l'abandon (supposé) »",
+   "raison": "Le lecteur a tort : Parcoursup est cité (p.2), mais pas comme cause de l'abandon. Hausse 2019 : +2,2 points ER p.4."
+  },
+  {
+   "n": 12,
+   "fiche": "param-ide-abandon-1a (12,0 % ; 13,1-13,5 %)",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Valeurs absentes de l'ER ; confirmées dans 491 Interruptions_1A par le lecteur r09",
+   "correction": "Aucune",
+   "raison": "Hors périmètre ER ; source = 491."
+  },
+  {
+   "n": 13,
+   "fiche": "param-ide-abandon-promotion table 2018 = 11,3 % vs ER 14 %",
+   "verdict_lecteur": "écart retenu (valeur)",
+   "verdict_final": "réfuté pour la valeur ; réel pour le libellé",
+   "gravite": "libellé ou page",
+   "preuve": "« Les abandons10 sur l'ensemble de la scolarité représentent 14 % des inscrites … en 2018 » ; 13,6 % graphique p.5 ; 491 Interruptions_promo : 2021=13,5",
+   "correction": "Garder les valeurs. Corriger l'en-tête « Toutes interruptions » : jusqu'en 2021 ce sont les interruptions « sans annonce de report » (491 l.32 ; ER note 10), « toutes » seulement dès 2022. Ajouter la ligne « année d'entrée = année de diplôme - 3 »",
+   "raison": "Colonnes de 491 = année de DIPLÔME (ligne 6 : entrée = diplôme - 3). 11,3 % = diplômés 2018, entrée 2015 ; l'ER 14 % (13,6 % exact) = entrée 2018, diplôme 2021, = 491 colonne 2021 : 13,5 %. Même grandeur, écart 0,1 point. Aucune contradiction. Réserve : la colonne 2025 porte « 2018 » en ligne 6, libellé incohérent dans le classeur."
+  },
+  {
+   "n": 14,
+   "fiche": "param-ide-rendement-diplomes « 76 % pour 2022 »",
+   "verdict_lecteur": "écart retenu (année)",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Communiqué non ouvert ; 24 379/32 114 = 75,9 % (calcul 491)",
+   "correction": "Si le communiqué le confirme : « diplômés 2022 / entrée 2019 » ; sinon marquer non vérifié",
+   "raison": "Lecture cohérente avec 491, mais le texte du communiqué n'a pas été lu."
+  },
+  {
+   "n": 15,
+   "fiche": "param-ide-rendement-diplomes 0,72 entrée 2022 ; 81,4 %",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable (dans l'ER) ; trouvé dans 491",
+   "gravite": "libellé ou page",
+   "preuve": "« Le nombre de diplômées en 2021 représente 81 % du nombre d'étudiantes entrées en formation trois ans plus tôt » — ER p.1",
+   "correction": "Aucune ; 0,72 = 491 (r09 : 26 020/36 218)",
+   "raison": "81 % ER confirmé ; 24 557/30 182 = 81,4 %."
+  }
+ ]
+}

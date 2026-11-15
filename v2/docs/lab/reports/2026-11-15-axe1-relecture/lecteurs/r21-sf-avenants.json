@@ -1,0 +1,173 @@
+{
+  "source": "Avenant n° 4 à la convention nationale des sages-femmes (signé 29/05/2018, avis NOR SSAS1822073V, JORF 10/08/2018, texte 100) ; ONSSF flash avenant 7 (août 2023)",
+  "acces": "texte intégral lu",
+  "url_lue": "Avenant 4 : reproduction de l'avis JO (« Texte 100 sur 121 ») hébergée par bretagne.paps.sante.fr/media/50899/download (PDF, 56 pages, texte extrait localement). Legifrance (https://www.legifrance.gouv.fr/jorf/id/JORFSCTA000037306865) : page de vérification anti-bot, non contournée, donc non lue. Flash avenant 7 : texte local scratchpad/src/onssf_av7.txt (4 pages, ONSSF, © 2023).",
+  "commentaire": "Règle de régulation (art. 3.3.2 c) et dérogations (art. 3.3.1, 3.3.3) confirmées dans le texte JO. Écart principal : la fiche résume la règle en « 1 pour 1 » et décrit les dérogations sans leur effet sur la cessation suivante. Or, pour les motifs de vie personnelle (3.3.3 a et b), la cessation suivante n'ouvre pas droit à un nouveau conventionnement ; seule la dérogation d'accompagnement global de la grossesse (3.3.3 c et d) ouvre ce droit. Le « 1 pour 1 » vaut donc pour la règle générale, pas pour toutes les entrées dérogatoires. Dates et références de l'avenant 4 et de l'avenant 7 (signature, publication, date d'application) confirmées. Non trouvé : le numéro JORF 0183 (absent du texte lu), l'origine 2012 (l'avenant 4 ne cite que les avenants 1 à 3, sans date) et la durée de 2 ans du zonage (non trouvée ; le texte parle de « l'arrêté de l'ARS », pas du DG). La fiche compare 12,2 % de la population totale (dérivé) à 12,5 % de la population féminine (source) : dénominateurs différents, à ne pas comparer directement.",
+  "claims": [
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "En zone sur-dotée, le conventionnement n'est accordé que si une autre sage-femme a préalablement mis fin à son activité conventionnée dans la même zone (art. 3.3).",
+      "valeur_fiche": "conditionnel : entrées conventionnées ≤ cessations (1 pour 1)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "« Le conventionnement est accordé ... uniquement si une autre sage-femme a préalablement mis fin à son activité conventionnée dans cette même zone. »",
+      "citation": "uniquement si une autre sage-femme a préalablement mis fin à son activité conventionnée dans cette même zone",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.3.2 c)",
+      "note": "La règle générale est bien celle-ci. Le « 1 pour 1 » est une lecture du modèle : chaque entrée suppose une cessation préalable, mais la condition porte sur la zone, pas sur un ratio annuel."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Dérogations : motifs de vie personnelle (art. 3.3.3 a).",
+      "valeur_fiche": "motifs de vie personnelle",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "situation médicale grave du conjoint, d'un enfant ou d'un ascendant direct ; mutation professionnelle du conjoint ; situation juridique personnelle ; réduction d'activité",
+      "citation": "situation médicale grave du conjoint, d'un enfant ou d'un ascendant direct",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.3.3 a)",
+      "note": "Les quatre motifs de vie personnelle sont dans le texte."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Dérogation : accompagnement global de la grossesse (art. 3.3.3 c).",
+      "valeur_fiche": "accompagnement global de la grossesse",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "activité spécifique d'accompagnement global de la grossesse : suivi de la grossesse, accouchement, prise en charge après la naissance ; engagement de 50 % d'actes spécifiques",
+      "citation": "activité spécifique d'accompagnement global de la grossesse, incluant le suivi de la grossesse, l'accouchement",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.3.3 c)",
+      "note": "La fiche omet l'engagement de 50 % d'actes spécifiques et le contrôle annuel par la caisse."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Dérogation : réduction d'activité d'au moins 50 % pendant 2 ans (art. 3.3.3).",
+      "valeur_fiche": "au moins 50 %, pendant 2 ans",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "réduire significativement et durablement son activité d'au moins 50 % ... Cette réduction d'activité doit durer au moins deux ans.",
+      "citation": "réduire significativement et durablement son activité d'au moins 50 % par rapport à son activité observée au cours des deux années précédentes",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.3.3 a) 4e tiret",
+      "note": "Seul motif soumis à l'avis de la CPR (art. 3.3.4)."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Effet des dérogations sur la cessation suivante : la fiche ne le précise pas.",
+      "valeur_fiche": "non précisé (dérogations listées sans effet)",
+      "verdict": "ecart",
+      "type_ecart": "valeur",
+      "valeur_source": "Lorsqu'un conventionnement est accordé ... au titre d'une des dérogations prévues ci-dessus, la cessation d'activité conventionnée suivante ... n'ouvre pas droit à un nouveau conventionnement dans cette zone.",
+      "citation": "la cessation d'activité conventionnée suivante d'une sage-femme dans la zone concernée n'ouvre pas droit à un nouveau conventionnement dans cette zone",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.3.3 b) (motifs de vie personnelle) ; art. 3.3.3 d) (accompagnement de la grossesse : la cessation ouvre droit)",
+      "note": "Mécanisme omis : pour les motifs de vie personnelle, une entrée dérogatoire ne rend pas de place. Pour l'accompagnement de la grossesse (3.3.3 d), la cessation suivante ouvre droit. Le modèle « 1 pour 1 » ne tient donc pas pour les entrées dérogatoires. À corriger dans la fiche et le module regulation."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Les échographistes ne sont pas soumises à la régulation.",
+      "valeur_fiche": "exclues de la régulation",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Ces sages-femmes ne sont pas soumises aux règles de conventionnement en zone sur-dotée.",
+      "citation": "Ces sages-femmes ne sont pas soumises aux règles de conventionnement en zone sur-dotée.",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.3.1",
+      "note": "Définition : activité quasi-exclusive en échographie (sans seuil défini)."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Zones sur-dotées : 12,5 % de la population (fiche : « 12,5 % de la population féminine dans l'avenant 4 »).",
+      "valeur_fiche": "12,5 % de la population féminine française totale",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Les « zones sur-dotées » correspondent aux bassins de vie pseudo-cantons qui recouvrent 12,5 % de la population féminine française totale",
+      "citation": "qui recouvrent 12,5 % de la population féminine française totale pour lesquels l'indicateur APL est le plus élevé",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.1.1",
+      "note": "Valeur et champ (population féminine) exacts. Les 12,2 % de la fiche sont sur la population totale (dérivé) : dénominateurs différents, la comparaison n'est pas directe. Modulation régionale possible par arrêté ARS (art. 3.1.2)."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Zonage arrêté par le DG de l'ARS, pour 2 ans au plus.",
+      "valeur_fiche": "DG ARS, 2 ans au plus",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "l'arrêté de l'agence régionale de santé définissant le zonage peut modifier ... (art. 3.1.2) ; aucune durée de deux ans trouvée",
+      "citation": "l'arrêté de l'agence régionale de santé définissant le zonage peut modifier le classement",
+      "page": "JO 10/08/2018, texte 100 sur 121, art. 3.1.2",
+      "note": "Le texte lu parle de l'arrêté de l'ARS, sans précision de signataire ni de durée. Non vérifié dans cette source ; à sourcer ailleurs (arrêté ou CSP L.1434-4)."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Avenant 4 signé le 29/05/2018.",
+      "valeur_fiche": "29/05/2018",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "l'avenant no 4 ... conclu le 29 mai 2018",
+      "citation": "l'avenant no 4 à la convention nationale des sages-femmes, conclu le 29 mai 2018",
+      "page": "Avis NOR SSAS1822073V, en-tête",
+      "note": null
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Publication JORF 10/08/2018, texte 100.",
+      "valeur_fiche": "JORF du 10/08/2018, texte 100",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "10 août 2018, JOURNAL OFFICIEL DE LA RÉPUBLIQUE FRANÇAISE, Texte 100 sur 121",
+      "citation": "10 août 2018 JOURNAL OFFICIEL DE LA RÉPUBLIQUE FRANÇAISE Texte 100 sur 121",
+      "page": "En-tête de chaque page de l'avis",
+      "note": null
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Numéro JORF n° 0183.",
+      "valeur_fiche": "JORF n° 0183",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "non lu dans le texte",
+      "citation": "",
+      "page": "",
+      "note": "Le numéro n'apparaît pas dans le texte lu. Non vérifié ici."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Origine du dispositif en 2012 (avenant 1, signé le 09/01/2012).",
+      "valeur_fiche": "2012 ; signé 09/01/2012",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "l'avenant 4 remplace « ses avenants de 1 à 3 » sans date",
+      "citation": "ainsi que ses avenants de 1 à 3 sont remplacés par les dispositions qui suivent",
+      "page": "JO 10/08/2018, texte 100 sur 121, préambule",
+      "note": "Aucune date de 2012 dans le texte. La fiche le signale déjà comme source secondaire (Banque des Territoires) : rien à corriger, mais non vérifié ici."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Avenant 7 signé le 11/07/2023 ; JO du 25/08/2023.",
+      "valeur_fiche": "signé 11/07/2023 ; JO 25/08/2023",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "L'avenant 7 signé le 11 juillet a été publié ce jour au Journal Officiel ; date du flash : 25 AOUT 2023",
+      "citation": "L'avenant 7 signé le 11 juillet a été publié ce jour au Journal Officiel",
+      "page": "ONSSF flash p. 1 (texte local onssf_av7.txt)",
+      "note": "Le flash ne donne pas le numéro JO. Le texte de l'avenant 7 lui-même n'est pas lu."
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "Avenant 7 applicable le 22/02/2024.",
+      "valeur_fiche": "22/02/2024",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "il sera applicable dès le 22 février 2024",
+      "citation": "il sera applicable dès le 22 février 2024",
+      "page": "ONSSF flash p. 1",
+      "note": null
+    },
+    {
+      "fiche": "param-sf-regul-regle",
+      "affirmation": "La règle zone sur-dotée est reconduite en substance par l'avenant 7 (2023).",
+      "valeur_fiche": "reconduite en substance",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Actuellement, une sage-femme peut s'installer où elle le souhaite mais elle ne pourra être conventionnée en zone surdotée que sous conditions.",
+      "citation": "elle ne pourra être conventionnée en zone surdotée que sous conditions",
+      "page": "ONSSF flash p. 1",
+      "note": "Inférence : le flash décrit la règle comme en vigueur (« Actuellement ») sans citer la condition de cessation. Reconduction confirmée en substance ; le texte de l'avenant 7 n'est pas lu."
+    }
+  ]
+}

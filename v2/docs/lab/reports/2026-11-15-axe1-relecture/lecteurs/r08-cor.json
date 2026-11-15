@@ -1,0 +1,107 @@
+{
+  "source": "COR 2016, séance, document n° 11, annexe 2 (CARCDSF, CAVP, CARPIMKO, au 30/06/2015)",
+  "acces": "partiel",
+  "url_lue": "https://www.cor-retraites.fr/sites/default/files/2019-06/doc-3265.pdf (texte local cor_doc11.txt)",
+  "commentaire": "Lus en entier : introduction et notes (PDF p. 1-5), annexe 1 (PDF p. 17-18, imprimées 15-16), annexe 2 (PDF p. 20, imprimée 18), annexe 5 (PDF p. 26). Le reste du corps (sections 2 à 9) a été parcouru par grep sur les chiffres et mots-clés, sans affirmation sourcée par la fiche trouvée. Les pages PDF sont dans l'index des marqueurs '===== PAGE n ====='. Les repères médecins (ER 1097) et CNAVPL 1953 (DREES 2025) de la fiche ne viennent pas de ce document : non vérifiés ici. Vérification du dénominateur : la note 2 de l'introduction définit les cumulants comme ceux qui poursuivent une activité entraînant des cotisations auprès de la caisse ; l'annexe 2 ne précise pas si « Cotisants » inclut les cumulants (l'annexe 5 isole des « cotisants non-cumulants », ce qui suggère une inclusion sans que ce soit dit). Sensibilité si on retire les cumulants du dénominateur : SF 0,82 % ; CD 4,89 % (au lieu de 4,67 %) ; PH 1,81 % ; MK+IDE+autres 1,57 %. Écart de 0,2 point au plus.",
+  "claims": [
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Sages-femmes : part 0,8 % (42 / 5 185)",
+      "valeur_fiche": "0,8 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "CARCDSF-SF : cotisants 5 185 ; cumuls emploi-retraite 42 ; 42/5185 = 0,81 %",
+      "citation": "CARCDSF-SF 5 185 1 686 42",
+      "page": "PDF 20 (imprimée 18), annexe 2",
+      "note": "Chiffres et arrondi exacts. Section limitée à la population sages-femmes (note 19)."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Dentistes : part 4,7 % (1 742 / 37 330), la plus élevée des groupes listés",
+      "valeur_fiche": "4,7 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "CARCDSF-CD : cotisants 37 330 ; cumuls 1 742 ; 1742/37330 = 4,67 %",
+      "citation": "CARCDSF-CD 37 330 17 502 1 742",
+      "page": "PDF 20 (imprimée 18), annexe 2",
+      "note": "Arrondi 4,67 -> 4,7 correct. Rang : 4,7 > 1,8 > 1,5 > 0,8 parmi les cinq groupes de la fiche. Section limitée à la population chirurgiens-dentistes (note 10 / 19)."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Pharmaciens : part 1,8 % (560 / 31 445)",
+      "valeur_fiche": "1,8 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "CAVP : cotisants 31 445 ; cumuls 560 ; 560/31445 = 1,78 %",
+      "citation": "CAVP 31 445 20 165 560",
+      "page": "PDF 20 (imprimée 18), annexe 2",
+      "note": "Chiffres exacts. La CAVP couvre les pharmaciens et les directeurs de laboratoires d'analyses non médecins (annexe 1, PDF 17)."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "MK + IDE : part 1,5 % (2 960 / 190 979), non séparables",
+      "valeur_fiche": "1,5 %",
+      "verdict": "ecart",
+      "type_ecart": "champ",
+      "valeur_source": "CARPIMKO : cotisants 190 979 ; cumuls 2 960 ; 2960/190979 = 1,55 % (1,5499)",
+      "citation": "CARPIMKO 190 979 49 937 2 960",
+      "page": "PDF 20 (imprimée 18), annexe 2 ; champ : PDF 17 (imprimée 15), annexe 1",
+      "note": "Le nombre et l'arrondi sont exacts. Mais le dénominateur couvre aussi pédicures-podologues, orthophonistes et orthoptistes, pas seulement MK et IDE (annexe 1). Le libellé « MK + IDE » est donc trop étroit. Dans le code (sorties.py, PART_CUMUL) 0,015 est appliqué séparément à « kines » et à « infirmiers » : c'est une hypothèse d'égalité, pas une valeur sourcée pour chacun."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Unité : part des cotisants de la caisse (libéraux)",
+      "valeur_fiche": "part des cotisants de la caisse (libéraux)",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "Note 2 : cumuls = poursuite d'une activité entraînant cotisations à la caisse. Annexe 2 : « effectifs des cotisants ». Aucune phrase ne dit si les cumulants sont inclus dans « Cotisants ».",
+      "citation": "Les effectifs ... concernent les professionnels libéraux ... qui poursuivent une activité professionnelle entraînant des cotisations auprès de la caisse",
+      "page": "PDF 3 (imprimée 1), note 2 ; PDF 20 (imprimée 18), annexe 2 ; annexe 5 PDF 26",
+      "note": "Le ratio est cohérent avec « part des cotisants », mais le dénominateur exact n'est pas défini. Sensibilité chiffrée dans commentaire (au plus 0,2 point)."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Millésime 30/06/2015",
+      "valeur_fiche": "30/06/2015",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "« Les effectifs indiqués dans le tableau ci-dessus sont les effectifs pour le régime de base au 30 juin 2015. »",
+      "citation": "Les effectifs indiqués dans le tableau ci-dessus sont les effectifs pour le régime de base au 30 juin 2015.",
+      "page": "PDF 20 (imprimée 18), sous annexe 2",
+      "note": "Millésime exact. Données du régime de base uniquement."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Libéraux seulement : la CAVP sous-estime les pharmaciens salariés",
+      "valeur_fiche": "CAVP sous-estime les pharmaciens salariés",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "Aucune mention de pharmaciens salariés ou de sous-estimation par la CAVP dans le texte lu.",
+      "citation": "",
+      "page": "—",
+      "note": "Affirmation de la fiche sans appui dans la source. Le champ libéral de la CAVP est cité en annexe 1 (PDF 17) ; l'effet sur les salariés n'est pas chiffré."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "CARPIMKO mélange IDE, MK, podologues et orthophonistes",
+      "valeur_fiche": "IDE, MK, podologues, orthophonistes",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Section CARPIMKO : infirmiers, masseurs-kinésithérapeutes, pédicures-podologues, orthophonistes et orthoptistes",
+      "citation": "Infirmiers · Masseurs-kinésithérapeutes · Pédicures-podologues, orthophonistes, orthoptistes",
+      "page": "PDF 17 (imprimée 15), annexe 1",
+      "note": "Exact. La fiche omet les orthoptistes ; complément mineur."
+    },
+    {
+      "fiche": "param-cumul-emploi-retraite",
+      "affirmation": "Repère médecins (phase 2) : environ 10 % des libéraux (ER 1097, 2018)",
+      "valeur_fiche": "environ 10 %",
+      "verdict": "ecart",
+      "type_ecart": "valeur",
+      "valeur_source": "CARMF (médecins libéraux) : cotisants 123 946 ; cumuls 10 650 ; 10650/123946 = 8,6 % (30/06/2015)",
+      "citation": "CARMF 123 946 58 161 10 650",
+      "page": "PDF 20 (imprimée 18), annexe 2",
+      "note": "Le 10 % de la fiche vient de la DREES ER 1097 (2018), source non vérifiée ici. Ce document COR, pour 2015 et la même population (médecins libéraux), donne 8,6 %. Écart de 1,4 point, qui peut tenir à l'année ou à la définition ; à trancher avant de garder 0,10 dans PART_CUMUL (sorties.py) pour « specialistes »."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+ "source": "RegProf + QE 15512/4281",
+ "items": [
+  {
+   "n": 1,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "RegProf : application sans données lisibles (pas de contournement)",
+   "correction": "Marquer « non vérifié (RegProf, lu ? / date) » dans la fiche",
+   "raison": "Pas de lecture possible de la base ; aucune preuve ni réfutation."
+  },
+  {
+   "n": 2,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "RegProf : application sans données lisibles (pas de contournement)",
+   "correction": "Marquer « non vérifié (RegProf, lu ? / date) » dans la fiche",
+   "raison": "Pas de lecture possible de la base ; aucune preuve ni réfutation."
+  },
+  {
+   "n": 3,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "RegProf : application sans données lisibles (pas de contournement)",
+   "correction": "Marquer « non vérifié (RegProf, lu ? / date) » dans la fiche",
+   "raison": "Pas de lecture possible de la base ; aucune preuve ni réfutation."
+  },
+  {
+   "n": 4,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "RegProf : application sans données lisibles (pas de contournement)",
+   "correction": "Aligner la plage SF : 170 vs 179 dans le tableau",
+   "raison": "Pas de lecture possible de la base ; aucune preuve ni réfutation. Incohérence interne de la fiche SF 170/179 confirmée par lecture de la fiche (non retestée)."
+  },
+  {
+   "n": 5,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "RegProf : application sans données lisibles (pas de contournement)",
+   "correction": "Marquer « non vérifié (RegProf, lu ? / date) » dans la fiche",
+   "raison": "Pas de lecture possible de la base ; aucune preuve ni réfutation. Le 1 300 repose sur QE/ONCD ; le « recoupement par 1 309 » est non contrôlé et, vu l'écart ONCD/QE, 1 313 vs 1 309 est trop proche pour en dire plus."
+  },
+  {
+   "n": 6,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "RegProf : application sans données lisibles (pas de contournement)",
+   "correction": "Marquer « non vérifié (RegProf, lu ? / date) » dans la fiche",
+   "raison": "Pas de lecture possible de la base ; aucune preuve ni réfutation."
+  }
+ ]
+}

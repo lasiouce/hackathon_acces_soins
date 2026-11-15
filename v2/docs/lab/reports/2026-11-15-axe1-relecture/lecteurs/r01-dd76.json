@@ -1,0 +1,261 @@
+{
+ "source": "DREES, Les Dossiers de la DREES n° 76 (mars 2021)",
+ "acces": "texte intégral lu",
+ "url_lue": "https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-03/DD76.pdf",
+ "commentaire": "PDF lu en entier (74 pages PDF, 4,1 Mo) via extraction PyMuPDF. Pages imprimées = index PDF - 6 (PDF 48 = p. 42). DD76 ne couvre ni les kinésithérapeutes ni les infirmiers : les affirmations sur ces professions sont marquées introuvable dans DD76 et renvoient aux ER non relues. Tableau 11 : définitions, pas de valeurs numériques.",
+ "claims": [
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "SF diplômées en France : âge moyen 24 ans",
+   "valeur_fiche": "24 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "24 ans",
+   "citation": "les diplômées ... l'âge moyen des diplômées est de 24 ans",
+   "page": "p. 43 (PDF 49), tab. 12 et texte",
+   "note": "Texte et tableau 12 concordants ; 94 % de femmes."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "CD diplômés en France : âge moyen 26 ans",
+   "valeur_fiche": "26 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "26 ans (femmes 26, hommes 27)",
+   "citation": "ont en moyenne 26 ans",
+   "page": "p. 43 (PDF 49), tab. 12",
+   "note": "Tableau 12, colonne chirurgiens-dentistes."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "PH diplômés en France : cycle court 27, DES biologie 28, DES pharmacie 29",
+   "valeur_fiche": "27 / 28 / 29 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "cycle court et DES IPR 27 ans ; biologie médicale 28 ans ; pharmacie 29 ans",
+   "citation": "DES de biologie médicale : 60 % de femmes, âge moyen 28 ans",
+   "page": "p. 43-44 (PDF 49-50), tab. 12",
+   "note": "Les trois valeurs figurent dans le tableau 12."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "SF diplômées à l'étranger : âge à l'installation 28 ans",
+   "valeur_fiche": "28 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "28 ans",
+   "citation": "un peu plus âgées à l'installation (28 ans)",
+   "page": "p. 45 (PDF 51), tab. 13",
+   "note": "Flux de 70 par an."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "CD diplômés à l'étranger : âge à l'installation 28 ans",
+   "valeur_fiche": "28 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "28 ans",
+   "citation": "54 % sont des femmes, âge moyen à l'installation 28 ans",
+   "page": "p. 45 (PDF 51), tab. 13",
+   "note": "Flux de 665 par an."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "Kinés et IDE : 99 % entrent l'année du diplôme (ER 1062, 1075)",
+   "valeur_fiche": "99 %",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "non traité dans DD76",
+   "citation": "",
+   "page": "—",
+   "note": "Hors périmètre de DD76 : la publication ne traite ni les kinés ni les infirmiers. Non vérifié ici (ER non lues)."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "Âge d'entrée : millésime RPPS 2020",
+   "valeur_fiche": "RPPS 2020",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "RPPS 2020",
+   "citation": "Déterminé dans le RPPS 2020 sur les diplômés de 2012-2017",
+   "page": "p. 43-44 (PDF 49-50), tab. 12",
+   "note": "Millésime cité pour les délais d'installation et l'âge."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Cessation = probabilité d'être en activité une année et inactif la suivante",
+   "valeur_fiche": "définition",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "probabilités d'être en activité une année et inactif la suivante",
+   "citation": "Probabilités d'être en activité une année et inactif la suivante",
+   "page": "p. 42 (PDF 48), tab. 11",
+   "note": "Définition exacte. La DREES ne détaille pas ce que comprend l'inactivité (décès, retraite, départs)."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Valeurs de cessation non publiées (définition seule)",
+   "valeur_fiche": "non publiée",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "tableau 11 : définitions et modes de calcul, sans valeurs numériques",
+   "citation": "Paramètres d'évolution au long de la carrière dans les modèles : définition et calculs",
+   "page": "p. 41-42 (PDF 47-48), tab. 11",
+   "note": "Aucune table de probabilités dans DD76 (vérifié dans le texte intégral)."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Calcul sur le panel RPPS 2016-2020 (tab. 11)",
+   "valeur_fiche": "panel RPPS 2016-2020",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "évolutions moyennes observées entre 2016 et 2020 (2019 pour les médecins) dans le RPPS constitué en panel",
+   "citation": "évolutions moyennes observées entre 2016 et 2020 (2019 pour les médecins) dans le RPPS constitué en panel",
+   "page": "p. 41 (PDF 47)",
+   "note": "Le millésime CNAM 2011-2015 / DADS 2011-2014 cité dans le champ millesime n'est pas dans DD76 (non vérifié)."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Champ < 70 ans, cumul emploi-retraite inclus",
+   "valeur_fiche": "< 70 ans ; cumul inclus",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "professionnels de moins de 70 ans ... Sont donc inclus les professionnels remplaçants ou en cumul emploi-retraite",
+   "citation": "Sont donc inclus les professionnels remplaçants ou en cumul emploi-retraite",
+   "page": "p. 3 (PDF 9), encadré champ",
+   "note": "Concerne le champ des effectifs, appliqué aux stocks et probabilités."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Cessation par âge, sexe et mode d'exercice, pour les cinq professions",
+   "valeur_fiche": "âge, sexe, mode",
+   "verdict": "ecart",
+   "type_ecart": "valeur",
+   "valeur_source": "CD : âge, sexe, mode initial ; médecins : âge, sexe, mode, origine du diplôme ; pharmaciens : âge, sexe, type d'activité initiale ; SF : âge et mode initial, mais pas par sexe",
+   "citation": "Probabilités d'être en activité une année et inactif la suivante, déclinée par tranche d'âge et mode d'exercice initial (mais pas par sexe)",
+   "page": "p. 42 (PDF 48), tab. 11",
+   "note": "La stratification n'est pas la même selon la profession : SF sans sexe, pharmaciens par type d'activité, médecins avec origine du diplôme."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Décès inclus implicitement dans la cessation",
+   "valeur_fiche": "décès inclus",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "aucune mention de décès",
+   "citation": "",
+   "page": "—",
+   "note": "Le mot décès n'apparaît pas dans DD76 (recherche plein texte). Inclusion non démontrée."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Bornes : aucune cessation avant 40 ans ; aucun exercice après 67 ans (IDE) / 70 ans (MK)",
+   "valeur_fiche": "40 ; 67 ; 70",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "non traité dans DD76",
+   "citation": "",
+   "page": "—",
+   "note": "Cité des ER 1062 et 1075 : non lues ici."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD diplômés à l'étranger : 665 entrées en activité par an (tab. 13)",
+   "valeur_fiche": "665 par an",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "665 entrées en activité",
+   "citation": "avec 665 entrées en activité",
+   "page": "p. 44-45 (PDF 50-51), tab. 13 p. 45",
+   "note": "Valeur de l'entrée en activité, moyenne 2016-2020 du RPPS."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "Période de calcul des flux étrangers : RPPS 2016-2020",
+   "valeur_fiche": "2016-2020",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "millésimes 2016 à 2020 du RPPS",
+   "citation": "Pour les trois modèles par composante, les paramètres sont calculés à partir des millésimes 2016 à 2020 du RPPS",
+   "page": "p. 44 (PDF 50)",
+   "note": "Le fiche dit « moyenne 2016-2020 » : la source dit que les paramètres sont calculés sur ces millésimes."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "PH diplômés à l'étranger : 160 par an (tab. 13)",
+   "valeur_fiche": "160 par an",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "160 diplômés à l'étranger entrent en activité chaque année",
+   "citation": "on considère chaque année que 160 diplômés à l'étranger entrent en activité",
+   "page": "p. 44 (PDF 50), tab. 13 p. 45",
+   "note": ""
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "SF diplômées à l'étranger : 70 par an (tab. 13)",
+   "valeur_fiche": "70 par an",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "70 sages-femmes diplômées à l'étranger",
+   "citation": "Chaque année, 70 sages-femmes diplômées à l'étranger entrent en activité",
+   "page": "p. 45 (PDF 51), tab. 13",
+   "note": "Entièrement des femmes."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "MK diplômés hors France : 1 175 par an, variante basse (tab. 13)",
+   "valeur_fiche": "1 175 par an",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "DD76 ne traite pas les kinésithérapeutes ; tableau 13 : médecins 1 200, pharmaciens 160, sages-femmes 70, chirurgiens-dentistes 665",
+   "citation": "",
+   "page": "tab. 13 p. 45",
+   "note": "Attribution au tableau 13 erronée pour les kinés : la valeur 1 175 vient d'ER 1075 (non relue ici). L'expression « variante basse » n'apparaît pas : DD76 donne une valeur unique par profession."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "Part libérale des diplômés à l'étranger : CD 60 %, SF 70 % (DD76)",
+   "valeur_fiche": "CD 60 % ; SF 70 %",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "Dans l'ensemble, 60 % des diplômés à l'étranger s'installent en libéral ; ... 70 % ... en libéral",
+   "citation": "Dans l'ensemble, 60 % des diplômés à l'étranger s'installent en libéral",
+   "page": "p. 45 (PDF 51), tab. 13",
+   "note": "Pharmaciens 34 % (non cité dans la fiche)."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "Part libérale 67 % pour les CD en 2016 (ER 1026)",
+   "valeur_fiche": "67 %",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "non traité dans DD76",
+   "citation": "",
+   "page": "—",
+   "note": "Cité d'ER 1026, non lu ici."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "Part libérale 70 % des SF (DD76)",
+   "valeur_fiche": "70 %",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "70 %",
+   "citation": "s'installent en libéral",
+   "page": "p. 45 (PDF 51), tab. 13",
+   "note": "Doublon de la ligne précédente, conservé pour lisibilité."
+  },
+  {
+   "fiche": "param-mortalite",
+   "affirmation": "Aucune occurrence de mortalité au sens démographique dans DD76",
+   "valeur_fiche": "aucune occurrence",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "recherche « mortalit », « décès », « décédé », « survie » : aucune occurrence",
+   "citation": "",
+   "page": "texte intégral (74 pages PDF)",
+   "note": "Vérifié par recherche plein texte sur DD76 seul ; ER 1062, 1075, 1319 non relues."
+  }
+ ]
+}

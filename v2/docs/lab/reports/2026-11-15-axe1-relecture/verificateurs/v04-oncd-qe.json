@@ -1,0 +1,95 @@
+{
+ "source": "ONCD 2022 + QE AN 15512 (question), lu en texte local et page AN",
+ "items": [
+  {
+   "n": 1,
+   "fiche": "param-cd-stock-specialistes",
+   "verdict_lecteur": "ecart (arrondi)",
+   "verdict_final": "retenu",
+   "gravite": "libellé ou page",
+   "preuve": "2 465 / 46 029 = 5,36 % (calcul sur p. 29 du rapport 2022)",
+   "correction": "Écrire 5,4 % (dérivé : 2 465/46 029) au lieu de 5,3 %",
+   "raison": "Arrondi réel, mineur. Non rechargé : calcul du lecteur, non revérifié ligne à ligne."
+  },
+  {
+   "n": 2,
+   "fiche": "param-cd-stock-specialistes",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable (non revu en détail)",
+   "gravite": "libellé ou page",
+   "preuve": "Modes d'exercice non ventilés par spécialité (lecteur, p. 29)",
+   "correction": "Étiqueter « supposé » ou citer une autre source",
+   "raison": "Non retesté ; hors question prioritaire."
+  },
+  {
+   "n": 3,
+   "fiche": "param-cd-stock-specialistes",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable (non revu en détail)",
+   "gravite": "libellé ou page",
+   "preuve": "Art. 35.5 absent du rapport 2022 (lecteur)",
+   "correction": "Citer le texte juridique, pas le rapport",
+   "raison": "Non retesté."
+  },
+  {
+   "n": 4,
+   "fiche": "param-cd-stock-specialistes",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable (non revu en détail)",
+   "gravite": "libellé ou page",
+   "preuve": "Aucun nombre de DES dans le rapport 2022 (lecteur)",
+   "correction": "Source CNG à citer",
+   "raison": "Non retesté."
+  },
+  {
+   "n": 5,
+   "fiche": "param-cd-stock-specialistes",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable (non revu en détail)",
+   "gravite": "libellé ou page",
+   "preuve": "Plafond 50-52 absent du rapport (lecteur)",
+   "correction": "Source CNG à citer",
+   "raison": "Non retesté."
+  },
+  {
+   "n": 6,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "ecart de valeur : 1 313 absent, 1 333 dans le rapport",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page (la valeur 1 313 est exacte, sa source est mal attribuée)",
+   "preuve": "ONCD p. 24 (numéro de page imprimé 27) : « primo-inscrits diplômés hors de France (1 333 confrères… ) pour 1 296 diplômés en France ». QE 15512 : « nouveaux inscrits … diplôme à l'étranger (1 313) », « plus 19 venant de pays hors UE »",
+   "correction": "Deux nombres existent, de sources différentes. 1 333 (ONCD 2022, texte p. 27) = tous primo-inscrits diplômés hors France, UE + hors UE, 2022 ; = 2 629 - 1 296 (dérivé). 1 313 (QE 15512 du 20/02/2024, texte de la QUESTION de Mme Mélin ; aucune réponse publiée, clôturée fin de mandat) = 1 294 diplômés UE hors France + 19 hors UE ; même champ « hors France », même année 2022, mais décompte légèrement différent (la QE oppose ce 1 313 à 1 294 « gradués français » alors que l'ONCD donne 1 296 ; le graphique ONCD p. 28 affiche 1 335/1 296 et le tableau p. 28 donne France 1 308, soit 1 321 hors France : l'ONCD est lui-même non cohérent à ±20). Fiche : remplacer « S : QE… (chiffres de l'Ordre, sans réponse du ministère) » par « 1 313 (texte de la question QE 15512, chiffres attribués à l'Ordre) ; ONCD 2022 p. 27 : 1 333 ». Les « 19 hors UE » ne viennent pas du rapport, seulement de la QE.",
+   "raison": "Le lecteur a raison que 1 313 est absent du rapport mais tort d'y voir une faute de frappe : le chiffre est dans la QE, que la fiche cite. La QE ne contient pas de réponse ministérielle, seulement la question ; la fiche dit « sans réponse du ministère », cohérent."
+  },
+  {
+   "n": 7,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable dans le rapport ; trouvé dans la QE",
+   "gravite": "libellé ou page",
+   "preuve": "QE 15512 : « plus 19 venant de pays hors UE »",
+   "correction": "Attribuer les 19 à la QE seule",
+   "raison": "Le rapport ONCD ne ventile pas ; la fiche cite la QE pour cette valeur."
+  },
+  {
+   "n": 8,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable dans le rapport (valeur de la base UE, non vérifiée)",
+   "gravite": "libellé ou page",
+   "preuve": "aucune (RegProf non lisible)",
+   "correction": "Aucune : la fiche l'attribue déjà à « P : base UE »",
+   "raison": "Pas d'écart de fiche."
+  },
+  {
+   "n": 9,
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "ecart meilleure_valeur : préférer 1 333",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page ; valeur de code inchangée (1 300 défendable)",
+   "preuve": "ONCD p. 27 : « 1 333 confrères » ; QE : « 1 313 ». Les deux dans ±2 % de 1 300.",
+   "correction": "Conserver FLUX dentistes = 1 300. Mais corriger l'étiquette : « sourcé (Ordre 2022) » devient « dérivé : arrondi de 1 313 (QE, champ hors France, 2022) et 1 333 (ONCD p. 27) ». Ajouter dans la fiche que le champ est primo-inscription à l'Ordre (tous modes d'exercice, pas seulement libéral) et que c'est une seule année (2022) à la hausse (1 994 - 1 258 = 736 en 2019, lecteur, non revérifié), donc la plage haute 1 333 est plausible ; la basse 665 (DD76) reste.",
+   "raison": "Le lecteur propose 1 333 par la même logique ; mais l'écart (2,5 %) est inférieur à l'incertitude de définition (±20 dans l'ONCD seul). 1 300 est donc défendable comme valeur ronde, pas comme valeur « sourcée » exacte. Écart sur le champ « libéral » : ni 1 313 ni 1 333 ne sont libéraux ; non traité dans la fiche, à signaler."
+  }
+ ]
+}

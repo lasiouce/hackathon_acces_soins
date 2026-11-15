@@ -22,7 +22,7 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | Lancer | `uv sync && uv run python v2/prototype-carte/server.py` → http://localhost:8767 ; données traitées commitées ([manifeste](v2/data/processed/MANIFEST.md)) |
 | Carte | ✅ option 1 par défaut depuis le 2026-11-14 : 3 colonnes, habillage DSFR (données en direction A), fiche France et bascule nationale, recette 45/46 · 9 leviers en 4 familles, phrase en langage naturel (≈ 77 % sur jeux à l'aveugle, confirmée avant application), densité pour 100 000 (Omphale 2022), hypothèses population / activité, mode expert, export avec sources |
 | Jumeau (axe 0) | ✅ `v2/jumeau/` : 18 critères sur 18 après 3 revues adversariales ; 15 ms par scénario au département, 1,1 s à la commune (5 professions). `PYTHONPATH=v2 uv run python -m jumeau.check` |
-| Hyperparamètres (axe 1) | ✅ fiches sourcées ; sources à relire en texte intégral |
+| Hyperparamètres (axe 1) | ✅ fiches sourcées, relues en texte intégral le 2026-11-15 : 20 confirmées, 8 corrigées, 1 introuvable ; aucune valeur du code changée |
 | Méthodes (axe 2) | ✅ cohortes bayésiennes : MAPE dép. h=5 7,73 % contre 8,68 % (stock-flux) ; projection communale K3–K5 non confirmée, affichage au département |
 | Validation (axe 3) | ✅ protocoles N1–N12 gelés ; dépôts à noter sur les effectifs 2027 |
 | Données (axe 4) | ✅ public / privé séparé : « libéral » = privé 2026, SF 12 059 – 14 660, PH 60 005 – 67 219, CD 40 784 – 47 894, MK 98 828 – 103 986, IDE 2023 277 788 ; zonage par commune ; grain communal |
@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Relecture des sources de l'axe 1](v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md) | 29 paramètres, 355 affirmations : 20 confirmés, 8 corrigés (fiches), 1 introuvable ; 0 valeur du code changée, jumeau.check 18/18 ; âge d'entrée des étrangers : CD −1,3 % de N(2050) à ×2 si 32 ans | lecteurs Haiku + vérificateurs Sonnet |
 | 2026-11-15 | [Évaluation selon la grille du jury](v2/docs/lab/reports/2026-11-15-jury-grille.md) | 64/100 (54–74) : pertinence 6,5 · IA 7 · prototype 6,5 · faisabilité 5,5 · pitch 6,5 ; le meilleur ratio est la note de conformité RGPD/2017/745 (+3 pts pour 45 min) | recette jury |
 | 2026-11-14 | [Vidéo de présentation V2](v2/video/README.md) | 60 s, un cas d'usage : +20 % de places de kinés (France), lu dans la Manche : 2036 808 (713–902), +34 ; 2046 1 033, +98 ; 2050 1 105 (794–1 416), +121, 246 pour 100 000 hab. | équipe |
 | 2026-11-14 | [Curseur d'année sur la carte](v2/docs/lab/reports/2026-11-14-curseur-annee.md) | 2026 → 2050 année par année, sans recalcul au déplacement ; /api/carte ≈ 100 ms pour 25 années ; 2050 inchangé | équipe |

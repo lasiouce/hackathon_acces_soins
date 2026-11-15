@@ -1,0 +1,129 @@
+{
+ "source": "Commission européenne, base RegProf (décisions de reconnaissance, pays d'accueil France) ; QE AN n° 15512 (2024) et n° 4281 (2025)",
+ "acces": "partiel",
+ "url_lue": "https://ec.europa.eu/growth/tools-databases/regprof/ (page sans donnée lisible) ; https://www.assemblee-nationale.fr/dyn/16/questions/QANR5L16QE15512 ; https://www.assemblee-nationale.fr/dyn/17/questions/QANR5L17QE4281 (PDF décodés localement)",
+ "commentaire": "QE lues en texte intégral (PDF décodés localement). Le chiffre 1 313 (2022) et « 19 hors UE » sont confirmés. Les QE 15512 et 4281 sont le même texte : la 4281 n'apporte aucune nouvelle année. ⚑ La QE écrit « 1 294 gradués des universités françaises » et, plus loin, « 1 294 » pour les diplômés UE hors France : le chiffre 1 294 est utilisé pour deux populations. Le total 1 313 = 1 294 + 19 n'utilise que la lecture « UE hors France ». La page RegProf est une application sans données lisibles (WebFetch ne renvoie que le titre) : les décisions de reconnaissance UE (CD, MK, IDE, SF) sont inaccessibles. Aucune valeur UE n'est vérifiée. Hors périmètre : la borne haute MK 2 528 (CNOMK 2024) et 1 175 (ER 1075), non vérifiées ici.",
+ "claims": [
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : nouveaux inscrits à l'Ordre ayant un diplôme étranger, 2022 (total)",
+   "valeur_fiche": "1 313 (2022)",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "1 313",
+   "citation": "le total des nouveaux inscrits au tableau de l'Ordre ayant obtenu leur diplôme à l'étranger (1 313)",
+   "page": "QE AN n° 15512 (16e lég.), publiée JO 20/02/2024 p. 1169, retirée 11/06/2024 (fin de mandat), texte de la question",
+   "note": "Valeur exacte. Chiffre attribué par la QE à l'Ordre des chirurgiens-dentistes."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : dont 19 hors UE (2022)",
+   "valeur_fiche": "19 hors UE",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "19 venant de pays hors UE",
+   "citation": "plus 19 venant de pays hors UE",
+   "page": "QE AN n° 15512 (16e lég.), publiée JO 20/02/2024 p. 1169, retirée 11/06/2024 (fin de mandat), texte de la question",
+   "note": "Le texte écrit « plus 19 » : 1 294 UE autres que France + 19 hors UE = 1 313. Ce recoupement est interne à la question."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : source « nouveaux inscrits à l'Ordre » pour 1 313 (2022)",
+   "valeur_fiche": "nouveaux inscrits à l'Ordre",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "nouveaux inscrits au tableau de l'Ordre",
+   "citation": "nouveaux inscrits au tableau de l'Ordre ayant obtenu leur diplôme à l'étranger",
+   "page": "QE AN n° 15512 (16e lég.), publiée JO 20/02/2024 p. 1169, retirée 11/06/2024 (fin de mandat), texte de la question",
+   "note": "Le chiffre est celui de l'Ordre, cité par le député. Ce n'est pas une donnée ministérielle."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : QE 15512 et 4281 sans réponse du ministère",
+   "valeur_fiche": "sans réponse",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "QE 15512 : « Question retirée le : 11 juin 2024 (Fin de mandat) » ; aucune rubrique réponse",
+   "citation": "Question retirée le : 11 juin 2024 (Fin de mandat)",
+   "page": "QE AN n° 15512 (16e lég.), publiée JO 20/02/2024 p. 1169, retirée 11/06/2024 (fin de mandat); QE AN n° 4281 (17e lég.), publiée JO 18/02/2025 p. 974",
+   "note": "Pour 15512, aucune réponse dans le document. Pour 4281, le document (généré le 14/11/2026) n'a pas de champ réponse. La réponse, si elle existe, serait un autre document : non vérifié."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : QE 4281 (2025) reprend le même chiffre 2022 (1 313)",
+   "valeur_fiche": "1 313 (2022), même chiffre",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "en 2022, le total ... (1 313)",
+   "citation": "en 2022, le total des nouveaux inscrits au tableau de l'Ordre ayant obtenu leur diplôme à l'étranger (1 313)",
+   "page": "QE AN n° 4281 (17e lég.), publiée JO 18/02/2025 p. 974, texte de la question",
+   "note": "La QE 4281 ne donne aucune nouvelle année : elle répète le chiffre de 2022. Pas une deuxième source indépendante."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : décisions positives de reconnaissance UE, 2020-2022 (892 / 1 323 / 1 309)",
+   "valeur_fiche": "892 / 1 323 / 1 309",
+   "verdict": "inaccessible",
+   "type_ecart": null,
+   "valeur_source": "non lu",
+   "citation": "—",
+   "page": "base Commission européenne RegProf",
+   "note": "La page RegProf ne renvoie que son titre (WebFetch) ; pas de données de décisions lisibles. Les 1 309 ne sont donc pas vérifiés."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "MK : décisions positives UE 2020-2022 (2 320 / 1 662 / 488)",
+   "valeur_fiche": "2 320 / 1 662 / 488",
+   "verdict": "inaccessible",
+   "type_ecart": null,
+   "valeur_source": "non lu",
+   "citation": "—",
+   "page": "base Commission européenne RegProf",
+   "note": "Même limite : données RegProf non lisibles. Les valeurs de la fiche ne sont pas vérifiées."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "IDE : décisions positives UE 2013/2015/2016/2020 (1 559 / 895 / 1 097 / 1 093)",
+   "valeur_fiche": "1 559 / 895 / 1 097 / 1 093",
+   "verdict": "inaccessible",
+   "type_ecart": null,
+   "valeur_source": "non lu",
+   "citation": "—",
+   "page": "base Commission européenne RegProf",
+   "note": "Données RegProf non lisibles. La borne haute 1 100 de la plage IDE (incertitude de la fiche) vient de ces chiffres : non vérifiée."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "SF : décisions positives UE 2013, 2014, 2020-2022 (152 à 179)",
+   "valeur_fiche": "152 à 179",
+   "verdict": "inaccessible",
+   "type_ecart": null,
+   "valeur_source": "non lu",
+   "citation": "—",
+   "page": "base Commission européenne RegProf",
+   "note": "Données RegProf non lisibles. Incohérence interne à la fiche : la plage SF de l'incertitude va jusqu'à 170, alors que le tableau va jusqu'à 179."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "CD : décisions UE 2022 = 1 309 utilisées pour « recouper » le défaut 1 300",
+   "valeur_fiche": "1 309 (2022)",
+   "verdict": "inaccessible",
+   "type_ecart": null,
+   "valeur_source": "non lu",
+   "citation": "—",
+   "page": "base Commission européenne RegProf",
+   "note": "Le recoupement annoncé ne peut pas être contrôlé. Le défaut 1 300 repose donc sur le seul chiffre QE/Ordre 1 313 (vérifié)."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "Gaps : années non déclarées par la France à la base UE (2009-2012, 2017-2019, 2023-2024)",
+   "valeur_fiche": "années non déclarées",
+   "verdict": "inaccessible",
+   "type_ecart": null,
+   "valeur_source": "non lu",
+   "citation": "—",
+   "page": "base Commission européenne RegProf",
+   "note": "Non vérifiable sans accès aux données."
+  }
+ ]
+}

@@ -1,0 +1,243 @@
+{
+ "source": "CNOP Panorama 2025 (dépliant), Synthèse 2024, Éléments démographiques 2016 ; arrêté PH 2025-26 / xlsx internat (groupes r17 à r20, préfixe r17-… = r17 n°…)",
+ "conventions_pages": "index PDF = marqueur ===== PAGE n ===== ; pied = numéro imprimé (Synthèse 2024 : pied = index − 1). Rendus image vérifiés (PyMuPDF) pour dépliant p. 2, Synthèse 2024 p. 3, Éléments 2016 p. 6 et 23.",
+ "constats_transverses": [
+  "8 106 (dépliant 2025, table H) = inscriptions principales+secondaires, personnes = 7 817 : le « 8 106 personnes » de la fiche est faux.",
+  "Rupture de définition 2024→2025 pour « inscriptions H privé/public » : 2024 somme = H inscriptions (7 959) ; 2025 somme 8 924 ≠ 8 106.",
+  "Série homogène recommandée : fonctions PUI (2015 « postes » 36,1 % → 31,5 % → 30,0 %).",
+  "Aucune valeur de code à changer : etrangers.py PH 240 défendable (arrondi de 242). Les parts s_H et s_G ne sont pas utilisées dans jumeau/ ni sante/ (grep).",
+  "Fausse alerte du lecteur : « 7,1 % » (Synthèse 2024 p. 8) = +300/4 202 de croissance, pas une part des 66 ans et plus (4 502/75 080 = 6,0 %, dérivé)."
+ ],
+ "items": [
+  {
+   "n": "r17-1",
+   "fiche": "param-ph-part-privee-biologie",
+   "verdict_lecteur": "introuvable (dépliant 2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« 55,3 % 3 722 pharmaciens SECTEUR PRIVÉ » ; « 44,7 % 3 009 pharmaciens SECTEUR PUBLIC » — Synthèse 2024, index PDF 14 (pied 13) ; PDF 6 (pied 5)",
+   "correction": "Aucune. Citer la Synthèse 2024 p. 5 et 13 (pied) ; ne pas citer le dépliant 2025 pour 2024.",
+   "raison": "Absent du dépliant 2025 mais présent dans la source 2024 que la fiche cite. 3 722/6 731 = 55,3 % (dérivé, juste)."
+  },
+  {
+   "n": "r17-2",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "écart de champ (H, E ; personnes ou inscriptions)",
+   "verdict_final": "reformulé",
+   "gravite": "change une valeur de fiche",
+   "preuve": "« Inscriptions de pharmaciens des établissements de santé publics 6 376 » / « privés 2 548 » ; bloc « SECTIONS H, E – PUI ET ASSIMILÉS », total 8 361 — dépliant 2025 p. 1",
+   "correction": "Valeurs 2 548 / 6 376 et part 28,6 % exactes (2 548/8 924 = 28,55 %). Corriger le libellé : unité = inscriptions (le dépliant le dit), bloc H+E ; 8 924 = 5 659 + 2 427 + 838 (somme des fonctions PUI public + PUI privé + hors PUI, dérivé), donc compté par fonction, pas par personne. Supprimer « 8 106 personnes inscrites en H » : 8 106 est le nombre d'inscriptions H (principales + secondaires), les personnes sont 7 817 (camembert « personnes physiques »). Ne pas enchaîner 2024 (27,7 %) et 2025 (28,6 %) comme une série : rupture de définition (voir raison).",
+   "raison": "Réponses aux questions : (1) inscriptions, pas personnes : c'est l'intitulé. (2) bloc H et E (pharmaciens PUI et assimilés, hexagone + outre-mer 255). (3) Le « 8 106 personnes » de la fiche est faux : table p. 2, H = 8 106, mais le camembert personnes donne H = 7 817 ; le rapport 8 106/7 817 = 1,037 est le même que 7 959/7 674 = 1,037 en 2024 où la Synthèse distingue explicitement personnes (7 674) et inscriptions principales+secondaires (7 959) (dérivé). En 2024, 5 754 + 2 205 = 7 959 = H inscriptions exactement ; en 2025, 6 376 + 2 548 = 8 924 dépasse H inscriptions (8 106) de 818 et le total du bloc (8 361) : définitions différentes entre 2024 et 2025. Écart de 818 non expliqué par la source (multi-fonctions probable, supposé)."
+  },
+  {
+   "n": "r17-3",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "introuvable (dépliant 2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "2024 : « Pharmaciens des établissements de santé publics 5 754 » / « privés 2 205 » — Synthèse 2024, index PDF 7 (pied 6) ; PDF 15 (pied 14). 2015 : voir r19-3",
+   "correction": "Citer Synthèse 2024 p. 6 et 14 (pied) pour 2 205 / 5 754 ; 2015 : Éléments 2016 p. 44-47.",
+   "raison": "2 205/7 959 = 27,7 % juste (dérivé)."
+  },
+  {
+   "n": "r17-4",
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "écart de valeur (240 ne vient pas de 247 et 238)",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page",
+   "preuve": "« 8,1 % ont effectué leurs études à l'étranger, et 65,3 % exercent dans leur région d'études » — dépliant 2025 p. 2 ; 3 044 primo-inscrits, même page",
+   "correction": "Garder 240 dans le code (pas de changement de valeur) ; écrire « 240 = arrondi à la dizaine de 242, moyenne de 237 (2024) et 247 (2025), dérivé de 8,1 % × primo-inscrits ». Ajouter en vigilance : 8,1 % porte sur les primo-inscrits de toutes sections (A à H, dont E outre-mer), arrondi à ±0,05 point soit ±1,5 personne/an, et primo-inscription ≠ entrée en activité (supposé).",
+   "raison": "(237,1 + 246,6)/2 = 241,9 ; 240 en est l'arrondi, écart 0,9 %, inférieur à l'incertitude d'arrondi cumulée du 8,1 %. L'écart signalé est réel mais négligeable ; la valeur de etrangers.py reste défendable."
+  },
+  {
+   "n": "r17-5",
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "introuvable (2 927 et 8,1 % 2024)",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page",
+   "preuve": "« 8,1 % ont effectué leurs études à l'étranger (dont 93,3 % dans l'EEE ou la Suisse) » ; « 2 927 nouveaux inscrits » — Synthèse 2024, index PDF 4 (pied 3) ; PDF 3 (pied 2)",
+   "correction": "Remplacer « ≈ 238 » par « ≈ 237 (8,1 % × 2 927 = 237,1, dérivé) ». Le 8,1 % et le 2 927 sont sourcés dans la Synthèse 2024, pas dans le dépliant 2025.",
+   "raison": "Lecteur à tort « introuvable » : il n'avait lu que le dépliant. 238 est dans l'intervalle d'arrondi (8,05-8,15 % → 235,6-238,6) mais pas le résultat du calcul ; écart d'une personne, sans effet."
+  },
+  {
+   "n": "r18-1",
+   "fiche": "param-ph-sorties-ordre",
+   "verdict_lecteur": "introuvable (solde positif)",
+   "verdict_final": "reformulé",
+   "gravite": "change une valeur de fiche",
+   "preuve": "« 3 902 RADIATIONS SANS RÉINSCRIPTION EN 2024 » ; « 2 927 NOUVEAUX INSCRITS » ; « 75 080 pharmaciens inscrits… +1,2 % » — Synthèse 2024, index PDF 8 (pied 7) ; PDF 3",
+   "correction": "Remplacer la phrase par : « 3 902 radiations 2024 (cité) pour 2 927 primo-inscrits 2024 (cité) : solde primo-inscrits − radiations = −975 (dérivé) ; le stock a pourtant crû de 74 219 à 75 080 (+861, dérivé), soit environ 1 836 réinscriptions et retours non publiés (dérivé, supposé : la source ne les chiffre pas). » Ne pas comparer radiations 2024 et primo-inscrits 2025.",
+   "raison": "La fiche mélange 2024 (radiations) et 2025 (3 044) ; même avec 3 044 : −858. Le solde du stock est bien positif (+861), mais « porté par les réinscriptions et les retours » est une inférence, pas une donnée de la source."
+  },
+  {
+   "n": "r18-2",
+   "fiche": "param-ph-sorties-ordre",
+   "verdict_lecteur": "introuvable (3 044 en 2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« On dénombre 3 044 primo inscrits à l'Ordre en 2025, en hausse de 4 % par rapport à 2024 » — dépliant 2025 p. 2",
+   "correction": "Aucune sur la valeur ; ajouter le dépliant 2025 aux sources de la fiche (elle ne cite que la Synthèse 2024).",
+   "raison": "3 044/2 927 = +4,0 % cohérent."
+  },
+  {
+   "n": "r18-3",
+   "fiche": "param-ph-internat-postes",
+   "verdict_lecteur": "introuvable (536)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "Fichier data/raw/Données pharma 2ème et 3ème cycle.xlsx, onglet Internat Pharma, ligne « Total général », 1ère année 2025-2026 = 536 (aussi 381, 448, 450, 516, 550)",
+   "correction": "Aucune sur la valeur. Ajouter : 536/746 = 72 % ; 550/694 = 79 % (2024-25) ; 516/629 = 82 % (2023-24) (dérivé) : écart postes-inscrits chaque année, donc probablement postes non pourvus, hypothèse (supposé).",
+   "raison": "Lu directement dans le xlsx (XML). Le « 536 » est sourcé par le fichier DREES local, non par la Synthèse 2024 ; fiche correcte."
+  },
+  {
+   "n": "r18-4",
+   "fiche": "param-ph-filiere-primo-inscrits",
+   "verdict_lecteur": "introuvable (répartition 2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "Camembert « NOUVEAUX INSCRITS À L'ORDRE PAR SECTION EN 2025 » : A 1,2 % (37), B 8,6 % (263), C 0,4 % (13), D 71 % (2 162), E 3,5 % (107), G 5,7 % (172), H 9,5 % (290) — dépliant 2025 p. 2",
+   "correction": "Aucune. Étiquettes vérifiées sur le rendu image (couleurs de la légende) ; somme 3 044.",
+   "raison": "37+263+13+2 162+107+172+290 = 3 044. A/C 2024 (30 et 30) aussi confirmés par la légende de couleur, Synthèse 2024 index PDF 3."
+  },
+  {
+   "n": "r18-5",
+   "fiche": "param-ph-filiere-primo-inscrits",
+   "verdict_lecteur": "introuvable (2015 et 2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "2015 : « 14 % » H, « 66 % » D, « En 2015, l'Ordre a compté 2 324 nouveaux inscrits » — Éléments 2016, index PDF 6 (imprimées 10-11) ; 2025 : dépliant p. 2",
+   "correction": "Aucune.",
+   "raison": "D 66→71 %, H 14→9,5 % confirmés par camembert 2015 (rendu image) et 2025."
+  },
+  {
+   "n": "r18-6",
+   "fiche": "param-ph-filiere-primo-inscrits",
+   "verdict_lecteur": "introuvable (8,1 % 2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« Parmi ces nouveaux inscrits, 8,1 % ont effectué leurs études à l'étranger » — dépliant 2025 p. 2 ; idem 2024 : Synthèse 2024 index PDF 4",
+   "correction": "Aucune.",
+   "raison": "« en 2024 comme en 2025 » exact."
+  },
+  {
+   "n": "r18-7",
+   "fiche": "param-ph-part-privee-biologie",
+   "verdict_lecteur": "introuvable (2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« Pharmaciens biologistes exerçant dans le secteur privé 3 750 » / « public 2 967 » — dépliant 2025 p. 1",
+   "correction": "Aucune. 3 750/6 717 = 55,83 % (dérivé) ; 3 750+2 967 = 6 717 hexagone.",
+   "raison": "Valeur et part exactes."
+  },
+  {
+   "n": "r18-8",
+   "fiche": "param-ph-part-privee-biologie",
+   "verdict_lecteur": "introuvable (≈ 60 % en 2015)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« la part des pharmaciens dans le secteur privé domine largement, elle s'est stabilisée autour de 60% » — Éléments 2016, index PDF 10 (imprimées 18-19)",
+   "correction": "Mineur : pente « −0,5 pt/an » à écrire « ≈ −0,4 pt/an » ((60 − 55,8)/10 = 0,42, dérivé ; 60 % est un arrondi).",
+   "raison": "Valeur citée correctement."
+  },
+  {
+   "n": "r18-9",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "écart d'unité (pharmaciens, pas postes)",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page",
+   "preuve": "« Pharmaciens exerçant dans les PUI d'établissements de santé public 5 161 … privée 2 370 » ; note « Un pharmacien peut avoir plusieurs inscriptions » — Synthèse 2024 index PDF 7 (pied 6), PDF 15",
+   "correction": "Libellé : « fonctions de pharmaciens exerçant en PUI (un pharmacien peut en cumuler plusieurs ; « postes » dans le Panorama 2016) », étiquette cité. Valeurs 2 370/5 161/31,5 % inchangées.",
+   "raison": "Les décomptes sont des sommes de fonctions : 2 785+781+1 000+281+129+19+10+156 = 5 161 ; 1 178+1 103+59+12+9+7+2 = 2 370 ; 2025 : 2 486+894+992+250+138+480+419 = 5 659 (dérivé). Ni purement personnes ni postes ; en 2015 la même mesure est nommée « Postes ». Les deux libellés, du lecteur et de la fiche, sont approximatifs ; unité exacte = fonctions. Aucune incidence code."
+  },
+  {
+   "n": "r18-10",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "introuvable (2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« Inscriptions de pharmaciens des établissements de santé privés 2 548 » / « publics 6 376 » — dépliant 2025 p. 1",
+   "correction": "Voir r17-2.",
+   "raison": "Valeurs exactes ; libellé de champ à corriger (r17-2)."
+  },
+  {
+   "n": "r18-11",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "introuvable (2025)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« Fonctions des pharmaciens exerçant dans les PUI d'établissements de santé privée 2 427 » ; « publics 5 659 » — dépliant 2025 p. 1",
+   "correction": "Aucune. 2 427/8 086 = 30,0 %.",
+   "raison": "Valeurs exactes. Note : le dépliant écrit « Fonctions », ce qui appuie « postes/fonctions »."
+  },
+  {
+   "n": "r18-12",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "introuvable (8 924 > 8 106 personnes)",
+   "verdict_final": "reformulé",
+   "gravite": "change une valeur de fiche",
+   "preuve": "Table p. 2 : « Section H … 8 106 » ; camembert « personnes physiques » : « 10,3 % (7 817) » ; bloc p. 1 : « HEXAGONE 8 106 » — dépliant 2025",
+   "correction": "Écrire : « 8 924 inscriptions > 8 106 inscriptions H (principales + secondaires) > 7 817 personnes (section principale) ». Retirer « 8 106 personnes ».",
+   "raison": "Les chiffres 8 924 et 8 106 sont bien dans le dépliant (p. 1), donc pas introuvable ; l'erreur est l'étiquette « personnes » sur 8 106 (voir r17-2). 5 659+2 427+838 = 8 924 (dérivé)."
+  },
+  {
+   "n": "r18-13",
+   "fiche": "param-diplomes-etrangers-flux",
+   "verdict_lecteur": "introuvable (≈ 247)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« 3 044 primo inscrits … 8,1 % ont effectué leurs études à l'étranger » — dépliant 2025 p. 2",
+   "correction": "Aucune : 3 044 × 0,081 = 246,6 ≈ 247 (dérivé).",
+   "raison": "Cohérent ; voir r17-4 pour 240."
+  },
+  {
+   "n": "r19-1",
+   "fiche": "param-ph-filiere-primo-inscrits",
+   "verdict_lecteur": "introuvable (C 1 % non attribuable)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "Camembert « RÉPARTITION DES NOUVEAUX INSCRITS PAR SECTION » : 1 %, 9 %, 2 %, 1 %, 66 %, 7 %, 14 % ; légende Sections A, B, BC, C, DA, G, H — Éléments 2016, index PDF 6 (imprimées 10)",
+   "correction": "Aucune. Rendu image : tranche jaune (légende Section C) = 1 %, tranche verte A = 1 %.",
+   "raison": "Somme 1+9+2+1+66+7+14 = 100. Attribution confirmée par les couleurs de la légende (A vert, C jaune), pas par le texte extrait."
+  },
+  {
+   "n": "r19-2",
+   "fiche": "param-ph-filiere-primo-inscrits",
+   "verdict_lecteur": "introuvable (« BC »)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "Légende du camembert : « Section A, Section B, Section BC, Section C, Section DA, Section G, Section H » ; tranche hachurée 2 % — Éléments 2016, PDF 6",
+   "correction": "Aucune. Préciser dans la fiche : « BC » = pharmaciens inscrits aux deux sections B et C.",
+   "raison": "L'étiquette « Section BC » figure dans l'extraction texte (ligne 614) et dans le rendu image ; la phrase de la source (« industrie (11 %) ») = 9 % + 2 %."
+  },
+  {
+   "n": "r19-3",
+   "fiche": "param-ph-part-privee-etablissements",
+   "verdict_lecteur": "écart de champ (inscriptions H 2015 vs postes)",
+   "verdict_final": "reformulé",
+   "gravite": "change une valeur de fiche",
+   "preuve": "« Nombre d'inscrits en établissements publics 4 202 » / « privés 2 377 » (Chiffres clés H, imprimées 44-45) ; « Postes 2015 : Public 4202, Privé 2377, Total 6579 » ; « 64% des effectifs » — index PDF 23-24",
+   "correction": "Supprimer la ligne 2015 « Inscriptions H, 36 % / 64 % » (doublon exact de la ligne « Postes en PUI » 2 377 / 4 202 = 36,1 %) ou la renommer « inscrits en établissements = postes PUI ». Comparer sur la ligne PUI seule : 36,1 % (2015) → 31,5 % (2024) → 30,0 % (2025), soit −0,6 pt/an ((36,1 − 30,0)/10, dérivé) au lieu de −0,7 ; ne pas comparer 36 % (2015) à 28,6 % (2025, inscriptions H+E).",
+   "raison": "Lecteur partiellement réfuté : la source nomme bien « inscrits » 4 202/2 377, mais leur somme (6 579) n'égale pas les 6 991 pharmaciens inscrits en H : ce sont les effectifs PUI, la même série que « Postes ». La fiche présente donc une même donnée comme deux séries. Le −0,7 pt/an provient de 36,1 → 28,6 sur 10 ans = 0,75, mélange de natures ; confirme l'écart de nature relevé par le lecteur."
+  },
+  {
+   "n": "r20-1",
+   "fiche": "param-ph-internat-postes",
+   "verdict_lecteur": "introuvable (228 ; 401)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« 253 PLACES AU CONCOURS … (228 pour la rentrée 2023 - 2024) » ; « 441 POSTES … 401 pour la rentrée 2023-2024 » — Synthèse Panorama 2024, index PDF 14 et 15 (pied 13, 14)",
+   "correction": "Aucune. Citer p. 13 et 14 (pied).",
+   "raison": "Dans la source citée par la fiche (P24), non dans l'arrêté."
+  },
+  {
+   "n": "r20-2",
+   "fiche": "param-ph-internat-postes",
+   "verdict_lecteur": "introuvable (253 ; 441)",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« 253 PLACES AU CONCOURS D'INTERNAT EN BIOLOGIE MÉDICALE POUR LA RENTRÉE 2024-2025 » ; « 441 POSTES … POUR LA RENTRÉE 2024-2025 » — Synthèse 2024, PDF 14 et 15",
+   "correction": "Aucune. Note : la Synthèse 2024 cite aussi 266 et 480 pour 2025-2026, ce qui recoupe l'arrêté (r20).",
+   "raison": "Valeurs exactes."
+  }
+ ]
+}
