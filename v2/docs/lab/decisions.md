@@ -4310,3 +4310,37 @@ vrai taux. D'ici là : renommer l'indicateur, ou le borner à l'affichage (voir 
 que les couleurs soient plus claires. Ce n'est pas confortable pour les yeux ».
 **Ce qui le renverserait.** Une recette où deux classes voisines ne se distinguent plus à l'œil, notamment au
 vidéoprojecteur. Il faudrait alors des paliers discrets plutôt qu'un dégradé continu.
+
+## 2026-11-15 — Axe 2 : budget d'erreur de C1 et A2 ; pas de modèle gravitaire ni à agents pour la mobilité
+
+**Décision** ([rapport](reports/2026-11-15-budget-erreur-c1-a2.md), script `v2/methodes/budget_erreur.py`).
+- **Méthode suivante :** l'axe 2 ne construit ni modèle gravitaire ni modèle à agents de la mobilité entre
+  départements, ni réseau profond appris sur les panneaux de stock. La suite est un test de covariables ouvertes
+  sur l'écart local des entrées et du milieu de carrière : zonage, densité, croissance de la population, âge du
+  stock, écoles.
+  - Un modèle de choix d'installation n'est justifié que si ce test atteint R² ≥ 0,2 hors échantillon.
+- **Critère d'une composante qui justifie un modèle dédié** (posé après le premier passage, exploratoire) :
+  - gain réaliste ≥ 0,4 point de MAPE, l'écart local étant réduit d'un quart ;
+  - **et** persistance de l'écart local d'une fenêtre de 5 ans à la suivante, r ≥ 0,3.
+- **Mesures** (banc N1, privé, h = 5, 2 056 couples, IC par bootstrap des départements) :
+  - MAPE de C1 : 7,76 [7,12 ; 8,40] ;
+  - plancher de bruit poissonien : 3,11 [2,89 ; 3,36] (dérivé, borne basse), soit 40 % ;
+  - oracle sur la répartition locale des entrées (< 35 ans) : −2,60 [2,20 ; 3,05] ;
+  - oracle sur la répartition locale des 35–59 ans (mobilité, borne haute) : −2,36 [2,00 ; 2,71] ;
+  - total national : −0,49 ; retraites : −0,22.
+  - Gain réaliste (écart réduit d'un quart) : 0,70 pour les entrées et 0,71 pour les 35–59 ans. Critère (a) tenu.
+  - Persistance : r = 0,02 (entrées) et r = 0,22 (35–59 ans), pour 273 départements × profession. Critère (b) non
+    tenu.
+- **Hypothèse « bruit imprévisible dominant » :**
+  - rejetée sous sa forme forte : le plancher fait 40 % de la MAPE, sous le seuil de 50 % ;
+  - tenue sous sa forme faible : le reste est local et ne s'apprend pas de l'historique.
+
+**Pourquoi.** Brief de la session v2 : décomposer l'erreur avant de choisir une méthode. Toutes les variantes
+structurelles tiennent dans 0,4 point. La décision « Axe 2 : dynamique des systèmes… » (2026-11-14) avait déjà tué
+le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle gravitaire.
+
+**Ce qui le renverserait.**
+- Des covariables qui expliquent au moins 20 % de l'écart local hors échantillon.
+- Un panel individuel (flux origine → destination) qui montre une persistance r ≥ 0,3.
+- Un plancher calculé sur flux bruts au-dessus de 50 % de la MAPE. Le verdict deviendrait alors : bruit dominant,
+  rien à gagner, effort sur les intervalles.
