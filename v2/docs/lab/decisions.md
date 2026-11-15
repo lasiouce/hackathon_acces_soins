@@ -5168,3 +5168,11 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Ce qui le renverserait :** une mesure de `a` en temps de MG (axe 4) ; M4 validé par P-B4 ; une préférence de
   l'utilisateur·rice pour une carte colorée par l'écart au tendanciel.
 - **Non fait :** étape 5 du plan côté `v2/langage/` et `chatbot/` (autre session).
+
+## 2026-11-15 — Carte : le transfert L23 dit en langue courante
+- **Décision** (demande de l'utilisateur·rice) : plus de « actes de MG libérés », de « L23 » ni d'« ETP-équivalents » à
+  l'écran ni dans l'export. Libellé du levier : « Les pharmaciens vaccinent davantage contre la grippe ». Fiche :
+  « vaccinations en moins pour les médecins généralistes, soit le temps de travail d'environ N médecins à temps plein ».
+  Les clés de l'API ne changent pas.
+- **Pourquoi :** un·e utilisateur·rice sans formation doit tout comprendre.
+- **Ce qui le renverserait :** un test de lecture qui montre une phrase encore mal comprise.

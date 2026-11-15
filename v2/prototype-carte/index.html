@@ -840,7 +840,7 @@ function buildLevFam(){
 
 // Transferts de tâches : L23 agit sur le besoin (pas sur l'offre), donc sur l'indice de couverture des pharmaciens seulement.
 // Bornes du mode expert : celles des fiches (k : [0,25 ; 1], fiche L23) ; a : [0 ; 0,05] en temps de MG (supposé).
-function l23HTML(){return `<div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-l23"${L23.on?" checked":""}><label class="fr-toggle__label" for="lv-l23" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">Vaccination antigrippale en officine (L23)</label></div>
+function l23HTML(){return `<div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-l23"${L23.on?" checked":""}><label class="fr-toggle__label" for="lv-l23" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">Les pharmaciens vaccinent davantage contre la grippe</label></div>
   <p class="note" id="l23-note"></p>
   <details class="l23x"><summary class="note">Réglages experts (paramètres supposés)</summary>
    <label class="note" for="l23-a">a, part du temps de MG portant sur l'acte : <b id="l23-av"></b></label><input type="range" id="l23-a" min="0" max="0.05" step="0.005">
@@ -946,7 +946,7 @@ function couvRows(T,Yn){if(!COUV||COUV.prof!==S.prof)return null;const o=T=="FR"
 function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c;if(!c)return;
   el.innerHTML=c.rows.map(([y,v])=>`Indice de couverture ${y} : <b class="num">${fC(v.cy)}</b> <small>(référence : 2026 = 1 ; ${couvMot(v.cy)} ; écart au tendanciel ${fE(v.ce)}${c.est.length>1?` ; fourchette ${c.est.join(", ")} : ${fC(v.clo)} – ${fC(v.chi)}`:""})</small>`).join("<br>")
     +`<small>Estimateur central ${c.central} : ${esc(COUV.hypotheses.estimateurs[c.central])}. M4 : ${COUV.en_attente[0].statut}.</small>`
-    +(c.mg?`<br>Actes de médecine générale libérés par L23 en ${c.mg.y} : <b class="num">${fmt(c.mg.actes)}</b> injections, soit ${fmt(c.mg.etp)} ETP-équivalents, France entière (${fmt(c.mg.recu)} ETP-équivalents reçus par les pharmaciens) <small>a et k supposés : ordre de grandeur illustratif</small>`:"");}
+    +(c.mg?`<br>Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de vaccins à faire : en ${c.mg.y}, environ <b class="num">${fmt(c.mg.actes)}</b> vaccinations en moins pour eux, soit le temps de travail d'environ ${fmt(c.mg.etp)} médecins à temps plein (France entière). Les pharmaciens reprennent ce travail. <small>Ordre de grandeur : la part de temps que la vaccination prend aux médecins n'est pas mesurée, elle est supposée.</small>`:"");}
 function tween(el,to,f){const from=tw.get(el)??to*.96,t0=performance.now();tw.set(el,to);
   const step=t=>{const p=Math.min(1,(t-t0)/280),e=1-Math.pow(1-p,3);el.textContent=f(from+(to-from)*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
 const band=(f,i)=>{const h=f.k*(f.years[i]-f.origin);return [f.scn[i]*(1-h),f.scn[i]*(1+h)];};   // fourchette indicative : scn × (1 ± k × horizon)
@@ -1121,7 +1121,7 @@ function couvExport(T){const c=couvRows(T,G_Y());if(!c)return [];const L=[`# Ind
   for(const [y,v] of c.rows)L.push(`#   ${y} : indice ${fC(v.cy)} (tendanciel ${fC(v.cb)}, écart au tendanciel ${fE(v.ce)}${c.est.length>1?`, fourchette ${fC(v.clo)} – ${fC(v.chi)}`:""})`);
   L.push(`#   Norme du besoin : ${COUV.hypotheses.estimateurs[c.central]} ; population ${COUV.hypotheses.population}`);
   if(COUV.l23){L.push(`#   L23 vaccination antigrippale en officine (actif) : ${COUV.l23.note}`);for(const p of COUV.l23.params)L.push(`#     ${p.name} = ${p.value} ${p.unit} ; ${STAT(p.status)} ; ${p.source.replace(/;/g,",")}`);
-    if(c.mg)L.push(`#   Actes de MG libérés ${c.mg.y} : ${Math.round(c.mg.actes)} injections, ${c.mg.etp.toFixed(1)} ETP-équivalents (France entière)`);}
+    if(c.mg)L.push(`#   Vaccinations contre la grippe reprises par les pharmaciens en ${c.mg.y} : environ ${Math.round(c.mg.actes)}, soit le temps de travail d'environ ${Math.round(c.mg.etp)} médecins généralistes à temps plein (France entière ; ordre de grandeur)`);}
   return L;}
 const G_Y=()=>{const G=F||SC;return G?G.years[yIdx(G.years)]:S.y;};
 // Langage naturel (v2/langage) : le serveur traduit la phrase en leviers ; rien n'est appliqué avant confirmation
