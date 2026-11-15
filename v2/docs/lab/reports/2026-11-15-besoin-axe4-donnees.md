@@ -172,6 +172,13 @@ bloc vaut pour 2024 et les campagnes 2015–2020, toujours non lus.)*
 | OSRM sur l'extrait OSM France (4,8 Go) : accord de l'utilisateur·rice nécessaire | ~30 min Claude + machine non mesurée |
 
 ## Addendum 2026-11-15 : rapport DAMIR / régime général sur 12 mois (rapporté, non décisif)
-Dépense 2025, DAMIR (tous régimes du fichier) sur la Statistique mensuelle (RG + SLM), mesuré par `--controle` :
+Montant remboursé 2025, DAMIR (libéral : `stj = 1`, `ppu = 2`) sur la Statistique mensuelle (RG + SLM, cabinets libéraux), mesuré par `--controle` :
 CD 0,996 ; SF 1,008 ; IDE 0,920 ; MK 1,040 ; MG 1,081 (source seulement). Les périmètres diffèrent : ce n'est pas
 le contrôle à 0,5 %, qui reste irréalisable.
+- **Le périmètre est plus proche qu'il n'y paraît :** `PSE_STJ_SNDS` n'est renseigné que pour le régime général et les
+  régimes infogérés (9 = inconnu ailleurs). Filtrer `stj = 1` revient donc à peu près au régime général, ce qui
+  explique des rapports proches de 1.
+- **IDE à 0,920 :** les IDE ont la plus forte part de remboursé en `stj = 9` : 0,705 Md€ sur 8,89, soit 7,9 %,
+  contre 3,7 à 5,0 % pour MG, CD et MK (mesuré, 2025). En réintégrant `stj = 9`, le rapport IDE passe à 1,000.
+  Explication probable, non vérifiée : une partie de l'activité infirmière est liquidée par des régimes non
+  infogérés, par exemple la MSA en zone rurale.
