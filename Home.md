@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Besoin P-B2 : saturation du recours (M2b)](v2/docs/lab/reports/2026-11-15-besoin-pb2-saturation.md) | M2b tombe pour IDE, MK, CD, SF : borne haute de l'IC à 98,75 % de δ ≥ 0 partout ; ΔAIC ≥ 2 pour les kinés seuls (23,1, par concavité) ; placebo non attribuable pour MK et CD | session besoin-v2-m1-m3 |
 | 2026-11-15 | [Besoin P-B1 : âge (M1) contre population (M0)](v2/docs/lab/reports/2026-11-15-besoin-pb1-age.md) | P1 + P2 : âge retenu pour les 5 professions ; IDE, MK, PH S₁ = 0 % ; SF 1–3 % ; dentistes de justesse (P1 93,1 % abandon, P2 87,1 % maintien, ρ = 0,999) | session besoin-v2-m1-m3 |
 | 2026-11-15 | [Ledger : lignes périmées](v2/docs/lab/reports/2026-11-15-ledger-perime.md) | 167 lignes « open » hors besoin : 43 faites, 6 dépassées, 7 incertaines, 111 ouvertes, 5 doublons ; le rapport technique reprend au moins 12 lignes faites ; corrections appliquées le 2026-11-15 | 3 lecteurs + session besoin-derivation |
 | 2026-11-15 | [Besoin, axe 0 : interface, M0, couverture, transferts](v2/docs/lab/reports/2026-11-15-besoin-axe0-interface.md) | 7/7 critères : M0 = densité/densité₂₀₂₆ à 1,3 × 10⁻¹⁵, conservation des transferts à 5,7 × 10⁻¹⁰ ETP, additivité commune → national à 1,5 × 10⁻¹⁴, 0,72 ms au 95ᵉ centile ; aucun C pour la MG ; paramètres supposés en attendant l'axe 1 | session besoin-axe0-interface |

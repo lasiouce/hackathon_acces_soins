@@ -4831,3 +4831,21 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** seuils gelés appliqués ; P1 reproduit à l'identique au second passage.
 - **Ce qui le renverserait :** un profil PH en temps de pharmacien (unité « boîtes + honoraires » mêlée, ledger) ;
   les 3 mois de DAMIR manquants, si le biais saisonnier dépasse celui mesuré par l'axe 4 (≤ 1,3 %).
+
+## 2026-11-15 — Module de besoin, P-B2 : M2b (saturation) tué ; M2a (AREA) construit comme repli
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb2-saturation.md)) :
+  - **M2b tué pour les quatre professions testées** (IDE, MK, CD, SF) par la règle gelée : borne haute de l'IC à
+    98,75 % de δ ≥ 0 partout ; pente du premier quintile non distinguable de 0 pour IDE, MK, SF ; placebo non
+    attribuable pour MK et CD. Pharmaciens : non applicable (dérivation §6).
+  - **Retrait du service** : `m2b.py` garde le code et le verdict, la classe n'est plus enregistrée.
+  - **Le niveau du besoin non satisfait n'est pas identifié** par les données ouvertes au département.
+  - **M2a construit** : `log R_std = α + β log A + γ log M`, M = indice de morbidité standardisé par âge et sexe
+    (part des consommants avec au moins un repérage de la cartographie des pathologies 2024), offre fixée à la
+    moyenne nationale ⇒ `B₂ₐ = r̄ · B₁ · M^γ`, M figé à 2024 (supposé). γ mesuré : IDE 3,66, MK 0,92, CD 1,44,
+    SF 0,06 (MCO, 2023–2025).
+  - **Écarts P-B2 écrits avant calcul** (commit `3ac2abd`) : Omphale au lieu des estimations Insee ; offre IDE 2023
+    seule ; stabilité sur 2018 seule ; descriptif de la patientèle sans définition du département ; placebo sur le
+    B₁ de la profession testée ; NLS `maxfev = 200`.
+- **Pourquoi :** seuils gelés appliqués tels quels ; a priori de la littérature confirmé (pas de saturation).
+- **Ce qui le renverserait :** un recours en actes au département ; un département de patientèle qui serait celui
+  de résidence ; une offre IDE libérale seule (sensibilité au ledger).

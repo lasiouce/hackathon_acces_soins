@@ -6,6 +6,7 @@ Pas un estimateur (rien n'est enregistré ici) : des lecteurs de données, tous 
   effectif_ameli(p, …)  effectif libéral data.ameli.fr (tout âge, tout sexe)
   offre_obs(p, years)   effectif libéral observé du jumeau (secteur privé, état historique), somme âge × sexe
   pstd(p, pop, years)   population standardisée Σ pop · ω (poids APL, M1), sans niveau
+  table(p, pop, years)  [département] R_std, A, R, B₁, N moyennés sur les années (P-B2, M2a, M2b)
   morbidite(year)       indice de morbidité standardisé par âge et sexe (cartographie des pathologies, ODbL) :
                         part observée des consommants avec au moins une pathologie, un traitement chronique, une
                         maternité ou une hospitalisation repérés, rapportée à la part attendue aux taux nationaux
@@ -97,3 +98,18 @@ def morbidite(year: int = 2024) -> pd.Series:
     obs = (tl[TOP_TOTAL] - tl[TOP_AUCUNE]).groupby("departement").sum()
     att = (npop * taux.reindex(npop.droplevel(0).index).to_numpy()).groupby("departement").sum()
     return (obs / att).rename("morbidite")
+
+
+def table(prof, pop, years, offre="jumeau"):
+    """DataFrame [département] : R_std, A, et les sommes utiles (R, B₁, N) ; jointure des trois sources."""
+    yrs = [y for y in years if y in offre_obs(prof, years).dropna(axis=1, how="all").columns] if offre == "jumeau" \
+        else list(years)
+    R = recours(prof, years)[list(years)]
+    Bs = pstd(prof, pop, years)
+    N = offre_obs(prof, yrs) if offre == "jumeau" else effectif_ameli(prof, yrs)
+    d = sorted(set(R.dropna().index) & set(Bs.index) & set(N.dropna().index))
+    r = (R.loc[d] / Bs.loc[d, list(years)]).mean(axis=1)
+    nat = (R.loc[d].sum() / Bs.loc[d, list(years)].sum()).mean()
+    A = (1e5 * N.loc[d, yrs] / Bs.loc[d, yrs]).mean(axis=1)
+    return pd.DataFrame({"R_std": r / nat, "A": A, "R": R.loc[d].mean(axis=1), "B1": Bs.loc[d, list(years)].mean(axis=1),
+                         "N": N.loc[d, yrs].mean(axis=1)}), yrs

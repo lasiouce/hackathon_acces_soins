@@ -18,27 +18,12 @@ import numpy as np
 import pandas as pd
 
 from besoin.cube import Population, mapping
-from besoin.estimateurs.recours import PROF_AMELI, effectif_ameli, offre_obs, pstd, recours
+from besoin.estimateurs.recours import PROF_AMELI, table
 
 OUT = Path("v2/artifacts/besoin_pb2")
 YEARS, STAB = (2023, 2024, 2025), (2018,)
 B, SEED, NIV = 2000, 20261115, 1 - 0.05 / 4                  # gelés : Bonferroni sur 4 professions
 IDF = {"75", "92", "93", "94"}
-
-
-def table(prof, pop, years, offre="jumeau"):
-    """DataFrame [département] : R_std, A, et les sommes utiles (R, B₁, N) ; jointure des trois sources."""
-    yrs = [y for y in years if y in offre_obs(prof, years).dropna(axis=1, how="all").columns] if offre == "jumeau" \
-        else list(years)
-    R = recours(prof, years)[list(years)]
-    Bs = pstd(prof, pop, years)
-    N = offre_obs(prof, yrs) if offre == "jumeau" else effectif_ameli(prof, yrs)
-    d = sorted(set(R.dropna().index) & set(Bs.index) & set(N.dropna().index))
-    r = (R.loc[d] / Bs.loc[d, list(years)]).mean(axis=1)
-    nat = (R.loc[d].sum() / Bs.loc[d, list(years)].sum()).mean()
-    A = (1e5 * N.loc[d, yrs] / Bs.loc[d, yrs]).mean(axis=1)
-    return pd.DataFrame({"R_std": r / nat, "A": A, "R": R.loc[d].mean(axis=1), "B1": Bs.loc[d, list(years)].mean(axis=1),
-                         "N": N.loc[d, yrs].mean(axis=1)}), yrs
 
 
 def spline(x, y, knots=None):
