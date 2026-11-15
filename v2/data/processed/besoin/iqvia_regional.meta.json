@@ -1,0 +1,23 @@
+{
+ "table": "iqvia_regional.parquet",
+ "chemin": "v2/data/processed/besoin/iqvia_regional.parquet",
+ "lignes": 292,
+ "colonnes": [
+  "campagne",
+  "region",
+  "code",
+  "variable",
+  "groupe",
+  "valeur"
+ ],
+ "sha256_16": "eeda13f9a209ddc9",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "IQVIA France (Pharmastat), Vaccination Grippe 2021-2022 à 2026-2027, data.gouv.fr",
+ "millesime": "saisons 2021-22 à 2026-27 ; série quotidienne 2020-21 reprise du fichier 2021-22 ; 2026-27 (en cours, au 2026-11-11)",
+ "commande": "uv run python v2/besoin/donnees/iqvia.py",
+ "dom": "régions présentes : 11, 24, 27, 28, 32, 44, 52, 53, 75, 76, 84, 93, 94 (aucun DOM)",
+ "controles": [],
+ "notes": "",
+ "ecrit_le": "2026-11-15T03:13:23"
+}

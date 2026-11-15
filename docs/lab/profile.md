@@ -18,7 +18,8 @@ aliases: [Lab profile]
   effet sur l'effectif « libéral » de SF, CD, PH, MK et IDE.
   - **« Libéral »** = secteur privé, lucratif ou non. Tout employeur public
     est exclu.
-  - Spécialistes en phase 2 (cardiologie, dermatologie, ophtalmologie).
+  - ~~Spécialistes en phase 2 (cardiologie, dermatologie, ophtalmologie).~~ Remplacé le 2026-11-15 : amélioration
+    possible, hors plan ; source de transferts seulement (O2).
 - **Indicateur principal :**
   1. précision des prévisions contre des références naïves, au backtest
      (environ 10 ans au plus) ;

@@ -41,8 +41,10 @@ communes, département, région, national. La régulation de l'installation
 s'applique par commune, et le DG d'ARS doit avoir la visibilité maximale.
 
 **Ce qui vient ensuite.**
-- **Phase 2**, une fois la phase 1 terminée : cardiologie, dermatologie,
-  ophtalmologie. Appui : rapport HCAAM *Trois scénarios pour une réforme des
+- ~~**Phase 2**, une fois la phase 1 terminée : cardiologie, dermatologie,
+  ophtalmologie.~~ *Remplacé le 2026-11-15 (utilisateur·rice) : la phase 2 passe dans les
+  **améliorations possibles** et n'est plus à l'ordre du jour.* Les spécialistes restent admis comme
+  profession source d'un transfert (règle O2), sans projection. Appui : rapport HCAAM *Trois scénarios pour une réforme des
   dépassements d'honoraires des médecins*.
 - **Couche ultérieure :** sélection des paramètres par persona (ARS/DG,
   Administration, élu·e) et aide à la décision sur les sorties.
@@ -292,7 +294,10 @@ le mesurer. Chaque axe a un critère d'acceptation vérifiable.
 - **Fait quand :** les paramètres sont classés par profession et par
   horizon (2030, 2040, 2050), et l'axe 1 est priorisé en conséquence.
 
-## 5. Phase 2 — cardiologie, dermatologie, ophtalmologie
+## 5. Phase 2 — cardiologie, dermatologie, ophtalmologie (amélioration possible depuis le 2026-11-15)
+> Plus un jalon du plan : décision du 2026-11-15 dans `decisions.md`. Le contenu ci-dessous reste comme
+> programme d'une amélioration future.
+
 On reprend le même contrat de modules et on ajoute les paramètres propres à
 ces spécialités :
 - postes d'internat par DES ;

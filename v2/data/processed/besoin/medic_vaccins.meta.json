@@ -1,0 +1,244 @@
+{
+ "table": "medic_vaccins.parquet",
+ "chemin": "v2/data/processed/besoin/medic_vaccins.parquet",
+ "lignes": 11021,
+ "colonnes": [
+  "annee",
+  "atc4",
+  "l_atc4",
+  "age",
+  "sexe",
+  "ben_reg",
+  "nbc",
+  "rem",
+  "bse",
+  "boites"
+ ],
+ "sha256_16": "f6d9a9d5a8c2937e",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "Assurance maladie, Open Medic, bases complémentaires ATC4",
+ "millesime": "2014–2025 (année civile de délivrance)",
+ "commande": "uv run python v2/besoin/donnees/medic.py",
+ "dom": "DOM regroupés (ben_reg 5), non séparables ; 0 et 99 = inconnu",
+ "controles": [
+  {
+   "controle": "J07BB boites 2014",
+   "reconstruit": 6722743.0,
+   "publie": 6722743.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2014_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2014",
+   "reconstruit": 27914516.119999997,
+   "publie": 27914516.1,
+   "ecart_rel": 7.16472954645804e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2014_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2015",
+   "reconstruit": 7027989.0,
+   "publie": 7027989.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2015_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2015",
+   "reconstruit": 25489457.919999998,
+   "publie": 25489457.96,
+   "ecart_rel": 1.5692763217637533e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2015_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2016",
+   "reconstruit": 7699782.0,
+   "publie": 7699782.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2016_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2016",
+   "reconstruit": 26408228.53,
+   "publie": 26408228.52,
+   "ecart_rel": 3.786699146273417e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2016_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2017",
+   "reconstruit": 7955143.0,
+   "publie": 7955143.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2017_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2017",
+   "reconstruit": 26440315.320000004,
+   "publie": 26440315.29,
+   "ecart_rel": 1.1346311338703856e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2017_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2018",
+   "reconstruit": 8567413.0,
+   "publie": 8567413.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2018_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2018",
+   "reconstruit": 55954651.18,
+   "publie": 55954651.22,
+   "ecart_rel": 7.148645954142421e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2018_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2019",
+   "reconstruit": 9160352.0,
+   "publie": 9160352.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2019_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2019",
+   "reconstruit": 57511328.13,
+   "publie": 57511328.12,
+   "ecart_rel": 1.738788807581102e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2019_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2020",
+   "reconstruit": 10763523.0,
+   "publie": 10763523.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2020_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2020",
+   "reconstruit": 76770090.14,
+   "publie": 76770090.19,
+   "ecart_rel": 6.512952752305183e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2020_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2021",
+   "reconstruit": 10255940.0,
+   "publie": 10255940.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2021_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2021",
+   "reconstruit": 80002703.21000001,
+   "publie": 80002703.21,
+   "ecart_rel": 1.8625822123451793e-16,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2021_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2022",
+   "reconstruit": 10306357.0,
+   "publie": 10306357.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2022_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2022",
+   "reconstruit": 93473668.35000001,
+   "publie": 93473668.34,
+   "ecart_rel": 1.0698205753564875e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2022_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2023",
+   "reconstruit": 9903344.0,
+   "publie": 9903344.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2023_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2023",
+   "reconstruit": 103445847.75,
+   "publie": 103445847.65,
+   "ecart_rel": 9.66689299872884e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2023_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2024",
+   "reconstruit": 9899944.0,
+   "publie": 9899944.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2024_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2024",
+   "reconstruit": 78339770.98,
+   "publie": 78339770.96,
+   "ecart_rel": 2.552983048552439e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2024_atc4 (national)"
+  },
+  {
+   "controle": "J07BB boites 2025",
+   "reconstruit": 11675815.0,
+   "publie": 11675815.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2025_atc4 (national)"
+  },
+  {
+   "controle": "J07BB rem 2025",
+   "reconstruit": 114762393.34,
+   "publie": 114762393.33,
+   "ecart_rel": 8.713660524369642e-11,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "Open Medic NB_2025_atc4 (national)"
+  }
+ ],
+ "notes": "",
+ "ecrit_le": "2026-11-15T03:18:56"
+}

@@ -1,0 +1,202 @@
+{
+ "items": [
+  {
+   "lecteur": "L1-apl",
+   "n": 17,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "retenu",
+   "gravite": "change une étiquette",
+   "preuve": "CD 90+ : 0,59 (2022), 0,62 (2023), 0,66 (2024) ; 0,66/0,59-1 = 11,86 % ; max consécutif 6,5 % (2023→2024) [Paramètres CD ; var.py]",
+   "correction": "« variation entre les millésimes extrêmes 2022 et 2024 (bandes ω ≥ 0,5, |Δ|/min) : CD ≤ 11,9 % (90+) ; entre millésimes consécutifs : CD ≤ 6,5 % (90+, 2023→2024) (dérivé) »",
+   "raison": "Valeur 11,9 % reproduite, mais sur la paire 2022→2024 (deux millésimes) ; « d'un millésime à l'autre » laisse lire consécutif. Dénominateur = min, non énoncé."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 18,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "retenu",
+   "gravite": "change une étiquette",
+   "preuve": "IDE 80-84 : 4,92 / 4,53 / 4,50 ; 4,92/4,50-1 = 9,3 % (2022→2024) ; consécutif max 8,6 % (2022→2023, /min)",
+   "correction": "« extrêmes 2022-2024 : IDE ≤ 9,3 % (80-84) ; consécutifs : ≤ 8,6 % (80-84, 2022→2023, |Δ|/min ; 7,9 % si |Δ|/ancien) (dérivé) »",
+   "raison": "Idem n°17. Note : le consécutif dépend du dénominateur (min 8,6 % ; ancien 7,9 %)."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 19,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "retenu",
+   "gravite": "change une étiquette",
+   "preuve": "SF 50-54 : 0,56 / 0,59 / 0,61 ; 0,61/0,56-1 = 8,9 % (2022→2024) ; consécutif max 5,7 % (20-24, 2022→2023, /min)",
+   "correction": "« extrêmes 2022-2024 : SF ≤ 8,9 % (50-54) ; consécutifs : ≤ 5,7 % (20-24, 2022→2023, |Δ|/min) (dérivé) »",
+   "raison": "Idem n°17. MK (6,3 %, 70-74, 2022→2023, /min) est bien consécutif (une seule paire) : cohérent, mais dénominateur min à énoncer (5,9 % sur l'ancien)."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 27,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Aucune date de téléchargement dans les sources ; mtime local des xlsx : 15 nov. 03:07",
+   "correction": "Aucune (métadonnée de provenance de la fiche ; cohérente avec la copie locale)",
+   "raison": "Une date de téléchargement n'est pas dans la source ; seule la date de fichier local la corrobore."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 28,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "retenu",
+   "gravite": "change une étiquette",
+   "preuve": "Onglet IDE « APL 2023 » : titre « APL 2024 aux infirmières », « Millésime : 2024 », colonne « Population standardisée 2022 », somme 67 408 052 (= population 2021, cf. CD 2023)",
+   "correction": "Ajouter à la fiche : « Anomalie source : l'onglet IDE « APL 2023 » porte titre et millésime 2024 et la colonne population 2022, mais ses populations (somme 67 408 052) sont celles de 2021 ; ne pas l'utiliser sans contrôle (observé) »",
+   "raison": "Anomalie réelle vérifiée dans le xlsx (SNIIR-AM 2024/2022, pop. 2021). Les poids de Paramètres ne sont pas touchés ; seul l'usage des APL 2023 IDE l'est."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 37,
+   "fiche": "param-besoin-activite-etp",
+   "verdict_lecteur": "inaccessible",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Aucune valeur de médiane dans les 4 xlsx ni le Lisez-moi (lu localement) ; jeu 530 complet non accessible",
+   "correction": "Écrire « non publiée dans les 4 fichiers xlsx (IDE, MK, CD, SF) ni le Lisez-moi » plutôt que « nulle part dans le jeu 530 »",
+   "raison": "Négatif vérifié seulement sur les fichiers locaux ; portée « jeu entier » non établie."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 41,
+   "fiche": "param-besoin-activite-etp",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Conditions de data.ameli.fr : recours à la licence « Open Database License » (ODbL) ; contenu : effectifs, densités, honoraires (via recherche, page du jeu non lue)",
+   "correction": "Citer « licence ODbL (conditions du site data.ameli.fr, à confirmer sur la fiche du jeu) » ; nommer le jeu exact une fois la page lue",
+   "raison": "ODbL du site retrouvée (secondaire, recherche) ; jeu « honoraires / effectif » non atteint (404 sur l'URL devinée) ; licence du jeu précis non confirmée."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 9,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "Légifrance, arrêté du 8 juin 2018, art. 1 : « Au premier alinéa, le mot : « deux » est remplacé par le mot : « quatre »  » ; entrée HdF/Occitanie le 6 oct. 2018 (Ordre des pharmaciens, via recherche)",
+   "correction": "Ajouter la source : « arrêté du 8 juin 2018 (JO 14 juin 2018, Légifrance, lu via WebFetch) ; entrée des 2 régions au 6 oct. 2018 (Ordre des pharmaciens, secondaire) ; HAS p. 11 n. 1 cite les deux arrêtés sans le détail »",
+   "raison": "Non écrit dans la HAS (lecteur correct sur ce point) mais le texte de l'arrêté le confirme. Citation obtenue par résumé WebFetch : à relire sur Légifrance si utilisée verbatim."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 10,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« Arrêté du 25 septembre 2018 modifiant l'arrêté du 10 mai 2017 » ; autorise primo-vaccinants, femmes enceintes ; JO du 26 septembre 2018 (Ordre des pharmaciens, Vidal, APHP ; via recherche)",
+   "correction": "Garder l'arrêté du 25 sept. 2018, en citant « Ordre des pharmaciens / Vidal (secondaires) ; texte Légifrance non lu » ; il est paru au JO du 26 sept. 2018 (même jour : décret 2018-805 pour les infirmiers)",
+   "raison": "L'arrêté existe et élargit le public ; absent de HAS et Cour, mais sourçable. Fiche juste sur le fond."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 14,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "reformulé",
+   "gravite": "change une étiquette",
+   "preuve": "« Date de validation par le collège : juillet 2018 » (HAS p. 1-2) ; mise en ligne le 8 août 2018 (horodatage du PDF 2018-08-08 ; recherche, secondaire)",
+   "correction": "« HAS, recommandation vaccinale validée par le Collège en juillet 2018 (mise en ligne le 8 août 2018) »",
+   "raison": "L'écart est réel mais il s'agit de deux dates (validation vs publication) ; « du 8 août 2018 » seul est trompeur pour une date de décision."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 18,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "retenu",
+   "gravite": "change une valeur de fiche",
+   "preuve": "Cour p. 48 : « 7,56 € pour une injection ayant donné lieu à une prescription par un tiers et 9,61 € lorsque la prescription a été réalisée par l'infirmier lui-même » ; actes « équivalents à ceux prévus pour les pharmaciens »",
+   "correction": "Remplacer « 9,61 € contre 7,50 € (presse) » par « Cour p. 48 : 7,56 € (prescription par un tiers) et 9,61 € (prescripteur lui-même) ; presse non lue : 7,50 € » ; plage de k : [0,25 ; 1] avec 0,25 = 7,56/30 (dérivé, supposé), au lieu de [0,32 ; 1]",
+   "raison": "La Cour elle-même donne 7,56 € pour l'acte de base, équivalent à l'officine ; 9,61 € est un tarif plus haut, d'où la borne basse de k à 0,25 ; 7,56/30 = 0,252."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 26,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "ecart",
+   "verdict_final": "retenu",
+   "gravite": "change une étiquette",
+   "preuve": "Fichiers campagne : cible 2022-23 = 5 373 898 (somme quotidienne 5 373 892, écart 6) ; 2023-24 : 5 645 127 (5) ; 2024-25 : 6 629 119 (5) ; 2025-26 : 8 020 525 (5)",
+   "correction": "« recoupées avec le fichier « campagne » à 6 près (5 pour 2023-24 à 2025-26) »",
+   "raison": "Écart de 6 en 2022-23 (valeur lue dans la colonne cible du fichier 2023-24). Sommes quotidiennes recalculées (iqsum2.py, 0 conflit)."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 6,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "confirme",
+   "verdict_final": "confirmé (contrôle)",
+   "gravite": "—",
+   "preuve": "Somme population standardisée APL 2024 : IDE 67 760 573,018 ; CD 67 760 572,999 (recalculé dans le xlsx)",
+   "correction": "—",
+   "raison": "Recalcul direct dans les xlsx."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 11,
+   "fiche": "param-besoin-poids-age-apl",
+   "verdict_lecteur": "confirme",
+   "verdict_final": "confirmé (contrôle)",
+   "gravite": "—",
+   "preuve": "« Sources : DCIR 2020, 2021 et 2022, Cnam ; populations municipales 2020, 2021 et 2022, Insee » (Paramètres IDE/CD/SF) ; MK : « DCIR 2020 et 2021 »",
+   "correction": "—",
+   "raison": "Lu dans dump_params.txt (lignes 40, 103, 166, 229)."
+  },
+  {
+   "lecteur": "L1-apl",
+   "n": 38,
+   "fiche": "param-besoin-activite-etp",
+   "verdict_lecteur": "confirme",
+   "verdict_final": "confirmé (contrôle)",
+   "gravite": "—",
+   "preuve": "« Auparavant, une activité correspondant à 1 ETP (ou 5 400 consultations, visites et téléconsultations pour les médecins généralistes) » (Lisez-moi p. 3)",
+   "correction": "—",
+   "raison": "Citation exacte ; nuance : la convention est ensuite étendue à tous les libéraux sans activité l'année précédente."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 3,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "confirme",
+   "verdict_final": "confirmé (contrôle)",
+   "gravite": "—",
+   "preuve": "« un peu moins d'une vaccination contre la grippe saisonnière sur trois » ; « près de deux sur trois » ; « d'une sur cinq à environ une sur dix »",
+   "correction": "—",
+   "raison": "Lu dans le rapport de la Cour (texte local)."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 7,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "confirme",
+   "verdict_final": "confirmé (contrôle)",
+   "gravite": "—",
+   "preuve": "« Quatre régions sont concernées par l'expérimentation : Auvergne-Rhône-Alpes, Nouvelle Aquitaine, Hauts-de-France et Occitanie » (HAS p. 11)",
+   "correction": "—",
+   "raison": "Lu dans has.txt."
+  },
+  {
+   "lecteur": "L2-l23",
+   "n": 12,
+   "fiche": "param-besoin-l23-vaccination",
+   "verdict_lecteur": "confirme",
+   "verdict_final": "confirmé (contrôle)",
+   "gravite": "—",
+   "preuve": "« près de 160 000 vaccinations » (HAS, expérimentation 2017-18 ; has.txt l. 1757 et note l. 1770)",
+   "correction": "—",
+   "raison": "Citation présente ; numéro de page 32 non rechecké."
+  }
+ ]
+}

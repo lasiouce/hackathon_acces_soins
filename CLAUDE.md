@@ -21,7 +21,9 @@ recherche quantitative.
 - Sorties : effectif « libéral » (secteur privé, tout employeur public
   exclu) des sages-femmes, dentistes, pharmaciens, kinés et infirmiers.
 - Échelles : toutes, jusqu'à la commune. Horizon 2050.
-- Spécialistes en phase 2 (cardiologie, dermatologie, ophtalmologie).
+- ~~Spécialistes en phase 2 (cardiologie, dermatologie, ophtalmologie).~~ *Remplacé le 2026-11-15 :* les
+  spécialistes sont une **amélioration possible**, plus un jalon du plan. Ils restent admis comme profession source
+  d'un transfert de tâches, sans projection ni indice de couverture (règle O2).
 - Personas et application : couche ultérieure.
 - Voir [`v2/ROADMAP.md`](v2/ROADMAP.md).
 

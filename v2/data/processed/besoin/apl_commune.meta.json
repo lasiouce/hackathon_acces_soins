@@ -1,0 +1,133 @@
+{
+ "table": "apl_commune.parquet",
+ "chemin": "v2/data/processed/besoin/apl_commune.parquet",
+ "lignes": 419232,
+ "colonnes": [
+  "com",
+  "prof",
+  "annee",
+  "apl",
+  "pop_std",
+  "pop_tot",
+  "pop_fem"
+ ],
+ "sha256_16": "6473426afae01b14",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "DREES, APL (jeu 530), fichiers par profession, modifié le 2026-07-22",
+ "millesime": "APL 2022, 2023, 2024 (pop. N−2)",
+ "commande": "uv run python v2/besoin/donnees/apl.py",
+ "dom": "inclus : 112 communes 971–974 ; Mayotte absente du champ DREES",
+ "controles": [
+  {
+   "controle": "APL moyen SF 2022",
+   "reconstruit": 21.063917634750755,
+   "publie": 21.1,
+   "ecart_rel": 0.001710064703755751,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen SF 2023",
+   "reconstruit": 21.77882644771241,
+   "publie": 21.8,
+   "ecart_rel": 0.0009712638664031699,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen SF 2024",
+   "reconstruit": 22.19705661346064,
+   "publie": 22.2,
+   "ecart_rel": 0.00013258497925048017,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen CD 2022",
+   "reconstruit": 59.48914640112668,
+   "publie": 59.5,
+   "ecart_rel": 0.00018241342644232015,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen CD 2023",
+   "reconstruit": 60.615965330458096,
+   "publie": 60.6,
+   "ecart_rel": 0.0002634542979883536,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen CD 2024",
+   "reconstruit": 61.46028124706123,
+   "publie": 61.46,
+   "ecart_rel": 4.576099271578698e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen MK 2022",
+   "reconstruit": 114.54941679379192,
+   "publie": 114.5,
+   "ecart_rel": 0.00043158771870672574,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen MK 2023",
+   "reconstruit": 119.25129843754533,
+   "publie": 119.3,
+   "ecart_rel": 0.0004082276819335052,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen MK 2024",
+   "reconstruit": 123.23156642620829,
+   "publie": 123.23,
+   "ecart_rel": 1.2711403134667415e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen IDE 2022",
+   "reconstruit": 156.44529518021804,
+   "publie": 156.4,
+   "ecart_rel": 0.0002896111267137704,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen IDE 2023",
+   "reconstruit": 156.02997984864137,
+   "publie": 156.0,
+   "ecart_rel": 0.00019217851693189056,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  },
+  {
+   "controle": "APL moyen IDE 2024",
+   "reconstruit": 154.82335352591352,
+   "publie": 154.82,
+   "ecart_rel": 2.1660805538850863e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "DREES 530, Indicateurs d'APL moyens par dixièmes, France hors Mayotte"
+  }
+ ],
+ "notes": "CD onglet APL 2022 : « Millésime : 2022 »; CD onglet APL 2023 : « Millésime : 2023 »; CD onglet APL 2024 : « Millésime : 2024 »; IDE onglet APL 2022 : « Millésime : 2022 »; IDE onglet APL 2023 : « Millésime : 2024 »; IDE onglet APL 2024 : « Millésime : 2024 »; MK onglet APL 2022 : « Millésime : 2022 »; MK onglet APL 2023 : « Millésime : 2023 »; MK onglet APL 2024 : « Millésime : 2024 »; SF onglet APL 2022 : « Millésime : 2022 »; SF onglet APL 2023 : « Millésime : 2023 »; SF onglet APL 2024 : « Millésime : 2024 »",
+ "ecrit_le": "2026-11-15T03:10:56"
+}

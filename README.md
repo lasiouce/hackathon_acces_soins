@@ -83,7 +83,8 @@ et avec quelle incertitude.
 
 Professions couvertes : **sages-femmes, chirurgiens-dentistes, pharmaciens,
 masseurs-kinésithérapeutes, infirmiers**. Les spécialités médicales (cardiologie, dermatologie,
-ophtalmologie) forment une phase 2.
+ophtalmologie) sont une amélioration possible (décision du 2026-11-15) ; elles ne sont plus un jalon du
+plan. Elles peuvent servir de profession source d'un transfert de tâches, sans projection.
 
 **« Libéral » au sens large.** Ici, « libéral » désigne **tout le secteur privé**, lucratif ou non :
 libéraux et mixtes, pharmaciens adjoints d'officine, salariés de cliniques privées, industrie. Tout
@@ -180,7 +181,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 4. Données | Public / privé, registre de 30 événements datés, zonage par commune, grain communal | ✅ |
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
-| Phase 2 | Cardiologie, dermatologie, ophtalmologie | à venir |
+| Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,
 validation, sensibilité, interface, conformité, menaces à la validité, questions ouvertes, reproductibilité) :
@@ -272,6 +273,11 @@ Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier d
 
 ```bash
 PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
+PYTHONPATH=v2 uv run --with scipy python -m besoin.tests    # module de besoin : critères d'identité et cas limites
+PYTHONPATH=v2 uv run python -m besoin.validation.pb1        # besoin, P-B1 : âge (M1) contre population (M0)
+PYTHONPATH=v2 uv run --with scipy python -m besoin.validation.pb2   # besoin, P-B2 : saturation (M2b)
+PYTHONPATH=v2 uv run python -m besoin.validation.pb3        # besoin, P-B3 : morbidité (M3)
+PYTHONPATH=v2 uv run --with scikit-learn --with xlrd --with openpyxl python -m besoin.validation.pb5   # P-B5 : backtest
 PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
 PYTHONPATH=v2 uv run --with scipy python -W ignore -m methodes.budget_erreur   # axe 2 : budget d'erreur
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
@@ -299,9 +305,20 @@ et la question ouverte sur le seuil de diffusion.
   salariés hospitaliers. La sortie 2026 est donc une fourchette (sages-femmes : 12 059 à 14 660).
 - **Pas de projection fiable sous le département.** Les modèles communaux testés (K3 à K5) n'ont pas
   passé la validation pré-enregistrée ; la carte affiche les projections au département.
-- **Pas de module de besoin.** Les transferts de tâches (vaccination en officine, IPA, accès direct au
-  kiné) n'ont aucun effet dans le jumeau ; ils sont signalés « pas encore dans le modèle ». Un plan
-  existe : `v2/docs/lab/derivations/2026-11-14-module-besoin.md`.
+- **Module de besoin : indice de couverture, pas un niveau de besoin.** `v2/besoin/` rapporte l'offre du
+  jumeau à un besoin estimé, indexé à 2026. Six protocoles gelés sur sept sont passés (2026-11-15,
+  `v2/docs/lab/reports/2026-11-15-besoin-etape.md`) : la pondération par l'âge (M1) est retenue pour les cinq
+  professions (dentistes de justesse) ; la saturation du recours (M2b) tombe, donc le besoin non satisfait n'est
+  pas identifié ; la morbidité (M3) ne sert l'indice que pour les infirmiers ; le backtest 2016 → 2025 retient
+  l'âge contre la persistance pour 3 professions sur 4. L'indice spatial M4 échoue à reproduire l'APL DREES en
+  repli vol d'oiseau (ρ 0,66 à 0,77 pour 0,90 exigé) : c'est un indice maison, jamais appelé « APL » ; le passage
+  OSRM est en attente. Pour les transferts de tâches, `k` et l'expansion `m` restent supposés. Aucun indice de
+  couverture n'est produit pour la médecine générale. Les passages lisent des tables data.ameli.fr (ODbL) hors
+  dépôt, à reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
+- Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
+  data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
+  `v2/besoin/donnees/MANIFEST.md`. Les tables issues de data.ameli.fr (ODbL) ne sont pas versionnées : les
+  reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
 - Les effectifs sont comptés en têtes. L'activité par professionnel (équivalents temps plein) n'est
   qu'une hypothèse supposée, sans série ouverte vérifiée.
 - Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les
@@ -312,8 +329,8 @@ et la question ouverte sur le seuil de diffusion.
 ## Feuille de route
 
 - Rejouer la recette par personas sur la carte finale.
-- Module de besoin (population × recours par âge, transferts de tâches), après son test d'abandon.
-- Phase 2 : cardiologie, dermatologie, ophtalmologie.
+- Module de besoin : passage OSRM de P-B4, passage de P-B4-PH, branchement dans la carte.
+- Amélioration possible, hors plan : spécialités (cardiologie, dermatologie, ophtalmologie).
 - Noter les dépôts pré-enregistrés sur les effectifs 2027.
 
 Détail : [`v2/ROADMAP.md`](v2/ROADMAP.md).

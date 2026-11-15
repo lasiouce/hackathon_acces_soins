@@ -2450,6 +2450,25 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 ## Open / not yet decided
 - **Copie commitée du dépôt dans `chatbot/vendor/hackathon_acces_soins/`** (relevé le 2026-11-15, relecture du rapport technique) : 687 fichiers suivis, dont 34 tables traitées (`commune_stock.parquet` compris), hors du manifeste et du contrôle de l'audit ; commitée sans `.gitmodules`, alors que `chatbot/DECISIONS.md` la décrit comme un sous-module. Options : la retirer et lire le dépôt courant (`JUMEAU_REPO=..`, déjà utilisé au lancement), ou l'inclure dans le manifeste et dans le futur seuil de diffusion. Prix ≈ 20 min. Le seuil de diffusion et l'archivage de l'Annuaire (données individuelles, 752 993 personnes, peut atteindre 2 critères AIPD) sont détaillés dans le rapport technique, chap. Conformité.
 - ~~**Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité**~~ **Tranchée le 2026-11-15 : remplacé par SISE (données ouvertes)**, voir l'entrée « Vivier CD/PH : SISE remplace le fichier 990 ». (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
+- **Cible externe de M4 pharmaciens** (ouvert le 2026-11-15, session besoin-cible-pharmaciens). Proposé : APL DREES
+  « Méthode initiale V0 » aux pharmacies, commune, 2013 (2010 en secondaire), Licence Ouverte 2.0, offre = officines
+  sans ETP, paliers 0–5 / 5–10 / 10–15 min (s, Notice). Écartés comme cible : IRDES QES 308 (pas d'APL des pharmacies,
+  distance Insee seulement) ; temps Insee à la pharmacie la plus proche (autre grandeur, gardé en contrôle du
+  distancier). Protocole [P-B4-PH](../../validation/preregistered/2026-11-15-besoin-p-b4-ph-apl-v0.md) rédigé,
+  **non gelé** : gel par jeton sur accord de l'utilisateur·rice. Reste à choisir la source d'offre 2013 (BPE ou FINESS).
+  Voir [exploration](explorations/2026-11-15-besoin-cible-pharmaciens.md).
+
+- ~~**Mise en service du GBM de P-B5**~~ **Tranché le 2026-11-15** : option (a), voir l'entrée datée « P-B5 : le GBM servi comme prédicteur du recours seulement ». (ouvert le 2026-11-15, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)).
+  Par la règle gelée (borne haute de l'IC de Δ_GBM < 0), il qualifie pour IDE (−1,9 pt de MAPE), CD (−3,2) et SF
+  (−45,8) ; pas pour MK. Mais son gain suit la croissance de l'offre (corrélation 0,54 à 0,71 entre sa cible et la
+  croissance de l'effectif 2016 → 2025, diagnostic a posteriori), et il n'est validé qu'à h = 9. Options :
+  (a) **le servir comme prédicteur du recours seulement**, jamais comme besoin (avis) ; (b) le servir comme
+  estimateur de besoin pour IDE, CD, SF, ce qui rend B dépendant de l'offre ; (c) ne pas le servir. Prix : (a)
+  ~30 min, (b) ~45 min, (c) 0.
+- **Brancher le module de besoin dans la carte** (ouvert le 2026-11-15, axe 0 du besoin). `besoin.sortie.besoin_api`
+  rend `besoin`, `couverture` et `couverture_base` en 0,72 ms au 95ᵉ centile au département (mesuré). Rien n'est
+  branché dans `/api/carte` sans accord. Tant que l'axe 1 n'a pas remplacé les placeholders, un effet de transfert
+  affiché serait « supposé » de bout en bout. Options : attendre l'axe 1 (avis) ; brancher C de M0 seul, sans transfert.
 - **Âge d'entrée des diplômés à l'étranger par profession** (ouvert le 2026-11-15, relecture des sources de l'axe 1).
   Aujourd'hui `etrangers.age_entree` est unique, à 28 ans. Les sources donnent : MK 26 ans (ER 1075) ; PH 31 ans (DD76,
   tab. 13) ; CD 28 ans (DD76) ou 32 ans (ER 1026), qui se contredisent.
@@ -2457,6 +2476,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   change pas.
   Options : garder 28 ans ; passer à un dictionnaire par profession, ce qui demande de réécrire C17. Prix ≈ 30 min.
 - **Conformité : seuil de diffusion des tables communales publiées, habillage DSFR, licence du code** (ouvert le 2026-11-15, [audit RGPD/AIPD/2017-745](reports/2026-11-15-audit-rgpd-aipd-dm.md)). Constat mesuré : 52,5 % des cellules commune × âge de `commune_stock.parquet`, sur le dépôt public, valent 1 personne (âge d'un professionnel nommable via l'Annuaire Santé). Verdicts dérivés, non juridiques : pas un dispositif médical (2017/745, aucune finalité médicale individuelle) ; AIPD probablement non obligatoire (1 à 2 critères G29), note de non-applicabilité recommandée si un seuil de diffusion est appliqué. Options pour le seuil : masquer ou regrouper les cellules < 5 (≈ 30 min) ; retirer les tables communales du dépôt public et les reconstruire localement (≈ 20 min, mais le clone neuf ne les a plus). ~~DSFR : porteur public réel, ou habillage neutre hors .gouv.fr.~~ **Levé le 2026-11-15** : le projet est porté par le Ministère chargé de la santé (information de l'utilisateur·rice) ; le DSFR est gardé, structure porteuse à nommer. Licence : EUPL 1.2 proposée. À trancher par l'équipe.
+  - *Recommandation ajoutée le 2026-11-15 (session besoin-axe0-interface, [brouillon](reports/2026-11-15-licences-brouillon.md)), entrée non fermée :* licence du code **EUPL 1.2** (projet porté par le Ministère, copyleft réseau, texte officiel en français) ; MIT si l'équipe veut la réutilisation sans condition ; Apache 2.0 sans apport ici. Brouillon `LICENSE.draft` non activé. La licence du code ne couvre pas les données (LO 2.0 et ODbL suivent leurs fichiers).
 - **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
   en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
   de 100 %. Prix : renommage ≈ 10 min ; premières entrées ≈ 2 h.
@@ -2546,6 +2566,32 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   Besoin = habitants × profil de recours par âge (Open DAMIR) ; indice de couverture
   indexé à 2026 ; transferts de tâches L23, L25 et L27 comme déplacement d'une part du
   besoin ; effectifs inchangés. Test d'abandon de ~30 min avant de construire.
+  *Complété le 2026-11-15 (non construit, accord attendu) :* le plan du 2026-11-14 est **remplacé comme plan de
+  travail** par la [dérivation du besoin](derivations/2026-11-15-besoin-derivation.md) et le
+  [plan par axes](derivations/2026-11-15-besoin-plan.md). Il survit comme M1 + transferts, avec cinq corrections
+  (dérivation §9). Le plan du 2026-11-14 reste en place, marqué remplacé.
+- ~~**Médecine générale comme profession source des transferts de tâches**~~ *décidé le 2026-11-15 : O2, voir l'entrée « Module de besoin : médecine générale comme source seulement (O2) ; plan accepté ».* (ouvert le 2026-11-15, dérivation du
+  besoin §7). Les transferts du pitch (vaccination, tension et diabète en officine, IPA, accès direct au kiné)
+  prennent surtout des actes à la MG, exclue du sujet.
+  - Options :
+    - **O1** hors modèle : seule la part IDE de L23 est calculable ;
+    - **O2** source seulement : `B_MG` par M1, aucune offre MG projetée, aucun indice de couverture MG affiché,
+      seulement les actes et les ETP de MG libérés ; coût ≈ 30 min ;
+    - **O3** O2 plus la projection DREES des médecins lue en contexte ;
+    - **O4** MG pleinement modélisée, contraire au sujet.
+  - Avis de la session besoin-derivation : **O2**. Le profil du laboratoire (`docs/lab/profile.md`, règles maison) le
+    permet déjà : « GPs may appear only as context, for example when demand shifts from GPs to pharmacists. They are
+    never a projected output. » Mais rien n'est acté pour le module.
+  - À trancher par l'utilisateur·rice. Bloque l'axe 1 du plan de besoin.
+- ~~**Licence des tables dérivées de jeux ODbL**~~ *décidé le 2026-11-15 : commitées sous ODbL, voir l'entrée « Tables dérivées ODbL commitées sous ODbL ».* (ouvert le 2026-11-15, [exploration](explorations/2026-11-15-besoin-sources.md)).
+  Les jeux data.ameli.fr (pathologies, patientèle, honoraires) et une matrice de temps OpenStreetMap sont sous
+  **ODbL** : une base dérivée redistribuée doit rester sous ODbL. Or le dépôt public commite les données traitées
+  (décision du 2026-11-14).
+  - Options :
+    - commiter ces tables sous ODbL, avec mention, et un `NOTICE` ;
+    - ne commiter que le script de reconstruction.
+  - Prix ≈ 10 min de décision + 15 min de mise en œuvre. Lié à la question de la licence du code (EUPL 1.2 proposée).
+  - *Recommandation ajoutée le 2026-11-15 (session besoin-axe0-interface, [brouillon](reports/2026-11-15-licences-brouillon.md)), entrée non fermée :* **commiter sous ODbL** dans `v2/data/odbl/` séparé, avec son `LICENSE` ODbL et un `NOTICE` racine (brouillon `NOTICE.draft`), si la taille mesurée tient sous 100 Mo par fichier. Raisons : décision du 2026-11-14 de commiter les données traitées, reproductibilité du backtest. Carte, fiches et réponses ponctuelles = œuvres produites (mention seule). À trancher par l'utilisateur·rice.
 
 ### 2026-11-14 — Accueil de la carte V2 : point d'entrée territorial ou national ?
 Le challenge par les trois personas
@@ -4535,3 +4581,588 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   maintenant aussi `v2/methodes`, `v2/validation` et `v2/data`. Aucun code du dépôt, hors la copie
   `chatbot/vendor/` (question ouverte, figée sur un ancien commit, non exécutée au lancement avec `JUMEAU_REPO=..`),
   ne lit plus le fichier des organisateurs.
+## 2026-11-15 — Module de besoin : dérivation des ansätze M0–M4 et plan par axes (non construit, accord attendu)
+- **Décision** (proposée ; rien n'est construit avant l'accord de l'utilisateur·rice) : le besoin est représenté par
+  plusieurs estimateurs derrière une interface `NeedEstimator`. Aucun n'est présenté comme « le » besoin.
+  - **M0** (population) est la baseline.
+  - **M1** (recours standardisé) : forme tirée des poids d'âge APL/DCIR, niveau d'Open DAMIR.
+  - **M2** (recours non contraint) : tué si aucun plateau n'apparaît au test P-B2.
+  - **M3** (prévalence de la cartographie × actes par cas).
+  - **M4** (2SFCA aux paramètres DREES, composable avec les autres).
+  - Les transferts suivent `ΣB' − ΣB = s·a·B_A·(k−1) + m`.
+  - Les effectifs restent inchangés.
+- **Corrections du plan du 2026-11-14** (dérivation §9) :
+  - le test d'abandon porte sur l'indice C et sur le rang, pas sur B ;
+  - la circularité du recours est reconnue : l'indexation à 2026 n'efface que la part constante du biais ;
+  - Open DAMIR ne descend qu'à la région ;
+  - un terme d'expansion `m` est ajouté ;
+  - `s(t)` est une montée en charge mesurée, pas le levier.
+- **Validation** : six protocoles P-B1 à P-B6, à geler **avec un horodatage externe** (OpenTimestamps et RFC 3161)
+  avant tout calcul.
+  - Cible externe : l'APL DREES 2024 (IDE, MK, SF, CD).
+  - Backtest : recours 2016 → 2025 contre la persistance.
+  - Expérience naturelle : vaccination antigrippale en officine, six régions dès 2017.
+- **Pourquoi :**
+  - le besoin n'est pas observé, et le recours est censuré par l'offre ;
+  - sans une hypothèse testable (saturation, exclusion, ou norme externe), le niveau du besoin n'est pas identifié ;
+  - chaque ansatz porte donc sa restriction et son test d'abandon.
+- **Données vérifiées le 2026-11-15** ([exploration](explorations/2026-11-15-besoin-sources.md)) :
+  - aucun jeu ouvert d'actes par profession au département ;
+  - un seul transfert mesurable, la vaccination en officine.
+- **Ce qui le renverserait :**
+  - P-B1 et P-B3 abandonnent l'âge et la morbidité pour toutes les professions : le module se réduit alors à M0 et aux
+    transferts ;
+  - l'utilisateur·rice refuse le plan ;
+  - O1 est retenue pour la médecine générale : il ne reste plus qu'un seul transfert partiel.
+
+## 2026-11-15 — Module de besoin : fenêtre d'Open DAMIR réduite à ~37–49 fichiers mensuels
+- **Décision** (sur proposition de l'utilisateur·rice : « se limiter à la période du jumeau », affinée) :
+  - profils de M1 : 2025, et 2024 pour la stabilité ;
+  - P-B6 : mois d'octobre à février des saisons 2015-16 à 2019-20 seulement ;
+  - aucun fichier avant 2015, aucun après février 2020 pour P-B6.
+- **Pourquoi :**
+  - avant 2015, DAMIR est en 9 ZEAT, incompatibles avec les régions de l'expérimentation de 2017 ;
+  - le COVID fausse les saisons à partir de 2020 ;
+  - le backtest P-B5 repose sur la patientèle, pas sur DAMIR ;
+  - Open DAMIR n'a pas d'API de requête (vérifié) : chaque fichier (~0,95 Go) se lit en entier.
+- **Correction :** le plan annonçait ~80 Go ; les années prévues faisaient ~100 Go. On passe à ~35–47 Go (dérivé).
+- **Résidu :** deux saisons seulement avant l'expérimentation, donc des tendances parallèles peu testables dans P-B6 ;
+  la menace est écrite dans le protocole.
+- **Ce qui le renverserait :** un besoin de profils plus anciens (dérive du recours, L31), ou une liste des régions
+  traitées qui commence avant 2017.
+
+
+## 2026-11-15 — Module de besoin : Open DAMIR lu en flux, aucun fichier brut stocké
+- **Décision** (accord de l'utilisateur·rice, 2026-11-15) :
+  - chaque fichier mensuel est lu en flux (`curl | gunzip | filtre`), et seuls les agrégats sont écrits, quelques Mo ;
+  - aucun téléchargement avant l'accord sur le plan ;
+  - un pilote d'un fichier est lancé d'abord.
+- **Pourquoi :** 35 à 47 Go à faire transiter sur la machine locale ; le disque ne doit pas les porter.
+- **Ce qui le renverserait :** un débit trop lent en flux (pilote), ou une ingestion déplacée sur une autre machine.
+
+## 2026-11-15 — Module de besoin : passe de littérature ; M2 dédoublé (AREA / saturation) ; ML seulement comme candidat au backtest
+- **Décision** (dérivation révisée, rien n'est construit) :
+  - **M2 dédoublé.**
+    - **M2a « AREA »** : l'offre est fixée à sa moyenne nationale, méthode établie (York 1994, Gravelle et coll.
+      2003). Il est ajouté comme repli.
+    - **M2b « saturation »** : notre extension, toujours soumise à P-B2, avec un a priori défavorable (Delattre et
+      Dormont 2003 ; Léonard et coll. 2009).
+  - **M4 projeté avec des poids d'âge figés à une année de base.** La DREES les renormalise à chaque millésime et ne
+    voit donc pas le vieillissement.
+  - **Le ML n'est pas un estimateur du besoin.** Le besoin n'a pas d'étiquette, et un modèle appris sur le recours
+    reproduit la censure. Un GBM entre seulement comme candidat concurrent dans le backtest P-B5. Il n'est servi que
+    s'il bat M1 au-delà de l'IC, même règle que C1-GBM (rejeté le 2026-11-15).
+- **Pourquoi :** [passe de littérature](explorations/2026-11-15-besoin-litterature.md), trois lecteurs, surtout des
+  résumés. Le cœur de M2 est connu sous le nom de formules de capitation fondées sur le recours. Le point de
+  saturation, l'APL projetée sous scénarios conjoints, la reproduction de l'APL en données ouvertes et l'opérateur de
+  transfert explicite n'ont pas été trouvés.
+- **Résidu :**
+  - les revendications de nouveauté exigent une recherche journalisée (~30 min) avant d'être écrites ;
+  - l'expérimentation de 2017 compte 4 régions selon les arrêtés, 6 selon la Cour des comptes : à lever avant le gel
+    de P-B6.
+- **Ce qui le renverserait :**
+  - un texte intégral (Birch, Gibson et McBride 2020 ; MacKenzie 2019) qui contient déjà `k`, `m` et l'identité ;
+  - une projection de l'APL déjà publiée.
+
+## 2026-11-15 — Module de besoin : médecine générale comme source seulement (O2) ; plan accepté, vague 1 lancée
+- **Décision** (choix de l'utilisateur·rice : « okay go O2 », après la recommandation de la session) :
+  - **O2 retenu** : la médecine générale entre dans le module de besoin **comme profession source des transferts
+    seulement**. `B_MG` est calculé par M1.
+  - **Interdits :** aucune offre de MG projetée, et **aucun indice de couverture MG**, nulle part (API, carte, rapport).
+  - **Affichage :** seulement « actes / ETP de MG libérés ».
+  - **Spécialistes :** même règle tant qu'ils sont en phase 2.
+  - **Plan accepté :** le [plan par axes](derivations/2026-11-15-besoin-plan.md) est accepté. La vague 1 est lancée
+    en quatre sous-sessions : axe 3 (protocoles), axe 4 (données), axe 1 (fiches), axe 0 (interface).
+- **Pourquoi :**
+  - seule option qui rend calculables les transferts du pitch sans projeter la MG ;
+  - conforme au profil du laboratoire (« GPs may appear only as context… never a projected output ») ;
+  - coût d'environ 30 min ;
+  - réversible.
+- **Ce qui le renverserait :** les organisateurs jugent que même le besoin de MG en contexte sort du sujet. On passe
+  alors à O1, en retirant `B_MG`.
+
+
+## ~~2026-11-15 — Module de besoin : règle d'attente pour les tables dérivées ODbL~~
+*Remplacé le 2026-11-15 par « Tables dérivées ODbL commitées sous ODbL ».*
+- **Décision** (provisoire, posée par la session besoin-derivation au lancement de la vague 1) : tant que la question
+  « Licence des tables dérivées de jeux ODbL » reste ouverte, aucune table dérivée des jeux data.ameli.fr ou d'OSM
+  n'est commitée. Elles sont écrites dans un chemin ignoré par git ; seuls le script de reconstruction et le
+  manifeste sont commités.
+- **Pourquoi :** une table ODbL commitée sur le dépôt public engage la licence avant la décision. Ce choix est
+  réversible : on commitera les tables une fois la décision prise.
+- **Ce qui le renverserait :** la décision de licence (§ Open).
+
+## 2026-11-15 — Module de besoin, axe 0 : le besoin est lu sur la trajectoire, pas rendu comme flux ; indexation sur la base
+- **Décision** (session besoin-axe0-interface, dans le cadre du plan accepté) :
+  - **Lecteur, pas module de flux.** `v2/besoin/` lit les états d'une trajectoire du jumeau après le run. Il ne
+    s'insère pas dans la composition du moteur, qui applique à N tout flux rendu. `v2/jumeau/` n'est pas modifié.
+  - **Interface** `besoin.interface.NeedEstimator` : `fit(pop, etat, ref)`, `predict(pop, etat, years) → Cube`
+    `B[p, T, t]` en ETP-équivalents, `norme`, `assumptions`, `params` (des `jumeau.module.Param`, donc avec statut).
+    Un estimateur par fichier dans `v2/besoin/estimateurs/`, décoré par `@register`, servi par son nom.
+  - **Indice de couverture** : `C = [S/B](t) / [S₀/B₀](2026)`, où `(S₀, B₀)` est la base, sans transfert. Un
+    transfert actif dès 2026 se lit donc contre la même référence. C au-dessus du département = rapport des sommes,
+    jamais une moyenne de C.
+  - **Expansion** : `m = μ · s·a·B_A·k`, en temps de la cible, μ = 0 par défaut (supposé).
+  - **O2 appliqué en code** : `SANS_COUVERTURE = {médecine générale, spécialistes}`. L'offre, la couverture et
+    l'agrégat les refusent, et un transfert ne peut pas les prendre pour cible. La sortie d'API ne rapporte pour eux
+    que les « ETP libérés ».
+  - **Norme de M0** : r̄ des professions de sortie = offre nationale / population nationale en 2026 (supposé). Il
+    s'annule dans C. r̄ de la MG et des spécialistes : 0,9 × 10⁻³ ETP/hab, placeholder (supposé, axe 1).
+- **Pourquoi :** le besoin n'est pas un flux sur N ; un lecteur rend « n'écrit jamais dans les effectifs » vrai par
+  construction. Indexer sur la base garde une référence unique entre scénarios.
+- **Mesures** ([rapport](reports/2026-11-15-besoin-axe0-interface.md)) : 7/7 critères ; 0,72 ms au 95ᵉ centile.
+- **Correction :** la première version mesurait 10,5 ms au 95ᵉ centile (critère 5 échoué) : tri de chaînes à chaque
+  année. Codes entiers mis en cache par table de cellules : 0,72 ms.
+- **Ce qui le renverserait :** un estimateur qui doit rétroagir sur l'offre (hors périmètre, N9) ; un besoin
+  qu'il faudrait connaître pendant le run (par exemple une installation guidée par C), qui demanderait un flux.
+
+## 2026-11-15 — Module de besoin, axe 1 : fiches d'hyperparamètres ; L23 seul transfert sourcé ; expérimentation sur 4 régions
+- **Décision** (session besoin-axe1-fiches, après relecture contradictoire) :
+  - **Format :** une fiche par paramètre pour `ω_a`, `r̄`, `q_p`, `B_MG` et `n_grossesse`, et **une fiche par
+    transfert** qui porte ses cinq paramètres `a`, `k`, `s_∞`, `τ`, `m`, chacun avec sa propre étiquette.
+  - **`ω_a`** : colonne 2024 (DCIR 2022) pour IDE, CD et SF. Pour les MK, colonne **2023** (DCIR 2021), faute de
+    colonne 2024 publiée. Poids figés à l'année de base, comme décidé pour M4.
+  - **`q_p`** : unité de la DREES (1 ETP = activité libérale médiane). La valeur n'est pas mesurable en données
+    ouvertes : les sorties du module restent en **indice** tant qu'un substitut n'est pas étiqueté.
+  - **L23** :
+    - `a` : parts des injections en 2018 (Cour des comptes, open data G10) ;
+    - `s(t)` : `s_∞` = 0,70 et `τ` = 2,8 ans pour t₀ = 2018 (dérivés), avec les plages [0,63 ; 0,77] et
+      [1,6 ; 3,7] ;
+    - `m` = 0 par défaut, plage [0 ; +5 %] ;
+    - `k` supposé, plage [0,25 ; 1].
+  - **Tension / diabète et L25 :** non mesurables, donc hors modèle ou entièrement supposés. Le volume IPA global
+    (codes DAMIR 1654, 3129, 3130) sert au plus de borne haute.
+  - **L27 :** `k` = 0 par construction ; `a` et `s` supposés.
+  - **`n_grossesse`** = 10 contacts réglementaires par défaut (CSP) ; variante HAS à 10 ou 11.
+  - **Expérimentation de la vaccination en officine : 4 régions**, d'après l'arrêté du 8 juin 2018 et la HAS 2018
+    p. 11. La Cour des comptes en compte 6 (p. 43). Le résidu « 4 ou 6 » de l'entrée du 2026-11-15 (passe de
+    littérature) est levé.
+- **Pourquoi :**
+  - sources primaires lues, puis 142 affirmations relues : 12 écarts retenus et corrigés, 0 faux confirmé sur 11
+    contrôles ([rapport](reports/2026-11-15-besoin-axe1-fiches.md)) ;
+  - le résultat suit l'attendu du plan.
+- **Ce qui le renverserait :**
+  - un code DAMIR qui isole l'accès direct (IPA ou kiné) ;
+  - une durée publiée de l'acte de vaccination ;
+  - la note méthodologique de la Cour qui expliquerait le 0 en officine en 2018 et déplacerait t₀ ;
+  - la publication des poids MK 2022.
+
+## 2026-11-15 — Module de besoin : P-B1 à P-B6 gelés avec horodatage externe ; 4 régions pour l'expérimentation de 2017
+- **Décision** (axe 3, [rapport](reports/2026-11-15-besoin-axe3-protocoles.md)) :
+  - **Six protocoles gelés avant tout calcul** dans `v2/validation/preregistered/2026-11-15-besoin-p-b*.md`.
+  - **Gel hors de git, une première pour ce dépôt.** Le manifeste SHA-256 `f0936ab2be34…` est horodaté par deux
+    autorités RFC 3161 : FreeTSA à 02:17:19 UTC et DigiCert à 02:17:20 UTC, le 2026-11-15. Il est aussi soumis à
+    OpenTimestamps, dont l'ancrage est en attente.
+  - Seule l'empreinte est partie, avec l'accord de l'utilisateur·rice dans la session. `ots` a été installé par
+    `uv tool`, avec son accord.
+  - **Heure de gel citée : celle du jeton.** Aucun croisement recours × offre avant 02:17:19 UTC.
+  - **Multiplicité :** Bonferroni par profession dans chaque protocole (IC à 98,75 % pour 4 professions). P-B1 et
+    l'indice de P-B3 sont sans inférence. P-B6 a un seul test décisif.
+  - **Règles communes :**
+    - bootstrap des départements, B = 2 000, graine 20261115 ;
+    - P-B6 : bootstrap sauvage par région (12 grappes) et permutation exacte ;
+    - le GBM de P-B5 n'entre que si la borne haute de l'IC de Δ(GBM − M1) est < 0 (règle de C1-GBM), avec des
+      hyperparamètres figés.
+  - **Écarts à la dérivation, déclarés dans les protocoles :**
+    - P-B5 juge 4 professions (pas de pharmaciens dans la patientèle), barre à 3 ;
+    - P-B6 : 12 zones métropolitaines ; `m` sur Open Medic 2014–2018 ; `s(t)` sur DAMIR jusqu'en 2019-20.
+  - **P-B6, régions traitées : 4, pas 6** (Légifrance lu, arrêté du 10/05/2017, NOR AFSS1713194A) :
+    - Auvergne-Rhône-Alpes et Nouvelle-Aquitaine dès 2017-18 ;
+    - Hauts-de-France et Occitanie dès 2018-19, par l'arrêté du **8 juin 2018**, en vigueur le 15/06/2018.
+- **Correction de la passe de littérature.** L'arrêté du 25/09/2018 élargit la **population cible** (art. 3) ; il
+  n'ajoute pas de régions. Le chiffre « six régions » de la Cour des comptes n'est retenu nulle part.
+- **Pourquoi :** le plan (axe 3) et le rapport technique (§ Intégrité) exigent une antériorité opposable hors de git.
+  P-B6 ne pouvait pas être gelé sans la liste des régions traitées.
+- **Ce qui le renverserait :**
+  - un texte qui ajoute d'autres régions avant 2019 ;
+  - un jeton RFC 3161 invalide à la vérification de la chaîne de certificats.
+
+## 2026-11-15 — Module de besoin, P-B1 : l'âge (M1) est retenu pour IDE, MK et SF ; dentistes et pharmaciens attendent P2
+- **Décision** (session besoin-v2-m1-m3, passage du protocole gelé P-B1,
+  [rapport](reports/2026-11-15-besoin-pb1-age.md)) :
+  - **M1 retenu** (dénominateur servi) pour les **infirmiers** (S₁ = 0 %, ρ = 0,835), les **kinés** (0 %, 0,984) et
+    les **sages-femmes** (1 %, 0,989), sous le profil APL (P1). Le protocole n'abandonne l'âge que si P1 **et** P2
+    concluent à l'abandon : ces trois verdicts sont définitifs.
+  - **Dentistes : en attente de P2.** P1 conclut à l'abandon (S₁ = 93,1 % > 90 %, ρ = 0,998 ≥ 0,98). M1 reste
+    calculé ; si P2 confirme, M0 suffit pour eux.
+  - **Pharmaciens : aucun verdict.** Pas de poids APL ; P2 (Open DAMIR) seul, en attente de l'axe 4. M1 ne les sert
+    pas d'ici là.
+  - **Le module n'est pas réduit à M0** : M2 et M3 sont construits.
+  - **Écarts au protocole, écrits et commités avant calcul** (commit `404d251`) : P2 absent ; N = trajectoire C1
+    servie déterministe (pas une médiane de tirages) ; tranches Omphale 90–94 et 95+ au poids « 90 et plus » ;
+    MK colonne 2023 ; départements à C non fini retirés (1, IDE).
+  - **M1 :** `B₁ = r̄ · Σ pop·ω`, ω APL figé ; r̄ = offre nationale / population standardisée nationale en 2026
+    (supposé, s'annule dans C) en attendant le niveau DAMIR.
+- **Pourquoi :** seuils gelés appliqués tels quels ; résultat recalculé par un chemin pandas indépendant.
+- **Ce qui le renverserait :** P2 pour les dentistes ; une révision des poids APL ; une dérive du recours par âge
+  (L31, hors périmètre).
+
+## 2026-11-15 — Module de besoin : amendement A1 aux protocoles P-B2, P-B3, P-B5, P-B6 (gelé, horodaté)
+- **Décision** (axe 3, [A1](../../validation/preregistered/2026-11-15-besoin-amendement-a1.md)) : les constats de
+  l'axe 4 changent des définitions et des sources, pas les règles de décision.
+  - **Recours de la patientèle** = file active moyenne × effectif data.ameli.fr. Le jeu donne une moyenne par
+    professionnel, pas un total. L'accessibilité reste calculée sur les effectifs du jumeau, pour ne pas partager
+    l'erreur de mesure.
+  - **P-B5** : la sensibilité au profil DAMIR 2016 est remplacée par les poids APL du millésime 2022 (DAMIR 2016 non
+    lu).
+  - **P-B6** :
+    - le test décisif sur `m` est inchangé (Open Medic 2014–2018, région de résidence lue au descriptif) ;
+    - `s(t)` régional par DAMIR est **abandonné**, car DAMIR est arrêté à 9 mois sur décision de
+      l'utilisateur·rice ;
+    - `s(t)` devient descriptif : Cour des comptes (national), Liard 2022 (cohortes), IQVIA rapporté à Open Medic.
+  - **P-B1 et P-B4 ne sont pas amendés** : ils étaient déjà lancés.
+  - **Jetons RFC 3161** à 03:18:22 UTC (FreeTSA) et 03:18:23 UTC (DigiCert), envoyés avec l'accord de
+    l'utilisateur·rice. OpenTimestamps est en attente.
+  - **Le premier gel** est ancré dans le bloc Bitcoin 975880 (lu par `ots info`, non vérifié contre un nœud).
+- **Pourquoi :** les copies gelées supposaient un total de patients et des saisons DAMIR qui n'existent pas sur
+  disque. L'amendement est daté et horodaté avant tout passage des quatre protocoles concernés.
+- **Ce qui le renverserait :**
+  - la page « Méthode » de la patientèle, si elle montre que la moyenne n'est pas pondérée par l'effectif publié ;
+  - une reprise de la lecture de DAMIR 2015–2020, qui rouvrirait `s(t)` régional par un amendement A2.
+
+## 2026-11-15 — Module de besoin, axe 4 : ingestion des sources, règles de lecture et de licence
+- **Décision** (session besoin-axe4-donnees, dans le cadre du plan accepté) :
+  - **Un module par source** dans `v2/besoin/donnees/` (`apl`, `ameli`, `medic`, `iqvia`, `damir`, `distancier`),
+    chacun avec sa commande de reconstruction. Une fiche `*.meta.json` par table, rassemblée par `manifest.py` dans
+    `v2/besoin/donnees/MANIFEST.md` et `controles.csv`.
+  - **Licence → dossier.** Licence Ouverte 2.0 (APL, Open Medic, IQVIA, Open DAMIR, geo.api) :
+    `v2/data/processed/besoin/`, commité. ODbL (les cinq jeux data.ameli.fr) : `v2/data/odbl/besoin/`, **ignoré par
+    git** tant que la décision de licence est ouverte (§ Open). Seuls le script et le manifeste sont commités.
+  - **Open DAMIR :** filtre `PRS_REM_TYP = 0` (le descriptif l'impose : sinon doublons) ; actes comptés par la
+    quantité `PRS_ACT_QTE`, pas le dénombrement ; dentistes = nature 19, 53, 54 ou spécialité 36 ; MG = spécialité 1
+    (O2) ; clés gardées : mois de flux et de soins, région du bénéficiaire et de l'exécutant, âge, sexe, statut
+    juridique, secteur public/privé, top PS5, `PRS_NAT`. Le filtre « libéral » (`stj = 1`, `ppu = 2`) reste à
+    l'usage, il n'est pas appliqué à l'agrégation. Les agrégats mensuels (~15 Mo par mois, ~0,7 Go) restent sur
+    disque, ignorés par git ; deux tables dérivées sont commitées : `damir_profils` (flux 2024–2025, sans région de
+    l'exécutant ni mois de soins) et `damir_vaccination` (codes de vaccination, mois de soins, deux régions).
+  - **Fenêtre DAMIR lancée après le pilote :** 213 s pour un mois (0,97 Go, 36,6 M lignes, 4,6 Mo/s, mesuré),
+    extrapolé à ~2 h 50 de machine pour les 48 autres mois, sous le seuil de 6 h fixé par la session parente.
+  - **Distancier de repli :** distance du grand cercle entre centres geo.api (communes et arrondissements PLM),
+    paires à ≤ 35 km ; temps = 1,3 × d / 60 km/h, **les deux valeurs supposées**, à traiter en hyperparamètres par
+    M4. Table non commitée (~100 Mo, régénérable en ~10 s). Aucun téléchargement OSM/OSRM.
+  - **Écarté :** `depenses-par-poste` de data.ameli.fr (jeu « risques professionnels », AT/MP du régime général).
+- **Pourquoi :** critères de l'axe 4 du [plan](derivations/2026-11-15-besoin-plan.md) ; règle de l'utilisateur·rice
+  sur la lecture en flux ; licence ODbL ouverte. Détail et contrôles dans le
+  [rapport](reports/2026-11-15-besoin-axe4-donnees.md).
+- **Résidu :** le contrôle « DAMIR contre le total inter-régimes publié, à 0,5 % » n'est **pas réalisable** tel quel :
+  la Statistique mensuelle de la Cnam est en champ régime général + SLM, et DAMIR n'a pas de variable de régime.
+  Seul un rapport DAMIR / RG est publié (§ open.md).
+- **Ce qui le renverserait :** un total inter-régimes publié par profession (DREES, comptes de la santé, ou rapport
+  charges et produits) au même périmètre ; la décision de licence (tables ODbL commitées sous ODbL) ; l'accord pour
+  OSRM (le distancier de repli devient une référence naïve).
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR à 1 flux, 4 flux refusés par le serveur ; filtre en Arrow
+- **Décision :** la demande de l'utilisateur·rice (« Oui, 4 en parallèle », relayée par la session parente) a été
+  essayée puis **abandonnée**. On revient à 1 flux. Le filtre passe de pandas à Arrow, multi-cœur, pour attaquer le
+  vrai goulot (Python mono-cœur, ~93 % d'un cœur, curl à ~4 %). Un refus déclenche une nouvelle tentative toutes
+  les 60 s, jusqu'à 12 par mois.
+- **Pourquoi :** avec 4 flux, le serveur `open-data-assurance-maladie.ameli.fr` sert une page HTML (« Limite de
+  téléchargements atteinte ou délai de connexion dépassé ») au lieu du fichier. Ensuite, même 1 flux est refusé
+  pendant plus de 6 min (observé à 03:53–04:01). Le filtre Arrow est identique au filtre pandas sur un test de
+  synthèse (200 000 lignes, écart max 7·10⁻¹⁵).
+- **Ce qui le renverserait :** une limite documentée qui permette 2 flux, ou un jeton par session (cookie).
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR arrêté à 9 mois sur 49, faute de temps ; P-B6 proposé sur Open Medic
+- **Décision** (accord de l'utilisateur·rice : « oui go », en ajoutant qu'il faudra écrire qu'on était limités par
+  le temps) :
+  - la lecture d'Open DAMIR s'arrête aux 9 mois lus (flux 2025-01 à 2025-09). La boucle de relance est arrêtée.
+    Pas de partage de connexion : ~37 Go pour un seul paramètre ;
+  - `damir_profils` et `damir_vaccination` sont construits sur ces 9 mois ;
+  - **proposé à l'axe 3** pour P-B6 : m mesuré sur Open Medic (boîtes J07BB par région de résidence, 2014–2025,
+    différence de différences annuelle), et s(t) pris dans la part nationale de la Cour des comptes. C'est à l'axe 3
+    de trancher avant le gel.
+- **Pourquoi :**
+  - l'indice M1 est rapporté à 2026, donc le niveau du recours s'annule ; la forme par âge vient des poids APL
+    (4 professions) et des 9 mois de DAMIR (PH) ;
+  - le prix par acte de M3 se calcule sur 9 mois ;
+  - seul s(t) régional exigeait les 25 mois de 2015–2020 ;
+  - le serveur bloquait la machine (adresse IP probable) depuis 03:53, et le temps du hackathon manque.
+- **Supersede en partie** « Open DAMIR lu en flux » et « fenêtre réduite à ~37–49 fichiers » (2026-11-15) : la
+  fenêtre décidée n'est pas lue en entier. La règle de lecture en flux reste.
+- **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
+  arrêté.
+
+## ~~2026-11-15 — Module de besoin : Open DAMIR définitivement limité à 9 mois pour cette phase, faute de temps~~
+*Remplacé le 2026-11-15 : DAMIR 2025 a été lu en entier (octobre à décembre via un autre réseau, addendum de 05:06 du rapport de l'axe 4) ; `damir_profils` et `damir_vaccination` couvrent 12 mois.*
+- **Décision** (utilisateur·rice : « mets donc bien dans le rapport qu'on a rien pu faire faute de temps ») :
+  - Open DAMIR reste à 9 mois (2025-01 à 2025-09) pour toute la phase en cours ;
+  - les 40 mois restants ne sont pas lus ;
+  - le rapport de l'axe 4 porte un addendum qui le dit.
+- **Pourquoi :**
+  - l'IP de la machine a été bloquée par le serveur après le passage à 4 flux (proposé par la session parente) ;
+  - la relance depuis un autre ordinateur, sur le même wifi, a échoué ;
+  - le temps manque.
+- **Conséquences :**
+  - profils de M1 et prix moyens de M3 calculés sur 9 mois (biais saisonnier ≤ 1,3 %, mesuré) ;
+  - P-B6 passe sur Open Medic (amendement A1).
+- **Ce qui le renverserait :** une connexion non bloquée et du temps. Commande à 1 flux, dans l'addendum du rapport
+  de l'axe 4.
+
+## 2026-11-15 — Module de besoin, P-B6 : m reste supposé à 0 (absence d'effet détectable, placebo en échec) ; s(t) de L23 mesuré sur la série nationale
+- **Décision** (règles gelées de P-B6 et de l'amendement A1, [rapport](reports/2026-11-15-besoin-p-b6-grippe-officine.md)) :
+  - **`m` du transfert L23 = 0, étiqueté « supposé ».**
+    - ATT +0,73 % [−0,12 ; +1,58] (IC 95 % bootstrap sauvage), permutation p = 0,15 sur 2 970 affectations.
+    - Le placebo 0–19 ans donne +4,7 % [+1,2 ; +8,2] : verdict « non attribuable ».
+  - **`s(t)` de L23** : s∞ = 0,74 ± 0,07, τ = 2,4 ± 0,5 ans, t₀ = 2019, ajusté sur la part officinale nationale
+    (IQVIA ÷ Open Medic, 2021-22 à 2024-25). Il remplace la forme supposée par l'axe 1.
+- **Pourquoi :** c'est le protocole gelé. Le résultat est cohérent avec les a priori publiés (HAS 46,1 % contre
+  46,0 % ; Buchan 2017, rapport de prévalence 1,05).
+- **Correction :** l'écart 8, écrit avant le calcul, tenait la campagne 2025-26 pour partielle. Elle est complète.
+  L'ajustement de sensibilité qui l'inclut donne le même résultat (s∞ 0,75, τ 2,4).
+- **Ce qui le renverserait :**
+  - un placebo refait avec le vrai dénominateur 0–19 ans, qui passerait ;
+  - un `s(t)` régional tiré de DAMIR 2015–2020.
+
+
+## 2026-11-15 — Module de besoin : formulations de nouveauté retenues (aucun « premier »)
+- **Décision** ([recherche journalisée](explorations/2026-11-15-besoin-nouveaute.md), 14 requêtes, profondeur « scan+ ») :
+  - n° 1 (APL/E2SFCA projetée à 2050, démographie et effectifs en mouvement) : « nous n'avons pas trouvé, dans une
+    recherche de profondeur limitée, de travail combinant… » ; plus proche voisin Bruns et coll. 2026 (IZA DP 18801).
+  - n° 2 (reproduction de l'APL en données ouvertes) : décrite comme une évaluation, sans revendication d'antériorité.
+  - n° 3 (opérateur de transfert) : « extension formelle de MacKenzie et coll. 2019 » ; `m` supposé nul (P-B6).
+  - M2b (plateau de saturation) : revendication abandonnée, M2b étant tué par P-B2.
+- **Pourquoi :** Scholar et Scopus non interrogés directement ; une recherche « scan » ne peut pas établir une nouveauté.
+- **Ce qui le renverserait :** un 2SFCA dans le PDF de Bruns 2026 ou dans Doi 2017 ; une passe « standard » sur
+  Scholar et Scopus qui ne trouve toujours rien (permettrait « à notre connaissance »).
+
+## 2026-11-15 — Module de besoin, nouveauté : formulations confirmées après lecture de Bruns 2026 et Doi 2017
+- **Décision :** les formulations de l'entrée précédente sont maintenues sans changement
+  ([addendum](explorations/2026-11-15-besoin-nouveaute.md#addendum-même-jour--textes-lus-et-deuxième-passe-apis-ouvertes)).
+- **Pourquoi :** Bruns 2026 (PDF lu) n'utilise ni 2SFCA ni distance ; Doi 2017 projette la demande contre des lits fixes.
+  25 requêtes au total (Europe PMC, HAL en plus) sans antécédent trouvé.
+- **Ce qui le renverserait :** une passe Scholar et Scopus (CAPTCHA ici, accès institutionnel requis).
+
+## 2026-11-15 — Les spécialistes (ancienne « phase 2 ») deviennent une amélioration possible, hors plan
+- **Décision** (utilisateur·rice, relayée par une bifurcation de la session besoin-derivation, puis confirmée ici :
+  « Oui, les deux ») :
+  - la phase 2 (cardiologie, dermatologie, ophtalmologie) **n'est plus à l'ordre du jour** : elle entre dans les
+    améliorations possibles ;
+  - les spécialistes restent admis comme **profession source** d'un transfert de tâches, sans projection ni indice de
+    couverture (règle O2).
+- **Remplace :**
+  - « Spécialistes en phase 2 » (recadrage du 2026-11-14, `CLAUDE.md`, `v2/ROADMAP.md` §1 et §5, profil du
+    laboratoire) ;
+  - la condition de démarrage de la phase 2 dans le rapport technique (`ch-ouvertes.tex`).
+
+  Ces mentions sont barrées ou annotées, pas effacées.
+- **Pourquoi :** choix de l'utilisateur·rice. Le travail se concentre sur les cinq professions et sur le module de
+  besoin.
+- **Aussi aligné :** `docs/lab/profile.md`, README, Home. Le PDF du rapport technique n'est pas recompilé.
+
+## 2026-11-15 — Module de besoin, P-B1 sous P2 : l'âge (M1) est retenu pour les cinq professions
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb1-age.md), section « Passage P2 ») :
+  complète l'entrée précédente du même jour (qui laissait dentistes et pharmaciens en attente).
+  - **Dentistes : M1 retenu.** P2 (Open DAMIR) conclut au maintien (S₁ = 87,1 % < 90 %, ρ = 0,999) ; l'abandon
+    exige P1 **et** P2. Décision de justesse : l'écart est un décalage national du niveau, pas du classement.
+  - **Pharmaciens : M1 retenu** sur P2 seul (S₁ = 0 %, ρ = 0,987). Profil DAMIR servi par M1 pour PH et MG.
+  - **Écarts écrits avant calcul** (commit `4efa8b4`) : 9 mois de flux 2025 ; champ `PRS_PPU_SEC = 2` ; quantité
+    sommée sur toutes les natures de prestation ; inconnus d'âge et de sexe exclus ; profil décennal, 80+ plat.
+  - **MG (source O2)** : r̄ = 0,9 × 10⁻³ ETP par habitant standardisé, placeholder de M0 (supposé).
+- **Pourquoi :** seuils gelés appliqués ; P1 reproduit à l'identique au second passage.
+- **Ce qui le renverserait :** un profil PH en temps de pharmacien (unité « boîtes + honoraires » mêlée, ledger) ;
+  les 3 mois de DAMIR manquants, si le biais saisonnier dépasse celui mesuré par l'axe 4 (≤ 1,3 %).
+
+## 2026-11-15 — Module de besoin, P-B2 : M2b (saturation) tué ; M2a (AREA) construit comme repli
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb2-saturation.md)) :
+  - **M2b tué pour les quatre professions testées** (IDE, MK, CD, SF) par la règle gelée : borne haute de l'IC à
+    98,75 % de δ ≥ 0 partout ; pente du premier quintile non distinguable de 0 pour IDE, MK, SF ; placebo non
+    attribuable pour MK et CD. Pharmaciens : non applicable (dérivation §6).
+  - **Retrait du service** : `m2b.py` garde le code et le verdict, la classe n'est plus enregistrée.
+  - **Le niveau du besoin non satisfait n'est pas identifié** par les données ouvertes au département.
+  - **M2a construit** : `log R_std = α + β log A + γ log M`, M = indice de morbidité standardisé par âge et sexe
+    (part des consommants avec au moins un repérage de la cartographie des pathologies 2024), offre fixée à la
+    moyenne nationale ⇒ `B₂ₐ = r̄ · B₁ · M^γ`, M figé à 2024 (supposé). γ mesuré : IDE 3,66, MK 0,92, CD 1,44,
+    SF 0,06 (MCO, 2023–2025).
+  - **Écarts P-B2 écrits avant calcul** (commit `3ac2abd`) : Omphale au lieu des estimations Insee ; offre IDE 2023
+    seule ; stabilité sur 2018 seule ; descriptif de la patientèle sans définition du département ; placebo sur le
+    B₁ de la profession testée ; NLS `maxfev = 200`.
+- **Pourquoi :** seuils gelés appliqués tels quels ; a priori de la littérature confirmé (pas de saturation).
+- **Ce qui le renverserait :** un recours en actes au département ; un département de patientèle qui serait celui
+  de résidence ; une offre IDE libérale seule (sensibilité au ledger).
+
+## 2026-11-15 — Module de besoin, P-B3 : M3 sert l'indice des seuls infirmiers ; H-B3 rejetée
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb3-pathologies.md)) :
+  - **(A) M3 retenu pour l'indice des infirmiers** (S₃ = 83 % < 90 %, ρ = 0,992, aux trois imputations) ;
+    **réduit au recoupement** pour MK, CD, SF, PH (S₃ de 95 à 100 %, ρ ≥ 0,998 aux trois imputations).
+    Constante `m3.INDICE = {infirmiers}`.
+  - **(B) H-B3 rejetée** pour IDE, MK, CD, SF : ΔR² hors échantillon −0,03 à +0,01 (seuil 0,10).
+  - **M3 (voie i)** : 16 groupes de niveau 1 de la cartographie 2024 (partition de la dépense) × dépense remboursée
+    nationale par patient du groupe / prix moyen DAMIR (9 mois) + résidu national `r₀` par âge et sexe, non borné.
+    Prévalences figées à 2024 (supposé). Unité : actes.
+  - **Écarts écrits avant calcul** (commit `3bf9b5d`) : 18 plis régionaux (DROM compris) au lieu de « 13 » ;
+    triangulation sans objet (M2b tué) ; voie (ii) SF non branchée.
+- **Correction** : le rapport P-B2 disait « P-B3 compare M3 à M2a » ; le protocole ne le prévoit pas (corrigé).
+- **Pourquoi :** seuils gelés appliqués tels quels.
+- **Ce qui le renverserait :** une dépense par cas ventilée par âge ; une morbidité non repérée par la
+  consommation de soins.
+
+## 2026-11-15 — Module de besoin, P-B5 : H-B1 retenue ; le GBM qualifie pour IDE, CD, SF, mise en service ouverte
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)) :
+  - **H-B1 retenue** : M1 bat la persistance du recours par habitant à 9 ans (2016 → 2025, MAPE départementale)
+    pour IDE (7,7 contre 15,8), MK (10,8 contre 14,1), CD (9,4 contre 10,4), IC à 98,75 % sous 0 ; **SF perd**
+    (66,6 contre 65,0). Même verdict sous P2 (poids APL 2022) : pas dépendante du profil.
+  - **GBM** : qualifie par la règle gelée pour IDE, CD, SF ; **pas mis en service** dans cette session, car la
+    mise en service comme besoin contredirait la norme (gain lié à la croissance de l'offre). Question ouverte
+    (§ Open), avec avis : prédicteur du recours seulement.
+  - **Données téléchargées** avec l'accord de l'utilisateur·rice : estimations de population Insee 1975–2023
+    (département × sexe × âge quinquennal, `v2/data/raw/insee/`, ignoré par git) ; 2025 = Insee 2023 × croissance
+    Omphale (écart 1, écrit avant calcul, commit `dd66519`). Autres écarts : kinés densité 2017 ; 18 plis régionaux.
+- **Pourquoi :** seuils et hyperparamètres gelés appliqués tels quels.
+- **Ce qui le renverserait :** un profil d'âge antérieur à 2016 (regard en avant) ; un recours en actes au
+  département ; les estimations Insee 2025 définitives.
+
+## 2026-11-15 — Module de besoin, P-B5 : le GBM servi comme prédicteur du recours seulement
+- **Décision** (choix de l'utilisateur·rice : « Usage only », option (a) de la question ouverte du même jour) :
+  - Le GBM de P-B5 est servi par `v2/besoin/estimateurs/gbm_recours.py` comme **prédicteur du recours** (patients,
+    file active × effectif) pour IDE, CD et SF, les trois professions où il bat M1 au-delà de l'IC.
+  - **Jamais comme besoin** : ce n'est pas une `NeedEstimator`, la classe n'est pas enregistrée, `besoin_api` ne
+    peut pas le choisir (test L4). Kinés refusés (non qualifiés).
+  - **Horizon servi : 9 ans seulement** (`predit(p, origine)` → origine + 9), appris sur toutes les paires
+    2016 → 2025, hyperparamètres gelés de P-B5.
+  - Branchement dans l'API ou la carte : non fait (hors des fichiers de cette session).
+- **Pourquoi :** son gain suit la croissance de l'offre (diagnostic de P-B5) ; servi comme besoin, il rendrait B
+  dépendant de l'offre, contraire à la norme et au cas limite « offre nulle ».
+- **Ce qui le renverserait :** un GBM dont le gain résiste à un terme d'offre explicite ; une validation à un autre
+  horizon.
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR porté à 12 mois (année 2025)
+- **Decision :** les profils DAMIR (`damir_profils`, `damir_vaccination`) portent sur les 12 mois de 2025, et non plus
+  sur 9. Supersède partiellement l'entrée « Open DAMIR arrêté à 9 mois sur 49, faute de temps ; P-B6 proposé sur Open Medic » (titre cité corrigé le 2026-11-15) : la limite
+  tient encore pour 2024 et les campagnes 2015–2020.
+- **Why :** l'utilisateur·rice a changé de réseau ; 2025-10 à 2025-12 ont été lus à 3 flux sans refus, en ~6 min de
+  machine (mesuré). Contrôles bloquants passés.
+
+## 2026-11-15 — Module de besoin : cible externe de M4 pharmaciens = APL DREES V0 2013 ; P-B4-PH gelé
+- **Decision :** la cible de validation de M4 pharmaciens est l'APL DREES « Méthode initiale V0 » aux pharmacies,
+  2013 (2010 en secondaire). Tranche l'entrée ouverte du même jour (« Cible externe de M4 pharmaciens »). Offre BPE
+  2013, population RP 2011 brute, paliers 5 / 10 / 15 min de la Notice.
+- **Why :** seule APL des pharmacies publiée (s) ; IRDES QES 308 n'en a pas ; le temps Insee au plus proche mesure
+  autre chose.
+- **Gel :** accord de l'utilisateur·rice (« Yes, timestamp it », 2026-11-15). SHA-256 `f96520f9…549d83` ; RFC 3161
+  FreeTSA 04:09:44 UTC et DigiCert 04:09:45 UTC ; OpenTimestamps soumis. Jetons dans
+  `v2/validation/preregistered/horodatage/2026-11-15-besoin-p-b4-ph-SHA256SUMS*`.
+
+## 2026-11-15 — Tables dérivées ODbL commitées sous ODbL
+- **Décision** (utilisateur·rice : « licence c'est ok pour ODbL sur nos données ici ») :
+  - les tables dérivées des jeux data.ameli.fr (démographie, patientèle, honoraires, pathologies effectifs et
+    dépenses ; 54 Mo) sont **commitées dans `v2/data/odbl/besoin/` sous ODbL 1.0**, avec la mention de la CNAM ;
+  - les dérivés d'OpenStreetMap (matrice de temps OSRM) suivent la même licence, mais restent hors dépôt pour leur
+    taille (`v2/data/odbl/osm/`, ignoré) ; on les reconstruit par script ;
+  - les données sous Licence Ouverte 2.0 et le code ne changent pas.
+- **Remplace :** la règle d'attente du même jour (aucune table ODbL commitée).
+- **Reste ouvert :**
+  - la licence du code (EUPL 1.2 proposée), d'où `LICENSE.draft` ;
+  - l'activation de `NOTICE`, dont `NOTICE.draft` porte encore des mentions « à confirmer » (rapport
+    `2026-11-15-licences-brouillon`).
+
+  Tant que `NOTICE` n'est pas activé, la mention ODbL est portée par `v2/data/odbl/README.md`.
+- **Pourquoi :** les chercheurs qui clonent le dépôt doivent avoir toutes les entrées de P-B2, P-B3 et P-B5 sans
+  reconstruction.
+
+## 2026-11-15 — Module de besoin : M4 construit ; P-B4 échoue en repli, M4 reste un indice maison
+- **Décision** (session besoin-v2-m4, [rapport](reports/2026-11-15-besoin-p-b4-apl.md)) :
+  - **M4** (`v2/besoin/estimateurs/m4.py`) : 2SFCA aux paliers DREES, relus dans l'onglet « Paramètres ». Le besoin
+    vient d'un estimateur d'entrée (M4∘M1…) ; par défaut, poids d'âge ω de l'APL figés à l'année de base (2024 ;
+    2023 pour les MK). `predict()` rend le besoin d'entrée inchangé ; `accessibilite()` rend A en ETP pour 100 000.
+    Temps : vol d'oiseau × 1,3 à 50 km/h (supposé), en attendant OSRM.
+  - **P-B4 passé en repli**, avec 11 écarts écrits et commités avant le passage (`76c04d5`) : `pop_std` de la DREES
+    comme P^std, part des moins de 65 ans départementale, SF lues dans `sf_popage`, ETP = honoraires sans
+    dépassement moyens / médiane.
+  - **Verdict : indice maison pour les 4 professions.** ρ = 0,72 (IDE), 0,77 (MK), 0,66 (SF), 0,74 (CD), sous 0,90 ;
+    EM de 21 à 29 %, au-dessus de 15 %. Le gain sur la meilleure densité naïve passe partout (+0,15 à +0,31, IC à
+    98,75 % > 0). Aucun seuil changé.
+  - **Libellé imposé :** M4 n'est jamais appelé « APL » dans la sortie, la carte ou un rapport.
+  - Critères M4a–M4d dans `besoin.tests` (découverte des modules `criteres_*.py`), 11/11.
+- **Pourquoi :** protocole gelé ; le repli ne peut pas valoir reproduction, et il échoue de toute façon.
+- **Résidu :** la cause probable la plus forte est le distancier (Corse et montagne en tête des écarts ; ρ MK 0,78
+  hors montagne, 0,66 dedans) ; l'ETP moyen départemental est la seconde. Passage OSRM soumis à l'accord de
+  l'utilisateur·rice (extrait OSM de 4,8 Go).
+- **Ce qui le renverserait :** un passage OSRM, daté comme amendement avant calcul, qui atteint les trois seuils.
+- *Résidu complété le 2026-11-15 : le passage OSRM a eu lieu et échoue aussi ; le distancier n'est pas la cause
+  principale. Voir l'entrée « P-B4 sur OSRM ».*
+
+## 2026-11-15 — Module de besoin : P-B4 sur OSRM échoue aussi ; l'écart vient de l'offre communale, pas du distancier
+- **Décision** (session besoin-v2-m4, accord de l'utilisateur·rice « Yes, OSRM », [rapport](reports/2026-11-15-besoin-p-b4-apl.md)) :
+  - **OSRM installé** (Homebrew 26.11.0) ; extrait OSM France du miroir openstreetmap.fr (5,9 Go, plus rapide que
+    Geofabrik) dans `v2/data/raw/osm/` du dépôt principal, non versionné. Graphe : métropole et Corse, voies
+    carrossables seulement (le graphe complet saturait 24 Go de mémoire), algorithme CH.
+  - **Distancier routier** `v2/besoin/donnees/distancier_osrm.py` → `v2/data/odbl/besoin/distancier_osrm.parquet`
+    (ODbL, non commité, règle d'attente) : 2 997 245 paires à 30 min au plus, rayon de recherche 50 km.
+  - **P-B4, passage 2 (voie principale, amendement A1 daté avant calcul) : indice maison pour les 4 professions.**
+    ρ = 0,72 (IDE), 0,76 (MK), 0,71 (SF), 0,73 (CD) ; EM de 23 à 33 % ; gain sur les naïfs +0,15 à +0,35, IC > 0.
+    Aucun seuil changé. Ce verdict remplace celui du repli comme verdict de P-B4 ; le repli reste rapporté.
+  - **Diagnostic :** temps routiers contre vol d'oiseau, ρ change de −0,01 à +0,05 ; au département, ρ = 0,98 (MK).
+    L'écart est dans la répartition de l'offre entre communes d'un même département (ETP individuel borné de la DREES,
+    commune d'exercice SNIIR-AM), non ouverte au grain individuel.
+- **Pourquoi :** voie principale du protocole, accordée ; elle tranche la cause que le repli laissait ouverte.
+- **Résidu :** centres geo.api et non mairies ; voies `service` exclues ; profil OSRM par défaut.
+- **Ce qui le renverserait :** une offre communale plus fidèle (activité individuelle ouverte, ou une offre inversée
+  depuis l'APL publiée) qui, avec nos temps, atteindrait les seuils : l'écart viendrait alors bien de l'offre.
+
+## 2026-11-15 — Module de besoin, P-B4-PH : M4 ne reproduit pas l'APL V0 des pharmacies ; indice maison
+- **Décision** (règles gelées de P-B4-PH, [rapport](reports/2026-11-15-besoin-p-b4-ph-apl-v0.md)) :
+  - **M4 pharmaciens reste un indice maison**, jamais appelé « APL ».
+  - Mesures 2013 : Spearman M4–APL V0 0,72 [0,71 ; 0,74], sous 0,90 ; erreur médiane 33 %, au-dessus de 15 % ; gain
+    sur la meilleure densité naïve +0,14 [+0,12 ; +0,16], qui passe.
+  - Le niveau moyen est reproduit : 22,1 contre 22,5 officines pour 100 000 habitants.
+- **Pourquoi :** c'est le protocole gelé. Le profil est le même que P-B4 pour les quatre autres professions. Ici
+  l'offre est un simple compte d'officines : l'activité non ouverte n'explique donc pas l'écart. Les suspects
+  principaux sont le distancier (paliers de 5 min) et la source de l'offre (FINESS contre SNIIR-AM).
+- **Ce qui le renverserait :** un contrôle du distancier, ou une offre tirée de la BPE, qui ferait monter le Spearman
+  au-dessus de 0,90.
+
+## 2026-11-15 — Module de besoin : périmètre « libéral » de DAMIR, trois réserves mesurées et tranchées
+Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mesures sur `damir_profils.parquet`, flux
+2025, secteur privé (`ppu = 2`).
+
+1. **Statut inconnu (`stj = 9`) : déjà réintégré, rien à corriger.**
+   - Part de `stj = 9` en actes (en montant remboursé) :
+
+     | Profession | Actes | Montant |
+     |---|---|---|
+     | IDE | 12,6 % | 7,8 % |
+     | MK | 7,8 % | 5,0 % |
+     | PH | 5,5 % | 5,3 % |
+     | CD | 3,9 % | 3,9 % |
+     | SF | 3,3 % | 2,1 % |
+
+     (mesuré)
+   - **M1 ne filtre pas sur `stj`** : il prend `ppu = 2` et tous les statuts (1 libéral, 2 salarié de centre,
+     9 inconnu). Le sous-comptage supposé n'existe donc pas dans le modèle ; seuls les contrôles de `damir.py`
+     distinguent `stj`. C'est vérifié dans `estimateurs/m1.py`, où le filtre `ppu == 2` est le seul.
+   - Sensibilité mesurée : la répartition par âge, tous statuts contre libéral strict (`stj = 1`), diffère de 2,7 %
+     (IDE), 2,1 % (MK), 1,7 % (CD), 0,9 % (PH) et 0,2 % (SF) en variation totale (mesuré).
+   - **Décision : garder tous les statuts.** On n'applique ni prorata ni filtre `stj = 1`.
+2. **Offre privée contre recours de ville : écart de définition documenté, sans effet sur l'indice si les parts
+   restent constantes.**
+   - L'offre privée du jumeau compte les salariés du privé. Ordre de grandeur, part des salariés dans l'offre privée
+     (`secteur_stock`, au centre de la fourchette) (mesuré) :
+
+     | Profession | Millésime | Salariés du privé | dont clinique | Libéraux et mixtes |
+     |---|---|---|---|---|
+     | IDE | 2023 | 64,5 % | 34,0 % | 35,6 % |
+     | PH | 2026 | 54,5 % (adjoints, industrie) | — | — |
+     | SF | 2026 | 20,3 % | — | — |
+     | MK | 2026 | 6,1 % | — | — |
+     | CD | 2026 | 1,7 % | — | — |
+
+   - Le recours DAMIR de ville ne compte pas les soins facturés par les établissements (IDE de clinique). Il compte en
+     revanche les salariés de centres de santé (`stj = 2` : SF 13 %, CD 16 % des actes).
+   - **Effet sur C** : nul tant que la part libérale de l'offre est constante dans le temps, puisque C est indexé
+     à 2026 et qu'un facteur constant s'annule (dérivé). L'effet n'est pas nul **sur les niveaux** (ETP, comparaisons
+     entre territoires).
+   - **Décision :** l'indice reste « offre privée / demande de ville privée », avec l'écart écrit dans la sortie.
+     Un niveau en ETP n'est jamais comparé à l'effectif privé total des IDE ni des PH. L'alignement exact
+     (projeter la part libérale) reste ouvert.
+3. **Deux grandeurs nommées distinctement.**
+   - Ce que M1, M2a, M2b, M3 et M4 produisent est la **demande adressée au secteur privé de ville**, tirée du
+     recours remboursé hors hôpital public. Ce n'est **pas le besoin de soins de la population**, dont une part est
+     servie par l'hôpital public.
+   - Dans le modèle : attribut `grandeur` de `NeedEstimator` (`v2/besoin/interface.py`), exposé dans la sortie
+     d'API (`sortie.py`, clé `grandeur`). Le mot « besoin » reste celui du code (`B`, `besoin`), mais l'interface
+     affiche la grandeur.
+   - Dans l'interface : un libellé « demande de soins de ville (privé) », jamais « besoin de la population » ;
+     l'indice C s'intitule « couverture de la demande de ville par l'offre privée ». C'est à appliquer au branchement
+     dans la carte (plan de la session licences-et-carte).
+- **Pourquoi :** demande de la session v2. La circularité recours/offre de la dérivation (§2) en est le cas général.
+

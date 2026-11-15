@@ -1,0 +1,747 @@
+{
+ "table": "ameli_demographie.parquet",
+ "chemin": "v2/data/odbl/besoin/ameli_demographie.parquet",
+ "lignes": 3694080,
+ "colonnes": [
+  "annee",
+  "profession_sante",
+  "region",
+  "departement",
+  "classe_age",
+  "libelle_sexe",
+  "effectif",
+  "densite",
+  "prof"
+ ],
+ "sha256_16": "f1ace4ca0b9d8df9",
+ "licence": "Open Database License 1.0",
+ "commite": false,
+ "source": "CNAM, data.ameli.fr, jeu « demographie-effectifs-et-les-densites » (export parquet de l'API Opendatasoft, lu le 2026-11-15)",
+ "millesime": "2010–2025 (au 31/12)",
+ "commande": "uv run python v2/besoin/donnees/ameli.py",
+ "dom": "inclus : départements 971, 972, 973, 974, 976 (Mayotte comprise) ; région 99 = France entière",
+ "controles": [
+  {
+   "controle": "effectifs libéraux CD 2010",
+   "reconstruit": 36874.0,
+   "publie": 36874.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2011",
+   "reconstruit": 36731.0,
+   "publie": 36731.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2012",
+   "reconstruit": 36776.0,
+   "publie": 36776.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2013",
+   "reconstruit": 36909.0,
+   "publie": 36909.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2014",
+   "reconstruit": 36895.0,
+   "publie": 36895.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2015",
+   "reconstruit": 36924.0,
+   "publie": 36924.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2016",
+   "reconstruit": 37015.0,
+   "publie": 37015.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2017",
+   "reconstruit": 37129.0,
+   "publie": 37129.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2018",
+   "reconstruit": 37134.0,
+   "publie": 37134.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2019",
+   "reconstruit": 37152.0,
+   "publie": 37152.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2020",
+   "reconstruit": 37188.0,
+   "publie": 37188.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2021",
+   "reconstruit": 37458.0,
+   "publie": 37458.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2022",
+   "reconstruit": 37817.0,
+   "publie": 37817.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2023",
+   "reconstruit": 38281.0,
+   "publie": 38281.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2024",
+   "reconstruit": 39126.0,
+   "publie": 39126.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux CD 2025",
+   "reconstruit": 40149.0,
+   "publie": 40149.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2010",
+   "reconstruit": 66642.0,
+   "publie": 66642.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2011",
+   "reconstruit": 70063.0,
+   "publie": 70063.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2012",
+   "reconstruit": 73701.0,
+   "publie": 73701.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2013",
+   "reconstruit": 76856.0,
+   "publie": 76856.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2014",
+   "reconstruit": 80399.0,
+   "publie": 80399.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2015",
+   "reconstruit": 84059.0,
+   "publie": 84059.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2016",
+   "reconstruit": 87398.0,
+   "publie": 87398.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2017",
+   "reconstruit": 90630.0,
+   "publie": 90630.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2018",
+   "reconstruit": 93206.0,
+   "publie": 93206.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2019",
+   "reconstruit": 95870.0,
+   "publie": 95870.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2020",
+   "reconstruit": 98014.0,
+   "publie": 98014.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2021",
+   "reconstruit": 99099.0,
+   "publie": 99099.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2022",
+   "reconstruit": 99506.0,
+   "publie": 99506.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2023",
+   "reconstruit": 99472.0,
+   "publie": 99472.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2024",
+   "reconstruit": 99023.0,
+   "publie": 99023.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux IDE 2025",
+   "reconstruit": 99435.0,
+   "publie": 99435.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2010",
+   "reconstruit": 62488.0,
+   "publie": 62488.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2011",
+   "reconstruit": 61952.0,
+   "publie": 61952.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2012",
+   "reconstruit": 61578.0,
+   "publie": 61578.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2013",
+   "reconstruit": 61300.0,
+   "publie": 61300.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2014",
+   "reconstruit": 60935.0,
+   "publie": 60935.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2015",
+   "reconstruit": 60343.0,
+   "publie": 60343.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2016",
+   "reconstruit": 59752.0,
+   "publie": 59752.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2017",
+   "reconstruit": 59417.0,
+   "publie": 59417.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2018",
+   "reconstruit": 58900.0,
+   "publie": 58900.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2019",
+   "reconstruit": 58266.0,
+   "publie": 58266.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2020",
+   "reconstruit": 57948.0,
+   "publie": 57948.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2021",
+   "reconstruit": 57156.0,
+   "publie": 57156.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2022",
+   "reconstruit": 56606.0,
+   "publie": 56606.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2023",
+   "reconstruit": 55979.0,
+   "publie": 55979.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2024",
+   "reconstruit": 55546.0,
+   "publie": 55546.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MG 2025",
+   "reconstruit": 56005.0,
+   "publie": 56005.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2010",
+   "reconstruit": 52122.0,
+   "publie": 52122.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2011",
+   "reconstruit": 53719.0,
+   "publie": 53719.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2012",
+   "reconstruit": 55569.0,
+   "publie": 55569.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2013",
+   "reconstruit": 57318.0,
+   "publie": 57318.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2014",
+   "reconstruit": 59577.0,
+   "publie": 59577.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2015",
+   "reconstruit": 61578.0,
+   "publie": 61578.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2016",
+   "reconstruit": 63727.0,
+   "publie": 63727.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2017",
+   "reconstruit": 65953.0,
+   "publie": 65953.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2018",
+   "reconstruit": 67860.0,
+   "publie": 67860.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2019",
+   "reconstruit": 69342.0,
+   "publie": 69342.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2020",
+   "reconstruit": 71831.0,
+   "publie": 71831.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2021",
+   "reconstruit": 73457.0,
+   "publie": 73457.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2022",
+   "reconstruit": 75610.0,
+   "publie": 75610.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2023",
+   "reconstruit": 78769.0,
+   "publie": 78769.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2024",
+   "reconstruit": 82101.0,
+   "publie": 82101.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux MK 2025",
+   "reconstruit": 84528.0,
+   "publie": 84528.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2010",
+   "reconstruit": 3265.0,
+   "publie": 3265.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2011",
+   "reconstruit": 3498.0,
+   "publie": 3498.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2012",
+   "reconstruit": 3842.0,
+   "publie": 3842.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2013",
+   "reconstruit": 4203.0,
+   "publie": 4203.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2014",
+   "reconstruit": 4604.0,
+   "publie": 4604.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2015",
+   "reconstruit": 5037.0,
+   "publie": 5037.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2016",
+   "reconstruit": 5426.0,
+   "publie": 5426.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2017",
+   "reconstruit": 5773.0,
+   "publie": 5773.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2018",
+   "reconstruit": 6060.0,
+   "publie": 6060.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2019",
+   "reconstruit": 6415.0,
+   "publie": 6415.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2020",
+   "reconstruit": 6798.0,
+   "publie": 6798.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2021",
+   "reconstruit": 7223.0,
+   "publie": 7223.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2022",
+   "reconstruit": 7692.0,
+   "publie": 7692.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2023",
+   "reconstruit": 7975.0,
+   "publie": 7975.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2024",
+   "reconstruit": 8190.0,
+   "publie": 8190.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "effectifs libéraux SF 2025",
+   "reconstruit": 8490.0,
+   "publie": 8490.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  }
+ ],
+ "notes": "",
+ "ecrit_le": "2026-11-15T03:25:45"
+}

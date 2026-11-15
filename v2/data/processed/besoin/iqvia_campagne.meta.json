@@ -1,0 +1,131 @@
+{
+ "table": "iqvia_campagne.parquet",
+ "chemin": "v2/data/processed/besoin/iqvia_campagne.parquet",
+ "lignes": 30,
+ "colonnes": [
+  "campagne",
+  "date",
+  "variable",
+  "valeur",
+  "cible"
+ ],
+ "sha256_16": "ba79d4b5e8175bb8",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "IQVIA France (Pharmastat), Vaccination Grippe 2021-2022 à 2026-2027, data.gouv.fr",
+ "millesime": "saisons 2021-22 à 2026-27 ; série quotidienne 2020-21 reprise du fichier 2021-22 ; 2026-27 (en cours, au 2026-11-11)",
+ "commande": "uv run python v2/besoin/donnees/iqvia.py",
+ "dom": "national (France entière extrapolée ; périmètre DOM non documenté)",
+ "controles": [
+  {
+   "controle": "IQVIA ACTE(VGP) 2021-2022 au 2022-02-28",
+   "reconstruit": 4475885.0,
+   "publie": 4475890.0,
+   "ecart_rel": 1.1170962646535103e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA DOSES(J07E1) 2021-2022 au 2022-02-28",
+   "reconstruit": 11178958.0,
+   "publie": 11178955.0,
+   "ecart_rel": 2.683613987175009e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA ACTE(VGP) 2022-2023 au 2023-02-28",
+   "reconstruit": 5373892.0,
+   "publie": 5373898.0,
+   "ecart_rel": 1.1165079798686167e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA DOSES(J07E1) 2022-2023 au 2023-02-28",
+   "reconstruit": 11219441.0,
+   "publie": 11219443.0,
+   "ecart_rel": 1.7826196897653476e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA ACTE(VGP) 2023-2024 au 2024-02-28",
+   "reconstruit": 5645132.0,
+   "publie": 5645127.0,
+   "ecart_rel": 8.857196658285987e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA DOSES(J07E1) 2023-2024 au 2024-02-28",
+   "reconstruit": 10510434.0,
+   "publie": 10510433.0,
+   "ecart_rel": 9.514355878582737e-08,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA ACTE(VGP) 2024-2025 au 2025-02-28",
+   "reconstruit": 6629124.0,
+   "publie": 6629119.0,
+   "ecart_rel": 7.542480380877158e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA DOSES(J07E1) 2024-2025 au 2025-02-28",
+   "reconstruit": 10929266.0,
+   "publie": 10929266.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA ACTE(VGP) 2025-2026 au 2026-02-28",
+   "reconstruit": 8020530.0,
+   "publie": 8020525.0,
+   "ecart_rel": 6.234005878667544e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA DOSES(J07E1) 2025-2026 au 2026-02-28",
+   "reconstruit": 12016508.0,
+   "publie": 12016504.0,
+   "ecart_rel": 3.32875518536839e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA ACTE(VGP) 2026-2027 au 2026-11-11",
+   "reconstruit": 4680900.0,
+   "publie": 4680898.0,
+   "ecart_rel": 4.272684429355222e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  },
+  {
+   "controle": "IQVIA DOSES(J07E1) 2026-2027 au 2026-11-11",
+   "reconstruit": 7160981.0,
+   "publie": 7160984.0,
+   "ecart_rel": 4.189368388478455e-07,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "IQVIA, campagne-AAAA.csv (total de campagne)"
+  }
+ ],
+ "notes": "",
+ "ecrit_le": "2026-11-15T03:13:23"
+}

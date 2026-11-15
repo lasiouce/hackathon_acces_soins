@@ -1,10 +1,12 @@
 ---
 date: 2026-11-14
-statut: plan, non construit (en attente d'accord)
+statut: "remplacé le 2026-11-15 par 2026-11-15-besoin-derivation.md et 2026-11-15-besoin-plan.md (survit comme M1 + transferts, corrigé)"
 headline: "Besoin = habitants × profil d'âge du recours ; un transfert de tâches déplace une part du besoin, il ne crée aucun professionnel"
 ---
 
 # Module de besoin : plan
+
+> **Remplacé le 2026-11-15** par la [dérivation du besoin](2026-11-15-besoin-derivation.md) et le [plan par axes](2026-11-15-besoin-plan.md). Gardé tel quel ; ses corrections sont au §9 de la dérivation.
 
 **ETA (temps Claude, non calibré) :** ~1 h 30 (1 h–2 h 30), dont ~30 min pour le test d'abandon, qui peut tout arrêter.
 
