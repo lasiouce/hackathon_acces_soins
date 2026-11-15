@@ -100,8 +100,11 @@ l'orange (en dessous de la moyenne nationale) au vert (au-dessus), en couleurs d
 s'ouvre dans une fenêtre par trois boutons : « Aide au scénario », « Aide à la lecture » et l'icône en bas à droite de
 la carte. Les deux panneaux latéraux se replient en une barre bleue (un clic la déplie), et la carte s'ouvre centrée sur la France.
 L'assistant et le compilateur comprennent la vaccination en officine (L23) : effectif inchangé dans le modèle,
-indice de couverture des pharmaciens (base 2026) lu sur `/api/couverture` ; jamais de couverture pour la médecine
-générale ([rapport](v2/docs/lab/reports/2026-11-15-besoin-assistant.md)).
+indice de couverture des pharmaciens (base 2026) lu sur `/api/couverture` ; seule la part de vaccinations au-delà de
+celle déjà faite en officine en 2026 agit (correctif P1-4 : effet 2050 de −0,03 % au lieu de −0,7 %). Pas de
+couverture pour la médecine générale sur la carte ; dans l'assistant, l'option « effectivité » (décision O3) dit si le
+transfert soulage les généralistes sans trop peser sur les pharmaciens, avec une offre de généralistes supposée constante
+([rapport](v2/docs/lab/reports/2026-11-15-besoin-assistant.md)).
 
 - **Carte des départements et des régions**, au choix : variation de l'effectif 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Sous la légende, « Comment lire cet indicateur ? » déplie sa
@@ -343,7 +346,8 @@ et la question ouverte sur le seuil de diffusion.
 
 ## Feuille de route
 
-- Corriger les 6 anomalies P1 de la recette de l'application (branche `claude/uat-application-d7ed57`, 0 P0, 17 P2).
+- Recette de l'application : les 6 P1 sont corrigés ; 3 P2 restent, dont le bouton « A+ » (texte agrandi) disparu, à
+  rétablir ou à retirer de la recette ([corrections](v2/docs/lab/reports/2026-11-15-uat-corrections.md)).
 - Module de besoin : mesurer `k` des transferts ; projeter la part libérale de l'offre privée ; trouver une source
   ouverte de la demande servie par l'hôpital public.
 - Amélioration possible, hors plan : spécialités (cardiologie, dermatologie, ophtalmologie).
