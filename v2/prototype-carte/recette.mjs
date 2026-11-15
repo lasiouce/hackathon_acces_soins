@@ -47,7 +47,9 @@ ws.addEventListener("message", ev => {
 });
 const cdp = (method, params = {}) => new Promise(r => { const id = ++seq; waiting.set(id, r); ws.send(JSON.stringify({ id, method, params })); });
 async function ev(expr) {   // évalue dans la portée globale de la page (les let / const du script y sont visibles)
-  const r = await cdp("Runtime.evaluate", { expression: `(async()=>{${expr}})()`, awaitPromise: true, returnByValue: true });
+  // gpick : choisit une superposition dans la liste déroulante #gpre (2026-11-15), comme un clic de l'utilisateur·rice
+  const pre = `const gpick=v=>{const s=document.querySelector("#gpre");s.value=v;s.dispatchEvent(new Event("change",{bubbles:true}));return 1;};`;
+  const r = await cdp("Runtime.evaluate", { expression: `(async()=>{${pre}${expr}})()`, awaitPromise: true, returnByValue: true });
   if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description?.split("\n")[0] || "exception");
   return r.result?.result?.value;
 }
@@ -126,11 +128,11 @@ await check("R08", "recherche : « puy » → Puy-de-Dôme, Entrée ouvre la fic
   await ev(`document.querySelector("#q").dispatchEvent(new KeyboardEvent("keydown",{key:"Enter"}));return 1`);
   await until(`S.terr==="D63"`); await until(`document.querySelector("#card").textContent.includes("Puy-de-Dôme")`); await idle();
 });
-// fiche répartie (2026-11-14) : en tête effectifs, fourchette et actions ; trajectoire, repères, flux et zonage dans leurs modes
-await check("R09", "fiche : effectifs, fourchette, trajectoire, repères, flux, zonage, actions", async () => {
+// fiche répartie (2026-11-14) : en tête effectifs, couverture de soin (2026-11-15) et actions ; trajectoire, repères, flux et zonage dans leurs modes
+await check("R09", "fiche : effectifs, couverture de soin, trajectoire, repères, flux, zonage, actions", async () => {
   const seen = {};
   for (const m of ["graph", "flux", "data"]) { await ev(mode(m)); seen[m] = await ev(`const v=document.querySelector("#rv-${m}");return !v.hidden&&v.textContent`); }
-  const k = await ev(`const c=document.querySelector("#card"),t=c.textContent;return [t.includes("Effectif 2050"),t.includes("fourchette"),document.querySelectorAll("#chart path").length>=4,!!c.querySelector('[onclick="addCmp()"]'),!!c.querySelector('[onclick="exportCard()"]')]`);
+  const k = await ev(`const c=document.querySelector("#card"),t=c.textContent;return [t.includes("Effectif 2050"),t.includes("Couverture de soin 2050")&&!t.includes("Diplômés installés"),document.querySelectorAll("#chart path").length>=4,!!document.querySelector('#cardact:not([hidden]) [onclick="addCmp()"]'),!!document.querySelector('#cardact:not([hidden]) [onclick="exportCard()"]')]`);
   k.push(!!seen.flux && seen.flux.includes("par flux"), !!seen.data && seen.data.includes("Département non régulé"));
   await ev(mode("graph")); if (k.includes(false)) throw new Error(JSON.stringify(k));
 });
@@ -243,15 +245,15 @@ await check("R32", "assistant (fenêtre modale) : s'ouvre, dit s'il est disponib
 await check("R33", "graphique : superposition à deux axes, puis base 100 au-delà de deux unités ; lien gardé", async () => {
   await ev(`select("D63");return 1`); await idle(); await ev(mode("graph"));
   const two = await ev(`return SC&&SC.series&&SC.series.age_moyen?"eff,age_moyen":"eff,dens"`);
-  await ev(`document.querySelector('#gpre [data-g="${two}"]').click();return 1`);
+  await ev(`gpick("${two}");return 1`);
   const a = await ev(`const t=[...document.querySelectorAll("#chart text")],W=460;return {sel:S.gs.join(),right:t.filter(x=>+x.getAttribute("x")>W-60&&x.getAttribute("text-anchor")!="end"&&x.getAttribute("text-anchor")!="middle").length,
     titles:t.filter(x=>x.getAttribute("y")=="12").length,leg:document.querySelectorAll("#gleg li").length,b100:document.querySelector("#b100").checked,hash:location.hash.includes("g=")}`);
   if (!(a.sel === two && a.right >= 3 && a.titles === 2 && a.leg === 2 && !a.b100 && a.hash)) throw new Error("deux axes " + JSON.stringify(a));
-  await ev(`const g=document.querySelector("#gs-pop");if(!g)throw new Error("population absente");g.click();return 1`);
+  await ev(`if(!document.querySelector('#gpre [data-g="eff,dens,pop"]'))throw new Error("population absente");gpick("eff,dens,pop");return 1`);
   const b = await ev(`const t=document.querySelector("#b100");return {n:S.gs.length,checked:t.checked,disabled:t.disabled,title:[...document.querySelectorAll("#chart text")].some(x=>x.textContent.startsWith("indice")),leg:document.querySelectorAll("#gleg li").length}`);
-  await ev(`document.querySelector('#gpre [data-g="eff"]').click();return 1`);
+  await ev(`gpick("eff");return 1`);
   if (!(b.n === 3 && b.checked && b.disabled && b.title && b.leg === 3)) throw new Error("base 100 " + JSON.stringify(b));
-  return `${two} : 2 axes ; +population : base 100`;
+  return `${two} : 2 axes ; effectif, densité et population : base 100`;
 });
 // « Chronologique » retiré (2026-11-15) : un lien r=chrono retombe sur Graphique ; « Pyramide des âges » si l'API sert `pyramide`
 await check("R34", "pyramide des âges : barres à l'année affichée, suit le curseur ; sinon mode masqué ; r=chrono → Graphique", async () => {
@@ -303,7 +305,7 @@ await check("R36", "assistant : boutons Scénario, Résultat et carte ; accueils
   const ok = h.every((x, i) => +x[1] >= 3 && x[2] === "true" && x[3] === ["askscn", "askres", "askbtn"][i]) && new Set(h.map(x => x[0])).size === 3
     && /scénario/i.test(h[0][0]) && /interpr/i.test(h[1][0]);
   const pos = await ev(`const b=document.querySelector("#askbtn").getBoundingClientRect(),w=document.querySelector("#mapwrap").getBoundingClientRect(),l=document.querySelector("#legend").getBoundingClientRect();
-    return {br:b.right>w.left+w.width/2&&b.bottom>w.top+w.height/2,overlap:!(b.right<=l.left||b.left>=l.right||b.bottom<=l.top||b.top>=l.bottom)}`);
+    return {br:Math.abs(b.right-l.right)<2&&b.bottom<=l.top&&l.top-b.bottom<20,overlap:!(b.right<=l.left||b.left>=l.right||b.bottom<=l.top||b.top>=l.bottom)}`);
   if (!ok || !pos.br || pos.overlap) throw new Error(JSON.stringify({ out, pos }));
   return h.map(x => x[0]).join(" / ");
 });
@@ -315,19 +317,19 @@ await check("R37", "taux d'installation des diplômés : rien sans données (den
   const prof = async p => { await ev(`const s=document.querySelector('#profsel');s.value="${p}";s.dispatchEvent(new Event("change"));return 1`); await idle(); await until(`F&&F.prof==="${p}"`); };
   await ev(`select("D63");return 1`); await idle(); await ev(mode("graph"));
   await prof("dentistes");
-  const d = await ev(`return [!gData(F).taux_installation,!document.querySelector('#gpre [data-g="taux_installation"]'),document.querySelector('#card [data-k="tx"]').hidden]`);
+  const d = await ev(`return [!gData(F).taux_installation,!document.querySelector('#gpre [data-g="taux_installation"]')]`);
   if (d.includes(false)) throw new Error("affiché sans données (dentistes) " + JSON.stringify(d));
   await prof("infirmiers");
   const dep = await ev(`return {tx:!!gData(F).taux_installation,dip:!!gData(F).diplomes,pre:!!document.querySelector('#gpre [data-g="taux_installation"]'),dippre:!!document.querySelector('#gpre [data-g="diplomes,installes_diplomes"]')}`);
   if (!dep.tx) { await prof("kines"); return "séries non servies : rien d'affiché"; }
   if (dep.dip || dep.dippre || !dep.pre) throw new Error("département : " + JSON.stringify(dep));
-  await ev(`document.querySelector('#gpre [data-g="taux_installation"]').click();return 1`);
-  const b = await ev(`return {leg:document.querySelector("#gleg").textContent,hash:location.hash.includes("g=taux_installation"),kpi:document.querySelector('#card [data-k="tx"]').hidden?"":document.querySelector('#card [data-k="tx"]').textContent}`);
+  await ev(`gpick("taux_installation");return 1`);
+  const b = await ev(`return {leg:document.querySelector("#gleg").textContent,hash:location.hash.includes("g=taux_installation")}`);
   await ev(`document.querySelector('#card [data-cs="fr"]').click();return 1`); await idle();
   const fr = await ev(`return !!document.querySelector('#gpre [data-g="diplomes,installes_diplomes"]')`);
-  await ev(`document.querySelector('#gpre [data-g="eff"]').click();return 1`); await prof("kines");
-  if (!(/%/.test(b.leg) && b.hash && /Diplômés installés en libéral : \d+ %/.test(b.kpi) && fr)) throw new Error(JSON.stringify({ b, fr }));
-  return b.kpi.slice(0, 60) + " ; diplômés proposés en France seulement";
+  await ev(`gpick("eff");return 1`); await prof("kines");
+  if (!(/%/.test(b.leg) && b.hash && fr)) throw new Error(JSON.stringify({ b, fr }));
+  return "taux en graphique, plus en compteur ; diplômés proposés en France seulement";
 });
 await check("R30","mobile 390 px : rien ne déborde à droite, sélecteur de profession, leviers accessibles", async () => {
   await open("", 390, 844);
@@ -360,7 +362,7 @@ if (OPTION1) {
     const pyr = await ev(`return pyrOK(F)`);
     for (const m of ["graph", ...(pyr ? ["pyr"] : []), "flux", "cmp", "data"]) {
       await ev(mode(m));
-      if (m === "graph") await ev(`document.querySelector('#gpre [data-g="eff,dens,pop"]')?.click();return 1`);
+      if (m === "graph") await ev(`(document.querySelector('#gpre [data-g="eff,dens,pop"]')&&gpick("eff,dens,pop"));return 1`);
       await ev(`await new Promise(r=>setTimeout(r,150));return 1`);
       const o = await ev(`const p=document.querySelector("#terrpanel");return p.scrollWidth-p.clientWidth`);
       if (o > 1) over.push(`${m} +${o}px`);

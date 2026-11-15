@@ -4174,7 +4174,7 @@ plancher qui dépasse quelques % des entrées : il faudrait alors l'afficher com
 - **Panneau droit « Résultat »**, un seul panneau sans onglet. Les onglets Assistant, « Territoire et comparaison » et
   Expert sont retirés.
   - En tête : la fiche du territoire (nom, bascule territoire ↔ France entière, trois chiffres clés), avec « Ajouter à la
-    comparaison » et « Exporter la fiche (CSV) ».
+    comparaison » et « Exporter la fiche (CSV) ». *Boutons remplacés le 2026-11-15 : en bas du panneau, voir « Carte : boutons de la fiche en bas du panneau Résultat ».*
   - Dessous, un sélecteur DSFR (`fr-segmented`) de **cinq modes**, gardé dans le lien (`r=`) :
     - **Graphique** (par défaut) ;
     - **Chronologique** ;
@@ -4328,7 +4328,7 @@ pas être présenté comme un résultat.
     profession, le territoire et l'année.
   - **« Aide à la lecture »**, à côté du titre Résultat. Accueil « Interpréter le résultat » : rappel de ce qui est
     affiché et questions d'interprétation.
-  - **Bouton de la carte en bas à droite**, au-dessus de l'attribution, avec l'icône DSFR `question-answer-line`. Accueil
+  - **Bouton de la carte en bas à droite**, au-dessus de l'attribution, avec l'icône DSFR `question-answer-line`. Accueil *Remplacé le 2026-11-15 : bouton au-dessus de la légende, voir « Carte : bouton de l'assistant au-dessus de la légende ».*
     général. Il se réduit à son icône quand la légende prend la largeur.
   - Les boutons des panneaux (icône `chat-3-line`) sont masqués quand leur panneau est replié. Le focus revient au bouton
     d'ouverture.
@@ -5280,7 +5280,7 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
     `min`/`max` entre estimateurs survivants) par département, région (rapport des sommes) et France.
   - Estimateurs servis : IDE M1, M2a, M3 ; MK, CD, SF M1, M2a ; PH M1 seul. Central M1. M4 : emplacement désactivé,
     « en attente de validation (P-B4) ».
-  - **Couleur de la vue = C scénario − 1** ; l'écart au tendanciel (relatif) va dans l'infobulle, la fiche, l'export.
+  - **Couleur de la vue = C scénario − 1** ; l'écart au tendanciel (relatif) va dans l'infobulle, la fiche, l'export. *Fiche remplacée le 2026-11-15 : voir « Carte : la couverture de soin remplace l'écart au tendanciel dans les compteurs de la fiche ».*
     Écart au plan : la carte colorée par l'écart seul serait uniforme sans levier.
   - **L23** (`l23=1`, t₀ = 2026) : `s_∞` 0,74 et `τ` 2,4 **mesurés** (P-B6) reportés dans `L23_PARAMS` ; `a` 0,01,
     `k` 1, `μ` 0 **supposés** ; mode expert a ∈ [0 ; 0,05], k ∈ [0,25 ; 1]. N'agit qu'avec M1 (M2a et M3 sans MG).
@@ -5608,7 +5608,7 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
     `non_modelise` (décision « L23 compilé en transfert », jeux à l'aveugle) ; c'est l'affichage qui la retire quand le
     transfert est compris, comme l'assistant le faisait déjà.
   - **Fourchette entre estimateurs (P2-1) :** affichée seulement si `fourchette_visible` (seuil de 5 %), dans l'infobulle,
-    la fiche et la légende, comme l'assistant.
+    la fiche et la légende, comme l'assistant. *Fiche remplacée le 2026-11-15 : voir « Carte : la couverture de soin remplace l'écart au tendanciel dans les compteurs de la fiche ».*
   - **Légende de la vue Couverture (P2-7) :** graduée en indice (unité « indice »), plus en %.
   - **Comparaison en vue Couverture (P1-1) :** colonne « Couverture · écart tend. », lue dans `/api/couverture` pour chaque
     territoire comparé (département, région, France), « — » si absente.
@@ -5669,3 +5669,108 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   en 2045. **À ne pas citer tel quel** : il tient à `a = 0,01` (part du temps de MG, placeholder supposé de la fiche L23),
   qui rend la perte des pharmaciens inférieure à 1 point partout. Le verdict ne vaudra que lorsque `a` sera sourcé
   (fiches de l'axe 1, branche `claude/besoin-axe1-fiches-*`).
+
+## 2026-11-15 — Carte : la couverture de soin remplace l'écart au tendanciel dans les compteurs de la fiche
+- **Décision** (demande de l'utilisateur·rice, préparation de la démo) : la fiche du panneau Résultat est allégée.
+  - Les trois compteurs deviennent : Effectif 2026 · Effectif *année* · **Couverture de soin *année*** (indice de
+    l'estimateur central, sous-titre « référence : 2026 = 1 »). La couverture remplace « Écart au tendanciel ».
+    *Sous-titre retiré le même jour (demande de l'utilisateur·rice) : la référence passe dans l'infobulle du chiffre
+    (« indice, 2026 = 1 »). Compteurs alignés : année sur la ligne du libellé, chiffres sur une même ligne, filets entre
+    colonnes, libellé et chiffre centrés dans leur colonne.*
+  - Retirés de la fiche : la fourchette « a – b » sous l'effectif projeté ; la ligne « Diplômés installés en libéral »
+    et ses notes ; sous la couverture, le qualificatif, l'écart au tendanciel, la fourchette entre estimateurs, la
+    phrase sur la demande estimée et « Méthode (détail) ».
+  - Gardé sous les compteurs : la phrase sur les vaccinations des généralistes, seulement quand le transfert
+    « Les pharmaciens vaccinent davantage contre la grippe » est actif.
+  - Inchangés : l'infobulle de la carte, la vue « Écart au tendanciel », les hachures du graphique, le graphique
+    « Taux d'installation des diplômés », l'export CSV (fourchette, écart et couverture y restent).
+  - Profession sans couverture servie : compteur « — », « non disponible pour cette profession ».
+- **Pourquoi :** une fiche lisible d'un coup d'œil pendant la démo ; le détail reste dans l'export et les autres vues.
+- **Remplace** pour la fiche seulement : « l'écart au tendanciel va dans […] la fiche » (entrée P-B4) et « fourchette
+  entre estimateurs […] dans la fiche » (P2-1).
+- **Vérifié :** recette de la carte 36/37 (R09 et R37 adaptés ; R25 « A+ » échouait déjà avant : bouton absent) ;
+  capture Puy-de-Dôme, kinés, 2050 : couverture de soin 1,59.
+
+## 2026-11-15 — Carte : boutons de la fiche en bas du panneau Résultat
+- **Décision** (demande de l'utilisateur·rice, préparation de la démo) : « Ajouter à la comparaison » et « Exporter la
+  fiche (CSV) » quittent l'en-tête de la fiche et passent en bas du panneau Résultat, après le mode de visualisation
+  affiché, sous un filet. Ils sont visibles dès qu'une fiche est affichée (territoire ou France entière) et masqués pendant
+  l'écran de chargement, comme avant.
+- **Remplace** la position « en tête, avec la fiche » de l'entrée « panneau Résultat à modes de visualisation »
+  (2026-11-14) ; le reste de cette entrée est inchangé.
+- **Pourquoi :** les compteurs et le graphique se suivent sans interruption à l'écran pendant la démo.
+
+## 2026-11-15 — Carte : plus de légende de lecture sous la courbe du graphique
+- **Décision** (demande de l'utilisateur·rice, préparation de la démo) : le texte sous la courbe du mode Graphique
+  (« Trait épais : scénario. Tirets : tendanciel […]. Trait fin avant 2026 : observé. Hachures : fourchette indicative de
+  l'effectif, ≈ 8 cas sur 10, pente d'erreur de backtest […] ; aucun backtest n'existe à 2050 : extrapolation. ») est
+  retiré. Seule reste, quand « Indice base 100 en 2026 » est activé, la phrase qui définit l'indice.
+- **Inchangé :** les hachures et les tirets sur le graphique ; la fourchette et sa méthode dans l'export CSV et le mode
+  Données.
+- **Risque :** la fourchette n'a plus de définition à l'écran à côté du graphique ; l'export CSV la
+  donne.
+
+## 2026-11-15 — Carte : superpositions proposées en liste déroulante
+- **Décision** (demande de l'utilisateur·rice : « je ne veux pas 4 lignes ») : les superpositions proposées du mode
+  Graphique passent de boutons-étiquettes (jusqu'à 4 lignes) à une liste déroulante DSFR (`fr-select`), une ligne.
+  - Mêmes choix, même filtre (seules les superpositions dont toutes les courbes sont servies), même lien (`g=`).
+  - Si les cases « Courbes superposées » ne correspondent à aucune proposition, la liste affiche « Personnalisée ». *Cases retirées le même jour : voir l'entrée suivante.*
+- **Recette :** les contrôles qui cliquaient un bouton choisissent l'option (`gpick`) ; 36/37 (R25 « A+ » échouait déjà).
+
+## 2026-11-15 — Carte : la légende du bas suit la largeur de la carte
+- **Décision** (demande de l'utilisateur·rice) : la fenêtre de légende en bas de la carte (indicateurs, barre de couleurs)
+  prend la largeur de la colonne de carte moins 17rem (place du bouton « Assistant de simulation »), entre 22rem et
+  60rem. *Remplacé le 2026-11-15 : légende à la largeur de la carte moins 4,6rem, bouton au-dessus, voir « Carte : bouton de l'assistant au-dessus de la légende ».* Elle s'élargit quand les panneaux Scénario et Résultat sont repliés. Avant : largeur du contenu, plafond 34rem.
+- **Mesuré** (fenêtre 1388 px) : panneaux ouverts, carte 562 px, légende 352 px ; Scénario replié, 858 → 586 px ;
+  les deux repliés, 1312 → 960 px, indicateurs sur une ligne, bouton de l'assistant en entier, sans chevauchement.
+- Mobile (≤ 700 px) inchangé : largeur de la carte moins 4,6rem.
+
+## 2026-11-15 — Carte : courbes du graphique choisies par la seule liste déroulante
+- **Décision** (demande de l'utilisateur·rice : « utilise uniquement le menu drop ») : les cases à cocher « Courbes
+  superposées » sous le graphique sont retirées. Les courbes se choisissent seulement par « Superpositions proposées ».
+  - Gardé : l'interrupteur « Indice base 100 en 2026 » (mode d'affichage, pas un choix de courbes).
+  - Un lien `g=` portant une combinaison hors liste reste lu ; la liste affiche alors « Personnalisée ».
+- **Conséquence :** une combinaison libre de courbes n'est plus composable à l'écran ; seules les 9 superpositions
+  proposées le sont.
+- **Recette :** R33 passe par « Effectif, densité et population » pour vérifier la base 100 imposée ; 36/37 (R25 « A+ »
+  échouait déjà).
+
+## 2026-11-15 — Carte : bouton de l'assistant au-dessus de la légende
+- **Décision** (demande de l'utilisateur·rice) : le bouton « Assistant de simulation » quitte le coin bas droit de la
+  carte et se place au-dessus de la légende, aligné sur son bord gauche, 8 px au-dessus. *Bord droit et libellé « IA » depuis le même jour : voir l'entrée suivante.* Sa hauteur suit celle de la
+  légende (indicateur, largeur de carte) par `askFit`. Le libellé est toujours complet (plus de forme réduite à l'icône).
+- **Conséquences :** la légende n'a plus à laisser de place à droite : largeur de la carte moins 4,6rem, plafond 60rem
+  (remplace « moins 17rem » de l'entrée « la légende du bas suit la largeur de la carte ») ; le cadrage de la carte
+  réserve en bas la hauteur de la légende et du bouton.
+- **Vérifié :** écart de 8 px et bords gauches alignés, panneaux ouverts, vue Couverture et panneaux repliés ;
+  recette 36/37 (R36 vérifie la nouvelle position ; R25 « A+ » échouait déjà).
+
+## 2026-11-15 — Carte : bouton « IA » à droite au-dessus de la légende ; indicateurs centrés
+- **Décision** (demande de l'utilisateur·rice) : le bouton de l'assistant sur la carte affiche l'icône et « IA » (libellé
+  accessible « Assistant de simulation (IA) », infobulle inchangée sur le fond) ; il reste au-dessus de la légende, 8 px,
+  mais aligné sur son bord **droit** (remplace « aligné sur son bord gauche » de l'entrée précédente). Les boutons
+  d'indicateur de la légende sont centrés dans la barre.
+- **Vérifié :** bords droits alignés, écart 8 px, indicateurs centrés à 0 px près, panneaux ouverts et repliés.
+- *Libellé « IA » remplacé le même jour par « Assistant » (demande de l'utilisateur·rice) ; libellé accessible « Assistant
+  de simulation ».*
+
+## 2026-11-15 — Carte : libellés courts des indicateurs dans la légende
+- **Décision** (demande de l'utilisateur·rice) : dans la barre de la carte, « Variation de l'effectif 2026 → 2050 »
+  devient « Variation » et « Écart au tendanciel » devient « Écart ». Le nom complet passe dans l'infobulle du bouton.
+  « Densité 2050 » et « Couverture 2050 » inchangés. Le titre de la légende sous les boutons garde le nom complet.
+  *Complété le même jour : plus aucune année dans les boutons (« Densité », « Couverture ») ; l'année affichée reste
+  dans le titre de la légende et dans l'infobulle de la carte.*
+
+## 2026-11-15 — Carte : légende centrée dans la carte, bouton « Assistant » aligné sur son bord droit
+- **Décision** (demande de l'utilisateur·rice, plein écran, panneaux dépliés) : la légende du bas est centrée
+  horizontalement dans la colonne de carte (même marge à gauche et à droite), quelle que soit la place laissée par les
+  panneaux ; largeur inchangée (carte moins 4,6rem, plafond 60rem). Le bouton « Assistant » reste au-dessus, bord droit
+  sur celui de la légende. Mobile (≤ 700 px) inchangé : légende calée à gauche.
+- **Vérifié** (fenêtre 1388 px) : panneaux dépliés, marges 37 / 37 px ; repliés, 176 / 176 px ; bouton aligné à 0 px,
+  8 px au-dessus ; pas de chevauchement avec l'attribution de la carte.
+
+## 2026-11-15 — Carte : écart entre les boutons d'indicateur proportionnel à la largeur de la légende
+- **Décision** (demande de l'utilisateur·rice) : l'écart horizontal entre « Variation », « Écart », « Densité » et
+  « Couverture » vaut 4 % de la largeur de la légende (requête de conteneur `cqi`), borné entre 0,4rem et 3rem.
+- **Mesuré** (fenêtre 1388 px) : légende 488 px → écart 18 px ; 784 px → 30 px ; 960 px → 37 px ; une seule ligne
+  dans les trois cas.
