@@ -240,7 +240,7 @@ class Conversation:
         vu = pour_modele(res)
         self.refs |= V.references(vu)
         self.qualifs |= V.qualificatifs(vu)
-        if nom in ("projeter", "comparer", "balayer", "atteindre", "planifier", "traduire_politique"):   # la carte peut l'afficher
+        if nom in ("projeter", "comparer", "balayer", "atteindre", "planifier", "traduire_politique", "couverture"):   # la carte peut l'afficher
             appels[-1]["code_territoire"] = res.get("code_territoire")
             if nom == "planifier" and res.get("melanges"):
                 appels[-1]["reglage_carte"] = res["melanges"][0]["reglage_carte"]
@@ -320,6 +320,9 @@ class Conversation:
     MOTS_HORS = {"medecins": r"\bm[ée]decins?\b|g[ée]n[ée]ralistes?|sp[ée]cialistes?|cardiolog|dermatolog|ophtalmolog|psychiatr|p[ée]diatr",
                  "horizon": r"\b(20[5-9]\d|2[1-9]\d\d)\b"}
 
+    # intention « couverture » (étape 5 du plan besoin-carte) : l'outil couverture, même sans transfert de tâches
+    RX_COUV = re.compile(r"couverture|couvert[es]?\b|indice de couverture|offre (?:rapport[ée]e )?au besoin", re.I)
+
     def _deterministe(self, texte: str) -> dict:
         appels, graphiques = [], []
         per = C.requete("perimetre", {})[0]
@@ -327,6 +330,8 @@ class Conversation:
         for k, rx in self.MOTS_HORS.items():
             m = re.search(rx, texte, re.I)
             if m and not (k == "horizon" and int(m.group(0)) <= 2050):
+                if k == "medecins" and self.RX_COUV.search(texte) and "couverture_medecins" in hors:
+                    k = "couverture_medecins"                 # règle O2, dite telle quelle
                 return {"texte": f"**{HORS} :** {hors[k]['sujet']}. {hors[k]['raison']}", "appels": [], "graphiques": [],
                         "verification": {"statut": "ok", "non_rattaches": []}}
         r, _ = C.requete("interpreter_phrase", {"texte": texte[:500]})
@@ -366,29 +371,44 @@ class Conversation:
                   "Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé."]
         lignes = ([x for x in lignes if x.startswith("**Je n'ai pas")] + lignes_proj
                   + [x for x in lignes if not x.startswith("**Je n'ai pas")])
-        if tr:
-            lignes += self._couverture(tr[0], terr, args["leviers"], annee, appels, graphiques)
+        if tr or self.RX_COUV.search(texte):
+            lignes += self._couverture(tr[0] if tr else None, prof, terr, args["leviers"], annee, appels, graphiques)
         if res["code_territoire"] != terr or (r["territoire"] and r["territoire"].startswith("D") and not re.search(res["territoire"], texte, re.I)):
             lignes.append(f"{LIMITE} grain départemental : une ville est ramenée à son département ({res['territoire']}).")
         return {"texte": "\n\n".join(lignes), "appels": appels, "graphiques": graphiques, "verification": {"statut": "ok", "non_rattaches": []}}
 
-    def _couverture(self, tr, terr, lv, annee, appels, graphiques) -> list[str]:
-        """L23 : effectif inchangé dans le modèle, indice de couverture des pharmaciens (outil couverture)."""
-        args = {"profession": tr["cible"], "territoire": terr, "leviers": lv, "l23": True, "l23_t0": tr["t0"], "annees": [annee]}
+    def _couverture(self, tr, prof, terr, lv, annee, appels, graphiques) -> list[str]:
+        """Indice de couverture (outil couverture) ; avec L23 : effectif inchangé dans le modèle, couverture des pharmaciens."""
+        args = {"profession": tr["cible"] if tr else prof, "territoire": terr, "leviers": lv, "l23": bool(tr), "annees": [annee]}
+        if tr:
+            args["l23_t0"] = tr["t0"]
         err, est_err, res = self._appel("couverture", args, appels, graphiques)
-        tete = f"**{tr['libelle']}, à partir de {tr['t0']} : effectif inchangé dans le modèle.**"
+        tete = f"**{tr['libelle']}, à partir de {tr['t0']} : effectif inchangé dans le modèle.**" if tr else "**Indice de couverture.**"
         if est_err:
             return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
         a = res["annees"][-1]
         f = lambda x: f"{x:.2f}".replace(".", ",")
         e = f"{a['ecart_tendanciel_pct']:+.1f}".replace(".", ",")
+        scn = "avec la vaccination en officine" if tr else "au scénario"
         lig = [tete + f" Couverture des {res['profession'].lower()} en {a['annee']} ({res['territoire']}, indice base "
-               f"{res['reference']} = 1) : {f(a['indice_scenario'])} avec la vaccination en officine, {f(a['indice_tendanciel'])} au "
+               f"{res['reference']} = 1) : {f(a['indice_scenario'])} {scn}, {f(a['indice_tendanciel'])} au "
                f"tendanciel, soit {a['qualificatifs']['ecart']} ({e} %)."]
         if a.get("fourchette_estimateurs"):
             lo, hi = a["fourchette_estimateurs"]
-            lig.append(f"Selon l'estimateur du besoin, l'indice va de {f(lo)} à {f(hi)} : le choix du modèle pèse, aucun chiffre "
-                       "unique n'est retenu.")
+            lig.append(f"Selon l'estimateur du besoin ({', '.join(res['estimateurs'] or [])}), l'indice {scn} va "
+                       f"de {f(lo)} à {f(hi)} : le choix du modèle pèse, aucun chiffre unique n'est retenu.")
+        for x in res["transferts"]:
+            if x.get("actes_mg_liberes_france") is not None:
+                n = f"{x['actes_mg_liberes_france']:,}".replace(",", " ")
+                lig.append(f"Actes de médecine générale libérés par la vaccination en officine en {x['annee']} : environ "
+                           f"{n} injections, France entière"
+                           + (f" ({x['etp_liberes_source_france']} ETP-équivalents)." if x.get("etp_liberes_source_france") else "."))
+        if res.get("avertissement"):
+            lig.append(f"{LIMITE} {res['avertissement']}.")
+        if not a.get("fourchette_estimateurs") and len(res.get("estimateurs") or []) == 1:
+            lig.append(f"Un seul estimateur du besoin est servi pour les {res['profession'].lower()} "
+                       f"({res['estimateurs'][0]}, choix du modèle distinguable de l'effet des leviers) : pas de fourchette entre "
+                       "estimateurs ; la fourchette de l'effectif ci-dessus reste celle de l'offre.")
         st = ", ".join(f"{p['nom']} {p['statut']}" for p in res["parametres_l23"])
         lig.append(f"{LIMITE} l'indice compare l'offre au besoin par rapport à 2026, ce n'est pas une part du besoin couverte"
                    + (f" ; paramètres de L23 : {st}." if st else "."))

@@ -33,7 +33,7 @@ def test_couverture_l23_ecart_au_tendanciel(passerelle):
     assert a["indice_scenario"] < a["indice_tendanciel"] and a["ecart_tendanciel_pct"] < 0
     assert "fourchette_estimateurs" not in a                      # pharmaciens : estimateur servi seul
     assert r["reference"] == 2026 and "inchangé" in r["effectif"]
-    assert r["transferts"][0]["cible"] == "pharmaciens"
+    assert r["transferts"][0]["cible"] == "pharmaciens" and r["transferts"][0]["actes_mg_liberes_france"] > 0
 
 
 def test_couverture_fourchette_kines(passerelle):
@@ -53,19 +53,30 @@ def test_deterministe_l23_effectif_inchange_et_couverture(passerelle):
         "Si les pharmaciens peuvent vacciner, combien de pharmaciens à Clermont-Ferrand en 2035 ?")
     t = out["texte"]
     assert "effectif inchangé dans le modèle" in t and "Couverture des pharmaciens" in t
-    assert "Hors du périmètre du modèle : Vaccination" not in t
+    assert "Hors du périmètre du modèle : Vaccination" not in t and "Actes de médecine générale libérés" in t
     assert "besoin couvert" not in t.replace("part du besoin couverte", "")
-    assert not MG.search(t)
+    assert not MG.search(t.replace("Actes de médecine générale libérés", ""))
     assert [x["outil"] for x in out["appels"]] == ["projeter", "couverture"]
 
 
 def test_deterministe_couverture_mg_jamais(passerelle):
-    t = A.Conversation(mode="deterministe").envoyer("Quelle couverture pour les médecins généralistes en 2035 ?")["texte"]
-    assert t.startswith(f"**{A.HORS}")
-    assert not re.search(r"indice|\d,\d\d", t)
+    out = A.Conversation(mode="deterministe").envoyer("Quelle couverture pour les médecins généralistes en 2035 ?")
+    assert out["texte"].startswith(f"**{A.HORS}") and out["appels"] == []    # aucun indice demandé ni montré
+    assert not re.search(r"\d,\d\d", out["texte"])
 
 
 def test_prompt_interdit_mg_et_vocabulaire(passerelle):
     s = A.systeme(C.requete("perimetre", {})[0])
     assert "Jamais de couverture, de besoin ni d'indice" in s and "Effectif inchangé dans le modèle" in s
     assert any(h["id"] == "couverture_medecins" for h in C.requete("perimetre", {})[0]["hors_perimetre"])
+
+
+def test_intention_couverture_sans_l23_fourchette(passerelle):
+    out = A.Conversation(mode="deterministe").envoyer("Quelle couverture des kinés en Auvergne-Rhône-Alpes en 2050 ?")
+    assert out["appels"][-1]["outil"] == "couverture" and out["appels"][-1]["entree"]["l23"] is False
+    assert "l'indice au scénario va de" in out["texte"]
+
+
+def test_couverture_mg_dit_o2(passerelle):
+    t = A.Conversation(mode="deterministe").envoyer("couverture des médecins généralistes en 2035")["texte"]
+    assert "O2" in t and t.startswith(f"**{A.HORS}")

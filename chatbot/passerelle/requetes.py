@@ -466,11 +466,11 @@ def interpreter(texte: str) -> dict:
 
 
 # ------------------------------------------------------------------ couverture (module de besoin, via l'API de la carte)
-# Contrat : plan v2/docs/lab/derivations/2026-11-15-besoin-carte-plan.md (branche claude/licences-et-carte-3f2547), étape 1 :
-# GET /api/couverture?prof=…&terr=…&<leviers>&l23=0|1 -> C base et scénario par année (indexé sur 2026), fourchette entre
-# estimateurs quand elle existe, bloc transferts, hypotheses. Le 2026-11-15, l'API n'est pas encore publiée : ce code suit le
-# contrat écrit et lit aussi la forme de besoin.sortie.besoin_api (dict profession -> [territoire][année]).
-CARTE_URL = os.environ.get("CARTE_URL", "http://127.0.0.1:8766")
+# API réelle : v2/prototype-carte/server.py, GET /api/couverture?prof=…&<leviers>&l23=1 (branche claude/besoin-carte-api-6d9504).
+# Réponse : years ; fr / regs["R84"] / deps["63"] = {cb, cs, ecart, min, max} par année (cb tendanciel, cs scénario, 2026 = 1) ;
+# fourchette_visible (règle des 5 % entre estimateurs) ; l23 = {params, transferts[{etp_liberes_source, actes_mg_liberes…}]}.
+# L'API date L23 à l'année de décision de la carte (2026) : une autre date est signalée, pas appliquée.
+CARTE_URL = os.environ.get("CARTE_URL", "http://127.0.0.1:8767")
 SANS_COUVERTURE = {"medecine-generale", "medecins-generalistes", "generalistes", "specialistes", "medecins-specialistes"}  # O2
 
 
@@ -483,29 +483,13 @@ def q_ecart_couverture(pct: float) -> str:
     return f"couverture légèrement {sens} tendanciel" if a < 5 else f"couverture {sens} tendanciel"
 
 
-def _serie(obj, prof: str, terr: str, terrs: list):
-    """Série par année pour (prof, terr) dans l'une des formes admises ; None si absente."""
-    if obj is None:
-        return None
-    if isinstance(obj, dict):
-        x = obj.get(prof, obj.get(terr))
-        if x is None:
-            return None
-        if isinstance(x, dict):
-            return x.get(terr)
-        if x and isinstance(x[0], list):
-            return x[terrs.index(terr)] if terr in terrs else None
-        return x
-    return obj
-
-
 def _carte_couverture(q: dict) -> dict:
     import urllib.error
     import urllib.request
     from urllib.parse import urlencode
     url = f"{CARTE_URL}/api/couverture?{urlencode(q)}"
     try:
-        with urllib.request.urlopen(url, timeout=30) as r:
+        with urllib.request.urlopen(url, timeout=120) as r:
             return json.loads(r.read())
     except urllib.error.HTTPError as e:
         raise ErreurOutil(f"l'API de couverture refuse la requête (HTTP {e.code})") from e
@@ -520,42 +504,47 @@ def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None 
         raise ErreurOutil("règle O2 : aucun indice de couverture pour la médecine générale ni les spécialistes ; "
                           "ils n'apparaissent que comme source d'un transfert (temps libéré, France entière)")
     p, t = profession(profession_), territoire(territoire_)
-    lv = {k: v for k, v in (leviers_ or {}).items()}
+    lv = dict(leviers_ or {})
     leviers(lv)                                                     # mêmes bornes que projeter
-    q = {"prof": p, "terr": t, **{k: ("1" if v is True else "0" if v is False else v) for k, v in lv.items()},
-         "l23": int(bool(l23)), "l23_t0": l23_t0}
+    q = {"prof": p, **{k: ("1" if v is True else "0" if v is False else v) for k, v in lv.items()}, "l23": int(bool(l23))}
     j = _carte_couverture(q)
-    ys, terrs = [int(y) for y in j.get("years", j.get("annees", []))], list(j.get("territories", j.get("territoires", [t])))
-    scn = _serie(j.get("couverture"), p, t, terrs)
-    base = _serie(j.get("couverture_base"), p, t, terrs)
-    lo, hi = _serie(j.get("couverture_min"), p, t, terrs), _serie(j.get("couverture_max"), p, t, terrs)
-    if scn is None or base is None or not ys:
-        raise ErreurOutil(f"réponse de l'API de couverture sans série pour {p} / {t}")
+    ys = [int(y) for y in j["years"]]
+    z = j["fr"] if t == "FR" else (j.get("regs") or {}).get(t) if t[0] == "R" else \
+        (j.get("deps") or {}).get(t[1:], (j.get("deps") or {}).get(t))
+    if not z:
+        raise ErreurOutil(f"pas d'indice de couverture pour {p} / {t} dans la réponse de l'API")
+    ref = int(j.get("ref", 2026))
     annees = annees or [y for y in (2030, 2035, 2040, 2050) if y in ys]
     rows = []
     for y in annees:
         if y not in ys:
             raise ErreurOutil(f"année {y} absente de l'API de couverture (années : {ys[0]} à {ys[-1]})")
         i = ys.index(y)
-        e = 100 * (scn[i] / base[i] - 1)
-        row = {"annee": y, "indice_tendanciel": round(base[i], 3), "indice_scenario": round(scn[i], 3),
+        e = 100 * z["ecart"][i]
+        row = {"annee": y, "indice_tendanciel": round(z["cb"][i], 3), "indice_scenario": round(z["cs"][i], 3),
                "ecart_tendanciel_pct": round(e, 1), "qualificatifs": {"ecart": q_ecart_couverture(e)}}
-        if lo is not None and hi is not None:
-            row["fourchette_estimateurs"] = [round(lo[i], 3), round(hi[i], 3)]
+        if j.get("fourchette_visible"):                            # règle des 5 % de la carte (décision axe 5)
+            row["fourchette_estimateurs"] = [round(z["min"][i], 3), round(z["max"][i], 3)]
         rows.append(row)
-    tr = [{"transfert": x.get("transfert"), "source": x.get("source"), "cible": x.get("cible"),
-           **({"etp_liberes_source_france": round(x["etp_liberes_source"][ys.index(annees[-1])])} if x.get("etp_liberes_source") else {})}
-          for x in j.get("transferts", []) if x.get("cible") not in SANS_COUVERTURE]
+    blk = j.get("l23") or {}
+    ia = ys.index(annees[-1])
+    tr = [{"transfert": x.get("transfert"), "source": x.get("source"), "cible": x.get("cible"), "annee": annees[-1],
+           "etp_liberes_source_france": round(x["etp_liberes_source"][ia]) if x.get("etp_liberes_source") else None,
+           "actes_mg_liberes_france": x["actes_mg_liberes"][ia] if x.get("actes_mg_liberes") else None}
+          for x in blk.get("transferts", []) if x.get("cible") not in SANS_COUVERTURE]
     params = [{"nom": h.get("name"), "statut": h.get("status"), "source": h.get("source")}
-              for h in (j.get("hypotheses") or {}).get("params", []) if h.get("name") in ("a", "k", "s_inf", "tau", "mu")]
-    return {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t,
-            "grandeur": "indice de couverture (offre / besoin, base 2026 = 1), demande adressée au secteur privé de ville",
-            "reference": int(j.get("ref", 2026)), "estimateur": j.get("estimateur"), "effectif": "inchangé dans le modèle par L23",
-            "l23": {"actif": bool(l23), "t0": l23_t0}, "annees": rows, "transferts": tr, "parametres_l23": params,
-            "lecture": "1 = couverture de 2026 ; l'écart se lit par rapport au tendanciel de la même année, jamais comme une part du besoin couvert",
-            "contrat_api": "plan besoin-carte du 2026-11-15, étape 1"}
-
-
+              for h in blk.get("params", []) if h.get("name") in ("a", "k", "s_inf", "tau", "mu")]
+    out = {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t,
+           "grandeur": "indice de couverture (offre / besoin, base 2026 = 1), demande adressée au secteur privé de ville",
+           "reference": ref, "estimateur_central": j.get("central"), "estimateurs": j.get("estimateurs"),
+           "effectif": "inchangé dans le modèle par L23",
+           "l23": {"actif": bool(l23), "t0": ref}, "annees": rows, "transferts": tr, "parametres_l23": params,
+           "lecture": "1 = couverture de 2026 ; l'écart se lit par rapport au tendanciel de la même année, jamais comme une part du besoin couvert"}
+    if l23 and l23_t0 != ref:
+        out["avertissement"] = f"l'API date la vaccination en officine à {ref} ; la date demandée ({l23_t0}) n'est pas appliquée"
+    if blk.get("note"):
+        out["note_l23"] = blk["note"]
+    return out
 
 
 # Ce que le modèle ne sait PAS faire, d'après sa documentation (synthèse du 2026-11-14, README, ROADMAP).

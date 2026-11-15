@@ -68,14 +68,17 @@ def appliquer(B: Cube, transferts=()) -> tuple[Cube, list[dict]]:
     return replace(B, values=V), detail
 
 
-# Exemple branché de bout en bout (L23, vaccination antigrippale en officine) ; toutes les valeurs sont « supposé ».
+# L23, vaccination antigrippale en officine : s_∞ et τ mesurés par P-B6 (registre 2026-11-15) ; a, k, μ supposés.
 L23_PARAMS = (
-    Param("a", 0.01, "part du temps de MG", PLACEHOLDER + " (Cour des comptes 2026 pour les parts par vaccinateur)",
-          "—", "supposé"),
-    Param("k", 1.0, "t_PH / t_MG", PLACEHOLDER + " ; aucune durée officielle trouvée (ledger)", "—", "supposé"),
-    Param("s_inf", 0.6, "part", PLACEHOLDER + " (IQVIA, DAMIR 3360 : à mesurer, P-B6)", "—", "supposé"),
-    Param("tau", 3.0, "années", PLACEHOLDER, "—", "supposé"),
-    Param("mu", 0.0, "actes ajoutés / acte transféré", PLACEHOLDER + " (P-B6 mesure m)", "—", "supposé"),
+    Param("a", 0.01, "part du temps de MG", "répartition des injections sourcée (Cour des comptes 2026, G10.csv : "
+          "médicaux 70,7 % en 2018) ; part en temps de MG : dénominateur non lu, valeur supposée (fiche L23)", "2018",
+          "supposé"),
+    Param("k", 1.0, "t_PH / t_MG", "plage [0,25 ; 1] de la fiche L23 ; aucune durée officielle trouvée (ledger)", "—",
+          "supposé"),
+    Param("s_inf", 0.74, "part", "P-B6 (série nationale) : part officinale, IQVIA ÷ Open Medic, 2021-22 à 2024-25 (± 0,07)",
+          "2025", "mesuré"),
+    Param("tau", 2.4, "années", "P-B6 : même ajustement (± 0,5 an)", "2025", "mesuré"),
+    Param("mu", 0.0, "actes ajoutés / acte transféré", "P-B6 : effet non attribuable (ATT +0,73 %, placebo en échec), tenu à 0", "2025", "supposé"),
 )
 
 

@@ -53,7 +53,11 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+<<<<<<< HEAD
 | 2026-11-15 | [Besoin dans l'assistant et le compilateur](v2/docs/lab/reports/2026-11-15-besoin-assistant.md) | Jeu transferts (12 phrases écrites avant le code) 3/12 → 11/12 ; six jeux à l'aveugle inchangés ; tests du chatbot 33 → 45 ; couverture via l'API de la carte (contrat du plan, API réelle pas encore publiée) | session besoin-assistant |
+=======
+| 2026-11-15 | [Besoin → carte : couverture et L23](v2/docs/lab/reports/2026-11-15-besoin-carte.md) | `/api/couverture` 28,8 ms au p95 (n = 60, < 150) ; L23 : C pharmaciens France 2050 1,013 → 1,006 (−0,7 %), 495 ETP-équivalents de MG libérés ; L23 = 0 ⇒ écart 0 ; MG et spécialistes → 400 | session besoin-carte |
+>>>>>>> origin/claude/besoin-carte-api-6d9504
 | 2026-11-15 | [Besoin P-B4-PH : APL V0 des pharmacies](v2/docs/lab/reports/2026-11-15-besoin-p-b4-ph-apl-v0.md) | Échec : Spearman 0,72 [0,71 ; 0,74] (seuil 0,90), erreur médiane 33 % ; gain sur la densité +0,14 ; niveau moyen reproduit (22,1 contre 22,5) → M4 pharmaciens indice maison | session besoin-derivation |
 | 2026-11-15 | [Besoin, axe 5 : sensibilité de C(2050)](v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md) | R (quotas × 1,2 / choix du modèle de besoin) : SF 1,91, CD 40, PH 1,14 distinguables ; MK 0,77, IDE 0,34 non distinguables → C en fourchette pour MK et IDE ; écart dû à M0 ; l'offre C1 porte 52–92 % de la variance | session besoin-axe5-sensibilite |
 | 2026-11-15 | [Besoin : rapport d'étape](v2/docs/lab/reports/2026-11-15-besoin-etape.md) | 6 protocoles sur 7 passés : M1 retenu pour les 5 professions (CD de justesse, S₁ 87,1 % sous P2) ; M2b tué ; M3 pour l'indice IDE (S₃ 83 %) ; H-B1 retenue (IDE −8,1 pts) ; M4 indice maison en repli ; m = 0 et k supposés ; P-B4 OSRM à compléter | session besoin-etape |
