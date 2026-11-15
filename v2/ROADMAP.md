@@ -36,8 +36,10 @@ professions :
 - Les sources (RPPS, ameli) emploient « libéral » au sens d'exercice
   indépendant. On rappelle donc notre définition à chaque sortie.
 
-**Échelles.** Les modèles tournent à tous les niveaux : commune, groupes de
-communes, département, région, national. La régulation de l'installation
+**Échelles.** ~~Les modèles tournent à tous les niveaux : commune, groupes de
+communes, département, région, national.~~ *Remplacé le 2026-11-15 (utilisateur·rice) : les sorties
+s'arrêtent au **département** (puis région, national) ; pas de grain communal affiché. Les calculs internes
+qui passent par la commune (zonage, M4) restent agrégés au département.* La régulation de l'installation
 s'applique par commune, et le DG d'ARS doit avoir la visibilité maximale.
 
 **Ce qui vient ensuite.**

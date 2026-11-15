@@ -10,8 +10,8 @@ territory, to 2035+, and simulate policy levers. Open data only.
 [Project brief](CLAUDE.md) · [Lab profile](docs/lab/profile.md)
 
 > **Recadrage 2026-11-14 :** projet de recherche. Jumeau numérique des
-> effectifs « libéraux » (secteur privé) SF, CD, PH, MK et IDE, à toutes les
-> échelles jusqu'à la commune, horizon 2050. Démarrer : [README](README.md) ·
+> effectifs « libéraux » (secteur privé) SF, CD, PH, MK et IDE, du département au
+> national (pas de grain communal, décision du 2026-11-15), horizon 2050. Démarrer : [README](README.md) ·
 > [feuille de route](v2/ROADMAP.md) · [décisions](v2/docs/lab/decisions.md) · [questions ouvertes](v2/docs/lab/open.md).
 > La v1 (13 novembre) est absorbée : code dans `v2/sante/`, registre dans [archive-v1](v2/docs/lab/archive-v1/decisions.md).
 

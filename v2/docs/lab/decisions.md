@@ -5288,3 +5288,23 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   - `jumeau.check` : seul C15 (temps) échoue, sous charge.
 - **Corrigé à la fusion :** `Home.md` de la branche `besoin-assistant` contenait des marqueurs de conflit commités ;
   ils sont retirés, et les trois lignes du journal sont gardées.
+
+## 2026-11-15 — Grain territorial : on s'arrête au département (pas de grain communal)
+- **Décision** (utilisateur·rice, après la recette de l'application, constat P1-5 : « pas de grain communal, on
+  s'arrête bien au départemental ») :
+  - les sorties du jumeau et du module de besoin s'affichent **au département, à la région et au national**
+    seulement ;
+  - pas de commune ni de groupe de communes dans la carte, l'API ou l'assistant ;
+  - les calculs internes qui passent par la commune restent permis (zonage conventionnel, M4 en 2SFCA, tables
+    communales), mais leurs résultats ne sont publiés qu'agrégés au département ;
+  - « Clermont-Ferrand » se lit « Puy-de-Dôme », comme l'assistant le fait déjà.
+- **Remplace :** « Les modèles tournent à toutes les granularités, jusqu'à la commune » (2026-11-14), dans
+  `CLAUDE.md`, `docs/lab/profile.md`, `v2/ROADMAP.md` et Home. Ces mentions sont barrées ou annotées, pas effacées.
+  Prolonge « affichage au département » (K5 non confirmé, N12).
+- **Pourquoi :**
+  - projection communale non confirmée (K3 à K5, N10 à N12) ;
+  - plus de la moitié des cellules commune × âge valent une personne (audit RGPD) ;
+  - P-B4 : M4 ne reproduit pas l'APL à la commune, alors que l'accord est de 0,98 au département.
+- **Conséquence :** le constat P1-5 de la recette (`2026-11-15-uat-application`) est clos par décision, pas par
+  correction. Le parcours ARS commence au département.
+

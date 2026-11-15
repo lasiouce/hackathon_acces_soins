@@ -20,7 +20,8 @@ and its demography.
 recherche quantitative.
 - Sorties : effectif « libéral » (secteur privé, tout employeur public
   exclu) des sages-femmes, dentistes, pharmaciens, kinés et infirmiers.
-- Échelles : toutes, jusqu'à la commune. Horizon 2050.
+- ~~Échelles : toutes, jusqu'à la commune.~~ *Remplacé le 2026-11-15 :* les sorties s'arrêtent au
+  **département** (puis région, national). Pas de grain communal affiché. Horizon 2050.
 - ~~Spécialistes en phase 2 (cardiologie, dermatologie, ophtalmologie).~~ *Remplacé le 2026-11-15 :* les
   spécialistes sont une **amélioration possible**, plus un jalon du plan. Ils restent admis comme profession source
   d'un transfert de tâches, sans projection ni indice de couverture (règle O2).

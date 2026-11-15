@@ -4,7 +4,7 @@
 
 Un projet de recherche quantitative. On simule des **politiques publiques nationales** et on mesure
 leur effet sur le nombre de professionnels de santé **libéraux** (hors médecine générale) jusqu'en
-**2050**, à toutes les échelles, de la commune au national. Chaque politique est un réglage
+**2050**, du département au national (pas de grain communal affiché, décision du 2026-11-15). Chaque politique est un réglage
 d'hyperparamètres **sourcés** : places en formation, âge de départ, diplômés à l'étranger, régulation
 de l'installation, etc. Chaque résultat est **reproductible, falsifiable et interprétable**, sans
 boîte noire.
