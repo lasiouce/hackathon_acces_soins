@@ -263,6 +263,28 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
             res["non_modelise"].append({"id": k, "libelle": e["libelle"], "raison": e["raison"],
                                         "source": e.get("source"), "repere": h[0][2]})
 
+    # transferts de tâches calculés par le module de besoin (L23) : date = année qui suit le terme dans sa proposition
+    res["transferts"] = []
+    for k, e in G.get("transferts_besoin", {}).items():
+        for c in re.split(r"[,;:?!.]|\s(?:et|puis|ainsi que|mais)\s", t):
+            h = _find(c, e["termes"])
+            if not h or any(x["id"] == k for x in res["transferts"]):
+                continue
+            if re.search(r"(?:^|\s)(?:pas de|pas d|ne pas|ne peuvent pas|ne peut pas|sans|interdire|supprimer)\s", c[:h[0][0]]):
+                res["compris"].append(f"{e['libelle']} : explicitement écarté.")
+                continue
+            y = re.search(r"(?:a partir de|des|en|depuis|au|d ici)\s+(?:l an |janvier |septembre )?(20\d\d)(?!\d)", c[h[0][1]:])
+            y = y or re.search(r"(?:a partir de|des)\s+(20\d\d)(?!\d)", t)
+            t0 = int(y.group(1)) if y else e["t0_defaut"]
+            if not 2019 <= t0 <= S.H:
+                res["avertissements"].append(f"{e['libelle']} : date {t0} hors de 2019–{S.H}, {e['t0_defaut']} retenu.")
+                t0 = e["t0_defaut"]
+            res["transferts"].append({"id": k, "libelle": e["libelle"], "t0": t0, "source": e["source_tache"], "cible": e["cible"],
+                                      "parametres_api": {e["parametre_api"]: 1, f"{e['parametre_api']}_t0": t0},
+                                      "statut": e["statut"], "fiche": e["fiche"], "repere": h[0][2]})
+            res["compris"].append(f"{e['libelle']} à partir de {t0} : effectif inchangé dans le modèle ; agit sur le besoin "
+                                  f"et l'indice de couverture des {e['cible']} (base 2026).")
+
     # profession
     profs = detecter_profession(t)
     m = re.search(r"combien d(?:e |es | )(.+)", t)
@@ -278,6 +300,8 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
                 f"« {profs[0]} » retenue, relancer pour les autres.")
     elif profession:
         res["profession"] = profession
+    elif res["transferts"]:
+        res["profession"] = res["transferts"][0]["cible"]
     if res["profession"] and res["profession"] not in S.PROFS:
         res["avertissements"].append(f"profession inconnue du serveur : {res['profession']!r}")
         res["profession"] = None

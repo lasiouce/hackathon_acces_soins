@@ -14,7 +14,10 @@ PORT = int(os.environ.get("PORT_TEST", "8779"))
 
 @pytest.fixture(scope="session")
 def passerelle():
-    p = subprocess.Popen([sys.executable, "-m", "passerelle.server", str(PORT)], cwd=RACINE,
+    carte = subprocess.Popen([sys.executable, str(RACINE / "tests" / "faux_carte.py"), str(PORT + 1)],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)      # API de couverture (contrat du plan)
+    env = {**os.environ, "CARTE_URL": f"http://127.0.0.1:{PORT + 1}"}
+    p = subprocess.Popen([sys.executable, "-m", "passerelle.server", str(PORT)], cwd=RACINE, env=env,
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     url = f"http://127.0.0.1:{PORT}"
     for _ in range(120):
@@ -25,6 +28,7 @@ def passerelle():
             time.sleep(0.5)
     else:
         p.kill()
+        carte.kill()
         pytest.fail("la passerelle n'a pas démarré")
     os.environ["PASSERELLE_URL"] = url
     import chat.client as C
@@ -32,3 +36,4 @@ def passerelle():
     yield url
     p.terminate()
     p.wait(10)
+    carte.terminate()

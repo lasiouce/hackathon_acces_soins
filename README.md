@@ -103,6 +103,9 @@ les infirmiers, le taux d'installation des diplômés ; Pyramide des âges ; Flu
 l'orange (en dessous de la moyenne nationale) au vert (au-dessus), en couleurs du DSFR. L'assistant de simulation
 s'ouvre dans une fenêtre par trois boutons : « Aide au scénario », « Aide à la lecture » et l'icône en bas à droite de
 la carte. Les deux panneaux latéraux se replient en une barre bleue (un clic la déplie), et la carte s'ouvre centrée sur la France.
+L'assistant et le compilateur comprennent la vaccination en officine (L23) : effectif inchangé dans le modèle,
+indice de couverture des pharmaciens (base 2026) lu sur `/api/couverture` ; jamais de couverture pour la médecine
+générale ([rapport](v2/docs/lab/reports/2026-11-15-besoin-assistant.md)).
 
 - **Carte des départements et des régions**, au choix : variation de l'effectif 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Sous la légende, « Comment lire cet indicateur ? » déplie sa

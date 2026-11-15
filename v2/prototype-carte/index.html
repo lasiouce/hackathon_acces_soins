@@ -851,6 +851,10 @@ function l23Wire(){const t=$("#lv-l23"),a=$("#l23-a"),k=$("#l23-k");
   t.onchange=()=>{L23.on=t.checked;renderL23();writeHash();tInput=performance.now();refresh();};
   a.oninput=()=>{L23.a=+a.value;sync();if(L23.on){writeHash();refresh();}};k.oninput=()=>{L23.k=+k.value;sync();if(L23.on){writeHash();refresh();}};
   sync();renderL23();}
+// proposition de l'assistant ou de la phrase : même effet que la case du panneau, appliquée après confirmation
+function setL23(on,vue){L23.on=on;const t=$("#lv-l23");if(t)t.checked=on;
+  if(vue&&COUVP.includes(S.prof)){S.v="couv";document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v=="couv"));}
+  renderL23();writeHash();}
 const STAT=s=>s=="mesuré"||s=="sourcé"?s:"supposé";
 function renderL23(){const n=$("#l23-note");if(!n)return;
   n.textContent=S.prof!="pharmaciens"?"Agit sur le besoin adressé aux pharmaciens (cible) et libère du temps de médecine générale (source) ; sans effet sur la profession affichée.":
@@ -1149,6 +1153,7 @@ function closeNL(){$("#nl").classList.remove("on");$("#nlq").focus();}
 function applyNL(){const r=NLR;if(!r)return;$("#nl").classList.remove("on");
   META.levers.forEach(l=>{if(l.famille!="contexte"&&l.k in r.leviers_valides)setL(l,r.leviers_valides[l.k]);});   // une phrase ne touche pas aux hypothèses
   if(r.profession&&r.profession!==S.prof){S.prof=r.profession;applyProf();}
+  const t23=(r.transferts||[]).find(t=>t.parametres_api?.l23);if(t23)setL23(true,true);
   if($("#levers").classList.contains("closed"))foldPanel("#levers","#fold",false);
   levState();refresh();
   if(r.territoire&&r.territoire!=="FR"&&r.territoire!==S.terr)select(r.territoire);else if(r.territoire=="FR"&&S.terr)closeCard();
@@ -1214,6 +1219,7 @@ const VERIF={ok:"Contrôle : chaque nombre vient d'un résultat du modèle",corr
 // scénario simulé par le chatbot -> carte : profession, leviers (les autres à leur défaut), année, territoire ; sur clic seulement
 function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof;applyProf();}
   for(const l of META.levers)if(!["pop_scen","activite"].includes(l.k)||l.k in c.leviers)setL(l,l.k in c.leviers?c.leviers[l.k]:l.default);
+  if("l23" in c)setL23(!!c.l23,c.vue=="couverture");
   if(c.annee>=2026&&c.annee<=2050)setYear(c.annee);levState();
   // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
   if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();askHide();toast("Scénario de l'assistant affiché sur la carte");}

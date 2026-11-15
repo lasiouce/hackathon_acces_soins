@@ -1,0 +1,29 @@
+Q: couverture des pharmaciens à Clermont-Ferrand en 2035 si les pharmaciens vaccinent
+**Ce que j'ai compris :** aucun levier : scénario tendanciel ; Pharmaciens ; Puy-de-Dôme
+
+En 2035, environ 771 pharmaciens libéraux (Puy-de-Dôme), probablement entre 755 et 788 (tendanciel : 771).
+
+Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé.
+
+**Vaccination en officine (L23), à partir de 2026 : effectif inchangé dans le modèle.** Couverture des pharmaciens en 2035 (Puy-de-Dôme, indice base 2026 = 1) : 0,98 avec la vaccination en officine, 0,99 au tendanciel, soit couverture proche du tendanciel (-0,7 %).
+
+Actes de médecine générale libérés par la vaccination en officine en 2035 : environ 1 878 752 injections, France entière (468 ETP-équivalents).
+
+Un seul estimateur du besoin est servi pour les pharmaciens (M1, choix du modèle distinguable de l'effet des leviers) : pas de fourchette entre estimateurs ; la fourchette de l'effectif ci-dessus reste celle de l'offre.
+
+Limite du modèle : l'indice compare l'offre au besoin par rapport à 2026, ce n'est pas une part du besoin couverte ; paramètres de L23 : a supposé, k supposé, s_inf mesuré, tau mesuré, mu supposé.
+
+Limite du modèle : grain départemental : une ville est ramenée à son département (Puy-de-Dôme).
+---
+Q: couverture des kinés en Auvergne-Rhône-Alpes en 2050
+**Ce que j'ai compris :** aucun levier : scénario tendanciel ; Masseurs-kinésithérapeutes ; Auvergne-Rhône-Alpes
+
+En 2050, environ 20 100 masseurs-kinésithérapeutes libéraux (Auvergne-Rhône-Alpes), probablement entre 14 400 et 25 700 (tendanciel : 20 100).
+
+Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé.
+---
+Q: Quelle couverture pour les médecins généralistes en 2035 ?
+**Hors du périmètre du modèle :** Médecins généralistes et médecins spécialistes. Médecine générale hors périmètre ; spécialités (cardiologie, dermatologie, ophtalmologie) prévues en phase 2, non construites.
+---
+({'profession': 'Masseurs-kinésithérapeutes', 'territoire': 'Auvergne-Rhône-Alpes', 'code_territoire': 'R84', 'grandeur': 'indice de couverture (offre / besoin, base 2026 = 1), demande adressée au secteur privé de ville', 'reference': 2026, 'estimateur_central': 'M1', 'estimateurs': ['M1', 'M2a'], 'effectif': 'inchangé dans le modèle par L23', 'l23': {'actif': False, 't0': 2026}, 'annees': [{'annee': 2050, 'indice_tendanciel': 1.248, 'indice_scenario': 1.248, 'ecart_tendanciel_pct': 0.0, 'qualificatifs': {'ecart': 'couverture proche du tendanciel'}}], 'transferts': [], 'parametres_l23': [], 'lecture': "1 = couverture de 2026 ; l'écart se lit par rapport au tendanciel de la même année, jamais comme une part du besoin couvert"}, None)
+(None, "arguments.profession : valeur 'medecine-generale' non autorisée ; valeurs : ['sages-femmes', 'dentistes', 'pharmaciens', 'kines', 'infirmiers']")

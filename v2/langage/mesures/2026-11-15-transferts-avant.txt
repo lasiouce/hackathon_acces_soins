@@ -1,0 +1,38 @@
+== jeu
+exact 29/30 = 97%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '3/4'}
+{'leviers': '30/30', 'profession': '29/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_2
+exact 27/30 = 90%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '3/4', 'piege': '2/4'}
+{'leviers': '30/30', 'profession': '28/30', 'territoire': '29/30', 'non_modelise': '30/30'}
+== jeu_3
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_4
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_5
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_6
+exact 21/30 = 70%
+{'simple': '8/12', 'combine': '3/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '2/4'}
+{'leviers': '22/30', 'profession': '30/30', 'territoire': '29/30', 'non_modelise': '30/30'}
+== transferts
+exact 3/12 = 25%
+{'l23': '0/7', 'non_mesurable': '2/4', 'temoin': '1/1'}
+{'leviers': '12/12', 'profession': '11/12', 'territoire': '12/12', 'non_modelise': '10/12', 'transferts': '5/12'}
+- ('t01', 'l23', 'Si les pharmaciens peuvent vacciner, combien de pharmaciens à Clermont-Ferrand en 2035 ?', {'transferts': ([], [('L23', 2026)])})
+- ('t02', 'l23', 'Généraliser la vaccination en officine à partir de 2028 dans le Rhône.', {'transferts': ([], [('L23', 2028)])})
+- ('t03', 'l23', 'Les pharmaciens vaccinent et on augmente de 10 % les places en pharmacie.', {'transferts': ([], [('L23', 2026)])})
+- ('t04', 'l23', "Vaccination antigrippale par les pharmaciens d'officine en Bretagne dès 2027", {'transferts': ([], [('L23', 2027)])})
+- ('t05', 'l23', 'Quelle couverture pour les pharmaciens en 2050 si les officines vaccinent contre la grippe ?', {'transferts': ([], [('L23', 2026)])})
+- ('t06', 'l23', "Autoriser les pharmaciens à vacciner en 2030 et reporter la retraite d'un an.", {'transferts': ([], [('L23', 2030)])})
+- ('t09', 'non_mesurable', 'Les pharmaciens prennent la tension et dépistent le diabète.', {'non_modelise': (False, True)})
+- ('t10', 'non_mesurable', 'Mesure de la pression artérielle en pharmacie dans le Nord.', {'non_modelise': (False, True)})
+- ('t12', 'l23', 'Pharmaciens qui vaccinent et infirmiers en pratique avancée.', {'profession': ('pharmaciens', None), 'transferts': ([], [('L23', 2026)])})
+Correspondance exacte (leviers + profession + territoire) : 35/36 = 97%

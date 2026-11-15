@@ -425,7 +425,7 @@ def _scenario_carte(appels: list) -> dict | None:
     cands = []
     for i, a in enumerate(appels):
         e = a.get("entree") or {}
-        if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique") or not a.get("code_territoire"):
+        if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique", "couverture") or not a.get("code_territoire"):
             continue
         lv = dict(e.get("leviers") or {})
         if a["outil"] in ("planifier", "traduire_politique"):      # premier mélange vérifié / essai d'ampleur basse
@@ -439,7 +439,9 @@ def _scenario_carte(appels: list) -> dict | None:
         if e.get("profession") not in V1.PROFS:
             continue
         c = {"prof": e["profession"], "terr": a["code_territoire"], "leviers": lv, "annee": max(ans) if ans else 2050}
-        cands.append(((bool(lv), c["terr"] != "FR", i), c))
+        if a["outil"] == "couverture":     # étape 5 du plan besoin-carte : L23 vu par l'assistant -> vue couverture, l23=1
+            c |= {"vue": "couverture", "l23": 1 if e.get("l23") else 0}
+        cands.append(((bool(lv) or bool(c.get("l23")), a["outil"] == "couverture", c["terr"] != "FR", i), c))
     return max(cands, key=lambda x: x[0])[1] if cands else None
 
 

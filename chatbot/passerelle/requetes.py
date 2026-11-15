@@ -44,10 +44,16 @@ def S():
     return mod
 
 
+# Compilateur : celui du dépôt qui contient chatbot/ quand il existe (le glossaire évolue plus vite que la copie du modèle :
+# transferts de tâches L23 du 2026-11-15), sinon celui de la copie épinglée. LANGAGE_DIR force un dossier.
+_LIVE = Path(__file__).resolve().parents[2] / "v2" / "langage"
+LANGAGE = Path(os.environ.get("LANGAGE_DIR") or (_LIVE if (_LIVE / "compilateur.py").exists() else V2 / "langage")).resolve()
+
+
 @lru_cache(maxsize=1)
 def NL():
     """Compilateur déterministe de v2/langage, branché sur le même module serveur (pas de second jumeau)."""
-    spec = importlib.util.spec_from_file_location("compilateur", V2 / "langage" / "compilateur.py")
+    spec = importlib.util.spec_from_file_location("compilateur", LANGAGE / "compilateur.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     mod.serveur = S
@@ -57,7 +63,7 @@ def NL():
 @lru_cache(maxsize=1)
 def PH():
     sys.modules.setdefault("compilateur", NL())   # phrases.py fait « from compilateur import serveur » : même instance
-    spec = importlib.util.spec_from_file_location("phrases", V2 / "langage" / "phrases.py")
+    spec = importlib.util.spec_from_file_location("phrases", LANGAGE / "phrases.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -453,10 +459,92 @@ def incertitude(profession_: str, annee: int = 2050) -> dict:
 
 def interpreter(texte: str) -> dict:
     r = NL().compile(texte)
-    return {k: r[k] for k in ("leviers", "profession", "territoire", "compris", "non_modelise", "non_compris",
-                               "avertissements", "reformulations")}
+    out = {k: r[k] for k in ("leviers", "profession", "territoire", "compris", "non_modelise", "non_compris",
+                              "avertissements", "reformulations")}
+    out["transferts"] = [{k: x[k] for k in ("id", "libelle", "t0", "cible", "statut")} for x in r.get("transferts", [])]
+    return out
 
 
+# ------------------------------------------------------------------ couverture (module de besoin, via l'API de la carte)
+# API réelle : v2/prototype-carte/server.py, GET /api/couverture?prof=…&<leviers>&l23=1 (branche claude/besoin-carte-api-6d9504).
+# Réponse : years ; fr / regs["R84"] / deps["63"] = {cb, cs, ecart, min, max} par année (cb tendanciel, cs scénario, 2026 = 1) ;
+# fourchette_visible (règle des 5 % entre estimateurs) ; l23 = {params, transferts[{etp_liberes_source, actes_mg_liberes…}]}.
+# L'API date L23 à l'année de décision de la carte (2026) : une autre date est signalée, pas appliquée.
+CARTE_URL = os.environ.get("CARTE_URL", "http://127.0.0.1:8767")
+SANS_COUVERTURE = {"medecine-generale", "medecins-generalistes", "generalistes", "specialistes", "medecins-specialistes"}  # O2
+
+
+def q_ecart_couverture(pct: float) -> str:
+    """Vocabulaire neutre de l'écart de couverture au tendanciel (mêmes seuils que q_variation)."""
+    a = abs(pct)
+    if a < 1:
+        return "couverture proche du tendanciel"
+    sens = "supérieure au" if pct > 0 else "moindre qu'au"
+    return f"couverture légèrement {sens} tendanciel" if a < 5 else f"couverture {sens} tendanciel"
+
+
+def _carte_couverture(q: dict) -> dict:
+    import urllib.error
+    import urllib.request
+    from urllib.parse import urlencode
+    url = f"{CARTE_URL}/api/couverture?{urlencode(q)}"
+    try:
+        with urllib.request.urlopen(url, timeout=120) as r:
+            return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        raise ErreurOutil(f"l'API de couverture refuse la requête (HTTP {e.code})") from e
+    except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+        raise ErreurOutil(f"API de couverture injoignable ({CARTE_URL}/api/couverture) : indice non disponible") from e
+
+
+def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None = None, l23: bool = True,
+               l23_t0: int = 2026, annees: list[int] | None = None) -> dict:
+    """Indice de couverture C (base 2026 = 1) d'une des cinq professions, tendanciel et scénario, écart relatif, fourchette."""
+    if str(profession_) in SANS_COUVERTURE:
+        raise ErreurOutil("règle O2 : aucun indice de couverture pour la médecine générale ni les spécialistes ; "
+                          "ils n'apparaissent que comme source d'un transfert (temps libéré, France entière)")
+    p, t = profession(profession_), territoire(territoire_)
+    lv = dict(leviers_ or {})
+    leviers(lv)                                                     # mêmes bornes que projeter
+    q = {"prof": p, **{k: ("1" if v is True else "0" if v is False else v) for k, v in lv.items()}, "l23": int(bool(l23))}
+    j = _carte_couverture(q)
+    ys = [int(y) for y in j["years"]]
+    z = j["fr"] if t == "FR" else (j.get("regs") or {}).get(t) if t[0] == "R" else \
+        (j.get("deps") or {}).get(t[1:], (j.get("deps") or {}).get(t))
+    if not z:
+        raise ErreurOutil(f"pas d'indice de couverture pour {p} / {t} dans la réponse de l'API")
+    ref = int(j.get("ref", 2026))
+    annees = annees or [y for y in (2030, 2035, 2040, 2050) if y in ys]
+    rows = []
+    for y in annees:
+        if y not in ys:
+            raise ErreurOutil(f"année {y} absente de l'API de couverture (années : {ys[0]} à {ys[-1]})")
+        i = ys.index(y)
+        e = 100 * z["ecart"][i]
+        row = {"annee": y, "indice_tendanciel": round(z["cb"][i], 3), "indice_scenario": round(z["cs"][i], 3),
+               "ecart_tendanciel_pct": round(e, 1), "qualificatifs": {"ecart": q_ecart_couverture(e)}}
+        if j.get("fourchette_visible"):                            # règle des 5 % de la carte (décision axe 5)
+            row["fourchette_estimateurs"] = [round(z["min"][i], 3), round(z["max"][i], 3)]
+        rows.append(row)
+    blk = j.get("l23") or {}
+    ia = ys.index(annees[-1])
+    tr = [{"transfert": x.get("transfert"), "source": x.get("source"), "cible": x.get("cible"), "annee": annees[-1],
+           "etp_liberes_source_france": round(x["etp_liberes_source"][ia]) if x.get("etp_liberes_source") else None,
+           "actes_mg_liberes_france": x["actes_mg_liberes"][ia] if x.get("actes_mg_liberes") else None}
+          for x in blk.get("transferts", []) if x.get("cible") not in SANS_COUVERTURE]
+    params = [{"nom": h.get("name"), "statut": h.get("status"), "source": h.get("source")}
+              for h in blk.get("params", []) if h.get("name") in ("a", "k", "s_inf", "tau", "mu")]
+    out = {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t,
+           "grandeur": "indice de couverture (offre / besoin, base 2026 = 1), demande adressée au secteur privé de ville",
+           "reference": ref, "estimateur_central": j.get("central"), "estimateurs": j.get("estimateurs"),
+           "effectif": "inchangé dans le modèle par L23",
+           "l23": {"actif": bool(l23), "t0": ref}, "annees": rows, "transferts": tr, "parametres_l23": params,
+           "lecture": "1 = couverture de 2026 ; l'écart se lit par rapport au tendanciel de la même année, jamais comme une part du besoin couvert"}
+    if l23 and l23_t0 != ref:
+        out["avertissement"] = f"l'API date la vaccination en officine à {ref} ; la date demandée ({l23_t0}) n'est pas appliquée"
+    if blk.get("note"):
+        out["note_l23"] = blk["note"]
+    return out
 
 
 # Ce que le modèle ne sait PAS faire, d'après sa documentation (synthèse du 2026-11-14, README, ROADMAP).
@@ -472,8 +560,12 @@ HORS_PERIMETRE = [
      "raison": "Le grain servi est le département ; une ville est ramenée à son département. La commune est en cours (≈ 6,8 s par scénario)."},
     {"id": "horizon", "sujet": "Années après 2050 ; passé avant les données (2012)",
      "raison": "Projection de l'origine (2026 ; 2023 pour les infirmiers) à 2050 ; historique observé depuis 2012."},
-    {"id": "besoin", "sujet": "Besoin ou demande de soins, délais d'attente, patients par professionnel, « combien en manque »",
-     "raison": "Aucun module de besoin : le modèle projette l'offre (effectifs), pas la demande. Décision ouverte de l'équipe."},
+    {"id": "besoin", "sujet": "Besoin en valeur absolue, part du besoin couvert, délais d'attente, patients par professionnel, « combien en manque »",
+     "raison": "Le modèle projette l'offre (effectifs). Le module de besoin ne fournit qu'un indice de couverture relatif "
+               "(outil couverture : base 2026 = 1, écart au tendanciel), pour les cinq professions seulement."},
+    {"id": "couverture_medecins", "sujet": "Couverture, besoin ou indice pour la médecine générale ou les spécialistes",
+     "raison": "Règle O2 : la médecine générale et les spécialistes n'entrent que comme source d'un transfert de tâches ; "
+               "aucun indice de couverture n'est calculé pour eux."},
     {"id": "activite_reelle", "sujet": "Temps de travail, équivalents temps plein, volume de soins",
      "raison": "L'activité par professionnel est une hypothèse supposée (curseur), pas une donnée mesurée."},
     {"id": "couts", "sujet": "Coûts, budget, rentabilité d'une politique",
@@ -669,6 +761,9 @@ def traduire_politique(politique: str, profession_: str, territoire_: str = "FR"
     tete = {"politique": g["libelle"], "pourquoi_hors_modele": g["raison"], "traduction": c["traduction"],
             "statut": "supposé (aucune élasticité estimée sur données ouvertes)", "limite": c.get("limite")}
     if c["traduction"] == "aucune":
+        if c.get("outil") == "couverture":
+            return {**tete, "lecture": "effectif inchangé dans le modèle ; effet calculé sur l'indice de couverture des "
+                                       "pharmaciens : appeler l'outil couverture avec l23"}
         return {**tete, "lecture": "pas dans le modèle : aucun levier du jumeau ne porte ce mécanisme"}
     p, t = profession(profession_), territoire(territoire_)
     base = _answer(p, leviers({}), t)
@@ -710,7 +805,8 @@ def perimetre() -> dict:
             "sortie": "effectif « libéral » = secteur privé (lucratif ou non), tout employeur public exclu",
             "grain": "France, région, département",
             "annees": {"historique_observe": "2012 à l'origine", "projection": f"origine (2026 ; infirmiers 2023) à {srv.H}"},
-            "questions": ["effectif projeté et sa fourchette", "effet d'un ou plusieurs leviers (écart au tendanciel, par flux)",
+            "questions": ["effectif projeté et sa fourchette",
+                          "indice de couverture (base 2026 = 1) et effet de la vaccination en officine (L23) sur celui des pharmaciens", "effet d'un ou plusieurs leviers (écart au tendanciel, par flux)",
                           "comparaison de scénarios", "sensibilité d'un levier sur une plage", "classement de départements (densité, écart, évolution)",
                           "paramètres qui pèsent le plus sur l'incertitude (Sobol)", "délai d'effet et niveau de preuve des leviers"],
             "leviers": [m["label"] for m in srv.LEVIERS_UI],

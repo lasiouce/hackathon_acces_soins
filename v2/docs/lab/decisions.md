@@ -5150,6 +5150,23 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   de séparabilité de l'offre qui change R de plus de 0,1.
 
 
+## 2026-11-15 — Assistant et compilateur : L23 compilé en transfert, couverture servie par l'API de la carte
+- **Décision** (tâche de la session v2, [rapport](reports/2026-11-15-besoin-assistant.md)) :
+  - **Compilateur** : la vaccination en officine produit un champ `transferts` (L23, avec t0 : année qui suit le terme
+    dans sa proposition, défaut 2026) **et reste dans `non_modelise`**, car l'effectif ne change pas. L25, L27 et
+    tension/diabète restent hors modèle, avec la raison « non mesurable » de leur fiche, sans transfert.
+  - **Assistant** : l'indice de couverture vient seulement de l'outil `couverture` (passerelle → `GET /api/couverture` de
+    la carte, contrat de l'étape 1 du plan besoin-carte ; branche de l'API absente au 2026-11-15). Écart au tendanciel en
+    relatif, qualifié par seuils (< 1 % proche, < 5 % légèrement, au-delà sans adverbe) ; fourchette entre estimateurs
+    quand l'API la donne. Jamais « % du besoin couvert ». MG et spécialistes : refus (O2), dans le schéma, la passerelle,
+    le périmètre et le prompt.
+  - **La passerelle charge le compilateur du dépôt** (`v2/langage/`) quand il existe, sinon celui de `vendor/` ;
+    `LANGAGE_DIR` le force.
+- **Pourquoi :** garder les jeux à l'aveugle comparables (vaccination toujours « non modélisée » pour l'effectif) ; ne
+  pas recalculer la couverture hors de l'API de la carte ; le glossaire évolue plus vite que la copie du modèle.
+- **Ce qui le renverserait :** une API de couverture publiée sous une autre forme ; une décision de servir le
+  compilateur figé de `vendor/` seulement.
+
 ## 2026-11-15 — Besoin → carte : vue « Couverture », L23 de bout en bout, M4 en attente (P-B4)
 - **Décision** (session besoin-carte, [rapport](reports/2026-11-15-besoin-carte.md), suit le
   [plan](derivations/2026-11-15-besoin-carte-plan.md)) :
@@ -5176,3 +5193,24 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   Les clés de l'API ne changent pas.
 - **Pourquoi :** un·e utilisateur·rice sans formation doit tout comprendre.
 - **Ce qui le renverserait :** un test de lecture qui montre une phrase encore mal comprise.
+
+## 2026-11-15 — Assistant : outil couverture aligné sur l'API réelle de la carte ; intention « couverture »
+- **Décision** (demande de la session besoin-derivation, [rapport](reports/2026-11-15-besoin-assistant.md)) :
+  - L'outil `couverture` lit la forme réelle de `/api/couverture` (`fr`, `regs`, `deps`, `fourchette_visible`,
+    `l23.transferts`), **remplace** la lecture « contrat du plan » de l'entrée précédente du même jour.
+  - Fourchette entre estimateurs montrée **seulement si `fourchette_visible`** ; sinon, pour un estimateur unique
+    (pharmaciens), la réponse dit qu'il n'y a pas de fourchette de modèle.
+  - Le mot « couverture » dans une question appelle l'outil, avec ou sans L23 ; avec MG ou spécialistes, réponse O2.
+  - Date de L23 : l'API applique 2026 ; une autre date est signalée, pas appliquée.
+- **Pourquoi :** une seule source pour C (la carte) ; règle d'affichage de l'axe 5 respectée.
+- **Ce qui le renverserait :** une API qui accepte `l23_t0` (alors la date compilée serait transmise).
+
+## 2026-11-15 — Carte : la proposition `l23` de l'assistant ou de la phrase règle le levier de vaccination
+- **Décision** : une proposition de l'assistant (`carte.l23`, `carte.vue = "couverture"`) ou un transfert L23 compris
+  par `/api/interpret` coche « Les pharmaciens vaccinent davantage contre la grippe » et ouvre la vue Couverture,
+  seulement au clic « Afficher sur la carte » (même confirmation que les autres leviers).
+  `l23_t0` proposé par le compilateur est ignoré : la carte sert t₀ = 2026.
+- **Pourquoi :** demande de l'utilisateur·rice ; vérifié dans le navigateur (« couverture des pharmaciens à
+  Clermont-Ferrand en 2035 si les pharmaciens vaccinent » → Puy-de-Dôme, 2035, indice 0,98, −0,7 %, même valeur que
+  la réponse de l'assistant). Capture : `figures/2026-11-15-besoin-carte-assistant-l23.jpg`.
+- **Ce qui le renverserait :** une date de transfert choisie par l'utilisateur·rice (brancher `l23_t0`).
