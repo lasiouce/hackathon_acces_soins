@@ -4657,3 +4657,23 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   pendant plus de 6 min (observé à 03:53–04:01). Le filtre Arrow est identique au filtre pandas sur un test de
   synthèse (200 000 lignes, écart max 7·10⁻¹⁵).
 - **Ce qui le renverserait :** une limite documentée qui permette 2 flux, ou un jeton par session (cookie).
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR arrêté à 9 mois sur 49, faute de temps ; P-B6 proposé sur Open Medic
+- **Décision** (accord de l'utilisateur·rice : « oui go », en ajoutant qu'il faudra écrire qu'on était limités par
+  le temps) :
+  - la lecture d'Open DAMIR s'arrête aux 9 mois lus (flux 2025-01 à 2025-09). La boucle de relance est arrêtée.
+    Pas de partage de connexion : ~37 Go pour un seul paramètre ;
+  - `damir_profils` et `damir_vaccination` sont construits sur ces 9 mois ;
+  - **proposé à l'axe 3** pour P-B6 : m mesuré sur Open Medic (boîtes J07BB par région de résidence, 2014–2025,
+    différence de différences annuelle), et s(t) pris dans la part nationale de la Cour des comptes. C'est à l'axe 3
+    de trancher avant le gel.
+- **Pourquoi :**
+  - l'indice M1 est rapporté à 2026, donc le niveau du recours s'annule ; la forme par âge vient des poids APL
+    (4 professions) et des 9 mois de DAMIR (PH) ;
+  - le prix par acte de M3 se calcule sur 9 mois ;
+  - seul s(t) régional exigeait les 25 mois de 2015–2020 ;
+  - le serveur bloquait la machine (adresse IP probable) depuis 03:53, et le temps du hackathon manque.
+- **Supersede en partie** « Open DAMIR lu en flux » et « fenêtre réduite à ~37–49 fichiers » (2026-11-15) : la
+  fenêtre décidée n'est pas lue en entier. La règle de lecture en flux reste.
+- **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
+  arrêté.

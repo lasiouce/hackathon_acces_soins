@@ -3,8 +3,8 @@ type: analysis
 date: 2026-11-15
 author: session besoin-axe4-donnees
 question: "Les sources du module de besoin sont-elles ingérées, au bon grain, sous leur licence, avec des totaux nationaux reconstruits égaux aux totaux publiés à 0,5 % près ?"
-headline: "6 sources ingérées en 15 tables ; 1 247 contrôles réussis sur 1 276. Les 29 échecs sont expliqués : secret statistique, bénéficiaires non localisés. Le contrôle DAMIR à 0,5 % est irréalisable : aucun total publié tous régimes au même périmètre. Pilote DAMIR à 1 flux : 213 s par mois (4,6 Mo/s) ; 4 flux refusés par le serveur"
-status: draft
+headline: "6 sources ingérées en 15 tables ; 1 247 contrôles réussis sur 1 276. Les 29 échecs sont expliqués : secret statistique, bénéficiaires non localisés. Le contrôle DAMIR à 0,5 % est irréalisable : aucun total publié tous régimes au même périmètre. DAMIR arrêté à 9 mois sur 49 (2025-01 à 2025-09), faute de temps : 213 s par mois à 1 flux (4,6 Mo/s), 4 flux refusés par le serveur, puis IP bloquée"
+status: final
 professions: [sages-femmes, dentistes, pharmaciens, kines, infirmiers]
 hypothesis: "critères de l'axe 4 du plan de besoin"
 sources:
@@ -28,7 +28,9 @@ tags: [besoin, axe4, donnees, open-damir, apl, data-ameli, open-medic, iqvia, di
 > totaux réussis sur 1 276 (mesuré). Les 29 échecs sont tous expliqués par la source : secret statistique, ou
 > bénéficiaires sans département. Le critère « DAMIR contre le total inter-régimes publié à 0,5 % » n'est **pas
 > réalisable** : aucun total publié tous régimes au même périmètre n'a été trouvé. Le pilote DAMIR à 1 flux prend
-> 213 s par mois (0,97 Go, 36,6 M lignes, 4,6 Mo/s). Avec 4 flux, le serveur a refusé les connexions.
+> 213 s par mois (0,97 Go, 36,6 M lignes, 4,6 Mo/s). Avec 4 flux, le serveur a refusé les connexions, puis a bloqué
+> la machine. **Limités par le temps du hackathon, nous avons arrêté DAMIR à 9 mois sur 49** (2025-01 à 2025-09) :
+> ils suffisent pour M1 et M3. P-B6 passe sur Open Medic (voir plus bas).
 
 ## Question
 Critères de l'axe 4 du [plan de besoin](../derivations/2026-11-15-besoin-plan.md) :
@@ -90,7 +92,29 @@ par contrôle).
   limite de téléchargements atteinte ou délai de connexion dépassé » au lieu du fichier. Ensuite, même un seul flux
   a été refusé pendant plus de 6 min (jeton changé entre-temps). On revient à 1 flux, avec une nouvelle tentative
   toutes les 60 s.
-- **ETA :** voir la section DAMIR plus bas, mise à jour à la fin de la fenêtre.
+- **Blocage :** le refus a duré au moins de 03:53 à 04:06 et touchait toute la machine : curl avec une session
+  neuve, le navigateur intégré, et même Open Medic sur le même serveur. Il n'y a pas de cookie, et le jeton est
+  commun à tous : la limite est très probablement liée à l'adresse IP (déduit, non documenté).
+
+**Open DAMIR, fenêtre arrêtée à 9 mois (décision de l'utilisateur·rice, 2026-11-15, faute de temps) :**
+- **Lu :** 2025-01 à 2025-09, soit 8,2 Go et ~310 M lignes. Les 3 mois de 2025 restants, les 12 mois de 2024 et
+  les 25 mois de campagne 2015-16 à 2019-20 ne sont **pas lus**.
+- **Ce qui suffit :**
+  - **M1** : l'indice est rapporté à 2026, donc le niveau absolu s'annule. La forme par âge vient des poids APL
+    pour SF, CD, MK et IDE, et de DAMIR pour les PH (tranches de 10 ans).
+  - **M3** : le prix moyen par acte (ratio montant / quantité) se calcule sur 9 mois.
+- **Ce qui manque :**
+  - octobre–décembre 2025 : biais saisonnier possible sur les profils, surtout la vaccination ;
+  - le contrôle de stabilité 2024 ;
+  - **s(t) régional pour P-B6** (actes VGP 3360 par région, 2015–2020).
+- **Repli pour P-B6 :**
+  - **m** (expansion du total des vaccinations) se mesure sur Open Medic : boîtes J07BB par région de résidence et
+    par an, 2014–2025, contrôles 24 / 24. C'est une différence de différences annuelle, moins fine que par mois de
+    soins.
+  - **s(t)** prend la part nationale publiée par la Cour des comptes, sans détail régional.
+  - Ce changement de protocole revient à l'axe 3, avant le gel.
+- **Reprendre plus tard :** `uv run python v2/besoin/donnees/damir.py --fenetre` saute les mois déjà lus. Compter
+  ~40 × 220 s ≈ 2 h 30 de machine sur une connexion non bloquée, à 1 flux seulement.
 
 ## How
 - **Données :** sources et millésimes dans le tableau et le manifeste. Brut sous `v2/data/raw/besoin/`, ignoré par
@@ -108,11 +132,14 @@ par contrôle).
 - **Le distancier :** détour 1,3 et 60 km/h sont **supposés**. Le centre geo.api n'est ni la mairie ni le
   barycentre de population. P-B4 comparera M4 à l'APL, qui utilise des temps routiers.
 - **IQVIA** est extrapolé d'un panel (60 à 90 % des officines), pas un recensement.
-- **Le quota du serveur DAMIR** n'est pas documenté. La fenêtre peut rester incomplète si le refus dure.
+- **Profils DAMIR sur 9 mois seulement** (janvier–septembre 2025) : la saisonnalité, surtout la vaccination
+  d'octobre à décembre, n'est pas couverte.
 
 ## → What it changes
-- **Axe 2 (M1–M4) :** les entrées sont prêtes, sauf DAMIR, qui est partiel tant que la fenêtre n'est pas finie.
+- **Axe 2 (M1–M4) :** les entrées sont prêtes. DAMIR couvre 9 mois de 2025 (`damir_profils`, `damir_vaccination`).
   M4 part sur le distancier de repli.
+- **Axe 3, P-B6 :** m passe sur Open Medic, s(t) sur la part nationale de la Cour des comptes. Le protocole est à
+  réécrire avant le gel.
 - **Axe 3 :** la patientèle est une moyenne par professionnel (P-B2, P-B5). DOM et Corse sont fusionnés dans
   DAMIR et Open Medic (P-B6 : pas de DiD par DOM). L'onglet APL 2023 est mal libellé (P-B4).
 - **Licence (registre § Open) :** les tables ODbL sont hors dépôt. Si la décision les autorise sous ODbL, il suffit
@@ -122,7 +149,7 @@ par contrôle).
 | Item | Cost |
 |---|---|
 | Total inter-régimes publié par profession (comptes de la santé DREES, rapport charges et produits) pour contrôler DAMIR à 0,5 % | ~30 min, peut-être non mesurable |
-| Terminer la fenêtre DAMIR (relances automatiques), puis `damir.py --controle` et `manifest.py` | machine : ~40 × 220 s ≈ 2 h 30 une fois le serveur rouvert |
+| Lire les 40 mois DAMIR restants (s(t) régional pour P-B6, profils complets 2024–2025), à 1 flux, sur une connexion non bloquée | ~2 h 30 machine + ~37 Go de transfert ; reporté faute de temps |
 | Page « Méthode » de data.ameli.fr : département de la patientèle | ~5 min |
 | Caler le détour et la vitesse sur 100 temps routiers (Metric-OSRM) | ~30 min + accès SSPCloud |
 | OSRM sur l'extrait OSM France (4,8 Go) : accord de l'utilisateur·rice nécessaire | ~30 min Claude + machine non mesurée |

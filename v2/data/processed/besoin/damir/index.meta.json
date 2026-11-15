@@ -1,0 +1,505 @@
+{
+ "table": "index.parquet",
+ "chemin": "v2/data/processed/besoin/damir/index.parquet",
+ "lignes": 9,
+ "colonnes": [
+  "mois"
+ ],
+ "sha256_16": "100cd0320b255ca4",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "Assurance maladie, Open DAMIR base complète, fichiers mensuels A{AAAAMM}.csv.gz (lus en flux)",
+ "millesime": "mois de flux lus : 202501, 202502, 202503, 202504, 202505, 202506, 202507, 202508, 202509",
+ "commande": "uv run python v2/besoin/donnees/damir.py --fenetre",
+ "dom": "DOM regroupés en une zone (code 5), non séparables ; PACA et Corse fusionnées (93)",
+ "controles": [
+  {
+   "controle": "DAMIR 202501 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1070275966.31,
+   "publie": 13265630145.42,
+   "ratio": 0.08068037134892654,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202501 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 979283605.6,
+   "publie": 13265630145.42,
+   "ratio": 0.07382111478044642,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202501 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 858032987.86,
+   "publie": 13265630145.42,
+   "ratio": 0.06468090685886027,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202501 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 515732986.42,
+   "publie": 13265630145.42,
+   "ratio": 0.03887738318997672,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202501 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3505259186.8399997,
+   "publie": 13265630145.42,
+   "ratio": 0.264236161299145,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202501 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 63488586.25,
+   "publie": 13265630145.42,
+   "ratio": 0.004785945752597334,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202502 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1150819182.31,
+   "publie": 12641751119.08,
+   "ratio": 0.09103320983539111,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202502 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 851717172.0799999,
+   "publie": 12641751119.08,
+   "ratio": 0.06737335390146357,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202502 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 774365985.66,
+   "publie": 12641751119.08,
+   "ratio": 0.06125464568680373,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202502 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 570478724.12,
+   "publie": 12641751119.08,
+   "ratio": 0.04512655871376753,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202502 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3151032674.9399996,
+   "publie": 12641751119.08,
+   "ratio": 0.24925602831906685,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202502 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 56362065.77,
+   "publie": 12641751119.08,
+   "ratio": 0.00445840653237775,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202503 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1259402476.8,
+   "publie": 13088759452.7,
+   "ratio": 0.09622015603168606,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202503 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 855505079.79,
+   "publie": 13088759452.7,
+   "ratio": 0.06536181544795087,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202503 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1041116957.39,
+   "publie": 13088759452.7,
+   "ratio": 0.0795428291850252,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202503 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 607097040.64,
+   "publie": 13088759452.7,
+   "ratio": 0.04638308487782359,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202503 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3391269726.5299997,
+   "publie": 13088759452.7,
+   "ratio": 0.2590978723984751,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202503 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 63906262.56,
+   "publie": 13088759452.7,
+   "ratio": 0.004882530142825504,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202504 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1217109630.6,
+   "publie": 13151583533.140001,
+   "ratio": 0.09254472113818596,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202504 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 934990588.21,
+   "publie": 13151583533.140001,
+   "ratio": 0.07109338475127083,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202504 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1264686946.3999999,
+   "publie": 13151583533.140001,
+   "ratio": 0.09616233233155384,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202504 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 613573555.3,
+   "publie": 13151583533.140001,
+   "ratio": 0.04665396784758941,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202504 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3560038984.27,
+   "publie": 13151583533.140001,
+   "ratio": 0.2706928010075167,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202504 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 62464972.25,
+   "publie": 13151583533.140001,
+   "ratio": 0.004749616051374933,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202505 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1208906249.98,
+   "publie": 14895698711.41,
+   "ratio": 0.08115807612663288,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202505 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 898120382.14,
+   "publie": 14895698711.41,
+   "ratio": 0.060293941193375916,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202505 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 731764636.52,
+   "publie": 14895698711.41,
+   "ratio": 0.049125902094104085,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202505 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 627881621.75,
+   "publie": 14895698711.41,
+   "ratio": 0.04215187443802466,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202505 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3345182922.7699995,
+   "publie": 14895698711.41,
+   "ratio": 0.22457375028722976,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202505 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 73352968.28,
+   "publie": 14895698711.41,
+   "ratio": 0.0049244395782395995,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202506 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1255655461.71,
+   "publie": 13990956885.369999,
+   "ratio": 0.08974764714077621,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202506 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 905081131.8299999,
+   "publie": 13990956885.369999,
+   "ratio": 0.06469043820558272,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202506 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 981490965.32,
+   "publie": 13990956885.369999,
+   "ratio": 0.07015181115641354,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202506 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 594484250.33,
+   "publie": 13990956885.369999,
+   "ratio": 0.04249060698283172,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202506 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3450704926.88,
+   "publie": 13990956885.369999,
+   "ratio": 0.2466382360514825,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202506 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 65708658.629999995,
+   "publie": 13990956885.369999,
+   "ratio": 0.0046965092644027755,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202507 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1347752626.2499998,
+   "publie": 14521330163.320002,
+   "ratio": 0.09281192639324055,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202507 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 992396560.5,
+   "publie": 14521330163.320002,
+   "ratio": 0.06834060993990299,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202507 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 772326383.36,
+   "publie": 14521330163.320002,
+   "ratio": 0.05318564998341885,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202507 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 664681806.2099999,
+   "publie": 14521330163.320002,
+   "ratio": 0.04577279069715981,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202507 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3711640338.8300004,
+   "publie": 14521330163.320002,
+   "ratio": 0.25559919766891454,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202507 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 68995622.12,
+   "publie": 14521330163.320002,
+   "ratio": 0.00475132934407612,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202508 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 560451806.0600001,
+   "publie": 10359636193.45,
+   "ratio": 0.054099564462925076,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202508 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 812599111.6999999,
+   "publie": 10359636193.45,
+   "ratio": 0.07843896219191318,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202508 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 557766770.71,
+   "publie": 10359636193.45,
+   "ratio": 0.05384038206502411,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202508 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 465009255.45,
+   "publie": 10359636193.45,
+   "ratio": 0.04488663952736173,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202508 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3032245489.59,
+   "publie": 10359636193.45,
+   "ratio": 0.2926980670911178,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202508 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 51721021.61,
+   "publie": 10359636193.45,
+   "ratio": 0.00499255192404355,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202509 CD part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1197979290.5300002,
+   "publie": 13887044368.220001,
+   "ratio": 0.0862659655118214,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202509 IDE part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 937302910.61,
+   "publie": 13887044368.220001,
+   "ratio": 0.06749477324022841,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202509 MG part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 1029292668.66,
+   "publie": 13887044368.220001,
+   "ratio": 0.07411891554228048,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202509 MK part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 554206765.24,
+   "publie": 13887044368.220001,
+   "ratio": 0.03990818712355252,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202509 PH part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 3672170802.0,
+   "publie": 13887044368.220001,
+   "ratio": 0.26443141568724515,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  },
+  {
+   "controle": "DAMIR 202509 SF part de la dépense du fichier (PRS_REM_TYP = 0)",
+   "reconstruit": 74085547.4,
+   "publie": 13887044368.220001,
+   "ratio": 0.005334867912537394,
+   "ok": null,
+   "source_publie": "ctl_AAAAMM (totaux du fichier entier)",
+   "note": "information, pas un contrôle : catégorie d'exécutant ≠ nature d'activité"
+  }
+ ],
+ "notes": "9 mois, 8.2 Go lus en 0.60 h (médiane 3.85 Mo/s) ; agg_AAAAMM et ctl_AAAAMM à côté de cet index",
+ "ecrit_le": "2026-11-15T04:08:53"
+}
