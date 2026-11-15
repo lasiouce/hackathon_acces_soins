@@ -86,6 +86,12 @@ verdict est le verdict de P-B4 ; le passage 1 (repli) reste rapporté. Aucun seu
   voies carrossables : `motorway`, `trunk`, `primary`, `secondary`, `tertiary` (et leurs bretelles),
   `unclassified`, `residential`, `living_street`, `road`, plus les bacs et les interdictions de tourner. Les voies
   `service` et `track` sont exclues (h) : un centre de commune s'accroche alors à la voie carrossable la plus proche.
+- **Complément du 2026-11-15 à 04:55 UTC, avant la table complète et avant tout calcul de M4 sur OSRM.** Pour
+  accélérer (pilote MLD : 240 s pour 1 000 communes, ≈ 2,3 h pour toutes, mesuré) : algorithme **CH** au lieu de
+  MLD (`osrm-contract` ; même graphe, mêmes poids : les deux donnent le plus court chemin exact) et rayon de
+  recherche **50 km** au lieu de 60. Sur le pilote de 300 communes, la plus grande distance à vol d'oiseau d'une
+  paire à 30 min au plus vaut 46,1 km (99,9ᵉ centile 31,4 km) (m). Risque résiduel : une paire au-delà de 50 km et
+  sous 30 min serait perdue (aucune sur le pilote). Le pilote n'a servi qu'à ces deux choix ; aucune APL lue.
 - **Le reste est inchangé** : écarts E2 à E11 du passage 1, mêmes entrées, même bootstrap, même graine.
 - **Table dérivée d'OSM, donc ODbL** : `v2/data/odbl/besoin/distancier_osrm.parquet`, non commitée (règle d'attente
   du 2026-11-15).

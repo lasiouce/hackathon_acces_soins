@@ -9,16 +9,16 @@ Préparation (une fois, hors Python ; extrait et graphe dans v2/data/raw/osm/ du
       secondary,secondary_link,tertiary,tertiary_link,unclassified,residential,living_street,road \
       w/route=ferry r/type=restriction -o voiture.osm.pbf
     osrm-extract -p $(brew --prefix osrm-backend)/share/osrm/profiles/car.lua -t 4 voiture.osm.pbf   (≈ 18 min, 19 Go)
-    osrm-partition voiture.osrm && osrm-customize voiture.osrm                                      (≈ 3 min)
-    osrm-routed --algorithm mld --max-table-size 10000 -t 8 -p 5055 voiture.osrm
+    osrm-contract -t 8 voiture.osrm      (CH : tables bien plus rapides qu'en MLD, même plus court chemin)
+    osrm-routed --algorithm ch --max-table-size 10000 -t 8 -i 127.0.0.1 -p 5055 voiture.osrm
 Run (serveur lancé) : uv run python v2/besoin/donnees/distancier_osrm.py [rayon_km]
 
 Méthode : pour chaque commune i, un appel `table` (source i, destinations = communes à moins de `rayon_km` à vol
-d'oiseau, 60 km par défaut), durée et distance routières. On garde les paires à 30 min au plus (dernier palier non
+d'oiseau, 50 km par défaut), durée et distance routières. On garde les paires à 30 min au plus (dernier palier non
 nul de l'APL, SF) et (i, i) à 0. Centres : ceux de geo.api.gouv.fr (comme le distancier à vol d'oiseau), accrochés par
 OSRM à la route la plus proche. Profil voiture d'OSRM par défaut (vitesses supposées par type de voie, sans trafic) :
 ce n'est pas le distancier Metric de l'Insee utilisé par la DREES (même moteur, réseau et date différents).
-Rayon 60 km à vol d'oiseau : couvre 30 min à 120 km/h de moyenne, au-dessus de toute vitesse moyenne du profil.
+Rayon 50 km : sur un pilote de 300 communes, aucune paire à 30 min au plus au-delà de 46,1 km à vol d'oiseau.
 
 Sortie : v2/data/odbl/besoin/distancier_osrm.parquet (com_i, com_j, t_min, d_route_km), **ODbL** (dérivée d'OSM),
 non commitée (règle d'attente du 2026-11-15). Contrôles : symétrie approchée, part des communes APL 2024 présentes,
@@ -64,7 +64,7 @@ def table(i: int, js: np.ndarray, lonlat: np.ndarray) -> tuple[np.ndarray, np.nd
     return dur / 60.0, dist / 1000.0
 
 
-def main(rayon_km: float = 60.0, limite: int | None = None):
+def main(rayon_km: float = 50.0, limite: int | None = None):
     c = centres()
     c = c[~c.com.str.startswith("97")].reset_index(drop=True)
     lonlat = c[["lon", "lat"]].to_numpy()
@@ -112,7 +112,7 @@ def main(rayon_km: float = 60.0, limite: int | None = None):
     if limite is not None:
         return out
     ecrire(out, "distancier_osrm", licence="ODbL",
-           source="OpenStreetMap (Geofabrik france-latest.osm.pbf), OSRM (profil car.lua, MLD) ; centres geo.api.gouv.fr",
+           source="OpenStreetMap (Geofabrik france-latest.osm.pbf), OSRM (profil car.lua, CH) ; centres geo.api.gouv.fr",
            millesime=f"extrait OSM lu le {lu.read_text().strip() if lu.exists() else '?'}", commande=CMD,
            controles=ctl, dom="hors champ (extrait métropolitain)",
            notes=f"rayon de recherche {rayon_km} km à vol d'oiseau ; paires gardées à t ≤ {T_MAX} min ; (i, i) à 0")
@@ -120,4 +120,4 @@ def main(rayon_km: float = 60.0, limite: int | None = None):
 
 
 if __name__ == "__main__":
-    main(float(sys.argv[1]) if len(sys.argv) > 1 else 60.0)
+    main(float(sys.argv[1]) if len(sys.argv) > 1 else 50.0)
