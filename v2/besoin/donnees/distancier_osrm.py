@@ -2,10 +2,15 @@
 
 Préparation (une fois, hors Python ; extrait et graphe dans v2/data/raw/osm/ du dépôt principal, non versionnés) :
     curl -L -o france-latest.osm.pbf https://download.geofabrik.de/europe/france-latest.osm.pbf   (≈ 4,8 Go)
+    (extrait du miroir download.openstreetmap.fr, plus rapide que Geofabrik ; même donnée OSM)
     osmium tags-filter france-latest.osm.pbf w/highway w/route=ferry r/type=restriction -o routes.osm.pbf
-    osrm-extract -p $(brew --prefix osrm-backend)/share/osrm/profiles/car.lua routes.osm.pbf
-    osrm-partition routes.osrm && osrm-customize routes.osrm
-    osrm-routed --algorithm mld --max-table-size 10000 -t 8 -p 5055 routes.osrm
+    osmium extract -b -5.4,41.2,9.8,51.2 -s complete_ways routes.osm.pbf -o metro.osm.pbf
+    osmium tags-filter metro.osm.pbf w/highway=motorway,motorway_link,trunk,trunk_link,primary,primary_link,\
+      secondary,secondary_link,tertiary,tertiary_link,unclassified,residential,living_street,road \
+      w/route=ferry r/type=restriction -o voiture.osm.pbf
+    osrm-extract -p $(brew --prefix osrm-backend)/share/osrm/profiles/car.lua -t 4 voiture.osm.pbf   (≈ 18 min, 19 Go)
+    osrm-partition voiture.osrm && osrm-customize voiture.osrm                                      (≈ 3 min)
+    osrm-routed --algorithm mld --max-table-size 10000 -t 8 -p 5055 voiture.osrm
 Run (serveur lancé) : uv run python v2/besoin/donnees/distancier_osrm.py [rayon_km]
 
 Méthode : pour chaque commune i, un appel `table` (source i, destinations = communes à moins de `rayon_km` à vol

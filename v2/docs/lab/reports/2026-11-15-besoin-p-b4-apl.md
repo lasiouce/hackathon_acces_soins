@@ -80,6 +80,12 @@ verdict est le verdict de P-B4 ; le passage 1 (repli) reste rapporté. Aucun seu
   (la conservation tient quelle que soit l'asymétrie). Une paire non routable compte comme hors d'atteinte.
 - **Centres.** Ceux de geo.api.gouv.fr, comme le repli (pas la mairie du distancier Metric), accrochés par OSRM à la
   route la plus proche.
+- **Complément du 2026-11-15 à 04:42 UTC, avant tout temps OSRM calculé.** Le premier graphe (toutes voies `highway`,
+  DOM compris) saturait la mémoire (`osrm-extract` arrêté après 48 min, 21 Go d'échange). Le graphe retenu est
+  restreint à la métropole et à la Corse (boîte −5,4 / 41,2 / 9,8 / 51,2, `osmium extract`, voies complètes) et aux
+  voies carrossables : `motorway`, `trunk`, `primary`, `secondary`, `tertiary` (et leurs bretelles),
+  `unclassified`, `residential`, `living_street`, `road`, plus les bacs et les interdictions de tourner. Les voies
+  `service` et `track` sont exclues (h) : un centre de commune s'accroche alors à la voie carrossable la plus proche.
 - **Le reste est inchangé** : écarts E2 à E11 du passage 1, mêmes entrées, même bootstrap, même graine.
 - **Table dérivée d'OSM, donc ODbL** : `v2/data/odbl/besoin/distancier_osrm.parquet`, non commitée (règle d'attente
   du 2026-11-15).
