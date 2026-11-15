@@ -9,14 +9,14 @@
   \texttt{v2/docs/lab/archive-v1/}.
 \item \textbf{Données.} Les 34 fichiers traités sont commités. Chacun est listé dans
   \texttt{data/processed/MANIFEST.md} et \texttt{v2/data/processed/MANIFEST.md}, avec sa taille, son empreinte
-  SHA-256, son script, sa commande et sa source. Un clone neuf suffit pour lancer la carte. \texttt{jumeau.check} demande en plus deux
-  fichiers bruts non commités : le jeu DREES 491 (ouvert, à télécharger ;
-  \texttt{data/raw/drees/491\_formation\_series\_longues\_1966\_2025.xlsx}, lu par C16) et
-  \texttt{990\_drees\_mmop2} (fichier fourni à l'équipe sous accord de confidentialité, non redistribuable ; lu par
-  \texttt{formation.pool\_drees} et \texttt{sante.pipeline.enrolments}). Sans ce dernier, C5, C9 et la variante
-  filière (C1, C11, facteur « filière » de l'axe~5) ne tournent pas. Le manifeste interdit ce fichier aux scripts
-  de construction des tables (\texttt{v2/data/manifest.py}, liste \texttt{INTERDITS}), pas à l'exécution du
-  jumeau. Pour le reste, les données brutes (environ 3,6\,Go\mesure{} au total) ne servent qu'à reconstruire les
+  SHA-256, son script, sa commande et sa source. Un clone neuf suffit pour lancer la carte. \texttt{jumeau.check} demande en plus un
+  fichier brut non commité, ouvert : le jeu DREES 491 (à télécharger ;
+  \texttt{data/raw/drees/491\_formation\_series\_longues\_1966\_2025.xlsx}, lu par C16). Jusqu'au 15 novembre 2026,
+  C5, C9 et la variante filière lisaient aussi un fichier d'inscrits fourni à l'équipe sous accord de
+  confidentialité ; ils lisent désormais SISE (\texttt{v2/data/build\_sise.py}, Licence Ouverte), et
+  \texttt{v2/data/manifest.py --check} échoue si un code exécuté par l'outil lit un fichier des organisateurs
+  (liste \texttt{INTERDITS}, dossiers \texttt{EXECUTE}). Seul \texttt{v2/methodes/c5.py}, script exploratoire de
+  l'axe~2 appelé par aucun autre code, lit encore ce fichier. Pour le reste, les données brutes (environ 3,6\,Go\mesure{} au total) ne servent qu'à reconstruire les
   tables.
 \end{itemize}
 
@@ -27,7 +27,7 @@ Toutes les commandes se lancent depuis la racine du dépôt.
 uv sync
 uv run python v2/data/manifest.py --check          # manifestes à jour, aucun fichier
                                                    # des organisateurs dans la construction
-PYTHONPATH=v2 uv run python -m jumeau.check        # 18 critères ; exige 491 et 990 (voir Données)
+PYTHONPATH=v2 uv run python -m jumeau.check        # 18 critères ; exige le jeu ouvert DREES 491
 uv run python v2/prototype-carte/server.py         # carte, http://localhost:8767
 
 # axe 2 : banc des méthodes et contrôles du 15 novembre

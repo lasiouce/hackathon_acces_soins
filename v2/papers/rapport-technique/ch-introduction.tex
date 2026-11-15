@@ -34,8 +34,9 @@ chiffre unique. Elle est comparée à la tendance, et l'écart est décomposé p
   sorties sont des \emph{scénarios conditionnels}, pas des prévisions.
 \item \textbf{Données.} Uniquement des données ouvertes pour les tables traitées. Chaque fichier traité porte sa
   source, son millésime et le script qui le produit (manifeste contrôlé par \texttt{v2/data/manifest.py --check}).
-  Exception : le module de formation et la variante filière lisent à la volée un fichier d'inscrits fourni à
-  l'équipe sous accord de confidentialité (\texttt{990\_drees\_mmop2}), non commité
+  Le code exécuté (jumeau, carte, assistant, sensibilité) ne lit lui aussi que des données ouvertes : depuis le
+  15 novembre 2026, le vivier des dentistes et des pharmaciens vient de SISE (MESR) et non plus d'un fichier
+  d'inscrits fourni à l'équipe sous accord de confidentialité ; le contrôle du manifeste couvre ce code
   (chapitre~\ref{sec:repro-ref}).
 \end{itemize}
 

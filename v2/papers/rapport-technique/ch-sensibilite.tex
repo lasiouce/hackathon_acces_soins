@@ -12,10 +12,37 @@ ignore des données et des paramètres ? Elle sert aussi à mettre un prix sur l
 finement un paramètre qui ne déplace pas la sortie. Le code est dans \texttt{v2/sensibilite/} ; le rapport est
 \texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md} et le prétirage \texttt{v2/papers/axe5-sensibilite/main.tex}.
 Toutes les valeurs de ce chapitre sont mesurées sur le jumeau (chapitre~\ref{jum:sec}), dans sa composition de
-référence A0 et non avec l'estimateur servi C1, sauf mention contraire. Le facteur « filière » lit à l'exécution
-les inscrits \texttt{990\_drees\_mmop2} (\texttt{sante.pipeline}), un fichier fourni à l'équipe sous accord de
-confidentialité et non commité : sans lui, les parties~1 et~2 ne se relancent pas telles quelles
-(chapitre~\ref{sec:repro-ref}).
+référence A0 et non avec l'estimateur servi C1, sauf mention contraire. Le facteur « filière » a été mesuré le 14 novembre avec
+un fichier d'inscrits fourni à l'équipe sous accord de confidentialité ; depuis le 15, il lit SISE (données
+ouvertes), et les parties~1 et~2 ont été relancées pour les dentistes et les pharmaciens, seules professions
+concernées (section~\ref{sen:sise}).
+
+\subsection{Relance du 15 novembre : vivier SISE pour les dentistes et les pharmaciens}\label{sen:sise}
+Le 15 novembre 2026, le vivier de formation des dentistes et des pharmaciens est passé d'un fichier fourni sous
+accord de confidentialité aux données ouvertes SISE (chapitre~\ref{sec:repro-ref}). SISE reproduit ce fichier à
+l'identique pour les rentrées 2020 à 2024\mesure, mais n'a pas encore la rentrée 2025, où la 2e année de dentaire
+passait de 1\,546 à 2\,083 inscrits\mesure. Les parties~1 et~2 ont été relancées pour ces deux professions
+($n = 2\,048$, $r = 30$, même graine ; \texttt{v2/sensibilite/out/*\_sise.csv}, 526\,s\mesure).
+
+\begin{center}\small
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Profession & Famille & $S_T$(filière), ancien fichier & $S_T$(filière), SISE & Fourchette 2050 (p05--p95), SISE \\
+\midrule
+Dentistes & tout & 0,444\mesure & 0,020\mesure{} [0,019 ; 0,021] & 59\,932 -- 90\,964\mesure \\
+Dentistes & incertitude & 0,547\mesure & 0,029\mesure{} [0,027 ; 0,031] & 60\,274 -- 84\,991\mesure \\
+Pharmaciens & tout & 0,226\mesure & 0,045\mesure{} [0,042 ; 0,048] & 64\,163 -- 95\,043\mesure \\
+Pharmaciens & incertitude & 0,320\mesure & 0,068\mesure{} [0,065 ; 0,072] & 64\,935 -- 88\,939\mesure \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Lecture.} Le poids du facteur « filière » venait presque entièrement d'une seule observation, la rentrée
+2025, que la variante prolonge telle quelle jusqu'en 2050. Sans elle, la part privée et les quotas redeviennent les
+premiers facteurs pour les dentistes ($S_T$ 0,377 et 0,325 en famille « tout »\mesure), et la fourchette 2050
+des dentistes se resserre (p95 de 108\,797 à 90\,964\mesure). Aucune des deux versions n'est « la bonne » : la hausse
+de 2025 est réelle, mais la prolonger 25 ans est une hypothèse. Le résultat à retenir est la fragilité de la
+variante filière, pas l'une ou l'autre valeur. Les autres professions ne lisent pas ce vivier et ne changent pas.
 
 \paragraph{Ce que ce chapitre ne donne pas.} Aucun chiffre 2050 n'est citable comme projection. Le registre l'a
 conclu le 2026-11-14 après les protocoles de l'axe~3 : aucune bande n'est calibrée à son niveau nominal, et les

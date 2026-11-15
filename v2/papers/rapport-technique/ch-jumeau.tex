@@ -327,9 +327,13 @@ Le code de sortie vaut 1 si un critère échoue. Le run du 2026-11-15 (02:03) pa
 \texttt{True} (\texttt{check.py}, l.~808--810) et elle ne peut pas échouer. Son extrapolation à 5 professions,
 $\approx 2{,}1$~s\derive, dépasse d'ailleurs la cible de 2~s ; seul C15 vérifie la cible, sur le chemin rapide.
 Plusieurs critères lisent à l'exécution des fichiers bruts non commités : C16 lit le jeu DREES 491
-(\texttt{data/raw/drees/}, ouvert, à télécharger) ; C5, C9 et la variante filière (C1, C11) lisent les inscrits
-\texttt{990\_drees\_mmop2}, fournis à l'équipe sous accord de confidentialité et non redistribuables
-(\texttt{formation.pool\_drees} $\to$ \texttt{sante.pipeline.enrolments} ; chapitre~\ref{sec:repro-ref}).
+(\texttt{data/raw/drees/}, ouvert, à télécharger). C5, C9 et la variante filière (C1, C11) lisent les inscrits
+en odontologie et en pharmacie de SISE (données ouvertes, \texttt{v2/data/processed/sise\_sante.parquet}, commité),
+qui remplacent depuis le 15 novembre 2026 un fichier fourni sous accord de confidentialité ; SISE le reproduit à
+l'identique pour les années d'études 2 à 5\mesure, mais s'arrête à la rentrée 2024 (chapitre~\ref{sec:repro-ref}).
+Les valeurs de C5, C9 et C11 du tableau sont celles du run avec SISE : vivier de 5\,064 diplômés\mesure (C5),
+4\,473\mesure (C9), dentistes 2050 en variante filière 85\,252\mesure au lieu de 102\,987 avec l'ancien fichier
+(C11, $-17$\,\%\derive, effet de la rentrée 2025 manquante, que la variante prolonge jusqu'en 2050).
 
 {\small
 \begin{longtable}{@{}lp{5.2cm}p{8.0cm}@{}}

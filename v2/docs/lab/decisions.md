@@ -2449,7 +2449,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
 - **Copie commitée du dépôt dans `chatbot/vendor/hackathon_acces_soins/`** (relevé le 2026-11-15, relecture du rapport technique) : 687 fichiers suivis, dont 34 tables traitées (`commune_stock.parquet` compris), hors du manifeste et du contrôle de l'audit ; commitée sans `.gitmodules`, alors que `chatbot/DECISIONS.md` la décrit comme un sous-module. Options : la retirer et lire le dépôt courant (`JUMEAU_REPO=..`, déjà utilisé au lancement), ou l'inclure dans le manifeste et dans le futur seuil de diffusion. Prix ≈ 20 min. Le seuil de diffusion et l'archivage de l'Annuaire (données individuelles, 752 993 personnes, peut atteindre 2 critères AIPD) sont détaillés dans le rapport technique, chap. Conformité.
-- **Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité** (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
+- ~~**Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité**~~ **Tranchée le 2026-11-15 : remplacé par SISE (données ouvertes)**, voir l'entrée « Vivier CD/PH : SISE remplace le fichier 990 ». (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
 - **Âge d'entrée des diplômés à l'étranger par profession** (ouvert le 2026-11-15, relecture des sources de l'axe 1).
   Aujourd'hui `etrangers.age_entree` est unique, à 28 ans. Les sources donnent : MK 26 ans (ER 1075) ; PH 31 ans (DD76,
   tab. 13) ; CD 28 ans (DD76) ou 32 ans (ER 1026), qui se contredisent.
@@ -4492,3 +4492,38 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - Avant la rédaction, les 4 branches de recherche du 2026-11-15 ont été fusionnées dans main (accord de
   l'utilisateur·rice) ; conflits d'ajout dans Home, `decisions.md` et `open.md` résolus en gardant les deux côtés ;
   `jumeau.check` 18/18 et `manifest.py --check` OK après fusion.
+
+## 2026-11-15 — Vivier CD/PH : SISE (données ouvertes) remplace le fichier 990 sous accord de confidentialité
+- **Décision** (demande de l'utilisateur·rice : « Oui, passer au 491 ») : plus aucun code exécuté par le jumeau, la
+  carte, l'assistant ou l'analyse de sensibilité ne lit `990_drees_mmop2`.
+- **Pourquoi pas le jeu 491 :** il ne couvre que IDE, MK et SF ; le fichier 990 servait aux dentistes et aux
+  pharmaciens (et à la DES de médecine pour la série « spécialistes » de test). La source ouverte équivalente est
+  **SISE** (MESR, `fr-esr-sise-effectifs-d-etudiants-inscrits-esr-public`, Licence Ouverte v2.0), odontologie et
+  pharmacie, diplôme « Autres formations de santé », année d'études = BAC + k, rentrées 2017–2024.
+  Constructeur `v2/data/build_sise.py` → `v2/data/processed/sise_sante.parquet` (au manifeste).
+- **Mesuré, SISE contre 990 (rentrées 2020–2024, années d'études 2 à 5) :** écart maximal 0 pour les dentistes ;
+  pharmaciens : identique sauf une valeur en 2e année (écart 163). La convention d'année est la rentrée (le champ
+  `annee` de SISE est l'année de fin).
+- **Dérivé :** « BAC + 6 et plus » mêle 6e année, internat et thèses ; l'année 6 est prise égale à l'année 5 de la
+  rentrée précédente (rapport observé dans le fichier 990 : 0,86 à 1,07, médiane ≈ 1,0).
+- **Perdu :** la rentrée 2025 (publiée par SISE plus tard). La 2e année de dentaire y passait de 1 546 à 2 083 ; la
+  variante « filière » prolonge le dernier rapport connu, si bien que l'indice CD de 2030 passe de 1,33 à 1,09.
+  Effet mesuré (critère C11, dentistes, variante filière, non active par défaut) : 2050 = 85 252 au lieu de
+  102 987 (−17 %), quotas × 1,1 : +6,08 % au lieu de +6,53 %. Ce résultat montre surtout que la variante filière
+  dépend d'un seul point de données ; à lire comme une sensibilité, pas comme une prévision.
+- **Série « spécialistes » de test :** plus d'indice de cohorte (aucune série ouverte par année de DES) ; phase 2.
+- **Revalidation :** `jumeau.check` 18/18 (C5 : vivier 5 064 diplômés au lieu de 4 725 ; C9 : 4 473 au lieu de
+  4 253 ; C1 inchangé à 0,0). `manifest.py --check` étend désormais son contrôle au code exécuté
+  (`v2/jumeau`, `v2/sante`, `v2/prototype*`, `v2/sensibilite`, `v2/agent`, `v2/langage`, `chatbot/passerelle`,
+  `chatbot/chat`) : toute lecture d'un fichier des organisateurs y fait échouer le contrôle.
+- **Reste :** `v2/methodes/c5.py` (exploratoire de l'axe 2 : région de formation → région d'installation) lit
+  encore le fichier 990 ; il n'est appelé par aucun autre code. SISE porte la région de l'établissement : portage
+  possible, ≈ 30 min. L'analyse de sensibilité de l'axe 5 (facteur « filière ») est relancée pour CD et PH.
+- **Axe 5 relancé pour CD et PH avec SISE** (n = 2 048, r = 30, même graine ; `v2/sensibilite/out/*_sise.csv`, 526 s).
+  Le facteur « filière » s'effondre : S_T à 2050, famille « incertitude », dentistes 0,547 → 0,029 [0,027 ; 0,031],
+  pharmaciens 0,320 → 0,068 ; famille « tout », dentistes 0,444 → 0,020, pharmaciens 0,226 → 0,045. Son poids venait
+  presque entièrement de la seule rentrée 2025, prolongée jusqu'en 2050. Pour les dentistes, part privée (0,377) et
+  quotas (0,325) redeviennent premiers ; fourchette 2050 p05–p95 (famille « tout ») 59 932 – 90 964 au lieu de
+  62 552 – 108 797. Les résultats du 14 (`sobol.csv`, article de l'axe 5, « S_T filière 0,55 CD ») sont mesurés avec
+  l'ancien fichier : ils restent visibles, mais ne décrivent plus le code. À retenir : la variante filière est
+  fragile, pas l'une ou l'autre valeur.
