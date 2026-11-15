@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Besoin : cible externe de M4 pharmaciens](v2/docs/lab/explorations/2026-11-15-besoin-cible-pharmaciens.md) | APL DREES V0 aux pharmacies (commune, 2010 et 2013, Licence Ouverte) retenue ; IRDES QES 308 sans APL pharmacies ; protocole P-B4-PH rédigé, non gelé | session besoin-cible-pharmaciens |
 | 2026-11-15 | [Besoin P-B6 : vaccination en officine](v2/docs/lab/reports/2026-11-15-besoin-p-b6-grippe-officine.md) | m = 0 retenu, ATT +0,73 % [−0,12 ; +1,58], p permutation 0,15 ; placebo 0–19 ans en échec → non attribuable, m reste supposé ; s(t) national s∞ 0,74, τ 2,4 ans | session besoin-derivation |
 | 2026-11-15 | [Ledger : lignes périmées](v2/docs/lab/reports/2026-11-15-ledger-perime.md) | 167 lignes « open » hors besoin : 43 faites, 6 dépassées, 7 incertaines, 111 ouvertes, 5 doublons ; le rapport technique reprend au moins 12 lignes faites ; corrections appliquées le 2026-11-15 | 3 lecteurs + session besoin-derivation |
 | 2026-11-15 | [Besoin, axe 0 : interface, M0, couverture, transferts](v2/docs/lab/reports/2026-11-15-besoin-axe0-interface.md) | 7/7 critères : M0 = densité/densité₂₀₂₆ à 1,3 × 10⁻¹⁵, conservation des transferts à 5,7 × 10⁻¹⁰ ETP, additivité commune → national à 1,5 × 10⁻¹⁴, 0,72 ms au 95ᵉ centile ; aucun C pour la MG ; paramètres supposés en attendant l'axe 1 | session besoin-axe0-interface |
