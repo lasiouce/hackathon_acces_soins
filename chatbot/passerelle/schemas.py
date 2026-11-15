@@ -93,6 +93,15 @@ OUTILS: dict[str, tuple[str, dict]] = {
                            "profession, un territoire et une année. À utiliser pour « quelles politiques ont le plus d'effet », "
                            "« quoi d'autre », « par quoi commencer ».",
                            _obj({"profession": PROF, "territoire": TERR, "annee": ANNEE}, ["profession"])),
+    "transfert": ("TRANSFERT DE TÂCHES (module de besoin, décision O3) : pour un transfert d'actes d'une profession vers une autre "
+                  "(vaccination en officine : médecine générale -> pharmaciens), couverture du besoin de la source et de la cible "
+                  "avec et sans transfert, à une année, pour un département ou la France (médiane des départements) ; k aux bornes "
+                  "de sa plage supposée ; ETP libérés et reçus ; verdict selon le critère par défaut (supposé). Les effectifs ne "
+                  "changent pas. À appeler pour « que se passe-t-il si les pharmaciens vaccinent », « le transfert est-il effectif ».",
+                  _obj({"transfert": {"type": "string", "enum": ["vaccination_officine"]}, "territoire": TERR, "annee": ANNEE,
+                        "offre_mg": {"type": "string", "enum": ["constante", "nationale", "externe"],
+                                     "description": "offre de médecine générale lue en entrée ; défaut constante (RPPS 2026, supposé)"}},
+                       ["transfert"])),
     "decrire_leviers": ("Leviers du modèle : bornes, délai d'effet, statut (sourcé / supposé), source.", _obj({}, [])),
     "incertitude": ("Indices de Sobol (axe 5) : quels paramètres et choix d'estimation pèsent le plus sur la projection.",
                     _obj({"profession": PROF, "annee": {"type": "integer", "enum": [2030, 2040, 2050]}}, ["profession"])),

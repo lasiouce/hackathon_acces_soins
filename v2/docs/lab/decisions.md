@@ -4620,6 +4620,7 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - une projection de l'APL déjà publiée.
 
 ## 2026-11-15 — Module de besoin : médecine générale comme source seulement (O2) ; plan accepté, vague 1 lancée
+> **Remplacé en partie le 2026-11-15 par O3** (entrée « Transferts de tâches : couverture de la médecine générale lue en entrée (O3) »). O2 reste la règle de la carte et de `besoin_api` ; O3 ne s'applique qu'à l'outil d'effectivité des transferts.
 - **Décision** (choix de l'utilisateur·rice : « okay go O2 », après la recommandation de la session) :
   - **O2 retenu** : la médecine générale entre dans le module de besoin **comme profession source des transferts
     seulement**. `B_MG` est calculé par M1.
@@ -5121,3 +5122,29 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
      dans la carte (plan de la session licences-et-carte).
 - **Pourquoi :** demande de la session v2. La circularité recours/offre de la dérivation (§2) en est le cas général.
 
+
+## 2026-11-15 — Transferts de tâches : couverture de la médecine générale lue en entrée (O3) ; critère d'effectivité par défaut
+- **Décision** (choix de l'utilisateur·rice : « Remplacer O2 par O3 » et « Critère par défaut ») :
+  - **O3** : pour juger un transfert, la couverture de la **source** (médecine générale) est calculée avec une offre MG
+    **lue en entrée**, jamais projetée par le jumeau (`v2/besoin/offre_mg.py`). Raison donnée par l'utilisateur·rice : la
+    médecine générale est déjà modélisée par la DGOS (programme Junior) et la DREES (Hippocrate) ; le projet prolonge ce
+    travail aux cinq autres professions et les relie par les transferts de compétences. Projet porté par le Ministère.
+  - Fournisseurs de l'offre MG : `constante` (RPPS 2026, 66 503 généralistes libéraux et mixtes, tenue constante,
+    **supposé**, défaut) ; `nationale` (trajectoire nationale publiée, répartition figée à 2026, fichier à déposer) ;
+    `externe` (table du porteur via `BESOIN_MG_OFFRE`, **hors dépôt**, peut être sous accord).
+  - **Critère d'effectivité, supposé, fixé avant tout calcul** : effectif en (T, t) si la couverture de la source
+    progresse et si celle de la cible reste ≥ son niveau de 2026, pour toute la plage de k ([0,25 ; 1], supposé) ;
+    « dépend de k » sinon ; « non effectif (cible déjà sous son niveau de 2026 sans transfert) » quand la baisse de la
+    cible précède le transfert.
+  - L23 : s_∞ = 0,74 et τ = 2,4 ans (mesurés au national par P-B6) ; a et k restent les placeholders supposés de la fiche.
+- **Portée** : O2 reste la règle de la carte et de `besoin_api` (aucun indice MG affiché sur la carte). O3 ne sert que
+  l'outil `besoin.effectivite` et l'outil « transfert » de l'assistant (passerelle). Les spécialistes restent sans
+  couverture.
+- **Premier résultat, à lire avec ces réserves** (tendanciel, M1, offre MG constante) : en 2035, L23 est « effectif »
+  dans 32 départements, « dépend de k » dans 2, et « non effectif » dans 67, tous parce que la couverture des
+  pharmaciens y est déjà sous son niveau de 2026 sans transfert. Puy-de-Dôme : couverture MG +0,68 point, pharmaciens
+  −0,17 à −0,67 point selon k, 4,8 ETP de MG libérés.
+- **Limite du critère** : il mélange l'effet du transfert et la tendance de la cible ; 67 « non effectif » sur 101 sont
+  dus à la tendance. Un critère sur l'écart dû au transfert seul est l'alternative à trancher.
+- Contrôles : `PYTHONPATH=v2 uv run python -m besoin.tests.effectivite` (E1 s ≡ 0, E2 source = 1/(1 − s·a) à 3e-16,
+  E3 k sans effet sur la source, E4 offre MG RPPS) : 4/4.

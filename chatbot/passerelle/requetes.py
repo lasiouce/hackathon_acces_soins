@@ -701,6 +701,40 @@ _METHODE_PLAN = ("effet de chaque levier seul calculé par le jumeau sur sa gril
                  "montré recalculé par le jumeau ; décision en 2026 dans le modèle")
 
 
+_TRANSFERTS = {"vaccination_officine": "L23"}
+
+
+@lru_cache(maxsize=4)
+def _effectivite(code: str, offre_mg: str):
+    S()                                                   # chdir vers la racine du dépôt (chemins de données relatifs)
+    if str(V2) not in sys.path:
+        sys.path.insert(0, str(V2))
+    from besoin.effectivite import evaluer
+    return evaluer(code, offre_mg=offre_mg)
+
+
+def transfert(transfert: str, territoire_: str = "FR", annee: int = 2035, offre_mg: str = "constante") -> dict:
+    """Couverture de la source et de la cible d'un transfert de tâches, avec et sans transfert (module de besoin, O3)."""
+    if transfert not in _TRANSFERTS:
+        raise ErreurOutil(f"transfert inconnu {transfert!r} ; valeurs : {', '.join(_TRANSFERTS)}")
+    t = territoire(territoire_)
+    if t[:1] == "R":
+        raise ErreurOutil("le transfert se lit au département ou pour la France : donner un département de la région")
+    try:
+        res = _effectivite(_TRANSFERTS[transfert], offre_mg)
+    except FileNotFoundError as e:
+        raise ErreurOutil(f"offre de médecine générale « {offre_mg} » indisponible : {e}") from None
+    from besoin.effectivite import resume
+    if annee not in set(int(y) for y in res["years"]):
+        raise ErreurOutil(f"année {annee} hors de la trajectoire ({int(res['years'].min())}–{int(res['years'].max())})")
+    out = resume(res, None if t == "FR" else t[1:], annee)
+    out["territoire"] = nom_territoire(t)
+    out["code_territoire"] = t
+    out["lecture"] = ("couverture = offre / besoin, indexée sur 2026 (1 = niveau de 2026) ; le transfert déplace une part du "
+                      "besoin de la source vers la cible, sans changer les effectifs")
+    return out
+
+
 def perimetre() -> dict:
     G = NL().glossaire()
     srv = S()

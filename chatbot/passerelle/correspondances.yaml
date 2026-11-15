@@ -35,7 +35,7 @@ cesp:
   limite: "concerne surtout la médecine (hors périmètre) et les dentistes ; pas de flux CESP dans le jumeau"
 vaccination_officine:
   traduction: aucune
-  limite: "agit sur l'activité et le recours aux soins, pas sur le nombre de professionnels : il faudrait un module de besoin"
+  limite: "agit sur le besoin, pas sur le nombre de professionnels : utiliser l'outil « transfert » (module de besoin, O3)"
 ipa:
   traduction: aucune
   limite: "les IPA ne sont pas distingués dans les effectifs ; agit sur l'activité, pas sur l'effectif projeté"
