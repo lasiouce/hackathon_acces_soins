@@ -535,7 +535,7 @@ def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None 
     params = [{"nom": h.get("name"), "statut": h.get("status"), "source": h.get("source")}
               for h in blk.get("params", []) if h.get("name") in ("a", "k", "s_inf", "tau", "mu")]
     out = {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t,
-           "grandeur": "indice de couverture (offre / besoin, base 2026 = 1), demande adressée au secteur privé de ville",
+           "grandeur": "indice de couverture (offre / demande de soins de ville, base 2026 = 1)",
            "reference": ref, "estimateur_central": j.get("central"), "estimateurs": j.get("estimateurs"),
            "effectif": "inchangé dans le modèle par L23",
            "l23": {"actif": bool(l23), "t0": ref}, "annees": rows, "transferts": tr, "parametres_l23": params,

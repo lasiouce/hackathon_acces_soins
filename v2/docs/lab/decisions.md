@@ -5223,3 +5223,28 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   plein ». Le test `chatbot/tests/test_couverture.py` vérifie l'absence de ces termes. Clés d'API inchangées.
 - **Pourquoi :** un·e utilisateur·rice sans formation doit tout comprendre ; même formulation que la fiche de la carte.
 - **Ce qui le renverserait :** un test de lecture qui montre une phrase encore mal comprise.
+
+## 2026-11-15 — Assistant : L23 dit en langue courante, comme la carte
+- **Décision** (demande de l'utilisateur·rice relayée par la session besoin-derivation ; carte `3c52883`) : libellé du
+  levier dans le compilateur et l'assistant : « Les pharmaciens vaccinent davantage contre la grippe ». Effet sur la MG :
+  « les médecins généralistes ont moins de vaccins à faire : environ N vaccinations en moins, soit le temps de travail
+  d'environ M médecins à temps plein (France entière) ». **Remplace** « actes de médecine générale libérés … ETP-équivalents »
+  de l'entrée « outil couverture aligné sur l'API réelle » du même jour. L'interdit de couverture MG (O2) est inchangé.
+- **Pourquoi :** même vocabulaire à l'écran, dans l'export et dans l'assistant.
+
+## 2026-11-15 — Assistant de la carte : trois exemples, un par cas d'usage
+- **Décision** (demande de l'utilisateur·rice relayée par besoin-derivation) : `ASKEX` passe de 6 à 3 phrases ; l'accueil
+  « Définir un scénario » ne montre plus que ces 3 (les cartes contextuelles « former 20 % » et « atteindre +10 % »
+  doublaient les exemples 1 et 2) :
+  1. leviers → effet : « Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ? » ;
+  2. objectif → possibilités : « Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ? » ;
+  3. transfert (L23) → couverture : « Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ? ».
+  Les trois sont compris de bout en bout en mode sans IA (mesuré, `v2/langage/mesures/2026-11-15-assistant-trois-exemples.txt`) ;
+  mode IA non vérifié (pas de clé). L'assistant dit « demande de soins de ville », plus « besoin ».
+
+## 2026-11-15 — Fusion besoin-assistant (trois exemples) dans la branche de la carte
+- **Décision** : la version de l'assistant de la session besoin-assistant est gardée (« demande de soins de ville »,
+  trois exemples) ; deux lignes encore techniques sont réécrites ici (« un seul estimateur … paramètres de L23 » →
+  « une seule façon d'estimer la demande de soins de ville … » ; limite sans noms de paramètres) et « (L23) » est retiré
+  du libellé du glossaire. Le test vérifie l'absence de « libérés », « ETP », « L23 », « estimateur ».
+- **Pourquoi :** l'utilisateur·rice voyait encore six exemples ; même langage pour un·e utilisateur·rice sans formation.

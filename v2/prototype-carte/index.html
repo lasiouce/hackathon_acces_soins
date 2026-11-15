@@ -1303,19 +1303,15 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
 // accueil selon le bouton d'ouverture (2026-11-15) : « gen » (carte), « scn » (définir un scénario, panneau Scénario),
 // « int » (interpréter le résultat, panneau Résultat) ; les suggestions citent la profession, le territoire et l'année affichés
 const ASKEX=["Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ?",
-  "Pour les infirmiers en Occitanie, quelles politiques ont le plus d'effet d'ici 2040 ?",
-  "Réguler l'installation des infirmiers en Occitanie et former 10 % de plus : que se passe-t-il d'ici 2040 ?",
-  "Repousser de 2 ans la cessation d'activité des sages-femmes : quel effet en 2040 ?",
-  "Accueillir deux fois plus de dentistes diplômés à l'étranger : quel effet en Bretagne en 2035 ?",
-  "Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?"];
+  "Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?",
+  "Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ?"];   // un exemple par cas d'usage : leviers → effet ; objectif → possibilités ; transfert (L23) → couverture
 function askIntent(i){const T=S.terr||"FR",nm=names[T]||"France",ou=T.startsWith("D")?`dans le département ${nm}`:`en ${nm}`,
   pr=(META.professions[S.prof]||S.prof).toLowerCase(),y=S.y,cards=a=>`<div class="cards">${a.map(t=>`<button type="button">${esc(t)}</button>`).join("")}</div>`,
   tags=a=>`<div class="cards mini">${a.map(t=>`<button type="button" class="fr-tag">${esc(t)}</button>`).join("")}</div>`,wh=t=>`<p class="wh">${t}</p>`;
   const lire=["Pourquoi ce résultat ?","Quelle confiance accorder à ce chiffre ?",`Quels flux expliquent l'écart au tendanciel ${ou} en ${y} ?`,
     `Comment se situe la densité ${ou} par rapport à la moyenne nationale en ${y} ?`,`Quels départements ont la densité la plus faible en ${y} ?`,"Comment le jumeau calcule-t-il ?"];
   if(i=="scn")return {t:"Définir un scénario",st:"Décrivez la politique à simuler : l'assistant propose les leviers et leurs valeurs, le jumeau calcule. Rien n'est appliqué au panneau Scénario sans votre clic.",
-    h:wh(`Pour les ${esc(pr)}, ${esc(ou)}`)+cards([`Pour les ${pr} ${ou}, quelles politiques ont le plus d'effet d'ici ${y} ?`,`Former 20 % de ${pr} en plus : quel effet ${ou} en ${y} ?`,
-      `Comment atteindre +10 % de densité de ${pr} ${ou} d'ici ${y} ?`])+wh("Autres scénarios à essayer")+cards(ASKEX.slice(0,4))};
+    h:wh("Scénarios à essayer")+cards(ASKEX)};
   if(i=="int")return {t:"Interpréter le résultat",st:`Résultat affiché : ${pr}, ${nm}, ${y}${changedN()?`, ${changedN()} levier${changedN()>1?"s":""} modifié${changedN()>1?"s":""}`:", tendance sans nouvelle politique"}. L'assistant explique d'où vient le chiffre à partir des calculs du jumeau.`,
     h:wh("Questions sur le résultat affiché")+tags(lire)};
   return {t:"Que voulez-vous simuler ?",st:"Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.",

@@ -93,7 +93,7 @@ OUTILS: dict[str, tuple[str, dict]] = {
                            "profession, un territoire et une année. À utiliser pour « quelles politiques ont le plus d'effet », "
                            "« quoi d'autre », « par quoi commencer ».",
                            _obj({"profession": PROF, "territoire": TERR, "annee": ANNEE}, ["profession"])),
-    "couverture": ("INDICE DE COUVERTURE (module de besoin) d'une des cinq professions : offre / besoin, base 2026 = 1, tendanciel "
+    "couverture": ("INDICE DE COUVERTURE (module de besoin) d'une des cinq professions : offre / demande de soins de ville, base 2026 = 1, tendanciel "
                    "et scénario, écart relatif au tendanciel, fourchette entre estimateurs si le choix du modèle pèse. Levier L23 "
                    "(vaccination en officine, à partir de l23_t0) : l'effectif ne change pas, la couverture des pharmaciens oui. "
                    "Jamais pour la médecine générale ni les spécialistes (règle O2).",
