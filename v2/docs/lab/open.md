@@ -206,7 +206,7 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin P-B3 : M3 (pathologies × actes) contre M1 sur l'indice, triangulation du niveau M3/M2 | ~1 h Claude après ingestion | dérivation du besoin | 2026-11-15 | fait 2026-11-15 : [rapport](reports/2026-11-15-besoin-pb3-pathologies.md) ; M3 retenu pour l'indice IDE seul ; H-B3 rejetée (4/4) |
 | Besoin M3, voie (ii) SF : actes réglementaires par grossesse × naissances Omphale (fiche n_grossesse) | ~30 min Claude | passage P-B3 | 2026-11-15 | open |
 | Besoin P-B4 : reproduire l'APL DREES 2024 (IDE, MK, SF, CD) par M4 ; Spearman ≥ 0,90, erreur médiane ≤ 15 %, +0,05 sur deux naïfs | ~2 h Claude + distancier (machine non mesurée) | dérivation du besoin | 2026-11-15 | open |
-| Besoin P-B5 : backtest du recours 2016 → 2025 par la structure d'âge contre la persistance (patientèle, MAPE dép.) | ~45 min Claude | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B5 : backtest du recours 2016 → 2025 par la structure d'âge contre la persistance (patientèle, MAPE dép.) | ~45 min Claude | dérivation du besoin | 2026-11-15 | fait 2026-11-15 : [rapport](reports/2026-11-15-besoin-pb5-backtest.md) ; H-B1 retenue (3/4), même verdict sous P2 |
 | Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~24 Go DAMIR (machine), saisons 2015-16 à 2019-20 | dérivation du besoin | 2026-11-15 | open |
 | Besoin : lire le descriptif de la patientèle (département d'exercice ou de résidence ?) | ~5 min | exploration besoin | 2026-11-15 | fait 2026-11-15 : moyenne par professionnel, département des professionnels (déduit du libellé ; page « Méthode » non lue), [axe 4](reports/2026-11-15-besoin-axe4-donnees.md) |
 | Besoin : ouvrir l'archive APL V0 2010/2013 (pharmaciens ?) | ~15 min | exploration besoin | 2026-11-15 | open |
@@ -219,7 +219,8 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : textes intégraux de MacKenzie 2019 et Birch, Gibson et McBride 2020 (W, R, identité de conservation ?) | ~30 min | passe de littérature | 2026-11-15 | open |
 | Besoin : conservation du 2SFCA contre Páez et coll. 2019 (inflation des FCA) | ~15 min | passe de littérature | 2026-11-15 | open |
 | Besoin : Gravelle et coll. 2003 en entier (spécification et instruments de M2a) | ~30 min | passe de littérature | 2026-11-15 | open |
-| Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | open |
+| Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | fait 2026-11-15 : [rapport](reports/2026-11-15-besoin-pb5-backtest.md) ; qualifie pour IDE, CD, SF ; mise en service soumise à décision (registre § Open) |
+| Besoin P-B5 : backtest SF avec un terme d'offre explicite (recours = besoin × φ(A)) | ~30 min Claude | passage P-B5 | 2026-11-15 | open |
 | Besoin axe 0 : brancher `besoin_api` dans `/api/carte` (couverture, couverture_base) et mesurer la carte < 150 ms au 95ᵉ centile, n ≥ 30 | ~30 min Claude, après accord | besoin axe 0 | 2026-11-15 | open |
 | Besoin axe 0 : offre multi-professions en un appel (une table par source d'âge aujourd'hui, un état par profession) | ~20 min | besoin axe 0 | 2026-11-15 | open |
 | Besoin axe 0 : remplacer les placeholders (`M0.r_bar` MG et spécialistes, `couverture.ACTIVITE`, `transferts.L23_PARAMS`) par les fiches de l'axe 1 | ~10 min après l'axe 1 | besoin axe 0 | 2026-11-15 | open |

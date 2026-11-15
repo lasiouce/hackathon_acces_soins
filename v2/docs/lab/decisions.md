@@ -2448,6 +2448,13 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Mise en service du GBM de P-B5** (ouvert le 2026-11-15, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)).
+  Par la règle gelée (borne haute de l'IC de Δ_GBM < 0), il qualifie pour IDE (−1,9 pt de MAPE), CD (−3,2) et SF
+  (−45,8) ; pas pour MK. Mais son gain suit la croissance de l'offre (corrélation 0,54 à 0,71 entre sa cible et la
+  croissance de l'effectif 2016 → 2025, diagnostic a posteriori), et il n'est validé qu'à h = 9. Options :
+  (a) **le servir comme prédicteur du recours seulement**, jamais comme besoin (avis) ; (b) le servir comme
+  estimateur de besoin pour IDE, CD, SF, ce qui rend B dépendant de l'offre ; (c) ne pas le servir. Prix : (a)
+  ~30 min, (b) ~45 min, (c) 0.
 - **Brancher le module de besoin dans la carte** (ouvert le 2026-11-15, axe 0 du besoin). `besoin.sortie.besoin_api`
   rend `besoin`, `couverture` et `couverture_base` en 0,72 ms au 95ᵉ centile au département (mesuré). Rien n'est
   branché dans `/api/carte` sans accord. Tant que l'axe 1 n'a pas remplacé les placeholders, un effet de transfert
@@ -4865,3 +4872,18 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** seuils gelés appliqués tels quels.
 - **Ce qui le renverserait :** une dépense par cas ventilée par âge ; une morbidité non repérée par la
   consommation de soins.
+
+## 2026-11-15 — Module de besoin, P-B5 : H-B1 retenue ; le GBM qualifie pour IDE, CD, SF, mise en service ouverte
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)) :
+  - **H-B1 retenue** : M1 bat la persistance du recours par habitant à 9 ans (2016 → 2025, MAPE départementale)
+    pour IDE (7,7 contre 15,8), MK (10,8 contre 14,1), CD (9,4 contre 10,4), IC à 98,75 % sous 0 ; **SF perd**
+    (66,6 contre 65,0). Même verdict sous P2 (poids APL 2022) : pas dépendante du profil.
+  - **GBM** : qualifie par la règle gelée pour IDE, CD, SF ; **pas mis en service** dans cette session, car la
+    mise en service comme besoin contredirait la norme (gain lié à la croissance de l'offre). Question ouverte
+    (§ Open), avec avis : prédicteur du recours seulement.
+  - **Données téléchargées** avec l'accord de l'utilisateur·rice : estimations de population Insee 1975–2023
+    (département × sexe × âge quinquennal, `v2/data/raw/insee/`, ignoré par git) ; 2025 = Insee 2023 × croissance
+    Omphale (écart 1, écrit avant calcul, commit `dd66519`). Autres écarts : kinés densité 2017 ; 18 plis régionaux.
+- **Pourquoi :** seuils et hyperparamètres gelés appliqués tels quels.
+- **Ce qui le renverserait :** un profil d'âge antérieur à 2016 (regard en avant) ; un recours en actes au
+  département ; les estimations Insee 2025 définitives.

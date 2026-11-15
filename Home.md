@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Besoin P-B5 : backtest du recours 2016 → 2025](v2/docs/lab/reports/2026-11-15-besoin-pb5-backtest.md) | H-B1 retenue : M1 bat la persistance pour IDE (MAPE 7,7 contre 15,8), MK (10,8 contre 14,1), CD (9,4 contre 10,4) ; SF perd ; GBM qualifie pour IDE, CD, SF, gain lié à la croissance de l'offre ; mise en service à décider | session besoin-v2-m1-m3 |
 | 2026-11-15 | [Besoin P-B3 : morbidité (M3) contre âge (M1)](v2/docs/lab/reports/2026-11-15-besoin-pb3-pathologies.md) | (A) M3 retenu pour l'indice IDE seul (S₃ = 83 %) ; réduit au recoupement pour MK, CD, SF, PH (S₃ ≥ 95 %) ; (B) H-B3 rejetée pour 4/4 (ΔR² hors échantillon ≤ 0,01, seuil 0,10) | session besoin-v2-m1-m3 |
 | 2026-11-15 | [Besoin P-B2 : saturation du recours (M2b)](v2/docs/lab/reports/2026-11-15-besoin-pb2-saturation.md) | M2b tombe pour IDE, MK, CD, SF : borne haute de l'IC à 98,75 % de δ ≥ 0 partout ; ΔAIC ≥ 2 pour les kinés seuls (23,1, par concavité) ; placebo non attribuable pour MK et CD | session besoin-v2-m1-m3 |
 | 2026-11-15 | [Besoin P-B1 : âge (M1) contre population (M0)](v2/docs/lab/reports/2026-11-15-besoin-pb1-age.md) | P1 + P2 : âge retenu pour les 5 professions ; IDE, MK, PH S₁ = 0 % ; SF 1–3 % ; dentistes de justesse (P1 93,1 % abandon, P2 87,1 % maintien, ρ = 0,999) | session besoin-v2-m1-m3 |

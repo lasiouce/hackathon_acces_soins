@@ -271,8 +271,11 @@ Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier d
 
 ```bash
 PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
-PYTHONPATH=v2 uv run python -m besoin.tests                 # module de besoin : critères d'identité et cas limites
+PYTHONPATH=v2 uv run --with scipy python -m besoin.tests    # module de besoin : critères d'identité et cas limites
 PYTHONPATH=v2 uv run python -m besoin.validation.pb1        # besoin, P-B1 : âge (M1) contre population (M0)
+PYTHONPATH=v2 uv run --with scipy python -m besoin.validation.pb2   # besoin, P-B2 : saturation (M2b)
+PYTHONPATH=v2 uv run python -m besoin.validation.pb3        # besoin, P-B3 : morbidité (M3)
+PYTHONPATH=v2 uv run --with scikit-learn --with xlrd --with openpyxl python -m besoin.validation.pb5   # P-B5 : backtest
 PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
 PYTHONPATH=v2 uv run --with scipy python -W ignore -m methodes.budget_erreur   # axe 2 : budget d'erreur
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
@@ -306,7 +309,10 @@ et la question ouverte sur le seuil de diffusion.
   n'est branché dans la carte. Aucun indice de couverture n'est produit pour la médecine générale.
   Plan : `v2/docs/lab/derivations/2026-11-15-besoin-plan.md`.
   **M1** (recours par âge : poids APL de la DREES, profil Open DAMIR pour les pharmaciens) est retenu par
-  P-B1 pour les cinq professions, les dentistes de justesse
+  P-B1 pour les cinq professions, les dentistes de justesse. P-B2 tue la saturation (M2b) ; M2a (AREA) reste en
+  repli. M3 (pathologies) ne sert l'indice que pour les infirmiers (P-B3). P-B5 : M1 bat la persistance du recours
+  à 9 ans pour IDE, MK et CD, pas pour les sages-femmes. Les passages P-B2, P-B3 et P-B5 lisent des tables
+  data.ameli.fr (ODbL) hors dépôt, à reconstruire avec `v2/besoin/donnees/ameli.py`
   ([rapport](v2/docs/lab/reports/2026-11-15-besoin-pb1-age.md)).
 - Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
   data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
