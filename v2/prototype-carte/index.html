@@ -64,9 +64,8 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 .fr-icon-question-answer-line:before,.fr-icon-question-answer-line:after{-webkit-mask-image:url("dsfr/icons/communication/question-answer-line.svg");mask-image:url("dsfr/icons/communication/question-answer-line.svg")}
 /* assistant (décision du 2026-11-15) : trois entrées vers la même fenêtre — en tête du Scénario, en tête du Résultat, et sur la carte,
    en bas à droite au-dessus de l'attribution ; réduit à son icône quand la légende ne lui laisse pas la place */
+/* bouton de l'assistant : icône + « Assistant », au-dessus de la légende, aligné sur son bord droit (2026-11-15) ; position posée par askFit */
 #askbtn{position:absolute;right:.8rem;bottom:2.4rem;z-index:3;box-shadow:0 2px 8px 0 rgba(0,0,18,.28);margin:0}
-#askbtn.compact{max-width:2.5rem;max-height:2.5rem;min-height:2.5rem;overflow:hidden;padding-left:.5rem;padding-right:.5rem;white-space:nowrap}
-#askbtn.compact:before{--icon-size:1.5rem;margin-left:0;margin-right:.5rem}
 .hgrp{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .7rem;min-width:0;flex:1}
 .hgrp .askopen{margin:0}
 #levers.closed .askopen,#side.closed .askopen{display:none}
@@ -147,8 +146,9 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #mapwrap{position:relative;flex:1 1 auto;min-height:12rem;background:var(--sea)}
 #map{position:absolute;inset:0}
 /* légende réduite (demande du 2026-11-14) : bascule d'indicateur et gamme ; le titre reste pour les lecteurs d'écran */
-#legend{position:absolute;left:.8rem;bottom:.8rem;width:auto;min-width:min(22rem,calc(100% - 4.6rem));max-width:min(34rem,calc(100% - 4.6rem));background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
-#var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:wrap}   /* les trois indicateurs sur une ligne quand la place le permet (demande du 2026-11-14) ; à la ligne sinon, au lieu d'être rognés quand le panneau Scénario rétrécit la carte */
+/* légende : largeur suivie de la colonne de carte (panneaux ouverts ou repliés), plafond 60rem, centrée dans la carte ; le bouton de l'assistant est au-dessus, bord droit sur le sien (2026-11-15) */
+#legend{position:absolute;container-type:inline-size;--lgw:min(calc(100% - 4.6rem),60rem);left:calc((100% - var(--lgw)) / 2);bottom:.8rem;width:var(--lgw);background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
+#var{display:flex;gap:.3rem clamp(.4rem,4cqi,3rem);margin-bottom:1.6rem;flex-wrap:wrap;justify-content:center}   /* écart entre indicateurs proportionnel à la largeur de la légende (4 % ; 0,4 à 3rem), 2026-11-15 */   /* les trois indicateurs sur une ligne quand la place le permet (demande du 2026-11-14) ; à la ligne sinon, au lieu d'être rognés quand le panneau Scénario rétrécit la carte */
 #var .fr-tag{white-space:nowrap}
 #var .fr-tag{margin:0}
 #defbtn{margin-top:.35rem;display:inline-flex;align-items:center;gap:.3rem}
@@ -157,9 +157,9 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #deftxt{margin:0;font-size:.85rem;line-height:1.4;color:var(--text-default-grey)}
 /* icône d'information (DSFR, info-line) à la place du point d'interrogation, couleur d'action */
 /* bascules à choix unique (indicateur, échelle de la fiche, mode expert) : étiquette pleine, sans la coche du DSFR */
-:is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]::after{display:none}
-:is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]:not(:disabled){background-image:none;background-color:var(--background-active-blue-france)}
-:is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]:not(:disabled):hover{background-image:none;background-color:var(--background-active-blue-france-hover)}
+:is(#var,#card .scope) .fr-tag[aria-pressed=true]::after{display:none}
+:is(#var,#card .scope) .fr-tag[aria-pressed=true]:not(:disabled){background-image:none;background-color:var(--background-active-blue-france)}
+:is(#var,#card .scope) .fr-tag[aria-pressed=true]:not(:disabled):hover{background-image:none;background-color:var(--background-active-blue-france-hover)}
 #trh{margin:.4rem 0 0;padding:.4rem .6rem;font-size:.82rem;line-height:1.3}#trh p{margin:0}#trh::before{display:none}
 #lt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* gamme continue, comme la carte (interpolation de RAMP entre −B et +B) ; graduations posées à leur valeur exacte */
@@ -213,20 +213,14 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 .rview>*+*{margin-top:.9rem}
 .rview .h4{margin-bottom:.3rem}
 /* Graphique : courbes superposables */
-#gpre{margin:0}
-#gpre li{line-height:1}
-#gpre .fr-tag{margin:0 .1rem .4rem 0}
+/* superpositions proposées : liste déroulante (2026-11-15), une ligne au lieu de quatre de boutons */
+#gpreg{margin:0 0 .4rem}#gpreg .fr-label{font-size:.75rem;color:var(--mute)}#gpre{margin-top:.2rem}
 #chart{width:100%;display:block}
 #gleg{list-style:none;margin:0;padding:0;display:grid;gap:.35rem;font-size:.87rem}
 #gleg li{padding:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 .5rem;align-items:baseline}
 #gleg li svg{align-self:start;margin-top:.4rem}
 #gleg small{display:block;color:var(--mute);font-size:.78rem}
-#gset{border:0;margin:0;padding:0;min-width:0}
-#gset legend{font-size:.87rem;font-weight:700;color:var(--ink);padding:0;margin-bottom:.3rem}
-#gser{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}
-#gser .fr-checkbox-group{margin:0}
-#gser .fr-checkbox-group input[type=checkbox]~label{padding:.3rem 0;font-size:.9rem}
-#gser .fr-checkbox-group--sm input[type=checkbox]{top:.55rem}
+#gset{margin:0;min-width:0}
 .sw{display:inline-block;width:1.1rem;height:3px;background:var(--c);margin-right:.45rem;flex:none}
 #gb100{margin-top:.6rem}
 #gb100 .fr-toggle__label{font-weight:400}
@@ -239,9 +233,11 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #card .sub{color:var(--mute);font-size:.87rem}
 #card section{padding:.7rem 0;border-top:1px solid var(--hair)}
 #card .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;border-top:2px solid var(--border-plain-blue-france);border-bottom:1px solid var(--rule);margin-top:.8rem}
-.kpis span{display:block;font-size:.85rem;color:var(--mute)}
-.kpis b{font-size:1.85rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
-.kpis em{display:block;font-style:normal;font-size:.8rem;color:var(--mute)}
+/* compteurs : centrés dans leur colonne, libellé en haut (année sur la même ligne), chiffres alignés sur une même ligne de base, filets entre colonnes */
+#card .kpis>div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.15rem;padding:.6rem .4rem .7rem}
+#card .kpis>div+div{border-left:1px solid var(--rule)}
+.kpis>div>span{flex:1;font-size:.85rem;line-height:1.25;color:var(--mute)}
+.kpis b{font-size:1.85rem;line-height:1.1;font-weight:700;letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 .kpis div:last-child b{color:var(--sel)}
 #card .kpix{margin:.5rem 0 0;font-size:.87rem;color:var(--text-default-grey)}
 #card .kpix small{display:block;color:var(--mute);font-size:.78rem}
@@ -255,7 +251,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 .flow .bar i.neg{background:var(--neg)}
 .flow .bar:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--text-title-grey)}
 .flow output{text-align:right}
-.cardact{padding-top:.7rem}
+.cardact{padding-top:.7rem}#cardact{border-top:1px solid var(--rule);margin-top:.8rem}
 .cardact .fr-btns-group{margin:0}
 .empty h3{margin:.2rem 0 .4rem;font-size:1.2rem}
 .empty p{color:var(--mute);margin:0}
@@ -352,7 +348,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
   #mapwrap{height:58dvh;flex:none}
   .panel{overflow:visible}
   #app{display:flex;flex-direction:column}#app>.fr-header{order:-3}#levers{order:-2}
-  #legend{width:calc(100% - 4.6rem)}#var{flex-wrap:wrap}
+  #legend{width:calc(100% - 4.6rem);left:.8rem}#var{flex-wrap:wrap}
   #legend .note{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -410,14 +406,14 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       <nav id="crumb" aria-label="Fil d'Ariane"></nav>
     </div>
     <!-- assistant (décision du 2026-11-15) : bouton de la carte en bas à droite, icône DSFR question-answer-line ; même fenêtre que les boutons des panneaux -->
-    <button type="button" id="askbtn" class="fr-btn fr-btn--icon-left fr-icon-question-answer-line askopen" data-intent="gen" aria-haspopup="dialog" aria-expanded="false" aria-label="Assistant de simulation" title="Décrire une politique ou poser une question : l'assistant la traduit en leviers, le jumeau calcule">Assistant de simulation</button>
+    <button type="button" id="askbtn" class="fr-btn fr-btn--icon-left fr-icon-question-answer-line askopen" data-intent="gen" aria-haspopup="dialog" aria-expanded="false" aria-label="Assistant de simulation" title="Assistant de simulation : décrire une politique ou poser une question ; l'assistant la traduit en leviers, le jumeau calcule">Assistant</button>
     <div id="zoom">
       <button id="zin" aria-label="Zoomer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg></button>
       <button id="zout" aria-label="Dézoomer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10"/></svg></button>
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture&nbsp;<span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true" title="Variation de l'effectif depuis 2026, jusqu'à l'année affichée">Variation</button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false" title="Écart au tendanciel : effectif du scénario rapporté à la même projection sans nouvelle politique">Écart</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false" title="Densité à l'année affichée, pour 100 000 habitants">Densité</button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1, à l'année affichée">Couverture</button></div>
       <div id="lt"></div>
       <div id="trh" class="fr-notice fr-notice--info" hidden><p><b>Transfert hypothétique (paramètres de l'utilisateur)</b> : <span id="trh-t"></span>. Pas un levier de la carte : non mesurable en données ouvertes. <button type="button" class="fr-link fr-link--sm" id="trh-x">Retirer</button></p></div>
       <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
@@ -445,13 +441,14 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       </div>
     </fieldset>
     <section class="rview" id="rv-graph" data-m="graph" aria-label="Graphique">
-      <div><p class="fr-text--xs" style="margin:0 0 .3rem;color:var(--mute)">Superpositions proposées</p><ul class="fr-tags-group" id="gpre" aria-label="Superpositions proposées"></ul></div>
+      <div class="fr-select-group" id="gpreg"><label class="fr-label" for="gpre">Superpositions proposées</label><select class="fr-select" id="gpre"></select></div>
       <svg id="chart" viewBox="0 0 460 260" role="img" aria-label="Trajectoire"></svg>
       <ul id="gleg"></ul>
       <p class="note" id="gnote"></p>
-      <fieldset id="gset"><legend>Courbes superposées</legend><div id="gser"></div>
+      <!-- courbes choisies seulement par la liste « Superpositions proposées » (cases à cocher retirées, 2026-11-15) -->
+      <div id="gset">
         <div class="fr-toggle" id="gb100"><input type="checkbox" class="fr-toggle__input" id="b100" aria-describedby="b100-hint"><label class="fr-toggle__label" for="b100" data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé">Indice base 100 en 2026</label><p class="fr-hint-text" id="b100-hint"></p></div>
-      </fieldset>
+      </div>
     </section>
     <section class="rview" id="rv-pyr" data-m="pyr" aria-label="Pyramide des âges" hidden></section>
     <section class="rview" id="rv-flux" data-m="flux" aria-label="Flux" hidden>
@@ -466,6 +463,8 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       <div><p class="h4">Leviers bruts</p><div id="xlev"></div></div>
       <div id="lat">—</div>
     </section>
+    <!-- actions de la fiche, en bas du panneau Résultat (2026-11-15) : visibles dès qu'une fiche est affichée -->
+    <div class="cardact" id="cardact" hidden><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" onclick="addCmp()">Ajouter à la comparaison</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" onclick="exportCard()">Exporter la fiche (CSV)</button></li></ul></div>
   </div>
 </aside>
 </div>
@@ -634,8 +633,8 @@ let userMoved=false;
 function fitFrance(ms=800){if(!map)return;try{map.fitBounds(bbox.FR,{padding:pad(),duration:ms});}catch(e){}}
 // la carte n'occupe que la colonne centrale : marges fixes, plus la hauteur de la légende en bas
 // en haut : sous le fil d'Ariane et le bouton de l'assistant
-function pad(){const l=$("#legend"),h=$("#mapwrap").clientHeight,small=innerWidth<=700,tl=$("#maptl");
-  return {left:small?12:24,right:small?56:64,top:Math.min(Math.round(h*.3),(tl?tl.offsetTop+tl.offsetHeight:0)+(small?8:16)),bottom:Math.min(Math.round(h*.45),(l?l.offsetHeight:0)+(small?16:28))};}
+function pad(){const l=$("#legend"),ab=$("#askbtn"),h=$("#mapwrap").clientHeight,small=innerWidth<=700,tl=$("#maptl");
+  return {left:small?12:24,right:small?56:64,top:Math.min(Math.round(h*.3),(tl?tl.offsetTop+tl.offsetHeight:0)+(small?8:16)),bottom:Math.min(Math.round(h*.45),(l?l.offsetHeight:0)+(ab?ab.offsetHeight+8:0)+(small?16:28))};}   // légende et bouton de l'assistant au-dessus
 // évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
 // densité : professionnels (× activité) pour 100 000 habitants, en écart à la densité France (Insee Omphale 2022)
 // sy/by/py : valeurs à l'année du curseur S.y (posées par derive)
@@ -936,7 +935,7 @@ function closeCardContent(keep){const c=$("#card");delete c.dataset.t;F=null;
   // retour à la France depuis un territoire : l'ancienne fiche reste, estompée, jusqu'aux chiffres nationaux (pas d'écran intermédiaire)
   if(keep&&c.classList.contains("on")){c.classList.add("busy");c.setAttribute("aria-busy","true");
     clearTimeout(c._busy);c._busy=setTimeout(()=>{if(c.classList.contains("busy"))closeCardContent();},4000);if(META)renderView();return;}
-  c.classList.remove("on","busy");c.removeAttribute("aria-busy");
+  c.classList.remove("on","busy");c.removeAttribute("aria-busy");$("#cardact").hidden=true;
   c.innerHTML=`<div class="empty"><h3>France entière</h3><p>Chargement des chiffres nationaux… Cliquez une région sur la carte ou cherchez un territoire pour ses chiffres.</p></div>`;if(META)renderView();}
 // échelle des chiffres de la fiche : le territoire ouvert, ou la France entière (option « chiffres nationaux »)
 let CS="terr",CREQ=0;
@@ -948,7 +947,7 @@ function closeCard(){closeCardContent(true);S.terr=null;dropRegional();setTimeou
 
 function renderCard(f){
   F=f;const T=cardT(),c=$("#card"),y=f.years,_b=(c.classList.remove("busy"),c.removeAttribute("aria-busy")),i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
-  const s26=f.scn[i26],s50=f.scn[n],b50=f.base[n],k=f.k,lo=s50*(1-k*(Yn-f.origin)),hi=s50*(1+k*(Yn-f.origin));
+  const s26=f.scn[i26],s50=f.scn[n];
   if(!c.classList.contains("on")||c.dataset.t!==T||c.dataset.s!==(S.terr||"")||c.dataset.p!==f.prof){
     c.dataset.t=T;c.dataset.s=S.terr||"";c.dataset.p=f.prof;
     // bascule « chiffres nationaux » : visible dès qu'un territoire est ouvert ; sans territoire, la fiche montre la France
@@ -956,19 +955,17 @@ function renderCard(f){
     c.innerHTML=`<header><div><h3>${names[T]||T}</h3><div class="sub">${f.label} · secteur libéral · origine des données ${f.origin}${T=="FR"?" · chiffres nationaux":""}</div></div>
       ${S.terr?`<button class="x" aria-label="Fermer la fiche" onclick="closeCard()"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>`:""}</header>${scope}
       <section class="kpis"><div><span>Effectif ${y[i26]}</span><b class="num" data-k="s26">0</b></div>
-        <div><span>Effectif <span class="yl">${Yn}</span></span><b class="num" data-k="s50">0</b><em class="num" data-k="rg"></em></div>
-        <div><span>Écart au tendanciel</span><b class="num" data-k="ec">0</b><em class="num" data-k="ecp"></em></div></section>
-      <p class="kpix" data-k="tx" hidden></p>
-      <div class="kpix couvk" data-k="cv" hidden></div>
-      <div class="cardact"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" onclick="addCmp()">Ajouter à la comparaison</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" onclick="exportCard()">Exporter la fiche (CSV)</button></li></ul></div>`;
-    c.classList.add("on");
+        <div><span>Effectif <span class="yl">${Yn}</span></span><b class="num" data-k="s50">0</b></div>
+        <div><span>Couverture de soin <span class="yl">${Yn}</span></span><b class="num" data-k="cy">—</b></div></section>
+      <div class="kpix couvk" data-k="cv" hidden></div>`;
+    c.classList.add("on");$("#cardact").hidden=false;
   }
   const q=s=>c.querySelector(`[data-k=${s}]`);
-  tween(q("s26"),s26,fmt);tween(q("s50"),s50,fmt);tween(q("ec"),s50-b50,v=>(v>=0?"+":"−")+fmt(Math.abs(v)));
-  q("ecp").textContent=b50?pct(s50/b50-1):"";q("rg").textContent=`fourchette ${fmt(lo)} – ${fmt(hi)}`;
-  // taux d'installation des diplômés à l'année affichée, seulement si l'API le sert (2026-11-15)
-  const tx=gData(f).taux_installation,tv=tx?.scn?.[n],tl=q("tx");tl.hidden=tv==null;
-  if(tv!=null)tl.innerHTML=`Diplômés installés en libéral : <b class="num">${Math.round(tv).toLocaleString("fr-FR")} %</b> (${Yn})${tv>100?`<small>rapport des installés de l'année aux diplômés de l'année : il dépasse 100 % quand des diplômés d'années antérieures s'installent</small>`:""}${tx.note?`<small>${esc(tx.note)}</small>`:""}`;
+  tween(q("s26"),s26,fmt);tween(q("s50"),s50,fmt);
+  // compteur « couverture de soin » à l'année affichée (remplace l'écart au tendanciel, 2026-11-15)
+  const cr=couvRows(T,Yn),cv=cr?.rows[0]?.[1]?.cy;
+  if(cv!=null&&isFinite(cv))tween(q("cy"),cv,fC);else{tw.delete(q("cy"));q("cy").textContent="—";}
+  q("cy").title=cr?"indice, 2026 = 1":"non disponible pour cette profession";
   couvCard(q("cv"),T,n,Yn);
   // mode Pyramide : proposé seulement si l'API sert la pyramide ; sinon un lien r=pyr retombe sur Graphique
   const pe=$("#rm-pyr").closest(".fr-segmented__element"),ok=pyrOK(f);pe.hidden=!ok;
@@ -981,17 +978,9 @@ function couvRows(T,Yn){if(!COUV||COUV.prof!==S.prof)return null;const o=T=="FR"
   const at=y=>{const j=COUV.years.indexOf(y);return j<0?null:couvAt(o,j);};const rows=[[Yn,at(Yn)]].filter(r=>r[1]);   // l'année du curseur seulement
   const tr=COUV.l23?.transferts?.[0],j=COUV.years.indexOf(Yn);
   return {rows,est:COUV.estimateurs,central:COUV.central,mg:tr&&j>=0?{etp:tr.etp_liberes_source[j],actes:tr.actes_mg_liberes[j],recu:tr.etp_recus_cible[j],y:Yn}:null};}
-function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c;if(!c)return;
-  el.innerHTML=c.rows.map(([y,v])=>`Couverture de la demande de ville ${y} : <b class="num">${fC(v.cy)}</b> <small>(référence : 2026 = 1 ; ${couvMot(v.cy)} ; écart au tendanciel ${fE(v.ce)}${COUV.fourchette_visible?` ; entre ${fC(v.clo)} et ${fC(v.chi)} selon la méthode d'estimation de la demande`:""})</small>`).join("<br>")
-    +`<small>Demande estimée à partir du recours actuel aux soins de ville par âge et sexe, appliqué à la population projetée du territoire.</small>`
-    +(c.mg?`<br>Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de vaccins à faire : en ${c.mg.y}, environ <b class="num">${fmt(c.mg.actes)}</b> vaccinations en moins pour eux (France entière), au-delà de la part déjà faite en pharmacie en 2026. Les pharmaciens reprennent ce travail. <small>Temps de travail libéré : environ ${fmt(c.mg.etp)} médecins à temps plein, un ordre de grandeur qui dépend d'une part de temps supposée, pas du nombre de vaccinations.</small>`:"")
-    +`<details class="meth"><summary>Méthode (détail)</summary><small>${couvMeth(c)}</small></details>`;}
-// détail de méthode pour l'Administration : codes des estimateurs et des protocoles, replié par défaut
-function couvMeth(c){const n=c.est.length;
-  return `Estimateur central ${c.central} (norme déclarée) : ${esc(COUV.hypotheses.estimateurs[c.central])}. `
-    +(n>1?`Estimateurs comparés : ${c.est.join(", ")} ; `+(COUV.fourchette_visible?`écart entre eux supérieur à ${nfr(COUV.seuil_fourchette*100)} % en 2050 : fourchette affichée.`:`ils concordent à ± ${nfr(COUV.ecart_modeles_2050*50,1)} % en 2050 (seuil ${nfr(COUV.seuil_fourchette*100)} %) : pas de fourchette affichée.`)
-      :`Un seul estimateur servi pour cette profession : pas de fourchette entre méthodes.`)
-    +` Population : ${esc(COUV.hypotheses.population)}. M4 (accessibilité 2SFCA) : ${esc(COUV.en_attente[0].statut)}.`;}
+// sous les compteurs : seulement l'effet du transfert L23 sur les généralistes, quand il est actif (la couverture est un compteur)
+function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c?.mg;if(!c?.mg)return;
+  el.innerHTML=`Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de vaccins à faire : en ${c.mg.y}, environ <b class="num">${fmt(c.mg.actes)}</b> vaccinations en moins pour eux (France entière), au-delà de la part déjà faite en pharmacie en 2026. Les pharmaciens reprennent ce travail. <small>Temps de travail libéré : environ ${fmt(c.mg.etp)} médecins à temps plein, un ordre de grandeur qui dépend d'une part de temps supposée, pas du nombre de vaccinations.</small>`;}
 function tween(el,to,f){const from=tw.get(el)??to*.96,t0=performance.now();tw.set(el,to);
   const step=t=>{const p=Math.min(1,(t-t0)/280),e=1-Math.pow(1-p,3);el.textContent=f(from+(to-from)*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
 const band=(f,i)=>{const h=f.k*(f.years[i]-f.origin);return [f.scn[i]*(1-h),f.scn[i]*(1+h)];};   // fourchette indicative : scn × (1 ± k × horizon)
@@ -1021,22 +1010,19 @@ const tickF=(v,st)=>Math.abs(v)>=1e6?(v/1e6).toLocaleString("fr-FR",{maximumFrac
 let GSIG="";
 // contrôles du graphique : reconstruits seulement quand l'ensemble des courbes disponibles change
 function graphCtl(av,D){const sig=av.join()+"|"+av.map(k=>gL(k,D)).join();if(sig===GSIG)return;GSIG=sig;
-  $("#gpre").innerHTML=GPRE.filter(([,ks])=>ks.every(k=>av.includes(k))).map(([t,ks])=>`<li><button type="button" class="fr-tag fr-tag--sm" data-g="${ks.join()}" aria-pressed="false">${t}</button></li>`).join("");
-  $("#gser").innerHTML=av.map(k=>`<div class="fr-checkbox-group fr-checkbox-group--sm"><input type="checkbox" id="gs-${k}" value="${k}"><label class="fr-label" for="gs-${k}"><i class="sw" style="--c:${GS[k].c}" aria-hidden="true"></i>${esc(gL(k,D))}</label></div>`).join("");}
+  // « Personnalisée » : montrée seulement quand le lien (g=) porte des courbes qui ne forment aucune superposition proposée
+  $("#gpre").innerHTML=`<option value="" hidden>Personnalisée</option>`+GPRE.filter(([,ks])=>ks.every(k=>av.includes(k))).map(([t,ks])=>`<option value="${ks.join()}" data-g="${ks.join()}">${t}</option>`).join("");}
 function syncCtl(sel,b100,forced){
-  $("#gpre").querySelectorAll("[data-g]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.g===sel.join()));
-  $("#gser").querySelectorAll("input").forEach(i=>i.checked=sel.includes(i.value));
+  const gp=$("#gpre");gp.value=[...gp.options].some(o=>o.value===sel.join())?sel.join():"";
   const t=$("#b100");t.checked=b100;t.disabled=forced;
   $("#b100-hint").textContent=forced?"Plus de deux unités : chaque courbe est lue en indice, 100 en 2026, sur un seul axe.":"Pour comparer des évolutions d'unités différentes sur un seul axe.";}
 function buildResult(){
   $("#rmode").addEventListener("change",e=>{if(e.target.name=="rmode")setMode(e.target.value);});
-  // superpositions proposées : choix unique, l'état final est réécrit après la bascule DSFR
-  $("#gpre").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;S.gs=b.dataset.g.split(",");S.b100=false;drawGraph();writeHash();});
-  $("#gser").addEventListener("change",e=>{const ks=[...$("#gser").querySelectorAll("input:checked")].map(i=>i.value);
-    if(!ks.length){e.target.checked=true;toast("Au moins une courbe reste affichée");return;}S.gs=Object.keys(GS).filter(k=>ks.includes(k));drawGraph();writeHash();});
+  // superpositions proposées : choix unique dans la liste déroulante
+  $("#gpre").addEventListener("change",e=>{const v=e.target.value;if(!v)return;S.gs=v.split(",");S.b100=false;drawGraph();writeHash();});
   $("#b100").addEventListener("change",e=>{S.b100=e.target.checked;drawGraph();writeHash();});}
 function drawGraph(){const f=F,svg=$("#chart");if(!svg)return;
-  if(!f){svg.innerHTML="";$("#gleg").innerHTML="";$("#gnote").textContent="Calcul en cours…";return;}
+  if(!f){svg.innerHTML="";$("#gleg").innerHTML="";$("#gnote").textContent="Calcul en cours…";$("#gnote").hidden=false;return;}
   const D=gData(f),av=Object.keys(GS).filter(k=>D[k]);graphCtl(av,D);
   let sel=S.gs.filter(k=>D[k]);if(!sel.length)sel=["eff"];
   // règle des axes : une unité par axe ; deux unités → axes gauche et droit ; au-delà → indice base 100 en 2026, un seul axe
@@ -1085,9 +1071,9 @@ function drawGraph(){const f=F,svg=$("#chart");if(!svg)return;
     const sw=`<svg width="30" height="10" aria-hidden="true"><line x1="0" x2="13" y1="5" y2="5" stroke="${c}" stroke-width="${d.single?2:3}"/>${d.base&&!d.single?`<line x1="16" x2="30" y1="5" y2="5" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 2"/>`:""}</svg>`;
     const v=d.single?`${Ysel} : ${gF(k,d.scn[n])}`:`${Ysel} : scénario ${gF(k,d.scn[n])}${d.base?` · tendanciel ${gF(k,d.base[n])}`:""}`;
     return `<li>${sw}<span><b>${esc(gL(k,D))}</b> <span style="color:var(--mute)">(${esc(gU(k,D))}${side(k)})</span> — ${v}${d.note?`<small>${esc(d.note)}</small>`:""}${d.src?`<small>${esc(d.src)}</small>`:""}</span></li>`;}).join("");
-  $("#gnote").textContent=`Trait épais : scénario. Tirets : tendanciel (même projection, sans nouvelle politique). Trait fin avant ${f.origin} : observé.`
-    +(sel.includes("eff")?` Hachures : fourchette indicative de l'effectif, ≈ 8 cas sur 10, pente d'erreur de backtest ${(f.k*100).toLocaleString("fr-FR",{maximumFractionDigits:2})} %/an × horizon ; aucun backtest n'existe à 2050 : extrapolation.`:"")
-    +(b100?` Indice : chaque courbe divisée par sa valeur ${f.origin} (tendanciel), × 100.`:"");}
+  // sous la courbe : seulement la note de l'indice base 100 (légende des traits et des hachures retirée, 2026-11-15)
+  const gn=$("#gnote");gn.textContent=""
+    +(b100?`Indice : chaque courbe divisée par sa valeur ${f.origin} (tendanciel), × 100.`:"");gn.hidden=!gn.textContent;}
 
 // ---------- Pyramide des âges (2026-11-15) : effectif par tranche d'âge à l'année affichée ----------
 // pyramide = {tranches:[libellés], base:[[n par tranche] par année], scn:[[…]], obs?:{"AAAA":[…]}, source}
@@ -1384,9 +1370,9 @@ function askShow(intent="gen",opener=$("#askbtn")){const d=$("#askdlg");if(d.ope
   askPlace();d.showModal();opener.setAttribute("aria-expanded","true");askOpen();}
 function askHide(){const d=$("#askdlg");if(!d.open)return;d.close();askFocusBack();}
 function askFocusBack(){const o=ASK.opener&&ASK.opener.offsetParent!==null?ASK.opener:$("#askbtn");o.focus({preventScroll:true});}
-// bouton de la carte : libellé complet s'il tient à droite de la légende, sinon l'icône seule (libellé gardé pour les lecteurs d'écran)
-function askFit(){const b=$("#askbtn"),l=$("#legend"),w=$("#mapwrap");if(!b||!l||!w)return;b.classList.remove("compact");
-  const free=w.clientWidth-(l.offsetLeft+l.offsetWidth)-12-13;b.classList.toggle("compact",b.offsetWidth>free);}
+// bouton de la carte : posé au-dessus de la légende, bord droit sur le sien ; la légende change de taille avec l'indicateur et la carte
+function askFit(){const b=$("#askbtn"),l=$("#legend"),w=$("#mapwrap");if(!b||!l||!w)return;
+  b.style.bottom=(w.clientHeight-l.offsetTop+8)+"px";b.style.right=(w.clientWidth-l.offsetLeft-l.offsetWidth)+"px";}
 function buildAsk(){const d=$("#askdlg");
   fetch("/api/agent/etat").then(r=>r.json()).then(e=>{ASK.modele??=e.modele||null;}).catch(()=>{});   // libellé du modèle, repris par l'export (même texte que l'assistant)
   document.querySelectorAll(".askopen").forEach(b=>b.onclick=e=>{e.stopPropagation();askShow(b.dataset.intent,b);});$("#askx").onclick=askHide;
