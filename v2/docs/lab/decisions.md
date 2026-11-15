@@ -4527,3 +4527,11 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   62 552 – 108 797. Les résultats du 14 (`sobol.csv`, article de l'axe 5, « S_T filière 0,55 CD ») sont mesurés avec
   l'ancien fichier : ils restent visibles, mais ne décrivent plus le code. À retenir : la variante filière est
   fragile, pas l'une ou l'autre valeur.
+- **C5 porté sur SISE** (demande de l'utilisateur·rice, même jour) : `v2/methodes/c5.py` lit
+  `v2/data/processed/sise_sante_region.parquet` (région de l'établissement ; somme régionale = national, écart 0,
+  vérifié par `build_sise.py`). Résultat quasi inchangé : part des étudiants contre part des entrées, r = 0,642
+  (dentistes) et 0,945 (pharmaciens), contre 0,636 et 0,937 avec l'ancien fichier (`v2/methodes/out/c5_990.csv`) ;
+  la part du stock reste le meilleur prédicteur (r = 0,996). Le garde-fou de `manifest.py --check` couvre
+  maintenant aussi `v2/methodes`, `v2/validation` et `v2/data`. Aucun code du dépôt, hors la copie
+  `chatbot/vendor/` (question ouverte, figée sur un ancien commit, non exécutée au lancement avec `JUMEAU_REPO=..`),
+  ne lit plus le fichier des organisateurs.

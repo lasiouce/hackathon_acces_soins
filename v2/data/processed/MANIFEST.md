@@ -33,5 +33,6 @@ Reconstruire un fichier : lancer sa commande depuis la racine, après avoir plac
 | `secteur_finess_shares.csv` | 234 | `078447b103c1e4a5` | `v2/data/build_secteur.py` | 426422c 2026-11-14 | `uv run python v2/data/build_secteur.py` | voir l'en-tête du script (sources et millésimes) |
 | `secteur_split.parquet` | 726 974 | `47a2f38638fa3907` | `v2/data/build_secteur.py` | 426422c 2026-11-14 | `uv run python v2/data/build_secteur.py` | voir l'en-tête du script (sources et millésimes) |
 | `secteur_stock.parquet` | 1 537 834 | `c784b1a8bad55cbd` | `v2/data/build_secteur.py` | 426422c 2026-11-14 | `uv run python v2/data/build_secteur.py` | voir l'en-tête du script (sources et millésimes) |
-| `sise_sante.parquet` | 3 291 | `cabeddf8b1059e2c` | `v2/data/build_sise.py` | non commité | `uv run python v2/data/build_sise.py` | voir l'en-tête du script (sources et millésimes) |
+| `sise_sante.parquet` | 3 291 | `cabeddf8b1059e2c` | `v2/data/build_sise.py` | f072f9e 2026-11-15 | `uv run python v2/data/build_sise.py` | voir l'en-tête du script (sources et millésimes) |
+| `sise_sante_region.parquet` | 6 235 | `196c1b0a39b43258` | `v2/data/build_sise.py` | f072f9e 2026-11-15 | `uv run python v2/data/build_sise.py` | voir l'en-tête du script (sources et millésimes) |
 | `zonage_commune.parquet` | 909 372 | `4e5da69f54064415` | `v2/data/build_zonage.py` | a0c02a3 2026-11-14 | `uv run python v2/data/build_zonage.py` | voir l'en-tête du script (sources et millésimes) |
