@@ -213,3 +213,6 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : conservation du 2SFCA contre Páez et coll. 2019 (inflation des FCA) | ~15 min | passe de littérature | 2026-11-15 | open |
 | Besoin : Gravelle et coll. 2003 en entier (spécification et instruments de M2a) | ~30 min | passe de littérature | 2026-11-15 | open |
 | Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | open |
+| Besoin axe 0 : brancher `besoin_api` dans `/api/carte` (couverture, couverture_base) et mesurer la carte < 150 ms au 95ᵉ centile, n ≥ 30 | ~30 min Claude, après accord | besoin axe 0 | 2026-11-15 | open |
+| Besoin axe 0 : offre multi-professions en un appel (une table par source d'âge aujourd'hui, un état par profession) | ~20 min | besoin axe 0 | 2026-11-15 | open |
+| Besoin axe 0 : remplacer les placeholders (`M0.r_bar` MG et spécialistes, `couverture.ACTIVITE`, `transferts.L23_PARAMS`) par les fiches de l'axe 1 | ~10 min après l'axe 1 | besoin axe 0 | 2026-11-15 | open |
