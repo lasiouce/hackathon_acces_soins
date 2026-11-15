@@ -80,3 +80,19 @@ réponse le dit (« indice de couverture non disponible »).
 - Rebrancher sur l'API réelle et rejouer `tests/test_couverture.py` contre elle (~10 min).
 - Jeu L23 à l'aveugle écrit par un agent qui n'a pas vu le glossaire (~10 min).
 - Mode LLM : non testé avec un vrai modèle de langage (pas de clé ici) ; vérifier que la règle 12 est suivie (~15 min, quota).
+
+## Mise à jour : API réelle (2026-11-15, après fusion de `claude/besoin-carte-api-6d9504`)
+- **Outil `couverture` aligné sur `couverture_carte`** : zones `fr` / `regs["R84"]` / `deps["63"]` = {cb, cs, ecart, min,
+  max} ; fourchette montrée seulement si `fourchette_visible` (règle des 5 % de la carte) ; `l23.transferts` donne
+  `actes_mg_liberes` et `etp_liberes_source` (France). L'API date L23 à 2026 : une autre date est signalée, pas appliquée.
+  Défaut `CARTE_URL` : port 8767.
+- **Étape 5 du plan** : intention « couverture » dans l'assistant (outil appelé même sans L23) ; MG + couverture → texte
+  O2 ; `_scenario_carte` de la carte propose `{vue: couverture, l23: 1}` après un appel `couverture`.
+- **Bout en bout (mesuré, serveur de la carte lancé, `v2/langage/mesures/2026-11-15-assistant-bout-en-bout.txt`)** :
+  « couverture des pharmaciens à Clermont-Ferrand en 2035 si les pharmaciens vaccinent » → effectif 771 (tendanciel 771,
+  inchangé) ; indice 0,98 avec L23 contre 0,99 au tendanciel, −0,7 %, « couverture proche du tendanciel » ; actes de MG
+  libérés 1 878 752 injections, 468 ETP-équivalents (France) ; aucune couverture MG. **Pas de fourchette entre
+  estimateurs** : un seul estimateur (M1) servi pour les pharmaciens (décision axe 5), la réponse le dit. Kinés ARA 2050 :
+  fourchette M1–M2a affichée. Tests de la carte `tests/couverture.py` : K3–K6 OK.
+- Tests du chatbot : **47/47**.
+- ⚑ Manque : `index.html` n'applique pas encore la proposition `vue: couverture, l23: 1` (frontend de la carte, non touché).

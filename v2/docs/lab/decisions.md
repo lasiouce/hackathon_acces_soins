@@ -5185,3 +5185,14 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Ce qui le renverserait :** une mesure de `a` en temps de MG (axe 4) ; M4 validé par P-B4 ; une préférence de
   l'utilisateur·rice pour une carte colorée par l'écart au tendanciel.
 - **Non fait :** étape 5 du plan côté `v2/langage/` et `chatbot/` (autre session).
+
+## 2026-11-15 — Assistant : outil couverture aligné sur l'API réelle de la carte ; intention « couverture »
+- **Décision** (demande de la session besoin-derivation, [rapport](reports/2026-11-15-besoin-assistant.md)) :
+  - L'outil `couverture` lit la forme réelle de `/api/couverture` (`fr`, `regs`, `deps`, `fourchette_visible`,
+    `l23.transferts`), **remplace** la lecture « contrat du plan » de l'entrée précédente du même jour.
+  - Fourchette entre estimateurs montrée **seulement si `fourchette_visible`** ; sinon, pour un estimateur unique
+    (pharmaciens), la réponse dit qu'il n'y a pas de fourchette de modèle.
+  - Le mot « couverture » dans une question appelle l'outil, avec ou sans L23 ; avec MG ou spécialistes, réponse O2.
+  - Date de L23 : l'API applique 2026 ; une autre date est signalée, pas appliquée.
+- **Pourquoi :** une seule source pour C (la carte) ; règle d'affichage de l'axe 5 respectée.
+- **Ce qui le renverserait :** une API qui accepte `l23_t0` (alors la date compilée serait transmise).

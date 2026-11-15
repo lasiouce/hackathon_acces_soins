@@ -54,7 +54,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
 <<<<<<< HEAD
-| 2026-11-15 | [Besoin dans l'assistant et le compilateur](v2/docs/lab/reports/2026-11-15-besoin-assistant.md) | Jeu transferts (12 phrases écrites avant le code) 3/12 → 11/12 ; six jeux à l'aveugle inchangés ; tests du chatbot 33 → 45 ; couverture via l'API de la carte (contrat du plan, API réelle pas encore publiée) | session besoin-assistant |
+| 2026-11-15 | [Besoin dans l'assistant et le compilateur](v2/docs/lab/reports/2026-11-15-besoin-assistant.md) | Jeu transferts (12 phrases écrites avant le code) 3/12 → 11/12 ; six jeux à l'aveugle inchangés ; tests du chatbot 33 → 47 ; bout en bout sur l'API réelle : pharmaciens D63 2035, effectif inchangé, couverture −0,7 % avec L23, 1,88 M actes de MG libérés (France), aucune couverture MG | session besoin-assistant |
 =======
 | 2026-11-15 | [Besoin → carte : couverture et L23](v2/docs/lab/reports/2026-11-15-besoin-carte.md) | `/api/couverture` 28,8 ms au p95 (n = 60, < 150) ; L23 : C pharmaciens France 2050 1,013 → 1,006 (−0,7 %), 495 ETP-équivalents de MG libérés ; L23 = 0 ⇒ écart 0 ; MG et spécialistes → 400 | session besoin-carte |
 >>>>>>> origin/claude/besoin-carte-api-6d9504
