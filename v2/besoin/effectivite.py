@@ -7,8 +7,10 @@ Pour un transfert A → B (ex. L23 : médecine générale → pharmaciens) et ch
 Le calcul est refait pour k aux bornes de sa plage (k est supposé, [0,25 ; 1]) : k change la charge reçue par B, pas
 le temps libéré chez A.
 
-Critère d'effectivité (décision du 2026-11-15, « critère par défaut », statut : supposé, fixé avant tout calcul) :
-  effectif(T,t, k)  ⇔  gain_A(T,t) > 0  et  C'_B(T,t, k) ≥ 1   (la cible ne passe pas sous sa couverture de 2026)
+Critère d'effectivité (décision du 2026-11-15, remplace le « critère par défaut » ; statut : supposé, fixé avant
+le recalcul) : on juge l'effet du transfert seul, pas la tendance de la cible.
+  effectif(T,t, k)  ⇔  gain_A(T,t) > 0  et  perte_B(T,t, k) ≥ −SEUIL_CIBLE   (SEUIL_CIBLE = 1 point d'indice, supposé)
+  La position de la cible par rapport à 2026 (C_B < 1 sans transfert) est rendue à côté, comme contexte.
   verdict(T,t) = « effectif » si vrai pour toute la plage de k, « non effectif » si faux pour toute la plage,
                  « dépend de k » sinon.
 Les effectifs ne changent jamais (pas de rétroaction, N9) ; seule la répartition du besoin bouge.
@@ -24,8 +26,10 @@ from besoin.offre_mg import MG, fournisseur
 from besoin.transferts import appliquer, l23
 
 K_PLAGE = (0.25, 1.0)          # fiches de l'axe 1, statut supposé
-CRITERE = ("effectif si la couverture de la source progresse et si celle de la cible reste au moins à son niveau de "
-           "2026, sur toute la plage de k (critère par défaut, supposé, décision du 2026-11-15)")
+SEUIL_CIBLE = 0.01             # perte de couverture acceptée chez la cible, en indice (1 point) ; supposé
+CRITERE = ("effectif si le transfert fait progresser la couverture de la source et ne fait pas perdre plus d'1 point de "
+           "couverture à la cible, sur toute la plage de k ; effet du transfert seul, la tendance de la cible est donnée à "
+           "part (critère supposé, décision du 2026-11-15)")
 TRANSFERTS = {"L23": l23}
 # s_∞ et τ mesurés au national par P-B6 (vaccination antigrippale en officine, 2021-22 → 2024-25) ; a et k restent
 # ceux de la fiche (placeholders supposés) tant que la branche des fiches de l'axe 1 n'est pas fusionnée.
@@ -79,14 +83,12 @@ def evaluer(transfert: str = "L23", years=None, etat: dict | None = None, pop: P
         B1A, B1B = B1.sel(professions=[tr.source]), B1.sel(professions=[tr.cible])
         C0A, C1A = _c_source(S_A, B0A, B1A, ref)
         C1B = couverture(S_B, B1B, ref, S_B, B0B).values[0]
-        ok = (C1A - C0A > 0) & (C1B >= 1)
+        ok = (C1A - C0A > 0) & (C1B - C0B >= -SEUIL_CIBLE)
         verdict = ok[None] if verdict is None else np.concatenate([verdict, ok[None]])
         par_k[k] = dict(couverture_cible=C1B, couverture_source=C1A, gain_source=C1A - C0A, perte_cible=C1B - C0B,
                         etp_liberes=detail[0]["libere"], etp_recus=detail[0]["recu"])
     tout, aucun = verdict.all(axis=0), (~verdict).all(axis=0)
-    v = np.where(tout, "effectif", np.where(aucun, "non effectif", "dépend de k")).astype(object)
-    deja = C0B < 1                                          # la cible est sous 2026 même sans transfert
-    v[aucun & deja] = "non effectif (cible déjà sous son niveau de 2026 sans transfert)"
+    v = np.where(tout, "effectif", np.where(aucun, "non effectif", "dépend de k"))
     return dict(transfert=tr, k=ks, territories=terr, years=np.asarray(years), C0_cible=C0B, C0_source=C0A,
                 par_k=par_k, verdict=v, offre_mg=mg.info(), estimateur=est.name, grandeur=est.grandeur,
                 critere=CRITERE, population=pop.source)
@@ -128,6 +130,8 @@ def resume(res: dict, territoire: str | None, annee: int) -> dict:
         transfert=tr.name, source=tr.source, cible=tr.cible, territoire=nom, annee=annee,
         couverture_cible_sans=round(val(res["C0_cible"]), 4), couverture_source_sans=round(val(res["C0_source"]), 4),
         par_k=lignes, verdict=verdict, critere=res["critere"],
+        contexte_cible=("sans transfert, la cible est sous son niveau de 2026 : la tendance pèse plus que le transfert"
+                        if val(res["C0_cible"]) < 1 else "sans transfert, la cible reste au moins à son niveau de 2026"),
         agregat="médiane des départements" if territoire is None else "département",
         parametres=dict(a=tr.a, k_plage=res["k"], s_inf=tr.s_inf, tau=tr.tau, t0=tr.t0, mu=tr.mu,
                         statut="a et k : supposés (placeholders de la fiche L23) ; s_∞ et τ : mesurés au national (P-B6)"),

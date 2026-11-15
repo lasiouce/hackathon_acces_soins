@@ -5148,3 +5148,15 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   dus à la tendance. Un critère sur l'écart dû au transfert seul est l'alternative à trancher.
 - Contrôles : `PYTHONPATH=v2 uv run python -m besoin.tests.effectivite` (E1 s ≡ 0, E2 source = 1/(1 − s·a) à 3e-16,
   E3 k sans effet sur la source, E4 offre MG RPPS) : 4/4.
+
+## 2026-11-15 — Effectivité des transferts : critère sur l'effet du transfert seul (remplace le critère par défaut)
+- **Décision** (choix de l'utilisateur·rice : « le 1 alors », après recommandation) : un transfert est **effectif** en
+  (T, t) si la couverture de la source progresse et si la cible ne perd pas plus de **1 point d'indice** (seuil
+  **supposé**) par rapport à la même année **sans transfert**, sur toute la plage de k. La position de la cible par
+  rapport à 2026 est rendue à part (`contexte_cible`), jamais dans le verdict.
+- **Remplace** le « critère par défaut » de l'entrée O3 ci-dessus, qui jugeait la cible contre son niveau de 2026 et
+  classait 67 départements sur 101 « non effectif » à cause de la tendance des pharmaciens, pas du transfert.
+- **Résultat recalculé** (tendanciel, M1, offre MG constante) : L23 « effectif » dans les 101 départements en 2035 et
+  en 2045. **À ne pas citer tel quel** : il tient à `a = 0,01` (part du temps de MG, placeholder supposé de la fiche L23),
+  qui rend la perte des pharmaciens inférieure à 1 point partout. Le verdict ne vaudra que lorsque `a` sera sourcé
+  (fiches de l'axe 1, branche `claude/besoin-axe1-fiches-*`).

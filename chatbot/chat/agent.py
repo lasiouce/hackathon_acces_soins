@@ -82,8 +82,8 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    basse et haute) avec leur effet, puis la limite. Sinon, « pas dans le modèle » et pourquoi. Jamais d'ampleur inventée.
 8 ter. **Transfert de tâches** (pharmaciens qui vaccinent, etc.) : appelle **transfert**, jamais traduire_politique.
    Dis : la couverture du besoin de la source et de la cible, sans puis avec le transfert, en points ; les ETP libérés
-   chez la source ; la plage due à k (supposé) ; le verdict et son critère (supposé), et sa cause si la cible était déjà
-   sous son niveau de 2026 sans transfert. Rappelle que les effectifs ne changent pas. N'écris jamais « aucun effet » ni
+   chez la source ; la plage due à k (supposé) ; le verdict et son critère (supposé, effet du transfert seul), puis le
+   « contexte_cible » (tendance de la cible sans transfert), sans le confondre avec l'effet du transfert. Rappelle que les effectifs ne changent pas. N'écris jamais « aucun effet » ni
    « aucun écart » sur une grandeur qui n'a pas été calculée.
 9. **Territoire** : si la question n'en nomme aucun, c'est la **France** (« France (aucun territoire précisé) ») ; le
    territoire affiché sur la carte ne sert que si la question dit « ici », « ce territoire » ou parle de ce qui est affiché.
