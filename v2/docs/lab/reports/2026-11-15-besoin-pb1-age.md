@@ -113,3 +113,21 @@ gelée ; le rang (ρ) isole la part territoriale.
 |---|---|
 | P-B1 sous P2 (profil DAMIR) : dentistes et pharmaciens, dès la fin de l'axe 4 | ~15 min Claude |
 | Sensibilité de ρ aux tirages de C1 (non décisive) | ~20 min Claude |
+
+## Écarts pour P2 (profil Open DAMIR), écrits le 2026-11-15 avant le calcul de P2
+Écrits et commités après la fin de l'axe 4 et **avant** tout calcul sous P2. Seuils inchangés.
+
+7. **Fenêtre.** Le protocole dit « Open DAMIR 2025 » ; seuls les flux de janvier à septembre 2025 sont lus (axe 4,
+   décision de l'utilisateur·rice). Profil = toutes les lignes de ces 9 mois de flux, quelle que soit l'année de
+   soins. Biais saisonnier mesuré par l'axe 4 : ≤ 1,3 % (PH), 0,9 % (CD), en variation totale hiver / été.
+8. **Champ.** Lignes `PRS_PPU_SEC = 2` (privé), cohérent avec « libéral = secteur privé » (décision du
+   2026-11-14) ; `PSE_STJ_SNDS` n'est pas filtré (renseigné seulement pour certains régimes, fiche
+   `param-besoin-profil-damir`). Profession par la clé `prof` de l'axe 4 (CD : nature 19, 53, 54 ou spécialité 36 ;
+   PH : 50).
+9. **Unité.** Quantité `PRS_ACT_QTE` sommée sur **toutes** les natures de prestation de la profession, comme écrit
+   au protocole (« actes PRS_NAT par PSE_ACT_SNDS »). Pour les PH, cela mêle boîtes délivrées et honoraires de
+   dispensation (menace écrite à la fiche).
+10. **Inconnus.** Âge 99 et sexe 0 / 9 exclus : répartis au prorata, ils ne changent pas la forme normalisée.
+11. **Profil.** `r(a, s)` = quantité / population Omphale 2025 (central, France entière) de la tranche décennale
+    (0–19, 20–29, …, 70–79, 80+) et du sexe ; `ω = r / r̄`. Chaque tranche quinquennale d'Omphale prend le poids de
+    sa tranche décennale (80+ plat, comme le protocole le note).
