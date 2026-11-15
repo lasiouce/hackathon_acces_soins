@@ -11,19 +11,21 @@ volontairement fausse, qui doit dépasser la tolérance (preuve que le test sait
   B5 latence       besoin_api au département, une profession, 2026–2050 : 95ᵉ centile < 5 ms, n ≥ 30
   B6 plug-in       estimateur déposé hors du paquet, servi par nom ; aucun fichier de v2/besoin modifié
   B7 O2            aucun indice de couverture pour la MG ni les spécialistes, par aucun chemin
+Cas limites de M1–M3 (dérivation §4) : besoin/tests/cas_limites.py, lancés à la suite.
 `jumeau.check` (18/18) se lance à part : PYTHONPATH=v2 uv run python -m jumeau.check
 """
 import json
 import sys
 from pathlib import Path
 
+from besoin.tests.cas_limites import CAS_LIMITES
 from besoin.tests.criteres import CRITERES, RESULTS
 
 OUT = Path("v2/artifacts/besoin_a0")
 
 
 def main():
-    for f in CRITERES:
+    for f in CRITERES + CAS_LIMITES:
         try:
             f()
         except Exception as e:                       # un critère qui plante est un échec, pas un arrêt

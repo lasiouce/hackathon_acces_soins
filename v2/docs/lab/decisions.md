@@ -2455,6 +2455,14 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   distancier). Protocole [P-B4-PH](../../validation/preregistered/2026-11-15-besoin-p-b4-ph-apl-v0.md) rédigé,
   **non gelé** : gel par jeton sur accord de l'utilisateur·rice. Reste à choisir la source d'offre 2013 (BPE ou FINESS).
   Voir [exploration](explorations/2026-11-15-besoin-cible-pharmaciens.md).
+
+- ~~**Mise en service du GBM de P-B5**~~ **Tranché le 2026-11-15** : option (a), voir l'entrée datée « P-B5 : le GBM servi comme prédicteur du recours seulement ». (ouvert le 2026-11-15, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)).
+  Par la règle gelée (borne haute de l'IC de Δ_GBM < 0), il qualifie pour IDE (−1,9 pt de MAPE), CD (−3,2) et SF
+  (−45,8) ; pas pour MK. Mais son gain suit la croissance de l'offre (corrélation 0,54 à 0,71 entre sa cible et la
+  croissance de l'effectif 2016 → 2025, diagnostic a posteriori), et il n'est validé qu'à h = 9. Options :
+  (a) **le servir comme prédicteur du recours seulement**, jamais comme besoin (avis) ; (b) le servir comme
+  estimateur de besoin pour IDE, CD, SF, ce qui rend B dépendant de l'offre ; (c) ne pas le servir. Prix : (a)
+  ~30 min, (b) ~45 min, (c) 0.
 - **Brancher le module de besoin dans la carte** (ouvert le 2026-11-15, axe 0 du besoin). `besoin.sortie.besoin_api`
   rend `besoin`, `couverture` et `couverture_base` en 0,72 ms au 95ᵉ centile au département (mesuré). Rien n'est
   branché dans `/api/carte` sans accord. Tant que l'axe 1 n'a pas remplacé les placeholders, un effet de transfert
@@ -4721,6 +4729,26 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - un texte qui ajoute d'autres régions avant 2019 ;
   - un jeton RFC 3161 invalide à la vérification de la chaîne de certificats.
 
+## 2026-11-15 — Module de besoin, P-B1 : l'âge (M1) est retenu pour IDE, MK et SF ; dentistes et pharmaciens attendent P2
+- **Décision** (session besoin-v2-m1-m3, passage du protocole gelé P-B1,
+  [rapport](reports/2026-11-15-besoin-pb1-age.md)) :
+  - **M1 retenu** (dénominateur servi) pour les **infirmiers** (S₁ = 0 %, ρ = 0,835), les **kinés** (0 %, 0,984) et
+    les **sages-femmes** (1 %, 0,989), sous le profil APL (P1). Le protocole n'abandonne l'âge que si P1 **et** P2
+    concluent à l'abandon : ces trois verdicts sont définitifs.
+  - **Dentistes : en attente de P2.** P1 conclut à l'abandon (S₁ = 93,1 % > 90 %, ρ = 0,998 ≥ 0,98). M1 reste
+    calculé ; si P2 confirme, M0 suffit pour eux.
+  - **Pharmaciens : aucun verdict.** Pas de poids APL ; P2 (Open DAMIR) seul, en attente de l'axe 4. M1 ne les sert
+    pas d'ici là.
+  - **Le module n'est pas réduit à M0** : M2 et M3 sont construits.
+  - **Écarts au protocole, écrits et commités avant calcul** (commit `404d251`) : P2 absent ; N = trajectoire C1
+    servie déterministe (pas une médiane de tirages) ; tranches Omphale 90–94 et 95+ au poids « 90 et plus » ;
+    MK colonne 2023 ; départements à C non fini retirés (1, IDE).
+  - **M1 :** `B₁ = r̄ · Σ pop·ω`, ω APL figé ; r̄ = offre nationale / population standardisée nationale en 2026
+    (supposé, s'annule dans C) en attendant le niveau DAMIR.
+- **Pourquoi :** seuils gelés appliqués tels quels ; résultat recalculé par un chemin pandas indépendant.
+- **Ce qui le renverserait :** P2 pour les dentistes ; une révision des poids APL ; une dérive du recours par âge
+  (L31, hors périmètre).
+
 ## 2026-11-15 — Module de besoin : amendement A1 aux protocoles P-B2, P-B3, P-B5, P-B6 (gelé, horodaté)
 - **Décision** (axe 3, [A1](../../validation/preregistered/2026-11-15-besoin-amendement-a1.md)) : les constats de
   l'axe 4 changent des définitions et des sources, pas les règles de décision.
@@ -4872,3 +4900,78 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   besoin.
 - **Aussi aligné :** `docs/lab/profile.md`, README, Home. Le PDF du rapport technique n'est pas recompilé.
 
+## 2026-11-15 — Module de besoin, P-B1 sous P2 : l'âge (M1) est retenu pour les cinq professions
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb1-age.md), section « Passage P2 ») :
+  complète l'entrée précédente du même jour (qui laissait dentistes et pharmaciens en attente).
+  - **Dentistes : M1 retenu.** P2 (Open DAMIR) conclut au maintien (S₁ = 87,1 % < 90 %, ρ = 0,999) ; l'abandon
+    exige P1 **et** P2. Décision de justesse : l'écart est un décalage national du niveau, pas du classement.
+  - **Pharmaciens : M1 retenu** sur P2 seul (S₁ = 0 %, ρ = 0,987). Profil DAMIR servi par M1 pour PH et MG.
+  - **Écarts écrits avant calcul** (commit `4efa8b4`) : 9 mois de flux 2025 ; champ `PRS_PPU_SEC = 2` ; quantité
+    sommée sur toutes les natures de prestation ; inconnus d'âge et de sexe exclus ; profil décennal, 80+ plat.
+  - **MG (source O2)** : r̄ = 0,9 × 10⁻³ ETP par habitant standardisé, placeholder de M0 (supposé).
+- **Pourquoi :** seuils gelés appliqués ; P1 reproduit à l'identique au second passage.
+- **Ce qui le renverserait :** un profil PH en temps de pharmacien (unité « boîtes + honoraires » mêlée, ledger) ;
+  les 3 mois de DAMIR manquants, si le biais saisonnier dépasse celui mesuré par l'axe 4 (≤ 1,3 %).
+
+## 2026-11-15 — Module de besoin, P-B2 : M2b (saturation) tué ; M2a (AREA) construit comme repli
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb2-saturation.md)) :
+  - **M2b tué pour les quatre professions testées** (IDE, MK, CD, SF) par la règle gelée : borne haute de l'IC à
+    98,75 % de δ ≥ 0 partout ; pente du premier quintile non distinguable de 0 pour IDE, MK, SF ; placebo non
+    attribuable pour MK et CD. Pharmaciens : non applicable (dérivation §6).
+  - **Retrait du service** : `m2b.py` garde le code et le verdict, la classe n'est plus enregistrée.
+  - **Le niveau du besoin non satisfait n'est pas identifié** par les données ouvertes au département.
+  - **M2a construit** : `log R_std = α + β log A + γ log M`, M = indice de morbidité standardisé par âge et sexe
+    (part des consommants avec au moins un repérage de la cartographie des pathologies 2024), offre fixée à la
+    moyenne nationale ⇒ `B₂ₐ = r̄ · B₁ · M^γ`, M figé à 2024 (supposé). γ mesuré : IDE 3,66, MK 0,92, CD 1,44,
+    SF 0,06 (MCO, 2023–2025).
+  - **Écarts P-B2 écrits avant calcul** (commit `3ac2abd`) : Omphale au lieu des estimations Insee ; offre IDE 2023
+    seule ; stabilité sur 2018 seule ; descriptif de la patientèle sans définition du département ; placebo sur le
+    B₁ de la profession testée ; NLS `maxfev = 200`.
+- **Pourquoi :** seuils gelés appliqués tels quels ; a priori de la littérature confirmé (pas de saturation).
+- **Ce qui le renverserait :** un recours en actes au département ; un département de patientèle qui serait celui
+  de résidence ; une offre IDE libérale seule (sensibilité au ledger).
+
+## 2026-11-15 — Module de besoin, P-B3 : M3 sert l'indice des seuls infirmiers ; H-B3 rejetée
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb3-pathologies.md)) :
+  - **(A) M3 retenu pour l'indice des infirmiers** (S₃ = 83 % < 90 %, ρ = 0,992, aux trois imputations) ;
+    **réduit au recoupement** pour MK, CD, SF, PH (S₃ de 95 à 100 %, ρ ≥ 0,998 aux trois imputations).
+    Constante `m3.INDICE = {infirmiers}`.
+  - **(B) H-B3 rejetée** pour IDE, MK, CD, SF : ΔR² hors échantillon −0,03 à +0,01 (seuil 0,10).
+  - **M3 (voie i)** : 16 groupes de niveau 1 de la cartographie 2024 (partition de la dépense) × dépense remboursée
+    nationale par patient du groupe / prix moyen DAMIR (9 mois) + résidu national `r₀` par âge et sexe, non borné.
+    Prévalences figées à 2024 (supposé). Unité : actes.
+  - **Écarts écrits avant calcul** (commit `3bf9b5d`) : 18 plis régionaux (DROM compris) au lieu de « 13 » ;
+    triangulation sans objet (M2b tué) ; voie (ii) SF non branchée.
+- **Correction** : le rapport P-B2 disait « P-B3 compare M3 à M2a » ; le protocole ne le prévoit pas (corrigé).
+- **Pourquoi :** seuils gelés appliqués tels quels.
+- **Ce qui le renverserait :** une dépense par cas ventilée par âge ; une morbidité non repérée par la
+  consommation de soins.
+
+## 2026-11-15 — Module de besoin, P-B5 : H-B1 retenue ; le GBM qualifie pour IDE, CD, SF, mise en service ouverte
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)) :
+  - **H-B1 retenue** : M1 bat la persistance du recours par habitant à 9 ans (2016 → 2025, MAPE départementale)
+    pour IDE (7,7 contre 15,8), MK (10,8 contre 14,1), CD (9,4 contre 10,4), IC à 98,75 % sous 0 ; **SF perd**
+    (66,6 contre 65,0). Même verdict sous P2 (poids APL 2022) : pas dépendante du profil.
+  - **GBM** : qualifie par la règle gelée pour IDE, CD, SF ; **pas mis en service** dans cette session, car la
+    mise en service comme besoin contredirait la norme (gain lié à la croissance de l'offre). Question ouverte
+    (§ Open), avec avis : prédicteur du recours seulement.
+  - **Données téléchargées** avec l'accord de l'utilisateur·rice : estimations de population Insee 1975–2023
+    (département × sexe × âge quinquennal, `v2/data/raw/insee/`, ignoré par git) ; 2025 = Insee 2023 × croissance
+    Omphale (écart 1, écrit avant calcul, commit `dd66519`). Autres écarts : kinés densité 2017 ; 18 plis régionaux.
+- **Pourquoi :** seuils et hyperparamètres gelés appliqués tels quels.
+- **Ce qui le renverserait :** un profil d'âge antérieur à 2016 (regard en avant) ; un recours en actes au
+  département ; les estimations Insee 2025 définitives.
+
+## 2026-11-15 — Module de besoin, P-B5 : le GBM servi comme prédicteur du recours seulement
+- **Décision** (choix de l'utilisateur·rice : « Usage only », option (a) de la question ouverte du même jour) :
+  - Le GBM de P-B5 est servi par `v2/besoin/estimateurs/gbm_recours.py` comme **prédicteur du recours** (patients,
+    file active × effectif) pour IDE, CD et SF, les trois professions où il bat M1 au-delà de l'IC.
+  - **Jamais comme besoin** : ce n'est pas une `NeedEstimator`, la classe n'est pas enregistrée, `besoin_api` ne
+    peut pas le choisir (test L4). Kinés refusés (non qualifiés).
+  - **Horizon servi : 9 ans seulement** (`predit(p, origine)` → origine + 9), appris sur toutes les paires
+    2016 → 2025, hyperparamètres gelés de P-B5.
+  - Branchement dans l'API ou la carte : non fait (hors des fichiers de cette session).
+- **Pourquoi :** son gain suit la croissance de l'offre (diagnostic de P-B5) ; servi comme besoin, il rendrait B
+  dépendant de l'offre, contraire à la norme et au cas limite « offre nulle ».
+- **Ce qui le renverserait :** un GBM dont le gain résiste à un terme d'offre explicite ; une validation à un autre
+  horizon.
