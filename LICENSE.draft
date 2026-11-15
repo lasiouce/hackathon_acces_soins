@@ -1,0 +1,25 @@
+BROUILLON NON ACTIVÉ (2026-11-15) — licence du code non décidée (registre § Open).
+Voir v2/docs/lab/reports/2026-11-15-licences-brouillon.md. Pour activer : remplacer ce bloc par le texte intégral
+officiel de l'EUPL 1.2 en français, copié depuis
+https://interoperable-europe.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+(ne pas le recopier de mémoire), puis renommer le fichier en LICENSE.
+
+-------------------------------------------------------------------------------
+Copyright (c) 2026 les contributeurs et contributrices de hackathon_acces_soins
+
+Sous licence EUPL, version 1.2 ou – dès leur approbation par la Commission
+européenne – versions ultérieures de l'EUPL (la « Licence »).
+Vous ne pouvez utiliser la présente œuvre que conformément à la Licence.
+Vous pouvez obtenir une copie de la Licence à l'adresse suivante :
+https://joinup.ec.europa.eu/software/page/eupl
+
+Sauf obligation légale ou contractuelle écrite, le logiciel distribué sous la
+Licence est distribué « en l'état », SANS GARANTIES OU CONDITIONS QUELLES
+QU'ELLES SOIENT, expresses ou implicites. Consultez la Licence pour les
+autorisations et les restrictions linguistiques spécifiques relevant de la
+Licence.
+
+Cette licence couvre le code source. Les données gardent leur licence propre
+(Licence Ouverte 2.0 ou ODbL 1.0) : voir NOTICE.
+-------------------------------------------------------------------------------
+[TEXTE INTÉGRAL DE L'EUPL 1.2 À INSÉRER ICI]
