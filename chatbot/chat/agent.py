@@ -383,13 +383,14 @@ class Conversation:
         if tr:
             args["l23_t0"] = tr["t0"]
         err, est_err, res = self._appel("couverture", args, appels, graphiques)
-        tete = f"**{tr['libelle']}, à partir de {tr['t0']} : effectif inchangé dans le modèle.**" if tr else "**Indice de couverture.**"
+        tete = (f"**{tr['libelle']}, à partir de {tr['t0']} : le nombre de professionnels ne change pas (effectif inchangé "
+                "dans le modèle), seul le besoin change.**" if tr else "**Indice de couverture.**")
         if est_err:
             return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
         a = res["annees"][-1]
         f = lambda x: f"{x:.2f}".replace(".", ",")
         e = f"{a['ecart_tendanciel_pct']:+.1f}".replace(".", ",")
-        scn = "avec la vaccination en officine" if tr else "au scénario"
+        scn = "si les pharmaciens vaccinent davantage" if tr else "au scénario"
         lig = [tete + f" Couverture des {res['profession'].lower()} en {a['annee']} ({res['territoire']}, indice base "
                f"{res['reference']} = 1) : {f(a['indice_scenario'])} {scn}, {f(a['indice_tendanciel'])} au "
                f"tendanciel, soit {a['qualificatifs']['ecart']} ({e} %)."]
@@ -400,18 +401,20 @@ class Conversation:
         for x in res["transferts"]:
             if x.get("actes_mg_liberes_france") is not None:
                 n = f"{x['actes_mg_liberes_france']:,}".replace(",", " ")
-                lig.append(f"Actes de médecine générale libérés par la vaccination en officine en {x['annee']} : environ "
-                           f"{n} injections, France entière"
-                           + (f" ({x['etp_liberes_source_france']} ETP-équivalents)." if x.get("etp_liberes_source_france") else "."))
+                etp = x.get("etp_liberes_source_france")
+                lig.append(f"Les médecins généralistes ont moins de vaccins à faire : en {x['annee']}, environ {n} vaccinations "
+                           "en moins pour eux"
+                           + (f", soit le temps de travail d'environ {round(etp)} médecins à temps plein" if etp else "")
+                           + " (France entière). Les pharmaciens reprennent ce travail.")
         if res.get("avertissement"):
             lig.append(f"{LIMITE} {res['avertissement']}.")
         if not a.get("fourchette_estimateurs") and len(res.get("estimateurs") or []) == 1:
-            lig.append(f"Un seul estimateur du besoin est servi pour les {res['profession'].lower()} "
-                       f"({res['estimateurs'][0]}, choix du modèle distinguable de l'effet des leviers) : pas de fourchette entre "
-                       "estimateurs ; la fourchette de l'effectif ci-dessus reste celle de l'offre.")
-        st = ", ".join(f"{p['nom']} {p['statut']}" for p in res["parametres_l23"])
-        lig.append(f"{LIMITE} l'indice compare l'offre au besoin par rapport à 2026, ce n'est pas une part du besoin couverte"
-                   + (f" ; paramètres de L23 : {st}." if st else "."))
+            lig.append(f"Une seule façon d'estimer le besoin existe pour les {res['profession'].lower()} : pas d'écart entre "
+                       "méthodes à montrer ; la fourchette du nombre de professionnels ci-dessus reste valable.")
+        lig.append(f"{LIMITE} l'indice compare le nombre de professionnels au besoin, par rapport à 2026 (1 = comme en 2026) ; "
+                   "ce n'est pas une part du besoin couverte"
+                   + (" ; ordre de grandeur : la part de temps que la vaccination prend aux médecins est supposée, "
+                      "la vitesse à laquelle les pharmaciens s'en emparent est mesurée." if res["parametres_l23"] else "."))
         return lig
 
     # -------- objectifs (« comment atteindre +20 % de densité »)

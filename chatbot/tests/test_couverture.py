@@ -52,10 +52,12 @@ def test_deterministe_l23_effectif_inchange_et_couverture(passerelle):
     out = A.Conversation(mode="deterministe").envoyer(
         "Si les pharmaciens peuvent vacciner, combien de pharmaciens à Clermont-Ferrand en 2035 ?")
     t = out["texte"]
-    assert "effectif inchangé dans le modèle" in t and "Couverture des pharmaciens" in t
-    assert "Hors du périmètre du modèle : Vaccination" not in t and "Actes de médecine générale libérés" in t
+    assert "effectif inchangé" in t and "Couverture des pharmaciens" in t
+    assert "Hors du périmètre du modèle : Vaccination" not in t and "Les médecins généralistes ont moins de vaccins à faire" in t
+    assert not re.search(r"libérés|ETP|L23|estimateur", t)
     assert "besoin couvert" not in t.replace("part du besoin couverte", "")
-    assert not MG.search(t.replace("Actes de médecine générale libérés", ""))
+    t_hors = re.sub(r"Les médecins généralistes ont moins de vaccins à faire[^.]*\.[^.]*\.", "", t)
+    assert not MG.search(re.sub(r"la vaccination prend aux médecins", "", t_hors))
     assert [x["outil"] for x in out["appels"]] == ["projeter", "couverture"]
 
 

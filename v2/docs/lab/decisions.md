@@ -5214,3 +5214,12 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   Clermont-Ferrand en 2035 si les pharmaciens vaccinent » → Puy-de-Dôme, 2035, indice 0,98, −0,7 %, même valeur que
   la réponse de l'assistant). Capture : `figures/2026-11-15-besoin-carte-assistant-l23.jpg`.
 - **Ce qui le renverserait :** une date de transfert choisie par l'utilisateur·rice (brancher `l23_t0`).
+
+## 2026-11-15 — Assistant : la vaccination en pharmacie dite en langue courante (suite de la carte)
+- **Décision** (demande de l'utilisateur·rice) : la réponse du chatbot (`chatbot/chat/agent.py`) et le libellé du
+  glossaire (`v2/langage/glossaire.yaml`) n'emploient plus « actes de MG libérés », « ETP-équivalents », « L23 »,
+  « estimateur » ni les noms de paramètres. Libellé : « Les pharmaciens vaccinent davantage contre la grippe » ; ligne :
+  « les médecins généralistes ont moins de vaccins à faire … soit le temps de travail d'environ N médecins à temps
+  plein ». Le test `chatbot/tests/test_couverture.py` vérifie l'absence de ces termes. Clés d'API inchangées.
+- **Pourquoi :** un·e utilisateur·rice sans formation doit tout comprendre ; même formulation que la fiche de la carte.
+- **Ce qui le renverserait :** un test de lecture qui montre une phrase encore mal comprise.
