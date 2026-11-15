@@ -2548,7 +2548,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   travail** par la [dérivation du besoin](derivations/2026-11-15-besoin-derivation.md) et le
   [plan par axes](derivations/2026-11-15-besoin-plan.md). Il survit comme M1 + transferts, avec cinq corrections
   (dérivation §9). Le plan du 2026-11-14 reste en place, marqué remplacé.
-- **Médecine générale comme profession source des transferts de tâches** (ouvert le 2026-11-15, dérivation du
+- ~~**Médecine générale comme profession source des transferts de tâches**~~ *décidé le 2026-11-15 : O2, voir l'entrée « Module de besoin : médecine générale comme source seulement (O2) ; plan accepté ».* (ouvert le 2026-11-15, dérivation du
   besoin §7). Les transferts du pitch (vaccination, tension et diabète en officine, IPA, accès direct au kiné)
   prennent surtout des actes à la MG, exclue du sujet.
   - Options :
@@ -4597,3 +4597,21 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :**
   - un texte intégral (Birch, Gibson et McBride 2020 ; MacKenzie 2019) qui contient déjà `k`, `m` et l'identité ;
   - une projection de l'APL déjà publiée.
+
+## 2026-11-15 — Module de besoin : médecine générale comme source seulement (O2) ; plan accepté, vague 1 lancée
+- **Décision** (choix de l'utilisateur·rice : « okay go O2 », après la recommandation de la session) :
+  - **O2 retenu** : la médecine générale entre dans le module de besoin **comme profession source des transferts
+    seulement**. `B_MG` est calculé par M1.
+  - **Interdits :** aucune offre de MG projetée, et **aucun indice de couverture MG**, nulle part (API, carte, rapport).
+  - **Affichage :** seulement « actes / ETP de MG libérés ».
+  - **Spécialistes :** même règle tant qu'ils sont en phase 2.
+  - **Plan accepté :** le [plan par axes](derivations/2026-11-15-besoin-plan.md) est accepté. La vague 1 est lancée
+    en quatre sous-sessions : axe 3 (protocoles), axe 4 (données), axe 1 (fiches), axe 0 (interface).
+- **Pourquoi :**
+  - seule option qui rend calculables les transferts du pitch sans projeter la MG ;
+  - conforme au profil du laboratoire (« GPs may appear only as context… never a projected output ») ;
+  - coût d'environ 30 min ;
+  - réversible.
+- **Ce qui le renverserait :** les organisateurs jugent que même le besoin de MG en contexte sort du sujet. On passe
+  alors à O1, en retirant `B_MG`.
+

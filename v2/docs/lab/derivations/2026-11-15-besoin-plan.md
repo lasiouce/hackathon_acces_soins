@@ -1,6 +1,6 @@
 ---
 date: 2026-11-15
-statut: plan, non construit (en attente d'accord)
+statut: "plan accepté le 2026-11-15 (O2) ; vague 1 lancée"
 headline: "Module de besoin en 6 axes : ~12 h 30 de Claude au jugé, ~6 h 20 corrigé (×0,51, plage 2 h–42 h), plus ~35–47 Go de DAMIR en temps machine ; 4 sous-sessions parallèles en vague 1 ; 6 protocoles gelés avec horodatage externe avant tout calcul"
 ---
 

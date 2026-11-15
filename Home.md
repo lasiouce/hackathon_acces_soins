@@ -27,7 +27,7 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | Validation (axe 3) | ✅ protocoles N1–N12 gelés ; dépôts à noter sur les effectifs 2027 |
 | Données (axe 4) | ✅ public / privé séparé : « libéral » = privé 2026, SF 12 059 – 14 660, PH 60 005 – 67 219, CD 40 784 – 47 894, MK 98 828 – 103 986, IDE 2023 277 788 ; zonage par commune ; grain communal |
 | Sensibilité (axe 5) | ✅ amplitude de référence DD76 : en 2050 la décision pèse plus que l'incertitude pour IDE (0,89), MK (0,81), SF (0,59) |
-| Next | recette personas sur la carte finale · module de besoin ([dérivation et plan du 2026-11-15](v2/docs/lab/derivations/2026-11-15-besoin-plan.md), accord attendu ; décision MG en Open) · phase 2 spécialistes |
+| Next | recette personas sur la carte finale · module de besoin ([plan du 2026-11-15](v2/docs/lab/derivations/2026-11-15-besoin-plan.md) accepté, O2 ; vague 1 en cours) · phase 2 spécialistes |
 
 ## Present
 - [One-page TL;DR (PDF), 2026-11-13](v2/docs/lab/archive-v1/presentations/2026-11-13-tldr.pdf). (v1, archivé)

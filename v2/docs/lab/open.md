@@ -193,7 +193,7 @@ restent valables : on les reprend ici au moment où on les traite.
 | Axe 2 : plancher de bruit sur flux bruts (instantanés Annuaire Santé appariés) ; au-dessus de 50 % de la MAPE, le verdict devient « bruit dominant » | ~1 h 30 Claude + téléchargement | budget d'erreur C1/A2 | 2026-11-15 | open |
 | Axe 2 : persistance de l'écart local sur plus de paires d'origines (décalage de 4 ans), kinés compris | ~10 min | budget d'erreur C1/A2 | 2026-11-15 | open |
 | Axe 2 : relancer les bancs N1 et N6 sur la table privée actuelle (sages-femmes modifiées depuis : A2 8,60 au lieu de 8,57, C1 7,76 au lieu de 7,73) | ~10 min machine | budget d'erreur C1/A2 | 2026-11-15 | open |
-| Besoin : décision de périmètre sur la médecine générale comme source (O1–O4, avis O2) ; bloque l'axe 1 du plan de besoin | ~10 min humain ; décision | dérivation du besoin | 2026-11-15 | open |
+| Besoin : décision de périmètre sur la médecine générale comme source (O1–O4, avis O2) ; bloque l'axe 1 du plan de besoin | ~10 min humain ; décision | dérivation du besoin | 2026-11-15 | fermé 2026-11-15 : O2 |
 | Besoin : licence des tables dérivées de jeux ODbL (data.ameli.fr, OSM) dans un dépôt public qui commite ses données traitées | ~10 min décision + 15 min | exploration besoin | 2026-11-15 | open |
 | Besoin P-B1 : indice C₁/C₀ en 2050 par département et rang (Spearman), 5 professions ; abandon de l'âge si < 2 % dans > 90 % des dép. et ρ ≥ 0,98 | ~30 min Claude, après gel | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B2 : saturation du recours standardisé (patientèle) contre la densité, placebo autre profession ; M2 tué sans plateau | ~1 h Claude | dérivation du besoin | 2026-11-15 | open |
