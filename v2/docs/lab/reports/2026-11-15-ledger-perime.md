@@ -4,7 +4,7 @@ date: 2026-11-15
 author: session besoin-derivation (3 lecteurs en lecture seule, contrôle par échantillon)
 question: "Quelles lignes « open » du ledger v2 sont déjà faites, dépassées ou en double ?"
 headline: "Sur 167 lignes « open » hors module de besoin : 43 déjà faites, 6 dépassées, 7 incertaines, 111 réellement ouvertes ; 5 doublons ; le tableau des questions ouvertes du rapport technique reprend au moins 12 lignes faites"
-status: draft
+status: final
 professions: [all]
 tags: [ledger, perime, stale]
 ---
@@ -17,7 +17,8 @@ tags: [ledger, perime, stale]
 > - **7 incertaines** ;
 > - **111 réellement ouvertes**, dont 5 doublons.
 >
-> Aucune ligne n'a été modifiée : ce rapport propose seulement.
+> **Appliqué le 2026-11-15** (accord de l'utilisateur·rice) : 43 lignes passées en « fait », 6 en « dépassé », avec
+> leur preuve ; 4 doublons marqués « en double de » (la paire 143/170 est fermée). Les 7 incertaines restent ouvertes.
 
 ## Comment
 Trois lecteurs en lecture seule se sont partagé les lignes, par tranches de 56. Ils ont confronté chacune au registre
