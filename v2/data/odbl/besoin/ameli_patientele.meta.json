@@ -1,0 +1,475 @@
+{
+ "table": "ameli_patientele.parquet",
+ "chemin": "v2/data/odbl/besoin/ameli_patientele.parquet",
+ "lignes": 45120,
+ "colonnes": [
+  "annee",
+  "profession_sante",
+  "prof",
+  "region",
+  "departement",
+  "patients_uniques_moy",
+  "patients_uniques_ns"
+ ],
+ "sha256_16": "84ea6baf69726ef7",
+ "licence": "Open Database License 1.0",
+ "commite": false,
+ "source": "CNAM, data.ameli.fr, jeu « patientele » (export parquet de l'API Opendatasoft, lu le 2026-11-15)",
+ "millesime": "2016–2025",
+ "commande": "uv run python v2/besoin/donnees/ameli.py",
+ "dom": "inclus : départements 971, 972, 973, 974, 976 (Mayotte comprise) ; région 99 = France entière",
+ "controles": [
+  {
+   "controle": "patientèle moyenne CD 2016",
+   "reconstruit": 805.1341348102121,
+   "publie": 806.0,
+   "ecart_rel": 0.0010742744290172242,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2017",
+   "reconstruit": 813.5460960435239,
+   "publie": 814.0,
+   "ecart_rel": 0.0005576215681524533,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2018",
+   "reconstruit": 822.6373943017181,
+   "publie": 823.0,
+   "ecart_rel": 0.0004405901558710427,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2019",
+   "reconstruit": 839.1749300172265,
+   "publie": 840.0,
+   "ecart_rel": 0.0009822261699684175,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2020",
+   "reconstruit": 730.7810852963321,
+   "publie": 731.0,
+   "ecart_rel": 0.0002994729188343447,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2021",
+   "reconstruit": 825.2054300816915,
+   "publie": 826.0,
+   "ecart_rel": 0.0009619490536422825,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2022",
+   "reconstruit": 830.8640822910331,
+   "publie": 831.0,
+   "ecart_rel": 0.0001635592165666329,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2023",
+   "reconstruit": 844.6539797810924,
+   "publie": 845.0,
+   "ecart_rel": 0.00040949138332260017,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2024",
+   "reconstruit": 848.5617236620151,
+   "publie": 849.0,
+   "ecart_rel": 0.0005162265465075578,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne CD 2025",
+   "reconstruit": 853.500286433037,
+   "publie": 854.0,
+   "ecart_rel": 0.0005851446919941565,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2016",
+   "reconstruit": 236.53188860156982,
+   "publie": 237.0,
+   "ecart_rel": 0.001975153579874184,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2017",
+   "reconstruit": 234.39439479201147,
+   "publie": 235.0,
+   "ecart_rel": 0.002577043438249072,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2018",
+   "reconstruit": 234.35975151814262,
+   "publie": 235.0,
+   "ecart_rel": 0.002724461624925038,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2019",
+   "reconstruit": 229.53391050380725,
+   "publie": 230.0,
+   "ecart_rel": 0.0020264760704032654,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2020",
+   "reconstruit": 258.5070398106393,
+   "publie": 259.0,
+   "ecart_rel": 0.0019033211944428626,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2021",
+   "reconstruit": 350.8036004399641,
+   "publie": 351.0,
+   "ecart_rel": 0.0005595429060851849,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2022",
+   "reconstruit": 341.821598697566,
+   "publie": 342.0,
+   "ecart_rel": 0.0005216412351871257,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2023",
+   "reconstruit": 256.04985322502813,
+   "publie": 256.0,
+   "ecart_rel": 0.00019473916026613303,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2024",
+   "reconstruit": 250.60706098583157,
+   "publie": 251.0,
+   "ecart_rel": 0.0015654940803523254,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne IDE 2025",
+   "reconstruit": 251.00839744556745,
+   "publie": 251.0,
+   "ecart_rel": 3.345595843607007e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2016",
+   "reconstruit": 1562.2306198955685,
+   "publie": 1562.0,
+   "ecart_rel": 0.0001476439792371653,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2017",
+   "reconstruit": 1550.8101048521467,
+   "publie": 1551.0,
+   "ecart_rel": 0.00012243400893188205,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2018",
+   "reconstruit": 1578.9004244482173,
+   "publie": 1579.0,
+   "ecart_rel": 6.306241404855209e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2019",
+   "reconstruit": 1599.426646757972,
+   "publie": 1599.0,
+   "ecart_rel": 0.00026682098684933947,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2020",
+   "reconstruit": 1479.5368261199696,
+   "publie": 1479.0,
+   "ecart_rel": 0.00036296559835675876,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2021",
+   "reconstruit": 1572.068601721604,
+   "publie": 1572.0,
+   "ecart_rel": 4.36397720126937e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2022",
+   "reconstruit": 1615.3773451577572,
+   "publie": 1615.0,
+   "ecart_rel": 0.0002336502524812325,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2023",
+   "reconstruit": 1590.9650225977598,
+   "publie": 1590.0,
+   "ecart_rel": 0.0006069324514212568,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2024",
+   "reconstruit": 1617.2971771144637,
+   "publie": 1616.0,
+   "ecart_rel": 0.0008027086104354538,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MG 2025",
+   "reconstruit": 1585.561967681457,
+   "publie": 1584.0,
+   "ecart_rel": 0.000986090707990507,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2016",
+   "reconstruit": 230.72073061653617,
+   "publie": 231.0,
+   "ecart_rel": 0.0012089583699732777,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2017",
+   "reconstruit": 229.50781617212257,
+   "publie": 229.0,
+   "ecart_rel": 0.0022175378695308908,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2018",
+   "reconstruit": 227.45717653993515,
+   "publie": 227.0,
+   "ecart_rel": 0.0020139935679962455,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2019",
+   "reconstruit": 225.97058060050185,
+   "publie": 226.0,
+   "ecart_rel": 0.0001301743340626223,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2020",
+   "reconstruit": 196.06339881109827,
+   "publie": 196.0,
+   "ecart_rel": 0.000323463321929934,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2021",
+   "reconstruit": 209.97439318240603,
+   "publie": 210.0,
+   "ecart_rel": 0.00012193722663794017,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2022",
+   "reconstruit": 212.85181854252082,
+   "publie": 213.0,
+   "ecart_rel": 0.0006956875937989796,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2023",
+   "reconstruit": 209.87573791720092,
+   "publie": 210.0,
+   "ecart_rel": 0.0005917242038051318,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2024",
+   "reconstruit": 209.393929428387,
+   "publie": 209.0,
+   "ecart_rel": 0.0018848298008947223,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne MK 2025",
+   "reconstruit": 209.95866458451638,
+   "publie": 210.0,
+   "ecart_rel": 0.00019683531182674113,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2016",
+   "reconstruit": 310.4952082565426,
+   "publie": 310.0,
+   "ecart_rel": 0.0015974459888470406,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2017",
+   "reconstruit": 325.79005716265374,
+   "publie": 326.0,
+   "ecart_rel": 0.0006439964335774893,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2018",
+   "reconstruit": 350.62095709570957,
+   "publie": 350.0,
+   "ecart_rel": 0.0017741631305987734,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2019",
+   "reconstruit": 377.9206547155105,
+   "publie": 378.0,
+   "ecart_rel": 0.00020990816002507224,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2020",
+   "reconstruit": 391.9424830832598,
+   "publie": 392.0,
+   "ecart_rel": 0.00014672682841890896,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2021",
+   "reconstruit": 457.1171258479856,
+   "publie": 457.0,
+   "ecart_rel": 0.0002562928839947904,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2022",
+   "reconstruit": 497.5447217888715,
+   "publie": 497.0,
+   "ecart_rel": 0.0010960196959185658,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2023",
+   "reconstruit": 526.8076489028214,
+   "publie": 527.0,
+   "ecart_rel": 0.00036499259426685005,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2024",
+   "reconstruit": 560.1809523809524,
+   "publie": 560.0,
+   "ecart_rel": 0.00032312925170064743,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  },
+  {
+   "controle": "patientèle moyenne SF 2025",
+   "reconstruit": 588.3272084805653,
+   "publie": 588.0,
+   "ecart_rel": 0.0005564770077641703,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr patientèle, ligne 999 ; poids = effectifs (démographie)"
+  }
+ ],
+ "notes": "moyenne par professionnel (file active moyenne), pas un total ; total ≈ moyenne × effectif",
+ "ecrit_le": "2026-11-15T03:25:45"
+}

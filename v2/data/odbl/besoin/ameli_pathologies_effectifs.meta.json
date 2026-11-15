@@ -1,0 +1,2012 @@
+{
+ "table": "ameli_pathologies_effectifs.parquet",
+ "chemin": "v2/data/odbl/besoin/ameli_pathologies_effectifs.parquet",
+ "lignes": 5796000,
+ "colonnes": [
+  "annee",
+  "patho_niv1",
+  "patho_niv2",
+  "patho_niv3",
+  "top",
+  "cla_age_5",
+  "sexe",
+  "region",
+  "departement",
+  "ntop",
+  "npop",
+  "prev",
+  "niveau_prioritaire",
+  "ntop_ns"
+ ],
+ "sha256_16": "37af165b34b33c5c",
+ "licence": "Open Database License 1.0",
+ "commite": false,
+ "source": "CNAM, data.ameli.fr, jeu « effectifs » (export parquet de l'API Opendatasoft, lu le 2026-11-15)",
+ "millesime": "2015–2024",
+ "commande": "uv run python v2/besoin/donnees/ameli.py",
+ "dom": "inclus : départements 971, 972, 973, 974, 976 (Mayotte comprise) ; région 99 = France entière",
+ "controles": [
+  {
+   "controle": "population cartographie 2015",
+   "reconstruit": 63377900.0,
+   "publie": 64277360.0,
+   "ecart_rel": 0.01399341852247821,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2016",
+   "reconstruit": 64276870.0,
+   "publie": 64780400.0,
+   "ecart_rel": 0.007772875746367728,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2017",
+   "reconstruit": 64536080.0,
+   "publie": 65001440.0,
+   "ecart_rel": 0.007159226010992987,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2018",
+   "reconstruit": 64986920.0,
+   "publie": 65392710.0,
+   "ecart_rel": 0.006205431767547178,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2019",
+   "reconstruit": 65578320.0,
+   "publie": 65891770.0,
+   "ecart_rel": 0.004757043254415536,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2020",
+   "reconstruit": 65721690.0,
+   "publie": 66021710.0,
+   "ecart_rel": 0.004544262788709956,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2021",
+   "reconstruit": 68309130.0,
+   "publie": 68615750.0,
+   "ecart_rel": 0.004468653333964869,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2022",
+   "reconstruit": 68546490.0,
+   "publie": 68823400.0,
+   "ecart_rel": 0.004023486198008235,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2023",
+   "reconstruit": 67113220.0,
+   "publie": 67365340.0,
+   "ecart_rel": 0.0037425774144389384,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie 2024",
+   "reconstruit": 67380400.0,
+   "publie": 67612360.0,
+   "ecart_rel": 0.0034307336705892235,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2015",
+   "reconstruit": 1588150.0,
+   "publie": 1635310.0,
+   "ecart_rel": 0.028838568834043697,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2016",
+   "reconstruit": 1614690.0,
+   "publie": 1643370.0,
+   "ecart_rel": 0.017451943262929225,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2017",
+   "reconstruit": 1662470.0,
+   "publie": 1689330.0,
+   "ecart_rel": 0.015899794593122716,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2018",
+   "reconstruit": 1707650.0,
+   "publie": 1730020.0,
+   "ecart_rel": 0.012930486352758928,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2019",
+   "reconstruit": 1721620.0,
+   "publie": 1733080.0,
+   "ecart_rel": 0.006612504904562975,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2020",
+   "reconstruit": 1740630.0,
+   "publie": 1751100.0,
+   "ecart_rel": 0.0059790988521500775,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2021",
+   "reconstruit": 1754910.0,
+   "publie": 1764380.0,
+   "ecart_rel": 0.00536732449925753,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2022",
+   "reconstruit": 1709800.0,
+   "publie": 1718770.0,
+   "ecart_rel": 0.005218848362491782,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2023",
+   "reconstruit": 1704590.0,
+   "publie": 1712950.0,
+   "ecart_rel": 0.004880469365714119,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT 2024",
+   "reconstruit": 1714440.0,
+   "publie": 1722020.0,
+   "ecart_rel": 0.004401807179939838,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2015",
+   "reconstruit": 3072900.0,
+   "publie": 3117740.0,
+   "ecart_rel": 0.01438221275667631,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2016",
+   "reconstruit": 3131020.0,
+   "publie": 3147390.0,
+   "ecart_rel": 0.0052011349086068135,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2017",
+   "reconstruit": 3225700.0,
+   "publie": 3240470.0,
+   "ecart_rel": 0.004557980786737727,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2018",
+   "reconstruit": 3328090.0,
+   "publie": 3341230.0,
+   "ecart_rel": 0.003932683472852812,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2019",
+   "reconstruit": 3405430.0,
+   "publie": 3416060.0,
+   "ecart_rel": 0.0031117720414746814,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2020",
+   "reconstruit": 3432510.0,
+   "publie": 3442350.0,
+   "ecart_rel": 0.0028585123534794546,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2021",
+   "reconstruit": 3466080.0,
+   "publie": 3475350.0,
+   "ecart_rel": 0.00266735724459407,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2022",
+   "reconstruit": 3484880.0,
+   "publie": 3494140.0,
+   "ecart_rel": 0.0026501513963378687,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2023",
+   "reconstruit": 3521440.0,
+   "publie": 3530400.0,
+   "ecart_rel": 0.0025379560389757532,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT 2024",
+   "reconstruit": 3575710.0,
+   "publie": 3583740.0,
+   "ecart_rel": 0.002240675941893106,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2015",
+   "reconstruit": 3542960.0,
+   "publie": 3591860.0,
+   "ecart_rel": 0.013614116363109921,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2016",
+   "reconstruit": 3647550.0,
+   "publie": 3665960.0,
+   "ecart_rel": 0.005021876943556394,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2017",
+   "reconstruit": 3735510.0,
+   "publie": 3752260.0,
+   "ecart_rel": 0.004463976376903519,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2018",
+   "reconstruit": 3812420.0,
+   "publie": 3827790.0,
+   "ecart_rel": 0.004015371794168437,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2019",
+   "reconstruit": 3910470.0,
+   "publie": 3923870.0,
+   "ecart_rel": 0.0034149959096504215,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2020",
+   "reconstruit": 4007620.0,
+   "publie": 4020400.0,
+   "ecart_rel": 0.0031787881802805692,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2021",
+   "reconstruit": 4133320.0,
+   "publie": 4145680.0,
+   "ecart_rel": 0.0029814168001389397,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2022",
+   "reconstruit": 4239340.0,
+   "publie": 4251980.0,
+   "ecart_rel": 0.0029727327033523205,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2023",
+   "reconstruit": 4339900.0,
+   "publie": 4352280.0,
+   "ecart_rel": 0.002844486108430524,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT 2024",
+   "reconstruit": 4460460.0,
+   "publie": 4471940.0,
+   "ecart_rel": 0.0025671185212681746,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2015",
+   "reconstruit": 830320.0,
+   "publie": 839180.0,
+   "ecart_rel": 0.010557925594032269,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2016",
+   "reconstruit": 860840.0,
+   "publie": 864080.0,
+   "ecart_rel": 0.003749652809925007,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2017",
+   "reconstruit": 896540.0,
+   "publie": 899400.0,
+   "ecart_rel": 0.003179897709584167,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2018",
+   "reconstruit": 928740.0,
+   "publie": 931320.0,
+   "ecart_rel": 0.0027702615642314133,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2019",
+   "reconstruit": 964060.0,
+   "publie": 966190.0,
+   "ecart_rel": 0.00220453533983999,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2020",
+   "reconstruit": 991350.0,
+   "publie": 993360.0,
+   "ecart_rel": 0.0020234356124667796,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2021",
+   "reconstruit": 1025130.0,
+   "publie": 1027060.0,
+   "ecart_rel": 0.0018791501957042432,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2022",
+   "reconstruit": 1062920.0,
+   "publie": 1064950.0,
+   "ecart_rel": 0.001906192779003709,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2023",
+   "reconstruit": 1111530.0,
+   "publie": 1113570.0,
+   "ecart_rel": 0.0018319459037150784,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT 2024",
+   "reconstruit": 1165480.0,
+   "publie": 1167320.0,
+   "ecart_rel": 0.0015762601514580407,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2015",
+   "reconstruit": 85110.0,
+   "publie": 86140.0,
+   "ecart_rel": 0.011957278848386347,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2016",
+   "reconstruit": 88700.0,
+   "publie": 89080.0,
+   "ecart_rel": 0.004265828468792097,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2017",
+   "reconstruit": 91950.0,
+   "publie": 92280.0,
+   "ecart_rel": 0.003576072821846554,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2018",
+   "reconstruit": 94500.0,
+   "publie": 94760.0,
+   "ecart_rel": 0.002743773744195863,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2019",
+   "reconstruit": 96950.0,
+   "publie": 97190.0,
+   "ecart_rel": 0.002469389854923346,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2020",
+   "reconstruit": 98590.0,
+   "publie": 98800.0,
+   "ecart_rel": 0.002125506072874494,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2021",
+   "reconstruit": 99830.0,
+   "publie": 100060.0,
+   "ecart_rel": 0.002298620827503498,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2022",
+   "reconstruit": 100400.0,
+   "publie": 100600.0,
+   "ecart_rel": 0.0019880715705765406,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2023",
+   "reconstruit": 101120.0,
+   "publie": 101350.0,
+   "ecart_rel": 0.0022693635915145534,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT 2024",
+   "reconstruit": 102710.0,
+   "publie": 102900.0,
+   "ecart_rel": 0.0018464528668610302,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2015",
+   "reconstruit": 1120130.0,
+   "publie": 1132310.0,
+   "ecart_rel": 0.010756771555492754,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2016",
+   "reconstruit": 1160190.0,
+   "publie": 1165190.0,
+   "ecart_rel": 0.004291145650065655,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2017",
+   "reconstruit": 1207070.0,
+   "publie": 1211630.0,
+   "ecart_rel": 0.0037635251685745647,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2018",
+   "reconstruit": 1247310.0,
+   "publie": 1251420.0,
+   "ecart_rel": 0.0032842690703360983,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2019",
+   "reconstruit": 1293040.0,
+   "publie": 1296570.0,
+   "ecart_rel": 0.0027225680063552296,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2020",
+   "reconstruit": 1325330.0,
+   "publie": 1328680.0,
+   "ecart_rel": 0.0025212993346780265,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2021",
+   "reconstruit": 1370040.0,
+   "publie": 1373370.0,
+   "ecart_rel": 0.002424692544616527,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2022",
+   "reconstruit": 1417290.0,
+   "publie": 1420660.0,
+   "ecart_rel": 0.0023721368941196346,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2023",
+   "reconstruit": 1468090.0,
+   "publie": 1471490.0,
+   "ecart_rel": 0.0023105831504121673,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT 2024",
+   "reconstruit": 1533100.0,
+   "publie": 1536410.0,
+   "ecart_rel": 0.0021543728562037475,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2015",
+   "reconstruit": 4651420.0,
+   "publie": 4716500.0,
+   "ecart_rel": 0.013798367433478214,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2016",
+   "reconstruit": 4804680.0,
+   "publie": 4827280.0,
+   "ecart_rel": 0.004681725526590544,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2017",
+   "reconstruit": 4937110.0,
+   "publie": 4957610.0,
+   "ecart_rel": 0.00413505701335926,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2018",
+   "reconstruit": 5044620.0,
+   "publie": 5063110.0,
+   "ecart_rel": 0.0036519056469245187,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2019",
+   "reconstruit": 5155840.0,
+   "publie": 5171880.0,
+   "ecart_rel": 0.0031013867297771795,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2020",
+   "reconstruit": 5225550.0,
+   "publie": 5240640.0,
+   "ecart_rel": 0.002879419307565488,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2021",
+   "reconstruit": 5320640.0,
+   "publie": 5335090.0,
+   "ecart_rel": 0.002708482893446971,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2022",
+   "reconstruit": 5393450.0,
+   "publie": 5408010.0,
+   "ecart_rel": 0.002692302713937289,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2023",
+   "reconstruit": 5490990.0,
+   "publie": 5505020.0,
+   "ecart_rel": 0.0025485829297622895,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT 2024",
+   "reconstruit": 5630600.0,
+   "publie": 5643630.0,
+   "ecart_rel": 0.002308797706440713,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2015",
+   "reconstruit": 1694060.0,
+   "publie": 1717490.0,
+   "ecart_rel": 0.01364200082678793,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2016",
+   "reconstruit": 1740520.0,
+   "publie": 1749090.0,
+   "ecart_rel": 0.0048996906963049355,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2017",
+   "reconstruit": 1782600.0,
+   "publie": 1789950.0,
+   "ecart_rel": 0.004106259951395291,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2018",
+   "reconstruit": 1809000.0,
+   "publie": 1815270.0,
+   "ecart_rel": 0.0034540316316581006,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2019",
+   "reconstruit": 1826720.0,
+   "publie": 1831550.0,
+   "ecart_rel": 0.002637110643990063,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2020",
+   "reconstruit": 1823940.0,
+   "publie": 1828250.0,
+   "ecart_rel": 0.0023574456447422397,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2021",
+   "reconstruit": 1836040.0,
+   "publie": 1840030.0,
+   "ecart_rel": 0.0021684429058221877,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2022",
+   "reconstruit": 1859060.0,
+   "publie": 1863020.0,
+   "ecart_rel": 0.0021255810458288157,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2023",
+   "reconstruit": 1880800.0,
+   "publie": 1884680.0,
+   "ecart_rel": 0.002058704926035189,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT 2024",
+   "reconstruit": 1921450.0,
+   "publie": 1924900.0,
+   "ecart_rel": 0.001792300898747987,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2015",
+   "reconstruit": 2330780.0,
+   "publie": 2353340.0,
+   "ecart_rel": 0.009586375109418954,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2016",
+   "reconstruit": 2397230.0,
+   "publie": 2406750.0,
+   "ecart_rel": 0.003955541705619611,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2017",
+   "reconstruit": 2494860.0,
+   "publie": 2503400.0,
+   "ecart_rel": 0.003411360549652473,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2018",
+   "reconstruit": 2619840.0,
+   "publie": 2627170.0,
+   "ecart_rel": 0.0027900744908018896,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2019",
+   "reconstruit": 2768330.0,
+   "publie": 2774170.0,
+   "ecart_rel": 0.002105134148231723,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2020",
+   "reconstruit": 2743110.0,
+   "publie": 2748190.0,
+   "ecart_rel": 0.0018484893693667469,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2021",
+   "reconstruit": 2756560.0,
+   "publie": 2761190.0,
+   "ecart_rel": 0.001676813258051782,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2022",
+   "reconstruit": 2795400.0,
+   "publie": 2799900.0,
+   "ecart_rel": 0.0016072002571520412,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2023",
+   "reconstruit": 2883250.0,
+   "publie": 2887640.0,
+   "ecart_rel": 0.001520272610159161,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT 2024",
+   "reconstruit": 2982890.0,
+   "publie": 2987010.0,
+   "ecart_rel": 0.0013793057271318141,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2015",
+   "reconstruit": 161050.0,
+   "publie": 162750.0,
+   "ecart_rel": 0.010445468509984639,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2016",
+   "reconstruit": 166550.0,
+   "publie": 167100.0,
+   "ecart_rel": 0.003291442250149611,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2017",
+   "reconstruit": 173670.0,
+   "publie": 174220.0,
+   "ecart_rel": 0.0031569280220410975,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2018",
+   "reconstruit": 178700.0,
+   "publie": 179180.0,
+   "ecart_rel": 0.0026788704096439337,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2019",
+   "reconstruit": 184080.0,
+   "publie": 184490.0,
+   "ecart_rel": 0.0022223426743996967,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2020",
+   "reconstruit": 187270.0,
+   "publie": 187650.0,
+   "ecart_rel": 0.002025046629363176,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2021",
+   "reconstruit": 191290.0,
+   "publie": 191660.0,
+   "ecart_rel": 0.0019305019305019305,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2022",
+   "reconstruit": 194460.0,
+   "publie": 194870.0,
+   "ecart_rel": 0.002103966747062144,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2023",
+   "reconstruit": 199920.0,
+   "publie": 200290.0,
+   "ecart_rel": 0.00184732138399321,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT 2024",
+   "reconstruit": 206520.0,
+   "publie": 206900.0,
+   "ecart_rel": 0.0018366360560657321,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, ligne 999"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2015",
+   "reconstruit": 63377900.0,
+   "publie": 63379460.0,
+   "ecart_rel": 2.461365243566291e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2016",
+   "reconstruit": 64276870.0,
+   "publie": 64278240.0,
+   "ecart_rel": 2.1313589171078736e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2017",
+   "reconstruit": 64536080.0,
+   "publie": 64537250.0,
+   "ecart_rel": 1.8129064997346493e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2018",
+   "reconstruit": 64986920.0,
+   "publie": 64987980.0,
+   "ecart_rel": 1.631070853410123e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2019",
+   "reconstruit": 65578320.0,
+   "publie": 65579120.0,
+   "ecart_rel": 1.2199004805187992e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2020",
+   "reconstruit": 65721690.0,
+   "publie": 65722380.0,
+   "ecart_rel": 1.0498706833197458e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2021",
+   "reconstruit": 68309130.0,
+   "publie": 68309700.0,
+   "ecart_rel": 8.344349338380933e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2022",
+   "reconstruit": 68546490.0,
+   "publie": 68547020.0,
+   "ecart_rel": 7.731918907634496e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2023",
+   "reconstruit": 67113220.0,
+   "publie": 67113690.0,
+   "ecart_rel": 7.0030421513107084e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "population cartographie Σ dép. = Σ régions 2024",
+   "reconstruit": 67380400.0,
+   "publie": 67380820.0,
+   "ecart_rel": 6.233227793903369e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 1588150.0,
+   "publie": 1588230.0,
+   "ecart_rel": 5.0370538272164614e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 1614690.0,
+   "publie": 1614750.0,
+   "ecart_rel": 3.7157454714352065e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 1662470.0,
+   "publie": 1662490.0,
+   "ecart_rel": 1.2030147549759698e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 1707650.0,
+   "publie": 1707730.0,
+   "ecart_rel": 4.684581286268907e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 1721620.0,
+   "publie": 1721620.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 1740630.0,
+   "publie": 1740680.0,
+   "ecart_rel": 2.87244065537606e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 1754910.0,
+   "publie": 1754860.0,
+   "ecart_rel": 2.849230138016708e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 1709800.0,
+   "publie": 1709790.0,
+   "ecart_rel": 5.848671474274618e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 1704590.0,
+   "publie": 1704590.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients ALD_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 1714440.0,
+   "publie": 1714410.0,
+   "ecart_rel": 1.7498731341977708e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 3072900.0,
+   "publie": 3073110.0,
+   "ecart_rel": 6.833468375684567e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 3131020.0,
+   "publie": 3131170.0,
+   "ecart_rel": 4.790541554754293e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 3225700.0,
+   "publie": 3225870.0,
+   "ecart_rel": 5.269896183045194e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 3328090.0,
+   "publie": 3328250.0,
+   "ecart_rel": 4.8073311800495754e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 3405430.0,
+   "publie": 3405520.0,
+   "ecart_rel": 2.642768211609387e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 3432510.0,
+   "publie": 3432610.0,
+   "ecart_rel": 2.9132351184667062e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 3466080.0,
+   "publie": 3466130.0,
+   "ecart_rel": 1.442531007204e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 3484880.0,
+   "publie": 3484920.0,
+   "ecart_rel": 1.1478025320523856e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 3521440.0,
+   "publie": 3521510.0,
+   "ecart_rel": 1.9877836496275746e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients CAN_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 3575710.0,
+   "publie": 3575790.0,
+   "ecart_rel": 2.2372678485034078e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 3542960.0,
+   "publie": 3543140.0,
+   "ecart_rel": 5.080239561518879e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 3647550.0,
+   "publie": 3647680.0,
+   "ecart_rel": 3.5639091148346346e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 3735510.0,
+   "publie": 3735610.0,
+   "ecart_rel": 2.6769389738222137e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 3812420.0,
+   "publie": 3812540.0,
+   "ecart_rel": 3.147507960572217e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 3910470.0,
+   "publie": 3910530.0,
+   "ecart_rel": 1.534318877492309e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 4007620.0,
+   "publie": 4007710.0,
+   "ecart_rel": 2.245671468244958e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 4133320.0,
+   "publie": 4133330.0,
+   "ecart_rel": 2.4193567898038626e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 4239340.0,
+   "publie": 4239450.0,
+   "ecart_rel": 2.5946761962046964e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 4339900.0,
+   "publie": 4339950.0,
+   "ecart_rel": 1.1520870056106637e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients DIA_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 4460460.0,
+   "publie": 4460490.0,
+   "ecart_rel": 6.725718474876078e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 830320.0,
+   "publie": 830320.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 860840.0,
+   "publie": 860790.0,
+   "ecart_rel": 5.808617665168043e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 896540.0,
+   "publie": 896480.0,
+   "ecart_rel": 6.692843119757273e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 928740.0,
+   "publie": 928760.0,
+   "ecart_rel": 2.1534088462035404e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 964060.0,
+   "publie": 964040.0,
+   "ecart_rel": 2.0746027135803493e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 991350.0,
+   "publie": 991340.0,
+   "ecart_rel": 1.0087356507353683e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 1025130.0,
+   "publie": 1025090.0,
+   "ecart_rel": 3.902096401291594e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 1062920.0,
+   "publie": 1062920.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 1111530.0,
+   "publie": 1111540.0,
+   "ecart_rel": 8.996527340446587e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IFL_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 1165480.0,
+   "publie": 1165410.0,
+   "ecart_rel": 6.006469826069795e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 85110.0,
+   "publie": 85100.0,
+   "ecart_rel": 0.00011750881316098707,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 88700.0,
+   "publie": 88690.0,
+   "ecart_rel": 0.00011275228323373548,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 91950.0,
+   "publie": 91910.0,
+   "ecart_rel": 0.0004352083560004352,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 94500.0,
+   "publie": 94490.0,
+   "ecart_rel": 0.00010583130489998942,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 96950.0,
+   "publie": 96930.0,
+   "ecart_rel": 0.00020633446817290828,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 98590.0,
+   "publie": 98570.0,
+   "ecart_rel": 0.00020290149132596124,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 99830.0,
+   "publie": 99810.0,
+   "ecart_rel": 0.00020038072337441137,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 100400.0,
+   "publie": 100390.0,
+   "ecart_rel": 9.961151509114453e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 101120.0,
+   "publie": 101110.0,
+   "ecart_rel": 9.890218573830482e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRT_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 102710.0,
+   "publie": 102670.0,
+   "ecart_rel": 0.00038959774033310606,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 1120130.0,
+   "publie": 1120170.0,
+   "ecart_rel": 3.570886561861146e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 1160190.0,
+   "publie": 1160200.0,
+   "ecart_rel": 8.619203585588691e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 1207070.0,
+   "publie": 1207080.0,
+   "ecart_rel": 8.284455048546906e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 1247310.0,
+   "publie": 1247290.0,
+   "ecart_rel": 1.6034763366979613e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 1293040.0,
+   "publie": 1292990.0,
+   "ecart_rel": 3.8670059319871e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 1325330.0,
+   "publie": 1325270.0,
+   "ecart_rel": 4.527379326476869e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 1370040.0,
+   "publie": 1370030.0,
+   "ecart_rel": 7.299110238461931e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 1417290.0,
+   "publie": 1417210.0,
+   "ecart_rel": 5.644893840715208e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 1468090.0,
+   "publie": 1468090.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients IRV_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 1533100.0,
+   "publie": 1533120.0,
+   "ecart_rel": 1.3045293258192444e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 4651420.0,
+   "publie": 4651950.0,
+   "ecart_rel": 0.00011393071722610948,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 4804680.0,
+   "publie": 4805120.0,
+   "ecart_rel": 9.156899307405435e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 4937110.0,
+   "publie": 4937490.0,
+   "ecart_rel": 7.696218118922772e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 5044620.0,
+   "publie": 5044940.0,
+   "ecart_rel": 6.34298921295397e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 5155840.0,
+   "publie": 5156120.0,
+   "ecart_rel": 5.4304399432131136e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 5225550.0,
+   "publie": 5225780.0,
+   "ecart_rel": 4.401256845867985e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 5320640.0,
+   "publie": 5320880.0,
+   "ecart_rel": 4.510532092435838e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 5393450.0,
+   "publie": 5393730.0,
+   "ecart_rel": 5.191212760000964e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 5490990.0,
+   "publie": 5491180.0,
+   "ecart_rel": 3.460094187405986e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients MCV_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 5630600.0,
+   "publie": 5630770.0,
+   "ecart_rel": 3.019125270611302e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 1694060.0,
+   "publie": 1694140.0,
+   "ecart_rel": 4.722159915945554e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 1740520.0,
+   "publie": 1740550.0,
+   "ecart_rel": 1.7235931171181524e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 1782600.0,
+   "publie": 1782630.0,
+   "ecart_rel": 1.6829067164807056e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 1809000.0,
+   "publie": 1809020.0,
+   "ecart_rel": 1.1055709721285558e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 1826720.0,
+   "publie": 1826750.0,
+   "ecart_rel": 1.6422608457643356e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 1823940.0,
+   "publie": 1823990.0,
+   "ecart_rel": 2.7412430989204985e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 1836040.0,
+   "publie": 1836060.0,
+   "ecart_rel": 1.0892890210559568e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 1859060.0,
+   "publie": 1859040.0,
+   "ecart_rel": 1.0758240812462347e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 1880800.0,
+   "publie": 1880790.0,
+   "ecart_rel": 5.316914700737456e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients NEU_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 1921450.0,
+   "publie": 1921500.0,
+   "ecart_rel": 2.6021337496747333e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 2330780.0,
+   "publie": 2330800.0,
+   "ecart_rel": 8.580744808649391e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 2397230.0,
+   "publie": 2397260.0,
+   "ecart_rel": 1.2514287144489959e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 2494860.0,
+   "publie": 2494840.0,
+   "ecart_rel": 8.016546151256192e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 2619840.0,
+   "publie": 2619830.0,
+   "ecart_rel": 3.8170415637655875e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 2768330.0,
+   "publie": 2768280.0,
+   "ecart_rel": 1.806175675870938e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 2743110.0,
+   "publie": 2743100.0,
+   "ecart_rel": 3.645510553753053e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 2756560.0,
+   "publie": 2756520.0,
+   "ecart_rel": 1.4511050164700419e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 2795400.0,
+   "publie": 2795420.0,
+   "ecart_rel": 7.1545599587897344e-06,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 2883250.0,
+   "publie": 2883220.0,
+   "ecart_rel": 1.0405033261422992e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients PSY_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 2982890.0,
+   "publie": 2982850.0,
+   "ecart_rel": 1.3409993797877868e-05,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2015",
+   "reconstruit": 161050.0,
+   "publie": 161010.0,
+   "ecart_rel": 0.0002484317744239488,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2016",
+   "reconstruit": 166550.0,
+   "publie": 166480.0,
+   "ecart_rel": 0.0004204709274387314,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2017",
+   "reconstruit": 173670.0,
+   "publie": 173650.0,
+   "ecart_rel": 0.00011517420097898071,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2018",
+   "reconstruit": 178700.0,
+   "publie": 178670.0,
+   "ecart_rel": 0.00016790731516203055,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2019",
+   "reconstruit": 184080.0,
+   "publie": 184080.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2020",
+   "reconstruit": 187270.0,
+   "publie": 187230.0,
+   "ecart_rel": 0.00021364097633926187,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2021",
+   "reconstruit": 191290.0,
+   "publie": 191220.0,
+   "ecart_rel": 0.0003660704947181257,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2022",
+   "reconstruit": 194460.0,
+   "publie": 194460.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2023",
+   "reconstruit": 199920.0,
+   "publie": 199880.0,
+   "ecart_rel": 0.00020012007204322593,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  },
+  {
+   "controle": "patients RAR_CAT_CAT Σ dép. = Σ régions 2024",
+   "reconstruit": 206520.0,
+   "publie": 206450.0,
+   "ecart_rel": 0.00033906514894647613,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr effectifs, lignes régionales (999)"
+  }
+ ],
+ "notes": "cla_age_5 'tsage' = tous âges ; sexe 9 = tous ; NS si < 11 patients (ntop_ns)",
+ "ecrit_le": "2026-11-15T03:26:29"
+}

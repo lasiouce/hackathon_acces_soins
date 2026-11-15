@@ -1,0 +1,751 @@
+{
+ "table": "ameli_honoraires.parquet",
+ "chemin": "v2/data/odbl/besoin/ameli_honoraires.parquet",
+ "lignes": 1351680,
+ "colonnes": [
+  "annee",
+  "profession_sante",
+  "region",
+  "departement",
+  "honoraires_ordre_niv_1",
+  "type_honoraires_niveau_1",
+  "honoraires_ordre_niv_2",
+  "type_honoraires_niveau_2",
+  "honoraires_ordre_niv_3",
+  "type_honoraires_niveau_3",
+  "montant_honoraires",
+  "montant_honoraires_moyens",
+  "prof"
+ ],
+ "sha256_16": "686446037253db38",
+ "licence": "Open Database License 1.0",
+ "commite": false,
+ "source": "CNAM, data.ameli.fr, jeu « honoraires-detailles » (export parquet de l'API Opendatasoft, lu le 2026-11-15)",
+ "millesime": "2010–2025",
+ "commande": "uv run python v2/besoin/donnees/ameli.py",
+ "dom": "inclus : départements 971, 972, 973, 974, 976 (Mayotte comprise) ; région 99 = France entière",
+ "controles": [
+  {
+   "controle": "honoraires (ensemble) CD 2010",
+   "reconstruit": 8710079420.0,
+   "publie": 8710079420.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2011",
+   "reconstruit": 8924067404.0,
+   "publie": 8924067404.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2012",
+   "reconstruit": 9061444816.0,
+   "publie": 9061444816.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2013",
+   "reconstruit": 9147829186.0,
+   "publie": 9147829186.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2014",
+   "reconstruit": 9090151901.0,
+   "publie": 9090151901.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2015",
+   "reconstruit": 9459647656.0,
+   "publie": 9459647653.0,
+   "ecart_rel": 3.1713654779188213e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2016",
+   "reconstruit": 9649290252.0,
+   "publie": 9649290249.0,
+   "ecart_rel": 3.1090369577295117e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2017",
+   "reconstruit": 9751188332.0,
+   "publie": 9751188330.0,
+   "ecart_rel": 2.0510320714931778e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2018",
+   "reconstruit": 9879657722.0,
+   "publie": 9879657722.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2019",
+   "reconstruit": 10064953665.0,
+   "publie": 10064953659.0,
+   "ecart_rel": 5.961279309651713e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2020",
+   "reconstruit": 9622415999.0,
+   "publie": 9622416002.0,
+   "ecart_rel": 3.1177201228635886e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2021",
+   "reconstruit": 11316323697.0,
+   "publie": 11316323696.0,
+   "ecart_rel": 8.836792114328364e-11,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2022",
+   "reconstruit": 11428295051.0,
+   "publie": 11428295051.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2023",
+   "reconstruit": 11838181875.0,
+   "publie": 11838181870.0,
+   "ecart_rel": 4.2236215450202405e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2024",
+   "reconstruit": 12156020911.0,
+   "publie": 12156020911.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) CD 2025",
+   "reconstruit": 12529437608.0,
+   "publie": 12529437607.0,
+   "ecart_rel": 7.981204195799783e-11,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2010",
+   "reconstruit": 5361613122.0,
+   "publie": 5361613122.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2011",
+   "reconstruit": 5668364215.0,
+   "publie": 5668364215.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2012",
+   "reconstruit": 6077053551.0,
+   "publie": 6077053551.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2013",
+   "reconstruit": 6543172944.0,
+   "publie": 6543172944.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2014",
+   "reconstruit": 6883939286.0,
+   "publie": 6883939286.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2015",
+   "reconstruit": 7264903252.0,
+   "publie": 7264903250.0,
+   "ecart_rel": 2.752961644740417e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2016",
+   "reconstruit": 7541661619.0,
+   "publie": 7541661619.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2017",
+   "reconstruit": 7811530943.0,
+   "publie": 7811530938.0,
+   "ecart_rel": 6.400793954072412e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2018",
+   "reconstruit": 8170899136.0,
+   "publie": 8170899137.0,
+   "ecart_rel": 1.22385551850926e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2019",
+   "reconstruit": 8467074938.0,
+   "publie": 8467074938.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2020",
+   "reconstruit": 8944425264.0,
+   "publie": 8944425266.0,
+   "ecart_rel": 2.236029639156918e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2021",
+   "reconstruit": 9745491725.0,
+   "publie": 9745491724.0,
+   "ecart_rel": 1.0261154883927743e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2022",
+   "reconstruit": 9862651448.0,
+   "publie": 9862651448.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2023",
+   "reconstruit": 9808985164.0,
+   "publie": 9808985162.0,
+   "ecart_rel": 2.038946911397112e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2024",
+   "reconstruit": 10317859306.0,
+   "publie": 10317859306.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) IDE 2025",
+   "reconstruit": 10516102705.0,
+   "publie": 10516102701.0,
+   "ecart_rel": 3.8036905056277466e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2010",
+   "reconstruit": 8284449335.0,
+   "publie": 8284449335.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2011",
+   "reconstruit": 8654653516.0,
+   "publie": 8654653516.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2012",
+   "reconstruit": 8559939191.0,
+   "publie": 8559939191.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2013",
+   "reconstruit": 8882804013.0,
+   "publie": 8882804013.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2014",
+   "reconstruit": 8992423323.0,
+   "publie": 8992423323.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2015",
+   "reconstruit": 9165629892.0,
+   "publie": 9165629889.0,
+   "ecart_rel": 3.273097469929925e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2016",
+   "reconstruit": 9230949573.0,
+   "publie": 9230949572.0,
+   "ecart_rel": 1.0833121686996038e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2017",
+   "reconstruit": 9410790030.0,
+   "publie": 9410790026.0,
+   "ecart_rel": 4.2504401744687274e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2018",
+   "reconstruit": 9418030734.0,
+   "publie": 9418030737.0,
+   "ecart_rel": 3.18537928339318e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2019",
+   "reconstruit": 9585716682.0,
+   "publie": 9585716687.0,
+   "ecart_rel": 5.21609407336326e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2020",
+   "reconstruit": 9149415956.0,
+   "publie": 9149415957.0,
+   "ecart_rel": 1.0929659387000805e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2021",
+   "reconstruit": 9844785763.0,
+   "publie": 9844785763.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2022",
+   "reconstruit": 9638751821.0,
+   "publie": 9638751820.0,
+   "ecart_rel": 1.0374787303113692e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2023",
+   "reconstruit": 9566232982.0,
+   "publie": 9566232982.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2024",
+   "reconstruit": 10059111518.0,
+   "publie": 10059111516.0,
+   "ecart_rel": 1.9882471695624454e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MG 2025",
+   "reconstruit": 10557847995.0,
+   "publie": 10557847993.0,
+   "ecart_rel": 1.894325435757389e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2010",
+   "reconstruit": 3950116949.0,
+   "publie": 3950116949.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2011",
+   "reconstruit": 4050561987.0,
+   "publie": 4050561987.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2012",
+   "reconstruit": 4261193058.0,
+   "publie": 4261193058.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2013",
+   "reconstruit": 4531242310.0,
+   "publie": 4531242310.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2014",
+   "reconstruit": 4753466558.0,
+   "publie": 4753466558.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2015",
+   "reconstruit": 4936987485.0,
+   "publie": 4936987480.0,
+   "ecart_rel": 1.0127633542226443e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2016",
+   "reconstruit": 5121249482.0,
+   "publie": 5121249480.0,
+   "ecart_rel": 3.9052969549923197e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2017",
+   "reconstruit": 5287104839.0,
+   "publie": 5287104836.0,
+   "ecart_rel": 5.674182928193406e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2018",
+   "reconstruit": 5480281839.0,
+   "publie": 5480281839.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2019",
+   "reconstruit": 5642008669.0,
+   "publie": 5642008670.0,
+   "ecart_rel": 1.772418403603765e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2020",
+   "reconstruit": 5087084711.0,
+   "publie": 5087084718.0,
+   "ecart_rel": 1.3760336986784185e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2021",
+   "reconstruit": 5983481145.0,
+   "publie": 5983481140.0,
+   "ecart_rel": 8.356339533811917e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2022",
+   "reconstruit": 6128186208.0,
+   "publie": 6128186206.0,
+   "ecart_rel": 3.263608403481335e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2023",
+   "reconstruit": 6574742432.0,
+   "publie": 6574742437.0,
+   "ecart_rel": 7.604860643455804e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2024",
+   "reconstruit": 6989440777.0,
+   "publie": 6989440775.0,
+   "ecart_rel": 2.8614592560160865e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) MK 2025",
+   "reconstruit": 7322933863.0,
+   "publie": 7322933862.0,
+   "ecart_rel": 1.365572895843259e-10,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2010",
+   "reconstruit": 157564629.0,
+   "publie": 160612635.0,
+   "ecart_rel": 0.018977373729034457,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2011",
+   "reconstruit": 168509370.0,
+   "publie": 172411719.0,
+   "ecart_rel": 0.02263389648124789,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2012",
+   "reconstruit": 183469084.0,
+   "publie": 187345627.0,
+   "ecart_rel": 0.02069193213674531,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2013",
+   "reconstruit": 214683253.0,
+   "publie": 217985379.0,
+   "ecart_rel": 0.015148382956455075,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2014",
+   "reconstruit": 240719166.0,
+   "publie": 242561268.0,
+   "ecart_rel": 0.0075943781758264885,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2015",
+   "reconstruit": 265770747.0,
+   "publie": 270529539.0,
+   "ecart_rel": 0.01759065578417298,
+   "seuil": 0.005,
+   "ok": false,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2016",
+   "reconstruit": 293677270.0,
+   "publie": 293677271.0,
+   "ecart_rel": 3.405098380936671e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2017",
+   "reconstruit": 316880186.0,
+   "publie": 316880187.0,
+   "ecart_rel": 3.155766882957564e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2018",
+   "reconstruit": 342487205.0,
+   "publie": 342487207.0,
+   "ecart_rel": 5.839634179387028e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2019",
+   "reconstruit": 386718359.0,
+   "publie": 386718358.0,
+   "ecart_rel": 2.585861207033776e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2020",
+   "reconstruit": 411675841.0,
+   "publie": 411675843.0,
+   "ecart_rel": 4.858191302713869e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2021",
+   "reconstruit": 482939151.0,
+   "publie": 482939152.0,
+   "ecart_rel": 2.070654234304035e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2022",
+   "reconstruit": 512842039.0,
+   "publie": 512842034.0,
+   "ecart_rel": 9.74959084574569e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2023",
+   "reconstruit": 544553892.0,
+   "publie": 544553895.0,
+   "ecart_rel": 5.509096578952943e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2024",
+   "reconstruit": 613352109.0,
+   "publie": 613352107.0,
+   "ecart_rel": 3.260769755536195e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  },
+  {
+   "controle": "honoraires (ensemble) SF 2025",
+   "reconstruit": 666285874.0,
+   "publie": 666285875.0,
+   "ecart_rel": 1.5008572709124294e-09,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "data.ameli.fr, ligne 999"
+  }
+ ],
+ "notes": "montants en euros, sans nombre d'actes ; ordre 6 = ensemble des honoraires",
+ "ecrit_le": "2026-11-15T03:25:46"
+}

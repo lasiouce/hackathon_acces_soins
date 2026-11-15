@@ -2581,7 +2581,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
     permet déjà : « GPs may appear only as context, for example when demand shifts from GPs to pharmacists. They are
     never a projected output. » Mais rien n'est acté pour le module.
   - À trancher par l'utilisateur·rice. Bloque l'axe 1 du plan de besoin.
-- **Licence des tables dérivées de jeux ODbL** (ouvert le 2026-11-15, [exploration](explorations/2026-11-15-besoin-sources.md)).
+- ~~**Licence des tables dérivées de jeux ODbL**~~ *décidé le 2026-11-15 : commitées sous ODbL, voir l'entrée « Tables dérivées ODbL commitées sous ODbL ».* (ouvert le 2026-11-15, [exploration](explorations/2026-11-15-besoin-sources.md)).
   Les jeux data.ameli.fr (pathologies, patientèle, honoraires) et une matrice de temps OpenStreetMap sont sous
   **ODbL** : une base dérivée redistribuée doit rester sous ODbL. Or le dépôt public commite les données traitées
   (décision du 2026-11-14).
@@ -4637,7 +4637,8 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   alors à O1, en retirant `B_MG`.
 
 
-## 2026-11-15 — Module de besoin : règle d'attente pour les tables dérivées ODbL
+## ~~2026-11-15 — Module de besoin : règle d'attente pour les tables dérivées ODbL~~
+*Remplacé le 2026-11-15 par « Tables dérivées ODbL commitées sous ODbL ».*
 - **Décision** (provisoire, posée par la session besoin-derivation au lancement de la vague 1) : tant que la question
   « Licence des tables dérivées de jeux ODbL » reste ouverte, aucune table dérivée des jeux data.ameli.fr ou d'OSM
   n'est commitée. Elles sont écrites dans un chemin ignoré par git ; seuls le script de reconstruction et le
@@ -4995,4 +4996,21 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Gel :** accord de l'utilisateur·rice (« Yes, timestamp it », 2026-11-15). SHA-256 `f96520f9…549d83` ; RFC 3161
   FreeTSA 04:09:44 UTC et DigiCert 04:09:45 UTC ; OpenTimestamps soumis. Jetons dans
   `v2/validation/preregistered/horodatage/2026-11-15-besoin-p-b4-ph-SHA256SUMS*`.
+
+## 2026-11-15 — Tables dérivées ODbL commitées sous ODbL
+- **Décision** (utilisateur·rice : « licence c'est ok pour ODbL sur nos données ici ») :
+  - les tables dérivées des jeux data.ameli.fr (démographie, patientèle, honoraires, pathologies effectifs et
+    dépenses ; 54 Mo) sont **commitées dans `v2/data/odbl/besoin/` sous ODbL 1.0**, avec la mention de la CNAM ;
+  - les dérivés d'OpenStreetMap (matrice de temps OSRM) suivent la même licence, mais restent hors dépôt pour leur
+    taille (`v2/data/odbl/osm/`, ignoré) ; on les reconstruit par script ;
+  - les données sous Licence Ouverte 2.0 et le code ne changent pas.
+- **Remplace :** la règle d'attente du même jour (aucune table ODbL commitée).
+- **Reste ouvert :**
+  - la licence du code (EUPL 1.2 proposée), d'où `LICENSE.draft` ;
+  - l'activation de `NOTICE`, dont `NOTICE.draft` porte encore des mentions « à confirmer » (rapport
+    `2026-11-15-licences-brouillon`).
+
+  Tant que `NOTICE` n'est pas activé, la mention ODbL est portée par `v2/data/odbl/README.md`.
+- **Pourquoi :** les chercheurs qui clonent le dépôt doivent avoir toutes les entrées de P-B2, P-B3 et P-B5 sans
+  reconstruction.
 
