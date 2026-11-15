@@ -213,3 +213,11 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : conservation du 2SFCA contre Páez et coll. 2019 (inflation des FCA) | ~15 min | passe de littérature | 2026-11-15 | open |
 | Besoin : Gravelle et coll. 2003 en entier (spécification et instruments de M2a) | ~30 min | passe de littérature | 2026-11-15 | open |
 | Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | open |
+| Besoin `ω_a` MK : récupérer les poids DCIR 2022 non publiés par régression de la population standardisée APL 2024 sur les populations communales par âge (Insee 2022) | ~20 min Claude | axe 1 besoin (fiches) | 2026-11-15 | open |
+| Besoin L23 : la série SNDS de la Cour (G10) compte 0 injection en officine en 2018 ; année civile ou de campagne, code retenu ? Déplace t₀, s_∞, τ | ~15 min + DAMIR 2018 (machine) | axe 1 besoin (fiches) | 2026-11-15 | open |
+| Besoin L25 : série DAMIR des actes IPA (1654, 3129, 3130) 2019–2025, borne haute de l'accès direct | ~0 de plus dans la lecture en flux (axe 4) | relecture axe 1 besoin | 2026-11-15 | open |
+| Besoin : lire au JO (navigateur) les décrets 2024-618, 2025-55, 2026-985 et la loi 2026-668, connus seulement par la presse | ~20 min | axe 1 besoin (fiches) | 2026-11-15 | open |
+| Besoin `n_grossesse` : double compte EPP / consultation précoce (HAS 2016) ; préparation à la naissance en 7 (ameli) ou 8 (HAS) séances | ~15 min | relecture axe 1 besoin | 2026-11-15 | open |
+| Besoin APL IDE : onglet « APL 2023 » étiqueté 2024 avec les populations de 2021 ; signaler à la DREES ou vérifier avant usage | ~5 min | relecture axe 1 besoin | 2026-11-15 | open |
+| Besoin `s(t)` : courbe de Bass contre exponentielle (6 points ne départagent pas) ; par région avec DAMIR | ~30 min après l'axe 4 | axe 1 besoin (fiches) | 2026-11-15 | open |
+| Besoin `q_p` : substitut ouvert (honoraires / effectif, data.ameli.fr, moyenne et non médiane) pour des sorties en ETP absolus | ~20 min, étiqueté « substitut » | axe 1 besoin (fiches) | 2026-11-15 | open |

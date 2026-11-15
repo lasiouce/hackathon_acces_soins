@@ -4615,3 +4615,34 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** les organisateurs jugent que même le besoin de MG en contexte sort du sujet. On passe
   alors à O1, en retirant `B_MG`.
 
+
+## 2026-11-15 — Module de besoin, axe 1 : fiches d'hyperparamètres ; L23 seul transfert sourcé ; expérimentation sur 4 régions
+- **Décision** (session besoin-axe1-fiches, après relecture contradictoire) :
+  - **Format :** une fiche par paramètre pour `ω_a`, `r̄`, `q_p`, `B_MG` et `n_grossesse`, et **une fiche par
+    transfert** qui porte ses cinq paramètres `a`, `k`, `s_∞`, `τ`, `m`, chacun avec sa propre étiquette.
+  - **`ω_a`** : colonne 2024 (DCIR 2022) pour IDE, CD et SF. Pour les MK, colonne **2023** (DCIR 2021), faute de
+    colonne 2024 publiée. Poids figés à l'année de base, comme décidé pour M4.
+  - **`q_p`** : unité de la DREES (1 ETP = activité libérale médiane). La valeur n'est pas mesurable en données
+    ouvertes : les sorties du module restent en **indice** tant qu'un substitut n'est pas étiqueté.
+  - **L23** :
+    - `a` : parts des injections en 2018 (Cour des comptes, open data G10) ;
+    - `s(t)` : `s_∞` = 0,70 et `τ` = 2,8 ans pour t₀ = 2018 (dérivés), avec les plages [0,63 ; 0,77] et
+      [1,6 ; 3,7] ;
+    - `m` = 0 par défaut, plage [0 ; +5 %] ;
+    - `k` supposé, plage [0,25 ; 1].
+  - **Tension / diabète et L25 :** non mesurables, donc hors modèle ou entièrement supposés. Le volume IPA global
+    (codes DAMIR 1654, 3129, 3130) sert au plus de borne haute.
+  - **L27 :** `k` = 0 par construction ; `a` et `s` supposés.
+  - **`n_grossesse`** = 10 contacts réglementaires par défaut (CSP) ; variante HAS à 10 ou 11.
+  - **Expérimentation de la vaccination en officine : 4 régions**, d'après l'arrêté du 8 juin 2018 et la HAS 2018
+    p. 11. La Cour des comptes en compte 6 (p. 43). Le résidu « 4 ou 6 » de l'entrée du 2026-11-15 (passe de
+    littérature) est levé.
+- **Pourquoi :**
+  - sources primaires lues, puis 142 affirmations relues : 12 écarts retenus et corrigés, 0 faux confirmé sur 11
+    contrôles ([rapport](reports/2026-11-15-besoin-axe1-fiches.md)) ;
+  - le résultat suit l'attendu du plan.
+- **Ce qui le renverserait :**
+  - un code DAMIR qui isole l'accès direct (IPA ou kiné) ;
+  - une durée publiée de l'acte de vaccination ;
+  - la note méthodologique de la Cour qui expliquerait le 0 en officine en 2018 et déplacerait t₀ ;
+  - la publication des poids MK 2022.
