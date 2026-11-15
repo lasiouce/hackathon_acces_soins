@@ -5214,3 +5214,11 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   Clermont-Ferrand en 2035 si les pharmaciens vaccinent » → Puy-de-Dôme, 2035, indice 0,98, −0,7 %, même valeur que
   la réponse de l'assistant). Capture : `figures/2026-11-15-besoin-carte-assistant-l23.jpg`.
 - **Ce qui le renverserait :** une date de transfert choisie par l'utilisateur·rice (brancher `l23_t0`).
+
+## 2026-11-15 — Assistant : L23 dit en langue courante, comme la carte
+- **Décision** (demande de l'utilisateur·rice relayée par la session besoin-derivation ; carte `3c52883`) : libellé du
+  levier dans le compilateur et l'assistant : « Les pharmaciens vaccinent davantage contre la grippe ». Effet sur la MG :
+  « les médecins généralistes ont moins de vaccins à faire : environ N vaccinations en moins, soit le temps de travail
+  d'environ M médecins à temps plein (France entière) ». **Remplace** « actes de médecine générale libérés … ETP-équivalents »
+  de l'entrée « outil couverture aligné sur l'API réelle » du même jour. L'interdit de couverture MG (O2) est inchangé.
+- **Pourquoi :** même vocabulaire à l'écran, dans l'export et dans l'assistant.

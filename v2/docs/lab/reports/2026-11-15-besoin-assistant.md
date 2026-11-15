@@ -96,3 +96,6 @@ réponse le dit (« indice de couverture non disponible »).
   fourchette M1–M2a affichée. Tests de la carte `tests/couverture.py` : K3–K6 OK.
 - Tests du chatbot : **47/47**.
 - ⚑ Manque : `index.html` n'applique pas encore la proposition `vue: couverture, l23: 1` (frontend de la carte, non touché).
+- **Formulation (2026-11-15, après `3c52883`)** : l'assistant dit « Les pharmaciens vaccinent davantage contre la grippe » et
+  « les médecins généralistes ont moins de vaccins à faire : environ N vaccinations en moins, soit le temps de travail
+  d'environ M médecins à temps plein », comme la carte ; plus de « actes de MG libérés ». Tests 47/47.

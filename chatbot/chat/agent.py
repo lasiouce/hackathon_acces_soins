@@ -101,7 +101,10 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    base 2026 = 1, tendanciel et scénario, écart relatif au tendanciel. Vaccination en officine, « les pharmaciens peuvent
    vacciner » (L23) : appelle couverture avec l23 (et l23_t0 si une date est dite) ; la réponse dit « Effectif inchangé dans
    le modèle ; couverture des pharmaciens … » avec l'indice et l'écart au tendanciel, et la fourchette entre estimateurs si
-   le résultat en donne une (jamais un seul chiffre dans ce cas). Qualifie l'écart avec le champ « qualificatifs » du
+   le résultat en donne une (jamais un seul chiffre dans ce cas). Nomme le levier « les pharmaciens vaccinent davantage
+   contre la grippe » ; son effet sur la médecine générale se dit « les médecins généralistes ont moins de vaccins à
+   faire : environ N vaccinations en moins, soit le temps de travail d'environ M médecins à temps plein (France entière) »,
+   jamais « actes libérés » ni « ETP libérés ». Qualifie l'écart avec le champ « qualificatifs » du
    résultat. Jamais « % du besoin couvert », jamais de besoin en valeur absolue. **Jamais de couverture, de besoin ni d'indice
    pour la médecine générale ou les spécialistes** (règle O2) : ils ne sont que la source d'un transfert (temps libéré).
    IPA en accès direct (L25), accès direct au kiné (L27), tension et diabète en officine : « pas dans le modèle », effectif
@@ -389,7 +392,7 @@ class Conversation:
         a = res["annees"][-1]
         f = lambda x: f"{x:.2f}".replace(".", ",")
         e = f"{a['ecart_tendanciel_pct']:+.1f}".replace(".", ",")
-        scn = "avec la vaccination en officine" if tr else "au scénario"
+        scn = "si les pharmaciens vaccinent davantage contre la grippe" if tr else "au scénario"
         lig = [tete + f" Couverture des {res['profession'].lower()} en {a['annee']} ({res['territoire']}, indice base "
                f"{res['reference']} = 1) : {f(a['indice_scenario'])} {scn}, {f(a['indice_tendanciel'])} au "
                f"tendanciel, soit {a['qualificatifs']['ecart']} ({e} %)."]
@@ -400,9 +403,12 @@ class Conversation:
         for x in res["transferts"]:
             if x.get("actes_mg_liberes_france") is not None:
                 n = f"{x['actes_mg_liberes_france']:,}".replace(",", " ")
-                lig.append(f"Actes de médecine générale libérés par la vaccination en officine en {x['annee']} : environ "
-                           f"{n} injections, France entière"
-                           + (f" ({x['etp_liberes_source_france']} ETP-équivalents)." if x.get("etp_liberes_source_france") else "."))
+                etp = x.get("etp_liberes_source_france")
+                lig.append(f"Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de "
+                           f"vaccins à faire : en {x['annee']}, environ {n} vaccinations en moins pour eux"
+                           + (f", soit le temps de travail d'environ {etp} médecins à temps plein" if etp else "")
+                           + " (France entière). Les pharmaciens reprennent ce travail. Ordre de grandeur : la part de temps "
+                           "que la vaccination prend aux médecins n'est pas mesurée, elle est supposée.")
         if res.get("avertissement"):
             lig.append(f"{LIMITE} {res['avertissement']}.")
         if not a.get("fourchette_estimateurs") and len(res.get("estimateurs") or []) == 1:
