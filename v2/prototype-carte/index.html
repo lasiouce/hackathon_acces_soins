@@ -147,7 +147,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 #map{position:absolute;inset:0}
 /* légende réduite (demande du 2026-11-14) : bascule d'indicateur et gamme ; le titre reste pour les lecteurs d'écran */
 #legend{position:absolute;left:.8rem;bottom:.8rem;width:auto;min-width:min(22rem,calc(100% - 4.6rem));max-width:min(34rem,calc(100% - 4.6rem));background:var(--paper);box-shadow:0 2px 6px 0 rgba(0,0,18,.16);padding:.6rem .8rem .5rem;font-size:.87rem;z-index:2}
-#var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:nowrap}   /* les trois indicateurs sur une ligne (demande du 2026-11-14) */
+#var{display:flex;gap:.3rem .4rem;margin-bottom:1.6rem;flex-wrap:wrap}   /* les trois indicateurs sur une ligne quand la place le permet (demande du 2026-11-14) ; à la ligne sinon, au lieu d'être rognés quand le panneau Scénario rétrécit la carte */
 #var .fr-tag{white-space:nowrap}
 #var .fr-tag{margin:0}
 #defbtn{margin-top:.35rem;display:inline-flex;align-items:center;gap:.3rem}
@@ -587,6 +587,9 @@ function buildMap(){
   map.touchZoomRotate.disableRotation();
   map.on("dragstart",()=>{userMoved=true;});map.on("zoomstart",e=>{if(e.originalEvent)userMoved=true;});
   map.on("load",()=>{
+    const fold=e=>{if(e.sourceId!=="d"||!e.isSourceLoaded)return;map.off("sourcedata",fold);   // attribution repliée sur ⓘ une fois les contours chargés (MapLibre la redéplie à leur arrivée) : dépliée, la légende la masque
+      const at=document.querySelector(".maplibregl-ctrl-attrib");if(at){at.classList.remove("maplibregl-compact-show");at.removeAttribute("open");}};
+    map.on("sourcedata",fold);
     fitFrance(0);
     map.addSource("d",{type:"geojson",data:GEO,promoteId:"code"});
     map.addLayer({id:"fill",type:"fill",source:"d",paint:{"fill-color":["coalesce",["feature-state","c"],DIM],
