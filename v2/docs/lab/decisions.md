@@ -2544,6 +2544,31 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   Besoin = habitants × profil de recours par âge (Open DAMIR) ; indice de couverture
   indexé à 2026 ; transferts de tâches L23, L25 et L27 comme déplacement d'une part du
   besoin ; effectifs inchangés. Test d'abandon de ~30 min avant de construire.
+  *Complété le 2026-11-15 (non construit, accord attendu) :* le plan du 2026-11-14 est **remplacé comme plan de
+  travail** par la [dérivation du besoin](derivations/2026-11-15-besoin-derivation.md) et le
+  [plan par axes](derivations/2026-11-15-besoin-plan.md). Il survit comme M1 + transferts, avec cinq corrections
+  (dérivation §9). Le plan du 2026-11-14 reste en place, marqué remplacé.
+- **Médecine générale comme profession source des transferts de tâches** (ouvert le 2026-11-15, dérivation du
+  besoin §7). Les transferts du pitch (vaccination, tension et diabète en officine, IPA, accès direct au kiné)
+  prennent surtout des actes à la MG, exclue du sujet.
+  - Options :
+    - **O1** hors modèle : seule la part IDE de L23 est calculable ;
+    - **O2** source seulement : `B_MG` par M1, aucune offre MG projetée, aucun indice de couverture MG affiché,
+      seulement les actes et les ETP de MG libérés ; coût ≈ 30 min ;
+    - **O3** O2 plus la projection DREES des médecins lue en contexte ;
+    - **O4** MG pleinement modélisée, contraire au sujet.
+  - Avis de la session besoin-derivation : **O2**. Le profil du laboratoire (`docs/lab/profile.md`, règles maison) le
+    permet déjà : « GPs may appear only as context, for example when demand shifts from GPs to pharmacists. They are
+    never a projected output. » Mais rien n'est acté pour le module.
+  - À trancher par l'utilisateur·rice. Bloque l'axe 1 du plan de besoin.
+- **Licence des tables dérivées de jeux ODbL** (ouvert le 2026-11-15, [exploration](explorations/2026-11-15-besoin-sources.md)).
+  Les jeux data.ameli.fr (pathologies, patientèle, honoraires) et une matrice de temps OpenStreetMap sont sous
+  **ODbL** : une base dérivée redistribuée doit rester sous ODbL. Or le dépôt public commite les données traitées
+  (décision du 2026-11-14).
+  - Options :
+    - commiter ces tables sous ODbL, avec mention, et un `NOTICE` ;
+    - ne commiter que le script de reconstruction.
+  - Prix ≈ 10 min de décision + 15 min de mise en œuvre. Lié à la question de la licence du code (EUPL 1.2 proposée).
 
 ### 2026-11-14 — Accueil de la carte V2 : point d'entrée territorial ou national ?
 Le challenge par les trois personas
@@ -4489,3 +4514,38 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - Avant la rédaction, les 4 branches de recherche du 2026-11-15 ont été fusionnées dans main (accord de
   l'utilisateur·rice) ; conflits d'ajout dans Home, `decisions.md` et `open.md` résolus en gardant les deux côtés ;
   `jumeau.check` 18/18 et `manifest.py --check` OK après fusion.
+
+## 2026-11-15 — Module de besoin : dérivation des ansätze M0–M4 et plan par axes (non construit, accord attendu)
+- **Décision** (proposée ; rien n'est construit avant l'accord de l'utilisateur·rice) : le besoin est représenté par
+  plusieurs estimateurs derrière une interface `NeedEstimator`. Aucun n'est présenté comme « le » besoin.
+  - **M0** (population) est la baseline.
+  - **M1** (recours standardisé) : forme tirée des poids d'âge APL/DCIR, niveau d'Open DAMIR.
+  - **M2** (recours non contraint) : tué si aucun plateau n'apparaît au test P-B2.
+  - **M3** (prévalence de la cartographie × actes par cas).
+  - **M4** (2SFCA aux paramètres DREES, composable avec les autres).
+  - Les transferts suivent `ΣB' − ΣB = s·a·B_A·(k−1) + m`.
+  - Les effectifs restent inchangés.
+- **Corrections du plan du 2026-11-14** (dérivation §9) :
+  - le test d'abandon porte sur l'indice C et sur le rang, pas sur B ;
+  - la circularité du recours est reconnue : l'indexation à 2026 n'efface que la part constante du biais ;
+  - Open DAMIR ne descend qu'à la région ;
+  - un terme d'expansion `m` est ajouté ;
+  - `s(t)` est une montée en charge mesurée, pas le levier.
+- **Validation** : six protocoles P-B1 à P-B6, à geler **avec un horodatage externe** (OpenTimestamps et RFC 3161)
+  avant tout calcul.
+  - Cible externe : l'APL DREES 2024 (IDE, MK, SF, CD).
+  - Backtest : recours 2016 → 2025 contre la persistance.
+  - Expérience naturelle : vaccination antigrippale en officine, six régions dès 2017.
+- **Pourquoi :**
+  - le besoin n'est pas observé, et le recours est censuré par l'offre ;
+  - sans une hypothèse testable (saturation, exclusion, ou norme externe), le niveau du besoin n'est pas identifié ;
+  - chaque ansatz porte donc sa restriction et son test d'abandon.
+- **Données vérifiées le 2026-11-15** ([exploration](explorations/2026-11-15-besoin-sources.md)) :
+  - aucun jeu ouvert d'actes par profession au département ;
+  - un seul transfert mesurable, la vaccination en officine.
+- **Ce qui le renverserait :**
+  - P-B1 et P-B3 abandonnent l'âge et la morbidité pour toutes les professions : le module se réduit alors à M0 et aux
+    transferts ;
+  - l'utilisateur·rice refuse le plan ;
+  - O1 est retenue pour la médecine générale : il ne reste plus qu'un seul transfert partiel.
+

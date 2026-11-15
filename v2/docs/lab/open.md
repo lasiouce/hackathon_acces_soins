@@ -193,3 +193,17 @@ restent valables : on les reprend ici au moment où on les traite.
 | Axe 2 : plancher de bruit sur flux bruts (instantanés Annuaire Santé appariés) ; au-dessus de 50 % de la MAPE, le verdict devient « bruit dominant » | ~1 h 30 Claude + téléchargement | budget d'erreur C1/A2 | 2026-11-15 | open |
 | Axe 2 : persistance de l'écart local sur plus de paires d'origines (décalage de 4 ans), kinés compris | ~10 min | budget d'erreur C1/A2 | 2026-11-15 | open |
 | Axe 2 : relancer les bancs N1 et N6 sur la table privée actuelle (sages-femmes modifiées depuis : A2 8,60 au lieu de 8,57, C1 7,76 au lieu de 7,73) | ~10 min machine | budget d'erreur C1/A2 | 2026-11-15 | open |
+| Besoin : décision de périmètre sur la médecine générale comme source (O1–O4, avis O2) ; bloque l'axe 1 du plan de besoin | ~10 min humain ; décision | dérivation du besoin | 2026-11-15 | open |
+| Besoin : licence des tables dérivées de jeux ODbL (data.ameli.fr, OSM) dans un dépôt public qui commite ses données traitées | ~10 min décision + 15 min | exploration besoin | 2026-11-15 | open |
+| Besoin P-B1 : indice C₁/C₀ en 2050 par département et rang (Spearman), 5 professions ; abandon de l'âge si < 2 % dans > 90 % des dép. et ρ ≥ 0,98 | ~30 min Claude, après gel | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B2 : saturation du recours standardisé (patientèle) contre la densité, placebo autre profession ; M2 tué sans plateau | ~1 h Claude | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B3 : M3 (pathologies × actes) contre M1 sur l'indice, triangulation du niveau M3/M2 | ~1 h Claude après ingestion | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B4 : reproduire l'APL DREES 2024 (IDE, MK, SF, CD) par M4 ; Spearman ≥ 0,90, erreur médiane ≤ 15 %, +0,05 sur deux naïfs | ~2 h Claude + distancier (machine non mesurée) | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B5 : backtest du recours 2016 → 2025 par la structure d'âge contre la persistance (patientèle, MAPE dép.) | ~45 min Claude | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~70 Go DAMIR (machine) | dérivation du besoin | 2026-11-15 | open |
+| Besoin : lire le descriptif de la patientèle (département d'exercice ou de résidence ?) | ~5 min | exploration besoin | 2026-11-15 | open |
+| Besoin : ouvrir l'archive APL V0 2010/2013 (pharmaciens ?) | ~15 min | exploration besoin | 2026-11-15 | open |
+| Besoin : sourcer la liste et les dates des régions de l'expérimentation de 2017 (arrêtés) | ~15 min | exploration besoin | 2026-11-15 | open |
+| Besoin : pilote OSRM `table` sur 35 000 communes à 30 min (temps machine) | ~30 min Claude + machine inconnue | exploration besoin | 2026-11-15 | open |
+| Besoin : comparer M1 au besoin pondéré par âge de l'observatoire de l'équipe (Hackathon-Evolution-soin) | ~20 min | dérivation du besoin | 2026-11-15 | open |
+| Besoin : durée d'une vaccination en officine (pour `k`), aucune source officielle trouvée | ~20 min, peut-être non mesurable | exploration besoin | 2026-11-15 | open |

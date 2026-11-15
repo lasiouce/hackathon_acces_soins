@@ -7,3 +7,6 @@
 | 2026-11-14 | [Projection communale calibrée](2026-11-14-axe2-communes.md) | K promue puis rejetée au banc N4 ; K2 (repli) rejetée ; K3 proposée |
 | 2026-11-14 | [Agent qui interprète les sorties du jumeau](2026-11-14-agent-interprete.md) | construit ; mesure en attente de clé |
 | 2026-11-14 | [Assistant : objectif → leviers, politique hors modèle → mélange](2026-11-14-assistant-objectifs.md) | plan, en attente d'accord |
+| 2026-11-14 | [Module de besoin (plan initial)](2026-11-14-module-besoin.md) | remplacé le 2026-11-15 |
+| 2026-11-15 | [Besoin de soins : censure, M0–M4, transferts](2026-11-15-besoin-derivation.md) | M0 baseline, M1/M3/M4 promus, M2 sous condition (P-B2) ; non construit |
+| 2026-11-15 | [Besoin de soins : plan par axes](2026-11-15-besoin-plan.md) | plan, accord attendu |

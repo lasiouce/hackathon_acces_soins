@@ -27,7 +27,7 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | Validation (axe 3) | ✅ protocoles N1–N12 gelés ; dépôts à noter sur les effectifs 2027 |
 | Données (axe 4) | ✅ public / privé séparé : « libéral » = privé 2026, SF 12 059 – 14 660, PH 60 005 – 67 219, CD 40 784 – 47 894, MK 98 828 – 103 986, IDE 2023 277 788 ; zonage par commune ; grain communal |
 | Sensibilité (axe 5) | ✅ amplitude de référence DD76 : en 2050 la décision pèse plus que l'incertitude pour IDE (0,89), MK (0,81), SF (0,59) |
-| Next | recette personas sur la carte finale · module de besoin ([plan](v2/docs/lab/derivations/2026-11-14-module-besoin.md)) · phase 2 spécialistes |
+| Next | recette personas sur la carte finale · module de besoin ([dérivation et plan du 2026-11-15](v2/docs/lab/derivations/2026-11-15-besoin-plan.md), accord attendu ; décision MG en Open) · phase 2 spécialistes |
 
 ## Present
 - [One-page TL;DR (PDF), 2026-11-13](v2/docs/lab/archive-v1/presentations/2026-11-13-tldr.pdf). (v1, archivé)
@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Besoin de soins : dérivation](v2/docs/lab/derivations/2026-11-15-besoin-derivation.md), [plan](v2/docs/lab/derivations/2026-11-15-besoin-plan.md), [données](v2/docs/lab/explorations/2026-11-15-besoin-sources.md) | Plan, non construit : besoin non identifié par le recours sans hypothèse ; 5 ansätze (M0–M4) avec tests d'abandon P-B1–P-B6 ; aucun jeu ouvert d'actes par profession au département (DAMIR : 13 zones) ; 1 transfert mesurable sur 4 (vaccination en officine) ; ~6 h 20 de Claude corrigé | session besoin-derivation |
 | 2026-11-15 | [Rapport technique pour la reprise](v2/papers/rapport-technique/main.pdf) | 90 p. : C1 7,76 % (persistance 9,94 %) au département h=5 ; 3,11 pts de bruit incompressible ; intervalles, GBM, MLP rejetés ; aucun chiffre 2050 citable ; 6/12 gels non prouvables par git ; ~150 incohérences entre fichiers tranchées en annexe | équipe |
 | 2026-11-15 | [Relecture des sources de l'axe 1](v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md) | 29 paramètres, 355 affirmations : 20 confirmés, 8 corrigés (fiches), 1 introuvable ; 0 valeur du code changée, jumeau.check 18/18 ; âge d'entrée des étrangers : CD −1,3 % de N(2050) à ×2 si 32 ans | lecteurs Haiku + vérificateurs Sonnet |
 | 2026-11-15 | [C1-GBM : apprentissage automatique global contre A2](v2/docs/lab/reports/2026-11-15-c1-gbm-global.md) | Rejeté : GBM global 10,15 % de MAPE dép. h=5 contre 8,60 % pour A2 (Δ +1,55 pt, IC 95 % [+0,62 ; +2,75]) et 7,73 % pour C1, le modèle servi (Δ +2,42, [+1,49 ; +3,70]) ; MLP 20,52 % ; aucune profession gagnée | session c1-gbm |
