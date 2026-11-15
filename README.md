@@ -271,6 +271,7 @@ Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier d
 
 ```bash
 PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
+PYTHONPATH=v2 uv run python -m besoin.tests                 # module de besoin, axe 0 : 7 critères d'identité
 PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
 PYTHONPATH=v2 uv run --with scipy python -W ignore -m methodes.budget_erreur   # axe 2 : budget d'erreur
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
@@ -298,9 +299,11 @@ et la question ouverte sur le seuil de diffusion.
   salariés hospitaliers. La sortie 2026 est donc une fourchette (sages-femmes : 12 059 à 14 660).
 - **Pas de projection fiable sous le département.** Les modèles communaux testés (K3 à K5) n'ont pas
   passé la validation pré-enregistrée ; la carte affiche les projections au département.
-- **Pas de module de besoin.** Les transferts de tâches (vaccination en officine, IPA, accès direct au
-  kiné) n'ont aucun effet dans le jumeau ; ils sont signalés « pas encore dans le modèle ». Un plan
-  existe : `v2/docs/lab/derivations/2026-11-14-module-besoin.md`.
+- **Module de besoin : squelette seulement.** `v2/besoin/` (axe 0, 2026-11-15) lit la trajectoire du
+  jumeau et produit un besoin M0 (proportionnel à la population), un indice de couverture indexé à 2026
+  et l'opérateur de transferts de tâches. Les paramètres sont des placeholders « supposé », et rien
+  n'est branché dans la carte. Aucun indice de couverture n'est produit pour la médecine générale.
+  Plan : `v2/docs/lab/derivations/2026-11-15-besoin-plan.md`.
 - Les effectifs sont comptés en têtes. L'activité par professionnel (équivalents temps plein) n'est
   qu'une hypothèse supposée, sans série ouverte vérifiée.
 - Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les

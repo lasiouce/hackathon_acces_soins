@@ -2448,6 +2448,10 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Brancher le module de besoin dans la carte** (ouvert le 2026-11-15, axe 0 du besoin). `besoin.sortie.besoin_api`
+  rend `besoin`, `couverture` et `couverture_base` en 0,72 ms au 95ᵉ centile au département (mesuré). Rien n'est
+  branché dans `/api/carte` sans accord. Tant que l'axe 1 n'a pas remplacé les placeholders, un effet de transfert
+  affiché serait « supposé » de bout en bout. Options : attendre l'axe 1 (avis) ; brancher C de M0 seul, sans transfert.
 - **Âge d'entrée des diplômés à l'étranger par profession** (ouvert le 2026-11-15, relecture des sources de l'axe 1).
   Aujourd'hui `etrangers.age_entree` est unique, à 28 ans. Les sources donnent : MK 26 ans (ER 1075) ; PH 31 ans (DD76,
   tab. 13) ; CD 28 ans (DD76) ou 32 ans (ER 1026), qui se contredisent.
@@ -4615,3 +4619,27 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** les organisateurs jugent que même le besoin de MG en contexte sort du sujet. On passe
   alors à O1, en retirant `B_MG`.
 
+
+## 2026-11-15 — Module de besoin, axe 0 : le besoin est lu sur la trajectoire, pas rendu comme flux ; indexation sur la base
+- **Décision** (session besoin-axe0-interface, dans le cadre du plan accepté) :
+  - **Lecteur, pas module de flux.** `v2/besoin/` lit les états d'une trajectoire du jumeau après le run. Il ne
+    s'insère pas dans la composition du moteur, qui applique à N tout flux rendu. `v2/jumeau/` n'est pas modifié.
+  - **Interface** `besoin.interface.NeedEstimator` : `fit(pop, etat, ref)`, `predict(pop, etat, years) → Cube`
+    `B[p, T, t]` en ETP-équivalents, `norme`, `assumptions`, `params` (des `jumeau.module.Param`, donc avec statut).
+    Un estimateur par fichier dans `v2/besoin/estimateurs/`, décoré par `@register`, servi par son nom.
+  - **Indice de couverture** : `C = [S/B](t) / [S₀/B₀](2026)`, où `(S₀, B₀)` est la base, sans transfert. Un
+    transfert actif dès 2026 se lit donc contre la même référence. C au-dessus du département = rapport des sommes,
+    jamais une moyenne de C.
+  - **Expansion** : `m = μ · s·a·B_A·k`, en temps de la cible, μ = 0 par défaut (supposé).
+  - **O2 appliqué en code** : `SANS_COUVERTURE = {médecine générale, spécialistes}`. L'offre, la couverture et
+    l'agrégat les refusent, et un transfert ne peut pas les prendre pour cible. La sortie d'API ne rapporte pour eux
+    que les « ETP libérés ».
+  - **Norme de M0** : r̄ des professions de sortie = offre nationale / population nationale en 2026 (supposé). Il
+    s'annule dans C. r̄ de la MG et des spécialistes : 0,9 × 10⁻³ ETP/hab, placeholder (supposé, axe 1).
+- **Pourquoi :** le besoin n'est pas un flux sur N ; un lecteur rend « n'écrit jamais dans les effectifs » vrai par
+  construction. Indexer sur la base garde une référence unique entre scénarios.
+- **Mesures** ([rapport](reports/2026-11-15-besoin-axe0-interface.md)) : 7/7 critères ; 0,72 ms au 95ᵉ centile.
+- **Correction :** la première version mesurait 10,5 ms au 95ᵉ centile (critère 5 échoué) : tri de chaînes à chaque
+  année. Codes entiers mis en cache par table de cellules : 0,72 ms.
+- **Ce qui le renverserait :** un estimateur qui doit rétroagir sur l'offre (hors périmètre, N9) ; un besoin
+  qu'il faudrait connaître pendant le run (par exemple une installation guidée par C), qui demanderait un flux.
