@@ -5149,3 +5149,22 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Ce qui le renverserait :** une décision retirant M0 des estimateurs survivants (P-B1 a retenu l'âge) ; un test
   de séparabilité de l'offre qui change R de plus de 0,1.
 
+
+## 2026-11-15 — Besoin → carte : vue « Couverture », L23 de bout en bout, M4 en attente (P-B4)
+- **Décision** (session besoin-carte, [rapport](reports/2026-11-15-besoin-carte.md), suit le
+  [plan](derivations/2026-11-15-besoin-carte-plan.md)) :
+  - `GET /api/couverture` sert C indexé 2026 (tendanciel `cb`, scénario `cs`, `ecart` = cs/cb − 1, fourchette
+    `min`/`max` entre estimateurs survivants) par département, région (rapport des sommes) et France.
+  - Estimateurs servis : IDE M1, M2a, M3 ; MK, CD, SF M1, M2a ; PH M1 seul. Central M1. M4 : emplacement désactivé,
+    « en attente de validation (P-B4) ».
+  - **Couleur de la vue = C scénario − 1** ; l'écart au tendanciel (relatif) va dans l'infobulle, la fiche, l'export.
+    Écart au plan : la carte colorée par l'écart seul serait uniforme sans levier.
+  - **L23** (`l23=1`, t₀ = 2026) : `s_∞` 0,74 et `τ` 2,4 **mesurés** (P-B6) reportés dans `L23_PARAMS` ; `a` 0,01,
+    `k` 1, `μ` 0 **supposés** ; mode expert a ∈ [0 ; 0,05], k ∈ [0,25 ; 1]. N'agit qu'avec M1 (M2a et M3 sans MG).
+  - « Actes de MG libérés » = s(t) × 2,6 M injections en consultation (Cour des comptes 2018) : dérivé.
+  - Seuil de la fourchette de modèle : 5 % en 2050 (supposé, repris du plan).
+  - Besoin mis en cache au démarrage (ne dépend pas des leviers d'offre) ; scénario de population central seulement.
+- **Pourquoi :** K1–K6 verts (p95 28,8 ms, n = 60 ; L23 = 0 ⇒ écart 0 ; MG et spécialistes → 400).
+- **Ce qui le renverserait :** une mesure de `a` en temps de MG (axe 4) ; M4 validé par P-B4 ; une préférence de
+  l'utilisateur·rice pour une carte colorée par l'écart au tendanciel.
+- **Non fait :** étape 5 du plan côté `v2/langage/` et `chatbot/` (autre session).
