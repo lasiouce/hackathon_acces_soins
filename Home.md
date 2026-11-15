@@ -52,6 +52,8 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Licences : sources, ODbL, code (brouillon)](v2/docs/lab/reports/2026-11-15-licences-brouillon.md) | 14 tables LO 2.0, 5 ODbL non commitées ; recommandé : ODbL commitée + NOTICE, code EUPL 1.2 ; non décidé | session besoin-axe0-interface |
+| 2026-11-15 | [Besoin → carte : plan de branchement](v2/docs/lab/derivations/2026-11-15-besoin-carte-plan.md) | vue couverture + L23 bout en bout, ~75 min Claude, p95 < 150 ms ; accord attendu | session besoin-axe0-interface |
 | 2026-11-15 | [Besoin : cible externe de M4 pharmaciens](v2/docs/lab/explorations/2026-11-15-besoin-cible-pharmaciens.md) | APL DREES V0 aux pharmacies (commune, 2010 et 2013, Licence Ouverte) retenue ; IRDES QES 308 sans APL pharmacies ; protocole P-B4-PH rédigé, non gelé | session besoin-cible-pharmaciens |
 | 2026-11-15 | [Besoin P-B6 : vaccination en officine](v2/docs/lab/reports/2026-11-15-besoin-p-b6-grippe-officine.md) | m = 0 retenu, ATT +0,73 % [−0,12 ; +1,58], p permutation 0,15 ; placebo 0–19 ans en échec → non attribuable, m reste supposé ; s(t) national s∞ 0,74, τ 2,4 ans | session besoin-derivation |
 | 2026-11-15 | [Ledger : lignes périmées](v2/docs/lab/reports/2026-11-15-ledger-perime.md) | 167 lignes « open » hors besoin : 43 faites, 6 dépassées, 7 incertaines, 111 ouvertes, 5 doublons ; le rapport technique reprend au moins 12 lignes faites ; corrections appliquées le 2026-11-15 | 3 lecteurs + session besoin-derivation |

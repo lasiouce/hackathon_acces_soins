@@ -2466,6 +2466,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   change pas.
   Options : garder 28 ans ; passer à un dictionnaire par profession, ce qui demande de réécrire C17. Prix ≈ 30 min.
 - **Conformité : seuil de diffusion des tables communales publiées, habillage DSFR, licence du code** (ouvert le 2026-11-15, [audit RGPD/AIPD/2017-745](reports/2026-11-15-audit-rgpd-aipd-dm.md)). Constat mesuré : 52,5 % des cellules commune × âge de `commune_stock.parquet`, sur le dépôt public, valent 1 personne (âge d'un professionnel nommable via l'Annuaire Santé). Verdicts dérivés, non juridiques : pas un dispositif médical (2017/745, aucune finalité médicale individuelle) ; AIPD probablement non obligatoire (1 à 2 critères G29), note de non-applicabilité recommandée si un seuil de diffusion est appliqué. Options pour le seuil : masquer ou regrouper les cellules < 5 (≈ 30 min) ; retirer les tables communales du dépôt public et les reconstruire localement (≈ 20 min, mais le clone neuf ne les a plus). ~~DSFR : porteur public réel, ou habillage neutre hors .gouv.fr.~~ **Levé le 2026-11-15** : le projet est porté par le Ministère chargé de la santé (information de l'utilisateur·rice) ; le DSFR est gardé, structure porteuse à nommer. Licence : EUPL 1.2 proposée. À trancher par l'équipe.
+  - *Recommandation ajoutée le 2026-11-15 (session besoin-axe0-interface, [brouillon](reports/2026-11-15-licences-brouillon.md)), entrée non fermée :* licence du code **EUPL 1.2** (projet porté par le Ministère, copyleft réseau, texte officiel en français) ; MIT si l'équipe veut la réutilisation sans condition ; Apache 2.0 sans apport ici. Brouillon `LICENSE.draft` non activé. La licence du code ne couvre pas les données (LO 2.0 et ODbL suivent leurs fichiers).
 - **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
   en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
   de 100 %. Prix : renommage ≈ 10 min ; premières entrées ≈ 2 h.
@@ -2580,6 +2581,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
     - commiter ces tables sous ODbL, avec mention, et un `NOTICE` ;
     - ne commiter que le script de reconstruction.
   - Prix ≈ 10 min de décision + 15 min de mise en œuvre. Lié à la question de la licence du code (EUPL 1.2 proposée).
+  - *Recommandation ajoutée le 2026-11-15 (session besoin-axe0-interface, [brouillon](reports/2026-11-15-licences-brouillon.md)), entrée non fermée :* **commiter sous ODbL** dans `v2/data/odbl/` séparé, avec son `LICENSE` ODbL et un `NOTICE` racine (brouillon `NOTICE.draft`), si la taille mesurée tient sous 100 Mo par fichier. Raisons : décision du 2026-11-14 de commiter les données traitées, reproductibilité du backtest. Carte, fiches et réponses ponctuelles = œuvres produites (mention seule). À trancher par l'utilisateur·rice.
 
 ### 2026-11-14 — Accueil de la carte V2 : point d'entrée territorial ou national ?
 Le challenge par les trois personas

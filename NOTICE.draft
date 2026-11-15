@@ -1,0 +1,36 @@
+BROUILLON NON ACTIVÉ (2026-11-15) — voir v2/docs/lab/reports/2026-11-15-licences-brouillon.md
+Les mentions « à confirmer » doivent être vérifiées sur la page de chaque jeu avant de renommer ce fichier en NOTICE.
+
+hackathon_acces_soins — projection des effectifs libéraux de santé
+Copyright (c) 2026 les contributeurs et contributrices du projet
+
+CODE
+  Le code source est distribué sous la licence choisie dans LICENSE (EUPL 1.2 proposée, non décidée).
+  Cette licence ne s'applique pas aux données ci-dessous, qui gardent leur propre licence.
+
+DONNÉES SOUS LICENCE OUVERTE 2.0 (Etalab) — paternité requise
+  v2/data/processed/ et v2/data/processed/besoin/ contiennent des données dérivées de :
+  - DREES : démographie des professionnels de santé (RPPS), APL (jeu 530) [APL : lue ; RPPS : à confirmer]
+  - Insee : projections Omphale 2022, recensement, grille communale de densité [à confirmer]
+  - Assurance maladie : Open DAMIR, Open Medic [lue]
+  - IQVIA France via data.gouv.fr : vaccination contre la grippe [lue]
+  - Agence du numérique en santé : Annuaire Santé [à confirmer]
+  - Ministère chargé de la santé : FINESS [à confirmer]
+  - geo.api.gouv.fr / IGN : centres et contours des communes [lue pour les centres]
+  - CartoSanté / Atlasanté (CNAM – ARS) : effectifs communaux, zonage [licence NON LUE, à vérifier]
+  Date de dernière mise à jour de chaque source : voir v2/data/processed/MANIFEST.md et v2/besoin/donnees/MANIFEST.md.
+
+DONNÉES SOUS ODbL 1.0 — attribution, partage à l'identique, ouverture
+  v2/data/odbl/ (si les tables y sont commitées) contient des bases dérivées de :
+  - CNAM, data.ameli.fr : démographie, patientèle, honoraires détaillés, pathologies (effectifs, dépenses)
+    © Caisse nationale de l'Assurance Maladie, ODbL 1.0
+  - OpenStreetMap (matrice de temps de trajet OSRM, à venir)
+    © les contributeurs d'OpenStreetMap, ODbL 1.0, https://www.openstreetmap.org/copyright
+  Ces fichiers sont mis à disposition sous ODbL 1.0 : https://opendatacommons.org/licenses/odbl/1-0/
+  Les cartes, figures, fiches et réponses ponctuelles de l'application sont des « œuvres produites » au sens de
+  l'ODbL : « Contient des données de data.ameli.fr (CNAM) et © OpenStreetMap, sous ODbL ».
+
+TIERS
+  v2/prototype-carte/dsfr/ : Système de design de l'État, code sous licence MIT, éléments graphiques sous
+  Licence Ouverte 2.0 ; marque de l'État réservée aux sites de l'État.
+  OSRM (logiciel) : licence BSD-2 [à confirmer].

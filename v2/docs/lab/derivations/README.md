@@ -10,3 +10,4 @@
 | 2026-11-14 | [Module de besoin (plan initial)](2026-11-14-module-besoin.md) | remplacé le 2026-11-15 |
 | 2026-11-15 | [Besoin de soins : censure, M0–M4, transferts](2026-11-15-besoin-derivation.md) | M0 baseline, M1/M3/M4 promus, M2 sous condition (P-B2) ; non construit |
 | 2026-11-15 | [Besoin de soins : plan par axes](2026-11-15-besoin-plan.md) | plan, accord attendu |
+| 2026-11-15 | [Besoin → carte : vue couverture, L23 de bout en bout](2026-11-15-besoin-carte-plan.md) | plan, accord attendu ; ~75 min Claude ; p95 < 150 ms, n ≥ 30 |
