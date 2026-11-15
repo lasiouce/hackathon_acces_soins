@@ -4829,3 +4829,21 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - un placebo refait avec le vrai dénominateur 0–19 ans, qui passerait ;
   - un `s(t)` régional tiré de DAMIR 2015–2020.
 
+
+## 2026-11-15 — Module de besoin : formulations de nouveauté retenues (aucun « premier »)
+- **Décision** ([recherche journalisée](explorations/2026-11-15-besoin-nouveaute.md), 14 requêtes, profondeur « scan+ ») :
+  - n° 1 (APL/E2SFCA projetée à 2050, démographie et effectifs en mouvement) : « nous n'avons pas trouvé, dans une
+    recherche de profondeur limitée, de travail combinant… » ; plus proche voisin Bruns et coll. 2026 (IZA DP 18801).
+  - n° 2 (reproduction de l'APL en données ouvertes) : décrite comme une évaluation, sans revendication d'antériorité.
+  - n° 3 (opérateur de transfert) : « extension formelle de MacKenzie et coll. 2019 » ; `m` supposé nul (P-B6).
+  - M2b (plateau de saturation) : revendication abandonnée, M2b étant tué par P-B2.
+- **Pourquoi :** Scholar et Scopus non interrogés directement ; une recherche « scan » ne peut pas établir une nouveauté.
+- **Ce qui le renverserait :** un 2SFCA dans le PDF de Bruns 2026 ou dans Doi 2017 ; une passe « standard » sur
+  Scholar et Scopus qui ne trouve toujours rien (permettrait « à notre connaissance »).
+
+## 2026-11-15 — Module de besoin, nouveauté : formulations confirmées après lecture de Bruns 2026 et Doi 2017
+- **Décision :** les formulations de l'entrée précédente sont maintenues sans changement
+  ([addendum](explorations/2026-11-15-besoin-nouveaute.md#addendum-même-jour--textes-lus-et-deuxième-passe-apis-ouvertes)).
+- **Pourquoi :** Bruns 2026 (PDF lu) n'utilise ni 2SFCA ni distance ; Doi 2017 projette la demande contre des lits fixes.
+  25 requêtes au total (Europe PMC, HAL en plus) sans antécédent trouvé.
+- **Ce qui le renverserait :** une passe Scholar et Scopus (CAPTCHA ici, accès institutionnel requis).
