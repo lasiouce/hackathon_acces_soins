@@ -219,3 +219,6 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : vérifier les jetons RFC 3161 du gel contre les certificats de FreeTSA et de DigiCert (`openssl ts -verify`) | ~10 min | axe 3 besoin | 2026-11-15 | open |
 | Besoin : geler le seuil de lecture de l'axe 5 (« ratio < 1 ⇒ non distinguable ») avec un jeton, oublié du lot P-B1–P-B6 | ~15 min | axe 3 besoin | 2026-11-15 | open |
 | Besoin P-B6 : avant le passage, lire le descriptif d'Open Medic (région du bénéficiaire, tranches d'âge, 2014 présent ?) et fixer le code DAMIR de l'injection en officine sur la nomenclature seule | ~20 min | protocole P-B6 | 2026-11-15 | open |
+| Besoin : `ots upgrade` du jeton OpenTimestamps du gel P-B1–P-B6 | — | axe 3 besoin | 2026-11-15 | fait 2026-11-15 04:18 : bloc Bitcoin 975880 (`ots info`), vérification contre un nœud non faite |
+| Besoin : `ots upgrade` du jeton OpenTimestamps de l'amendement A1, puis commit | ~2 min Claude, quelques heures de monde | amendement A1 | 2026-11-15 | open |
+| Besoin : vérifier les jetons OpenTimestamps contre un nœud ou un explorateur Bitcoin (bloc 975880) | ~10 min | axe 3 besoin | 2026-11-15 | open |
