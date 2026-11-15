@@ -513,6 +513,8 @@ def _scenario_carte(appels: list) -> dict | None:
     cands = []
     for i, a in enumerate(appels):
         e = a.get("entree") or {}
+        if (e.get("transfert") and a.get("outil") == "couverture"):
+            continue       # transfert hypothétique : la carte n'a pas ce levier, elle afficherait une autre couverture
         if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique", "couverture") or not a.get("code_territoire"):
             continue
         lv = dict(e.get("leviers") or {})
