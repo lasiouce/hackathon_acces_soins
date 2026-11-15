@@ -301,6 +301,10 @@ et la question ouverte sur le seuil de diffusion.
 - **Pas de module de besoin.** Les transferts de tâches (vaccination en officine, IPA, accès direct au
   kiné) n'ont aucun effet dans le jumeau ; ils sont signalés « pas encore dans le modèle ». Un plan
   existe : `v2/docs/lab/derivations/2026-11-14-module-besoin.md`.
+- Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
+  data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
+  `v2/besoin/donnees/MANIFEST.md`. Les tables issues de data.ameli.fr (ODbL) ne sont pas versionnées : les
+  reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
 - Les effectifs sont comptés en têtes. L'activité par professionnel (équivalents temps plein) n'est
   qu'une hypothèse supposée, sans série ouverte vérifiée.
 - Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les

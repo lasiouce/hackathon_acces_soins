@@ -4646,3 +4646,14 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** un total inter-régimes publié par profession (DREES, comptes de la santé, ou rapport
   charges et produits) au même périmètre ; la décision de licence (tables ODbL commitées sous ODbL) ; l'accord pour
   OSRM (le distancier de repli devient une référence naïve).
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR à 1 flux, 4 flux refusés par le serveur ; filtre en Arrow
+- **Décision :** la demande de l'utilisateur·rice (« Oui, 4 en parallèle », relayée par la session parente) a été
+  essayée puis **abandonnée**. On revient à 1 flux. Le filtre passe de pandas à Arrow, multi-cœur, pour attaquer le
+  vrai goulot (Python mono-cœur, ~93 % d'un cœur, curl à ~4 %). Un refus déclenche une nouvelle tentative toutes
+  les 60 s, jusqu'à 12 par mois.
+- **Pourquoi :** avec 4 flux, le serveur `open-data-assurance-maladie.ameli.fr` sert une page HTML (« Limite de
+  téléchargements atteinte ou délai de connexion dépassé ») au lieu du fichier. Ensuite, même 1 flux est refusé
+  pendant plus de 6 min (observé à 03:53–04:01). Le filtre Arrow est identique au filtre pandas sur un test de
+  synthèse (200 000 lignes, écart max 7·10⁻¹⁵).
+- **Ce qui le renverserait :** une limite documentée qui permette 2 flux, ou un jeton par session (cookie).
