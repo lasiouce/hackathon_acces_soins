@@ -132,8 +132,17 @@ par contrôle).
 - **Le distancier :** détour 1,3 et 60 km/h sont **supposés**. Le centre geo.api n'est ni la mairie ni le
   barycentre de population. P-B4 comparera M4 à l'APL, qui utilise des temps routiers.
 - **IQVIA** est extrapolé d'un panel (60 à 90 % des officines), pas un recensement.
-- **Profils DAMIR sur 9 mois seulement** (janvier–septembre 2025) : la saisonnalité, surtout la vaccination
-  d'octobre à décembre, n'est pas couverte.
+- **Profils DAMIR sur 9 mois seulement** (janvier–septembre 2025) : octobre–décembre manque. **Biais mesuré,
+  jugé acceptable :**
+  - la distance en variation totale entre les répartitions par âge de la dépense en hiver (mois de flux 1–3) et en
+    été (6–8) vaut 0,6 % pour IDE, 0,8 % pour MK, 0,9 % pour CD, 1,1 % pour SF et 1,3 % pour PH, et 3,2 % pour MG
+    (source seulement) ;
+  - le trimestre manquant est intermédiaire, donc l'erreur du profil sur 9 mois est de quelques dixièmes de point
+    (dérivé) ;
+  - la vaccination ne pèse que 0,14 % de la dépense PH (mesuré) ;
+  - la forme du profil de SF, CD, MK et IDE vient des poids APL, calculés sur l'année entière.
+  Une tentative de lecture d'octobre à décembre par partage de connexion mobile (2026-11-15, 04:13) a été
+  abandonnée : environ 75 Ko/s, soit ~10 h pour 3 mois.
 
 ## → What it changes
 - **Axe 2 (M1–M4) :** les entrées sont prêtes. DAMIR couvre 9 mois de 2025 (`damir_profils`, `damir_vaccination`).
