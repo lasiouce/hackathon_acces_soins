@@ -4,7 +4,7 @@
 
 Un projet de recherche quantitative. On simule des **politiques publiques nationales** et on mesure
 leur effet sur le nombre de professionnels de santé **libéraux** (hors médecine générale) jusqu'en
-**2050**, à toutes les échelles, de la commune au national. Chaque politique est un réglage
+**2050**, du département au national (pas de grain communal affiché, décision du 2026-11-15). Chaque politique est un réglage
 d'hyperparamètres **sourcés** : places en formation, âge de départ, diplômés à l'étranger, régulation
 de l'installation, etc. Chaque résultat est **reproductible, falsifiable et interprétable**, sans
 boîte noire.
@@ -181,6 +181,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
 | Besoin → carte | Vue « Couverture » (indice C, référence 2026 = 1, fourchette M1/M2a/M3), levier L23 « vaccination en officine » de bout en bout ; M4 non servi (P-B4 échoue, OSRM compris) | ✅ 6 critères sur 6 ; `/api/couverture` 28,8 ms au 95ᵉ centile (n = 60) |
+| Transferts hypothétiques | L'assistant simule « X prennent p % de <acte> de Y » (forme de L23, `tr_*` sur `/api/couverture`), balayé sur a (mode IA et sans IA), étiqueté « hypothèse de l'utilisateur », bandeau dans la carte ; niveau MG et spécialistes mesuré (ameli 2025) ; O2 refuse la MG et les spécialistes en cible seulement | ✅ 7 critères sur 7 ([rapport](v2/docs/lab/reports/2026-11-15-transfert-hypothetique.md)) |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,

@@ -35,7 +35,10 @@ FEMMES = {"sages-femmes"}
 DAMIR_PROFS = ("infirmiers", "kines", "dentistes", "sages-femmes", "pharmaciens", "medecine-generale")
 
 
-R_BAR_SOURCE = 0.9e-3      # ETP par habitant standardisé, MG : placeholder de M0 (supposé), niveau DAMIR à venir
+R_BAR_SOURCE = 0.9e-3      # ETP par habitant standardisé : repli si le niveau mesuré manque (supposé)
+# Niveau de la demande des sources, calé à l'année de référence sur l'effectif libéral mesuré (1 professionnel = 1 temps
+# plein, comme les cibles) : ameli, « Démographie des professionnels de santé », France, 1er janvier 2025 (décision P1-4).
+NIVEAU_SOURCE = {"medecine-generale": 56005}
 
 
 @lru_cache(maxsize=1)
@@ -106,8 +109,9 @@ class M1(NeedEstimator):
               "2025 (9 mois)", "mesuré", "pharmaciens et MG ; 80+ plat ; biais saisonnier ≤ 1,3 % (axe 4)"),
         Param("r_bar", None, "ETP par habitant standardisé",
               "offre nationale / population standardisée nationale à l'année de référence, ajusté par fit() ; "
-              "niveau Open DAMIR en attente (axe 4)", "Omphale 2022 ; état du jumeau", "supposé",
-              "s'annule dans C"),
+              "MG (source) : effectif libéral ameli au 1er janvier 2025 (56 005) / population standardisée",
+              "Omphale 2022 ; état du jumeau ; ameli 2025", "supposé",
+              "s'annule dans C des cibles ; MG : niveau mesuré (ameli), fixe son poids dans un transfert"),
     )
 
     def __init__(self, omega: dict | None = None, profil: str = "apl"):
@@ -132,7 +136,8 @@ class M1(NeedEstimator):
     def fit(self, pop: Population, etat: dict | None = None, ref: int = 2026) -> "M1":
         super().fit(pop, etat, ref)
         profs, Pstd = self.standard(pop, [ref])
-        self.r_bar = {p: R_BAR_SOURCE for p in profs}
+        self.r_bar = {p: (NIVEAU_SOURCE[p] / Pstd[i].sum() if p in NIVEAU_SOURCE else R_BAR_SOURCE)
+                      for i, p in enumerate(profs)}
         if etat is not None and ref in etat:
             from besoin.couverture import offre
             S = offre({ref: etat[ref]})

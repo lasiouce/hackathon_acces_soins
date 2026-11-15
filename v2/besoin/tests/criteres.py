@@ -149,7 +149,8 @@ def b4_conservation():
         out = np.zeros(len(years))
         for tr in trs:                                    # sources disjointes des cibles : B_A = B avant transfert
             BA = B.values[B.p(tr.source)].sum(axis=0)
-            sa = tr.s_inf * (1 - np.exp(-np.maximum(np.array(years) - tr.t0, 0) / tr.tau)) * (np.array(years) >= tr.t0) * tr.a
+            raw = tr.s_inf * (1 - np.exp(-np.maximum(np.array(years) - tr.t0, 0) / tr.tau)) * (np.array(years) >= tr.t0)
+            sa = np.maximum(raw - tr.s_deja, 0) * tr.a           # L23 : seule la part au-delà de s(2026) agit (P1-4)
             k = tr.k + k_bias
             out += sa * BA * (k - 1) + tr.mu * sa * BA * k
         return out

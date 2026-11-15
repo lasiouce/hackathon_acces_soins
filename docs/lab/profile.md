@@ -72,7 +72,7 @@ Two parts, both required (user, 2026-11-13):
 | backtest MAPE (%) | headcount by profession × département at a 5–10 yr horizon | **not established**. A naive baseline sets the bar |
 | levers wired end to end (count) | the "exhaustive parameters" goal | target **not established** |
 | scenario recompute (s) | live demo interactivity | **< 2 s** (**assumed**) |
-| territorial grain | département (101) vs bassin de vie / commune | **toutes les échelles jusqu'à la commune** (user, 2026-11-14) |
+| territorial grain | département (101) vs bassin de vie / commune | ~~toutes les échelles jusqu'à la commune (user, 2026-11-14)~~ **département, région, national ; pas de commune** (user, 2026-11-15) |
 | horizon | projection | **2050** (user, 2026-11-14); backtestable ≈ 10 y max (derived: data 2012–2026) |
 | jury minutes | the pitch and demo | **not established**. Ask the organisers |
 

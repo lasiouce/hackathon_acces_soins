@@ -3351,6 +3351,7 @@ un modèle de langage pour l'analyse seule (jamais le calcul), évalué sur les 
 
 ## 2026-11-14 — Carte : curseurs principaux visibles sous la phrase (remplace « tout replié » pour le panneau)
 
+*Remplacé en partie le 2026-11-15 : les familles sont repliées au chargement (entrée « familles de leviers repliées »).*
 **Décision.** Dans le panneau Leviers, sous « Décrire une politique en une phrase », chaque famille est dépliée et montre son
 curseur principal (places, diplômés étrangers, régulation, retraite) ; les réglages secondaires restent sous « Plus de réglages ».
 L'accordéon (une seule famille ouverte) est retiré. Sur mobile, le panneau reste replié à l'ouverture.
@@ -4012,7 +4013,8 @@ précédent). Ou une recette (`recette.mjs --option1`) qui régresse sous 39/40 
   - Chaque accordéon contient le curseur principal, son délai et sa source, puis les réglages fins de la famille.
   - Son titre porte l'effet du réglage (« +1 234 en 2050 ») dès qu'un levier de la famille est modifié.
   - Les accordéons sont **indépendants**, sans groupe, donc plusieurs peuvent être ouverts.
-  - Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.
+  - ~~Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.~~ *Remplacé le
+    2026-11-15 : toutes les familles sont repliées au chargement (entrée du même nom).*
   - Cela respecte l'entrée « Carte : curseurs principaux visibles sous la phrase », qui a retiré l'accordéon à une
     seule famille ouverte.
 - « Plus » ne contient plus que la phrase en langage naturel, le résumé et ses actions, et la liste « Pas encore dans
@@ -5345,6 +5347,37 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Corrigé à la fusion :** `Home.md` de la branche `besoin-assistant` contenait des marqueurs de conflit commités ;
   ils sont retirés, et les trois lignes du journal sont gardées.
 
+## 2026-11-15 — Grain territorial : on s'arrête au département (pas de grain communal)
+- **Décision** (utilisateur·rice, après la recette de l'application, constat P1-5 : « pas de grain communal, on
+  s'arrête bien au départemental ») :
+  - les sorties du jumeau et du module de besoin s'affichent **au département, à la région et au national**
+    seulement ;
+  - pas de commune ni de groupe de communes dans la carte, l'API ou l'assistant ;
+  - les calculs internes qui passent par la commune restent permis (zonage conventionnel, M4 en 2SFCA, tables
+    communales), mais leurs résultats ne sont publiés qu'agrégés au département ;
+  - « Clermont-Ferrand » se lit « Puy-de-Dôme », comme l'assistant le fait déjà.
+- **Remplace :** « Les modèles tournent à toutes les granularités, jusqu'à la commune » (2026-11-14), dans
+  `CLAUDE.md`, `docs/lab/profile.md`, `v2/ROADMAP.md` et Home. Ces mentions sont barrées ou annotées, pas effacées.
+  Prolonge « affichage au département » (K5 non confirmé, N12).
+- **Pourquoi :**
+  - projection communale non confirmée (K3 à K5, N10 à N12) ;
+  - plus de la moitié des cellules commune × âge valent une personne (audit RGPD) ;
+  - P-B4 : M4 ne reproduit pas l'APL à la commune, alors que l'accord est de 0,98 au département.
+- **Conséquence :** le constat P1-5 de la recette (`2026-11-15-uat-application`) est clos par décision, pas par
+  correction. Le parcours ARS commence au département.
+
+## 2026-11-15 — Pas de « mode simple » pour l'élu·e : l'assistant IA en tient lieu
+- **Décision** (utilisateur·rice, après la recette, constat P1-6 : « le mode simple pour l'élue c'est stale, on a
+  l'assistant IA ») :
+  - aucun mode simple séparé n'est construit ;
+  - l'élu·e passe par l'**assistant de simulation**, qui traduit une phrase en leviers et répond en langue courante.
+    C'est la suite de la décision du 2026-11-14, « L'agent conversationnel devient l'interface principale ».
+- **Remplace :** le « mode simple » des personas (`CLAUDE.md`, règles maison, annoté) et la partie « mode simple »
+  du constat P1-6.
+- **Reste ouvert** (partie de P1-6 non couverte par cette décision) : le jargon de méthode (M1, DCIR, P-B4, L23,
+  s∞…) visible dans la fiche et dans l'assistant. On le garde en P2, à reformuler en langue courante ou à replier
+  dans un détail.
+
 ## 2026-11-15 — Carte : la fiche montre la couverture de l'année du curseur seulement
 - **Décision** (demande de l'utilisateur·rice) : la fiche du territoire n'affiche plus la ligne fixe « Couverture de la
   demande de ville 2035 ». Elle montre seulement l'année du curseur ; l'export suit la même règle. L'étiquette de
@@ -5352,3 +5385,162 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   l'espace avant l'année.
 - **Pourquoi :** la ligne 2035 doublait celle du curseur ; une seule année se lit d'un coup d'œil.
 - **Vérifié :** dans le navigateur (Puy-de-Dôme, pharmaciens, curseur sur 2040 : une ligne, 1,01).
+
+## 2026-11-15 — Transferts hypothétiques admis dans l'assistant, étiquetés « hypothèse de l'utilisateur » ; O2 précisé : cible seulement
+- **Décision** (tâche de la session v2, relayée à besoin-axe5-sensibilite ; [plan](derivations/2026-11-15-transfert-hypothetique-plan.md),
+  [rapport](reports/2026-11-15-transfert-hypothetique.md)) :
+  - **Forme :** celle de L23, généralisée à une source et à une cible quelconques. `GET /api/couverture` accepte
+    `tr_src`, `tr_cible`, `tr_a` [0 ; 0,5], `tr_sinf` [0 ; 1], `tr_k` [0,1 ; 3], `tr_tau` [0,1 ; 20] et
+    `tr_t0` [2026 ; 2050]. L'opérateur s'applique après L23, sur le besoin en cache.
+  - **Profession affichée :** `prof` doit être la cible ou la source, sinon 400.
+  - **Demande de la source :**
+    - une des 5 : son propre besoin ;
+    - MG : M1, niveau placeholder ;
+    - spécialistes : M0, placeholder.
+  - **Défauts, tous « supposé (hypothèse de l'utilisateur) » :** a 0,10, s∞ 1, k 1, τ 2,4 (forme de L23,
+    empruntée), t₀ 2026.
+  - **Lecture de la phrase :**
+    - « p % des <acte> de Y » : s∞ = p, et a est balayé sur {5, 10, 20 %} ;
+    - « p % de la demande de Y » : a = p, balayé sur {p/2, p, 2p}.
+  - **Réponse de l'assistant :**
+    - jamais un chiffre unique ;
+    - source, cible et paramètres réaffichés avec leur statut ;
+    - elle dit pourquoi ce n'est pas un levier de la carte : ni volume d'acte ni part du temps publiés en données
+      ouvertes.
+  - **L23 reste le seul transfert sourcé**, inchangé.
+  - **O2 précisé :** la MG et les spécialistes sont refusés comme **cible** de l'indice (`tr_cible` ⇒ 400 ;
+    « couverture des généralistes » ⇒ refus). Ils sont admis comme **source**.
+    - Cela corrige le faux refus constaté en recette sur la phrase d'exemple : le mot « généralistes » déclenchait O2.
+    - Les transferts L23 qui citent les médecins en profitent aussi.
+  - **Carte :** aucun nouvel interrupteur, aucun bandeau. La carte ne propose pas d'afficher un transfert
+    hypothétique, puisqu'elle n'a pas ce levier.
+- **Pourquoi :**
+  - demande de l'utilisateur·rice : que l'assistant « essaie » un transfert arbitraire ;
+  - une seule source pour C, la carte : l'alternative calculée dans la passerelle est rejetée, car elle perd le
+    département et ne se vérifie pas contre L23.
+- **Vérifié :**
+  - générique MG → PH aux paramètres de L23 = `l23=1` (écart 0,0) ;
+  - L23 identique octet pour octet ;
+  - K1–K7 verts, p95 24,7 ms ;
+  - compilateur 10/10 sur des cas écrits avant le code, jeux existants inchangés ;
+  - chatbot 50/51 (le 51ᵉ exige un arbre propre ; vert après nettoyage) ;
+  - navigateur, mode sans IA.
+- **Ce qui le renverserait :**
+  - un volume d'acte ou une part du temps publiés : le transfert deviendrait un levier sourcé, comme L23 ;
+  - un niveau mesuré de la demande MG, qui changerait l'ampleur.
+- **Non fait :**
+  - mode IA non vérifié (pas de clé) ;
+  - pas de bandeau dans la carte.
+
+## 2026-11-15 — Carte : familles de leviers repliées au chargement ; retour à la France sans écran intermédiaire
+- **Décision** (demande de l'utilisateur·rice) :
+  - Les six familles du panneau Scénario (Former, Attirer, Réguler, Retenir, Transférer des tâches, Hypothèses de
+    contexte) sont **repliées à l'arrivée**. Le titre de chaque famille porte toujours l'effet du réglage dès qu'un
+    levier est modifié. **Remplace** « quatre familles ouvertes au chargement » (entrée du 2026-11-14), choisie alors
+    parce que, repliés, « les curseurs semblaient avoir disparu ». Choix confirmé par l'utilisateur·rice, qui avait
+    été averti·e de cette raison.
+  - Bouton « Vue France entière » : la fiche du territoire reste affichée, estompée, jusqu'à l'arrivée des chiffres
+    nationaux, puis passe à « France ». Avant, elle passait par une fiche d'attente « France entière — Chargement… »
+    pendant environ 200 ms. Si les chiffres nationaux n'arrivent pas, la fiche d'attente revient au bout de 4 s.
+- **Vérifié** (navigateur, panneau masqué, dessin de la carte neutralisé) :
+  - 6 familles avec `aria-expanded=false` ;
+  - Puy-de-Dôme → estompée → France en 230 ms, sans titre intermédiaire.
+- **Ce qui le renverserait :** un test de lecture où les curseurs repliés ne sont pas trouvés.
+
+## 2026-11-15 — Transfert hypothétique : niveau MG et spécialistes mesuré, balayage dans la passerelle, bandeau dans la carte
+- **Décision** (demande de l'utilisateur·rice : « les 3 go », sur les suites du rapport transfert hypothétique) :
+  - **Niveau de la demande de la source.** Pour le transfert hypothétique seulement, la demande des MG et des
+    spécialistes est ramenée, à l'année de référence, à l'**effectif libéral mesuré** (ameli, France, 1ᵉʳ janvier
+    2025) : 56 005 médecins généralistes, 57 346 spécialistes. La répartition par territoire et par âge reste celle
+    de M1 (MG) ou de M0 (spécialistes).
+    - **Corrige ma proposition** « Open DAMIR » : DAMIR compte des actes, alors que le transfert raisonne en temps de
+      professionnels, comme les cibles (1 professionnel = 1 temps plein).
+    - Facteur MG 0,911 contre l'ancienne valeur provisoire.
+    - **L23 garde le niveau de M1** : levier sourcé déjà validé, laissé inchangé ; l'alignement est au ledger.
+    - K7 compare désormais le transfert générique avec `a` divisé par ce facteur à `l23=1` (écart 0,0).
+  - **Balayage dans la passerelle**, quel que soit le mode.
+    - Avec `transfert`, l'outil `couverture` renvoie `balayage_a` : 5, 10 et 20 % si `a` n'est pas donné, sinon
+      a/2, a et 2a. Le point médian sert de réponse principale.
+    - Le mode sans IA fait un seul appel au lieu de trois.
+    - Consigne au modèle (schéma et prompt) : « p % des <acte> » donne s_inf = p/100, sans `a`.
+  - **`l23` n'est plus actif par défaut** dans l'outil `couverture` : il est demandé seulement pour la vaccination.
+  - **Bandeau dans la carte.**
+    - La proposition de l'assistant porte les `tr_*` du point médian, et la carte les envoie à `/api/couverture`.
+    - Un bandeau « Transfert hypothétique (paramètres de l'utilisateur) » s'affiche, avec « Retirer », tant que la
+      profession affichée est la cible ou la source.
+    - **Remplace** « aucun bandeau » de l'entrée « transferts hypothétiques admis » du même jour.
+- **Pourquoi :** en mode IA, mesuré avant correction, la phrase d'exemple donnait un chiffre unique et lisait
+  « 10 % des renouvellements » comme 10 % de toute la demande MG : −1,7 %, 10 fois trop.
+- **Vérifié :**
+  - mode IA (claude-haiku-5-5), 6 questions ([mesures](../../langage/mesures/2026-11-15-transfert-hypothetique-mode-ia.txt)) :
+    - exemple : s_inf 0,1 et a balayé, −0,08 / −0,17 / −0,34 %, mêmes valeurs qu'en mode sans IA ;
+    - « couverture des généralistes » : O2 dit, indice des infirmiers seulement ;
+    - spécialistes → kinés : balayé ;
+    - L23 : inchangé, −0,7 % ;
+  - carte : le bandeau applique la proposition (−0,17 %, D63, 2035) et « Retirer » remet l'écart à 0 ;
+  - K1–K7 verts, p95 23,5 ms ;
+  - chatbot 50/51 avant nettoyage (le 51ᵉ exige un arbre propre).
+- **Ce qui le renverserait :** une durée publiée des actes de la MG (a deviendrait mesurable) ; un choix
+  d'aligner L23 sur le niveau mesuré.
+
+## 2026-11-15 — UAT de l'application : assistant testé sans IA seulement ; constats notés, rien corrigé
+- **Décision** (session uat-application, [rapport](reports/2026-11-15-uat-application.md)) : l'assistant est recetté
+  en mode sans IA (glossaire), sur une passerelle et un chatbot propres à la branche (ports 8782, 8783). Le mode IA
+  n'est pas appelé : une clé existe, mais un appel payant demande l'accord de l'utilisateur·rice. Conformément à la
+  consigne, aucun constat n'est corrigé pendant la recette ; les 6 P1 vont au ledger.
+- **Pourquoi :** consigne de la recette (« ne corrige rien ») ; règle de confirmation avant toute dépense.
+- **Ce qui le renverserait :** un accord pour quelques appels Haiku (ligne du ledger « UAT en mode IA »).
+
+## 2026-11-15 — L23 : la montée en charge part de la part déjà atteinte (P1-4) ; niveau de la demande MG mesuré dans M1 ; écart au protocole P-B6
+- **Décision** (accord de l'utilisateur·rice : « 1 mais après la fusion », règle fixée avant la mesure : au-delà de
+  20 % d'effet gonflé, corriger le double compte et le niveau ensemble ; enregistrée avant tout changement de code) :
+  - **Constat mesuré (P1-4 de la recette).**
+    - La part officinale nationale vaut déjà **0,687 en 2025-26** (IQVIA ÷ Open Medic, P-B6, mesuré) et 0,670 en
+      2024-25.
+    - La courbe ajustée (t₀ = 2019) donne s(2026) = 0,698 (dérivé).
+    - L23 rejouait toute la montée (0 → 0,74) à partir de 2026 : effet **19 fois** trop grand en 2035
+      (0,723 contre une marge de 0,038 ; dérivé).
+    - L'année de base contient déjà l'officine : la demande des pharmaciens est calée sur leur offre de 2026 et le
+      profil de la MG sur Open DAMIR 2025.
+  - **Correction.**
+    - L23 garde la courbe mesurée : s∞ 0,74, τ 2,4, **t₀ = 2019**.
+    - Il n'applique que **ce qui reste au-delà de la part atteinte à l'année de base** :
+      `s_eff(t) = max(0, s(t) − s(2026))`.
+    - Nouveau champ `s_deja` de `Transfert`, à 0 par défaut : les autres transferts, dont l'hypothétique, ne changent
+      pas.
+  - **Niveau de la demande MG dans M1.**
+    - r̄_MG est calé pour que la demande nationale de la MG à l'année de base égale l'**effectif libéral mesuré**
+      (ameli, 1ᵉʳ janvier 2025 : 56 005, mesuré).
+    - Il remplace le placeholder de 0,9 ‰ (supposé), plus haut d'environ 10 %.
+    - La répartition par âge reste celle d'Open DAMIR.
+  - **Écart au protocole P-B6** (gelé, horodaté).
+    - Le protocole mesure s(t) avec t₀ = 2019 et ne fixe pas son application au besoin ; il est inchangé.
+    - Ce qui change, c'est l'application dans le module de besoin : t₀ = 2019 et soustraction de s(2026), au lieu de
+      t₀ = 2026.
+    - s∞ et τ ne sont pas réajustés.
+- **Pourquoi :**
+  - effet gonflé de +1 830 %, bien au-delà du seuil de 20 % fixé avant la mesure ;
+  - les deux corrections changent les chiffres de L23 : une seule fois, un seul passage de K4.
+- **Effet attendu (dérivé, à vérifier) :** l'écart de couverture des pharmaciens avec L23 passe d'environ −0,7 % à
+  environ −0,04 %. Les « vaccinations en moins pour les généralistes » baissent dans la même proportion.
+- **⚑ Ce qui le fragilise :**
+  - la marge restante (≈ 0,04) est plus petite que l'erreur type de s∞ (± 0,07) : son signe même n'est pas sûr ;
+  - la grille de sensibilité (`v2/sensibilite/besoin/grille.py`) applique L23 avec t₀ = 2019 sans soustraire
+    s(2026) : non corrigée ici, inscrite au ledger.
+- **Ce qui le renverserait :** une année de base de la demande antérieure à 2019 (la soustraction serait alors de
+  trop) ; un nouvel ajustement de P-B6 avec un s∞ nettement plus haut.
+
+## 2026-11-15 — Erratum P1-4 propagé : grille de l'axe 5 relancée, rapports annotés
+- **Fait** (rappel de l'utilisateur·rice, relayé par la session transfert-hypothetique : « corrige l'erreur L23
+  partout où elle reste ») :
+  - `v2/sensibilite/besoin/grille.py` appelle `l23(2026, …)` (constante `L23_REF`) au lieu de `l23(2019, …)` ;
+  - la grille des pharmaciens est relancée ; les sorties des quatre autres professions sont gardées, puisqu'elles ne
+    dépendent pas de L23 et que leurs grilles brutes ne sont pas versionnées ;
+  - résultat : L23 en 2050, E 0,0002 et R 0,002, au lieu de 0,004 et 0,05 ; verdict inchangé, non distinguable.
+- **Encadrés « Erratum 2026-11-15 (P1-4) »** en tête des rapports, anciens chiffres conservés et annotés :
+  - `besoin-carte`, `besoin-assistant`, `uat-application`, `besoin-axe5-sensibilite` ;
+  - trois fichiers de mesure de `v2/langage/mesures/` ;
+  - trois lignes du journal de Home.
+- **Article du besoin (`v2/papers/besoin/`)** : la phrase sur L23 est remplacée par les nouveaux chiffres.
+- **Hors champ :** `besoin-axe1-fiches` ne cite pas l'effet de L23, seulement s∞ et τ, qui restent valables.
+

@@ -1,0 +1,200 @@
+# ERRATUM 2026-11-15 (P1-4) : les effets de L23 ci-dessous sont dépassés (double compte ×19). Nouveaux chiffres :
+# pharmaciens France 2050 −0,03 % ; 104 110 vaccinations en moins pour les généralistes en 2050 ; ≈ 24 ETP.
+# Voir v2/docs/lab/reports/2026-11-15-l23-p1-4-marge.md. Mesure d'origine conservée telle quelle.
+
+# Transfert hypothétique en mode IA (claude-haiku-5-5, CHAT_FALLBACKS=0), 2026-11-15, carte 8795 / passerelle 8796 / chatbot 8797
+# ia0 : AVANT le balayage dans la passerelle ; ia1-ia3 : après. Sortie de $SP/ia.py (question, appels, valeurs de a, proposition carte, réponse).
+
+######## ia0
+================================================================================ 
+Q: Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des infirmiers dans le Puy-de-Dôme en 2035 ? 
+mode llm verif ok s 17.82
+appels: [('couverture', {'source': 'medecine-generale', 'cible': 'infirmiers', 'a': 0.1})]
+valeurs de a: [0.1]
+carte: {'prof': 'infirmiers', 'terr': 'D63', 'leviers': {}, 'annee': 2035, 'vue': 'couverture', 'l23': 0, 'tr': {'p': {'tr_src': 'medecine-generale', 'tr_cible': 'infirmiers', 'tr_a': 0.1}, 'libelle': 'une part de la demande des médecins généralistes passe aux infirmiers', 'resume': 'part de la demande concernée 10 % (point médian du balayage)'}}
+**Avec ce transfert, l'indice de couverture des infirmiers dans le Puy-de-Dôme en 2035 est de 0,934, contre 0,949 au tendanciel : une couverture légèrement moindre qu'au tendanciel (−1,7 %).**
+
+### Ce que ça change
+- Indice 0,934 avec le transfert, fourchette 0,934 à 0,95 entre les trois estimateurs (M1, M2a, M3). Le tendanciel est de 0,949 (base 2026 = 1).
+- L'effectif d'infirmiers est inchangé. Le transfert ajoute de la demande de soins infirmiers sans ajouter de professionnels, donc l'indice baisse.
+
+### Pourquoi
+- Dans cette hypothèse, les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes. Le temps de la cible augmente, à rapport k = 1 (même temps que la source).
+- La montée en charge est d'environ 2,4 ans, à partir de 2026. Le transfert est donc déjà effectif en 2035.
+
+### Fiabilité
+- Le transfert est une hypothèse de votre question (statut : hypothèse de l'utilisateur). La part de 10 % n'est pas publiée ; l'effet est illustratif.
+- Les autres paramètres sont des valeurs par défaut non sourcées : 100 % de l'acte transféré, k = 1, montée en charge 2,4 ans, année d'autorisation 2026.
+- Le levier de vaccination en officine (L23) est actif par défaut dans ce calcul ; il agit sur la couverture des pharmaciens, pas sur celle des infirmiers.
+- Médecine générale : elle n'entre ici que comme source de transfert, sans indice de couverture.
+
+→ Et si seulement 5 % des renouvellements étaient transférés ?
+→ Et avec une montée en charge plus lente, sur 5 ans ?
+
+######## ia1
+================================================================================ 
+Q: Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des infirmiers dans le Puy-de-Dôme en 2035 ? 
+mode llm verif ok s 11.15
+appels: [('couverture', {'source': 'medecine-generale', 'cible': 'infirmiers', 's_inf': 0.1})]
+valeurs de a: [None]
+carte: {'prof': 'infirmiers', 'terr': 'D63', 'leviers': {}, 'annee': 2035, 'vue': 'couverture', 'l23': 0, 'tr': {'p': {'tr_src': 'medecine-generale', 'tr_cible': 'infirmiers', 'tr_sinf': 0.1}, 'libelle': 'une part de la demande des médecins généralistes passe aux infirmiers', 'resume': "part de la demande concernée 10 % (point médian du balayage, supposée), part de l'acte transférée 10 %"}}
+**Dans le Puy-de-Dôme en 2035, l'indice de couverture des infirmiers reste proche du tendanciel (0,948 contre 0,949 ; écart de −0,17 %) dans le transfert hypothétique à 10 %.**
+
+### Ce que ça change
+- Transfert hypothétique (paramètres de l'utilisateur·rice) : infirmiers prenant 10 % des renouvellements d'ordonnance des médecins généralistes, soit 10 % de l'acte à terme.
+- Les trois valeurs de la part de la demande de la source (a) donnent : a = 5 % : indice 0,949 (−0,08 %) ; a = 10 % : 0,948 (−0,17 %) ; a = 20 % : 0,946 (−0,34 %). Qualificatif pour les trois : « couverture proche du tendanciel ».
+- Fourchette entre estimateurs à a = 10 % : 0,948 à 0,950.
+- L'effectif ne change pas : c'est un transfert de tâches, pas un levier de la carte.
+
+### Pourquoi
+- Le transfert agit sur la demande de soins, pas sur le nombre d'infirmiers installés.
+- Montée en charge supposée d'environ 2,4 ans après une autorisation en 2026 ; à 2035, l'effet est déjà engagé.
+- Temps de médecins généralistes transféré en France, à titre illustratif : environ 574 équivalents temps plein à a = 10 % (287 à 5 %, 1 147 à 20 %).
+
+### Fiabilité
+- Paramètres de l'utilisateur·rice : part de l'acte transférée (10 %) et délai (k = 1, t0 = 2026) ; la part de la demande occupée par l'acte (a) est inconnue et balayée.
+- Le volume de cet acte et sa part dans le temps des généralistes ne sont pas publiés : effet illustratif, non sourcé.
+- Pas de backtest pour ce type de transfert.
+
+→ Et si la part de l'acte transférée était de 20 % ?
+→ Et avec les pharmaciens qui vaccinent contre la grippe, en 2035 dans le Puy-de-Dôme ?
+
+######## ia2
+================================================================================ 
+Q: Les infirmiers reprennent 5 % de la demande des généralistes : quelle couverture des infirmiers en France en 2050 ? 
+mode llm verif corrigee s 16.98
+appels: [('couverture', {'source': 'medecine-generale', 'cible': 'infirmiers', 'a': 0.05})]
+valeurs de a: [0.05]
+carte: {'prof': 'infirmiers', 'terr': 'FR', 'leviers': {}, 'annee': 2050, 'vue': 'couverture', 'l23': 0, 'tr': {'p': {'tr_src': 'medecine-generale', 'tr_cible': 'infirmiers', 'tr_a': 0.05}, 'libelle': 'une part de la demande des médecins généralistes passe aux infirmiers', 'resume': 'part de la demande concernée 5 % (point médian du balayage)'}}
+**En 2050, l'indice de couverture des infirmiers est de 0,823 (base 2026 = 1), contre 0,829 au tendanciel : couverture proche du tendanciel (−0,8 %).**
+
+### Ce que ça change
+- Le transfert ne change pas le nombre d'infirmiers. Il augmente la demande à couvrir, d'où un indice un peu plus bas.
+- Fourchette entre estimateurs en 2050 : 0,823 à 0,830.
+- Autres parts testées en 2050 : 2,5 % de la demande donne 0,826 (−0,37 %, couverture proche du tendanciel) ; 10 % donne 0,817 (−1,48 %, couverture légèrement moindre qu'au tendanciel).
+- À 5 %, le transfert représente le temps de travail d'environ 3 027 médecins généralistes à temps plein (France entière).
+- En 2030 et en 2040, l'écart est le même (−0,8 %).
+
+### Pourquoi
+- Transfert hypothétique, paramètres de l'utilisateur·rice : ce n'est pas un levier de la carte, et aucun volume d'actes publié ne le justifie.
+- Paramètres par défaut, supposés : part transférée à terme de 1,0, temps égal (k = 1,0), montée en charge de 2,4 ans, autorisation en 2026.
+- Correction : la vaccination en officine (L23) était active dans ce calcul, depuis 2026. Son effet porte sur l'indice des pharmaciens, pas sur celui des infirmiers.
+
+### Fiabilité
+- Statut du transfert : supposé (hypothèse de l'utilisateur·rice).
+- L'effectif tendanciel et les leviers sourcés restent inchangés ; le passage de la demande reste illustratif.
+- Projection à 2050 : aucun backtest n'existe à cet horizon.
+
+→ Et si la part transférée est de 10 % avec une montée en charge plus lente ?
+→ Quel effet sur les infirmiers en France en 2050 si l'on augmente les places en formation ?
+================================================================================ 
+Q: Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des généralistes en 2035 ? 
+mode llm verif ok s 10.09
+appels: [('couverture', {'source': 'medecine-generale', 'cible': 'infirmiers', 's_inf': 0.1})]
+valeurs de a: [None]
+carte: {'prof': 'infirmiers', 'terr': 'FR', 'leviers': {}, 'annee': 2035, 'vue': 'couverture', 'l23': 0, 'tr': {'p': {'tr_src': 'medecine-generale', 'tr_cible': 'infirmiers', 'tr_sinf': 0.1}, 'libelle': 'une part de la demande des médecins généralistes passe aux infirmiers', 'resume': "part de la demande concernée 10 % (point médian du balayage, supposée), part de l'acte transférée 10 %"}}
+Hors du périmètre du modèle : la couverture des médecins généralistes n'est pas calculée, car la médecine générale n'entre dans le modèle que comme source de transfert de tâches.
+
+**Sur la couverture des infirmiers, en France, en 2035 : une couverture proche du tendanciel (indice 0,93 en tendanciel).**
+
+### Ce que ça change
+- Avec 10 % des renouvellements d'ordonnance transférés, l'indice des infirmiers passe à 0,929, soit −0,17 % par rapport au tendanciel.
+- Les trois hypothèses testées donnent −0,09 % (5 %), −0,17 % (10 %) et −0,34 % (20 %).
+- Pour les généralistes, le transfert représente environ 574 équivalents temps plein à 10 % (France entière), soit 287 à 5 % et 1 147 à 20 %.
+
+### Pourquoi
+- Le transfert ne change pas le nombre d'infirmiers : il ajoute de la demande de soins à la charge de la profession cible.
+- La montée en charge prend environ 2,4 ans après l'autorisation, fixée ici à 2026.
+
+### Fiabilité
+- Fourchette entre estimateurs : 0,927 à 0,931 selon la part transférée.
+- Les paramètres du transfert sont des hypothèses : la part de la demande des généralistes concernée par l'acte est inconnue (supposée), k et la montée en charge sont supposés, et la part transférée à terme (10 %) vient de votre question.
+- Ce n'est pas un levier de la carte : l'effet est illustratif.
+
+Limite du modèle : l'indice de couverture ne porte que sur les cinq professions non médicales.
+
+→ Et si les infirmiers prennent 20 % des renouvellements ?
+→ Quel effet d'un transfert de vaccination vers les pharmaciens en 2035 ?
+================================================================================ 
+Q: Si les kinés prenaient en charge 15 % des séances de rééducation des spécialistes, quelle couverture des kinés en Bretagne en 2040 ? 
+mode llm verif ok s 16.82
+appels: [('couverture', {'source': 'specialistes', 'cible': 'kines', 's_inf': 0.15})]
+valeurs de a: [None]
+carte: {'prof': 'kines', 'terr': 'R53', 'leviers': {}, 'annee': 2040, 'vue': 'couverture', 'l23': 0, 'tr': {'p': {'tr_src': 'specialistes', 'tr_cible': 'kines', 'tr_sinf': 0.15}, 'libelle': 'une part de la demande des médecins spécialistes passe aux masseurs-kinésithérapeutes', 'resume': "part de la demande concernée 10 % (point médian du balayage, supposée), part de l'acte transférée 15 %"}}
+**En 2040, si les kinés prenaient en charge 15 % des séances de spécialistes, leur indice de couverture en Bretagne serait de 1,078, proche du tendanciel (1,086).**
+
+### Ce que ça change
+- L'effectif de kinés est inchangé. Le transfert augmente la demande adressée aux kinés, donc l'indice baisse de 0,7 % par rapport au tendanciel (« couverture proche du tendanciel »).
+- Selon la part de la demande des spécialistes concernée : 5 % donne -0,36 %, 10 % donne -0,71 % et 20 % donne -1,41 % (« couverture légèrement moindre qu'au tendanciel » à 20 %).
+- Ces parts correspondent à 436, 872 et 1 744 temps plein de spécialistes transférés en France.
+
+### Pourquoi
+- Le modèle traite ce transfert comme un flux de demande : une part de la demande des spécialistes passe vers les kinés.
+- La montée en charge est d'environ 2,4 ans à partir de 2026, donc l'effet est déjà installé en 2040.
+
+### Fiabilité
+- Transfert hypothétique, selon vos paramètres. La part de la demande des spécialistes concernée est inconnue (supposée, balayée de 5 à 20 %). Les 15 % des séances sont votre hypothèse. La vitesse de transfert (k = 1) et la montée en charge sont supposées.
+- Le résultat ne donne pas de fourchette chiffrée. Il s'appuie sur deux estimateurs, M1 (central) et M2a.
+- La vaccination en officine (L23) reste active par défaut. Elle ne change pas l'effectif des kinés.
+- Ce transfert n'est pas un levier de la carte. Ce sont des projections sous hypothèses, non des prévisions.
+
+→ Et si la couverture des kinés en Bretagne était projetée avec 20 % de places en plus ?
+→ Quel effet de la population Insee haute sur les kinés en Bretagne en 2040 ?
+
+######## ia3
+================================================================================ 
+Q: Si les kinés prenaient en charge 15 % des séances de rééducation des spécialistes, quelle couverture des kinés en Bretagne en 2040 ? 
+mode llm verif corrigee s 16.55
+appels: [('couverture', {'source': 'specialistes', 'cible': 'kines', 's_inf': 0.15})]
+valeurs de a: [None]
+carte: {'prof': 'kines', 'terr': 'R53', 'leviers': {}, 'annee': 2040, 'vue': 'couverture', 'l23': 0, 'tr': {'p': {'tr_src': 'specialistes', 'tr_cible': 'kines', 'tr_sinf': 0.15}, 'libelle': 'une part de la demande des médecins spécialistes passe aux masseurs-kinésithérapeutes', 'resume': "part de la demande concernée 10 % (point médian du balayage, supposée), part de l'acte transférée 15 %"}}
+**Le transfert de 15 % des séances de rééducation vers les kinés laisse la couverture en Bretagne en 2040 proche du tendanciel (-0,71 %).**
+
+Transfert hypothétique (paramètres de l'utilisateur·rice) : spécialistes vers kinés, 15 % de l'acte transféré à terme. La part de la demande des spécialistes concernée par cet acte est inconnue, donc trois hypothèses sont testées.
+
+### Ce que ça change
+- Indice de couverture (base 2026 = 1) : 1,078 avec transfert, contre 1,086 au tendanciel.
+- Selon la part de la demande concernée :
+  - 5 % : -0,36 %, couverture proche du tendanciel.
+  - 10 % : -0,71 %, couverture proche du tendanciel.
+  - 20 % : -1,41 %, couverture légèrement moindre qu'au tendanciel.
+- L'effectif de kinés ne change pas : le transfert modifie la demande, pas le nombre de professionnels.
+
+### Pourquoi
+- Les kinés prennent une part de la demande des spécialistes, ce qui augmente leur charge par rapport à l'offre.
+- La montée en charge dure environ 2,4 ans (valeur par défaut supposée), et l'effet est progressif.
+
+### Part de chaque levier
+Un seul réglage est appliqué ici ; il n'y a pas de décomposition par levier.
+
+### Fiabilité
+- Le modèle ne fournit pas de fourchette chiffrée distincte pour ce transfert. L'estimateur central est M1, et M2a est également calculé.
+- Statut : hypothèse de l'utilisateur·rice, non sourcée. La part de la demande et le volume d'actes ne sont pas publiés en données ouvertes.
+- Limite du modèle : ce transfert n'est pas un levier de la carte. Il est traité comme un effet illustratif.
+
+→ Et si la part de la demande concernée est de 10 % seulement, en France entière ?
+→ Quel est l'effet des leviers sur les effectifs de kinés en Bretagne en 2040 ?
+================================================================================ 
+Q: Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ? 
+mode llm verif ok s 7.47
+appels: [('couverture', None)]
+valeurs de a: []
+carte: {'prof': 'pharmaciens', 'terr': 'D63', 'leviers': {}, 'annee': 2035, 'vue': 'couverture', 'l23': 1}
+**En Puy-de-Dôme en 2035, l'indice de couverture des pharmaciens est de 0,982 si les pharmaciens vaccinent, contre 0,989 au tendanciel : couverture proche du tendanciel (−0,7 %).**
+
+### Ce que ça change
+- L'effectif de pharmaciens ne change pas : la vaccination en officine est un transfert de tâches, pas une variation du nombre de professionnels.
+- L'indice est base 2026 = 1. Il baisse légèrement par rapport au tendanciel parce que la demande de soins de ville diminue un peu sous l'effet de la vaccination.
+- Pour la médecine générale, l'outil donne 1 878 752 actes de vaccination en moins et 468 ETP libérés à l'échelle de la France entière. Il ne donne pas de chiffre pour le département.
+
+### Pourquoi
+- Le levier L23 (vaccination en officine, autorisée dès 2026) transfère une part de la demande de médecine générale vers les pharmaciens.
+- La montée en charge suit une forme mesurée au niveau national (P-B6). En 2035, l'effet est déjà présent mais reste d'ampleur modérée.
+
+### Fiabilité
+- Le modèle ne fournit qu'un seul estimateur (M1) : aucune fourchette entre estimateurs n'est calculée ici.
+- Le levier L23 est sourcé pour la forme dans le temps (s et τ mesurés, P-B6). La répartition des actes (a) et la durée k sont supposées.
+- Ce résultat est une projection sous hypothèses, pas une prévision.
+
+→ Et si la vaccination en officine démarre en 2028 plutôt qu'en 2026 ?
+→ Quelle est la couverture des pharmaciens en Puy-de-Dôme sans vaccination en officine ?
