@@ -184,7 +184,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 4. Données | Public / privé, registre de 30 événements datés, zonage par commune, grain communal | ✅ |
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
-| Besoin → carte | Vue « Couverture » (indice C, référence 2026 = 1, fourchette M1/M2a/M3), levier L23 « vaccination en officine » de bout en bout ; M4 en attente (P-B4) | ✅ 6 critères sur 6 ; `/api/couverture` 28,8 ms au 95ᵉ centile (n = 60) |
+| Besoin → carte | Vue « Couverture » (indice C, référence 2026 = 1, fourchette M1/M2a/M3), levier L23 « vaccination en officine » de bout en bout ; M4 non servi (P-B4 échoue, OSRM compris) | ✅ 6 critères sur 6 ; `/api/couverture` 28,8 ms au 95ᵉ centile (n = 60) |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,
@@ -312,15 +312,21 @@ et la question ouverte sur le seuil de diffusion.
 - **Pas de projection fiable sous le département.** Les modèles communaux testés (K3 à K5) n'ont pas
   passé la validation pré-enregistrée ; la carte affiche les projections au département.
 - **Module de besoin : indice de couverture, pas un niveau de besoin.** `v2/besoin/` rapporte l'offre du
-  jumeau à un besoin estimé, indexé à 2026. Six protocoles gelés sur sept sont passés (2026-11-15,
+  jumeau à un besoin estimé, indexé à 2026. Les sept protocoles gelés sont passés (2026-11-15,
   `v2/docs/lab/reports/2026-11-15-besoin-etape.md`) : la pondération par l'âge (M1) est retenue pour les cinq
   professions (dentistes de justesse) ; la saturation du recours (M2b) tombe, donc le besoin non satisfait n'est
   pas identifié ; la morbidité (M3) ne sert l'indice que pour les infirmiers ; le backtest 2016 → 2025 retient
   l'âge contre la persistance pour 3 professions sur 4. L'indice spatial M4 échoue à reproduire l'APL DREES en
-  repli vol d'oiseau (ρ 0,66 à 0,77 pour 0,90 exigé) : c'est un indice maison, jamais appelé « APL » ; le passage
-  OSRM est en attente. Pour les transferts de tâches, `k` et l'expansion `m` restent supposés. Aucun indice de
+  repli vol d'oiseau (ρ 0,66 à 0,77 pour 0,90 exigé), avec les temps routiers OSRM (ρ 0,71 à 0,76) et pour les
+  pharmacies contre l'APL V0 2013 (P-B4-PH, ρ 0,72) : c'est une mesure d'accessibilité maison, jamais appelée « APL ». Pour les transferts de tâches, `k` et l'expansion `m` restent supposés. Aucun indice de
   couverture n'est produit pour la médecine générale. Les passages lisent des tables data.ameli.fr (ODbL) hors
   dépôt, à reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
+- **Grandeur mesurée : la demande de ville, pas le besoin de la population.** Le recours vient d'Open DAMIR,
+  secteur privé, tous statuts d'exécutant (statut inconnu compris : 3 à 13 % des actes). C'est la demande adressée
+  au secteur privé de ville ; la part servie par l'hôpital public n'y est pas. L'offre privée du jumeau compte les
+  salariés du privé (64,5 % des infirmiers privés, dont 34 % en clinique), que ce recours ne voit pas : sans effet
+  sur l'indice tant que leur part reste constante, mais un niveau en ETP ne se compare jamais à l'effectif privé
+  total des infirmiers ou des pharmaciens (registre, « périmètre libéral de DAMIR »).
 - **Sensibilité de l'indice de couverture (axe 5 du besoin, 2026-11-15).** En 2050, l'effet de quotas × 1,2 sur
   C dépasse l'écart entre modèles de besoin pour les sages-femmes, dentistes et pharmaciens, pas pour les kinés
   (ratio 0,77) ni les infirmiers (0,34). Cet écart tient à M0 (sans effet de l'âge), réfuté par P-B1 : il est
@@ -340,8 +346,9 @@ et la question ouverte sur le seuil de diffusion.
 
 ## Feuille de route
 
-- Rejouer la recette par personas sur la carte finale.
-- Module de besoin : passage OSRM de P-B4, passage de P-B4-PH, branchement dans la carte.
+- Corriger les 6 anomalies P1 de la recette de l'application (branche `claude/uat-application-d7ed57`, 0 P0, 17 P2).
+- Module de besoin : mesurer `k` des transferts ; projeter la part libérale de l'offre privée ; trouver une source
+  ouverte de la demande servie par l'hôpital public.
 - Amélioration possible, hors plan : spécialités (cardiologie, dermatologie, ophtalmologie).
 - Noter les dépôts pré-enregistrés sur les effectifs 2027.
 
