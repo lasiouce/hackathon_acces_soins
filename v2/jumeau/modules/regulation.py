@@ -15,8 +15,9 @@ privé d'un territoire régulé, les entrées de l'année ne peuvent dépasser l
     sortie    quittent l'exercice (compte `regulation_sortie` du registre).
 Valeurs par défaut (fiches axe 1) : θ = 0,80 [0,74 ; 0,87], supposé (axe 3, N3, IDE 2012-2019, exploratoire) ;
 repartition = 100 % voisine, supposé (param-regul-report-entrants : destination non mesurable ; variantes
-pour l'axe 5 : 50/50 voisine/salariat, 100 % sortie) ; part_exemptee : dentistes spécialistes (ODF, CO, MBD)
-exemptés par la convention 2023 (art. 35.5), part non mesurée dans nos données → 0, non mesurable.
+pour l'axe 5 : 50/50 voisine/salariat, 100 % sortie) ; part_exemptee : dentistes spécialistes (ODF, CO, MBD),
+conventionnables sans succession en place supplémentaire (convention 2023, art. 35.5 : dérogation, pas exemption ;
+relecture du 2026-11-15), part non mesurée dans nos données → 0, supposé.
 
 Non représenté ici, faute d'objet dans un modèle d'effectifs :
   - IDE, zones intermédiaires ou très dotées en périphérie : ≥ 2/3 de l'activité dans la zone d'installation
@@ -58,8 +59,8 @@ class Regulation(Module):
         Param("destination", "bloques", "secteur", "hypothèse en attendant l'axe 1", "—", "supposé",
               "Secteur qui reçoit la part « salariat » (créé vide si absent ; démographie du privé par repli)."),
         Param("part_exemptee", {"dentistes": 0.0, "*": 0.0}, "part des entrants, par profession",
-              "convention nationale des chirurgiens-dentistes 2023, art. 35.5 (spécialistes exemptés) ; fiche "
-              "param-cd-regul-regle", "2023", "non mesurable",
+              "convention nationale des chirurgiens-dentistes 2023, art. 35.5 (spécialistes : dérogation, place "
+              "supplémentaire hors succession) ; fiche param-cd-regul-regle", "2023", "non mesurable",
               "Part des entrants non soumis à la règle ; dentistes spécialistes : part non mesurée → 0.", (0.0, 1.0),
               "installer"),
         Param("voisins", None, "{territoire régulé : territoire voisin}", "à construire (axe 4)", "—", "supposé",

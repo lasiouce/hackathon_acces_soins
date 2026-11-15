@@ -8,14 +8,15 @@ positives de l'année, puis on la multiplie.
   ajout  = part_p · entrées⁺ · (m − 1)
 La part formée en France, (1 − part_p) · entrées⁺, est celle que suit `lien_formation`.
 Âge : l'ajout entre dans la tranche qui contient `age_entree` (28 ans, DD76, tableaux 12-13 : âge moyen des
-diplômés à l'étranger à l'entrée, SF et CD ; repris pour MK, supposé). Territoires et sexes : comme les entrées
+diplômés à l'étranger à l'entrée, SF et CD ; MK : 26 ans, ER 1075 p. 2, même tranche 25-29 ; PH : 31 ans et CD : 32 ans
+selon DD76 tab. 13 et ER 1026, non repris : âge unique, voir open.md). Territoires et sexes : comme les entrées
 ajustées (supposé). Le total ajouté par cellule est inchangé ; seule sa répartition par âge change.
-Flux par an (fiche axe 1 param-diplomes-etrangers-flux, 2026-11-14) : CD 1 300 (sourcé : Ordre 2022, 1 313
-primo-inscrits diplômés à l'étranger ; 1 309 reconnaissances UE) · MK 2 200 (dérivé : 2 528 autorisations en
+Flux par an (fiche axe 1 param-diplomes-etrangers-flux, 2026-11-14) : CD 1 300 (dérivé : arrondi de 1 313
+primo-inscrits diplômés hors France en 2022, QE AN 15512, et de 1 333, rapport ONCD 2022 p. 27 ; tous modes d'exercice) · MK 2 200 (dérivé : 2 528 autorisations en
 2023, CNOMK 2024 ; stock diplômés hors France +2 212 / an net 2020-2024 ; plage 1 700-2 500) · PH 240 (dérivé :
 8,1 % des primo-inscrits de l'Ordre 2024-2025) · IDE 400 (sourcé, confiance faible : hypothèse DREES ER 1319 ;
-plage 400-1 100) · SF 80 (dérivé ; plage 70-170). Variante basse (DD76, ER 1075, données 2015-2020) :
-SF 70 · CD 665 · MK 1 175 · PH et IDE 0 (FLUX_BAS).
+plage haute 1 100 supposée, absente de la source) · SF 80 (dérivé ; plage 70-170). Variante basse (données 2015-2020) :
+SF 70 · CD 665 (DD76, tableau 13) · MK 1 175 (ER 1075, p. 2-3) · PH et IDE 0 (FLUX_BAS).
 ⚑ Définitions hétérogènes (primo-inscription, entrée RPPS, autorisation) : un flux d'entrées en activité est
 probablement plus bas que les décisions de reconnaissance ; la part est plafonnée à 1.
 """
@@ -47,8 +48,8 @@ class Etrangers(Module):
     params = (
         Param("flux", FLUX, "personnes/an, par profession",
               "fiche axe 1 param-diplomes-etrangers-flux : Ordre CD 2022, CNOMK 2024, Ordre PH 2024-2025, DREES "
-              "ER 1319 (IDE) ; variante basse FLUX_BAS : DD76 tableaux 12-13, ER 1075", "2022-2025", "sourcé",
-              "Diplômés à l'étranger entrant chaque année. CD sourcé, MK/PH/SF dérivés, IDE confiance faible.",
+              "ER 1319 (IDE) ; variante basse FLUX_BAS : DD76 tableau 13 (SF, CD), ER 1075 (MK)", "2022-2025", "sourcé",
+              "Diplômés à l'étranger entrant chaque année. CD/MK/PH/SF dérivés, IDE sourcé (confiance faible).",
               (0.0, 1e5)),
         Param("multiplicateur", 1.0, "× flux observé", "fiche param-age-entree-exercice (plage supposée × [0 ; 2])",
               "—", "supposé", "Reconnaissance des diplômes, procédures d'autorisation d'exercice.", (0.0, 3.0),
