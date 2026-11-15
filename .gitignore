@@ -36,3 +36,10 @@ v2/validation/out/*.parquet
 # skill vidéo tiers volumineux (54 Mo), réinstallable : npx skills add Vincentwei1021/video-shotcraft
 .claude/skills/video-shotcraft/
 v2/methodes/out/c1i_tirages_*.parquet
+
+# besoin, axe 4 (2026-11-15) : tables dérivées de jeux ODbL (data.ameli.fr), hors dépôt tant que la licence est ouverte
+v2/data/odbl/
+# distancier à vol d’oiseau (~100 Mo), régénérable en ~10 s par v2/besoin/donnees/distancier.py
+v2/data/processed/besoin/distancier_vol_oiseau.parquet
+# agrégats mensuels Open DAMIR (~15 Mo par mois), reconstruits par v2/besoin/donnees/damir.py ; tables dérivées commitées
+v2/data/processed/besoin/damir/agg_*.parquet

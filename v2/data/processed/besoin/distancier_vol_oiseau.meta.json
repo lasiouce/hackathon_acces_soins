@@ -1,0 +1,36 @@
+{
+ "table": "distancier_vol_oiseau.parquet",
+ "chemin": "v2/data/processed/besoin/distancier_vol_oiseau.parquet",
+ "lignes": 9810510,
+ "colonnes": [
+  "com_i",
+  "com_j",
+  "d_km",
+  "t_min_suppose"
+ ],
+ "sha256_16": "9e421a3b713aff74",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "geo.api.gouv.fr, centres des communes et arrondissements (fichiers du 2026-11-14)",
+ "millesime": "géographie 2026",
+ "commande": "uv run python v2/besoin/donnees/distancier.py",
+ "dom": "inclus (971–976), sans paire inter-territoires ; Mayotte hors champ APL",
+ "controles": [
+  {
+   "controle": "symétrie i→j = j→i",
+   "ok": true
+  },
+  {
+   "controle": "communes APL 2024 présentes",
+   "reconstruit": 1.0,
+   "publie": 1.0,
+   "ecart_rel": 0.0,
+   "seuil": 0.005,
+   "ok": true,
+   "source_publie": "apl_commune.parquet (DREES 530)",
+   "absentes": []
+  }
+ ],
+ "notes": "rayon 35.0 km ; t_min_suppose = 1.3 × d / 60.0 km/h (supposé) ; communes et arrondissements PLM tous deux présents",
+ "ecrit_le": "2026-11-15T03:16:02"
+}
