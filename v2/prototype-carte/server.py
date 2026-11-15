@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import time
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -139,6 +140,147 @@ def carte(prof: str, lv: dict, terr: str = "FR") -> dict:
             "regul_deps": V1.zones().get(prof, []), "ms": round((time.perf_counter() - t0) * 1000, 1)}
 
 
+# --- Besoin et indice de couverture (plan v2/docs/lab/derivations/2026-11-15-besoin-carte-plan.md) ----------------
+# C(T,t) = [S(T,t) / B(T,t)] / [S_base(T,2026) / B_base(T,2026)] : indice relatif, 2026 = 1, jamais un « % du besoin
+# couvert ». S = séries b/s de carte() (aucun second passage du jumeau) ; B = besoin_api sur les états de base, mis en
+# cache (le besoin ne dépend que de la population, pas des leviers d'offre). O2 : aucune clé pour la MG ni les spécialistes.
+sys.path.insert(0, str(HERE.parent))
+from besoin.couverture import SANS_COUVERTURE  # noqa: E402
+from besoin.cube import Population  # noqa: E402
+from besoin.sortie import besoin_api  # noqa: E402
+from besoin.transferts import L23_PARAMS, l23  # noqa: E402
+from jumeau.state import State  # noqa: E402
+
+# Estimateurs servis par profession : survivants des protocoles (M1 socle P-B1/P-B5, M2a, M3 pour IDE seulement ; M2b tué).
+SURVIVANTS = {"infirmiers": ("M1", "M2a", "M3"), "kines": ("M1", "M2a"), "dentistes": ("M1", "M2a"),
+              "sages-femmes": ("M1", "M2a"), "pharmaciens": ("M1",)}
+CENTRAL = "M1"
+EN_ATTENTE = [{"estimateur": "M4", "actif": False, "statut": "en attente de validation (P-B4)",
+               "doc": "2SFCA (famille de l'APL), à la commune ; servi quand P-B4 sera tranché"}]
+SEUIL_FOURCHETTE = 0.05      # (max − min) / central en 2050 : au-delà, la fourchette de modèle est montrée (supposé, plan)
+INJ_MG_2018 = 2.6e6          # injections antigrippales en consultation de médecin, 2018 (Cour des comptes, G10.csv ; fiche L23)
+L23_BORNES = {"a": (0.0, 0.05), "k": (0.25, 1.0)}   # plages des fiches (k : fiche L23) ; a : en temps de MG, supposé
+_BES: dict = {}
+_CAR: dict = {}
+
+
+@lru_cache(maxsize=1)
+def _pop() -> Population:
+    return Population.load()
+
+
+def _etats(prof: str) -> dict:
+    """Année -> State de base, de 2026 à H ; 2026 observé quand c'est l'origine du jumeau."""
+    m = V1.model(prof)
+    e = {y: s for y, s in m.base.states.items() if y >= V1.DECISION}
+    if V1.DECISION not in e:
+        e[V1.DECISION] = State.from_table(m.t, m.o, "dep")
+    return dict(sorted(e.items()))
+
+
+def _l23_params(q: dict) -> tuple[dict | None, str | None]:
+    """l23=0|1 et, en mode expert, l23_a, l23_k dans les plages des fiches."""
+    if str(q.get("l23", "0")) not in ("1", "true"):
+        return None, None
+    ov = {}
+    for k, (lo, hi) in L23_BORNES.items():
+        if f"l23_{k}" in q:
+            try:
+                v = float(q[f"l23_{k}"])
+            except ValueError:
+                return None, f"l23_{k} : valeur non numérique"
+            if not lo <= v <= hi:
+                return None, f"l23_{k} hors bornes [{lo} ; {hi}] : {v}"
+            ov[k] = v
+    return ov, None
+
+
+def besoin_cache(prof: str, est: str, ov: dict | None) -> dict:
+    """besoin_api sur les états de base ; ov = paramètres de L23 (None : sans transfert). L23 n'agit que sur les
+    estimateurs qui portent la MG (source) et la profession (cible)."""
+    ov = ov if prof == "pharmaciens" else None          # L23 : cible pharmaciens ; ailleurs, besoin inchangé
+    key = (prof, est, None if ov is None else tuple(sorted(ov.items())))
+    if key not in _BES:
+        tr = (l23(V1.DECISION, **ov),) if ov is not None and prof == "pharmaciens" else ()
+        _BES[key] = besoin_api(_etats(prof), _pop(), est, transferts=tr, ref=V1.DECISION)
+    return _BES[key]
+
+
+def _param_l23(p) -> dict:
+    return dict(name=p.name, value=p.value, unit=p.unit, source=p.source, vintage=p.vintage, status=p.status)
+
+
+def couverture_carte(prof: str, lv: dict, ov: dict | None) -> dict:
+    """Indice de couverture par département et pour la France, base et scénario, par estimateur survivant."""
+    if prof in SANS_COUVERTURE or prof not in SURVIVANTS:
+        raise ValueError(f"pas d'indice de couverture pour {prof!r} (O2 : sources de transferts seulement)")
+    ck = (prof, tuple(sorted(lv.items())))
+    car = _CAR.get(ck) or _CAR.setdefault(ck, carte(prof, lv))
+    t0 = time.perf_counter()
+    years, codes = car["years"], list(car["deps"])
+    Sb = np.array([car["deps"][d]["b"] for d in codes])
+    Ss = np.array([car["deps"][d]["s"] for d in codes])
+    par = {}
+    for est in SURVIVANTS[prof]:
+        r0 = besoin_cache(prof, est, None)
+        r1 = besoin_cache(prof, est, ov) if ov is not None else r0
+        ti = {t: i for i, t in enumerate(r0["territories"])}
+        yi = [r0["years"].index(y) for y in years]
+        rows = [ti[d] for d in codes]
+        B0 = np.asarray(r0["besoin"][prof])[rows][:, yi]
+        B1 = np.asarray(r1["besoin"][prof])[rows][:, yi]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            ref = Sb[:, 0] / B0[:, 0]
+            Cb, Cs = (Sb / B0) / ref[:, None], (Ss / B1) / ref[:, None]
+            nat = lambda S, B: (S.sum(0) / B.sum(0)) / (Sb[:, 0].sum() / B0[:, 0].sum())
+            par[est] = dict(b=Cb, s=Cs, fb=nat(Sb, B0), fs=nat(Ss, B1), r1=r1, B0=B0, B1=B1)
+    c = par[CENTRAL]
+    lo = np.nanmin([p["s"] for p in par.values()], 0)
+    hi = np.nanmax([p["s"] for p in par.values()], 0)
+    flo = np.min([p["fs"] for p in par.values()], 0)
+    fhi = np.max([p["fs"] for p in par.values()], 0)
+    r4 = lambda a: [None if not np.isfinite(v) else round(float(v), 4) for v in a]
+    deps = {d: {"cb": r4(c["b"][i]), "cs": r4(c["s"][i]), "ecart": r4(c["s"][i] / c["b"][i] - 1),
+                "min": r4(lo[i]), "max": r4(hi[i])} for i, d in enumerate(codes)}
+    # régions : rapport des sommes (C n'est pas additif), même formule que agrege()
+    reg = V1.geo().region.to_dict()
+    regs = {}
+    for r in sorted({reg[d] for d in codes if d in reg}):
+        ix = [i for i, d in enumerate(codes) if reg.get(d) == r]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            C = {e: ((Sb[ix].sum(0) / p["B0"][ix].sum(0)), (Ss[ix].sum(0) / p["B1"][ix].sum(0)),
+                     Sb[ix, 0].sum() / p["B0"][ix, 0].sum()) for e, p in par.items()}
+            Cs_ = {e: v[1] / v[2] for e, v in C.items()}
+            cb, cs = C[CENTRAL][0] / C[CENTRAL][2], Cs_[CENTRAL]
+        regs["R" + r] = {"cb": r4(cb), "cs": r4(cs), "ecart": r4(cs / cb - 1),
+                         "min": r4(np.min(list(Cs_.values()), 0)), "max": r4(np.max(list(Cs_.values()), 0))}
+    with np.errstate(divide="ignore", invalid="ignore"):
+        e50 = (hi[:, -1] - lo[:, -1]) / c["s"][:, -1]
+    tr = [t | {"actes_mg_liberes": [round(INJ_MG_2018 * s) for s in l23(V1.DECISION, **(ov or {})).s(years)]}
+          for t in c["r1"]["transferts"]] if ov is not None and prof == "pharmaciens" else []
+    params = [_param_l23(p) for p in L23_PARAMS] + [dict(name="actes_mg_base", value=INJ_MG_2018, unit="injections / an",
+              source="Cour des comptes, « La politique de vaccination depuis 2018 », G10.csv (fiche param-besoin-l23-vaccination)",
+              vintage="2018", status="sourcé")]
+    for p in params:
+        if ov and p["name"] in ov:
+            p |= {"value": ov[p["name"]], "status": "supposé", "source": "réglage expert de la carte"}
+    return {"prof": prof, "ref": V1.DECISION, "years": years, "unite": f"indice, {V1.DECISION} = 1",
+            "grandeur": c["r1"]["grandeur"], "central": CENTRAL, "estimateurs": list(par), "en_attente": EN_ATTENTE,
+            "deps": deps, "regs": regs, "fr": {"cb": r4(c["fb"]), "cs": r4(c["fs"]), "ecart": r4(c["fs"] / c["fb"] - 1),
+                                 "min": r4(flo), "max": r4(fhi)},
+            "fourchette_visible": bool(np.nanmax(e50) > SEUIL_FOURCHETTE) if len(par) > 1 else False,
+            "ecart_modeles_2050": round(float(np.nanmedian(e50)), 4) if len(par) > 1 else 0.0,
+            "seuil_fourchette": SEUIL_FOURCHETTE,
+            "l23": None if ov is None else {"actif": True, "params": params, "transferts": tr,
+                                            "note": "a et k supposés : effet illustratif ; s(t) : forme mesurée (P-B6)"},
+            "hypotheses": {"norme": c["r1"]["norme"], "estimateurs": {e: besoin_cache(prof, e, None)["norme"] for e in par},
+                           "population": c["r1"]["hypotheses"]["population"], "sources": [
+                               "offre : jumeau v2, secteur privé (RPPS / Hippocrate, DREES)",
+                               "besoin : v2/besoin (M1 poids APL DREES, DCIR ; M2a, M3 : fiches de l'axe 1)",
+                               "population : Insee Omphale 2022"]},
+            "ms": round((time.perf_counter() - t0) * 1000, 1)}
+
+
 class Handler(V1.Handler):
     def __init__(self, *a, **k):
         super(V1.Handler, self).__init__(*a, directory=str(HERE), **k)
@@ -164,6 +306,19 @@ class Handler(V1.Handler):
                 return self.send_json({"error": err}, 400)
             try:
                 return self.send_json(carte(prof, lv, q.get("terr", "FR")))
+            except Exception as e:
+                return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
+        if u.path == "/api/couverture":
+            q = {k: v[0] for k, v in parse_qs(u.query).items()}
+            prof = q.get("prof", "pharmaciens")
+            if prof in SANS_COUVERTURE or prof not in SURVIVANTS:
+                return self.send_json({"error": f"pas d'indice de couverture pour {prof!r} (sources de transferts seulement)"}, 400)
+            lv, err = V1.parse_levers(q)
+            ov, err2 = _l23_params(q)
+            if err or err2:
+                return self.send_json({"error": err or err2}, 400)
+            try:
+                return self.send_json(couverture_carte(prof, lv, ov))
             except Exception as e:
                 return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
         if u.path == "/api/interpret":     # texte -> leviers ; traduit, ne calcule rien (v2/langage/README.md)
@@ -270,7 +425,7 @@ def _scenario_carte(appels: list) -> dict | None:
     cands = []
     for i, a in enumerate(appels):
         e = a.get("entree") or {}
-        if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique") or not a.get("code_territoire"):
+        if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique", "couverture") or not a.get("code_territoire"):
             continue
         lv = dict(e.get("leviers") or {})
         if a["outil"] in ("planifier", "traduire_politique"):      # premier mélange vérifié / essai d'ampleur basse
@@ -284,7 +439,9 @@ def _scenario_carte(appels: list) -> dict | None:
         if e.get("profession") not in V1.PROFS:
             continue
         c = {"prof": e["profession"], "terr": a["code_territoire"], "leviers": lv, "annee": max(ans) if ans else 2050}
-        cands.append(((bool(lv), c["terr"] != "FR", i), c))
+        if a["outil"] == "couverture":     # étape 5 du plan besoin-carte : L23 vu par l'assistant -> vue couverture, l23=1
+            c |= {"vue": "couverture", "l23": 1 if e.get("l23") else 0}
+        cands.append(((bool(lv) or bool(c.get("l23")), a["outil"] == "couverture", c["terr"] != "FR", i), c))
     return max(cands, key=lambda x: x[0])[1] if cands else None
 
 
@@ -328,5 +485,11 @@ if __name__ == "__main__":
     for p in V1.PROFS:
         V1.model(p)
         print(f"{p}: origine {V1.MODELS[p].o} ({time.perf_counter() - t0:.1f} s)", flush=True)
+    for p in SURVIVANTS:       # besoin précalculé (ne dépend pas des leviers d'offre) : la vue couverture répond à chaud
+        for e in SURVIVANTS[p]:
+            besoin_cache(p, e, None)
+        if p == "pharmaciens":
+            besoin_cache(p, CENTRAL, {})
+    print(f"besoin : {len(_BES)} estimations en cache ({time.perf_counter() - t0:.1f} s)", flush=True)
     print(f"prêt : http://localhost:{port}", flush=True)
     V1.ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()

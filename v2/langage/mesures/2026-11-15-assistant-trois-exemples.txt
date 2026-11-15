@@ -1,0 +1,38 @@
+Q: Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ?
+**Ce que j'ai compris :** Places en formation : +20 % ; Report de la cessation d'activité : +2 an(s) ; Masseurs-kinésithérapeutes ; Auvergne-Rhône-Alpes
+
+En 2040, environ 19 600 masseurs-kinésithérapeutes libéraux (Auvergne-Rhône-Alpes), probablement entre 16 400 et 22 800 (tendanciel : 18 000).
+
+Premier effet des places en formation : 2032.
+
+Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé.
+appels: ['projeter'] carte: {'prof': 'kines', 'terr': 'R84', 'leviers': {'quotas': 1.2, 'retraite': 2.0}, 'annee': 2040} lexique: {'termes': [], 'ok': True}
+----
+Q: Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?
+**Objectif compris :** +10 % de densité pour 100 000 habitants par rapport au tendanciel 2040, pharmaciens libéraux, Normandie.
+
+Cible : 124,7 pour 100 000 habitants en 2040 (référence : 113,4). Pour situer : 94,3 pour 100 000 habitants en 2026, 113,4 au tendanciel 2040.
+
+**Leviers qui suffisent seuls :**
+- Places en formation : +35 % → 125,0 pour 100 000 habitants (délai : lent : après la durée des études)
+- Places en formation : +35 % (région seulement) → 125,0 pour 100 000 habitants (délai : lent : après la durée des études)
+
+**Leviers qui ne suffisent pas seuls, même au maximum :**
+- Diplômés étrangers accueillis : × 2 → 117,8 pour 100 000 habitants (5,6 % sous la cible)
+- Report de la cessation d'activité : +3 an(s) → 119,2 pour 100 000 habitants (4,4 % sous la cible)
+- Cumul emploi-retraite : × 2 → 113,5 pour 100 000 habitants (9,0 % sous la cible)
+- Départs avant 60 ans : × 0,5 → 
+appels: ['atteindre'] carte: None lexique: {'termes': [], 'ok': True}
+----
+Q: Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ?
+**Ce que j'ai compris :** aucun levier : scénario tendanciel ; Pharmaciens ; Puy-de-Dôme
+
+En 2035, environ 771 pharmaciens libéraux (Puy-de-Dôme), probablement entre 755 et 788 (tendanciel : 771).
+
+Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé.
+
+**Les pharmaciens vaccinent davantage contre la grippe (L23), à partir de 2026 : effectif inchangé dans le modèle.** Couverture des pharmaciens en 2035 (Puy-de-Dôme, indice base 2026 = 1) : 0,98 si les pharmaciens vaccinent davantage contre la grippe, 0,99 au tendanciel, soit couverture proche du tendanciel (-0,7 %).
+
+Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de vaccins à faire : en 2035, environ 1 878 752 vaccinations en moins pour eux, soit le temps de travail d'environ 468 médecins à temps plein (France entière). Les pharmac
+appels: ['projeter', 'couverture'] carte: {'prof': 'pharmaciens', 'terr': 'D63', 'leviers': {}, 'annee': 2035, 'vue': 'couverture', 'l23': 1} lexique: {'termes': [], 'ok': True}
+----

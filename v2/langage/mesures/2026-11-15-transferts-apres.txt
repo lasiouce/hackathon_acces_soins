@@ -1,0 +1,30 @@
+== jeu
+exact 29/30 = 97%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '3/4'}
+{'leviers': '30/30', 'profession': '29/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_2
+exact 27/30 = 90%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '3/4', 'piege': '2/4'}
+{'leviers': '30/30', 'profession': '28/30', 'territoire': '29/30', 'non_modelise': '30/30'}
+== jeu_3
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_4
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_5
+exact 30/30 = 100%
+{'simple': '12/12', 'combine': '6/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '4/4'}
+{'leviers': '30/30', 'profession': '30/30', 'territoire': '30/30', 'non_modelise': '30/30'}
+== jeu_6
+exact 21/30 = 70%
+{'simple': '8/12', 'combine': '3/6', 'negation': '4/4', 'non_modelise': '4/4', 'piege': '2/4'}
+{'leviers': '22/30', 'profession': '30/30', 'territoire': '29/30', 'non_modelise': '30/30'}
+== transferts
+exact 11/12 = 92%
+{'l23': '6/7', 'non_mesurable': '4/4', 'temoin': '1/1'}
+{'leviers': '12/12', 'profession': '11/12', 'territoire': '12/12', 'non_modelise': '12/12', 'transferts': '12/12'}
+- ('t12', 'l23', 'Pharmaciens qui vaccinent et infirmiers en pratique avancée.', {'profession': ('pharmaciens', None)})
+Correspondance exacte (leviers + profession + territoire) : 35/36 = 97%

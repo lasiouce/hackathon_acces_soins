@@ -1,0 +1,52 @@
+# Transferts de tâches (L23, L25, L27, tension/diabète) — 12 phrases écrites le 2026-11-15 AVANT la modification du
+# compilateur (session besoin-assistant), non ajustées ensuite. Pas à l'aveugle : même session que le code (⚑ rapport).
+# Convention : `transferts` = liste des transferts calculables par le module de besoin (L23 seul, avec t0) ;
+# non_modelise = true si l'effectif ne change pas ou si un transfert est non mesurable (L25, L27, tension/diabète).
+- id: t01
+  texte: "Si les pharmaciens peuvent vacciner, combien de pharmaciens à Clermont-Ferrand en 2035 ?"
+  attendu: {leviers: {}, profession: pharmaciens, territoire: D63, non_modelise: true, transferts: [{id: L23, t0: 2026}]}
+  categorie: l23
+- id: t02
+  texte: "Généraliser la vaccination en officine à partir de 2028 dans le Rhône."
+  attendu: {leviers: {}, profession: pharmaciens, territoire: D69, non_modelise: true, transferts: [{id: L23, t0: 2028}]}
+  categorie: l23
+- id: t03
+  texte: "Les pharmaciens vaccinent et on augmente de 10 % les places en pharmacie."
+  attendu: {leviers: {quotas: 1.1}, profession: pharmaciens, territoire: FR, non_modelise: true, transferts: [{id: L23, t0: 2026}]}
+  categorie: l23
+- id: t04
+  texte: "Vaccination antigrippale par les pharmaciens d'officine en Bretagne dès 2027"
+  attendu: {leviers: {}, profession: pharmaciens, territoire: R53, non_modelise: true, transferts: [{id: L23, t0: 2027}]}
+  categorie: l23
+- id: t05
+  texte: "Quelle couverture pour les pharmaciens en 2050 si les officines vaccinent contre la grippe ?"
+  attendu: {leviers: {}, profession: pharmaciens, territoire: FR, non_modelise: true, transferts: [{id: L23, t0: 2026}]}
+  categorie: l23
+- id: t06
+  texte: "Autoriser les pharmaciens à vacciner en 2030 et reporter la retraite d'un an."
+  attendu: {leviers: {retraite: 1.0}, profession: pharmaciens, territoire: FR, non_modelise: true, transferts: [{id: L23, t0: 2030}]}
+  categorie: l23
+- id: t07
+  texte: "Accès direct aux infirmiers en pratique avancée dans l'Hérault."
+  attendu: {leviers: {}, profession: infirmiers, territoire: D34, non_modelise: true, transferts: []}
+  categorie: non_mesurable
+- id: t08
+  texte: "Accès direct au kinésithérapeute sans ordonnance en Occitanie."
+  attendu: {leviers: {}, profession: kines, territoire: R76, non_modelise: true, transferts: []}
+  categorie: non_mesurable
+- id: t09
+  texte: "Les pharmaciens prennent la tension et dépistent le diabète."
+  attendu: {leviers: {}, profession: pharmaciens, territoire: FR, non_modelise: true, transferts: []}
+  categorie: non_mesurable
+- id: t10
+  texte: "Mesure de la pression artérielle en pharmacie dans le Nord."
+  attendu: {leviers: {}, profession: pharmaciens, territoire: D59, non_modelise: true, transferts: []}
+  categorie: non_mesurable
+- id: t11
+  texte: "Augmenter de 20 % les quotas de kinés dans le Puy-de-Dôme."
+  attendu: {leviers: {quotas: 1.2}, profession: kines, territoire: D63, non_modelise: false, transferts: []}
+  categorie: temoin
+- id: t12
+  texte: "Pharmaciens qui vaccinent et infirmiers en pratique avancée."
+  attendu: {leviers: {}, profession: null, territoire: FR, non_modelise: true, transferts: [{id: L23, t0: 2026}]}
+  categorie: l23

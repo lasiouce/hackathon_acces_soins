@@ -5186,3 +5186,87 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Pourquoi :** le but de M4 est la métrique, pas la cible externe ; l'écart restant tient à des données non
   ouvertes (activité individuelle, adresse d'exercice).
 - **Ce qui le renverserait :** un besoin de présenter M4 comme l'APL, ou l'ouverture de l'activité individuelle.
+
+
+## 2026-11-15 — Assistant et compilateur : L23 compilé en transfert, couverture servie par l'API de la carte
+- **Décision** (tâche de la session v2, [rapport](reports/2026-11-15-besoin-assistant.md)) :
+  - **Compilateur** : la vaccination en officine produit un champ `transferts` (L23, avec t0 : année qui suit le terme
+    dans sa proposition, défaut 2026) **et reste dans `non_modelise`**, car l'effectif ne change pas. L25, L27 et
+    tension/diabète restent hors modèle, avec la raison « non mesurable » de leur fiche, sans transfert.
+  - **Assistant** : l'indice de couverture vient seulement de l'outil `couverture` (passerelle → `GET /api/couverture` de
+    la carte, contrat de l'étape 1 du plan besoin-carte ; branche de l'API absente au 2026-11-15). Écart au tendanciel en
+    relatif, qualifié par seuils (< 1 % proche, < 5 % légèrement, au-delà sans adverbe) ; fourchette entre estimateurs
+    quand l'API la donne. Jamais « % du besoin couvert ». MG et spécialistes : refus (O2), dans le schéma, la passerelle,
+    le périmètre et le prompt.
+  - **La passerelle charge le compilateur du dépôt** (`v2/langage/`) quand il existe, sinon celui de `vendor/` ;
+    `LANGAGE_DIR` le force.
+- **Pourquoi :** garder les jeux à l'aveugle comparables (vaccination toujours « non modélisée » pour l'effectif) ; ne
+  pas recalculer la couverture hors de l'API de la carte ; le glossaire évolue plus vite que la copie du modèle.
+- **Ce qui le renverserait :** une API de couverture publiée sous une autre forme ; une décision de servir le
+  compilateur figé de `vendor/` seulement.
+
+## 2026-11-15 — Besoin → carte : vue « Couverture », L23 de bout en bout, M4 en attente (P-B4)
+- **Décision** (session besoin-carte, [rapport](reports/2026-11-15-besoin-carte.md), suit le
+  [plan](derivations/2026-11-15-besoin-carte-plan.md)) :
+  - `GET /api/couverture` sert C indexé 2026 (tendanciel `cb`, scénario `cs`, `ecart` = cs/cb − 1, fourchette
+    `min`/`max` entre estimateurs survivants) par département, région (rapport des sommes) et France.
+  - Estimateurs servis : IDE M1, M2a, M3 ; MK, CD, SF M1, M2a ; PH M1 seul. Central M1. M4 : emplacement désactivé,
+    « en attente de validation (P-B4) ».
+  - **Couleur de la vue = C scénario − 1** ; l'écart au tendanciel (relatif) va dans l'infobulle, la fiche, l'export.
+    Écart au plan : la carte colorée par l'écart seul serait uniforme sans levier.
+  - **L23** (`l23=1`, t₀ = 2026) : `s_∞` 0,74 et `τ` 2,4 **mesurés** (P-B6) reportés dans `L23_PARAMS` ; `a` 0,01,
+    `k` 1, `μ` 0 **supposés** ; mode expert a ∈ [0 ; 0,05], k ∈ [0,25 ; 1]. N'agit qu'avec M1 (M2a et M3 sans MG).
+  - « Actes de MG libérés » = s(t) × 2,6 M injections en consultation (Cour des comptes 2018) : dérivé.
+  - Seuil de la fourchette de modèle : 5 % en 2050 (supposé, repris du plan).
+  - Besoin mis en cache au démarrage (ne dépend pas des leviers d'offre) ; scénario de population central seulement.
+- **Pourquoi :** K1–K6 verts (p95 28,8 ms, n = 60 ; L23 = 0 ⇒ écart 0 ; MG et spécialistes → 400).
+- **Ce qui le renverserait :** une mesure de `a` en temps de MG (axe 4) ; M4 validé par P-B4 ; une préférence de
+  l'utilisateur·rice pour une carte colorée par l'écart au tendanciel.
+- **Non fait :** étape 5 du plan côté `v2/langage/` et `chatbot/` (autre session).
+
+## 2026-11-15 — Carte : le transfert L23 dit en langue courante
+- **Décision** (demande de l'utilisateur·rice) : plus de « actes de MG libérés », de « L23 » ni d'« ETP-équivalents » à
+  l'écran ni dans l'export. Libellé du levier : « Les pharmaciens vaccinent davantage contre la grippe ». Fiche :
+  « vaccinations en moins pour les médecins généralistes, soit le temps de travail d'environ N médecins à temps plein ».
+  Les clés de l'API ne changent pas.
+- **Pourquoi :** un·e utilisateur·rice sans formation doit tout comprendre.
+- **Ce qui le renverserait :** un test de lecture qui montre une phrase encore mal comprise.
+
+## 2026-11-15 — Assistant : outil couverture aligné sur l'API réelle de la carte ; intention « couverture »
+- **Décision** (demande de la session besoin-derivation, [rapport](reports/2026-11-15-besoin-assistant.md)) :
+  - L'outil `couverture` lit la forme réelle de `/api/couverture` (`fr`, `regs`, `deps`, `fourchette_visible`,
+    `l23.transferts`), **remplace** la lecture « contrat du plan » de l'entrée précédente du même jour.
+  - Fourchette entre estimateurs montrée **seulement si `fourchette_visible`** ; sinon, pour un estimateur unique
+    (pharmaciens), la réponse dit qu'il n'y a pas de fourchette de modèle.
+  - Le mot « couverture » dans une question appelle l'outil, avec ou sans L23 ; avec MG ou spécialistes, réponse O2.
+  - Date de L23 : l'API applique 2026 ; une autre date est signalée, pas appliquée.
+- **Pourquoi :** une seule source pour C (la carte) ; règle d'affichage de l'axe 5 respectée.
+- **Ce qui le renverserait :** une API qui accepte `l23_t0` (alors la date compilée serait transmise).
+
+## 2026-11-15 — Carte : la proposition `l23` de l'assistant ou de la phrase règle le levier de vaccination
+- **Décision** : une proposition de l'assistant (`carte.l23`, `carte.vue = "couverture"`) ou un transfert L23 compris
+  par `/api/interpret` coche « Les pharmaciens vaccinent davantage contre la grippe » et ouvre la vue Couverture,
+  seulement au clic « Afficher sur la carte » (même confirmation que les autres leviers).
+  `l23_t0` proposé par le compilateur est ignoré : la carte sert t₀ = 2026.
+- **Pourquoi :** demande de l'utilisateur·rice ; vérifié dans le navigateur (« couverture des pharmaciens à
+  Clermont-Ferrand en 2035 si les pharmaciens vaccinent » → Puy-de-Dôme, 2035, indice 0,98, −0,7 %, même valeur que
+  la réponse de l'assistant). Capture : `figures/2026-11-15-besoin-carte-assistant-l23.jpg`.
+- **Ce qui le renverserait :** une date de transfert choisie par l'utilisateur·rice (brancher `l23_t0`).
+
+## 2026-11-15 — Assistant : L23 dit en langue courante, comme la carte
+- **Décision** (demande de l'utilisateur·rice relayée par la session besoin-derivation ; carte `3c52883`) : libellé du
+  levier dans le compilateur et l'assistant : « Les pharmaciens vaccinent davantage contre la grippe ». Effet sur la MG :
+  « les médecins généralistes ont moins de vaccins à faire : environ N vaccinations en moins, soit le temps de travail
+  d'environ M médecins à temps plein (France entière) ». **Remplace** « actes de médecine générale libérés … ETP-équivalents »
+  de l'entrée « outil couverture aligné sur l'API réelle » du même jour. L'interdit de couverture MG (O2) est inchangé.
+- **Pourquoi :** même vocabulaire à l'écran, dans l'export et dans l'assistant.
+
+## 2026-11-15 — Assistant de la carte : trois exemples, un par cas d'usage
+- **Décision** (demande de l'utilisateur·rice relayée par besoin-derivation) : `ASKEX` passe de 6 à 3 phrases ; l'accueil
+  « Définir un scénario » ne montre plus que ces 3 (les cartes contextuelles « former 20 % » et « atteindre +10 % »
+  doublaient les exemples 1 et 2) :
+  1. leviers → effet : « Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ? » ;
+  2. objectif → possibilités : « Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ? » ;
+  3. transfert (L23) → couverture : « Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ? ».
+  Les trois sont compris de bout en bout en mode sans IA (mesuré, `v2/langage/mesures/2026-11-15-assistant-trois-exemples.txt`) ;
+  mode IA non vérifié (pas de clé). L'assistant dit « demande de soins de ville », plus « besoin ».
