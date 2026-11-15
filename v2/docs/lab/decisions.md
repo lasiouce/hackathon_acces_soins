@@ -4753,3 +4753,17 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Résidu :** centres geo.api et non mairies ; voies `service` exclues ; profil OSRM par défaut.
 - **Ce qui le renverserait :** une offre communale plus fidèle (activité individuelle ouverte, ou une offre inversée
   depuis l'APL publiée) qui, avec nos temps, atteindrait les seuils : l'écart viendrait alors bien de l'offre.
+
+## 2026-11-15 — Module de besoin : rôle de M4 précisé ; pas de décomposition de l'écart à l'APL
+- **Décision** (utilisateur·rice : « the actual M4 calculus was to have something rigorous in the metric of spatial
+  accessibility, that's all ») :
+  - **M4 sert de mesure rigoureuse d'accessibilité spatiale**, pas de reproduction de l'APL. Ce qui le rend
+    rigoureux est déjà en place : paliers et poids publiés par la DREES, conservation exacte `Σ P·A = Σ S`
+    (≈ 10⁻¹⁶), limites rayon 0 et ∞ testées, temps routiers OSRM.
+  - **P-B4 reste au registre tel quel** : il dit seulement que M4 n'est pas le chiffre de l'APL (libellé « indice
+    maison » maintenu) ; au département, M4 suit l'APL (ρ = 0,98, MK).
+  - **Abandonné :** la décomposition de l'écart communal (offre contre distancier) ; elle confirmerait un diagnostic
+    sans rien changer à l'usage.
+- **Pourquoi :** le but de M4 est la métrique, pas la cible externe ; l'écart restant tient à des données non
+  ouvertes (activité individuelle, adresse d'exercice).
+- **Ce qui le renverserait :** un besoin de présenter M4 comme l'APL, ou l'ouverture de l'activité individuelle.
