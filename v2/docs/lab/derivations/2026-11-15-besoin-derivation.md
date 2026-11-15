@@ -9,7 +9,7 @@ tags: [besoin, recours, identification, 2SFCA, APL, transferts-de-taches]
 # Comment représenter le besoin de soins quand on n'observe que le recours ?
 
 **Dérivé :** 2026-11-15. **Temps passé :** ~1 h de Claude (mesuré au journal `eta.py`).
-**Statut :** 4 promus en hypothèse (M0 baseline, M1, M3, M4), 1 promu sous condition (M2, tué si pas de
+**Statut :** 5 promus en hypothèse (M0 baseline, M1, M2a, M3, M4), 1 promu sous condition (M2b, tué si pas de
 saturation), transferts promus ; 0 tué à ce stade (les tests d'abandon sont écrits, pas lancés).
 **Données :** vérifiées le 2026-11-15 en ligne, voir l'exploration
 [2026-11-15-besoin-sources](../explorations/2026-11-15-besoin-sources.md). Toute affirmation sur un jeu de données
@@ -54,8 +54,9 @@ Modèle structurel général :
     R_ip = B_ip · φ_p(A_ip) + D_p(A_ip) + ε_ip ,   0 < φ ≤ 1 ,  D ≥ 0
 
 - `φ` est la part du besoin satisfaite (rationnement par l'accès : distance, délais, renoncement).
-- `D` est la demande induite par l'offre (Evans 1974 ; « loi de Roemer » ; (s) à citer après lecture,
-  non lue ici).
+- `D` est la demande induite par l'offre (Evans 1974 ; Shain et Roemer 1959 ; en France, Delattre et Dormont
+  2003). Références vérifiées dans la [passe de littérature](../explorations/2026-11-15-besoin-litterature.md),
+  résumés lus.
 - La **censure** : on n'observe jamais B, seulement le produit `B·φ(A)` plus `D(A)`. C'est une censure
   multiplicative, de type frontière stochastique (`R = B·e^{−u}`, `u ≥ 0` = besoin non satisfait), et non une censure
   à seuil de type Tobit.
@@ -137,7 +138,9 @@ n'apporte rien : c'est ce que le test d'abandon P-B1 mesure, et ce qu'il doit me
 
 | Ici | Là | Étiquette |
 |---|---|---|
-| R = B·φ(A), φ ≤ 1 | frontière stochastique de production (Aigner–Lovell–Schmidt 1977) : sortie = frontière × inefficacité | **claim** (M2 en dépend) |
+| R = B·φ(A), φ ≤ 1 | frontière stochastique de production (Aigner, Lovell et Schmidt 1977, résumé lu) : sortie = frontière × inefficacité ; appliquée à la demande par Sheng et coll. 2021 | **claim** (M2b en dépend) |
+| recours = f(besoin, offre), évalué à une offre de référence | formules de capitation anglaises : York (Carr-Hill 1994), AREA (Gravelle, Sutton et coll. 2003) | **claim** : M2a **est** cette méthode |
+| besoin = population × état de santé × service par besoin / productivité | cadre de Birch et coll. 2007 ; MacKenzie et coll. 2019 | **claim** : M3 **est** ce cadre |
 | besoin non satisfait | renoncement aux soins (enquêtes EHIS / ESPS, IRDES) | intuition (pas de grain territorial ouvert, probablement) |
 | standardisation par âge du besoin | densité standardisée DREES (DD76, ER1319) et population standardisée de l'APL | **claim** (déjà utilisée par la DREES, à reproduire) |
 | 2SFCA | modèle gravitaire de Huff / Hansen ; dans ce dépôt, rien : le budget d'erreur a rejeté le gravitaire **pour la mobilité des professionnels**, pas pour l'accès des patients | intuition |
@@ -191,6 +194,18 @@ habitant et par an ; `q_p` actes par ETP et par an (activité), pour passer en E
   abandonnée pour cette profession.
 
 ### M2 — recours non contraint (frontière ou saturation)
+**Révisé après la passe de littérature (2026-11-15).** M2 se dédouble.
+- **M2a, « AREA ».** On régresse le recours standardisé sur le besoin et sur l'offre, puis on fixe l'offre à sa
+  moyenne nationale, comme les formules de capitation anglaises (Gravelle et coll. 2003 ; CHE RP 73, texte intégral
+  lu).
+  - Méthode établie, identifiée sous R1.
+  - Elle produit un « besoin à accès moyen », pas un besoin non contraint.
+  - C'est le repli de M2b.
+- **M2b, « saturation ».** Notre extension, décrite ci-dessous.
+  - **A priori défavorable** : la littérature (Delattre et Dormont 2003 en France ; Léonard et coll. 2009, revue de
+    25 études ; Dartmouth) ne montre pas de saturation, et aucun test explicite de plateau n'a été trouvé.
+  - On s'attend à ce que P-B2 la tue.
+
 - Estimer `R_std(T) = R(T)/B₁(T)` (recours standardisé par l'âge, indice 1 = moyenne nationale) contre
   `A(T)` (densité, ou M4) sur les territoires, puis ajuster deux formes concurrentes :
   - **saturation** : `R_std = ρ_max · A/(A + K)` (Michaelis–Menten) ou linéaire par morceaux avec plateau ;
@@ -254,7 +269,13 @@ habitant et par an ; `q_p` actes par ETP et par an (activité), pour passer en E
   ameli par département / médiane nationale, (h)). C'est la principale source d'écart attendue à l'APL.
 - Décalages : l'APL de l'année N utilise la population N−2 et l'activité N−2 (s). La cible 2024 se reproduit donc
   avec l'état 2022.
-- Exploite : la conservation `Σ_i P_i A_i = Σ_j S_j` (test gratuit), les limites de rayon.
+- Exploite : la conservation `Σ_i P_i A_i = Σ_j S_j` (test gratuit ; à confronter à Páez et coll. 2019 sur
+  l'« inflation » des FCA), les limites de rayon.
+- **Poids d'âge figés à une année de base** pour la projection. La DREES renormalise les siens à chaque millésime, si
+  bien que l'APL ne voit pas le vieillissement national (lisez-moi, lu). C'est ce choix qui rend M4 projetable.
+- Littérature : E2SFCA de Luo et Qi (2009) ; APL de Barlet et coll. (2012) et de Vergier et Chaput (2017, paliers
+  « concertés », une convention et non une estimation). Les travaux prospectifs trouvés projettent la population à
+  **offre figée** : une projection conjointe démographie × effectifs par profession n'a pas été trouvée.
 - C'est un **indice d'accessibilité** qui prend un besoin en entrée : on écrit M4∘M1, M4∘M2, M4∘M3. Il ne se
   projette en 2050 qu'en projetant `S_j` à la commune, ce que le jumeau sait faire mais n'affiche pas (projection
   communale non confirmée, N11–N12) : à la commune, M4 est donc **descriptif pour 2026** et projeté seulement à titre
@@ -339,8 +360,8 @@ de MG libérés ». O3 peut venir plus tard comme contexte, sur demande. La mêm
 | **P-B2** forme du recours standardisé contre l'accessibilité (dép.), placebo autre profession | M1 vs M2 | élasticité du quintile haut ≥ 0,5 × quintile bas, ou ΔAIC < 2 → M2 tué | 1 h |
 | **P-B3** M3 vs M1 sur l'indice ; triangulation niveau M3 / M2 | M1 vs M3 | même règle que P-B1 → M3 réduit au recoupement | 1 h (après ingestion) |
 | **P-B4** reproduction de l'APL DREES 2024 (cible externe) | M4 vs naïf | Spearman < 0,90 ou erreur médiane > 15 % ou gain < 0,05 sur les références naïves | 2 h (après distancier) |
-| **P-B5** backtest du recours 2016 → 2025 par la structure d'âge (patientèle ameli, actes si disponibles) | M1 vs persistance du recours par habitant | MAPE de M1 ≥ MAPE de la persistance pour ≥ 3 professions sur 5 → H-B1 rejetée | 45 min |
-| **P-B6** expérience naturelle : expérimentation de la vaccination antigrippale en officine dans six régions à partir de 2017 (Cour des comptes 2026 (s) ; liste et dates des régions à sourcer par l'arrêté), généralisée ensuite. Différence de différences, région × saison, saisons 2015-16 à 2019-20, mois d'octobre à février : actes VGP (DAMIR 3360) pour `s(t)`, **doses de vaccin antigrippal délivrées** (Open Medic, ATC J07BB, région du bénéficiaire, annuel (s)) pour le total | `m = 0` vs `m > 0` ; forme de `s(t)` | effet sur le total des doses nul (IC 95 % contient 0) → `m = 0` retenu ; < 4 régions traitées identifiables, ou régions traitées non séparables dans les 13 zones DAMIR → P-B6 non faisable, `m` reste « supposé » | 1 h 30 + ~25 fichiers DAMIR (~24 Go compressés (d)) ; deux saisons seulement avant 2017 : tendances parallèles peu testables (menace écrite) |
+| **P-B5** backtest du recours 2016 → 2025 par la structure d'âge (patientèle ameli, actes si disponibles) | M1 vs persistance du recours par habitant ; candidat ML (GBM sur covariables ouvertes) | MAPE de M1 ≥ MAPE de la persistance pour ≥ 3 professions sur 5 → H-B1 rejetée ; le GBM n'entre que s'il bat M1 au-delà de l'IC (même règle que C1-GBM) | 45 min + 45 min (GBM) |
+| **P-B6** expérience naturelle : expérimentation de la vaccination antigrippale en officine à partir de 2017 : Auvergne-Rhône-Alpes et Nouvelle-Aquitaine en 2017-18, Hauts-de-France et Occitanie en 2018-19 (arrêtés du 10/05/2017 et du 25/09/2018, selon la passe de littérature), généralisation en 2019-20 (décret 2019-357). La Cour des comptes dit « six régions » : **désaccord à lever** en lisant les arrêtés avant le gel. A priori publiés : `m` faible (Canada, RP 1,05 ; France, 46,1 % contre 46,0 % la première année, HAS via Liard 2022). Différence de différences, région × saison, saisons 2015-16 à 2019-20, mois d'octobre à février : actes VGP (DAMIR 3360) pour `s(t)`, **doses de vaccin antigrippal délivrées** (Open Medic, ATC J07BB, région du bénéficiaire, annuel (s)) pour le total | `m = 0` vs `m > 0` ; forme de `s(t)` | effet sur le total des doses nul (IC 95 % contient 0) → `m = 0` retenu ; < 4 régions traitées identifiables, ou régions traitées non séparables dans les 13 zones DAMIR → P-B6 non faisable, `m` reste « supposé » | 1 h 30 + ~25 fichiers DAMIR (~24 Go compressés (d)) ; deux saisons seulement avant 2017 : tendances parallèles peu testables (menace écrite) |
 
 **Gel hors de git.** Le rapport technique (§ Validation, intégrité) a montré que git ne prouve pas l'antériorité du
 gel (historique réécrit, copie et résultat dans le même commit pour 6 protocoles sur 12). Procédure proposée pour ces
@@ -377,7 +398,8 @@ M1 doit le reproduire ou expliquer l'écart (prix : ~20 min, lecture de son code
 |---|---|---|
 | M0 | **promu (baseline)** | déjà en place ; tout autre ansatz doit le battre sur P-B1 / P-B5 |
 | M1 | **promu, H-B1** | socle ; données au moins nationales par âge ; biais connu en signe |
-| M2 | **promu sous condition, H-B2** | tué par P-B2 s'il n'y a pas de plateau |
+| M2a (AREA) | **promu** | méthode établie ; repli de M2b |
+| M2b (saturation) | **promu sous condition, H-B2** | tué par P-B2 s'il n'y a pas de plateau ; a priori défavorable (littérature) |
 | M3 | **promu, H-B3** | seul ansatz indépendant de l'offre (voie norme) ; utile au moins comme recoupement |
 | M4 | **promu, H-B4** | cible externe (APL) disponible pour 4 professions sur 5 ; pas pour les pharmaciens |
 | Transferts | **promus, H-BT** | identité comptable sûre ; `s(t)` et `m` mesurables sur la grippe en officine si les données le permettent |

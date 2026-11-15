@@ -203,8 +203,13 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~24 Go DAMIR (machine), saisons 2015-16 à 2019-20 | dérivation du besoin | 2026-11-15 | open |
 | Besoin : lire le descriptif de la patientèle (département d'exercice ou de résidence ?) | ~5 min | exploration besoin | 2026-11-15 | open |
 | Besoin : ouvrir l'archive APL V0 2010/2013 (pharmaciens ?) | ~15 min | exploration besoin | 2026-11-15 | open |
-| Besoin : sourcer la liste et les dates des régions de l'expérimentation de 2017 (arrêtés) | ~15 min | exploration besoin | 2026-11-15 | open |
+| Besoin : sourcer la liste et les dates des régions de l'expérimentation de 2017 (arrêtés ; 4 selon les arrêtés relevés, 6 selon la Cour des comptes) | ~15 min | exploration besoin | 2026-11-15 | open |
 | Besoin : pilote OSRM `table` sur 35 000 communes à 30 min (temps machine) | ~30 min Claude + machine inconnue | exploration besoin | 2026-11-15 | open |
 | Besoin : comparer M1 au besoin pondéré par âge de l'observatoire de l'équipe (Hackathon-Evolution-soin) | ~20 min | dérivation du besoin | 2026-11-15 | open |
 | Besoin : durée d'une vaccination en officine (pour `k`), aucune source officielle trouvée | ~20 min, peut-être non mesurable | exploration besoin | 2026-11-15 | open |
-| Besoin : passe de littérature (2SFCA, demande induite, frontière, needs-based planning, substitution, Bass) ; citations de la dérivation de mémoire, non relues ; dire ce qui est nouveau | ~45 min Claude + lecteurs web | question utilisateur·rice | 2026-11-15 | open |
+| Besoin : passe de littérature (2SFCA, demande induite, frontière, needs-based planning, substitution, Bass) ; citations de la dérivation de mémoire, non relues ; dire ce qui est nouveau | ~45 min Claude + lecteurs web | question utilisateur·rice | 2026-11-15 | fait 2026-11-15 : [passe de littérature](explorations/2026-11-15-besoin-litterature.md) |
+| Besoin : recherche de nouveauté journalisée (`novelty-claim`, Scholar et HAL) sur « APL projetée sous scénarios conjoints » et « reproduction de l'APL en données ouvertes », avant d'écrire « premier » | ~30 min | passe de littérature | 2026-11-15 | open |
+| Besoin : textes intégraux de MacKenzie 2019 et Birch, Gibson et McBride 2020 (W, R, identité de conservation ?) | ~30 min | passe de littérature | 2026-11-15 | open |
+| Besoin : conservation du 2SFCA contre Páez et coll. 2019 (inflation des FCA) | ~15 min | passe de littérature | 2026-11-15 | open |
+| Besoin : Gravelle et coll. 2003 en entier (spécification et instruments de M2a) | ~30 min | passe de littérature | 2026-11-15 | open |
+| Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | open |

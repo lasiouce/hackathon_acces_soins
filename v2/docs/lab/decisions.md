@@ -4573,3 +4573,27 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - un pilote d'un fichier est lancé d'abord.
 - **Pourquoi :** 35 à 47 Go à faire transiter sur la machine locale ; le disque ne doit pas les porter.
 - **Ce qui le renverserait :** un débit trop lent en flux (pilote), ou une ingestion déplacée sur une autre machine.
+
+## 2026-11-15 — Module de besoin : passe de littérature ; M2 dédoublé (AREA / saturation) ; ML seulement comme candidat au backtest
+- **Décision** (dérivation révisée, rien n'est construit) :
+  - **M2 dédoublé.**
+    - **M2a « AREA »** : l'offre est fixée à sa moyenne nationale, méthode établie (York 1994, Gravelle et coll.
+      2003). Il est ajouté comme repli.
+    - **M2b « saturation »** : notre extension, toujours soumise à P-B2, avec un a priori défavorable (Delattre et
+      Dormont 2003 ; Léonard et coll. 2009).
+  - **M4 projeté avec des poids d'âge figés à une année de base.** La DREES les renormalise à chaque millésime et ne
+    voit donc pas le vieillissement.
+  - **Le ML n'est pas un estimateur du besoin.** Le besoin n'a pas d'étiquette, et un modèle appris sur le recours
+    reproduit la censure. Un GBM entre seulement comme candidat concurrent dans le backtest P-B5. Il n'est servi que
+    s'il bat M1 au-delà de l'IC, même règle que C1-GBM (rejeté le 2026-11-15).
+- **Pourquoi :** [passe de littérature](explorations/2026-11-15-besoin-litterature.md), trois lecteurs, surtout des
+  résumés. Le cœur de M2 est connu sous le nom de formules de capitation fondées sur le recours. Le point de
+  saturation, l'APL projetée sous scénarios conjoints, la reproduction de l'APL en données ouvertes et l'opérateur de
+  transfert explicite n'ont pas été trouvés.
+- **Résidu :**
+  - les revendications de nouveauté exigent une recherche journalisée (~30 min) avant d'être écrites ;
+  - l'expérimentation de 2017 compte 4 régions selon les arrêtés, 6 selon la Cour des comptes : à lever avant le gel
+    de P-B6.
+- **Ce qui le renverserait :**
+  - un texte intégral (Birch, Gibson et McBride 2020 ; MacKenzie 2019) qui contient déjà `k`, `m` et l'identité ;
+  - une projection de l'APL déjà publiée.
