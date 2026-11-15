@@ -18,7 +18,7 @@ tags: [ledger, perime, stale]
 > - **111 réellement ouvertes**, dont 5 doublons.
 >
 > **Appliqué le 2026-11-15** (accord de l'utilisateur·rice) : 43 lignes passées en « fait », 6 en « dépassé », avec
-> leur preuve ; 4 doublons marqués « en double de » (la paire 143/170 est fermée). Les 7 incertaines restent ouvertes.
+> leur preuve ; 4 doublons marqués « en double de » (la paire 143/170 est fermée). Les 7 incertaines ont été tranchées plus tard le même jour (§ Incertaines).
 
 ## Comment
 Trois lecteurs en lecture seule se sont partagé les lignes, par tranches de 56. Ils ont confronté chacune au registre
@@ -84,16 +84,23 @@ concordent. Les 43 autres verdicts « fait » n'ont pas été recontrôlés un p
 | 163 | table de passage RPPS privé ↔ CartoSanté pour K3 | decisions:3158 ; K3 jugé |
 | 190 | emballer un intervalle comme `Estimator` | decisions:4448 (aucun candidat ne bat C1, la condition est tombée) |
 
-## Incertaines (7) : à trancher
-| Ligne | Objet | Pourquoi incertaine |
+## Incertaines (7) : tranchées le 2026-11-15
+Chaque ligne a été coupée en deux : la partie faite passe en « fait (constaté le 2026-11-15) » avec sa preuve, la
+partie restante devient une nouvelle ligne « open » avec un prix (`open.md`, ligne ajoutée juste après). Rien n'est
+supprimé.
+
+| Ligne (texte) | Partie faite | Partie restée ouverte (prix) |
 |---|---|---|
-| 14 | relancer K1 + filière sur le privé | N1 confirmatoire sur le privé fait (`axe3-n1-prevision`:161) ; variante filière peut-être jamais relancée |
-| 17 | injecter le vivier | injection construite (decisions:1671) ; comparaison au banc non faite |
-| 22 | recalcul communal 5 × 2 | mesuré de 2,0 à 4,6 s sur un état synthétique, « C15 échoue sous charge » (decisions:1564) ; état réel non mesuré |
-| 24 | 3 constats non réfutés | 2 sur 3 vérifiés (decisions:588) ; « entrées ≤ sorties » non vérifié (decisions:1036) |
-| 58 | observatoire → axe 0 (B1, B2, B6, A6) | B1 fait ; aucune trace pour B2, B6, A6 |
-| 61 | borne r ≤ 1,2 contre l'emballement de K1 | répondu au banc (decisions:2745) ; test en mondes simulés non fait |
-| 120 | part privée des pharmaciens hospitaliers : choix de la source | RPPS central, SAE en variante (decisions:1980) ; écart non réconcilié |
+| relancer K1 + filière sur le privé | N1 confirmatoire sur le privé (`axe3-n1-prevision`:161) | variante filière sur le privé, aucune trace (~20 min) |
+| injecter le vivier | injection construite (`jumeau/vivier.py`, decisions:1393) | comparaison au banc N1, déjà visée par la ligne « Mettre la variante `lien_formation.mode = vivier` au banc N1 » : à fusionner (~30 min) |
+| recalcul communal 5 × 2 | mesure sur état synthétique, chemin rapide, critère C15 (`check.py:567`, decisions:1564) | mesure sur l'état communal réel (~20 min) |
+| 3 constats non réfutés | **les trois levés** : conservation (decisions:1040), « 1/5 » remplacé par `fractions` (`check.py:760–768`), reset des modules (decisions:634) ; « entrées ≤ sorties » testée (decisions:1250) | rien (le rapport se trompait : 3 sur 3, pas 2 sur 3) |
+| observatoire → axe 0 | B1 (decisions:861, :1247) | B2, B6, A6 : aucune trace (~1 h) ; attention, « B2 » et « A6 » des decisions:2060 et :2764 sont d'autres éléments (axe 2) |
+| borne r ≤ 1,2 | rejetée au banc N1 (decisions:2749–2754) | test en monde simulé (~20 min) |
+| part privée des PH | choix fait : RPPS central, SAE et Ordre en variante (decisions:1980–1992) | réconciliation de l'écart par appariement individuel (~1 h) |
+
+Correction du rapport : la ligne « 3 constats » est fermée, pas à moitié ouverte ; les nouveaux totaux « ouvertes »
+sont inchangés sauf −1 (ligne 24) et six restes ajoutés.
 
 ## Doublons (5 paires)
 - **137 = 141** : flux des diplômés étrangers.
