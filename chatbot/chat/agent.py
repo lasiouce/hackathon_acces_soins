@@ -398,7 +398,7 @@ class Conversation:
                f"tendanciel, soit {a['qualificatifs']['ecart']} ({e} %)."]
         if a.get("fourchette_estimateurs"):
             lo, hi = a["fourchette_estimateurs"]
-            lig.append(f"Selon l'estimateur du besoin ({', '.join(res['estimateurs'] or [])}), l'indice {scn} va "
+            lig.append(f"Selon l'estimateur de la demande de soins de ville ({', '.join(res['estimateurs'] or [])}), l'indice {scn} va "
                        f"de {f(lo)} à {f(hi)} : le choix du modèle pèse, aucun chiffre unique n'est retenu.")
         for x in res["transferts"]:
             if x.get("actes_mg_liberes_france") is not None:
@@ -412,11 +412,11 @@ class Conversation:
         if res.get("avertissement"):
             lig.append(f"{LIMITE} {res['avertissement']}.")
         if not a.get("fourchette_estimateurs") and len(res.get("estimateurs") or []) == 1:
-            lig.append(f"Un seul estimateur du besoin est servi pour les {res['profession'].lower()} "
+            lig.append(f"Un seul estimateur de la demande de soins de ville est servi pour les {res['profession'].lower()} "
                        f"({res['estimateurs'][0]}, choix du modèle distinguable de l'effet des leviers) : pas de fourchette entre "
                        "estimateurs ; la fourchette de l'effectif ci-dessus reste celle de l'offre.")
         st = ", ".join(f"{p['nom']} {p['statut']}" for p in res["parametres_l23"])
-        lig.append(f"{LIMITE} l'indice compare l'offre au besoin par rapport à 2026, ce n'est pas une part du besoin couverte"
+        lig.append(f"{LIMITE} l'indice rapporte l'offre à la demande de soins de ville, par rapport à 2026 ; ce n'est pas une part de la demande satisfaite"
                    + (f" ; paramètres de L23 : {st}." if st else "."))
         return lig
 

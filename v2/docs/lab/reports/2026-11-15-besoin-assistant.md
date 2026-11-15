@@ -99,3 +99,7 @@ réponse le dit (« indice de couverture non disponible »).
 - **Formulation (2026-11-15, après `3c52883`)** : l'assistant dit « Les pharmaciens vaccinent davantage contre la grippe » et
   « les médecins généralistes ont moins de vaccins à faire : environ N vaccinations en moins, soit le temps de travail
   d'environ M médecins à temps plein », comme la carte ; plus de « actes de MG libérés ». Tests 47/47.
+- **Trois exemples de la carte (2026-11-15)** : `ASKEX` réduit à 3 phrases (leviers → effet ; objectif → possibilités ;
+  L23 → couverture), doublons de l'accueil retirés ; chacune comprise de bout en bout sans IA (appels `projeter` ;
+  `atteindre` ; `projeter` + `couverture` avec proposition `vue: couverture, l23: 1`) ; lexique OK ; mode IA non testé
+  (pas de clé). Capture : `v2/docs/lab/figures/2026-11-15-assistant-trois-exemples.jpg`.

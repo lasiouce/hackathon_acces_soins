@@ -5222,3 +5222,13 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   d'environ M médecins à temps plein (France entière) ». **Remplace** « actes de médecine générale libérés … ETP-équivalents »
   de l'entrée « outil couverture aligné sur l'API réelle » du même jour. L'interdit de couverture MG (O2) est inchangé.
 - **Pourquoi :** même vocabulaire à l'écran, dans l'export et dans l'assistant.
+
+## 2026-11-15 — Assistant de la carte : trois exemples, un par cas d'usage
+- **Décision** (demande de l'utilisateur·rice relayée par besoin-derivation) : `ASKEX` passe de 6 à 3 phrases ; l'accueil
+  « Définir un scénario » ne montre plus que ces 3 (les cartes contextuelles « former 20 % » et « atteindre +10 % »
+  doublaient les exemples 1 et 2) :
+  1. leviers → effet : « Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ? » ;
+  2. objectif → possibilités : « Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ? » ;
+  3. transfert (L23) → couverture : « Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ? ».
+  Les trois sont compris de bout en bout en mode sans IA (mesuré, `v2/langage/mesures/2026-11-15-assistant-trois-exemples.txt`) ;
+  mode IA non vérifié (pas de clé). L'assistant dit « demande de soins de ville », plus « besoin ».
