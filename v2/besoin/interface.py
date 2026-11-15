@@ -3,6 +3,9 @@
 Un estimateur :
   name               clé du registre (M0, M1, …)
   norme              ce que « besoin » veut dire pour lui : c'est un choix déclaré, pas une mesure
+  grandeur           ce que la sortie mesure réellement (décision du 2026-11-15) : par défaut la **demande adressée
+                     au secteur privé de ville**, tirée du recours remboursé hors hôpital public, et non le besoin
+                     de soins de toute la population (dont une part est servie par l'hôpital public)
   assumptions        hypothèses en mots simples
   params             tuple de jumeau.module.Param : valeur, unité, source, millésime, statut (mesuré / sourcé /
                      supposé / non mesurable) ; value None = ajusté par fit()
@@ -33,6 +36,8 @@ SOURCES = ("medecine-generale", "specialistes")                                 
 class NeedEstimator:
     name = ""
     norme = ""
+    grandeur = ("demande adressée au secteur privé de ville (recours de ville remboursé, hors hôpital public) ; "
+                "pas le besoin de soins de toute la population")
     assumptions = ""
     params: tuple = ()
     professions: tuple = PROFESSIONS + SOURCES

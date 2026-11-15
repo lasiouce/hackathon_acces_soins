@@ -5066,3 +5066,58 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** un contrôle du distancier, ou une offre tirée de la BPE, qui ferait monter le Spearman
   au-dessus de 0,90.
 
+## 2026-11-15 — Module de besoin : périmètre « libéral » de DAMIR, trois réserves mesurées et tranchées
+Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mesures sur `damir_profils.parquet`, flux
+2025, secteur privé (`ppu = 2`).
+
+1. **Statut inconnu (`stj = 9`) : déjà réintégré, rien à corriger.**
+   - Part de `stj = 9` en actes (en montant remboursé) :
+
+     | Profession | Actes | Montant |
+     |---|---|---|
+     | IDE | 12,6 % | 7,8 % |
+     | MK | 7,8 % | 5,0 % |
+     | PH | 5,5 % | 5,3 % |
+     | CD | 3,9 % | 3,9 % |
+     | SF | 3,3 % | 2,1 % |
+
+     (mesuré)
+   - **M1 ne filtre pas sur `stj`** : il prend `ppu = 2` et tous les statuts (1 libéral, 2 salarié de centre,
+     9 inconnu). Le sous-comptage supposé n'existe donc pas dans le modèle ; seuls les contrôles de `damir.py`
+     distinguent `stj`. C'est vérifié dans `estimateurs/m1.py`, où le filtre `ppu == 2` est le seul.
+   - Sensibilité mesurée : la répartition par âge, tous statuts contre libéral strict (`stj = 1`), diffère de 2,7 %
+     (IDE), 2,1 % (MK), 1,7 % (CD), 0,9 % (PH) et 0,2 % (SF) en variation totale (mesuré).
+   - **Décision : garder tous les statuts.** On n'applique ni prorata ni filtre `stj = 1`.
+2. **Offre privée contre recours de ville : écart de définition documenté, sans effet sur l'indice si les parts
+   restent constantes.**
+   - L'offre privée du jumeau compte les salariés du privé. Ordre de grandeur, part des salariés dans l'offre privée
+     (`secteur_stock`, au centre de la fourchette) (mesuré) :
+
+     | Profession | Millésime | Salariés du privé | dont clinique | Libéraux et mixtes |
+     |---|---|---|---|---|
+     | IDE | 2023 | 64,5 % | 34,0 % | 35,6 % |
+     | PH | 2026 | 54,5 % (adjoints, industrie) | — | — |
+     | SF | 2026 | 20,3 % | — | — |
+     | MK | 2026 | 6,1 % | — | — |
+     | CD | 2026 | 1,7 % | — | — |
+
+   - Le recours DAMIR de ville ne compte pas les soins facturés par les établissements (IDE de clinique). Il compte en
+     revanche les salariés de centres de santé (`stj = 2` : SF 13 %, CD 16 % des actes).
+   - **Effet sur C** : nul tant que la part libérale de l'offre est constante dans le temps, puisque C est indexé
+     à 2026 et qu'un facteur constant s'annule (dérivé). L'effet n'est pas nul **sur les niveaux** (ETP, comparaisons
+     entre territoires).
+   - **Décision :** l'indice reste « offre privée / demande de ville privée », avec l'écart écrit dans la sortie.
+     Un niveau en ETP n'est jamais comparé à l'effectif privé total des IDE ni des PH. L'alignement exact
+     (projeter la part libérale) reste ouvert.
+3. **Deux grandeurs nommées distinctement.**
+   - Ce que M1, M2a, M2b, M3 et M4 produisent est la **demande adressée au secteur privé de ville**, tirée du
+     recours remboursé hors hôpital public. Ce n'est **pas le besoin de soins de la population**, dont une part est
+     servie par l'hôpital public.
+   - Dans le modèle : attribut `grandeur` de `NeedEstimator` (`v2/besoin/interface.py`), exposé dans la sortie
+     d'API (`sortie.py`, clé `grandeur`). Le mot « besoin » reste celui du code (`B`, `besoin`), mais l'interface
+     affiche la grandeur.
+   - Dans l'interface : un libellé « demande de soins de ville (privé) », jamais « besoin de la population » ;
+     l'indice C s'intitule « couverture de la demande de ville par l'offre privée ». C'est à appliquer au branchement
+     dans la carte (plan de la session licences-et-carte).
+- **Pourquoi :** demande de la session v2. La circularité recours/offre de la dérivation (§2) en est le cas général.
+

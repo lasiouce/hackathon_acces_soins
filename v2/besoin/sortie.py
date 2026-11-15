@@ -38,7 +38,7 @@ def besoin_api(etat: dict, pop: Population | None = None, estimateur: str = "M0"
     profs = [p for p in C1.professions if p not in SANS_COUVERTURE]
     Bo = B1.sel(professions=profs)
     return {
-        "estimateur": est.name, "norme": est.norme, "unite": B1.unit, "ref": ref, "niveau": C1.level,
+        "estimateur": est.name, "norme": est.norme, "grandeur": est.grandeur, "unite": B1.unit, "ref": ref, "niveau": C1.level,
         "years": [int(y) for y in C1.years], "territories": C1.territories.tolist(),
         "besoin": {p: Bo.values[Bo.p(p)].tolist() for p in profs},
         "couverture": {p: C1.values[C1.p(p)].tolist() for p in profs},
