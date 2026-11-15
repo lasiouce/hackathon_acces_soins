@@ -3337,6 +3337,7 @@ un modèle de langage pour l'analyse seule (jamais le calcul), évalué sur les 
 
 ## 2026-11-14 — Carte : curseurs principaux visibles sous la phrase (remplace « tout replié » pour le panneau)
 
+*Remplacé en partie le 2026-11-15 : les familles sont repliées au chargement (entrée « familles de leviers repliées »).*
 **Décision.** Dans le panneau Leviers, sous « Décrire une politique en une phrase », chaque famille est dépliée et montre son
 curseur principal (places, diplômés étrangers, régulation, retraite) ; les réglages secondaires restent sous « Plus de réglages ».
 L'accordéon (une seule famille ouverte) est retiré. Sur mobile, le panneau reste replié à l'ouverture.
@@ -3998,7 +3999,8 @@ précédent). Ou une recette (`recette.mjs --option1`) qui régresse sous 39/40 
   - Chaque accordéon contient le curseur principal, son délai et sa source, puis les réglages fins de la famille.
   - Son titre porte l'effet du réglage (« +1 234 en 2050 ») dès qu'un levier de la famille est modifié.
   - Les accordéons sont **indépendants**, sans groupe, donc plusieurs peuvent être ouverts.
-  - Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.
+  - ~~Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.~~ *Remplacé le
+    2026-11-15 : toutes les familles sont repliées au chargement (entrée du même nom).*
   - Cela respecte l'entrée « Carte : curseurs principaux visibles sous la phrase », qui a retiré l'accordéon à une
     seule famille ouverte.
 - « Plus » ne contient plus que la phrase en langage naturel, le résumé et ses actions, et la liste « Pas encore dans
@@ -5342,3 +5344,18 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Non fait :**
   - mode IA non vérifié (pas de clé) ;
   - pas de bandeau dans la carte.
+
+## 2026-11-15 — Carte : familles de leviers repliées au chargement ; retour à la France sans écran intermédiaire
+- **Décision** (demande de l'utilisateur·rice) :
+  - Les six familles du panneau Scénario (Former, Attirer, Réguler, Retenir, Transférer des tâches, Hypothèses de
+    contexte) sont **repliées à l'arrivée**. Le titre de chaque famille porte toujours l'effet du réglage dès qu'un
+    levier est modifié. **Remplace** « quatre familles ouvertes au chargement » (entrée du 2026-11-14), choisie alors
+    parce que, repliés, « les curseurs semblaient avoir disparu ». Choix confirmé par l'utilisateur·rice, qui avait
+    été averti·e de cette raison.
+  - Bouton « Vue France entière » : la fiche du territoire reste affichée, estompée, jusqu'à l'arrivée des chiffres
+    nationaux, puis passe à « France ». Avant, elle passait par une fiche d'attente « France entière — Chargement… »
+    pendant environ 200 ms. Si les chiffres nationaux n'arrivent pas, la fiche d'attente revient au bout de 4 s.
+- **Vérifié** (navigateur, panneau masqué, dessin de la carte neutralisé) :
+  - 6 familles avec `aria-expanded=false` ;
+  - Puy-de-Dôme → estompée → France en 230 ms, sans titre intermédiaire.
+- **Ce qui le renverserait :** un test de lecture où les curseurs repliés ne sont pas trouvés.

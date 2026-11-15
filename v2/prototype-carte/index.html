@@ -177,6 +177,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 /* panneau Scénario simplifié : nom du paramètre, valeur, curseur */
 /* familles de leviers en accordéons DSFR indépendants : politiques ouvertes au chargement, contexte replié */
 #levfam .fr-accordion{margin:0}
+#card.busy{opacity:.5;transition:opacity .15s}
 #levfam .fr-accordion__btn{display:flex;gap:.6rem;align-items:baseline;font-size:1rem}
 #levfam .fr-accordion__btn .ttl{flex:1;text-align:left}
 #levfam .fr-accordion__btn .ef{font-size:.87rem;font-weight:700;color:var(--sel);white-space:nowrap}
@@ -820,9 +821,9 @@ function mainHTML(l){const inp=l.type=="range"?rangeHTML(l):toggleHTML(l),sup=l.
 const famHTML=(id,titre,corps,open)=>`<section class="fr-accordion" id="q-${id}"><h3 class="fr-accordion__title"><button type="button" class="fr-accordion__btn" aria-expanded="${open}" aria-controls="acc-${id}"><span class="ttl">${titre}</span><span class="ef" id="ef-${id}"></span></button></h3>
   <div class="fr-collapse" id="acc-${id}">${corps}</div></section>`;
 function buildLevFam(){
-  // familles de politiques ouvertes au chargement (décision « curseurs principaux visibles ») ; hypothèses de contexte repliées
-  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>famHTML(f,F.q,mainHTML(LV(F.main))+F.more.map(k=>leverHTML(LV(k),false)).join("")+`<span id="st-${f}" hidden></span>`,true)).join("")
-    +famHTML("transferts","Transférer des tâches ?",l23HTML(),true)
+  // toutes les familles repliées au chargement (décision du 2026-11-15, remplace « ouvertes au chargement ») ; le titre porte l'effet
+  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>famHTML(f,F.q,mainHTML(LV(F.main))+F.more.map(k=>leverHTML(LV(k),false)).join("")+`<span id="st-${f}" hidden></span>`,false)).join("")
+    +famHTML("transferts","Transférer des tâches ?",l23HTML(),false)
     +famHTML("contexte","Hypothèses de contexte",META.levers.filter(l=>l.famille=="contexte").map(l=>leverHTML(l,false)).join(""),false);
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
   const H=S.lvHash||{},bad=[];
@@ -902,7 +903,11 @@ function select(id,fly=true,push=true){if(id=="FR")return backToFrance(push);if(
   const tk=++REQ;fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${id}`).then(r=>r.json()).then(f=>{if(tk!==REQ)return;if(f.error)return toast(f.error);SC=f;levState();loadCard();});
 }
 function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();userMoved=false;fitFrance();}
-function closeCardContent(){const c=$("#card");c.classList.remove("on");delete c.dataset.t;F=null;
+function closeCardContent(keep){const c=$("#card");delete c.dataset.t;F=null;
+  // retour à la France depuis un territoire : l'ancienne fiche reste, estompée, jusqu'aux chiffres nationaux (pas d'écran intermédiaire)
+  if(keep&&c.classList.contains("on")){c.classList.add("busy");c.setAttribute("aria-busy","true");
+    clearTimeout(c._busy);c._busy=setTimeout(()=>{if(c.classList.contains("busy"))closeCardContent();},4000);if(META)renderView();return;}
+  c.classList.remove("on","busy");c.removeAttribute("aria-busy");
   c.innerHTML=`<div class="empty"><h3>France entière</h3><p>Chargement des chiffres nationaux… Cliquez une région sur la carte ou cherchez un territoire pour ses chiffres.</p></div>`;if(META)renderView();}
 // échelle des chiffres de la fiche : le territoire ouvert, ou la France entière (option « chiffres nationaux »)
 let CS="terr",CREQ=0;
@@ -910,10 +915,10 @@ const cardT=()=>CS=="fr"||!S.terr?"FR":S.terr;
 function loadCard(){const T=cardT(),tk=++CREQ;
   if(T===(S.terr||"FR")&&SC){renderCard(SC);return;}   // SC : scénario du territoire ouvert, ou de la France sans territoire
   fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${T}`).then(r=>r.json()).then(f=>{if(tk!==CREQ)return;if(f.error)return toast(f.error);renderCard(f);});}
-function closeCard(){closeCardContent();S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
+function closeCard(){closeCardContent(true);S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
 
 function renderCard(f){
-  F=f;const T=cardT(),c=$("#card"),y=f.years,i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
+  F=f;const T=cardT(),c=$("#card"),y=f.years,_b=(c.classList.remove("busy"),c.removeAttribute("aria-busy")),i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
   const s26=f.scn[i26],s50=f.scn[n],b50=f.base[n],k=f.k,lo=s50*(1-k*(Yn-f.origin)),hi=s50*(1+k*(Yn-f.origin));
   if(!c.classList.contains("on")||c.dataset.t!==T||c.dataset.s!==(S.terr||"")||c.dataset.p!==f.prof){
     c.dataset.t=T;c.dataset.s=S.terr||"";c.dataset.p=f.prof;
