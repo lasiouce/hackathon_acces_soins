@@ -53,6 +53,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Besoin P-B4-PH : APL V0 des pharmacies](v2/docs/lab/reports/2026-11-15-besoin-p-b4-ph-apl-v0.md) | Échec : Spearman 0,72 [0,71 ; 0,74] (seuil 0,90), erreur médiane 33 % ; gain sur la densité +0,14 ; niveau moyen reproduit (22,1 contre 22,5) → M4 pharmaciens indice maison | session besoin-derivation |
 | 2026-11-15 | [Besoin : rapport d'étape](v2/docs/lab/reports/2026-11-15-besoin-etape.md) | 6 protocoles sur 7 passés : M1 retenu pour les 5 professions (CD de justesse, S₁ 87,1 % sous P2) ; M2b tué ; M3 pour l'indice IDE (S₃ 83 %) ; H-B1 retenue (IDE −8,1 pts) ; M4 indice maison en repli ; m = 0 et k supposés ; P-B4 OSRM à compléter | session besoin-etape |
 | 2026-11-15 | [Licences : sources, ODbL, code (brouillon)](v2/docs/lab/reports/2026-11-15-licences-brouillon.md) | 14 tables LO 2.0, 5 ODbL non commitées ; recommandé : ODbL commitée + NOTICE, code EUPL 1.2 ; non décidé | session besoin-axe0-interface |
 | 2026-11-15 | [Besoin → carte : plan de branchement](v2/docs/lab/derivations/2026-11-15-besoin-carte-plan.md) | vue couverture + L23 bout en bout, ~75 min Claude, p95 < 150 ms ; accord attendu | session besoin-axe0-interface |

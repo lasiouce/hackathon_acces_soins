@@ -3,8 +3,8 @@ type: analysis
 date: 2026-11-15
 author: session besoin-derivation
 question: "La mécanique M4 (2SFCA à paliers, paramètres publiés de la V0) reproduit-elle l'APL DREES V0 2013 aux pharmacies, commune par commune ? (P-B4-PH, protocole gelé)"
-headline: "(passage non lancé : écarts au protocole écrits avant calcul)"
-status: draft
+headline: "P-B4-PH échoue : M4 contre APL V0 2013 aux pharmacies, Spearman 0,72 [0,71 ; 0,74] (seuil 0,90), erreur médiane 33 % (seuil 15 %), gain sur la meilleure densité naïve +0,14 [+0,12 ; +0,16] ; niveau moyen reproduit (22,1 contre 22,5 officines pour 100 000 hab.) ; M4 pharmaciens reste un indice maison"
+status: done
 professions: [pharmaciens]
 hypothesis: H-B4-PH ; test P-B4-PH
 sources: [APL DREES Méthode initiale V0 2010/2013 (jeu 530, LO 2.0), FINESS historique 2004–2025 (officines, état au 31/12), Insee séries historiques de population (PMUN2008, PMUN2011), OSRM sur OpenStreetMap (ODbL), table de passage communale du dépôt]
@@ -57,4 +57,59 @@ Aucune APL n'avait été calculée.
    l'année en question.
 
 ## Résultat
-*(à compléter après le passage)*
+Commande : `uv run --with scipy --with python-calamine --with pyarrow python v2/besoin/validation/pb4ph.py --cible <csv V0 pharmacies> --raw <v2/data/raw/insee>`.
+Sortie : `v2/besoin/validation/out/pb4ph.json`. Graine 20261115, B = 2 000.
+
+> **Headline :** la mécanique 2SFCA avec les paliers V0 **ne reproduit pas** l'APL V0 des pharmacies, commune par
+> commune. Le niveau moyen est bien retrouvé, mais pas le classement. M4 pharmaciens reste un **indice maison**.
+> Il bat nettement la densité simple.
+
+| Statistique (2013, 33 897 communes) | Valeur | Seuil | Verdict |
+|---|---|---|---|
+| Spearman M4–APL | **0,723** [0,707 ; 0,738] (m) | ≥ 0,90 | échoue |
+| Erreur relative médiane (APL > 0) | **33,1 %** [31,3 ; 35,3] (m) | ≤ 15 % | échoue |
+| Spearman N1 (densité de la commune) | 0,584 (m) | — | — |
+| Spearman N2 (densité du bassin de vie 2022) | 0,158 (m) | — | — |
+| Gain G = ρ_M4 − max(ρ_N1, ρ_N2) | **+0,139** [+0,121 ; +0,158] (m) | ≥ 0,05, IC > 0 | passe |
+| Conservation Σ P·A = Σ S | écart relatif 0,0 (m) | < 10⁻⁹ | passe (bloquant) |
+| Niveau moyen, officines pour 100 000 hab. | M4 22,1 ; APL 22,5 (m) | — | — |
+
+- **Par taille de commune (2013)** : Spearman 0,63 (< 1 000 hab.), 0,77 (1 000 à 10 000), 0,67 (> 10 000) (m).
+- **2010** (rapporté, non décisif) : Spearman 0,721, erreur médiane 32,8 %, G +0,135 (m). Même verdict.
+- Les 20 communes les plus écartées sont dans `pb4ph.json`.
+
+**Lecture.**
+- C'est le même profil que P-B4 sur les quatre autres professions (Spearman de 0,71 à 0,76) : le niveau est bon, le
+  classement fin ne l'est pas.
+- Ici, l'offre est un simple **nombre d'officines**, sans conversion en ETP. L'activité non ouverte de la DREES ne peut
+  donc pas être la cause principale de l'écart.
+- Restent les **paliers courts** (5 min) face aux écarts de distancier : centres geo.api contre chefs-lieux et Metric
+  2013, contre OSM 2025. Restent aussi la **source de l'offre** (FINESS contre SNIIR-AM) et la géographie 2013 ramenée
+  à 2026.
+- La faiblesse de N2 (0,16) vient probablement de la taille des bassins de vie 2022 face à des paliers de 15 min :
+  c'est une hypothèse.
+
+## Comment
+- **Données :** APL V0 2013 (DREES, LO 2.0) ; FINESS officines au 31/12/2013 ; RP 2011 ; OSRM sur OSM (ODbL),
+  paires à 30 min au plus ; BV2022.
+- **Méthode :** 2SFCA aux paliers V0 (1 / 0,3 / 0,1 sur 0–5 / 5–10 / 10–15 min), population brute, bootstrap des
+  départements. Script : `v2/besoin/validation/pb4ph.py`.
+
+## ⚑ Ce qui pourrait rendre ceci faux
+- **FINESS au lieu de la BPE** (écart 1) : la sensibilité à la BPE n'est pas faite.
+- **Distancier OSM 2025** et centres geo.api au lieu de Metric 2013 et des chefs-lieux. À 5 min, chaque minute compte.
+- **Appariement un à un des communes** : les communes fusionnées sont exclues de la comparaison, pas de l'offre.
+- **Seuils supposés** (repris de P-B4).
+
+## → Ce que ça change
+- **M4** n'est jamais présenté comme « l'APL », ni pour les pharmaciens ni pour les quatre autres professions. C'est un
+  indice d'accessibilité maison, meilleur que la densité simple (G > 0 partout).
+- La suite naturelle serait un test du distancier seul : le temps OSRM vers l'officine la plus proche, comparé au
+  temps Insee (carreaux). Le protocole le prévoit en « rapporté, non décisif », et il n'est pas fait ici.
+
+## ? Suite
+| Point | Coût |
+|---|---|
+| Contrôle du distancier : OSRM contre le temps Insee vers la pharmacie la plus proche (BPE, carreaux 200 m ; 28,7 Go, téléchargement) | ~45 min + téléchargement |
+| Sensibilité de l'offre : BPE 2013 au lieu de FINESS | ~20 min + téléchargement |
+| Fusionner la table OSRM et ce passage dans un M4 servi pour les pharmaciens (indice maison, à part) | ~30 min |

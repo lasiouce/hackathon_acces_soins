@@ -5053,3 +5053,16 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Résidu :** centres geo.api et non mairies ; voies `service` exclues ; profil OSRM par défaut.
 - **Ce qui le renverserait :** une offre communale plus fidèle (activité individuelle ouverte, ou une offre inversée
   depuis l'APL publiée) qui, avec nos temps, atteindrait les seuils : l'écart viendrait alors bien de l'offre.
+
+## 2026-11-15 — Module de besoin, P-B4-PH : M4 ne reproduit pas l'APL V0 des pharmacies ; indice maison
+- **Décision** (règles gelées de P-B4-PH, [rapport](reports/2026-11-15-besoin-p-b4-ph-apl-v0.md)) :
+  - **M4 pharmaciens reste un indice maison**, jamais appelé « APL ».
+  - Mesures 2013 : Spearman M4–APL V0 0,72 [0,71 ; 0,74], sous 0,90 ; erreur médiane 33 %, au-dessus de 15 % ; gain
+    sur la meilleure densité naïve +0,14 [+0,12 ; +0,16], qui passe.
+  - Le niveau moyen est reproduit : 22,1 contre 22,5 officines pour 100 000 habitants.
+- **Pourquoi :** c'est le protocole gelé. Le profil est le même que P-B4 pour les quatre autres professions. Ici
+  l'offre est un simple compte d'officines : l'activité non ouverte n'explique donc pas l'écart. Les suspects
+  principaux sont le distancier (paliers de 5 min) et la source de l'offre (FINESS contre SNIIR-AM).
+- **Ce qui le renverserait :** un contrôle du distancier, ou une offre tirée de la BPE, qui ferait monter le Spearman
+  au-dessus de 0,90.
+

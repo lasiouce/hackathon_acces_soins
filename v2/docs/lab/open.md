@@ -274,3 +274,5 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : IRDES QES 308 : la typologie communale est-elle téléchargeable, sous quelle licence ? | ~10 min ou un courriel | exploration | 2026-11-15 | open |
 | Besoin, axe 4 : Open DAMIR 2025-10 à 2025-12 | — | axe 4 | 2026-11-15 | fait 2026-11-15 05:06 : lus à 3 flux sur un autre réseau, `--controle` reconstruit `damir_profils` et `damir_vaccination` sur 12 mois |
 | Besoin P-B4-PH : `ots upgrade` du jeton OpenTimestamps, puis commit | ~2 min Claude, quelques heures de monde | P-B4-PH | 2026-11-15 | open |
+| Besoin P-B4-PH : contrôle du distancier (OSRM contre le temps Insee vers la pharmacie la plus proche, carreaux BPE) | ~45 min + 28,7 Go de téléchargement | P-B4-PH | 2026-11-15 | open |
+| Besoin P-B4-PH : sensibilité de l'offre (BPE 2013 au lieu de FINESS) | ~20 min + téléchargement | P-B4-PH | 2026-11-15 | open |
