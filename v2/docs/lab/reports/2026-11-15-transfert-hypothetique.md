@@ -85,3 +85,14 @@ Pour a = 10 %, le temps transféré correspond à environ 630 médecins à temps
 | Mode IA : vérifier que le modèle balaie aussi a (consigne dans le schéma, pas dans le prompt) | ~10 min Claude + une clé |
 | Niveau de la demande MG (r̄) depuis Open DAMIR 12 mois, au lieu du placeholder | ~30 min Claude |
 | Bandeau « transfert hypothétique » dans la carte, avec `tr_*` transmis depuis la proposition de l'assistant | ~20 min Claude |
+
+## Suites du 2026-11-15 (« les 3 go »)
+| Suite | Résultat |
+|---|---|
+| Niveau MG / spécialistes | Mesuré, effectif libéral ameli 2025 : 56 005 / 57 346. Facteur 0,911 sur la MG. Exemple : −0,08 / −0,17 / −0,34 % (avant : −0,1 / −0,2 / −0,4 %). Environ 574 médecins à temps plein pour a = 10 % (avant : 630). L23 inchangé. |
+| Mode IA | Avant correction : chiffre unique, a = 10 % de toute la demande MG, −1,7 % (10 fois trop). Après : balayage par la passerelle et consigne « p % des <acte> » → s_inf ; 6 questions conformes ([mesures](../../langage/mesures/2026-11-15-transfert-hypothetique-mode-ia.txt)). |
+| Bandeau | « Transfert hypothétique (paramètres de l'utilisateur) » avec « Retirer ». La carte reprend le point médian (−0,17 %, D63, 2035), « Retirer » remet l'écart à 0. |
+
+⚑ Mode IA : la réponse L23 garde deux écarts antérieurs (« ETP libérés », « la demande diminue »), inscrits au
+ledger. Le dessin de la carte n'a pas été vu dans le navigateur, faute de rendu dans le panneau masqué ; les états
+(bandeau, vue, écart) ont été vérifiés par script.

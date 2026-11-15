@@ -5359,3 +5359,39 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   - 6 familles avec `aria-expanded=false` ;
   - Puy-de-Dôme → estompée → France en 230 ms, sans titre intermédiaire.
 - **Ce qui le renverserait :** un test de lecture où les curseurs repliés ne sont pas trouvés.
+
+## 2026-11-15 — Transfert hypothétique : niveau MG et spécialistes mesuré, balayage dans la passerelle, bandeau dans la carte
+- **Décision** (demande de l'utilisateur·rice : « les 3 go », sur les suites du rapport transfert hypothétique) :
+  - **Niveau de la demande de la source.** Pour le transfert hypothétique seulement, la demande des MG et des
+    spécialistes est ramenée, à l'année de référence, à l'**effectif libéral mesuré** (ameli, France, 1ᵉʳ janvier
+    2025) : 56 005 médecins généralistes, 57 346 spécialistes. La répartition par territoire et par âge reste celle
+    de M1 (MG) ou de M0 (spécialistes).
+    - **Corrige ma proposition** « Open DAMIR » : DAMIR compte des actes, alors que le transfert raisonne en temps de
+      professionnels, comme les cibles (1 professionnel = 1 temps plein).
+    - Facteur MG 0,911 contre l'ancienne valeur provisoire.
+    - **L23 garde le niveau de M1** : levier sourcé déjà validé, laissé inchangé ; l'alignement est au ledger.
+    - K7 compare désormais le transfert générique avec `a` divisé par ce facteur à `l23=1` (écart 0,0).
+  - **Balayage dans la passerelle**, quel que soit le mode.
+    - Avec `transfert`, l'outil `couverture` renvoie `balayage_a` : 5, 10 et 20 % si `a` n'est pas donné, sinon
+      a/2, a et 2a. Le point médian sert de réponse principale.
+    - Le mode sans IA fait un seul appel au lieu de trois.
+    - Consigne au modèle (schéma et prompt) : « p % des <acte> » donne s_inf = p/100, sans `a`.
+  - **`l23` n'est plus actif par défaut** dans l'outil `couverture` : il est demandé seulement pour la vaccination.
+  - **Bandeau dans la carte.**
+    - La proposition de l'assistant porte les `tr_*` du point médian, et la carte les envoie à `/api/couverture`.
+    - Un bandeau « Transfert hypothétique (paramètres de l'utilisateur) » s'affiche, avec « Retirer », tant que la
+      profession affichée est la cible ou la source.
+    - **Remplace** « aucun bandeau » de l'entrée « transferts hypothétiques admis » du même jour.
+- **Pourquoi :** en mode IA, mesuré avant correction, la phrase d'exemple donnait un chiffre unique et lisait
+  « 10 % des renouvellements » comme 10 % de toute la demande MG : −1,7 %, 10 fois trop.
+- **Vérifié :**
+  - mode IA (claude-haiku-5-5), 6 questions ([mesures](../../langage/mesures/2026-11-15-transfert-hypothetique-mode-ia.txt)) :
+    - exemple : s_inf 0,1 et a balayé, −0,08 / −0,17 / −0,34 %, mêmes valeurs qu'en mode sans IA ;
+    - « couverture des généralistes » : O2 dit, indice des infirmiers seulement ;
+    - spécialistes → kinés : balayé ;
+    - L23 : inchangé, −0,7 % ;
+  - carte : le bandeau applique la proposition (−0,17 %, D63, 2035) et « Retirer » remet l'écart à 0 ;
+  - K1–K7 verts, p95 23,5 ms ;
+  - chatbot 50/51 avant nettoyage (le 51ᵉ exige un arbre propre).
+- **Ce qui le renverserait :** une durée publiée des actes de la MG (a deviendrait mesurable) ; un choix
+  d'aligner L23 sur le niveau mesuré.
