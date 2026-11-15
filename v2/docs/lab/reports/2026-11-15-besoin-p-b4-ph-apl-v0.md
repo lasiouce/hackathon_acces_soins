@@ -52,6 +52,9 @@ Aucune APL n'avait été calculée.
 7. **Bootstrap** : 2 000 tirages de départements avec remise (sur le département 2026), graine 20261115, IC percentile.
    L'erreur médiane EM est calculée sur `APL > 0`.
 8. **Métropole seule**, puisque la table OSRM est métropolitaine. Les DOM de la cible sont exclus.
+9. **Valeurs « ND ».** Ajouté après une erreur de lecture, avant tout calcul d'APL. La cible contient des valeurs
+   « ND » (non disponible) : elles sont traitées comme manquantes, et les communes concernées sortent du champ de
+   l'année en question.
 
 ## Résultat
 *(à compléter après le passage)*
