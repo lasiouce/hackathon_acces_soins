@@ -213,3 +213,9 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : conservation du 2SFCA contre Páez et coll. 2019 (inflation des FCA) | ~15 min | passe de littérature | 2026-11-15 | open |
 | Besoin : Gravelle et coll. 2003 en entier (spécification et instruments de M2a) | ~30 min | passe de littérature | 2026-11-15 | open |
 | Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | open |
+| Besoin : sourcer la liste et les dates des régions de l'expérimentation de 2017 | — | exploration besoin | 2026-11-15 | fait 2026-11-15 : 4 régions (ARA, NA en 2017 ; HDF, OCC par l'arrêté du 8/06/2018), Légifrance ; [rapport](reports/2026-11-15-besoin-axe3-protocoles.md) |
+| Besoin P-B1 à P-B6 : protocoles écrits et gelés, horodatés (RFC 3161 FreeTSA et DigiCert, 2026-11-15 02:17 UTC) | — | plan du besoin, axe 3 | 2026-11-15 | fait 2026-11-15 : [rapport](reports/2026-11-15-besoin-axe3-protocoles.md) ; les passages restent ouverts (lignes P-B1 à P-B6 ci-dessus) |
+| Besoin : `ots upgrade` du jeton OpenTimestamps du gel P-B1–P-B6 après ancrage Bitcoin, puis commit | ~2 min Claude, quelques heures de monde | axe 3 besoin | 2026-11-15 | open |
+| Besoin : vérifier les jetons RFC 3161 du gel contre les certificats de FreeTSA et de DigiCert (`openssl ts -verify`) | ~10 min | axe 3 besoin | 2026-11-15 | open |
+| Besoin : geler le seuil de lecture de l'axe 5 (« ratio < 1 ⇒ non distinguable ») avec un jeton, oublié du lot P-B1–P-B6 | ~15 min | axe 3 besoin | 2026-11-15 | open |
+| Besoin P-B6 : avant le passage, lire le descriptif d'Open Medic (région du bénéficiaire, tranches d'âge, 2014 présent ?) et fixer le code DAMIR de l'injection en officine sur la nomenclature seule | ~20 min | protocole P-B6 | 2026-11-15 | open |
