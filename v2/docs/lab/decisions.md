@@ -2449,7 +2449,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
 
-- **M0 reste-t-il une borne de la fourchette de C ?** (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
+- ~~**M0 reste-t-il une borne de la fourchette de C ?**~~ **Tranché le 2026-11-15** : M0 retiré, voir l'entrée datée « axe 5 : M0 retiré de la fourchette affichée ». (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
   [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md))
   - **Question** : M0 (besoin ∝ population) est « cas limite » au rapport d'étape et figure dans l'ensemble gelé
     de l'axe 5. P-B1 a retenu l'âge (M1) contre lui pour les cinq professions. Avec M0, la fourchette MK et IDE est large
@@ -5064,7 +5064,8 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** une offre communale plus fidèle (activité individuelle ouverte, ou une offre inversée
   depuis l'APL publiée) qui, avec nos temps, atteindrait les seuils : l'écart viendrait alors bien de l'offre.
 
-## 2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs
+## ~~2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs~~
+*Remplacée le 2026-11-15 pour l'affichage : voir « axe 5 : M0 retiré de la fourchette affichée ». Le verdict gelé ci-dessous reste valable et publié.*
 - **Décision** (règle gelée du protocole `2026-11-15-besoin-axe5-sensibilite`, [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md)) :
   - **Protocole gelé avant tout calcul de B ou de C** : SHA-256 `10a5b285…cd87834`, RFC 3161 FreeTSA 05:28:15 UTC
     et DigiCert 05:28:16 UTC, OpenTimestamps soumis ; accord de l'utilisateur·rice (« Oui, horodater »). Jetons dans
@@ -5082,3 +5083,23 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** une décision retirant M0 des estimateurs survivants (P-B1 a retenu l'âge) ; un test
   de séparabilité de l'offre qui change R de plus de 0,1.
 
+## 2026-11-15 — Module de besoin, axe 5 : M0 retiré de la fourchette affichée ; le vieillissement est montré comme un effet
+- **Décision** (utilisateur·rice : « okay donc go enlève le », après discussion sous l'angle de l'aide à la décision
+  du DG d'ARS) :
+  - **M0 n'est plus une borne de la fourchette affichée de C**, pour aucune profession. P-B1 l'a réfuté (l'âge est
+    retenu pour les cinq professions) : ce n'est pas une alternative plausible.
+  - **C est servi par l'estimateur retenu** : M1 ; M3 pour les infirmiers. Les estimateurs survivants qui tiennent
+    compte de l'âge (M1, M2a, M3) diffèrent de 0,4 % au plus en 2050 (≤ 0,004 en log, mesuré) : un seul chiffre suffit
+    au regard du choix du modèle de besoin.
+  - **L'écart M0 → M1 est présenté comme l'effet du vieillissement sur le besoin**, à côté de l'effet du levier, pas
+    comme une incertitude. Exemple, IDE, France, 2050 : C = 0,83 avec l'âge, 1,14 sans ; quotas × 1,2 : +11 % (mesuré).
+  - **L'incertitude affichée autour de C est la bande de l'offre** (tirages de C1), qui porte 52 à 92 % de la variance
+    de log C.
+- **Remplace** l'affichage en fourchette de l'entrée « axe 5 : C des kinés et des infirmiers affiché en fourchette
+  entre estimateurs ». **Le verdict gelé ne change pas** : R = 0,77 (MK) et 0,34 (IDE) avec M0 dans l'ensemble, publié
+  tel quel. Ce changement est postérieur au résultat et déclaré comme tel ; aucun seuil n'est modifié.
+- **Pourquoi :** une fourchette bornée par un modèle réfuté se lit « on ne sait pas » ; le message utile au décideur
+  est « le vieillissement pèse plus que ce levier ». La largeur réelle de C vient de l'offre.
+- **Ce qui le renverserait :** un choix normatif d'un « besoin égal par habitant » (M0 servi alors comme option
+  choisie, pas comme borne d'incertitude) ; un estimateur plausible qui s'écarterait de M1 de plus que l'effet des
+  leviers.

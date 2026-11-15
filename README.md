@@ -317,8 +317,9 @@ et la question ouverte sur le seuil de diffusion.
   dépôt, à reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
 - **Sensibilité de l'indice de couverture (axe 5 du besoin, 2026-11-15).** En 2050, l'effet de quotas × 1,2 sur
   C dépasse l'écart entre modèles de besoin pour les sages-femmes, dentistes et pharmaciens, pas pour les kinés
-  (ratio 0,77) ni les infirmiers (0,34) : leur C s'affiche en fourchette entre estimateurs. Cet écart tient à M0
-  (sans effet de l'âge) ; la largeur de C vient d'abord de l'incertitude de l'offre (52 à 92 % de la variance).
+  (ratio 0,77) ni les infirmiers (0,34). Cet écart tient à M0 (sans effet de l'âge), réfuté par P-B1 : il est
+  retiré de l'affichage et montré comme l'effet du vieillissement. C est servi par M1 (M3 pour les infirmiers) ; sa
+  largeur vient de l'incertitude de l'offre (52 à 92 % de la variance), affichée en bande.
   `v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md`.
 - Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
   data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
