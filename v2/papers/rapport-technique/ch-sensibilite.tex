@@ -11,7 +11,11 @@ et 2050, et de combien ? Le choix du décideur pèse-t-il plus, dans la variance
 ignore des données et des paramètres ? Elle sert aussi à mettre un prix sur l'axe~1 : il est inutile de sourcer
 finement un paramètre qui ne déplace pas la sortie. Le code est dans \texttt{v2/sensibilite/} ; le rapport est
 \texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md} et le prétirage \texttt{v2/papers/axe5-sensibilite/main.tex}.
-Toutes les valeurs de ce chapitre sont mesurées sur le jumeau (chapitre~\ref{jum:sec}), sauf mention contraire.
+Toutes les valeurs de ce chapitre sont mesurées sur le jumeau (chapitre~\ref{jum:sec}), dans sa composition de
+référence A0 et non avec l'estimateur servi C1, sauf mention contraire. Le facteur « filière » lit à l'exécution
+les inscrits \texttt{990\_drees\_mmop2} (\texttt{sante.pipeline}), un fichier fourni à l'équipe sous accord de
+confidentialité et non commité : sans lui, les parties~1 et~2 ne se relancent pas telles quelles
+(chapitre~\ref{sec:repro-ref}).
 
 \paragraph{Ce que ce chapitre ne donne pas.} Aucun chiffre 2050 n'est citable comme projection. Le registre l'a
 conclu le 2026-11-14 après les protocoles de l'axe~3 : aucune bande n'est calibrée à son niveau nominal, et les
@@ -53,7 +57,8 @@ Facteur & Famille & Plage & Statut de la plage \\
 fenêtre d'ajustement & estimation & $\{2, 3, 5, 8\}$ ans & choix \\
 \texttt{shrink} & estimation & $\{20, 200, 2000, \text{national}\}$ & choix \\
 entrées & estimation & \{plates, récentes 2 ans\} & choix \\
-filière (CD, PH) & estimation & \{non, oui\} & choix ; inscrits DREES 2020--2025 \\
+filière (CD, PH) & estimation & \{non, oui\} & choix ; inscrits DREES 2020--2025 (fichier sous accord de
+  confidentialité) \\
 part privée des salariés ambigus (sauf IDE) & données & \{min, centrale, max\} & bornes mesurées (axe~4) \\
 fraction de vieillissement & paramètre & $[0{,}18 ; 0{,}22]$ & supposé\suppose{} \\
 part en cumul emploi-retraite & paramètre & fiche $\times [0{,}5 ; 2]$ & sourcé (COR 2016) $\times$ supposé \\
@@ -108,14 +113,15 @@ La partie~1 a demandé \num{201276}\mesure{} runs en \SI{1187}{\second}\mesure{}
         « incertitude » ;
   \item \textbf{(b) backtest extrapolé} : banc à origines glissantes (protocole N1 de l'axe~3,
         $h \in \{1, 3, 5, 8, 10\}$), erreur relative du total national ; pente $a$ de $|\text{erreur}| \propto h$
-        par moindres carrés sans constante, puis $\pm 1{,}6\, a\, h$. Le facteur 1,6 est repris d'un outil de
-        l'équipe pour couvrir environ 8 cas sur 10 ; il est cité, non reproduit.
+        par moindres carrés sans constante, puis $\pm 1{,}6\, a\, h$ : méthode A3 de l'observatoire (outil antérieur
+        de l'équipe), censé couvrir environ 8 cas sur 10 ; cité, non reproduit.
 \end{itemize}
 Au département (partie~2), la largeur (a) est $(P_{95} - P_5)/Y^{\text{tend}}$ sur 500 tirages de la connaissance
 seule, décisions au statu quo. Elle est comparée à un seuil dérivé : deux fois l'effet national à 2050 de quotas
 $\times 1{,}2$, mesuré par profession (\texttt{decisions.md}, 2026-11-14, « fourchettes départementales et seuil
-\enquote{assez sûr pour décider} »). Sous ce seuil, l'effet du levier le plus fort dépasse la demi-bande de
-connaissance.
+\enquote{assez sûr pour décider} »). Sous ce seuil, l'effet de quotas $\times 1{,}2$ dépasse la demi-bande de
+connaissance (pour les kinésithérapeutes et les dentistes, ce sont pourtant les diplômés à l'étranger qui dominent
+la variance due aux leviers).
 
 \paragraph{Version du code.} Le jumeau a changé pendant l'analyse. Les deux parties ont été relancées sur un
 instantané figé du jumeau (\texttt{git archive} du commit \texttt{b64ce56}) et sur les données du 2026-11-14,
@@ -166,7 +172,7 @@ pour les kinésithérapeutes, fenêtre $0{,}35$ contre $0{,}53$\mesure{}. Morris
 la fenêtre et la fraction de vieillissement.
 
 \paragraph{Résultat nul : le cumul emploi-retraite.} $\mu^* \le 0{,}25$\mesure{}\,\% de $Y_{2050}$ pour la part
-comme pour le multiplicateur, $S_T < 0{,}01$\mesure{}. La question est fermée pour l'axe~1. Le report de la
+comme pour le multiplicateur, $S_T < 0{,}01$\mesure{}. La question est fermée pour l'axe~1, pour le total national et dans ce modèle. Le report de la
 retraite a un $S_T \le 0{,}02$\mesure{}, sauf pour les infirmiers en 2030 (0,14\mesure{}).
 
 \paragraph{Partie 1 : fourchettes nationales à 2050} (tableau~\ref{sen:tab:fourchettes}).
@@ -187,13 +193,14 @@ Infirmiers (libéraux) & \num{115323} & \num{95647}--\num{125972} ($-17$ / $+9$\
   ($h_{\max} = 5$) & $+5{,}8$\,\% \\
 \bottomrule
 \end{tabular}
-\caption{Fourchettes nationales à 2050 (partie~1). $Y^{\text{tend}}$, (a) et le biais sont mesurés\mesure{} ; les
+\caption{Réponse du modèle à ses facteurs, pas une projection citable. Fourchettes nationales à 2050
+(partie~1). $Y^{\text{tend}}$, (a) et le biais sont mesurés\mesure{} ; les
 niveaux discrets sont équiprobables\suppose{}. (b) est dérivé\derive{} avec un facteur 1,6 cité, non reproduit.}
 \label{sen:tab:fourchettes}
 \end{table}
 
 Pour les sages-femmes, l'erreur de backtest est un biais qui croît, pas une dispersion : $+1{,}5$\mesure{}\,\% à
-$h = 1$, $+7{,}8$\mesure{}\,\% à $h = 5$, $+18{,}8$\mesure{}\,\% à $h = 10$. La moitié haute de leur bande (b) est donc
+$h = 1$, $+7{,}9$\mesure{}\,\% à $h = 5$, $+18{,}9$\mesure{}\,\% à $h = 10$ (une seule origine). La moitié haute de leur bande (b) est donc
 peu informative. Les deux composantes dépassent la tolérance de $\pm 3$\suppose{}\,\% fixée par le protocole N2 pour la
 reproduction de DD76.
 
@@ -256,8 +263,9 @@ backtest (dérivée\derive{}) et nombre de départements où la largeur (a) est 
 \label{sen:tab:dep}
 \end{table}
 
-Le seuil porte sur la composante (a) seulement : la composante (b) n'existe pas au-delà de $h = 10$. Un département
-« sous le seuil » est un département où l'effet du levier le plus fort se distingue de la bande de connaissance ; ce
+Le seuil porte sur la composante (a) seulement : la composante (b) n'est pas observée au-delà de $h = 10$ (5 pour
+les kinésithérapeutes et les infirmiers) ; en 2050, elle est extrapolée. Un département « sous le seuil » est un
+département où l'effet de quotas $\times 1{,}2$ se distingue de la bande de connaissance ; ce
 n'est pas un département où le niveau 2050 est connu.
 
 \paragraph{Convergence.} Partie~1 ($N = 2048$) : la largeur maximale de l'intervalle de $S_T$ (facteurs

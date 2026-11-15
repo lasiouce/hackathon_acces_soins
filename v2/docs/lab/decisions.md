@@ -2448,6 +2448,8 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Copie commitée du dépôt dans `chatbot/vendor/hackathon_acces_soins/`** (relevé le 2026-11-15, relecture du rapport technique) : 687 fichiers suivis, dont 34 tables traitées (`commune_stock.parquet` compris), hors du manifeste et du contrôle de l'audit ; commitée sans `.gitmodules`, alors que `chatbot/DECISIONS.md` la décrit comme un sous-module. Options : la retirer et lire le dépôt courant (`JUMEAU_REPO=..`, déjà utilisé au lancement), ou l'inclure dans le manifeste et dans le futur seuil de diffusion. Prix ≈ 20 min. Le seuil de diffusion et l'archivage de l'Annuaire (données individuelles, 752 993 personnes, peut atteindre 2 critères AIPD) sont détaillés dans le rapport technique, chap. Conformité.
+- **Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité** (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
 - **Âge d'entrée des diplômés à l'étranger par profession** (ouvert le 2026-11-15, relecture des sources de l'axe 1).
   Aujourd'hui `etrangers.age_entree` est unique, à 28 ans. Les sources donnent : MK 26 ans (ER 1075) ; PH 31 ans (DD76,
   tab. 13) ; CD 28 ans (DD76) ou 32 ans (ER 1026), qui se contredisent.
@@ -4432,6 +4434,7 @@ le même test d'abandon.
   - Le conforme fait passer la couverture à 80 % de 73,5 % à 63–67 % ; MinT dégrade le CRPS de C1 (+0,0019
     [+0,0010 ; +0,0030]).
 - **La bande affichée reste celle des tirages de C1**, sous sa couverture mesurée (règle N6), sans recalibrage.
+  - **Correction du 2026-11-15 (relecture du rapport technique)** : la phrase ne décrit pas le code. La carte affiche $v(1 \pm k_p h)$, où $k_p$ (`v2/methodes/out/c1_pente.json`, facteur 1,6 inclus) est la pente de l'erreur relative du total **national** de C1 au banc du 14, appliquée à chaque territoire, linéaire jusqu'en 2050 (`v2/prototype/server.py` l. 158-180, `v2/prototype-carte/index.html` l. 225). Cette fourchette n'est calibrée ni au département ni au-delà de h = 10.
 - Le prochain effort probabiliste porte sur le **centre**, avec un choc commun national dans C1, et non sur la
   largeur.
 

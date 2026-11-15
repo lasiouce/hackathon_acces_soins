@@ -9,8 +9,15 @@
   \texttt{v2/docs/lab/archive-v1/}.
 \item \textbf{Données.} Les 34 fichiers traités sont commités. Chacun est listé dans
   \texttt{data/processed/MANIFEST.md} et \texttt{v2/data/processed/MANIFEST.md}, avec sa taille, son empreinte
-  SHA-256, son script, sa commande et sa source. Un clone neuf suffit pour lancer le jumeau et la carte. Les données
-  brutes (environ 3,6\,Go\mesure) ne sont pas commitées ; elles ne sont nécessaires que pour reconstruire les tables.
+  SHA-256, son script, sa commande et sa source. Un clone neuf suffit pour lancer la carte. \texttt{jumeau.check} demande en plus deux
+  fichiers bruts non commités : le jeu DREES 491 (ouvert, à télécharger ;
+  \texttt{data/raw/drees/491\_formation\_series\_longues\_1966\_2025.xlsx}, lu par C16) et
+  \texttt{990\_drees\_mmop2} (fichier fourni à l'équipe sous accord de confidentialité, non redistribuable ; lu par
+  \texttt{formation.pool\_drees} et \texttt{sante.pipeline.enrolments}). Sans ce dernier, C5, C9 et la variante
+  filière (C1, C11, facteur « filière » de l'axe~5) ne tournent pas. Le manifeste interdit ce fichier aux scripts
+  de construction des tables (\texttt{v2/data/manifest.py}, liste \texttt{INTERDITS}), pas à l'exécution du
+  jumeau. Pour le reste, les données brutes (environ 3,6\,Go\mesure{} au total) ne servent qu'à reconstruire les
+  tables.
 \end{itemize}
 
 \subsection{Commandes}
@@ -20,7 +27,7 @@ Toutes les commandes se lancent depuis la racine du dépôt.
 uv sync
 uv run python v2/data/manifest.py --check          # manifestes à jour, aucun fichier
                                                    # des organisateurs dans la construction
-PYTHONPATH=v2 uv run python -m jumeau.check        # 18 critères d'acceptation du jumeau
+PYTHONPATH=v2 uv run python -m jumeau.check        # 18 critères ; exige 491 et 990 (voir Données)
 uv run python v2/prototype-carte/server.py         # carte, http://localhost:8767
 
 # axe 2 : banc des méthodes et contrôles du 15 novembre
@@ -43,7 +50,8 @@ uv run python v2/data/build_secteur.py
 uv run python v2/data/manifest.py                  # réécrit les manifestes
 \end{verbatim}
 \end{small}
-Les sorties des scripts de l'axe 2 sont écrites dans \texttt{v2/methodes/out/}, celles de l'axe 3 dans
+\texttt{jumeau.check} écrit \texttt{v2/artifacts/a0\_jumeau/results.json}, qui n'est pas versionné et se
+régénère à chaque run. Les sorties des scripts de l'axe 2 sont écrites dans \texttt{v2/methodes/out/}, celles de l'axe 3 dans
 \texttt{v2/validation/out/}. La carte et l'assistant ont leurs propres commandes, données dans
 \texttt{README.md} et \texttt{chatbot/README.md}. L'assistant demande une clé \texttt{ANTHROPIC\_API\_KEY} dans un
 fichier \texttt{.env} ignoré par git ; sans clé, il bascule en mode déterministe.
