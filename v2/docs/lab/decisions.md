@@ -4736,3 +4736,65 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :**
   - la page « Méthode » de la patientèle, si elle montre que la moyenne n'est pas pondérée par l'effectif publié ;
   - une reprise de la lecture de DAMIR 2015–2020, qui rouvrirait `s(t)` régional par un amendement A2.
+
+## 2026-11-15 — Module de besoin, axe 4 : ingestion des sources, règles de lecture et de licence
+- **Décision** (session besoin-axe4-donnees, dans le cadre du plan accepté) :
+  - **Un module par source** dans `v2/besoin/donnees/` (`apl`, `ameli`, `medic`, `iqvia`, `damir`, `distancier`),
+    chacun avec sa commande de reconstruction. Une fiche `*.meta.json` par table, rassemblée par `manifest.py` dans
+    `v2/besoin/donnees/MANIFEST.md` et `controles.csv`.
+  - **Licence → dossier.** Licence Ouverte 2.0 (APL, Open Medic, IQVIA, Open DAMIR, geo.api) :
+    `v2/data/processed/besoin/`, commité. ODbL (les cinq jeux data.ameli.fr) : `v2/data/odbl/besoin/`, **ignoré par
+    git** tant que la décision de licence est ouverte (§ Open). Seuls le script et le manifeste sont commités.
+  - **Open DAMIR :** filtre `PRS_REM_TYP = 0` (le descriptif l'impose : sinon doublons) ; actes comptés par la
+    quantité `PRS_ACT_QTE`, pas le dénombrement ; dentistes = nature 19, 53, 54 ou spécialité 36 ; MG = spécialité 1
+    (O2) ; clés gardées : mois de flux et de soins, région du bénéficiaire et de l'exécutant, âge, sexe, statut
+    juridique, secteur public/privé, top PS5, `PRS_NAT`. Le filtre « libéral » (`stj = 1`, `ppu = 2`) reste à
+    l'usage, il n'est pas appliqué à l'agrégation. Les agrégats mensuels (~15 Mo par mois, ~0,7 Go) restent sur
+    disque, ignorés par git ; deux tables dérivées sont commitées : `damir_profils` (flux 2024–2025, sans région de
+    l'exécutant ni mois de soins) et `damir_vaccination` (codes de vaccination, mois de soins, deux régions).
+  - **Fenêtre DAMIR lancée après le pilote :** 213 s pour un mois (0,97 Go, 36,6 M lignes, 4,6 Mo/s, mesuré),
+    extrapolé à ~2 h 50 de machine pour les 48 autres mois, sous le seuil de 6 h fixé par la session parente.
+  - **Distancier de repli :** distance du grand cercle entre centres geo.api (communes et arrondissements PLM),
+    paires à ≤ 35 km ; temps = 1,3 × d / 60 km/h, **les deux valeurs supposées**, à traiter en hyperparamètres par
+    M4. Table non commitée (~100 Mo, régénérable en ~10 s). Aucun téléchargement OSM/OSRM.
+  - **Écarté :** `depenses-par-poste` de data.ameli.fr (jeu « risques professionnels », AT/MP du régime général).
+- **Pourquoi :** critères de l'axe 4 du [plan](derivations/2026-11-15-besoin-plan.md) ; règle de l'utilisateur·rice
+  sur la lecture en flux ; licence ODbL ouverte. Détail et contrôles dans le
+  [rapport](reports/2026-11-15-besoin-axe4-donnees.md).
+- **Résidu :** le contrôle « DAMIR contre le total inter-régimes publié, à 0,5 % » n'est **pas réalisable** tel quel :
+  la Statistique mensuelle de la Cnam est en champ régime général + SLM, et DAMIR n'a pas de variable de régime.
+  Seul un rapport DAMIR / RG est publié (§ open.md).
+- **Ce qui le renverserait :** un total inter-régimes publié par profession (DREES, comptes de la santé, ou rapport
+  charges et produits) au même périmètre ; la décision de licence (tables ODbL commitées sous ODbL) ; l'accord pour
+  OSRM (le distancier de repli devient une référence naïve).
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR à 1 flux, 4 flux refusés par le serveur ; filtre en Arrow
+- **Décision :** la demande de l'utilisateur·rice (« Oui, 4 en parallèle », relayée par la session parente) a été
+  essayée puis **abandonnée**. On revient à 1 flux. Le filtre passe de pandas à Arrow, multi-cœur, pour attaquer le
+  vrai goulot (Python mono-cœur, ~93 % d'un cœur, curl à ~4 %). Un refus déclenche une nouvelle tentative toutes
+  les 60 s, jusqu'à 12 par mois.
+- **Pourquoi :** avec 4 flux, le serveur `open-data-assurance-maladie.ameli.fr` sert une page HTML (« Limite de
+  téléchargements atteinte ou délai de connexion dépassé ») au lieu du fichier. Ensuite, même 1 flux est refusé
+  pendant plus de 6 min (observé à 03:53–04:01). Le filtre Arrow est identique au filtre pandas sur un test de
+  synthèse (200 000 lignes, écart max 7·10⁻¹⁵).
+- **Ce qui le renverserait :** une limite documentée qui permette 2 flux, ou un jeton par session (cookie).
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR arrêté à 9 mois sur 49, faute de temps ; P-B6 proposé sur Open Medic
+- **Décision** (accord de l'utilisateur·rice : « oui go », en ajoutant qu'il faudra écrire qu'on était limités par
+  le temps) :
+  - la lecture d'Open DAMIR s'arrête aux 9 mois lus (flux 2025-01 à 2025-09). La boucle de relance est arrêtée.
+    Pas de partage de connexion : ~37 Go pour un seul paramètre ;
+  - `damir_profils` et `damir_vaccination` sont construits sur ces 9 mois ;
+  - **proposé à l'axe 3** pour P-B6 : m mesuré sur Open Medic (boîtes J07BB par région de résidence, 2014–2025,
+    différence de différences annuelle), et s(t) pris dans la part nationale de la Cour des comptes. C'est à l'axe 3
+    de trancher avant le gel.
+- **Pourquoi :**
+  - l'indice M1 est rapporté à 2026, donc le niveau du recours s'annule ; la forme par âge vient des poids APL
+    (4 professions) et des 9 mois de DAMIR (PH) ;
+  - le prix par acte de M3 se calcule sur 9 mois ;
+  - seul s(t) régional exigeait les 25 mois de 2015–2020 ;
+  - le serveur bloquait la machine (adresse IP probable) depuis 03:53, et le temps du hackathon manque.
+- **Supersede en partie** « Open DAMIR lu en flux » et « fenêtre réduite à ~37–49 fichiers » (2026-11-15) : la
+  fenêtre décidée n'est pas lue en entier. La règle de lecture en flux reste.
+- **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
+  arrêté.
