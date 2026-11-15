@@ -26,8 +26,9 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | Méthodes (axe 2) | ✅ cohortes bayésiennes : MAPE dép. h=5 7,73 % contre 8,68 % (stock-flux) ; projection communale K3–K5 non confirmée, affichage au département |
 | Validation (axe 3) | ✅ protocoles N1–N12 gelés ; dépôts à noter sur les effectifs 2027 |
 | Données (axe 4) | ✅ public / privé séparé : « libéral » = privé 2026, SF 12 059 – 14 660, PH 60 005 – 67 219, CD 40 784 – 47 894, MK 98 828 – 103 986, IDE 2023 277 788 ; zonage par commune ; grain communal |
+| Module de besoin | 🟡 6 protocoles gelés sur 7 passés ([étape](v2/docs/lab/reports/2026-11-15-besoin-etape.md)) : M1 (âge) retenu pour les 5 professions ; M2b tué ; M3 pour l'indice IDE seul ; H-B1 retenue ; M4 indice maison (repli, ρ 0,66–0,77) ; P-B4 OSRM et P-B4-PH à passer ; k, m supposés |
 | Sensibilité (axe 5) | ✅ amplitude de référence DD76 : en 2050 la décision pèse plus que l'incertitude pour IDE (0,89), MK (0,81), SF (0,59) |
-| Next | recette personas sur la carte finale · module de besoin ([plan du 2026-11-15](v2/docs/lab/derivations/2026-11-15-besoin-plan.md) accepté, O2 ; vagues 1 et 2 en cours) · spécialistes : amélioration possible, hors plan (2026-11-15) |
+| Next | recette personas sur la carte finale · module de besoin : P-B4 OSRM, P-B4-PH, fusion des branches de passage · spécialistes : amélioration possible, hors plan (2026-11-15) |
 
 ## Present
 - [One-page TL;DR (PDF), 2026-11-13](v2/docs/lab/archive-v1/presentations/2026-11-13-tldr.pdf). (v1, archivé)
@@ -52,6 +53,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Besoin : rapport d'étape](v2/docs/lab/reports/2026-11-15-besoin-etape.md) | 6 protocoles sur 7 passés : M1 retenu pour les 5 professions (CD de justesse, S₁ 87,1 % sous P2) ; M2b tué ; M3 pour l'indice IDE (S₃ 83 %) ; H-B1 retenue (IDE −8,1 pts) ; M4 indice maison en repli ; m = 0 et k supposés ; P-B4 OSRM à compléter | session besoin-etape |
 | 2026-11-15 | [Besoin : cible externe de M4 pharmaciens](v2/docs/lab/explorations/2026-11-15-besoin-cible-pharmaciens.md) | APL DREES V0 aux pharmacies (commune, 2010 et 2013, Licence Ouverte) retenue ; IRDES QES 308 sans APL pharmacies ; protocole P-B4-PH rédigé, non gelé | session besoin-cible-pharmaciens |
 | 2026-11-15 | [Besoin P-B6 : vaccination en officine](v2/docs/lab/reports/2026-11-15-besoin-p-b6-grippe-officine.md) | m = 0 retenu, ATT +0,73 % [−0,12 ; +1,58], p permutation 0,15 ; placebo 0–19 ans en échec → non attribuable, m reste supposé ; s(t) national s∞ 0,74, τ 2,4 ans | session besoin-derivation |
 | 2026-11-15 | [Besoin P-B5 : backtest du recours 2016 → 2025](v2/docs/lab/reports/2026-11-15-besoin-pb5-backtest.md) | H-B1 retenue : M1 bat la persistance pour IDE (MAPE 7,7 contre 15,8), MK (10,8 contre 14,1), CD (9,4 contre 10,4) ; SF perd ; GBM qualifie pour IDE, CD, SF, gain lié à la croissance de l'offre ; mise en service à décider | session besoin-v2-m1-m3 |
