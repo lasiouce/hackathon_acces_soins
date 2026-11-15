@@ -16,5 +16,5 @@ Les millésimes et les contrôles de chaque table sont dans les fichiers `.meta.
 Les cartes, figures et réponses ponctuelles qui en sont tirées sont des « œuvres produites » au sens de l'ODbL. Elles
 portent la mention : « Contient des données de data.ameli.fr (CNAM), sous ODbL ».
 
-`osm/` (dérivés d'OpenStreetMap, © les contributeurs d'OpenStreetMap, ODbL 1.0) n'est pas versionné à cause de sa
+`osm/` et `besoin/distancier_osrm.parquet` (dérivés d'OpenStreetMap, © les contributeurs d'OpenStreetMap, ODbL 1.0) n'est pas versionné à cause de sa
 taille : on le reconstruit par `v2/besoin/donnees/distancier_osrm.py`.
