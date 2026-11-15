@@ -5172,3 +5172,17 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Ce qui le renverserait :** un choix normatif d'un « besoin égal par habitant » (M0 servi alors comme option
   choisie, pas comme borne d'incertitude) ; un estimateur plausible qui s'écarterait de M1 de plus que l'effet des
   leviers.
+
+## 2026-11-15 — Module de besoin : rôle de M4 précisé ; pas de décomposition de l'écart à l'APL
+- **Décision** (utilisateur·rice : « the actual M4 calculus was to have something rigorous in the metric of spatial
+  accessibility, that's all ») :
+  - **M4 sert de mesure rigoureuse d'accessibilité spatiale**, pas de reproduction de l'APL. Ce qui le rend
+    rigoureux est déjà en place : paliers et poids publiés par la DREES, conservation exacte `Σ P·A = Σ S`
+    (≈ 10⁻¹⁶), limites rayon 0 et ∞ testées, temps routiers OSRM.
+  - **P-B4 reste au registre tel quel** : il dit seulement que M4 n'est pas le chiffre de l'APL (libellé « indice
+    maison » maintenu) ; au département, M4 suit l'APL (ρ = 0,98, MK).
+  - **Abandonné :** la décomposition de l'écart communal (offre contre distancier) ; elle confirmerait un diagnostic
+    sans rien changer à l'usage.
+- **Pourquoi :** le but de M4 est la métrique, pas la cible externe ; l'écart restant tient à des données non
+  ouvertes (activité individuelle, adresse d'exercice).
+- **Ce qui le renverserait :** un besoin de présenter M4 comme l'APL, ou l'ouverture de l'activité individuelle.
