@@ -11,6 +11,7 @@ incertitude: "zones sur-dotées = 27,4 % de la population et 13,7 % des communes
 source: "Avenant n° 6 à la convention nationale des infirmiers, signé le 29/03/2019, avis NOR SSAS1916881V, JORF n° 0135 du 13/06/2019, texte 128 — https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000038599882 (texte intégral : https://bretagne.paps.sante.fr/media/62292/download), art. 3.4 et 3.4.4 ; zonage : data.gouv.fr, « Zonages des professionnels de santé libéraux » (Atlasanté/DataSanté), fichier t-zonages-com.csv — https://www.data.gouv.fr/datasets/zonages-des-professionnels-de-sante-liberaux"
 millesime: "avenant 2019 ; zonage par commune mis à jour le 20/10/2026"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -54,3 +55,9 @@ cibles nationales de l'avenant, art. 3.2.1) :
   de cessations dans ces zones, par an. Il doit être ≤ 1, hors dérogations.
 
 **Géocodes (axe 4).** [[data-zonage-ide]] : liste des communes en « remplacement seul », extraite de CartoSanté. Le nombre concorde avec le fichier data.gouv (à ±10 communes près).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Cibles, signature du 29/03/2019, NOR SSAS1916881V, JORF du 13/06/2019 et texte 128 confirmés (avenant 6, p. 13-14 et 83 ; Légifrance). Le « 1 pour 1 » est une lecture de la règle de succession. La règle des 2/3 (art. 3.4.4) vise les nouveaux installés, à compter du nouveau zonage (p. 28).

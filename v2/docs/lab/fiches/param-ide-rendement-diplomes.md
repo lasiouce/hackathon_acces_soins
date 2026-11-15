@@ -11,6 +11,7 @@ incertitude: "0,81-0,85 sur les entrées 2009-2018, puis 0,76 (2019), 0,75 (2020
 source: "DREES, enquête Écoles, jeu 491, Séries longues 1966-2025, onglets Inscrits1ere_an et Diplomes_an — https://data.drees.solidarites-sante.gouv.fr/explore/dataset/491_la-formation-aux-professions-de-sante/ ; contrôle : ER 1266 (diplômés 2021 = 81 % des inscrits en 1re année 2018), communiqué DREES du 07/11/2023 (76 % pour 2022)"
 millesime: "entrées 2008-2022, diplômés 2011-2025 (mise à jour du 29/10/2026)"
 statut: mesuré
+relecture: "2026-11-15 : confirmé (0,72) ; étiquette corrigée"
 date: 2026-11-14
 ---
 
@@ -40,3 +41,11 @@ Contrôle : ER 1266 donne 81 % pour l'entrée 2018, nous trouvons 81,4 %.
   proche du « 30 % » qui circule. Mais c'est un écart cumulé sur 3 ans,
   calculé avec les redoublants au dénominateur : ce n'est **pas** un abandon
   annuel.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé (0,72) ; étiquette corrigée** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- 0,718 = 26 020 / 36 218 confirmé (491) : valeur du code (`formation.py`) inchangée.
+- **Étiquette** : le 76 % du communiqué du 07/11/2023 est le ratio diplômés 2022 / inscrits 2019 (24 379 / 32 114 = 75,9 %, *dérivé*), pas l'entrée 2022. Communiqué non ouvert.
+- 0,77 (33 972 nouveaux inscrits) : introuvable dans les séries longues.

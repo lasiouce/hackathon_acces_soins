@@ -11,6 +11,7 @@ incertitude: "±1 point en ETP (SF 18,4 %) ; stable sur 2023-2025 (SF 20,4 → 1
 source: "DREES, Statistique annuelle des établissements de santé (SAE), Bases statistiques 2023-2025, bordereaux Q23 (EFFPNM, ETPPNM ; N2800 sages-femmes, N2410 kinés) et Q20 (EFFSAL, ETPSAL ; M3050, M3012 pharmaciens, M3030 odontologie), statut juridique ID.STJR — https://data.drees.solidarites-sante.gouv.fr/explore/dataset/708_bases-statistiques-sae/"
 millesime: "PMI 31/12/2024 ; SAE 2025 (personnel au 31/12/2025), mise à jour du 2026-11-04 ; 2023 et 2024"
 statut: mesuré
+relecture: "2026-11-15 : confirmé (codes)"
 date: 2026-11-14
 ---
 
@@ -141,3 +142,9 @@ pd.set_option("display.width", 250)
 print("FI de", " ".join(sorted(CODES and {b for b,_ in CODES})), "absents de ID:", {b: int((~rd(b).FI.isin(idt.FI)).sum()) for b in ("Q20","Q23")})
 print(df.round(3).to_string(index=False))
 ```
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé (codes)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Codes vérifiés dans la nomenclature et le guide SAE 2025 : N2800 sages-femmes, N2410 kinés, M3030 odontologie, M3012 biologistes, M3050 pharmaciens hors biologie ; STJR 1 / 2 / 3 = public / privé lucratif / privé non lucratif. Les noms de colonnes EFFPNM, ETPPNM, EFFSAL et ETPSAL n'apparaissent que dans les en-têtes des CSV. Parts non recalculées (*mesuré* par notre code).

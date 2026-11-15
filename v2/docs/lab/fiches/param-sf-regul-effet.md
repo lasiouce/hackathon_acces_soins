@@ -11,6 +11,7 @@ incertitude: "aucune ampleur publiée ; indicateur IGAS = rapport des densités 
 source: "IGAS, rapport n° 2022-027R (Albertone, Gueydan, Flamant, Perruchon), Évaluation de la COG 2018-2022 de la CNAM, p. 67, § 200 et note 133 ; Cour des comptes, Organisation territoriale des soins de premier recours, mai 2024, p. 31 — https://www.vie-publique.fr/files/rapport/pdf/294141.pdf"
 millesime: "2016-2019 (IGAS 2022) ; 2016-2019 (Cour des comptes 2024)"
 statut: non mesurable
+relecture: "2026-11-15 : corrigé (attribution)"
 date: 2026-11-14
 ---
 
@@ -35,3 +36,9 @@ la même zone. Le flux d'entrées y est donc plafonné par les sorties (voir
   sur-dotées contre zones intermédiaires, avant/après la date d'effet.
 - Cela demande le zonage SF par commune (axe 4).
 - Coût estimé : ~3 h une fois le zonage disponible.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **corrigé (attribution)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Direction seule confirmée : baisse des disparités 2016-2019 (IGAS p. 67, note 133 ; Cour p. 31). **Correction** : le bilan Cnam en commission GDR (23 juin 2022 selon la Cour, juillet 2022 selon l'IGAS) porte sur les aides à l'installation, pas sur la régulation. Il ne source pas la baisse SF, et la note 133 ne cite aucune source.

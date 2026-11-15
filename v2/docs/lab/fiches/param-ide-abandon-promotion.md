@@ -11,6 +11,7 @@ incertitude: "large : 10,4 % (2014) → 25,0 % (2025) ; changement de définitio
 source: "DREES, enquête Écoles, jeu « La formation aux professions de santé » (491), Séries longues 1966-2025, onglet Interruptions_promo — https://data.drees.solidarites-sante.gouv.fr/explore/dataset/491_la-formation-aux-professions-de-sante/ ; DREES Études et Résultats n° 1266 (mai 2023) — https://drees.solidarites-sante.gouv.fr/sites/default/files/2023-05/ER1266.pdf"
 millesime: "série 2014-2025, mise à jour du 29/10/2026"
 statut: sourcé
+relecture: "2026-11-15 : confirmé (valeurs) ; libellé corrigé"
 date: 2026-11-14
 ---
 
@@ -45,3 +46,10 @@ promotion (*cité*, données DREES) :
 - ⚑ Les interruptions « provisoires » reviennent en partie : les notes sont
   conservées 3 ans (arrêté du 21/04/2007). Toutes interruptions = borne
   haute ; définitives = borne basse.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé (valeurs) ; libellé corrigé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- 25,0 % (promotion diplômée en 2025) et 11,9 % de définitives (2024) confirmés. Les colonnes de 491 sont des années de diplôme (entrée = diplôme − 3).
+- **Définition** : jusqu'en 2021, ce sont les interruptions « sans annonce de report » ; « toutes interruptions » ne vaut qu'à partir de 2022. Le 14 % de l'ER 1266 (13,6 %, p. 5) porte sur l'entrée 2018, soit le diplôme 2021 (491 : 13,5 %). Il n'y a pas de contradiction.

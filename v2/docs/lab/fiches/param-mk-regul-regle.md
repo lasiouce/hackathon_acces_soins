@@ -11,6 +11,7 @@ incertitude: "zones non prioritaires = 26,5 % de la population et 8,1 % des comm
 source: "Avenant n° 7 à la convention nationale des masseurs-kinésithérapeutes, conclu le 13/07/2023, arrêté d'approbation du 21/08/2023, NOR SPRS2322893A, JO du 25/08/2023, texte 28, art. 1.2.1 et annexe 3 — https://bretagne.paps.sante.fr/media/41875/download ; Conseil d'État, 17/07/2024, n° 488665 (recours rejetés) — https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2024-07-17/488665 ; zonage : data.gouv.fr, « Zonages des professionnels de santé libéraux » (Atlasanté/DataSanté), fichier t-zonages-com.csv — https://www.data.gouv.fr/datasets/zonages-des-professionnels-de-sante-liberaux"
 millesime: "avenant 2023 ; zonage par commune mis à jour le 20/10/2026"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -44,3 +45,9 @@ renomme la zone « non prioritaire ». *[Corrigé le 2026-11-14 après audit en 
 Obligation d'exercice associée : [[param-mk-obligation-exercice]].
 
 **Géocodes (axe 4).** [[data-zonage-mk]] : liste des communes en « remplacement seul », extraite de CartoSanté. Le nombre concorde avec le fichier data.gouv (à ±10 communes près).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Art. 1.2.1 et annexe 3 confirmés : succession, cédant ≥ 1 200 actes, successeur sous 2 ans, signature du 13/07/2023 ; recours rejetés par le CE. Régulation depuis 2018 : Cour p. 95, note 152, et CNOMK p. 15. Le numéro « avenant 5 » n'est pas dans ces sources (*dérivé*). « Régulation 2012 annulée en 2014 » reste sans source.

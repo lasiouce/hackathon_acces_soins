@@ -11,6 +11,7 @@ incertitude: "±1 an ; millésime RPPS 2020 ; MK et IDE : pas d'âge publié, ma
 source: "DREES, Les Dossiers n° 76 (mars 2021), tableaux 12 et 13 — https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-03/DD76.pdf ; DREES ER n° 1062 (IDE, 2018) et n° 1075 (MK, 2018), encadré 2"
 millesime: "RPPS 2020 ; 2016"
 statut: sourcé
+relecture: "2026-11-15 : confirmé, complété"
 date: 2026-11-14
 ---
 
@@ -33,3 +34,11 @@ pendant lesquelles un diplômé compte dans le stock.
 (annuaire santé, millésimes empilés). On peut aussi le dériver de nos stocks
 par âge (`data/processed/stock.parquet`) : c'est la classe d'âge où le
 solde des entrées culmine. Coût estimé : ~30 min.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé, complété** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Âges SF 24, CD 26, PH 27/28/29, étrangers SF 28 et CD 28 confirmés (DD76, tableaux 12-13).
+- Ajout : MK diplômés à l'étranger, 26 ans en moyenne (*cité*, ER 1075, p. 2, primo-inscrits 2015). Aucun âge d'entrée IDE dans l'ER 1062.
+- Le « 99 % » porte sur le délai diplôme → première activité des diplômés en France (ER 1062 p. 3, ER 1075 p. 4), pas sur l'âge.

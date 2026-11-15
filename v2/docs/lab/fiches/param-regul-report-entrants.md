@@ -11,6 +11,7 @@ incertitude: "aucune source ne chiffre le nombre de refus de conventionnement ni
 source: "IRDES QES n° 270 (2022), p. 6 — https://www.irdes.fr/recherche/questions-d-economie-de-la-sante/270-inegalites-territoriales-de-repartition-des-infirmieres-liberales.pdf ; Cour des comptes, mai 2024, p. 95 — https://www.vie-publique.fr/files/rapport/pdf/294141.pdf"
 millesime: "2022 ; 2024"
 statut: non mesurable
+relecture: "2026-11-15 : introuvable (partie qualitative)"
 date: 2026-11-14
 ---
 
@@ -50,3 +51,9 @@ implicitement une destination.
   « personne / activité » : oui pour l'adresse, mais pas en historique. Il
   faut empiler des millésimes.
 - Coût estimé : ~4 h.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **introuvable (partie qualitative)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Le report vers les zones intermédiaires en bordure des zones sur-dotées est confirmé (QES 270). En revanche, le « contournement par le remplacement » n'est ni dans QES 270 ni dans la Cour 2024. Le « deux tiers (EHESP) » est introuvable dans ces deux sources. À marquer *supposé* tant qu'une source n'est pas lue. Le défaut du code (100 % voisine, *supposé*) est inchangé.

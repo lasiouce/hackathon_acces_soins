@@ -11,6 +11,7 @@ incertitude: "exploratoire : le test de tendances parallèles pré-enregistré �
 source: "Axe 3, N3 (v2/docs/lab/reports/2026-11-14-axe3-n3-leviers-did.md) et décision du 2026-11-14 « Axe 3, N3 lancé » ; données : Atlasanté zonage c987d0e2 (génération 2012), effectifs IDE libéraux par commune"
 millesime: "2004-2019"
 statut: supposé
+relecture: "2026-11-15 : confirmé (rapport interne)"
 date: 2026-11-14
 ---
 
@@ -34,3 +35,9 @@ date: 2026-11-14
 - Second test pré-enregistré de l'axe 3 (borne de Rambachan et Roth,
   contrôle synthétique).
 - Pour SF et MK, même protocole sur leurs zonages.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé (rapport interne)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- θ = 0,80 [0,74 ; 0,87], β_obs −32,4 %, β_mod −40,5 %, p = 0,043 : conformes au rapport N3. À réconcilier : β_obs −32,4 % (référence 2008) contre T5 = −30,3 % (moyenne 2004-2008).

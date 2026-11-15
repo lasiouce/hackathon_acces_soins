@@ -11,6 +11,7 @@ incertitude: "jusqu'à ±3 points par section d'une année à l'autre (D +3,1 en
 source: "Ordre national des pharmaciens (CNOP, traitement EY), Panorama 2025, dépliant, p. 2 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2025-depliant-fr%20 ; Synthèse Panorama 2024, p. 2 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2024-synthese ; Éléments démographiques 2016, p. 10 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf"
 millesime: "au 1er janvier 2026 (Panorama 2025) ; au 1er janvier 2025 ; données 2015"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -54,3 +55,9 @@ comme en 2025 (cité).
 - On compte des inscriptions principales. Un « nouvel inscrit dans la
   section » peut aussi venir d'une autre section : par exemple 2 318 en D
   en 2024, contre 1 987 primo-inscrits.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Sections 2025 (A 1,2 · B 8,6 · C 0,4 · D 71,0 · E 3,5 · G 5,7 · H 9,5 ; N = 3 044) confirmées sur le rendu image. Pour 2015 : C 1 % et « BC » 2 % (inscrits aux sections B et C) confirmés.
