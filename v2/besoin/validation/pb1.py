@@ -5,7 +5,8 @@ Run (racine du dépôt) : PYTHONPATH=v2 uv run python -m besoin.validation.pb1  
 
   B₀ = pop ; B₁ = Σ pop·ω ; C_k = [N(2050)/B_k(2050)] / [N(2026)/B_k(2026)]
   S₁ = part des départements où |C₁/C₀ − 1| < 0,02 ; ρ = Spearman(C₁, C₀)
-  abandon de l'âge si S₁ > 0,90 et ρ ≥ 0,98 sous P1 et sous P2 ; P2 (Open DAMIR) absent ici (écart 1).
+  abandon de l'âge si S₁ > 0,90 et ρ ≥ 0,98 sous P1 et sous P2 (pharmaciens : P2 seul). Le champ abandon_P1 de
+  stats() vaut pour le profil passé (P1 ou P2).
 """
 import json
 import subprocess
@@ -48,11 +49,11 @@ def etat_servi(prof: str) -> dict:
     return {m.o: m.est.state, **m.base.states}
 
 
-def stats(prof: str, etat: dict, pop: Population, year: int) -> dict:
+def stats(prof: str, etat: dict, pop: Population, year: int, profil: str = "apl") -> dict:
     years = [REF, year]
     S = offre(etat, years)
     C = {}
-    for name, est in (("M0", M0()), ("M1", M1())):
+    for name, est in (("M0", M0()), ("M1", M1(profil=profil))):
         B = est.fit(pop, etat, REF).predict(pop, etat, years)
         c = couverture(S, B, REF)
         C[name], terr = c.values[c.p(prof), :, c.y(year)], c.territories
@@ -73,20 +74,26 @@ def main():
     commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     pops = {s: Population.load(s) for s in ("central", "pop_basse", "pop_haute")}
     res = dict(commit=commit, seuils=dict(ecart=SEUIL_ECART, part=SEUIL_PART, rho=SEUIL_RHO), professions={})
-    for prof in CODE:
+    for prof in tuple(CODE) + ("pharmaciens",):
         e = etat_servi(prof)
-        r = dict(decisif=stats(prof, e, pops["central"], H),
-                 rapporte={"pop_basse": stats(prof, e, pops["pop_basse"], H),
-                           "pop_haute": stats(prof, e, pops["pop_haute"], H),
-                           "central_2035": stats(prof, e, pops["central"], MID)})
-        d = r["decisif"]
-        r["verdict"] = ("en attente de P2 (P1 conclut à l'abandon)" if d["abandon_P1"]
-                        else "M1 retenu (P1 conclut au maintien ; P2 ne peut pas renverser)")
+        r = {}
+        for profil, nom in (("apl", "P1"), ("damir", "P2")):
+            if nom == "P1" and prof not in CODE:
+                continue                                       # pharmaciens : pas de poids APL, P2 seul
+            r[nom] = dict(decisif=stats(prof, e, pops["central"], H, profil),
+                          rapporte={"pop_basse": stats(prof, e, pops["pop_basse"], H, profil),
+                                    "pop_haute": stats(prof, e, pops["pop_haute"], H, profil),
+                                    "central_2035": stats(prof, e, pops["central"], MID, profil)})
+            d = r[nom]["decisif"]
+            print(f"{prof:13s} {nom} S1={d['S1']:.3f} rho={d['rho']:.4f} n={d['n_dep']} abandon={d['abandon_P1']}",
+                  flush=True)
+        ab = [r[k]["decisif"]["abandon_P1"] for k in r]
+        r["verdict"] = ("âge abandonné (" + " et ".join(r) + " concluent à l'abandon)" if all(ab)
+                        else "M1 retenu (" + ", ".join(k for k in r if not r[k]["decisif"]["abandon_P1"])
+                        + " conclut au maintien)")
         res["professions"][prof] = r
-        print(f"{prof:13s} S1={d['S1']:.3f} rho={d['rho']:.4f} n={d['n_dep']} -> {r['verdict']}", flush=True)
-    res["professions"]["pharmaciens"] = dict(verdict="aucun verdict : P2 (Open DAMIR) en attente de l'axe 4")
+        print(f"{prof:13s} -> {r['verdict']}", flush=True)
     (OUT / "results.json").write_text(json.dumps(res, ensure_ascii=False, indent=1))
-    print("pharmaciens    -> aucun verdict (P2 en attente)")
 
 
 if __name__ == "__main__":

@@ -305,8 +305,8 @@ et la question ouverte sur le seuil de diffusion.
   et l'opérateur de transferts de tâches. Les paramètres sont des placeholders « supposé », et rien
   n'est branché dans la carte. Aucun indice de couverture n'est produit pour la médecine générale.
   Plan : `v2/docs/lab/derivations/2026-11-15-besoin-plan.md`.
-  **M1** (recours par âge, poids APL de la DREES) est retenu par P-B1 pour les infirmiers, les kinés et
-  les sages-femmes ; dentistes et pharmaciens attendent le profil Open DAMIR
+  **M1** (recours par âge : poids APL de la DREES, profil Open DAMIR pour les pharmaciens) est retenu par
+  P-B1 pour les cinq professions, les dentistes de justesse
   ([rapport](v2/docs/lab/reports/2026-11-15-besoin-pb1-age.md)).
 - Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
   data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans

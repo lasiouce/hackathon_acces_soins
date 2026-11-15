@@ -4818,3 +4818,16 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   fenêtre décidée n'est pas lue en entier. La règle de lecture en flux reste.
 - **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
   arrêté.
+
+## 2026-11-15 — Module de besoin, P-B1 sous P2 : l'âge (M1) est retenu pour les cinq professions
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb1-age.md), section « Passage P2 ») :
+  complète l'entrée précédente du même jour (qui laissait dentistes et pharmaciens en attente).
+  - **Dentistes : M1 retenu.** P2 (Open DAMIR) conclut au maintien (S₁ = 87,1 % < 90 %, ρ = 0,999) ; l'abandon
+    exige P1 **et** P2. Décision de justesse : l'écart est un décalage national du niveau, pas du classement.
+  - **Pharmaciens : M1 retenu** sur P2 seul (S₁ = 0 %, ρ = 0,987). Profil DAMIR servi par M1 pour PH et MG.
+  - **Écarts écrits avant calcul** (commit `4efa8b4`) : 9 mois de flux 2025 ; champ `PRS_PPU_SEC = 2` ; quantité
+    sommée sur toutes les natures de prestation ; inconnus d'âge et de sexe exclus ; profil décennal, 80+ plat.
+  - **MG (source O2)** : r̄ = 0,9 × 10⁻³ ETP par habitant standardisé, placeholder de M0 (supposé).
+- **Pourquoi :** seuils gelés appliqués ; P1 reproduit à l'identique au second passage.
+- **Ce qui le renverserait :** un profil PH en temps de pharmacien (unité « boîtes + honoraires » mêlée, ledger) ;
+  les 3 mois de DAMIR manquants, si le biais saisonnier dépasse celui mesuré par l'axe 4 (≤ 1,3 %).

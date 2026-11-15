@@ -3,8 +3,8 @@ type: analysis
 date: 2026-11-15
 author: session besoin-v2-m1-m3
 question: La pondération par l'âge (M1) change-t-elle l'indice de couverture de 2050 assez pour être gardée, par rapport à la population brute (M0) ?
-headline: "P-B1 (P1 seul, sans Open DAMIR) : âge retenu pour IDE (S₁ = 0 %, ρ = 0,835), MK (0 %, 0,984) et SF (1 %, 0,989) ; dentistes en attente de P2 (S₁ = 93,1 %, ρ = 0,998, P1 conclut à l'abandon) ; pharmaciens sans verdict"
-status: passage fait (P1) ; P2 en attente de l'axe 4
+headline: "P-B1 complet (P1 APL + P2 Open DAMIR 9 mois) : âge (M1) retenu pour les 5 professions ; IDE S₁ = 0 % (ρ 0,835 / 0,860), MK 0 %, SF 1–3 %, PH 0 % (P2 seul, ρ 0,987) ; dentistes retenus de justesse : P1 abandon (93,1 %), P2 maintien (S₁ = 87,1 % < 90 %, ρ = 0,999)"
+status: passage fait (P1 et P2)
 professions: [infirmiers, kines, dentistes, sages-femmes, pharmaciens]
 hypothesis: H-B0 ; protocole gelé P-B1 (v2/validation/preregistered/2026-11-15-besoin-p-b1-age.md)
 sources: [Omphale 2022 (Insee), poids APL DREES (DCIR 2021–2022), projection C1 du jumeau]
@@ -13,7 +13,11 @@ tags: [besoin, validation, P-B1]
 
 # P-B1 — M1 contre M0 sur l'indice de couverture 2050 (passage)
 
-> **Headline :** sous le profil APL (P1), l'âge change l'indice de couverture 2050 de plus de 2 % dans **tous** les
+> **Mise à jour P2 (2026-11-15, même jour) :** avec le profil Open DAMIR (9 mois), **M1 est retenu pour les cinq
+> professions**. Dentistes : P2 conclut au maintien (S₁ = 87,1 % < 90 %), donc l'abandon exigé sous P1 **et** P2
+> n'a pas lieu. Pharmaciens (P2 seul) : S₁ = 0 %, ρ = 0,987, M1 retenu. Détail à la section « Passage P2 ».
+>
+> **Headline (P1, premier passage) :** sous le profil APL (P1), l'âge change l'indice de couverture 2050 de plus de 2 % dans **tous** les
 > départements pour les IDE et les MK, et dans 99 % pour les SF : **M1 est retenu** pour ces trois professions, et
 > P2 ne peut pas le renverser. Pour les **dentistes**, P1 conclut à l'abandon (93,1 % des départements sous 2 %,
 > ρ = 0,998) : verdict **en attente de P2** (Open DAMIR). **Pharmaciens** : aucun verdict (P2 seul, absent).
@@ -131,3 +135,30 @@ gelée ; le rang (ρ) isole la part territoriale.
 11. **Profil.** `r(a, s)` = quantité / population Omphale 2025 (central, France entière) de la tranche décennale
     (0–19, 20–29, …, 70–79, 80+) et du sexe ; `ω = r / r̄`. Chaque tranche quinquennale d'Omphale prend le poids de
     sa tranche décennale (80+ plat, comme le protocole le note).
+
+## Passage P2 (profil Open DAMIR, flux 2025-01 à 2025-09)
+Lancé après le commit des écarts 7–11 (`4efa8b4`). Même statistique, mêmes seuils. Commande inchangée ; les
+résultats P1 sont reproduits à l'identique dans le même fichier.
+
+| Profession | P1 : S₁ / ρ | P2 : S₁ / ρ | médiane C₁/C₀ − 1 (P2) | Verdict final |
+|---|---|---|---:|---|
+| infirmiers | 0,000 / 0,8350 | 0,000 / 0,8597 | −24,2 % | **M1 retenu** |
+| kinés | 0,000 / 0,9838 | 0,000 / 0,9778 | −16,0 % | **M1 retenu** |
+| sages-femmes | 0,010 / 0,9886 | 0,030 / 0,9865 | +6,0 % | **M1 retenu** |
+| dentistes | 0,931 / 0,9976 (abandon) | **0,871** / 0,9993 (maintien) | +1,3 % | **M1 retenu** (P2) |
+| pharmaciens | — | 0,000 / 0,9865 | −9,7 % | **M1 retenu** (P2 seul) |
+
+Rapporté, non décisif (P2) : Omphale bas / haut / central 2035, S₁ :
+- dentistes 0,980 / 0,366 / 1,000 (ρ ≥ 0,998 partout) ;
+- pharmaciens 0,000 / 0,000 / 0,000 (ρ 0,988 / 0,988 / 0,980) ;
+- pharmaciens, départements les plus écartés en 2050 : 971 (−23,8 %), 972 (−23,7 %), 974, 68, 27.
+
+**Lecture des dentistes.** Le verdict suit la règle gelée : P2 donne 87,1 %, sous le seuil de 90 %, donc l'âge est
+gardé. Mais l'écart vient surtout d'un décalage **national** du niveau (médiane +1,3 %), pas du classement
+(ρ = 0,999). Pour les dentistes, M1 et M0 donnent la même carte relative ; c'est le niveau de 2050 qui diffère de
+1 à 2 %. Le verdict dépend du scénario Omphale (S₁ 98 % en bas, 37 % en haut), et les deux profils se contredisent.
+C'est une décision de justesse, écrite comme telle.
+
+**Pharmaciens.** La quantité DAMIR mêle boîtes et honoraires (écart 9) : le profil reflète la consommation de
+médicaments, très croissante avec l'âge, plus que le temps du pharmacien. Le sens de l'effet (couverture plus basse
+en 2050 sous M1) est robuste aux trois scénarios ; son ampleur dépend de cette unité.

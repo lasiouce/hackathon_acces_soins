@@ -7,8 +7,10 @@ B₁(p, T, t) = r̄_p · Σ_{a,s} pop(T, t, a, s) · ω(p, a, s), en ETP-équiva
       Omphale a deux tranches au-delà de 90 ans (90–94, 95+) : toutes deux prennent le poids « 90 et plus ».
   r̄   niveau : en attendant Open DAMIR (axe 4), offre nationale / population standardisée nationale à l'année de
       référence (supposé). Il s'annule dans C, comme pour M0.
-Pharmaciens, médecine générale, spécialistes : pas de poids APL. Leur forme viendra du profil Open DAMIR
-(param-besoin-profil-damir) ; d'ici là M1 ne les sert pas (ils sont absents du cube, jamais remplacés par M0).
+Pharmaciens et médecine générale : pas de poids APL ; forme par le profil Open DAMIR (param-besoin-profil-damir) :
+quantités des flux de janvier à septembre 2025, secteur privé, par tranche décennale (80+ plat) et sexe, rapportées
+à la population Omphale 2025. `profil="damir"` l'applique à toutes les professions (P2 de P-B1). Spécialistes :
+non servis (absents du cube, jamais remplacés par M0).
 
 `omega` peut être passé au constructeur ({profession: tableau [sexe, âge] aligné sur la population}) : c'est ce que
 font les tests de cas limites (profil plat ⇒ M1 = M0).
@@ -24,9 +26,16 @@ from besoin.cube import Cube, Population
 from besoin.interface import NeedEstimator, register
 
 APL = "v2/data/processed/besoin/apl_parametres.parquet"
+DAMIR = "v2/data/processed/besoin/damir_profils.parquet"
+DAMIR_CODE = {**{"infirmiers": "IDE", "kines": "MK", "dentistes": "CD", "sages-femmes": "SF"},
+              "pharmaciens": "PH", "medecine-generale": "MG"}
 CODE = {"infirmiers": "IDE", "kines": "MK", "dentistes": "CD", "sages-femmes": "SF"}
 COLONNE = {"infirmiers": 2024, "kines": 2023, "dentistes": 2024, "sages-femmes": 2024}
 FEMMES = {"sages-femmes"}
+DAMIR_PROFS = ("infirmiers", "kines", "dentistes", "sages-femmes", "pharmaciens", "medecine-generale")
+
+
+R_BAR_SOURCE = 0.9e-3      # ETP par habitant standardisé, MG : placeholder de M0 (supposé), niveau DAMIR à venir
 
 
 @lru_cache(maxsize=1)
@@ -54,6 +63,30 @@ def omega_apl(prof: str, sexes, ages) -> np.ndarray:
     return out
 
 
+@lru_cache(maxsize=1)
+def _damir_qte() -> pd.DataFrame:
+    """Quantités Open DAMIR (flux 2025-01 à 2025-09), secteur privé, par profession × tranche décennale × sexe."""
+    d = pd.read_parquet(DAMIR, columns=["prof", "age", "sexe", "ppu", "qte"])
+    d = d[(d.ppu == 2) & d.age.between(0, 80) & d.sexe.isin([1, 2])]
+    return d.groupby(["prof", "age", "sexe"]).qte.sum().reset_index()
+
+
+def omega_damir(prof: str, pop: Population, year: int = 2025) -> np.ndarray:
+    """ω [sexe, âge] = r(a,s) / r̄, r = quantité DAMIR / population Omphale de la tranche décennale (80+ plat)."""
+    q = _damir_qte()
+    q = q[q.prof == DAMIR_CODE[prof]].set_index(["sexe", "age"]).qte
+    ages = np.asarray(pop.ages)
+    dec = np.where(ages < 20, 0, np.minimum(ages // 10 * 10, 80))
+    P = pop.P[:, pop.years_index([year])[0]].sum(axis=0)              # [sexe, âge], France entière
+    code = {"H": 1, "F": 2}
+    r = np.zeros_like(P)
+    for i, sx in enumerate(pop.sexes):
+        for d in np.unique(dec):
+            m = dec == d
+            r[i, m] = q.get((code[sx], int(d)), 0.0) / P[i, m].sum()
+    return r / ((r * P).sum() / P.sum())
+
+
 @register
 class M1(NeedEstimator):
     name = "M1"
@@ -62,25 +95,32 @@ class M1(NeedEstimator):
     assumptions = ("Chaque habitant compte selon le recours moyen de sa tranche d'âge (et de son sexe pour les "
                    "sages-femmes), figé à l'année de base. Le recours est censuré par l'offre : là où elle manque, "
                    "ce besoin est trop bas (dérivation §2.3).")
-    professions = tuple(CODE)
+    professions = tuple(DAMIR_CODE)
     params = (
         Param("omega", "poids APL par tranche quinquennale (19 tranches, 90+)", "sans dimension",
               "DREES, jeu 530 APL, onglet « Paramètres » (fiche param-besoin-poids-age-apl)",
               "DCIR 2022 (colonne 2024) ; MK : DCIR 2021 (colonne 2023)", "mesuré",
               "forme du profil seulement ; SF sur la population féminine"),
+        Param("omega_damir", "quantités par tranche décennale et sexe / population", "sans dimension",
+              "Open DAMIR, flux 2025-01 à 2025-09, PRS_PPU_SEC = 2 (fiche param-besoin-profil-damir)",
+              "2025 (9 mois)", "mesuré", "pharmaciens et MG ; 80+ plat ; biais saisonnier ≤ 1,3 % (axe 4)"),
         Param("r_bar", None, "ETP par habitant standardisé",
               "offre nationale / population standardisée nationale à l'année de référence, ajusté par fit() ; "
               "niveau Open DAMIR en attente (axe 4)", "Omphale 2022 ; état du jumeau", "supposé",
               "s'annule dans C"),
     )
 
-    def __init__(self, omega: dict | None = None):
-        self.omega_fixe = omega
+    def __init__(self, omega: dict | None = None, profil: str = "apl"):
+        """profil « apl » (P1 : poids APL ; pharmaciens et MG par DAMIR) ou « damir » (P2 : DAMIR pour tous)."""
+        self.omega_fixe, self.profil = omega, profil
 
     def omega(self, pop: Population) -> dict:
         if self.omega_fixe is not None:
             return {p: np.asarray(w, float) for p, w in self.omega_fixe.items()}
-        return {p: omega_apl(p, pop.sexes, pop.ages) for p in self.professions}
+        W = {p: omega_damir(p, pop) for p in DAMIR_PROFS}
+        if self.profil == "apl":
+            W |= {p: omega_apl(p, pop.sexes, pop.ages) for p in CODE}
+        return W
 
     def standard(self, pop: Population, years) -> tuple[np.ndarray, np.ndarray]:
         """(professions, P_std [profession, territoire, année]) = Σ_{a,s} pop · ω."""
@@ -92,7 +132,7 @@ class M1(NeedEstimator):
     def fit(self, pop: Population, etat: dict | None = None, ref: int = 2026) -> "M1":
         super().fit(pop, etat, ref)
         profs, Pstd = self.standard(pop, [ref])
-        self.r_bar = {p: 1.0 for p in profs}
+        self.r_bar = {p: R_BAR_SOURCE for p in profs}
         if etat is not None and ref in etat:
             from besoin.couverture import offre
             S = offre({ref: etat[ref]})
@@ -104,5 +144,5 @@ class M1(NeedEstimator):
     def predict(self, pop: Population, etat: dict | None = None, years=None) -> Cube:
         years = pop.years if years is None else np.asarray(list(years))
         profs, Pstd = self.standard(pop, years)
-        r = np.array([self.r_bar.get(p, 1.0) for p in profs])
+        r = np.array([self.r_bar.get(p, R_BAR_SOURCE) for p in profs])
         return Cube(profs, pop.territories, years, r[:, None, None] * Pstd, pop.level)
