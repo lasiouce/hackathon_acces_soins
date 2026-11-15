@@ -1,0 +1,36 @@
+# Transferts de tâches HYPOTHÉTIQUES (proposés par l'utilisateur·rice, forme de L23, paramètres de l'utilisateur) —
+# 10 phrases écrites le 2026-11-15 AVANT le code (session besoin-axe5-sensibilite), non ajustées ensuite. Pas à l'aveugle.
+# Convention : `hypothetique` = {source, cible, mode, p} ; mode « acte » (p % d'un acte : s∞ = p) ou « demande »
+# (p % de la demande ou du temps de la source : a = p) ; null = aucun transfert hypothétique attendu.
+# `profession` = profession dont la couverture est demandée.
+cas:
+- id: h01
+  texte: "Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des infirmiers dans le Puy-de-Dôme en 2035 ?"
+  attendu: {profession: infirmiers, territoire: D63, hypothetique: {source: medecine-generale, cible: infirmiers, mode: acte, p: 10}}
+- id: h02
+  texte: "Les pharmaciens font 20 % des renouvellements d'ordonnance des médecins généralistes : couverture des pharmaciens en Bretagne ?"
+  attendu: {profession: pharmaciens, territoire: R53, hypothetique: {source: medecine-generale, cible: pharmaciens, mode: acte, p: 20}}
+- id: h03
+  texte: "Et si les kinés prenaient en charge 15 % des séances de rééducation des spécialistes, quelle couverture des kinés en 2040 ?"
+  attendu: {profession: kines, territoire: FR, hypothetique: {source: specialistes, cible: kines, mode: acte, p: 15}}
+- id: h04
+  texte: "Si les sages-femmes assurent 30 % des suivis gynécologiques des généralistes dans le Rhône, quelle couverture des sages-femmes ?"
+  attendu: {profession: sages-femmes, territoire: D69, hypothetique: {source: medecine-generale, cible: sages-femmes, mode: acte, p: 30}}
+- id: h05
+  texte: "Les infirmiers reprennent 5 % de la demande des généralistes : quelle couverture des infirmiers en France en 2050 ?"
+  attendu: {profession: infirmiers, territoire: FR, hypothetique: {source: medecine-generale, cible: infirmiers, mode: demande, p: 5}}
+- id: h06
+  texte: "Si les infirmiers font 10 % des pansements des kinés, quelle couverture des infirmiers à Lyon ?"
+  attendu: {profession: infirmiers, territoire: D69, hypothetique: {source: kines, cible: infirmiers, mode: acte, p: 10}}
+- id: h07
+  texte: "Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des généralistes en 2035 ?"
+  attendu: {profession: infirmiers, territoire: FR, hypothetique: {source: medecine-generale, cible: infirmiers, mode: acte, p: 10}, o2_cible: true}
+- id: h08
+  texte: "Les pharmaciens prennent la tension et dépistent le diabète."
+  attendu: {profession: pharmaciens, territoire: FR, hypothetique: null}
+- id: h09
+  texte: "Augmenter de 20 % les quotas de kinés dans le Puy-de-Dôme."
+  attendu: {profession: kines, territoire: D63, hypothetique: null}
+- id: h10
+  texte: "Si les dentistes réalisent 10 % des actes des spécialistes à partir de 2030, quelle couverture des dentistes en Normandie ?"
+  attendu: {profession: dentistes, territoire: R28, hypothetique: {source: specialistes, cible: dentistes, mode: acte, p: 10, t0: 2030}}

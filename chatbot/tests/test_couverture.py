@@ -83,3 +83,55 @@ def test_intention_couverture_sans_l23_fourchette(passerelle):
 def test_couverture_mg_dit_o2(passerelle):
     t = A.Conversation(mode="deterministe").envoyer("couverture des médecins généralistes en 2035")["texte"]
     assert "O2" in t and t.startswith(f"**{A.HORS}")
+
+
+# ------------------------------------------------------------------ transferts hypothétiques (paramètres de l'utilisateur·rice)
+EXEMPLE = ("Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des "
+           "infirmiers dans le Puy-de-Dôme en 2035 ?")
+
+
+def test_interpreter_transfert_hypothetique(passerelle):
+    r, err = C.requete("interpreter_phrase", {"texte": EXEMPLE})
+    assert err is None and r["transferts"] == [] and not r["o2_cible"]
+    h = r["transferts_hypothetiques"][0]
+    assert (h["source"], h["cible"], h["mode"], h["p"]) == ("medecine-generale", "infirmiers", "acte", 10)
+    assert h["parametres_api"] == {"tr_src": "medecine-generale", "tr_cible": "infirmiers", "tr_sinf": 0.1}
+    assert h["statut"] == "hypothèse de l'utilisateur" and len(h["balayage"]["tr_a"]) == 3
+    assert r["profession"] == "infirmiers" and r["territoire"] == "D63" and r["non_modelise"] == []
+
+
+def test_couverture_transfert_hypothetique_nul_et_cible_mg(passerelle):
+    tr = {"source": "medecine-generale", "cible": "infirmiers", "s_inf": 0.1}
+    r, err = C.requete("couverture", {"profession": "infirmiers", "territoire": "D63", "annees": [2035], "l23": False,
+                                      "transfert": tr | {"a": 0.0}})
+    assert err is None and r["annees"][0]["ecart_tendanciel_pct"] == 0
+    assert r["transfert_hypothetique"]["statut"] == "hypothèse de l'utilisateur"
+    r, err = C.requete("couverture", {"profession": "infirmiers", "territoire": "D63", "annees": [2035], "transfert": tr})
+    assert err is None and [x["a"] for x in r["balayage_a"]] == [0.05, 0.1, 0.2]            # a non donné : 5, 10, 20 %
+    e = [x["ecart_tendanciel_pct"] for x in r["balayage_a"]]
+    assert e[0] > e[1] > e[2] and r["annees"][0]["ecart_tendanciel_pct"] == e[1]           # point médian = réponse
+    r, _ = C.requete("couverture", {"profession": "infirmiers", "territoire": "D63", "annees": [2035],
+                                    "transfert": tr | {"a": 0.04}})
+    assert [x["a"] for x in r["balayage_a"]] == [0.02, 0.04, 0.08]                          # a donné : a/2, a, 2a
+    for cible in ("medecine-generale", "specialistes"):
+        r, err = C.requete("couverture", {"profession": "infirmiers", "transfert": {"source": "infirmiers", "cible": cible}})
+        assert r is None and err                                   # schéma (5 professions en cible) ou O2
+
+
+def test_deterministe_transfert_hypothetique_balaye(passerelle):
+    out = A.Conversation(mode="deterministe").envoyer(EXEMPLE)
+    t = out["texte"]
+    assert "Hors du périmètre" not in t and "O2" not in t           # MG en source : pas de refus O2
+    assert "Transfert hypothétique (paramètres de l'utilisateur·rice)" in t and "Effectif inchangé" in t
+    assert all(f"a = {x} %" in t for x in ("5", "10", "20"))        # balayage de a, pas de chiffre unique
+    assert "donnée par vous" in t and "supposés (hypothèse de l'utilisateur·rice)" in t
+    assert "ce n'est pas un levier de la carte" in t
+    cv = [a for a in out["appels"] if a["outil"] == "couverture"]
+    assert len(cv) == 1 and "a" not in cv[0]["entree"]["transfert"]           # a inconnu : balayé par la passerelle
+    assert "ETP" not in t and "besoin couvert" not in t
+
+
+def test_deterministe_couverture_generalistes_refusee_o2(passerelle):
+    out = A.Conversation(mode="deterministe").envoyer(
+        "Si les infirmiers prennent 10 % des renouvellements d'ordonnance des généralistes, quelle couverture des généralistes en 2035 ?")
+    assert out["texte"].startswith(f"**{A.HORS} :**") and "O2" in out["texte"] and out["appels"] == []

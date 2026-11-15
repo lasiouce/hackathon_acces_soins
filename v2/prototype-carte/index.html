@@ -160,6 +160,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 :is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]::after{display:none}
 :is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]:not(:disabled){background-image:none;background-color:var(--background-active-blue-france)}
 :is(#var,#card .scope,#gpre) .fr-tag[aria-pressed=true]:not(:disabled):hover{background-image:none;background-color:var(--background-active-blue-france-hover)}
+#trh{margin:.4rem 0 0;padding:.4rem .6rem;font-size:.82rem;line-height:1.3}#trh p{margin:0}#trh::before{display:none}
 #lt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* gamme continue, comme la carte (interpolation de RAMP entre −B et +B) ; graduations posées à leur valeur exacte */
 .rrow{display:flex;align-items:flex-start;gap:.6rem}
@@ -177,6 +178,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 /* panneau Scénario simplifié : nom du paramètre, valeur, curseur */
 /* familles de leviers en accordéons DSFR indépendants : politiques ouvertes au chargement, contexte replié */
 #levfam .fr-accordion{margin:0}
+#card.busy{opacity:.5;transition:opacity .15s}
 #levfam .fr-accordion__btn{display:flex;gap:.6rem;align-items:baseline;font-size:1rem}
 #levfam .fr-accordion__btn .ttl{flex:1;text-align:left}
 #levfam .fr-accordion__btn .ef{font-size:.87rem;font-weight:700;color:var(--sel);white-space:nowrap}
@@ -414,8 +416,9 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture <span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture&nbsp;<span class="yl">2050</span></button></div>
       <div id="lt"></div>
+      <div id="trh" class="fr-notice fr-notice--info" hidden><p><b>Transfert hypothétique (paramètres de l'utilisateur)</b> : <span id="trh-t"></span>. Pas un levier de la carte : non mesurable en données ouvertes. <button type="button" class="fr-link fr-link--sm" id="trh-x">Retirer</button></p></div>
       <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
       <!-- définition facultative de l'indicateur affiché (décision du 2026-11-14) : fermée par défaut, état mémorisé dans le navigateur -->
       <button type="button" class="fr-link fr-link--sm" id="defbtn" aria-expanded="false" aria-controls="defbox">Comment lire cet indicateur ?</button>
@@ -517,6 +520,9 @@ const GPRE=[["Effectif seul",["eff"]],["Effectif + âge moyen",["eff","age_moyen
 const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],y:2050,r:"graph",gs:["eff"],b100:false};
 let COUV=null;const COUVP=["sages-femmes","dentistes","pharmaciens","kines","infirmiers"];
 const L23={on:false,a:null,k:null};
+// transfert de tâches hypothétique proposé par l'assistant (paramètres de l'utilisateur·rice, pas un levier de la carte) :
+// envoyé à /api/couverture tant que la profession affichée en est la cible ou la source ; bandeau + « Retirer »
+let TRH=null;
 let META,GEO,REGL,regOf={},focusReg=null,carte=null,map,bbox={},names={},lat=[];
 let F=null,SC=null,PIN=[];
 
@@ -615,6 +621,7 @@ function buildMap(){
     map.on("click",e=>{if(!map.queryRenderedFeatures(e.point,{layers:["fill"]}).length){backToFrance();}});
     refresh().then(()=>{if(S.terr)select(S.terr);renderCmp();});
   });
+  $("#trh-x").onclick=()=>{setTRH(null);refresh();};
   $("#zin").onclick=()=>map.zoomIn();$("#zout").onclick=()=>map.zoomOut();$("#zfr").onclick=()=>select("FR");
 }
 // vue France (métropole et encarts DROM) centrée dans la colonne de la carte
@@ -637,7 +644,9 @@ function derive(c){const i=yIdx(c.years||[2026,2050]);   // valeurs à S.y, par 
   const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("sy")/T("s26")-1;c.natD=T("sy")*(c.activite??1)/T("py");}
 // ---------- indice de couverture (v2/besoin, /api/couverture) : C indexé 2026, jamais une part absolue du besoin ----------
 // O2 : la médecine générale et les spécialistes n'ont jamais d'indice ; ils n'apparaissent que comme source de L23.
-const l23Q=()=>"l23="+(L23.on?1:0)+(L23.on&&L23.a!=null?"&l23_a="+L23.a:"")+(L23.on&&L23.k!=null?"&l23_k="+L23.k:"");
+const trhOn=()=>!!TRH&&[TRH.p.tr_cible,TRH.p.tr_src].includes(S.prof);
+const trhQ=()=>trhOn()?"&"+new URLSearchParams(TRH.p):"";
+const l23Q=()=>"l23="+(L23.on?1:0)+(L23.on&&L23.a!=null?"&l23_a="+L23.a:"")+(L23.on&&L23.k!=null?"&l23_k="+L23.k:"")+trhQ();
 function couvAt(o,i){return o?{cy:o.cs[i],cb:o.cb[i],ce:o.ecart[i],clo:o.min[i],chi:o.max[i]}:{cy:null,cb:null,ce:null,clo:null,chi:null};}
 function couvDerive(c,i){const C=COUV&&COUV.prof===c.prof?COUV:null,j=C?C.years.indexOf(c.years[i]):-1;
   for(const [id,d] of Object.entries(c.deps))Object.assign(d,couvAt(j<0?null:C.deps[id],j));c.couvFR=couvAt(j<0?null:C.fr,j);}
@@ -704,7 +713,7 @@ async function refresh(){
     const [c,f]=await Promise.all([fetch(`/api/carte?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),
       fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),loadCouv()]);
     if(c.error){toast(c.error);if(!carte){META.levers.forEach(l=>setL(l,l.default));levState();setTimeout(refresh);}return;}
-    derive(c);carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();renderL23();if(SC&&fresh)loadCard();renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
+    derive(c);carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();renderL23();renderTRH();if(SC&&fresh)loadCard();renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
     // jusqu'à l'image affichée ; borné à 100 ms (onglet en arrière-plan : rAF suspendu, sinon inflight reste bloqué)
     await Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),new Promise(r=>setTimeout(r,100))]);
     if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
@@ -820,9 +829,9 @@ function mainHTML(l){const inp=l.type=="range"?rangeHTML(l):toggleHTML(l),sup=l.
 const famHTML=(id,titre,corps,open)=>`<section class="fr-accordion" id="q-${id}"><h3 class="fr-accordion__title"><button type="button" class="fr-accordion__btn" aria-expanded="${open}" aria-controls="acc-${id}"><span class="ttl">${titre}</span><span class="ef" id="ef-${id}"></span></button></h3>
   <div class="fr-collapse" id="acc-${id}">${corps}</div></section>`;
 function buildLevFam(){
-  // familles de politiques ouvertes au chargement (décision « curseurs principaux visibles ») ; hypothèses de contexte repliées
-  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>famHTML(f,F.q,mainHTML(LV(F.main))+F.more.map(k=>leverHTML(LV(k),false)).join("")+`<span id="st-${f}" hidden></span>`,true)).join("")
-    +famHTML("transferts","Transférer des tâches ?",l23HTML(),true)
+  // toutes les familles repliées au chargement (décision du 2026-11-15, remplace « ouvertes au chargement ») ; le titre porte l'effet
+  $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>famHTML(f,F.q,mainHTML(LV(F.main))+F.more.map(k=>leverHTML(LV(k),false)).join("")+`<span id="st-${f}" hidden></span>`,false)).join("")
+    +famHTML("transferts","Transférer des tâches ?",l23HTML(),false)
     +famHTML("contexte","Hypothèses de contexte",META.levers.filter(l=>l.famille=="contexte").map(l=>leverHTML(l,false)).join(""),false);
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
   const H=S.lvHash||{},bad=[];
@@ -852,6 +861,8 @@ function l23Wire(){const t=$("#lv-l23"),a=$("#l23-a"),k=$("#l23-k");
   a.oninput=()=>{L23.a=+a.value;sync();if(L23.on){writeHash();refresh();}};k.oninput=()=>{L23.k=+k.value;sync();if(L23.on){writeHash();refresh();}};
   sync();renderL23();}
 // proposition de l'assistant ou de la phrase : même effet que la case du panneau, appliquée après confirmation
+function setTRH(t){TRH=t;if(t&&COUVP.includes(S.prof)){S.v="couv";document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v=="couv"));}renderTRH();}
+function renderTRH(){const b=$("#trh");if(!b)return;b.hidden=!trhOn();if(!b.hidden)$("#trh-t").textContent=TRH.libelle+" ; "+TRH.resume;}
 function setL23(on,vue){L23.on=on;const t=$("#lv-l23");if(t)t.checked=on;
   if(vue&&COUVP.includes(S.prof)){S.v="couv";document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v=="couv"));}
   renderL23();writeHash();}
@@ -902,7 +913,11 @@ function select(id,fly=true,push=true){if(id=="FR")return backToFrance(push);if(
   const tk=++REQ;fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${id}`).then(r=>r.json()).then(f=>{if(tk!==REQ)return;if(f.error)return toast(f.error);SC=f;levState();loadCard();});
 }
 function backToFrance(push=true){if(push&&S.terr)history.pushState(null,"",location.href);setFocus(null);closeCard();userMoved=false;fitFrance();}
-function closeCardContent(){const c=$("#card");c.classList.remove("on");delete c.dataset.t;F=null;
+function closeCardContent(keep){const c=$("#card");delete c.dataset.t;F=null;
+  // retour à la France depuis un territoire : l'ancienne fiche reste, estompée, jusqu'aux chiffres nationaux (pas d'écran intermédiaire)
+  if(keep&&c.classList.contains("on")){c.classList.add("busy");c.setAttribute("aria-busy","true");
+    clearTimeout(c._busy);c._busy=setTimeout(()=>{if(c.classList.contains("busy"))closeCardContent();},4000);if(META)renderView();return;}
+  c.classList.remove("on","busy");c.removeAttribute("aria-busy");
   c.innerHTML=`<div class="empty"><h3>France entière</h3><p>Chargement des chiffres nationaux… Cliquez une région sur la carte ou cherchez un territoire pour ses chiffres.</p></div>`;if(META)renderView();}
 // échelle des chiffres de la fiche : le territoire ouvert, ou la France entière (option « chiffres nationaux »)
 let CS="terr",CREQ=0;
@@ -910,10 +925,10 @@ const cardT=()=>CS=="fr"||!S.terr?"FR":S.terr;
 function loadCard(){const T=cardT(),tk=++CREQ;
   if(T===(S.terr||"FR")&&SC){renderCard(SC);return;}   // SC : scénario du territoire ouvert, ou de la France sans territoire
   fetch(`/api/scenario?prof=${S.prof}&${LQ()}&terr=${T}`).then(r=>r.json()).then(f=>{if(tk!==CREQ)return;if(f.error)return toast(f.error);renderCard(f);});}
-function closeCard(){closeCardContent();S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
+function closeCard(){closeCardContent(true);S.terr=null;dropRegional();setTimeout(refresh);if(META)levState();setTimeout(repaint);if(prevSel)map.setFeatureState({source:"d",id:prevSel},{s:false});prevSel=null;writeHash();}
 
 function renderCard(f){
-  F=f;const T=cardT(),c=$("#card"),y=f.years,i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
+  F=f;const T=cardT(),c=$("#card"),y=f.years,_b=(c.classList.remove("busy"),c.removeAttribute("aria-busy")),i26=Math.max(0,y.indexOf(carte?.y26??2026)),n=yIdx(y),Yn=y[n];
   const s26=f.scn[i26],s50=f.scn[n],b50=f.base[n],k=f.k,lo=s50*(1-k*(Yn-f.origin)),hi=s50*(1+k*(Yn-f.origin));
   if(!c.classList.contains("on")||c.dataset.t!==T||c.dataset.s!==(S.terr||"")||c.dataset.p!==f.prof){
     c.dataset.t=T;c.dataset.s=S.terr||"";c.dataset.p=f.prof;
@@ -944,7 +959,7 @@ function renderCard(f){
 const tw=new WeakMap();
 // lignes « couverture » de la fiche et de l'export : mêmes valeurs que l'API (aucun calcul dans la page)
 function couvRows(T,Yn){if(!COUV||COUV.prof!==S.prof)return null;const o=T=="FR"?COUV.fr:T.startsWith("D")?COUV.deps[T.slice(1)]:COUV.regs[T];if(!o)return null;
-  const at=y=>{const j=COUV.years.indexOf(y);return j<0?null:couvAt(o,j);};const rows=[2035,Yn].filter((y,i,a)=>a.indexOf(y)==i).map(y=>[y,at(y)]).filter(r=>r[1]);
+  const at=y=>{const j=COUV.years.indexOf(y);return j<0?null:couvAt(o,j);};const rows=[[Yn,at(Yn)]].filter(r=>r[1]);   // l'année du curseur seulement
   const tr=COUV.l23?.transferts?.[0],j=COUV.years.indexOf(Yn);
   return {rows,est:COUV.estimateurs,central:COUV.central,mg:tr&&j>=0?{etp:tr.etp_liberes_source[j],actes:tr.actes_mg_liberes[j],recu:tr.etp_recus_cible[j],y:Yn}:null};}
 function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c;if(!c)return;
@@ -1220,6 +1235,7 @@ const VERIF={ok:"Contrôle : chaque nombre vient d'un résultat du modèle",corr
 function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof;applyProf();}
   for(const l of META.levers)if(!["pop_scen","activite"].includes(l.k)||l.k in c.leviers)setL(l,l.k in c.leviers?c.leviers[l.k]:l.default);
   if("l23" in c)setL23(!!c.l23,c.vue=="couverture");
+  setTRH(c.tr||null);
   if(c.annee>=2026&&c.annee<=2050)setYear(c.annee);levState();
   // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
   if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();askHide();toast("Scénario de l'assistant affiché sur la carte");}

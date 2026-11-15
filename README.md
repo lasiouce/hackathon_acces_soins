@@ -185,6 +185,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
 | Besoin → carte | Vue « Couverture » (indice C, référence 2026 = 1, fourchette M1/M2a/M3), levier L23 « vaccination en officine » de bout en bout ; M4 en attente (P-B4) | ✅ 6 critères sur 6 ; `/api/couverture` 28,8 ms au 95ᵉ centile (n = 60) |
+| Transferts hypothétiques | L'assistant simule « X prennent p % de <acte> de Y » (forme de L23, `tr_*` sur `/api/couverture`), balayé sur a (mode IA et sans IA), étiqueté « hypothèse de l'utilisateur », bandeau dans la carte ; niveau MG et spécialistes mesuré (ameli 2025) ; O2 refuse la MG et les spécialistes en cible seulement | ✅ 7 critères sur 7 ([rapport](v2/docs/lab/reports/2026-11-15-transfert-hypothetique.md)) |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,

@@ -147,8 +147,9 @@ def carte(prof: str, lv: dict, terr: str = "FR") -> dict:
 sys.path.insert(0, str(HERE.parent))
 from besoin.couverture import SANS_COUVERTURE  # noqa: E402
 from besoin.cube import Population  # noqa: E402
+from besoin.interface import discover  # noqa: E402
 from besoin.sortie import besoin_api  # noqa: E402
-from besoin.transferts import L23_PARAMS, l23  # noqa: E402
+from besoin.transferts import L23_PARAMS, Transfert, l23  # noqa: E402
 from jumeau.state import State  # noqa: E402
 
 # Estimateurs servis par profession : survivants des protocoles (M1 socle P-B1/P-B5, M2a, M3 pour IDE seulement ; M2b tué).
@@ -160,8 +161,20 @@ EN_ATTENTE = [{"estimateur": "M4", "actif": False, "statut": "en attente de vali
 SEUIL_FOURCHETTE = 0.05      # (max − min) / central en 2050 : au-delà, la fourchette de modèle est montrée (supposé, plan)
 INJ_MG_2018 = 2.6e6          # injections antigrippales en consultation de médecin, 2018 (Cour des comptes, G10.csv ; fiche L23)
 L23_BORNES = {"a": (0.0, 0.05), "k": (0.25, 1.0)}   # plages des fiches (k : fiche L23) ; a : en temps de MG, supposé
+# Transfert hypothétique (plan v2/docs/lab/derivations/2026-11-15-transfert-hypothetique-plan.md) : forme de L23, paramètres
+# de l'utilisateur·rice, jamais un levier sourcé. Défauts supposés ; τ = forme de L23 (P-B6), empruntée.
+TR_BORNES = {"a": (0.0, 0.5), "sinf": (0.0, 1.0), "k": (0.1, 3.0), "tau": (0.1, 20.0), "t0": (2026, 2050)}
+TR_DEFAUT = {"a": 0.10, "sinf": 1.0, "k": 1.0, "tau": 2.4, "t0": 2026}
+TR_UNITES = {"a": "part de la demande de la source concernée par l'acte", "sinf": "part de l'acte transférée à terme",
+             "k": "temps de la cible par unité de temps de la source", "tau": "années (montée en charge)", "t0": "année d'autorisation"}
+TR_SOURCES = ("medecine-generale", "specialistes") + tuple(SURVIVANTS)
+# Niveau de la demande des sources hors des 5 (transfert hypothétique seulement ; L23 garde le niveau de M1) : effectif
+# libéral France au 1er janvier 2025, ameli « Démographie des professionnels de santé » (data/raw/ameli/…, classe
+# tout_age, tout sexe, région FRANCE), 1 professionnel = 1 temps plein comme pour les cibles. Mesuré.
+NIVEAU_SOURCE = {"medecine-generale": 56005, "specialistes": 57346}
 _BES: dict = {}
 _CAR: dict = {}
+_BSRC: dict = {}
 
 
 @lru_cache(maxsize=1)
@@ -195,6 +208,63 @@ def _l23_params(q: dict) -> tuple[dict | None, str | None]:
     return ov, None
 
 
+def _tr_params(q: dict, prof: str) -> tuple[tuple | None, str | None]:
+    """tr_src, tr_cible et, facultatifs, tr_a, tr_sinf, tr_k, tr_tau, tr_t0 -> (Transfert, paramètres réglés).
+    O2 : la cible est l'une des 5 professions ; la MG et les spécialistes ne sont admis qu'en source."""
+    if "tr_src" not in q and "tr_cible" not in q:
+        return None, None
+    src, cib = q.get("tr_src"), q.get("tr_cible")
+    if cib not in SURVIVANTS:
+        return None, f"tr_cible {cib!r} : l'une de {', '.join(SURVIVANTS)} (O2 : MG et spécialistes en source seulement)"
+    if src not in TR_SOURCES:
+        return None, f"tr_src {src!r} : l'une de {', '.join(TR_SOURCES)}"
+    if src == cib:
+        return None, "tr_src = tr_cible"
+    if prof not in (src, cib):
+        return None, f"transfert {src} → {cib} sans effet sur {prof} : afficher la cible ou la source"
+    v, regles = dict(TR_DEFAUT), []
+    for k, (lo, hi) in TR_BORNES.items():
+        if f"tr_{k}" in q:
+            try:
+                x = float(q[f"tr_{k}"])
+            except ValueError:
+                return None, f"tr_{k} : valeur non numérique"
+            if not lo <= x <= hi:
+                return None, f"tr_{k} hors bornes [{lo} ; {hi}] : {x}"
+            v[k], regles = x, regles + [k]
+    try:
+        tr = Transfert("transfert hypothétique (paramètres de l'utilisateur)", src, cib, v["a"], v["k"], v["sinf"], v["tau"],
+                       int(v["t0"]))
+    except ValueError as e:
+        return None, str(e)
+    return (tr, regles), None
+
+
+def besoin_source(src: str, cible: str, est: str) -> tuple[list, list, np.ndarray, str]:
+    """B de la source d'un transfert hypothétique : (territoires, années, B [territoire, année], estimateur).
+    Une des 5 : son propre besoin (même estimateur s'il survit pour elle, sinon M1). MG : M1 (profil DAMIR), pour tous
+    les estimateurs de la cible (M2a et M3 n'ont pas de MG). Spécialistes : M0 (population). Niveau national des deux
+    ramené à l'effectif libéral mesuré (NIVEAU_SOURCE, ameli 2025) à l'année de référence."""
+    if src in SURVIVANTS:
+        e = est if est in SURVIVANTS[src] else CENTRAL
+        r = besoin_cache(src, e, None)
+        return r["territories"], r["years"], np.asarray(r["besoin"][src]), e
+    e = "M1" if src == "medecine-generale" else "M0"
+    if (src, cible) not in _BSRC:
+        E = _etats(cible)
+        years = [y for y in sorted(E) if y >= V1.DECISION]
+        B = discover()[e]().fit(_pop(), E, V1.DECISION).predict(_pop(), E, years)
+        V = B.values[B.p(src)]
+        f = NIVEAU_SOURCE[src] / V[:, list(B.years).index(V1.DECISION)].sum()        # niveau national mesuré à la référence
+        _BSRC[(src, cible)] = ([str(t) for t in B.territories], [int(y) for y in B.years], V * f, e, f)
+    return _BSRC[(src, cible)][:4]
+
+
+def facteur_niveau(src: str, cible: str) -> float:
+    """Rapport du niveau mesuré (NIVEAU_SOURCE) au niveau de l'estimateur seul ; 1 pour une des 5 professions."""
+    return 1.0 if src in SURVIVANTS else _BSRC[(src, cible)][4]
+
+
 def besoin_cache(prof: str, est: str, ov: dict | None) -> dict:
     """besoin_api sur les états de base ; ov = paramètres de L23 (None : sans transfert). L23 n'agit que sur les
     estimateurs qui portent la MG (source) et la profession (cible)."""
@@ -210,8 +280,9 @@ def _param_l23(p) -> dict:
     return dict(name=p.name, value=p.value, unit=p.unit, source=p.source, vintage=p.vintage, status=p.status)
 
 
-def couverture_carte(prof: str, lv: dict, ov: dict | None) -> dict:
-    """Indice de couverture par département et pour la France, base et scénario, par estimateur survivant."""
+def couverture_carte(prof: str, lv: dict, ov: dict | None, trh: tuple | None = None) -> dict:
+    """Indice de couverture par département et pour la France, base et scénario, par estimateur survivant.
+    trh = (Transfert, paramètres réglés) : transfert hypothétique de l'utilisateur·rice, appliqué après L23."""
     if prof in SANS_COUVERTURE or prof not in SURVIVANTS:
         raise ValueError(f"pas d'indice de couverture pour {prof!r} (O2 : sources de transferts seulement)")
     ck = (prof, tuple(sorted(lv.items())))
@@ -229,11 +300,23 @@ def couverture_carte(prof: str, lv: dict, ov: dict | None) -> dict:
         rows = [ti[d] for d in codes]
         B0 = np.asarray(r0["besoin"][prof])[rows][:, yi]
         B1 = np.asarray(r1["besoin"][prof])[rows][:, yi]
+        src_info = None
+        if trh is not None:                 # même opérateur que besoin.transferts.appliquer, sur les tableaux en cache
+            tr = trh[0]
+            sa = tr.s(years) * tr.a
+            T, Y, Bs, e_src = besoin_source(tr.source, tr.cible, est)
+            t2 = {t: i for i, t in enumerate(T)}
+            Bsrc = Bs[[t2[d] for d in codes]][:, [Y.index(y) for y in years]]
+            if prof == tr.cible:
+                B1 = B1 + sa[None, :] * tr.k * (1 + tr.mu) * Bsrc
+            else:
+                B1 = B1 * (1 - sa[None, :])
+            src_info = dict(estimateur=e_src, temps_source=(sa[None, :] * Bsrc).sum(0))
         with np.errstate(divide="ignore", invalid="ignore"):
             ref = Sb[:, 0] / B0[:, 0]
             Cb, Cs = (Sb / B0) / ref[:, None], (Ss / B1) / ref[:, None]
             nat = lambda S, B: (S.sum(0) / B.sum(0)) / (Sb[:, 0].sum() / B0[:, 0].sum())
-            par[est] = dict(b=Cb, s=Cs, fb=nat(Sb, B0), fs=nat(Ss, B1), r1=r1, B0=B0, B1=B1)
+            par[est] = dict(b=Cb, s=Cs, fb=nat(Sb, B0), fs=nat(Ss, B1), r1=r1, B0=B0, B1=B1, src=src_info)
     c = par[CENTRAL]
     lo = np.nanmin([p["s"] for p in par.values()], 0)
     hi = np.nanmax([p["s"] for p in par.values()], 0)
@@ -273,12 +356,30 @@ def couverture_carte(prof: str, lv: dict, ov: dict | None) -> dict:
             "seuil_fourchette": SEUIL_FOURCHETTE,
             "l23": None if ov is None else {"actif": True, "params": params, "transferts": tr,
                                             "note": "a et k supposés : effet illustratif ; s(t) : forme mesurée (P-B6)"},
+            "transfert_hypothetique": None if trh is None else _trh_bloc(trh, years, c["src"]),
             "hypotheses": {"norme": c["r1"]["norme"], "estimateurs": {e: besoin_cache(prof, e, None)["norme"] for e in par},
                            "population": c["r1"]["hypotheses"]["population"], "sources": [
                                "offre : jumeau v2, secteur privé (RPPS / Hippocrate, DREES)",
                                "besoin : v2/besoin (M1 poids APL DREES, DCIR ; M2a, M3 : fiches de l'axe 1)",
                                "population : Insee Omphale 2022"]},
             "ms": round((time.perf_counter() - t0) * 1000, 1)}
+
+
+def _trh_bloc(trh: tuple, years: list, src: dict) -> dict:
+    tr, regles = trh
+    v = {"a": tr.a, "sinf": tr.s_inf, "k": tr.k, "tau": tr.tau, "t0": tr.t0}
+    st = {"medecine-generale": "niveau mesuré : 56 005 médecins généralistes libéraux en France au 1er janvier 2025 "
+                               "(ameli) ; répartition par âge mesurée (Open DAMIR 2025)",
+          "specialistes": "niveau mesuré : 57 346 médecins spécialistes libéraux en France au 1er janvier 2025 "
+                          "(ameli) ; répartition selon la population seule, sans effet de l'âge (supposé)"}
+    return {"actif": True, "statut": "hypothèse de l'utilisateur", "source": tr.source, "cible": tr.cible,
+            "params": [dict(name=k, value=v[k], unit=TR_UNITES[k], status="hypothèse de l'utilisateur" if k in regles
+                            else "supposé (défaut, hypothèse de l'utilisateur)") for k in TR_DEFAUT],
+            "besoin_source": {"estimateur": src["estimateur"], "statut": st.get(tr.source, "comme la profession source"),
+                              "facteur_niveau": round(facteur_niveau(tr.source, tr.cible), 12)},
+            "etp_source_transferes": [round(float(x), 1) for x in src["temps_source"]],
+            "note": "transfert proposé par l'utilisateur·rice, pas un levier de la carte : ni le volume de l'acte ni la part "
+                    "du temps de la source qu'il occupe ne sont publiés en données ouvertes ; effet illustratif"}
 
 
 class Handler(V1.Handler):
@@ -315,10 +416,11 @@ class Handler(V1.Handler):
                 return self.send_json({"error": f"pas d'indice de couverture pour {prof!r} (sources de transferts seulement)"}, 400)
             lv, err = V1.parse_levers(q)
             ov, err2 = _l23_params(q)
-            if err or err2:
-                return self.send_json({"error": err or err2}, 400)
+            trh, err3 = _tr_params(q, prof)
+            if err or err2 or err3:
+                return self.send_json({"error": err or err2 or err3}, 400)
             try:
-                return self.send_json(couverture_carte(prof, lv, ov))
+                return self.send_json(couverture_carte(prof, lv, ov, trh))
             except Exception as e:
                 return self.send_json({"error": f"{type(e).__name__}: {e}"}, 500)
         if u.path == "/api/interpret":     # texte -> leviers ; traduit, ne calcule rien (v2/langage/README.md)
@@ -423,8 +525,13 @@ def _scenario_carte(appels: list) -> dict | None:
     de l'afficher, rien n'est appliqué sans clic. Parmi les calculs réussis, on préfère ceux qui ont des leviers, puis
     un territoire plus fin que la France (les appels « France » servent souvent de référence), puis le dernier."""
     cands = []
+    trh_i = [i for i, a in enumerate(appels) if a.get("outil") == "couverture" and (a.get("entree") or {}).get("transfert")
+             and not a.get("erreur")]
+    trh_mid = trh_i[len(trh_i) // 2] if trh_i else None
     for i, a in enumerate(appels):
         e = a.get("entree") or {}
+        if e.get("transfert") and a.get("outil") == "couverture" and i != trh_mid:
+            continue       # transfert hypothétique balayé : la carte reçoit le point médian du balayage
         if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique", "couverture") or not a.get("code_territoire"):
             continue
         lv = dict(e.get("leviers") or {})
@@ -441,8 +548,31 @@ def _scenario_carte(appels: list) -> dict | None:
         c = {"prof": e["profession"], "terr": a["code_territoire"], "leviers": lv, "annee": max(ans) if ans else 2050}
         if a["outil"] == "couverture":     # étape 5 du plan besoin-carte : L23 vu par l'assistant -> vue couverture, l23=1
             c |= {"vue": "couverture", "l23": 1 if e.get("l23") else 0}
-        cands.append(((bool(lv) or bool(c.get("l23")), a["outil"] == "couverture", c["terr"] != "FR", i), c))
+            if e.get("transfert"):        # bandeau « transfert hypothétique » de la carte ; paramètres tr_* de /api/couverture
+                t = e["transfert"]
+                c["tr"] = {"p": {TR_Q[k]: v for k, v in t.items()}, "libelle": _trh_libelle(t),
+                           "resume": _trh_resume(t)}
+        cands.append(((bool(lv) or bool(c.get("l23")) or "tr" in c, a["outil"] == "couverture", c["terr"] != "FR", i), c))
     return max(cands, key=lambda x: x[0])[1] if cands else None
+
+
+TR_Q = {"source": "tr_src", "cible": "tr_cible", "a": "tr_a", "s_inf": "tr_sinf", "k": "tr_k", "tau": "tr_tau", "t0": "tr_t0"}
+NOMS_SOURCES = {"medecine-generale": "médecins généralistes", "specialistes": "médecins spécialistes"}
+
+
+def _trh_libelle(t: dict) -> str:
+    nom = lambda p: NOMS_SOURCES.get(p) or V1.PROFS.get(p, p).lower()
+    return f"une part de la demande des {nom(t['source'])} passe aux {nom(t['cible'])}"
+
+
+def _trh_resume(t: dict) -> str:
+    """Réglage du transfert hypothétique en langue courante (point médian du balayage de a)."""
+    pc = lambda x: f"{100 * x:.3g} %".replace(".", ",")
+    out = [f"part de la demande concernée {pc(t.get('a', TR_DEFAUT['a']))} (point médian du balayage"
+           + (")" if "a" in t else ", supposée)")]
+    out += [f"part de l'acte transférée {pc(t['s_inf'])}"] if "s_inf" in t else []
+    out += [f"à partir de {t['t0']}"] if "t0" in t else []
+    return ", ".join(out)
 
 
 def _chatbot(methode: str, chemin: str, corps: dict | None = None) -> tuple[int, dict]:
