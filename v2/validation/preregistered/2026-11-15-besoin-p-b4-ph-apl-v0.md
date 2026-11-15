@@ -7,7 +7,7 @@ headline: "Protocole rédigé, NON GELÉ (pas de jeton) : succès si Spearman �
 status: protocole rédigé, non gelé (non lancé)
 professions: [pharmaciens]
 hypothesis: H-B4 (dérivation du besoin, §6 M4), extension aux pharmaciens
-sources: [APL DREES Méthode initiale V0 2010/2013 (jeu 530, Licence Ouverte 2.0, fichier pharmacies et Notice APL), officines par commune 2013 (BPE ou FINESS archivé, à fixer avant gel), Insee populations communales (millésime à fixer avant gel), OSRM sur OpenStreetMap (ODbL), BV2012 (Insee), Insee accès aux équipements (carreaux 200 m, Licence Ouverte 2.0)]
+sources: [APL DREES Méthode initiale V0 2010/2013 (jeu 530, Licence Ouverte 2.0, fichier pharmacies et Notice APL), BPE 2013 et 2010 (Insee, pharmacies), Insee RP 2011 et 2008 (populations municipales), OSRM sur OpenStreetMap (ODbL), BV2012 (Insee), Insee accès aux équipements (carreaux 200 m, Licence Ouverte 2.0)]
 tags: [validation, besoin, 2SFCA, APL, pharmaciens, pre-registration, P-B4-PH]
 ---
 
@@ -28,15 +28,19 @@ porte sur la mécanique, pas sur les paliers 2022+ utilisés en projection.
 ## Données (jeu, millésime, grain)
 - **Cible** : colonne « APL 2013 (nouveau distancier) » du fichier
   `…aux pharmaciennes libérales.csv`, 36 747 lignes, commune (s).
-- **Offre** `S_j` : **nombre d'officines** par commune en 2013, sans ETP (la
-  V0 ne pondère pas l'activité des pharmacies (s)). Source à fixer avant gel :
-  BPE 2013 (pharmacie) ou FINESS archivé ; écrite ici au gel.
-- **Demande** : population communale de l'année de référence de la V0, à lire
-  dans la Notice avant gel (non lue à ce jour). Pondération par âge : celle de
-  la Notice si elle s'applique aux pharmacies, sinon population brute.
+- **Offre** `S_j` : **nombre d'officines** par commune, sans ETP (la V0
+  compte « les effectifs d'officines » (s, Notice)). La DREES les prend dans
+  le SNIIR-AM, non ouvert (s) : on prend la **BPE 2013 de l'Insee**, type
+  « pharmacie » (Licence Ouverte), code lu dans la nomenclature 2013 au
+  passage. Pour 2010 : BPE 2010.
+- **Demande** : **population municipale du recensement 2011** (Insee) pour
+  2013, RP 2008 pour 2010 (s, Notice). **Population brute** : la Notice ne
+  décrit de pondération par âge que pour les médecins et ne publie pas les
+  poids (EGB, non ouvert) (s).
 - **Paliers** (Notice) (s) : poids 1 de 0 à 5 min, 0,3 de 5 à 10 min, 0,1 de
   10 à 15 min, 0 au-delà.
-- **Temps d'accès** : OSRM sur OSM (axe 4), centre à centre. Repli à vol
+- **Temps d'accès** : OSRM sur OSM (axe 4), centre à centre. La DREES
+  utilise Metric (Insee) pour 2013 et « APL 2010 (nouveau distancier) » (s). Repli à vol
   d'oiseau × 1,3 (h) : verdict marqué « repli », ne vaut pas reproduction.
 - **Champ** : communes métropolitaines présentes dans la cible et dans le
   distancier, après passage du code 2013 au code courant par la table de
@@ -49,9 +53,9 @@ porte sur la mécanique, pas sur les paliers 2022+ utilisés en projection.
 - **Références naïves** : (N1) officines de la commune / population ;
   (N2) idem au **bassin de vie 2012** ;
 - `G = ρ_M4 − max(ρ_N1, ρ_N2)`.
-- Mise à l'échelle : si l'unité de la cible diffère (pour 100 000 habitants
-  probable (d)), un facteur fixe d'unité est appliqué, écrit au gel ; aucun
-  facteur calé sur la cible.
+- Unité : **officines pour 100 000 habitants** (d : la Notice l'écrit pour
+  les ETP des autres professions) ; M4 est multiplié par 10⁵, aucun facteur
+  calé sur la cible. Le Spearman n'en dépend pas.
 
 ## Seuil de décision
 M4 est « la méthode de l'APL » pour les pharmacies si :
@@ -94,15 +98,18 @@ Aucun (cible externe).
 - **Paliers empruntés.** La DREES n'avait pas de flux de patients pour les
   pharmacies (s) : la cible n'est pas validée comme mesure d'accès, seulement
   comme calcul reproductible.
-- **Offre 2013.** BPE ou FINESS ne compte peut-être pas les officines comme la
-  DREES (source de la DREES non écrite dans la Notice, à vérifier).
+- **Offre 2013.** La BPE (Insee) n'est pas le SNIIR-AM de la DREES : écarts
+  possibles (officines ouvertes ou fermées en cours d'année, antennes).
+- **Population brute** : si la DREES a pondéré par âge pour les pharmacies,
+  l'écart en vient en partie.
 - **Géographie communale 2013** : fusions depuis, appariement imparfait.
 - **Ancienneté.** Un succès sur 2013 ne dit rien des paramètres utilisés en
   projection 2050.
 - **Seuils supposés**, non étalonnés.
 
-## Avant le gel (ouvert)
-Lire la Notice (année de population, pondération d'âge, source de l'offre),
-choisir la source d'offre 2013, écrire le facteur d'unité. Puis jeton
-OpenTimestamps, **sur accord de l'utilisateur·rice**. Les valeurs d'APL ne
+## Règles de gel
+Notice lue avant le gel (permis). Gel accordé par l'utilisateur·rice le
+2026-11-15 (« Oui et oui », relayé par la session de dérivation) ; jetons
+dans `horodatage/2026-11-15-besoin-p-b4-ph-SHA256SUMS*`. Mêmes règles que
+P-B1. Les valeurs d'APL ne
 sont lues commune par commune qu'après le jeton.
