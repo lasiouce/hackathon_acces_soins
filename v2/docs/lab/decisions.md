@@ -4854,3 +4854,21 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** Bruns 2026 (PDF lu) n'utilise ni 2SFCA ni distance ; Doi 2017 projette la demande contre des lits fixes.
   25 requêtes au total (Europe PMC, HAL en plus) sans antécédent trouvé.
 - **Ce qui le renverserait :** une passe Scholar et Scopus (CAPTCHA ici, accès institutionnel requis).
+
+## 2026-11-15 — Les spécialistes (ancienne « phase 2 ») deviennent une amélioration possible, hors plan
+- **Décision** (utilisateur·rice, relayée par une bifurcation de la session besoin-derivation, puis confirmée ici :
+  « Oui, les deux ») :
+  - la phase 2 (cardiologie, dermatologie, ophtalmologie) **n'est plus à l'ordre du jour** : elle entre dans les
+    améliorations possibles ;
+  - les spécialistes restent admis comme **profession source** d'un transfert de tâches, sans projection ni indice de
+    couverture (règle O2).
+- **Remplace :**
+  - « Spécialistes en phase 2 » (recadrage du 2026-11-14, `CLAUDE.md`, `v2/ROADMAP.md` §1 et §5, profil du
+    laboratoire) ;
+  - la condition de démarrage de la phase 2 dans le rapport technique (`ch-ouvertes.tex`).
+
+  Ces mentions sont barrées ou annotées, pas effacées.
+- **Pourquoi :** choix de l'utilisateur·rice. Le travail se concentre sur les cinq professions et sur le module de
+  besoin.
+- **Aussi aligné :** `docs/lab/profile.md`, README, Home. Le PDF du rapport technique n'est pas recompilé.
+

@@ -83,7 +83,8 @@ et avec quelle incertitude.
 
 Professions couvertes : **sages-femmes, chirurgiens-dentistes, pharmaciens,
 masseurs-kinésithérapeutes, infirmiers**. Les spécialités médicales (cardiologie, dermatologie,
-ophtalmologie) forment une phase 2.
+ophtalmologie) sont une amélioration possible (décision du 2026-11-15) ; elles ne sont plus un jalon du
+plan. Elles peuvent servir de profession source d'un transfert de tâches, sans projection.
 
 **« Libéral » au sens large.** Ici, « libéral » désigne **tout le secteur privé**, lucratif ou non :
 libéraux et mixtes, pharmaciens adjoints d'officine, salariés de cliniques privées, industrie. Tout
@@ -180,7 +181,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 4. Données | Public / privé, registre de 30 événements datés, zonage par commune, grain communal | ✅ |
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
-| Phase 2 | Cardiologie, dermatologie, ophtalmologie | à venir |
+| Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,
 validation, sensibilité, interface, conformité, menaces à la validité, questions ouvertes, reproductibilité) :
@@ -319,7 +320,7 @@ et la question ouverte sur le seuil de diffusion.
 
 - Rejouer la recette par personas sur la carte finale.
 - Module de besoin (population × recours par âge, transferts de tâches), après son test d'abandon.
-- Phase 2 : cardiologie, dermatologie, ophtalmologie.
+- Amélioration possible, hors plan : spécialités (cardiologie, dermatologie, ophtalmologie).
 - Noter les dépôts pré-enregistrés sur les effectifs 2027.
 
 Détail : [`v2/ROADMAP.md`](v2/ROADMAP.md).
