@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Intervalles de C1 : conforme et MinT](v2/docs/lab/reports/2026-11-15-c1-intervalles.md) | Non : aucun des 6 candidats ne bat la persistance à l'origine 2021 (meilleur +0,0043 [−0,0006 ; +0,0094] en CRPS log), tous moins bons que C1 brut ; le biais de C1 à h = 5 change de signe entre 2016 et 2021 | Claude (session c1-intervalles) |
 | 2026-11-15 | [Budget d'erreur de C1 et A2](v2/docs/lab/reports/2026-11-15-budget-erreur-c1-a2.md) | MAPE C1 7,76 % [7,12 ; 8,40] : bruit poissonien 3,11 ; entrées locales −2,60 et 35–59 ans locaux −2,36 si connus, national −0,49 ; écart local non persistant (r ≤ 0,24) → ni gravitaire ni agents, test de covariables d'abord | axe 2 |
 | 2026-11-15 | [Audit RGPD, AIPD, 2017/745](v2/docs/lab/reports/2026-11-15-audit-rgpd-aipd-dm.md) | pas un dispositif médical ; AIPD probablement non obligatoire (1–2 critères G29) ; 52,5 % des cellules commune × âge publiées valent 1 personne ; DSFR hors administration | audit |
 | 2026-11-15 | [Évaluation selon la grille du jury](v2/docs/lab/reports/2026-11-15-jury-grille.md) | 64/100 (54–74) : pertinence 6,5 · IA 7 · prototype 6,5 · faisabilité 5,5 · pitch 6,5 ; le meilleur ratio est la note de conformité RGPD/2017/745 (+3 pts pour 45 min) | recette jury |

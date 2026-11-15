@@ -4312,6 +4312,29 @@ que les couleurs soient plus claires. Ce n'est pas confortable pour les yeux ».
 **Ce qui le renverserait.** Une recette où deux classes voisines ne se distinguent plus à l'œil, notamment au
 vidéoprojecteur. Il faudrait alors des paliers discrets plutôt qu'un dégradé continu.
 
+## 2026-11-15 — C1 : ni prévision conforme ni réconciliation MinT ; la bande affichée reste celle des tirages bruts
+
+**Décision.**
+- Les six candidats sont **abandonnés** : C1-conf (tous h′, h′ = 5, adaptatif en h), C1-MinT (dép → région →
+  France), et les deux combinés.
+  - Test d'abandon écrit avant le lancement : le CRPS à l'origine 2021 doit être inférieur à celui de C1. Aucun ne
+    passe (+0,0012 à +0,0098, mesuré).
+  - Aucun ne bat la persistance probabiliste. Le meilleur est à +0,0043 [−0,0006 ; +0,0094] ; C1 brut est à
+    +0,0031 [−0,0008 ; +0,0071].
+  - Le conforme fait passer la couverture à 80 % de 73,5 % à 63–67 % ; MinT dégrade le CRPS de C1 (+0,0019
+    [+0,0010 ; +0,0030]).
+- **La bande affichée reste celle des tirages de C1**, sous sa couverture mesurée (règle N6), sans recalibrage.
+- Le prochain effort probabiliste porte sur le **centre**, avec un choc commun national dans C1, et non sur la
+  largeur.
+
+**Pourquoi.** [Rapport](reports/2026-11-15-c1-intervalles.md).
+- Le score normalisé de C1 n'est pas invariant en h : son écart-type passe de 0,80 à h′ = 1 à 1,12 à h′ = 5.
+- Son biais à h = 5 change de signe entre les origines (z moyen de −0,30 en 2016, +0,59 en 2021). Un calibrage sur
+  le passé déplace donc la bande dans le mauvais sens.
+- La couverture de C1 en 2021 vaut 91 % pour les petits départements et 55 % pour les grands.
+
+**Ce qui le renverserait.** Le dépôt 2027 (origine 2022) ou une origine plus stable où C1-conf ferait mieux que C1
+brut. Ou une prévision de C1 au niveau régional meilleure que la somme des départements, qui rendrait MinT utile.
 ## 2026-11-15 — Axe 2 : budget d'erreur de C1 et A2 ; pas de modèle gravitaire ni à agents pour la mobilité
 
 **Décision** ([rapport](reports/2026-11-15-budget-erreur-c1-a2.md), script `v2/methodes/budget_erreur.py`).

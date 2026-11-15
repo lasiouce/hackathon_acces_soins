@@ -35,3 +35,4 @@ v2/validation/out/*.parquet
 
 # skill vidéo tiers volumineux (54 Mo), réinstallable : npx skills add Vincentwei1021/video-shotcraft
 .claude/skills/video-shotcraft/
+v2/methodes/out/c1i_tirages_*.parquet
