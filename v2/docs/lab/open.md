@@ -201,7 +201,7 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin P-B4 : reproduire l'APL DREES 2024 (IDE, MK, SF, CD) par M4 ; Spearman ≥ 0,90, erreur médiane ≤ 15 %, +0,05 sur deux naïfs | ~2 h Claude + distancier (machine non mesurée) | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B5 : backtest du recours 2016 → 2025 par la structure d'âge contre la persistance (patientèle, MAPE dép.) | ~45 min Claude | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~24 Go DAMIR (machine), saisons 2015-16 à 2019-20 | dérivation du besoin | 2026-11-15 | open |
-| Besoin : lire le descriptif de la patientèle (département d'exercice ou de résidence ?) | ~5 min | exploration besoin | 2026-11-15 | open |
+| Besoin : lire le descriptif de la patientèle (département d'exercice ou de résidence ?) | ~5 min | exploration besoin | 2026-11-15 | fait 2026-11-15 : moyenne par professionnel, département des professionnels (déduit du libellé ; page « Méthode » non lue), [axe 4](reports/2026-11-15-besoin-axe4-donnees.md) |
 | Besoin : ouvrir l'archive APL V0 2010/2013 (pharmaciens ?) | ~15 min | exploration besoin | 2026-11-15 | open |
 | Besoin : sourcer la liste et les dates des régions de l'expérimentation de 2017 (arrêtés ; 4 selon les arrêtés relevés, 6 selon la Cour des comptes) | ~15 min | exploration besoin | 2026-11-15 | open |
 | Besoin : pilote OSRM `table` sur 35 000 communes à 30 min (temps machine) | ~30 min Claude + machine inconnue | exploration besoin | 2026-11-15 | open |
@@ -213,3 +213,7 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : conservation du 2SFCA contre Páez et coll. 2019 (inflation des FCA) | ~15 min | passe de littérature | 2026-11-15 | open |
 | Besoin : Gravelle et coll. 2003 en entier (spécification et instruments de M2a) | ~30 min | passe de littérature | 2026-11-15 | open |
 | Besoin P-B5 : candidat GBM (covariables ouvertes) contre M1 et la persistance, même règle que C1-GBM | ~45 min Claude | question utilisateur·rice sur le ML | 2026-11-15 | open |
+| Besoin, axe 4 : total inter-régimes publié par profession (soins de ville, libéral, par an) pour contrôler Open DAMIR à 0,5 % ; la Statistique mensuelle est en régime général + SLM seulement | ~30 min de recherche, peut-être non mesurable | [axe 4](reports/2026-11-15-besoin-axe4-donnees.md) | 2026-11-15 | open |
+| Besoin, axe 4 : page « Méthode » de data.ameli.fr (PS libéraux) : confirmer que le département de la patientèle est celui d'exercice | ~5 min | axe 4 | 2026-11-15 | open |
+| Besoin, axe 4 : facteur de détour et vitesse du distancier de repli (1,3 et 60 km/h, supposés) : les caler sur un échantillon de temps routiers (Metric-OSRM, 100 paires) | ~30 min Claude + accès au serveur SSPCloud | axe 4 | 2026-11-15 | open |
+| Besoin, axe 4 : onglet « APL 2023 » de la DREES libellé « Millésime : 2024 », population 2022 : demander ou vérifier (P-B4) | ~10 min | axe 4 | 2026-11-15 | open |

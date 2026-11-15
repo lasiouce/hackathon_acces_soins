@@ -4615,3 +4615,34 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** les organisateurs jugent que même le besoin de MG en contexte sort du sujet. On passe
   alors à O1, en retirant `B_MG`.
 
+
+## 2026-11-15 — Module de besoin, axe 4 : ingestion des sources, règles de lecture et de licence
+- **Décision** (session besoin-axe4-donnees, dans le cadre du plan accepté) :
+  - **Un module par source** dans `v2/besoin/donnees/` (`apl`, `ameli`, `medic`, `iqvia`, `damir`, `distancier`),
+    chacun avec sa commande de reconstruction. Une fiche `*.meta.json` par table, rassemblée par `manifest.py` dans
+    `v2/besoin/donnees/MANIFEST.md` et `controles.csv`.
+  - **Licence → dossier.** Licence Ouverte 2.0 (APL, Open Medic, IQVIA, Open DAMIR, geo.api) :
+    `v2/data/processed/besoin/`, commité. ODbL (les cinq jeux data.ameli.fr) : `v2/data/odbl/besoin/`, **ignoré par
+    git** tant que la décision de licence est ouverte (§ Open). Seuls le script et le manifeste sont commités.
+  - **Open DAMIR :** filtre `PRS_REM_TYP = 0` (le descriptif l'impose : sinon doublons) ; actes comptés par la
+    quantité `PRS_ACT_QTE`, pas le dénombrement ; dentistes = nature 19, 53, 54 ou spécialité 36 ; MG = spécialité 1
+    (O2) ; clés gardées : mois de flux et de soins, région du bénéficiaire et de l'exécutant, âge, sexe, statut
+    juridique, secteur public/privé, top PS5, `PRS_NAT`. Le filtre « libéral » (`stj = 1`, `ppu = 2`) reste à
+    l'usage, il n'est pas appliqué à l'agrégation. Les agrégats mensuels (~15 Mo par mois, ~0,7 Go) restent sur
+    disque, ignorés par git ; deux tables dérivées sont commitées : `damir_profils` (flux 2024–2025, sans région de
+    l'exécutant ni mois de soins) et `damir_vaccination` (codes de vaccination, mois de soins, deux régions).
+  - **Fenêtre DAMIR lancée après le pilote :** 213 s pour un mois (0,97 Go, 36,6 M lignes, 4,6 Mo/s, mesuré),
+    extrapolé à ~2 h 50 de machine pour les 48 autres mois, sous le seuil de 6 h fixé par la session parente.
+  - **Distancier de repli :** distance du grand cercle entre centres geo.api (communes et arrondissements PLM),
+    paires à ≤ 35 km ; temps = 1,3 × d / 60 km/h, **les deux valeurs supposées**, à traiter en hyperparamètres par
+    M4. Table non commitée (~100 Mo, régénérable en ~10 s). Aucun téléchargement OSM/OSRM.
+  - **Écarté :** `depenses-par-poste` de data.ameli.fr (jeu « risques professionnels », AT/MP du régime général).
+- **Pourquoi :** critères de l'axe 4 du [plan](derivations/2026-11-15-besoin-plan.md) ; règle de l'utilisateur·rice
+  sur la lecture en flux ; licence ODbL ouverte. Détail et contrôles dans le
+  [rapport](reports/2026-11-15-besoin-axe4-donnees.md).
+- **Résidu :** le contrôle « DAMIR contre le total inter-régimes publié, à 0,5 % » n'est **pas réalisable** tel quel :
+  la Statistique mensuelle de la Cnam est en champ régime général + SLM, et DAMIR n'a pas de variable de régime.
+  Seul un rapport DAMIR / RG est publié (§ open.md).
+- **Ce qui le renverserait :** un total inter-régimes publié par profession (DREES, comptes de la santé, ou rapport
+  charges et produits) au même périmètre ; la décision de licence (tables ODbL commitées sous ODbL) ; l'accord pour
+  OSRM (le distancier de repli devient une référence naïve).

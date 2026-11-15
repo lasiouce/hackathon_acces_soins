@@ -4,6 +4,7 @@ Run (racine du dépôt) :
     uv run python v2/besoin/donnees/damir.py 202501            # un mois de flux (pilote)
     uv run python v2/besoin/donnees/damir.py 202401-202412     # une plage
     uv run python v2/besoin/donnees/damir.py --fenetre         # la fenêtre décidée le 2026-11-15 (registre)
+    uv run python v2/besoin/donnees/damir.py --fenetre --parallele 4   # 4 mois à la fois (filtre Python mono-cœur)
     uv run python v2/besoin/donnees/damir.py --controle        # contrôles et fiche de manifeste (après lecture)
 
 Règle de l'utilisateur·rice (registre, 2026-11-15) : `curl | gunzip | filtre`, le CSV (~0,95 Go compressé par mois)
@@ -57,6 +58,7 @@ from pathlib import Path
 
 import pandas as pd
 import pyarrow as pa
+import pyarrow.compute as pc
 import pyarrow.csv as pcsv
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -99,6 +101,40 @@ def prof(df: pd.DataFrame) -> pd.Series:
     return p
 
 
+def prof_arrow(t: pa.Table) -> pa.Array:
+    """Même règle que `prof` (la dernière affectation l'emporte : MG, puis IDE, MK, PH, CD, SF), en Arrow."""
+    a, s, c = t["PSE_ACT_SNDS"], t["PSE_SPE_SNDS"], t["PSE_ACT_CAT"]
+    vrai = lambda x: pc.fill_null(x, False)  # noqa: E731
+    p = pa.nulls(len(t), pa.string())
+    for code, cond in [("SF", pc.equal(a, 21)), ("CD", pc.or_(pc.is_in(a, pa.array([19, 53, 54], pa.int32())),
+                                                               pc.equal(s, 36))),
+                       ("PH", pc.equal(a, 50)), ("MK", pc.equal(a, 26)), ("IDE", pc.equal(a, 24)),
+                       ("MG", pc.and_(pc.equal(s, 1), pc.equal(c, 1)))]:
+        p = pc.if_else(vrai(cond), code, p)
+    return p
+
+
+def somme(t: pa.Table, cles: list[str]) -> pa.Table:
+    g = t.group_by(cles, use_threads=True).aggregate([(m, "sum") for m in MESURES])
+    return g.rename_columns([c[:-4] if c.endswith("_sum") else c for c in g.column_names])
+
+
+def agreger_lot(t: pa.Table) -> tuple[pa.Table, pa.Table]:
+    """Filtre PRS_REM_TYP = 0, puis (agrégat par profession, totaux du lot) : version Arrow, multi-cœur."""
+    t = t.filter(vrai0(t["PRS_REM_TYP"]))
+    ctl = somme(t, K_CTL)
+    t = t.append_column("prof", prof_arrow(t))
+    t = t.filter(pc.is_valid(t["prof"]))
+    return somme(t, CLES + ["prof"]), ctl
+
+
+def vrai0(x):
+    return pc.fill_null(pc.equal(x, 0), False)
+
+
+K_CTL = ["FLX_ANN_MOI", "PSE_ACT_CAT", "CPT_ENV_TYP", "TOP_PS5_TRG"]
+
+
 def lire_mois(mois: str) -> dict:
     url = lien(mois)
     t0 = time.time()
@@ -113,24 +149,22 @@ def lire_mois(mois: str) -> dict:
                             parse_options=pcsv.ParseOptions(delimiter=";"),
                             convert_options=pcsv.ConvertOptions(include_columns=cols, column_types=types))
     parts, ctl, n = [], [], 0
-    k_ctl = ["FLX_ANN_MOI", "PSE_ACT_CAT", "CPT_ENV_TYP", "TOP_PS5_TRG"]
     for lot in lecteur:
-        df = lot.to_pandas()
-        n += len(df)
-        df = df[df["PRS_REM_TYP"] == 0]
-        ctl.append(df.groupby(k_ctl, dropna=False)[MESURES].sum().reset_index())
-        df = df.assign(prof=prof(df)).dropna(subset=["prof"])
-        parts.append(df.groupby(CLES + ["prof"], dropna=False)[MESURES].sum().reset_index())
+        n += lot.num_rows
+        a, c = agreger_lot(pa.Table.from_batches([lot]))
+        parts.append(a)
+        ctl.append(c)
         if len(parts) >= 20:
-            parts = [pd.concat(parts).groupby(CLES + ["prof"], dropna=False)[MESURES].sum().reset_index()]
+            parts = [somme(pa.concat_tables(parts), CLES + ["prof"])]
+            ctl = [somme(pa.concat_tables(ctl), K_CTL)]
         print(f"\r  {mois} : {n / 1e6:,.1f} M lignes, {time.time() - t0:,.0f} s", end="", flush=True)
     avert = gz.communicate()[1].decode("utf-8", "ignore").strip()
     octets = int((curl.communicate()[1] or b"0").decode().strip() or 0)
     # gunzip rend 2 sur un simple avertissement (« trailing garbage ignored ») : accepté, et noté dans pilote.csv
     if curl.returncode or gz.returncode not in (0, 2):
         raise SystemExit(f"\n{mois} : curl {curl.returncode}, gunzip {gz.returncode} {avert}")
-    agg = pd.concat(parts).groupby(CLES + ["prof"], dropna=False)[MESURES].sum().reset_index().rename(columns=NOMS)
-    ctl = pd.concat(ctl).groupby(k_ctl, dropna=False)[MESURES].sum().reset_index().rename(columns=NOMS)
+    agg = somme(pa.concat_tables(parts), CLES + ["prof"]).to_pandas().rename(columns=NOMS)
+    ctl = somme(pa.concat_tables(ctl), K_CTL).to_pandas().rename(columns=NOMS)
     OUT.mkdir(parents=True, exist_ok=True)
     agg.to_parquet(OUT / f"agg_{mois}.parquet", index=False)
     ctl.to_parquet(OUT / f"ctl_{mois}.parquet", index=False)
@@ -244,8 +278,33 @@ if __name__ == "__main__":
     if "--controle" in sys.argv:
         controler()
         raise SystemExit
-    for m in [x for a in sys.argv[1:] for x in mois_de(a)]:
-        if (OUT / f"agg_{m}.parquet").exists():
-            print(f"  {m} : déjà agrégé, sauté")
-            continue
-        lire_mois(m)
+    args = sys.argv[1:]
+    n = 1
+    if "--parallele" in args:
+        i = args.index("--parallele")
+        n = int(args[i + 1])
+        del args[i:i + 2]
+    todo = [m for m in [x for a in args for x in mois_de(a)] if not (OUT / f"agg_{m}.parquet").exists()]
+    print(f"{len(todo)} mois à lire, {n} à la fois")
+    if n == 1:
+        for m in todo:
+            for essai in range(12):  # le serveur refuse tant qu'il compte une connexion précédente (observé)
+                try:
+                    lire_mois(m)
+                    break
+                except BaseException as e:  # noqa: BLE001
+                    print(f"\n  {m} : refus ou erreur ({str(e)[:120]}), nouvel essai dans 60 s")
+                    time.sleep(60)
+            else:
+                print(f"  ÉCHEC {m} après 12 essais")
+    else:
+        # un processus par mois, chacun avec son propre lien à jeton ; un refus du serveur (page HTML au lieu du
+        # gzip) fait échouer gunzip, le mois est signalé et rien n'est écrit pour lui
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor(max_workers=n) as ex:
+            fut = {m: ex.submit(lire_mois, m) for m in todo}
+            for m, f in fut.items():
+                try:
+                    f.result()
+                except BaseException as e:  # noqa: BLE001 — SystemExit inclus
+                    print(f"  ÉCHEC {m} : {e}")
