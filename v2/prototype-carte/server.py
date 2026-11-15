@@ -525,10 +525,13 @@ def _scenario_carte(appels: list) -> dict | None:
     de l'afficher, rien n'est appliqué sans clic. Parmi les calculs réussis, on préfère ceux qui ont des leviers, puis
     un territoire plus fin que la France (les appels « France » servent souvent de référence), puis le dernier."""
     cands = []
+    trh_i = [i for i, a in enumerate(appels) if a.get("outil") == "couverture" and (a.get("entree") or {}).get("transfert")
+             and not a.get("erreur")]
+    trh_mid = trh_i[len(trh_i) // 2] if trh_i else None
     for i, a in enumerate(appels):
         e = a.get("entree") or {}
-        if (e.get("transfert") and a.get("outil") == "couverture"):
-            continue       # transfert hypothétique : la carte n'a pas ce levier, elle afficherait une autre couverture
+        if e.get("transfert") and a.get("outil") == "couverture" and i != trh_mid:
+            continue       # transfert hypothétique balayé : la carte reçoit le point médian du balayage
         if a.get("erreur") or a.get("outil") not in ("projeter", "comparer", "balayer", "planifier", "traduire_politique", "couverture") or not a.get("code_territoire"):
             continue
         lv = dict(e.get("leviers") or {})
@@ -545,8 +548,31 @@ def _scenario_carte(appels: list) -> dict | None:
         c = {"prof": e["profession"], "terr": a["code_territoire"], "leviers": lv, "annee": max(ans) if ans else 2050}
         if a["outil"] == "couverture":     # étape 5 du plan besoin-carte : L23 vu par l'assistant -> vue couverture, l23=1
             c |= {"vue": "couverture", "l23": 1 if e.get("l23") else 0}
-        cands.append(((bool(lv) or bool(c.get("l23")), a["outil"] == "couverture", c["terr"] != "FR", i), c))
+            if e.get("transfert"):        # bandeau « transfert hypothétique » de la carte ; paramètres tr_* de /api/couverture
+                t = e["transfert"]
+                c["tr"] = {"p": {TR_Q[k]: v for k, v in t.items()}, "libelle": _trh_libelle(t),
+                           "resume": _trh_resume(t)}
+        cands.append(((bool(lv) or bool(c.get("l23")) or "tr" in c, a["outil"] == "couverture", c["terr"] != "FR", i), c))
     return max(cands, key=lambda x: x[0])[1] if cands else None
+
+
+TR_Q = {"source": "tr_src", "cible": "tr_cible", "a": "tr_a", "s_inf": "tr_sinf", "k": "tr_k", "tau": "tr_tau", "t0": "tr_t0"}
+NOMS_SOURCES = {"medecine-generale": "médecins généralistes", "specialistes": "médecins spécialistes"}
+
+
+def _trh_libelle(t: dict) -> str:
+    nom = lambda p: NOMS_SOURCES.get(p) or V1.PROFS.get(p, p).lower()
+    return f"une part de la demande des {nom(t['source'])} passe aux {nom(t['cible'])}"
+
+
+def _trh_resume(t: dict) -> str:
+    """Réglage du transfert hypothétique en langue courante (point médian du balayage de a)."""
+    pc = lambda x: f"{100 * x:.3g} %".replace(".", ",")
+    out = [f"part de la demande concernée {pc(t.get('a', TR_DEFAUT['a']))} (point médian du balayage"
+           + (")" if "a" in t else ", supposée)")]
+    out += [f"part de l'acte transférée {pc(t['s_inf'])}"] if "s_inf" in t else []
+    out += [f"à partir de {t['t0']}"] if "t0" in t else []
+    return ", ".join(out)
 
 
 def _chatbot(methode: str, chemin: str, corps: dict | None = None) -> tuple[int, dict]:
