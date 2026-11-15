@@ -208,6 +208,11 @@ Points de méthode :
   stock-flux à taux locaux, 7,73 % pour les cohortes bayésiennes de l'axe 2, contre 9,30 % pour la
   tendance (mesuré, secteur privé). La carte et l'assistant servent C1 par défaut (taux précalculés dans
   `v2/methodes/out/c1_taux/`, `v2/methodes/c1_jumeau.py`).
+- **Budget d'erreur.** Sur les 7,76 points de MAPE de C1, 3,1 points viennent d'un plancher de bruit
+  poissonien (dérivé). L'essentiel du reste est local : la répartition des installations et des 35 à 59 ans
+  entre départements. Cet écart local ne persiste pas d'une fenêtre de 5 ans à l'autre (r ≤ 0,24, mesuré).
+  Ni modèle gravitaire ni modèle à agents pour l'instant : on teste d'abord des covariables
+  ([rapport](v2/docs/lab/reports/2026-11-15-budget-erreur-c1-a2.md)).
 - **2050 ne se backteste pas.** Les données vont de 2012 à 2026, donc on valide au plus sur environ
   10 ans. Au-delà, on s'appuie sur la reproduction des projections DREES, les cas limites du modèle et
   des fourchettes extrapolées, toujours affichées comme telles.
@@ -265,6 +270,7 @@ Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier d
 ```bash
 PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
 PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
+PYTHONPATH=v2 uv run --with scipy python -W ignore -m methodes.budget_erreur   # axe 2 : budget d'erreur
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
 uv run python v2/langage/evaluer_hors_echantillon.py cas_test_hors_echantillon_6.yaml   # compilateur
 ```
