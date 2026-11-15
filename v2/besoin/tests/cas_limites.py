@@ -3,6 +3,7 @@
   L1 profil plat   ω ≡ 1 ⇒ C(M1) = C(M0) à 10⁻⁹ près (5 professions de l'offre servies par M1)
   L2 offre nulle   offre mise à 0 dans des départements ⇒ B(M2a), B(M2b), B(M3) > 0 partout, et inchangé
   L3 O2            M1, M2a, M3 servis par besoin_api : aucun indice de couverture pour la MG ni les spécialistes
+  L4 GBM recours   le GBM de P-B5 n'est pas un estimateur de besoin (absent du registre) et refuse les kinés
 """
 import numpy as np
 
@@ -88,4 +89,20 @@ def l3_o2():
          not any(fuites.values()), "M1 produit B_MG (source O2) : le cube le contient, la couverture non")
 
 
-CAS_LIMITES = [l1_profil_plat, l2_offre_nulle, l3_o2]
+def l4_gbm_recours():
+    from besoin.estimateurs import gbm_recours
+    from besoin.interface import NeedEstimator, discover
+    reg = discover()
+    hors = not any(c.__module__.endswith("gbm_recours") for c in reg.values())
+    pas_besoin = not any(isinstance(v, type) and issubclass(v, NeedEstimator) for v in vars(gbm_recours).values())
+    try:
+        gbm_recours.predit("kines")
+        refus = False
+    except ValueError:
+        refus = True
+    crit("L4", "GBM de P-B5 : prédicteur du recours seulement (hors registre, kinés refusés)",
+         f"hors registre {hors} ; aucune NeedEstimator {pas_besoin} ; kinés refusés {refus}",
+         hors and pas_besoin and refus, f"registre : {sorted(reg)}")
+
+
+CAS_LIMITES = [l1_profil_plat, l2_offre_nulle, l3_o2, l4_gbm_recours]

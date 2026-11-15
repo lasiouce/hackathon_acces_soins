@@ -4,7 +4,7 @@ date: 2026-11-15
 author: session besoin-v2-m1-m3
 question: Projeter le recours 2016 → 2025 par la seule structure d'âge (M1) bat-il la persistance du recours par habitant, et un GBM bat-il M1 ?
 headline: "P-B5 : H-B1 retenue (M1 bat la persistance pour 3 professions sur 4 : IDE −8,1 pts de MAPE, MK −3,3, CD −1,0 ; SF +1,6, perd), même verdict sous P2 ; le GBM passe la règle pour IDE (−1,9 pt), CD (−3,2) et SF (−45,8), pas pour MK ; son gain suit la croissance de l'offre, pas l'âge (diagnostic a posteriori)"
-status: passage fait ; mise en service du GBM soumise à décision
+status: passage fait ; GBM servi comme prédicteur du recours seulement (décision du 2026-11-15)
 professions: [infirmiers, kines, dentistes, sages-femmes]
 hypothesis: H-B1 ; protocole gelé P-B5 (v2/validation/preregistered/2026-11-15-besoin-p-b5-backtest.md) et amendement A1.3
 sources: [patientèle et démographie data.ameli.fr (ODbL), estimations de population Insee (1975–2023), Omphale 2022, poids APL, effectifs du jumeau, grille de densité Insee 2016]
@@ -119,9 +119,13 @@ au gel. IC à 98,75 % (bootstrap des départements, B = 2 000).
      validation.
   Écrit au registre sous `## Open / not yet decided`, avec la recommandation de le garder comme prédicteur du
   **recours** (diagnostic), pas comme estimateur du besoin.
+  **Tranché le 2026-11-15 (option a)** : servi comme prédicteur du recours seulement, à h = 9, pour IDE, CD et SF
+  ([`gbm_recours.py`](../../../besoin/estimateurs/gbm_recours.py)) ; hors du registre des besoins (test L4).
+  Premier passage 2025 → 2034 (**mesuré**, somme nationale) : GBM / M1 = 1,008 (IDE), 1,114 (CD), **2,484 (SF)**.
+  Pour les SF, le GBM prolonge le rattrapage 2016 → 2025 (recours ×2,5 en 9 ans au-delà de l'âge) : c'est la
+  croissance passée de l'offre extrapolée, à lire comme telle, pas comme une prévision de besoin.
 
 ## ? Next
 | Item | Cost |
 |---|---|
-| Décider de la mise en service du GBM (recours seulement, ou besoin) | décision, ~0 |
 | Backtest SF avec un terme d'offre explicite (recours = besoin × φ(A)), pour séparer âge et offre | ~30 min Claude |

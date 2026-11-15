@@ -85,30 +85,33 @@ def grille() -> pd.Series:
     return (d[d.DENS <= 4].groupby("dep").PMUN14.sum().reindex(tot.index).fillna(0) / tot).rename("part_dense")
 
 
-def predictions(prof, pops, cible, colonne=None):
+def predictions(prof, pops, cible, colonne=None, o=O):
     """DataFrame [département] : R(o), R(cible), R̂_pers, R̂_M1."""
-    R = recours(prof, [O, cible])
-    p0, p1 = pops[O], pops[cible]
+    R = recours(prof, [o, cible]) if cible in recours(prof, [cible]).columns else recours(prof, [o])
+    p0, p1 = pops[o], pops[cible]
     w = omega(prof, p0, colonne)
     b0, b1 = bstd(p0, w), bstd(p1, w)
     n0, n1 = pd.Series(p0.P[:, 0].sum(axis=(1, 2)), p0.territories), pd.Series(p1.P[:, 0].sum(axis=(1, 2)),
                                                                               p1.territories)
     d = sorted(set(R.dropna().index) & set(b0.index) & set(b1.index))
-    t = pd.DataFrame({"R0": R.loc[d, O], "R": R.loc[d, cible]})
+    t = pd.DataFrame({"R0": R.loc[d, o], "R": R.loc[d, cible] if cible in R.columns else np.nan})
     t["pers"] = t.R0 * n1[d] / n0[d]
     t["M1"] = t.R0 * b1[d] / b0[d]
     return t
 
 
-def covariables(prof, t, pops, cible):
-    p0 = pops[O]
+def covariables(prof, t, pops, cible, o=O):
+    p0 = pops[o]
     pop0 = pd.Series(p0.P[:, 0].sum(axis=(1, 2)), p0.territories)
     ages = p0.ages
     parts = {k: pd.Series(p0.P[:, 0][:, :, m].sum(axis=(1, 2)), p0.territories) / pop0
              for k, m in (("p0_14", ages < 15), ("p15_59", (ages >= 15) & (ages < 60)),
                           ("p60_74", (ages >= 60) & (ages < 75)), ("p75", ages >= 75))}
-    an = lambda q: O if O in _secteur(q).columns and _secteur(q)[O].notna().any() else int(
-        _secteur(q).columns[_secteur(q).notna().any()].min())
+    def an(q):
+        """Année o si l'effectif du jumeau l'a, sinon la plus récente avant o, sinon la plus ancienne."""
+        dispo = [int(c) for c in _secteur(q).columns[_secteur(q).notna().any()]]
+        avant = [y for y in dispo if y <= o]
+        return max(avant) if avant else min(dispo)
     dens = lambda q: _secteur(q)[an(q)].reindex(t.index)
     autres = sum(dens(q) for q in PROF_AMELI if q != prof)
     X = pd.DataFrame(index=t.index)

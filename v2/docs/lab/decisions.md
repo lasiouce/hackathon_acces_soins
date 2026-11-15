@@ -2448,7 +2448,7 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
-- **Mise en service du GBM de P-B5** (ouvert le 2026-11-15, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)).
+- ~~**Mise en service du GBM de P-B5**~~ **Tranché le 2026-11-15** : option (a), voir l'entrée datée « P-B5 : le GBM servi comme prédicteur du recours seulement ». (ouvert le 2026-11-15, [rapport](reports/2026-11-15-besoin-pb5-backtest.md)).
   Par la règle gelée (borne haute de l'IC de Δ_GBM < 0), il qualifie pour IDE (−1,9 pt de MAPE), CD (−3,2) et SF
   (−45,8) ; pas pour MK. Mais son gain suit la croissance de l'offre (corrélation 0,54 à 0,71 entre sa cible et la
   croissance de l'effectif 2016 → 2025, diagnostic a posteriori), et il n'est validé qu'à h = 9. Options :
@@ -4887,3 +4887,17 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** seuils et hyperparamètres gelés appliqués tels quels.
 - **Ce qui le renverserait :** un profil d'âge antérieur à 2016 (regard en avant) ; un recours en actes au
   département ; les estimations Insee 2025 définitives.
+
+## 2026-11-15 — Module de besoin, P-B5 : le GBM servi comme prédicteur du recours seulement
+- **Décision** (choix de l'utilisateur·rice : « Usage only », option (a) de la question ouverte du même jour) :
+  - Le GBM de P-B5 est servi par `v2/besoin/estimateurs/gbm_recours.py` comme **prédicteur du recours** (patients,
+    file active × effectif) pour IDE, CD et SF, les trois professions où il bat M1 au-delà de l'IC.
+  - **Jamais comme besoin** : ce n'est pas une `NeedEstimator`, la classe n'est pas enregistrée, `besoin_api` ne
+    peut pas le choisir (test L4). Kinés refusés (non qualifiés).
+  - **Horizon servi : 9 ans seulement** (`predit(p, origine)` → origine + 9), appris sur toutes les paires
+    2016 → 2025, hyperparamètres gelés de P-B5.
+  - Branchement dans l'API ou la carte : non fait (hors des fichiers de cette session).
+- **Pourquoi :** son gain suit la croissance de l'offre (diagnostic de P-B5) ; servi comme besoin, il rendrait B
+  dépendant de l'offre, contraire à la norme et au cas limite « offre nulle ».
+- **Ce qui le renverserait :** un GBM dont le gain résiste à un terme d'offre explicite ; une validation à un autre
+  horizon.
