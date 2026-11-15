@@ -5248,3 +5248,12 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   « une seule façon d'estimer la demande de soins de ville … » ; limite sans noms de paramètres) et « (L23) » est retiré
   du libellé du glossaire. Le test vérifie l'absence de « libérés », « ETP », « L23 », « estimateur ».
 - **Pourquoi :** l'utilisateur·rice voyait encore six exemples ; même langage pour un·e utilisateur·rice sans formation.
+
+## 2026-11-15 — Assistant : chaque exemple porte son cas d'usage
+- **Décision** (accord de l'utilisateur·rice) : au-dessus de chacun des trois exemples, un libellé en petites capitales :
+  « Une politique → quel effet ? », « Un objectif → quelles politiques ? », « Un transfert de tâches → quelle couverture ? ».
+  Seule la question est envoyée au clic (`data-q`). Capture : `figures/2026-11-15-assistant-exemples-libelles.jpg`.
+- **Rejeté :** « issue » (laisse croire à un résultat certain ; la carte dit « effet »), « que faire ? » (prescriptif,
+  contraire au lexique neutre), « transfert de compétences » (le registre et le panneau disent « transfert de tâches » ;
+  la compétence de vacciner existe déjà, c'est la tâche qui se déplace).
+- **Ce qui le renverserait :** un test de lecture où un libellé est mal compris.
