@@ -18,6 +18,9 @@ tags: [besoin, axe5, sensibilite, couverture, 2050]
 >   SF **1,91**, CD **40**, PH **1,14** : distinguables ; MK **0,77**, IDE **0,34** : **non distinguables**.
 > - **La règle d'affichage se déclenche pour les kinés et les infirmiers** : C en fourchette entre estimateurs,
 >   jamais un seul chiffre.
+> - *Mise à jour du 2026-11-15 (après résultat, décision de l'utilisateur·rice) : M0, réfuté par P-B1, est retiré
+>   de la fourchette affichée. C est servi par M1 (M3 pour les IDE) ; l'écart M0 → M1 est montré comme l'effet du
+>   vieillissement ; l'incertitude affichée est la bande de l'offre C1. Le verdict gelé ci-dessus ne change pas.*
 > - **Cette étendue tient presque toute à M0** (besoin ∝ population, sans âge). Entre M1, M2a et M3, elle vaut au
 >   plus 0,004 en log (m). Or P-B1 a déjà retenu l'âge pour les cinq professions.
 > - **La première source de variance est l'offre** : les tirages de C1 portent 52 à 92 % de la variance de log C
@@ -129,10 +132,12 @@ Déclenchée si, au national en 2050, R(quotas × 1,2) < 1 ou S_e > S_π :
 - **Capacité de formation et abandon IFSI** ne sont pas joués (absents du modèle servi).
 
 ## → What it changes
-- **Affichage de C pour les kinés et les infirmiers** : fourchette entre estimateurs (min–max), jamais un seul
-  chiffre. Décision au [registre](../decisions.md), 2026-11-15.
-- **Branchement dans la carte** ([plan](../derivations/2026-11-15-besoin-carte-plan.md)) : la fourchette MK et IDE
-  doit y figurer ; pour SF, CD, PH, l'estimateur servi suffit au regard de D.
+- **Affichage de C** : ~~fourchette entre estimateurs pour les kinés et les infirmiers~~ (règle gelée, remplacée le
+  2026-11-15 pour l'affichage). M0 est retiré de la fourchette : C est servi par M1 (M3 pour les IDE), l'écart
+  M0 → M1 est montré comme l'effet du vieillissement (IDE 2050 : 0,83 avec l'âge, 1,14 sans ; quotas × 1,2 : +11 %),
+  et l'incertitude affichée est la bande de l'offre C1. Décisions au [registre](../decisions.md), 2026-11-15.
+- **Branchement dans la carte** ([plan](../derivations/2026-11-15-besoin-carte-plan.md)) : C par l'estimateur servi,
+  avec la bande de l'offre et, à côté, l'effet du vieillissement (M0 → M1).
 - **Priorité de recherche** : la largeur de C vient de l'offre (C1), pas du besoin. Resserrer la bande de C1 (choc
   commun national, décision du 2026-11-15) vaut plus que tout raffinement de M1–M3.
 - [`Home.md`](../../../../Home.md) (journal, Status) et [`README.md`](../../../../README.md) mis à jour.
@@ -140,7 +145,6 @@ Déclenchée si, au national en 2050, R(quotas × 1,2) < 1 ou S_e > S_π :
 ## ? Next
 | Item | Cost |
 |---|---|
-| Décider si M0 reste une borne de la fourchette affichée (variante sans M0 : D ≤ 0,004) | décision de l'utilisateur·rice, ~5 min Claude ensuite |
 | Tester la séparabilité : 10 tirages C1 rejoués avec quotas × 1,2 dans la méthode | ~20 min Claude, ~2 min machine |
 | Régulation à E = 0 au département : vérifier le déclenchement dans `Model.scenario` | ~15 min Claude |
 | Sensibilité de l'indice M4 (accessibilité, à part) aux leviers, à la commune | ~45 min Claude, offre communale requise |
