@@ -17,7 +17,16 @@ import json
 import sys
 from pathlib import Path
 
-from besoin.tests.criteres import CRITERES, RESULTS
+import importlib
+import pkgutil
+
+import besoin.tests
+from besoin.tests.criteres import CRITERES as _AXE0, RESULTS
+
+# critères de l'axe 0 puis ceux de chaque module besoin/tests/criteres_*.py (un par estimateur ou protocole)
+CRITERES = list(_AXE0) + [f for m in sorted(pkgutil.iter_modules(besoin.tests.__path__), key=lambda m: m.name)
+                          if m.name.startswith("criteres_")
+                          for f in importlib.import_module(f"besoin.tests.{m.name}").CRITERES]
 
 OUT = Path("v2/artifacts/besoin_a0")
 
