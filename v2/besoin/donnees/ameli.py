@@ -138,6 +138,20 @@ def pathologies():
                   "data.ameli.fr effectifs, ligne 999")
     niv1 = tot[tot.top.str.endswith("_CAT_CAT")]
     ctl += par_dep(niv1, ["top", "annee"], "ntop", "patients", "data.ameli.fr effectifs, ligne 999")
+    # Σ départements = Σ régions (lignes 999 hors région 99) : l'écart au national vient des bénéficiaires sans
+    # région attribuée (0,3 % en 2024, 1,4 % en 2015, mesuré le 2026-11-15), pas de la lecture
+    reg = tot[(tot.departement == "999") & (tot.region.astype(str) != "99")]
+    dep = tot[tot.departement != "999"]
+    for k in ["npop"]:
+        for a in sorted(tot.annee.unique()):
+            r = reg[(reg.annee == a) & (reg.top == tot.top.iloc[0])][k].sum()
+            ctl.append(controle(f"population cartographie Σ dép. = Σ régions {a}",
+                                dep[(dep.annee == a) & (dep.top == tot.top.iloc[0])][k].sum(), r,
+                                source_publie="data.ameli.fr effectifs, lignes régionales (999)"))
+    for (t, a), g in niv1.groupby(["top", "annee"]):
+        r = g[(g.departement == "999") & (g.region.astype(str) != "99")].ntop.sum()
+        ctl.append(controle(f"patients {t} Σ dép. = Σ régions {a}", g[g.departement != "999"].ntop.sum(), r,
+                            source_publie="data.ameli.fr effectifs, lignes régionales (999)"))
     src = SRC.format("effectifs")
     ecrire(d, "ameli_pathologies_effectifs", licence="ODbL", source=src, millesime=f"{d.annee.min()}–{d.annee.max()}",
            commande=CMD, dom=DOM, controles=ctl,
