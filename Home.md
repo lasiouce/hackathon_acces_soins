@@ -53,6 +53,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Article : module de besoin](v2/papers/besoin/main.tex) | 7 p. : besoin non identifié par le recours sans restriction ; M1 (âge) retenu pour les 5 professions, M2b rejeté, M3 pour les IDE ; M4 indice maison (ρ 0,71–0,76 contre l'APL) ; L23 s∞ 0,74, τ 2,4 ans ; 7 protocoles gelés et horodatés | session besoin-derivation |
 | 2026-11-15 | [Besoin P-B4-PH : APL V0 des pharmacies](v2/docs/lab/reports/2026-11-15-besoin-p-b4-ph-apl-v0.md) | Échec : Spearman 0,72 [0,71 ; 0,74] (seuil 0,90), erreur médiane 33 % ; gain sur la densité +0,14 ; niveau moyen reproduit (22,1 contre 22,5) → M4 pharmaciens indice maison | session besoin-derivation |
 | 2026-11-15 | [Besoin, axe 5 : sensibilité de C(2050)](v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md) | R (quotas × 1,2 / choix du modèle de besoin) : SF 1,91, CD 40, PH 1,14 distinguables ; MK 0,77, IDE 0,34 non distinguables → C en fourchette pour MK et IDE ; écart dû à M0 ; l'offre C1 porte 52–92 % de la variance | session besoin-axe5-sensibilite |
 | 2026-11-15 | [Besoin, axe 5 : sensibilité de C(2050)](v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md) | R (quotas × 1,2 / choix du modèle de besoin) : SF 1,91, CD 40, PH 1,14 distinguables ; MK 0,77, IDE 0,34 non distinguables, écart dû à M0 (réfuté par P-B1, retiré de l'affichage) ; l'offre C1 porte 52–92 % de la variance | session besoin-axe5-sensibilite |
