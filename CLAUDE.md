@@ -92,7 +92,8 @@ This applies to every session working in this folder, sub-sessions included.
   and compare (e.g. "accès moindre"), never judge ("médiocre", "désert").
 - **Three personas share one model**: ARS/DG (zoom commune → groups of
   communes → département → région),
-  Administration (all parameters), politician (plain mode). Stage 1 is the
+  Administration (all parameters), politician (~~plain mode~~ *superseded 2026-11-15: the AI assistant is the
+  politician's entry point; no separate plain mode*). Stage 1 is the
   demographic projection only (Hippocrate + Omphale).
 - Every input names its dataset and vintage. No closed data.
 - A lever counts only when it is wired end to end and its effect cites a

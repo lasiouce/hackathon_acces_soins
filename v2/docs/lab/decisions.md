@@ -5308,3 +5308,15 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Conséquence :** le constat P1-5 de la recette (`2026-11-15-uat-application`) est clos par décision, pas par
   correction. Le parcours ARS commence au département.
 
+## 2026-11-15 — Pas de « mode simple » pour l'élu·e : l'assistant IA en tient lieu
+- **Décision** (utilisateur·rice, après la recette, constat P1-6 : « le mode simple pour l'élue c'est stale, on a
+  l'assistant IA ») :
+  - aucun mode simple séparé n'est construit ;
+  - l'élu·e passe par l'**assistant de simulation**, qui traduit une phrase en leviers et répond en langue courante.
+    C'est la suite de la décision du 2026-11-14, « L'agent conversationnel devient l'interface principale ».
+- **Remplace :** le « mode simple » des personas (`CLAUDE.md`, règles maison, annoté) et la partie « mode simple »
+  du constat P1-6.
+- **Reste ouvert** (partie de P1-6 non couverte par cette décision) : le jargon de méthode (M1, DCIR, P-B4, L23,
+  s∞…) visible dans la fiche et dans l'assistant. On le garde en P2, à reformuler en langue courante ou à replier
+  dans un détail.
+
