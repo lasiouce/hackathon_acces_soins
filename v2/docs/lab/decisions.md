@@ -5296,3 +5296,49 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   l'espace avant l'année.
 - **Pourquoi :** la ligne 2035 doublait celle du curseur ; une seule année se lit d'un coup d'œil.
 - **Vérifié :** dans le navigateur (Puy-de-Dôme, pharmaciens, curseur sur 2040 : une ligne, 1,01).
+
+## 2026-11-15 — Transferts hypothétiques admis dans l'assistant, étiquetés « hypothèse de l'utilisateur » ; O2 précisé : cible seulement
+- **Décision** (tâche de la session v2, relayée à besoin-axe5-sensibilite ; [plan](derivations/2026-11-15-transfert-hypothetique-plan.md),
+  [rapport](reports/2026-11-15-transfert-hypothetique.md)) :
+  - **Forme :** celle de L23, généralisée à une source et à une cible quelconques. `GET /api/couverture` accepte
+    `tr_src`, `tr_cible`, `tr_a` [0 ; 0,5], `tr_sinf` [0 ; 1], `tr_k` [0,1 ; 3], `tr_tau` [0,1 ; 20] et
+    `tr_t0` [2026 ; 2050]. L'opérateur s'applique après L23, sur le besoin en cache.
+  - **Profession affichée :** `prof` doit être la cible ou la source, sinon 400.
+  - **Demande de la source :**
+    - une des 5 : son propre besoin ;
+    - MG : M1, niveau placeholder ;
+    - spécialistes : M0, placeholder.
+  - **Défauts, tous « supposé (hypothèse de l'utilisateur) » :** a 0,10, s∞ 1, k 1, τ 2,4 (forme de L23,
+    empruntée), t₀ 2026.
+  - **Lecture de la phrase :**
+    - « p % des <acte> de Y » : s∞ = p, et a est balayé sur {5, 10, 20 %} ;
+    - « p % de la demande de Y » : a = p, balayé sur {p/2, p, 2p}.
+  - **Réponse de l'assistant :**
+    - jamais un chiffre unique ;
+    - source, cible et paramètres réaffichés avec leur statut ;
+    - elle dit pourquoi ce n'est pas un levier de la carte : ni volume d'acte ni part du temps publiés en données
+      ouvertes.
+  - **L23 reste le seul transfert sourcé**, inchangé.
+  - **O2 précisé :** la MG et les spécialistes sont refusés comme **cible** de l'indice (`tr_cible` ⇒ 400 ;
+    « couverture des généralistes » ⇒ refus). Ils sont admis comme **source**.
+    - Cela corrige le faux refus constaté en recette sur la phrase d'exemple : le mot « généralistes » déclenchait O2.
+    - Les transferts L23 qui citent les médecins en profitent aussi.
+  - **Carte :** aucun nouvel interrupteur, aucun bandeau. La carte ne propose pas d'afficher un transfert
+    hypothétique, puisqu'elle n'a pas ce levier.
+- **Pourquoi :**
+  - demande de l'utilisateur·rice : que l'assistant « essaie » un transfert arbitraire ;
+  - une seule source pour C, la carte : l'alternative calculée dans la passerelle est rejetée, car elle perd le
+    département et ne se vérifie pas contre L23.
+- **Vérifié :**
+  - générique MG → PH aux paramètres de L23 = `l23=1` (écart 0,0) ;
+  - L23 identique octet pour octet ;
+  - K1–K7 verts, p95 24,7 ms ;
+  - compilateur 10/10 sur des cas écrits avant le code, jeux existants inchangés ;
+  - chatbot 50/51 (le 51ᵉ exige un arbre propre ; vert après nettoyage) ;
+  - navigateur, mode sans IA.
+- **Ce qui le renverserait :**
+  - un volume d'acte ou une part du temps publiés : le transfert deviendrait un levier sourcé, comme L23 ;
+  - un niveau mesuré de la demande MG, qui changerait l'ampleur.
+- **Non fait :**
+  - mode IA non vérifié (pas de clé) ;
+  - pas de bandeau dans la carte.
