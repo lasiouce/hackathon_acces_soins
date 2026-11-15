@@ -64,6 +64,26 @@ l'APL.
   commune de l'APL 2024 n'est concernée (contrôle de l'axe 4) ; quelques communes des millésimes 2022–2023,
   fusionnées depuis, le sont (rapporté seulement).
 
+## Amendement A1 — passage 2 sur OSRM (écrit le 2026-11-15 à 03:25 UTC, avant tout temps OSRM calculé)
+
+L'utilisateur·rice a accepté le téléchargement de l'extrait OSM et l'installation d'OSRM (2026-11-15, « Yes,
+OSRM »). Le passage 2 suit la voie **principale** du protocole (OSRM sur OSM, voiture, centres de communes). Son
+verdict est le verdict de P-B4 ; le passage 1 (repli) reste rapporté. Aucun seuil ni aucune statistique ne change.
+
+- **Distancier.** OSRM 26.11.0 (Homebrew), profil `car.lua` par défaut, algorithme MLD, sans trafic. Extrait
+  `france-latest.osm.pbf` du miroir **download.openstreetmap.fr** (5 895 464 862 octets, modifié le 2026-11-15 à
+  01:12 UTC), et non Geofabrik (1,1 Mo/s mesuré, ≈ 70 min) : même donnée OSM, découpe différente, DOM compris puis
+  hors champ. Filtré par osmium aux voies (`highway`), bacs (`route=ferry`) et interdictions de tourner. Script :
+  `v2/besoin/donnees/distancier_osrm.py`.
+- **Paires.** Pour chaque commune i, appel `table` de i vers les communes à moins de 60 km à vol d'oiseau ; on garde
+  t_ij ≤ 30 min, plus (i, i) à 0. Le temps est orienté : t_ij va de la commune de résidence i au point d'offre j
+  (la conservation tient quelle que soit l'asymétrie). Une paire non routable compte comme hors d'atteinte.
+- **Centres.** Ceux de geo.api.gouv.fr, comme le repli (pas la mairie du distancier Metric), accrochés par OSRM à la
+  route la plus proche.
+- **Le reste est inchangé** : écarts E2 à E11 du passage 1, mêmes entrées, même bootstrap, même graine.
+- **Table dérivée d'OSM, donc ODbL** : `v2/data/odbl/besoin/distancier_osrm.parquet`, non commitée (règle d'attente
+  du 2026-11-15).
+
 > **Headline :** P-B4 **échoue en repli** pour IDE, MK, SF et CD. M4 classe les communes bien mieux que les deux
 > densités naïves (+0,15 à +0,31 de Spearman, IC > 0), mais ne reproduit pas l'APL : ρ de 0,66 à 0,77 contre 0,90
 > requis, erreur médiane de 21 à 29 % contre 15 %. M4 est un **indice maison**, jamais présenté comme l'APL.

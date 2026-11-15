@@ -30,6 +30,7 @@ from besoin.interface import NeedEstimator, register
 
 PARAMETRES = "v2/data/processed/besoin/apl_parametres.parquet"    # DREES 530, onglet « Paramètres » (LO 2.0)
 DISTANCIER = "v2/data/processed/besoin/distancier_vol_oiseau.parquet"
+OSRM = "v2/data/odbl/besoin/distancier_osrm.parquet"     # OSRM sur OSM (ODbL, non commité), colonne t_min
 CODE = {"sages-femmes": "SF", "dentistes": "CD", "kines": "MK", "infirmiers": "IDE"}   # pas d'APL pharmaciens
 PALIERS = {   # bornes hautes (min) et poids, onglet « Paramètres » APL 2024 (relus dans apl_parametres par paliers())
     "SF": ((10, 20, 30), (1.0, 2 / 3, 1 / 3)),
@@ -64,17 +65,21 @@ def temps_repli(d_km: np.ndarray, detour: float = 1.3, vitesse: float = 50.0) ->
 
 @lru_cache(maxsize=2)
 def _paires(path: str = DISTANCIER) -> pd.DataFrame:
-    return pd.read_parquet(path, columns=["com_i", "com_j", "d_km"])
+    cols = ["com_i", "com_j", "t_min"] if path == OSRM else ["com_i", "com_j", "d_km"]
+    return pd.read_parquet(path, columns=cols)
 
 
-def matrice(communes: np.ndarray, code: str, detour=1.3, vitesse=50.0, paires: pd.DataFrame | None = None):
-    """W[i, j] = w(t_ij) sur les communes données (creuse, symétrique), depuis le distancier à vol d'oiseau."""
-    d = _paires() if paires is None else paires
+def matrice(communes: np.ndarray, code: str, detour=1.3, vitesse=50.0, paires: pd.DataFrame | None = None,
+            distancier: str = DISTANCIER):
+    """W[i, j] = w(t_ij) sur les communes données (creuse), depuis un distancier : temps routier `t_min` s'il est
+    donné (OSRM), sinon vol d'oiseau `d_km` × détour / vitesse. W[i, j] porte t_ij ; R_j somme sur la colonne j."""
+    d = _paires(distancier) if paires is None else paires
     pos = pd.Series(np.arange(len(communes)), index=pd.Index(communes))
     i = pos.reindex(d.com_i.to_numpy()).to_numpy()
     j = pos.reindex(d.com_j.to_numpy()).to_numpy()
     ok = ~(np.isnan(i) | np.isnan(j))
-    w = poids_distance(temps_repli(d.d_km.to_numpy()[ok], detour, vitesse), code)
+    t = d.t_min.to_numpy()[ok] if "t_min" in d else temps_repli(d.d_km.to_numpy()[ok], detour, vitesse)
+    w = poids_distance(t, code)
     nz = w > 0
     n = len(communes)
     W = sparse.csr_matrix((w[nz], (i[ok][nz].astype(int), j[ok][nz].astype(int))), shape=(n, n))

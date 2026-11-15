@@ -5,6 +5,7 @@ Protocole : v2/validation/preregistered/2026-11-15-besoin-p-b4-apl.md (gelé, ho
 
 Run (racine du dépôt, liens data/raw et v2/data/raw présents le temps du passage ; ≈ 3 min) :
     PYTHONPATH=v2 uv run python -m besoin.validation.pb4      -> v2/artifacts/besoin_pb4/{results.json, ecarts_*.csv}
+    PYTHONPATH=v2 uv run python -m besoin.validation.pb4 --osrm   (amendement A1 : temps OSRM) -> besoin_pb4_osrm/
 
 Entrées (APL de l'année N : état N−2) :
   cible     APL DREES N par commune (apl_commune.parquet, LO 2.0), France métropolitaine
@@ -24,9 +25,10 @@ import pandas as pd
 from scipy.stats import rankdata
 
 from besoin.cube import Population
-from besoin.estimateurs.m4 import CODE, PAR, M4, deux_etapes, matrice, paliers
+from besoin.estimateurs.m4 import CODE, DISTANCIER, OSRM, PAR, M4, deux_etapes, matrice, paliers
 
 OUT = Path("v2/artifacts/besoin_pb4")
+DIST = DISTANCIER                                                # remplacé par OSRM avec --osrm
 APL = "v2/data/processed/besoin/apl_commune.parquet"
 STOCK = "v2/data/processed/commune_stock.parquet"
 SECTEUR = "v2/data/processed/secteur_stock.parquet"
@@ -122,7 +124,7 @@ def calcul(prof: str, annee: int, detour=1.3, vitesse=50.0) -> tuple[pd.DataFram
     S = S_all.reindex(com, fill_value=0.0).to_numpy()
     P = a.pop_std.to_numpy()
     paliers(CODE[prof])
-    W = matrice(com, CODE[prof], detour, vitesse)
+    W = matrice(com, CODE[prof], detour, vitesse, distancier=DIST)
     A, _, bilan = deux_etapes(W, S, P)
     geo = pd.read_parquet(GEO, columns=["com", "bv2022"]).set_index("com").bv2022
     bv = geo.reindex(com).fillna(pd.Series(com, index=com)).to_numpy()
@@ -202,7 +204,7 @@ def sensibilite_omphale(prof: str, f: pd.DataFrame) -> float:
         if parent in P.index and m.any():
             Pf[m] = P[parent] * f.P.to_numpy()[m] / f.P.to_numpy()[m].sum()
     Pf = np.nan_to_num(Pf)
-    W = matrice(f.com.to_numpy(), CODE[prof])
+    W = matrice(f.com.to_numpy(), CODE[prof], distancier=DIST)
     A, _, _ = deux_etapes(W, f.S.to_numpy(), Pf)
     return rho(A, f.apl.to_numpy())
 
@@ -222,7 +224,8 @@ def main():
         top = f.assign(ecart_rel=(f.m4 - f.apl) / f.apl.where(f.apl > 0)).reindex(
             (f.m4 - f.apl).abs().sort_values(ascending=False).index).head(20)
         top.to_csv(OUT / f"ecarts_{CODE[prof]}.csv", index=False)
-        res[prof] = dict(**st, ic_98_75=ic, criteres=ok, verdict="méthode de l'APL (repli)" if all(ok.values())
+        res[prof] = dict(**st, ic_98_75=ic, criteres=ok, distancier=DIST,
+                         verdict=("méthode de l'APL" + (" (repli)" if DIST == DISTANCIER else "")) if all(ok.values())
                          else "indice maison", bilan=bilan,
                          rapporte=dict(par_taille=par_taille(f), rho_2023=stats(f23)["rho_m4"],
                                        em_2023=stats(f23)["em"], kappa_2022=k,
@@ -238,5 +241,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--osrm" in sys.argv:
+        DIST, OUT = OSRM, Path("v2/artifacts/besoin_pb4_osrm")
     main()
     sys.exit(0)
