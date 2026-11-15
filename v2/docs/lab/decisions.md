@@ -4677,3 +4677,11 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   fenêtre décidée n'est pas lue en entier. La règle de lecture en flux reste.
 - **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
   arrêté.
+
+## 2026-11-15 — Module de besoin, axe 4 : Open DAMIR porté à 12 mois (année 2025)
+- **Decision :** les profils DAMIR (`damir_profils`, `damir_vaccination`) portent sur les 12 mois de 2025, et non plus
+  sur 9. Supersède partiellement l'entrée « Open DAMIR définitivement limité à 9 mois pour cette phase » : la limite
+  tient encore pour 2024 et les campagnes 2015–2020.
+- **Why :** l'utilisateur·rice a changé de réseau ; 2025-10 à 2025-12 ont été lus à 3 flux sans refus, en ~6 min de
+  machine (mesuré). Contrôles bloquants passés.
+
