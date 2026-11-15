@@ -2448,6 +2448,13 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Cible externe de M4 pharmaciens** (ouvert le 2026-11-15, session besoin-cible-pharmaciens). Proposé : APL DREES
+  « Méthode initiale V0 » aux pharmacies, commune, 2013 (2010 en secondaire), Licence Ouverte 2.0, offre = officines
+  sans ETP, paliers 0–5 / 5–10 / 10–15 min (s, Notice). Écartés comme cible : IRDES QES 308 (pas d'APL des pharmacies,
+  distance Insee seulement) ; temps Insee à la pharmacie la plus proche (autre grandeur, gardé en contrôle du
+  distancier). Protocole [P-B4-PH](../../validation/preregistered/2026-11-15-besoin-p-b4-ph-apl-v0.md) rédigé,
+  **non gelé** : gel par jeton sur accord de l'utilisateur·rice. Reste à choisir la source d'offre 2013 (BPE ou FINESS).
+  Voir [exploration](explorations/2026-11-15-besoin-cible-pharmaciens.md).
 - **Brancher le module de besoin dans la carte** (ouvert le 2026-11-15, axe 0 du besoin). `besoin.sortie.besoin_api`
   rend `besoin`, `couverture` et `couverture_base` en 0,72 ms au 95ᵉ centile au département (mesuré). Rien n'est
   branché dans `/api/carte` sans accord. Tant que l'axe 1 n'a pas remplacé les placeholders, un effet de transfert

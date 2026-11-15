@@ -250,4 +250,7 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin, axe 4 : compléter Open DAMIR à une année complète (2025-10 à 2025-12, 3 mois) depuis un réseau non bloqué, puis `damir.py --controle` pour reconstruire `damir_profils` et `damir_vaccination` (commitées) sur 12 mois, avant de donner le dépôt aux chercheurs | ~15 min machine + ~5 min | utilisateur·rice | 2026-11-15 | open, prévu le 2026-11-16 par l'utilisateur·rice |
 
 | Besoin P-B6 : refaire le placebo 0–19 ans avec la population régionale par âge 2014–2018 (Insee), au lieu de la population totale | ~20 min | P-B6 | 2026-11-15 | open |
-| Besoin : mettre à jour la fiche L23 (s∞ 0,74, τ 2,4 ans, t₀ 2019 mesurés ; m supposé 0 d'après P-B6) | ~10 min | P-B6 | 2026-11-15 | open |
+| Besoin : mettre à jour la fiche L23 (s∞ 0,74, τ 2,4 ans, t₀ 2019 mesurés ; m supposé 0 d'après P-B6) | ~10 min | P-B6 | 2026-11-15 | open || Besoin P-B4-PH : avant gel, lire la Notice APL V0 (année de population, pondération d'âge, source de l'offre des pharmacies) et choisir l'offre 2013 (BPE ou FINESS archivé) ; écrire le facteur d'unité | ~30 min | [P-B4-PH](../../validation/preregistered/2026-11-15-besoin-p-b4-ph-apl-v0.md) | 2026-11-15 | open |
+| Besoin P-B4-PH : gel par jeton OpenTimestamps, sur accord de l'utilisateur·rice | ~5 min | P-B4-PH | 2026-11-15 | open, attend l'accord |
+| Besoin : dictionnaire Insee « accès aux équipements » : D307 présent ? millésime BPE ? | ~5 min | [exploration](explorations/2026-11-15-besoin-cible-pharmaciens.md) | 2026-11-15 | open |
+| Besoin : IRDES QES 308 : la typologie communale est-elle téléchargeable, sous quelle licence ? | ~10 min ou un courriel | exploration | 2026-11-15 | open |
