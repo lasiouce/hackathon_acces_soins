@@ -274,3 +274,8 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : IRDES QES 308 : la typologie communale est-elle téléchargeable, sous quelle licence ? | ~10 min ou un courriel | exploration | 2026-11-15 | open |
 | Besoin, axe 4 : Open DAMIR 2025-10 à 2025-12 | — | axe 4 | 2026-11-15 | fait 2026-11-15 05:06 : lus à 3 flux sur un autre réseau, `--controle` reconstruit `damir_profils` et `damir_vaccination` sur 12 mois |
 | Besoin P-B4-PH : `ots upgrade` du jeton OpenTimestamps, puis commit | ~2 min Claude, quelques heures de monde | P-B4-PH | 2026-11-15 | open |
+| Besoin axe 5 : M0 reste-t-il une borne de la fourchette affichée de C (MK, IDE) ? Sans M0, D ≤ 0,004 en log et la règle ne se déclenche plus | décision, puis ~5 min Claude | [axe 5 du besoin](reports/2026-11-15-besoin-axe5-sensibilite.md) | 2026-11-15 | open |
+| Besoin axe 5 : tester la séparabilité de l'offre (10 tirages C1 rejoués avec quotas × 1,2 dans la méthode ; invalide si ΔR > 0,1) | ~20 min Claude, ~2 min machine | axe 5 du besoin | 2026-11-15 | open |
+| Besoin axe 5 : régulation à l'installation à E = 0 au département dans le modèle servi : déclenchement à vérifier | ~15 min Claude | axe 5 du besoin | 2026-11-15 | open |
+| Besoin axe 5 : sensibilité de l'indice M4 (accessibilité, à part de C) aux leviers, à la commune | ~45 min Claude | axe 5 du besoin | 2026-11-15 | open |
+| Besoin axe 5 : `ots upgrade` du jeton OpenTimestamps du protocole, puis commit | ~2 min Claude, quelques heures de monde | axe 5 du besoin | 2026-11-15 | open |

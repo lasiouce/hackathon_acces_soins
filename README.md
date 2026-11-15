@@ -277,6 +277,7 @@ PYTHONPATH=v2 uv run python -m besoin.validation.pb1        # besoin, P-B1 : âg
 PYTHONPATH=v2 uv run --with scipy python -m besoin.validation.pb2   # besoin, P-B2 : saturation (M2b)
 PYTHONPATH=v2 uv run python -m besoin.validation.pb3        # besoin, P-B3 : morbidité (M3)
 PYTHONPATH=v2 uv run --with scikit-learn --with xlrd --with openpyxl python -m besoin.validation.pb5   # P-B5 : backtest
+PYTHONPATH=v2 uv run --with scipy python -W ignore -m sensibilite.besoin.grille && PYTHONPATH=v2 uv run python -m sensibilite.besoin.stats   # besoin, axe 5 : sensibilité de C
 PYTHONPATH=v2 uv run python -m methodes.banc                # axe 2 : banc des méthodes
 PYTHONPATH=v2 uv run --with scipy python -W ignore -m methodes.budget_erreur   # axe 2 : budget d'erreur
 PYTHONPATH=v2 uv run --with scipy python -m validation.did  # axe 3 : effet de la régulation
@@ -314,6 +315,11 @@ et la question ouverte sur le seuil de diffusion.
   OSRM est en attente. Pour les transferts de tâches, `k` et l'expansion `m` restent supposés. Aucun indice de
   couverture n'est produit pour la médecine générale. Les passages lisent des tables data.ameli.fr (ODbL) hors
   dépôt, à reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
+- **Sensibilité de l'indice de couverture (axe 5 du besoin, 2026-11-15).** En 2050, l'effet de quotas × 1,2 sur
+  C dépasse l'écart entre modèles de besoin pour les sages-femmes, dentistes et pharmaciens, pas pour les kinés
+  (ratio 0,77) ni les infirmiers (0,34) : leur C s'affiche en fourchette entre estimateurs. Cet écart tient à M0
+  (sans effet de l'âge) ; la largeur de C vient d'abord de l'incertitude de l'offre (52 à 92 % de la variance).
+  `v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md`.
 - Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
   data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
   `v2/besoin/donnees/MANIFEST.md`. Les tables issues de data.ameli.fr (ODbL) ne sont pas versionnées : les
