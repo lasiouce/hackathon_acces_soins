@@ -4834,7 +4834,8 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
   arrêté.
 
-## 2026-11-15 — Module de besoin : Open DAMIR définitivement limité à 9 mois pour cette phase, faute de temps
+## ~~2026-11-15 — Module de besoin : Open DAMIR définitivement limité à 9 mois pour cette phase, faute de temps~~
+*Remplacé le 2026-11-15 : DAMIR 2025 a été lu en entier (octobre à décembre via un autre réseau, addendum de 05:06 du rapport de l'axe 4) ; `damir_profils` et `damir_vaccination` couvrent 12 mois.*
 - **Décision** (utilisateur·rice : « mets donc bien dans le rapport qu'on a rien pu faire faute de temps ») :
   - Open DAMIR reste à 9 mois (2025-01 à 2025-09) pour toute la phase en cours ;
   - les 40 mois restants ne sont pas lus ;
