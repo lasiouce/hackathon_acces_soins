@@ -4713,3 +4713,23 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :**
   - un texte qui ajoute d'autres régions avant 2019 ;
   - un jeton RFC 3161 invalide à la vérification de la chaîne de certificats.
+
+## 2026-11-15 — Module de besoin : M4 construit ; P-B4 échoue en repli, M4 reste un indice maison
+- **Décision** (session besoin-v2-m4, [rapport](reports/2026-11-15-besoin-p-b4-apl.md)) :
+  - **M4** (`v2/besoin/estimateurs/m4.py`) : 2SFCA aux paliers DREES, relus dans l'onglet « Paramètres ». Le besoin
+    vient d'un estimateur d'entrée (M4∘M1…) ; par défaut, poids d'âge ω de l'APL figés à l'année de base (2024 ;
+    2023 pour les MK). `predict()` rend le besoin d'entrée inchangé ; `accessibilite()` rend A en ETP pour 100 000.
+    Temps : vol d'oiseau × 1,3 à 50 km/h (supposé), en attendant OSRM.
+  - **P-B4 passé en repli**, avec 11 écarts écrits et commités avant le passage (`76c04d5`) : `pop_std` de la DREES
+    comme P^std, part des moins de 65 ans départementale, SF lues dans `sf_popage`, ETP = honoraires sans
+    dépassement moyens / médiane.
+  - **Verdict : indice maison pour les 4 professions.** ρ = 0,72 (IDE), 0,77 (MK), 0,66 (SF), 0,74 (CD), sous 0,90 ;
+    EM de 21 à 29 %, au-dessus de 15 %. Le gain sur la meilleure densité naïve passe partout (+0,15 à +0,31, IC à
+    98,75 % > 0). Aucun seuil changé.
+  - **Libellé imposé :** M4 n'est jamais appelé « APL » dans la sortie, la carte ou un rapport.
+  - Critères M4a–M4d dans `besoin.tests` (découverte des modules `criteres_*.py`), 11/11.
+- **Pourquoi :** protocole gelé ; le repli ne peut pas valoir reproduction, et il échoue de toute façon.
+- **Résidu :** la cause probable la plus forte est le distancier (Corse et montagne en tête des écarts ; ρ MK 0,78
+  hors montagne, 0,66 dedans) ; l'ETP moyen départemental est la seconde. Passage OSRM soumis à l'accord de
+  l'utilisateur·rice (extrait OSM de 4,8 Go).
+- **Ce qui le renverserait :** un passage OSRM, daté comme amendement avant calcul, qui atteint les trois seuils.

@@ -3,8 +3,8 @@ type: analysis
 date: 2026-11-15
 author: session besoin-v2-m4
 question: M4 (2SFCA aux paramètres DREES) reproduit-il l'APL DREES 2024 commune par commune pour IDE, MK, SF et CD, mieux que deux densités naïves ? (P-B4, protocole gelé)
-headline: "(passage en attente : écarts au protocole écrits avant le passage)"
-status: draft
+headline: "P-B4 échoue (repli vol d'oiseau) pour les 4 professions : Spearman M4–APL 2024 de 0,66 (SF) à 0,77 (MK), sous 0,90 ; erreur médiane 21 à 29 %, au-dessus de 15 % ; gain sur la meilleure densité naïve +0,15 à +0,31, IC 98,75 % > 0. M4 reste un indice maison"
+status: done
 professions: [infirmiers, kines, dentistes, sages-femmes]
 hypothesis: H-B4 ; test d'abandon P-B4
 sources: [APL DREES 530 millésimes 2022–2024 (LO 2.0), CartoSanté FNPS/SNDS au 31/12/2020–2022, RPPS DREES par secteur (secteur_stock), SNDS infirmiers libéraux, data.ameli.fr honoraires 2020–2022 (ODbL), geo.api.gouv.fr centres de communes, BV2022 Insee]
@@ -64,5 +64,75 @@ l'APL.
   commune de l'APL 2024 n'est concernée (contrôle de l'axe 4) ; quelques communes des millésimes 2022–2023,
   fusionnées depuis, le sont (rapporté seulement).
 
+> **Headline :** P-B4 **échoue en repli** pour IDE, MK, SF et CD. M4 classe les communes bien mieux que les deux
+> densités naïves (+0,15 à +0,31 de Spearman, IC > 0), mais ne reproduit pas l'APL : ρ de 0,66 à 0,77 contre 0,90
+> requis, erreur médiane de 21 à 29 % contre 15 %. M4 est un **indice maison**, jamais présenté comme l'APL.
+
+## Question
+H-B4 ([dérivation](../derivations/2026-11-15-besoin-derivation.md), §6 M4) : M4, avec les seuls paramètres publiés,
+reproduit-il l'APL 2024 au grain communal ? Décide si M4 peut être appelé « la méthode de l'APL »
+(registre, [entrée du 2026-11-15](../decisions.md)).
+
 ## Result
-(à venir)
+Passage principal, APL 2024, entrées 2022, 34 778 communes métropolitaines (m). IC à 98,75 % (bootstrap de
+96 départements, B = 2 000, graine 20261115).
+
+| Profession | ρ_M4 [IC] | EM [IC] | ρ_N1 | ρ_N2 | G [IC] | ρ ≥ 0,90 | EM ≤ 15 % | G ≥ 0,05, IC > 0 | Verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| Infirmiers | 0,718 [0,659 ; 0,767] | 21,2 % [19,9 ; 23,0] | 0,333 | 0,570 | +0,148 [0,118 ; 0,185] | non | non | oui | indice maison (repli) |
+| Kinés | 0,766 [0,726 ; 0,803] | 23,5 % [22,3 ; 24,9] | 0,381 | 0,565 | +0,201 [0,167 ; 0,244] | non | non | oui | indice maison (repli) |
+| Sages-femmes | 0,662 [0,627 ; 0,695] | 26,9 % [25,1 ; 28,9] | 0,224 | 0,359 | +0,302 [0,271 ; 0,339] | non | non | oui | indice maison (repli) |
+| Dentistes | 0,736 [0,711 ; 0,760] | 29,4 % [27,7 ; 31,1] | 0,333 | 0,425 | +0,310 [0,271 ; 0,351] | non | non | oui | indice maison (repli) |
+
+**Contrôle bloquant :** conservation `Σ P·A = Σ S` à 2,5 × 10⁻¹⁶ au pire (m) ; aucune offre perdue.
+
+### Rapporté, non décisif
+| Profession | ρ < 1 000 hab. | ρ 1 000–10 000 | ρ > 10 000 | ρ 2023 (entrées 2021) | κ (APL 2022) | EM 2024 × κ | ρ, P^std Omphale (E2) | moyenne M4 / APL |
+|---|---|---|---|---|---|---|---|---|
+| Infirmiers | 0,673 | 0,828 | 0,899 | 0,718 | 0,943 | 19,7 % | 0,672 | 153 / 150 |
+| Kinés | 0,707 | 0,830 | 0,890 | 0,759 | 1,106 | 22,0 % | 0,753 | 105 / 121 |
+| Sages-femmes | 0,633 | 0,636 | 0,752 | 0,637 | 0,986 | 26,8 % | 0,672 | 21,5 / 21,9 |
+| Dentistes | 0,696 | 0,711 | 0,650 | 0,732 | 1,064 | 28,6 % | 0,734 | 47,1 / 61,5 |
+
+- **Communes les plus écartées** (`v2/artifacts/besoin_pb4/ecarts_*.csv`, non commités) : la Corse domine (16 des
+  20 pour les IDE en Haute-Corse ; 13 pour les MK ; 8 pour les SF), puis des départements de montagne ; pour les CD,
+  Paris (5) et le Puy-de-Dôme (4).
+- **Diagnostic (d, hors protocole) :** pour les MK, ρ = 0,78 hors de 14 départements de montagne et de Corse,
+  0,66 dedans. Le rapport M4/APL a pour quantiles 10/50/90 % 0,57 / 0,89 / 1,48.
+- **Variante κ** (un scalaire sur l'ETP calé sur 2022) : EM gagne au plus 1,5 point. Le niveau n'est pas la cause
+  principale de l'écart : c'est la dispersion commune par commune.
+
+## How
+- **Données :** APL DREES 530 (2022–2024, LO 2.0) ; CartoSanté FNPS/SNDS au 31/12 (IDE, MK, CD : `commune_stock` ; SF :
+  `sf_popage`) ; RPPS et SNDS par âge (part des moins de 65 ans) ; data.ameli.fr honoraires 2020–2022 (ODbL, non
+  commités) ; geo.api.gouv.fr (distancier à vol d'oiseau) ; BV2022 (Insee).
+- **Méthode :** [`v2/besoin/estimateurs/m4.py`](../../../besoin/estimateurs/m4.py) (2SFCA, paliers DREES),
+  [`v2/besoin/validation/pb4.py`](../../../besoin/validation/pb4.py). Commande :
+  `PYTHONPATH=v2 uv run python -m besoin.validation.pb4` (≈ 4 min machine, mesuré). Critères M4a–M4d dans
+  `besoin.tests` (11/11) ; `jumeau.check` vert.
+- **Code et écarts commités avant le passage :** commit `76c04d5` (03:08 UTC), puis deux corrections de la seule
+  sensibilité Omphale (plantage de tableau), sans effet sur les statistiques décisives.
+
+## ⚑ What could make it wrong
+- **Distancier.** Le repli à vol d'oiseau ignore le relief et les côtes : la Corse et la montagne dominent les
+  écarts. Un échec en repli ne dit pas si M4 sur OSRM passerait. C'est la cause probable la plus forte, pas la seule :
+  hors montagne, ρ reste à 0,78 pour les MK.
+- **ETP.** Moyenne départementale à la place de l'activité individuelle bornée (h) : la DREES distingue deux
+  communes voisines par l'activité de leurs professionnels, nous non. Les CD sont 23 % sous l'APL en moyenne : champ
+  ou ETP différents.
+- **Champ des effectifs.** CartoSanté (FNPS/SNDS) contre SNIIR-AM, part des moins de 65 ans départementale (E3), SF
+  des centres de santé absentes (E4), PLM ventilés à la population.
+- **Seuils supposés** (0,90 ; 15 %) : aucune reproduction ouverte de l'APL pour les étalonner.
+
+## → What it changes
+- **M4 est un indice maison** : la sortie et la carte ne l'appellent jamais « APL » ; libellé « accessibilité
+  (2SFCA, paliers DREES, indice maison) ». Registre : entrée P-B4 du 2026-11-15.
+- **Ledger :** ligne P-B4 fermée ; une ligne ouverte pour le passage OSRM (accord requis).
+- M4 bat les densités naïves de loin : il reste l'indice spatial du module de besoin, au rang d'outil descriptif.
+
+## ? Next
+| Item | Cost |
+|---|---|
+| Distancier OSRM (extrait OSM France 4,8 Go, accord de l'utilisateur·rice), puis nouveau passage P-B4 daté comme amendement | ~45 min machine + ~30 min Claude |
+| Calage du détour par département (relief) : hors protocole, à pré-enregistrer avant usage | ~30 min Claude |
+| Comparer le champ des CD (CartoSanté contre APL) pour l'écart de niveau de 23 % | ~20 min Claude |
