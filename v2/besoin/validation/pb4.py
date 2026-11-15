@@ -16,6 +16,7 @@ Entrées (APL de l'année N : état N−2) :
 import json
 import re
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -187,8 +188,7 @@ def sensibilite_omphale(prof: str, f: pd.DataFrame) -> float:
     """Hors protocole (contrôle de l'écart E2) : P^std = structure par âge du département (Omphale 2022, 2022) ×
     population communale, poids ω figés ; Spearman de M4 contre l'APL 2024."""
     pop = Population.load()
-    pop = pop.__class__(pop.territories, pop.years, pop.sexes, pop.ages, pop.P[:, pop.years_index([2022])],
-                        pop.level, pop.scenario, pop.source)
+    pop = replace(pop, years=np.array([2022]), P=pop.P[:, pop.years_index([2022])])
     pc = pop.ventile()
     Bc = M4().predict(pc, years=[2022])
     P = pd.Series(Bc.values[Bc.p(prof), :, 0], Bc.territories)
@@ -196,7 +196,7 @@ def sensibilite_omphale(prof: str, f: pd.DataFrame) -> float:
          * pd.Series(f.P.to_numpy(), f.com.to_numpy()).groupby(f.dep.to_numpy()).sum().reindex(
              dep_of(P.index.to_series())).to_numpy())          # même total départemental que pop_std
     # PLM : ventile() rend la commune parente ; on la répartit sur ses arrondissements au prorata de pop_std
-    Pf = P.reindex(f.com.to_numpy()).to_numpy()
+    Pf = P.reindex(f.com.to_numpy()).to_numpy().copy()
     for parent, pre in PLM.items():
         m = f.com.str.startswith(pre).to_numpy() & (f.com != parent).to_numpy()
         if parent in P.index and m.any():
