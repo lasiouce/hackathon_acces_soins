@@ -4713,3 +4713,26 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :**
   - un texte qui ajoute d'autres régions avant 2019 ;
   - un jeton RFC 3161 invalide à la vérification de la chaîne de certificats.
+
+## 2026-11-15 — Module de besoin : amendement A1 aux protocoles P-B2, P-B3, P-B5, P-B6 (gelé, horodaté)
+- **Décision** (axe 3, [A1](../../validation/preregistered/2026-11-15-besoin-amendement-a1.md)) : les constats de
+  l'axe 4 changent des définitions et des sources, pas les règles de décision.
+  - **Recours de la patientèle** = file active moyenne × effectif data.ameli.fr. Le jeu donne une moyenne par
+    professionnel, pas un total. L'accessibilité reste calculée sur les effectifs du jumeau, pour ne pas partager
+    l'erreur de mesure.
+  - **P-B5** : la sensibilité au profil DAMIR 2016 est remplacée par les poids APL du millésime 2022 (DAMIR 2016 non
+    lu).
+  - **P-B6** :
+    - le test décisif sur `m` est inchangé (Open Medic 2014–2018, région de résidence lue au descriptif) ;
+    - `s(t)` régional par DAMIR est **abandonné**, car DAMIR est arrêté à 9 mois sur décision de
+      l'utilisateur·rice ;
+    - `s(t)` devient descriptif : Cour des comptes (national), Liard 2022 (cohortes), IQVIA rapporté à Open Medic.
+  - **P-B1 et P-B4 ne sont pas amendés** : ils étaient déjà lancés.
+  - **Jetons RFC 3161** à 03:18:22 UTC (FreeTSA) et 03:18:23 UTC (DigiCert), envoyés avec l'accord de
+    l'utilisateur·rice. OpenTimestamps est en attente.
+  - **Le premier gel** est ancré dans le bloc Bitcoin 975880 (lu par `ots info`, non vérifié contre un nœud).
+- **Pourquoi :** les copies gelées supposaient un total de patients et des saisons DAMIR qui n'existent pas sur
+  disque. L'amendement est daté et horodaté avant tout passage des quatre protocoles concernés.
+- **Ce qui le renverserait :**
+  - la page « Méthode » de la patientèle, si elle montre que la moyenne n'est pas pondérée par l'effectif publié ;
+  - une reprise de la lecture de DAMIR 2015–2020, qui rouvrirait `s(t)` régional par un amendement A2.
