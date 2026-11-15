@@ -841,12 +841,12 @@ function buildLevFam(){
 
 // Transferts de tâches : L23 agit sur le besoin (pas sur l'offre), donc sur l'indice de couverture des pharmaciens seulement.
 // Bornes du mode expert : celles des fiches (k : [0,25 ; 1], fiche L23) ; a : [0 ; 0,05] en temps de MG (supposé).
-function l23HTML(){return `<div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-l23"${L23.on?" checked":""}><label class="fr-toggle__label" for="lv-l23" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">Les pharmaciens vaccinent davantage contre la grippe</label></div>
+function l23HTML(){return `<p class="note" id="l23-autre" hidden></p><div id="l23-box"><div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-l23"${L23.on?" checked":""}><label class="fr-toggle__label" for="lv-l23" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">Les pharmaciens vaccinent davantage contre la grippe</label></div>
   <p class="note" id="l23-note"></p>
   <details class="l23x"><summary class="note">Réglages experts (paramètres supposés)</summary>
    <label class="note" for="l23-a">a, part du temps de MG portant sur l'acte : <b id="l23-av"></b></label><input type="range" id="l23-a" min="0" max="0.05" step="0.005">
    <label class="note" for="l23-k">k, temps du pharmacien par unité de temps de MG : <b id="l23-kv"></b></label><input type="range" id="l23-k" min="0.25" max="1" step="0.05"></details>
-  <ul class="note" id="l23-par"></ul>`;}
+  <ul class="note" id="l23-par"></ul></div>`;}
 function l23Wire(){const t=$("#lv-l23"),a=$("#l23-a"),k=$("#l23-k");
   const sync=()=>{a.value=L23.a??0.01;k.value=L23.k??1;$("#l23-av").textContent=(+a.value).toLocaleString("fr-FR",{maximumFractionDigits:3});$("#l23-kv").textContent=fC(+k.value);};
   t.onchange=()=>{L23.on=t.checked;renderL23();writeHash();tInput=performance.now();refresh();};
@@ -858,7 +858,11 @@ function setL23(on,vue){L23.on=on;const t=$("#lv-l23");if(t)t.checked=on;
   renderL23();writeHash();}
 const STAT=s=>s=="mesuré"||s=="sourcé"?s:"supposé";
 function renderL23(){const n=$("#l23-note");if(!n)return;
-  n.textContent=S.prof!="pharmaciens"?"Agit sur le besoin adressé aux pharmaciens (cible) et libère du temps de médecine générale (source) ; sans effet sur la profession affichée.":
+  // le levier ne concerne que les pharmaciens : pour une autre profession, il est masqué et remplacé par une phrase
+  const autre=S.prof!="pharmaciens",o=$("#l23-autre");$("#l23-box").hidden=autre;o.hidden=!autre;
+  if(autre)o.innerHTML=`Aucun transfert de tâches n'est encore calculé pour les ${esc((META.professions[S.prof]||S.prof).toLowerCase())}. Seul exemple disponible : les pharmaciens vaccinent davantage contre la grippe. <button type="button" class="fr-link" id="l23-go">Afficher les pharmaciens</button>`;
+  if(autre)$("#l23-go").onclick=()=>{S.prof="pharmaciens";applyProf();levState();refresh();};
+  n.textContent=autre?"":
     L23.on?"Actif dès 2026 : une part du besoin de vaccination passe de la médecine générale aux pharmaciens ; l'offre ne change pas.":"Inactif : la couverture est celle du tendanciel.";
   const P=COUV?.l23?.params;$("#l23-par").innerHTML=P?P.map(p=>`<li>${esc(p.name)} = ${esc(String(p.value))} ${esc(p.unit)} · <b>${STAT(p.status)}</b> · ${esc(p.source)}</li>`).join(""):"";}
 

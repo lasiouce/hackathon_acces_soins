@@ -5257,3 +5257,12 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   contraire au lexique neutre), « transfert de compétences » (le registre et le panneau disent « transfert de tâches » ;
   la compétence de vacciner existe déjà, c'est la tâche qui se déplace).
 - **Ce qui le renverserait :** un test de lecture où un libellé est mal compris.
+
+## 2026-11-15 — Carte : le levier de vaccination n'apparaît que pour les pharmaciens
+- **Décision** (remarque de l'utilisateur·rice : « rubrique kiné mais transfert de tâches pharma ? ») : pour une autre
+  profession, la famille « Transférer des tâches ? » cache la case et dit « Aucun transfert de tâches n'est encore
+  calculé pour les <profession>. Seul exemple disponible : les pharmaciens vaccinent davantage contre la grippe », avec
+  un lien « Afficher les pharmaciens ». Remplace la note « agit sur … (cible) … (source) ; sans effet sur la profession
+  affichée ». Le réglage de la case est conservé d'une profession à l'autre.
+- **Pourquoi :** un levier sans effet sur la profession affichée prêtait à confusion.
+- **Ce qui le renverserait :** un transfert de tâches calculé pour une autre profession (il prendra place ici).
