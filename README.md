@@ -185,6 +185,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
 | Besoin → carte | Vue « Couverture » (indice C, référence 2026 = 1, fourchette M1/M2a/M3), levier L23 « vaccination en officine » de bout en bout ; M4 en attente (P-B4) | ✅ 6 critères sur 6 ; `/api/couverture` 28,8 ms au 95ᵉ centile (n = 60) |
+| Transferts hypothétiques | L'assistant simule « X prennent p % de <acte> de Y » (forme de L23, `tr_*` sur `/api/couverture`), balayé sur a, étiqueté « hypothèse de l'utilisateur » ; O2 refuse la MG et les spécialistes en cible seulement | ✅ 7 critères sur 7 ([rapport](v2/docs/lab/reports/2026-11-15-transfert-hypothetique.md)) |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,
@@ -322,8 +323,9 @@ et la question ouverte sur le seuil de diffusion.
   dépôt, à reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
 - **Sensibilité de l'indice de couverture (axe 5 du besoin, 2026-11-15).** En 2050, l'effet de quotas × 1,2 sur
   C dépasse l'écart entre modèles de besoin pour les sages-femmes, dentistes et pharmaciens, pas pour les kinés
-  (ratio 0,77) ni les infirmiers (0,34) : leur C s'affiche en fourchette entre estimateurs. Cet écart tient à M0
-  (sans effet de l'âge) ; la largeur de C vient d'abord de l'incertitude de l'offre (52 à 92 % de la variance).
+  (ratio 0,77) ni les infirmiers (0,34). Cet écart tient à M0 (sans effet de l'âge), réfuté par P-B1 : il est
+  retiré de l'affichage et montré comme l'effet du vieillissement. C est servi par M1 (M3 pour les infirmiers) ; sa
+  largeur vient de l'incertitude de l'offre (52 à 92 % de la variance), affichée en bande.
   `v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md`.
 - Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
   data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans

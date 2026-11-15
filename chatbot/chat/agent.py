@@ -330,15 +330,21 @@ class Conversation:
         appels, graphiques = [], []
         per = C.requete("perimetre", {})[0]
         hors = {h["id"]: h for h in per["hors_perimetre"]}
+        r = None
         for k, rx in self.MOTS_HORS.items():
             m = re.search(rx, texte, re.I)
             if m and not (k == "horizon" and int(m.group(0)) <= 2050):
-                if k == "medecins" and self.RX_COUV.search(texte) and "couverture_medecins" in hors:
-                    k = "couverture_medecins"                 # règle O2, dite telle quelle
+                if k == "medecins":
+                    r = r or C.requete("interpreter_phrase", {"texte": texte[:500]})[0]
+                    if (r.get("transferts_hypothetiques") or r.get("transferts")) and not r.get("o2_cible"):
+                        continue        # O2 ne vise que la cible de l'indice : MG ou spécialistes en source d'un transfert, admis
+                    if self.RX_COUV.search(texte) and "couverture_medecins" in hors:
+                        k = "couverture_medecins"                 # règle O2, dite telle quelle
                 return {"texte": f"**{HORS} :** {hors[k]['sujet']}. {hors[k]['raison']}", "appels": [], "graphiques": [],
                         "verification": {"statut": "ok", "non_rattaches": []}}
-        r, _ = C.requete("interpreter_phrase", {"texte": texte[:500]})
+        r = r or C.requete("interpreter_phrase", {"texte": texte[:500]})[0]
         tr = r.get("transferts", [])
+        trh = (r.get("transferts_hypothetiques") or [None])[0]
         lignes = [f"**{HORS} : {x['libelle']}.** {x['raison']}" for x in r["non_modelise"]
                   if not (tr and x["id"] == "vaccination_officine")]       # L23 : répondu par la couverture, plus bas
         prof = r["profession"] or self.defaut["profession"]
@@ -374,7 +380,9 @@ class Conversation:
                   "Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé."]
         lignes = ([x for x in lignes if x.startswith("**Je n'ai pas")] + lignes_proj
                   + [x for x in lignes if not x.startswith("**Je n'ai pas")])
-        if tr or self.RX_COUV.search(texte):
+        if trh:
+            lignes += self._transfert_hypothetique(trh, prof, terr, args["leviers"], annee, bool(tr), appels, graphiques)
+        elif tr or self.RX_COUV.search(texte):
             lignes += self._couverture(tr[0] if tr else None, prof, terr, args["leviers"], annee, appels, graphiques)
         if res["code_territoire"] != terr or (r["territoire"] and r["territoire"].startswith("D") and not re.search(res["territoire"], texte, re.I)):
             lignes.append(f"{LIMITE} grain départemental : une ville est ramenée à son département ({res['territoire']}).")
@@ -416,6 +424,59 @@ class Conversation:
                        "pas d'écart entre méthodes à montrer ; la fourchette du nombre de professionnels ci-dessus reste valable.")
         lig.append(f"{LIMITE} l'indice compare le nombre de professionnels à la demande de soins de ville, par rapport à 2026 "
                    "(1 = comme en 2026) ; ce n'est pas une part de la demande satisfaite.")
+        return lig
+
+    TR_ARGS = {"tr_src": "source", "tr_cible": "cible", "tr_a": "a", "tr_sinf": "s_inf", "tr_k": "k", "tr_tau": "tau", "tr_t0": "t0"}
+    NOMS_TR = {"a": "a, part de la demande de la source concernée par l'acte", "sinf": "s∞, part de l'acte transférée à terme",
+               "k": "k, temps de la cible par unité de temps de la source", "tau": "τ, montée en charge (années)",
+               "t0": "t₀, année d'autorisation"}
+
+    def _transfert_hypothetique(self, trh, prof, terr, lv, annee, l23, appels, graphiques) -> list[str]:
+        """Transfert proposé par l'utilisateur·rice : couverture balayée sur a (jamais un chiffre unique), paramètres
+        réaffichés avec leur statut, raison pour laquelle ce n'est pas un levier de la carte."""
+        base = {self.TR_ARGS[k]: v for k, v in trh["parametres_api"].items()}
+        lib = {"medecine-generale": "médecins généralistes", "specialistes": "médecins spécialistes"}
+        src = lib.get(trh["source"], trh["source"])
+        tete = (f"**Transfert hypothétique (paramètres de l'utilisateur·rice) : {trh['libelle']}, à partir de {trh['t0']}. "
+                "Effectif inchangé dans le modèle.**")
+        pts = []
+        for a in trh["balayage"]["tr_a"]:
+            args = {"profession": prof, "territoire": terr, "leviers": lv, "l23": l23, "annees": [annee],
+                    "transfert": base | {"a": a}}
+            err, est_err, res = self._appel("couverture", args, appels, graphiques)
+            if est_err:
+                return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
+            pts.append((a, res))
+        f = lambda x: f"{x:.3f}".replace(".", ",")          # 3 décimales : les points du balayage restent distincts
+        pc = lambda x: f"{100 * x:.3g} %".replace(".", ",")
+        h = pts[0][1]["transfert_hypothetique"]
+        par = {x["nom"]: x for x in h["parametres"]}
+        donne = "a" if trh["mode"] == "demande" else "sinf"
+        lig = [tete, f"**Ce que j'ai compris :** source : {src} ; cible : {trh['cible']} ; acte : {trh['acte']} ; "
+                     + ("part de la demande des " + src + " transférée" if donne == "a" else "part de l'acte transférée à terme (s∞)")
+                     + f" : {trh['p']:g} % (donnée par vous) ; ".replace(".", ",")
+                     + ("a balayé autour de cette valeur." if donne == "a" else
+                        f"poids de l'acte dans la demande des {src} (a) : non donné, balayé.")
+                     + " " + " ; ".join(f"{self.NOMS_TR[k]} = {str(par[k]['valeur']).replace('.', ',')}"
+                                        for k in ("k", "tau", "t0")) + " : supposés (hypothèse de l'utilisateur·rice)."]
+        a0 = pts[0][1]["annees"][-1]
+        lig.append(f"Couverture des {pts[0][1]['profession'].lower()} en {a0['annee']} ({pts[0][1]['territoire']}, indice base "
+                   f"{pts[0][1]['reference']} = 1), tendanciel {f(a0['indice_tendanciel'])} :\n" + "\n".join(
+                       f"- a = {pc(a)} : {f(r['annees'][-1]['indice_scenario'])} "
+                       f"({r['annees'][-1]['ecart_tendanciel_pct']:+.1f} %, {r['annees'][-1]['qualificatifs']['ecart']})".replace(".", ",", 1)
+                       + (" ; selon l'estimateur : de {} à {}".format(*map(f, r['annees'][-1]['fourchette_estimateurs']))
+                          if r["annees"][-1].get("fourchette_estimateurs") else "")
+                       for a, r in pts))
+        mid = pts[len(pts) // 2]
+        n = mid[1]["transfert_hypothetique"]["etp_source_transferes_france"]
+        lig.append(f"Pour a = {pc(mid[0])}, les {src} transfèrent en {a0['annee']} le temps de travail d'environ {n} "
+                   f"{'médecins' if trh['source'] in lib else src} à temps plein (France entière) ; les {trh['cible']} le reprennent.")
+        lig.append("Aucun chiffre unique : l'effet dépend d'abord de a, que les données ouvertes ne mesurent pas.")
+        lig.append(f"Pourquoi ce n'est pas un levier de la carte : ni le volume de cet acte ni la part du temps des {src} qu'il "
+                   "occupe ne sont publiés en données ouvertes ; seul le transfert de la vaccination en officine a des "
+                   f"paramètres sourcés. Demande de soins de ville des {src} : {h['besoin_source']['statut']}.")
+        lig.append(f"{LIMITE} l'indice rapporte l'offre à la demande de soins de ville, par rapport à 2026 ; ce n'est pas une "
+                   "part de la demande satisfaite. Résultat sous l'hypothèse de l'utilisateur·rice, pas une projection sourcée.")
         return lig
 
     # -------- objectifs (« comment atteindre +20 % de densité »)

@@ -2449,7 +2449,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
 
-- **M0 reste-t-il une borne de la fourchette de C ?** (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
+- ~~**M0 reste-t-il une borne de la fourchette de C ?**~~ **Tranché le 2026-11-15** : M0 retiré, voir l'entrée datée « axe 5 : M0 retiré de la fourchette affichée ». (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
   [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md))
   - **Question** : M0 (besoin ∝ population) est « cas limite » au rapport d'étape et figure dans l'ensemble gelé
     de l'axe 5. P-B1 a retenu l'âge (M1) contre lui pour les cinq professions. Avec M0, la fourchette MK et IDE est large
@@ -3337,6 +3337,7 @@ un modèle de langage pour l'analyse seule (jamais le calcul), évalué sur les 
 
 ## 2026-11-14 — Carte : curseurs principaux visibles sous la phrase (remplace « tout replié » pour le panneau)
 
+*Remplacé en partie le 2026-11-15 : les familles sont repliées au chargement (entrée « familles de leviers repliées »).*
 **Décision.** Dans le panneau Leviers, sous « Décrire une politique en une phrase », chaque famille est dépliée et montre son
 curseur principal (places, diplômés étrangers, régulation, retraite) ; les réglages secondaires restent sous « Plus de réglages ».
 L'accordéon (une seule famille ouverte) est retiré. Sur mobile, le panneau reste replié à l'ouverture.
@@ -3998,7 +3999,8 @@ précédent). Ou une recette (`recette.mjs --option1`) qui régresse sous 39/40 
   - Chaque accordéon contient le curseur principal, son délai et sa source, puis les réglages fins de la famille.
   - Son titre porte l'effet du réglage (« +1 234 en 2050 ») dès qu'un levier de la famille est modifié.
   - Les accordéons sont **indépendants**, sans groupe, donc plusieurs peuvent être ouverts.
-  - Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.
+  - ~~Les quatre familles de politiques sont **ouvertes au chargement** ; le contexte est replié.~~ *Remplacé le
+    2026-11-15 : toutes les familles sont repliées au chargement (entrée du même nom).*
   - Cela respecte l'entrée « Carte : curseurs principaux visibles sous la phrase », qui a retiré l'accordéon à une
     seule famille ouverte.
 - « Plus » ne contient plus que la phrase en langage naturel, le résumé et ses actions, et la liste « Pas encore dans
@@ -5132,6 +5134,9 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Pourquoi :** demande de la session v2. La circularité recours/offre de la dérivation (§2) en est le cas général.
 
 ## 2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs
+
+## ~~2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs~~
+*Remplacée le 2026-11-15 pour l'affichage : voir « axe 5 : M0 retiré de la fourchette affichée ». Le verdict gelé ci-dessous reste valable et publié.*
 - **Décision** (règle gelée du protocole `2026-11-15-besoin-axe5-sensibilite`, [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md)) :
   - **Protocole gelé avant tout calcul de B ou de C** : SHA-256 `10a5b285…cd87834`, RFC 3161 FreeTSA 05:28:15 UTC
     et DigiCert 05:28:16 UTC, OpenTimestamps soumis ; accord de l'utilisateur·rice (« Oui, horodater »). Jetons dans
@@ -5148,6 +5153,41 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   92 % de la variance de log C : c'est la première source de largeur, pas le besoin.
 - **Ce qui le renverserait :** une décision retirant M0 des estimateurs survivants (P-B1 a retenu l'âge) ; un test
   de séparabilité de l'offre qui change R de plus de 0,1.
+
+## 2026-11-15 — Module de besoin, axe 5 : M0 retiré de la fourchette affichée ; le vieillissement est montré comme un effet
+- **Décision** (utilisateur·rice : « okay donc go enlève le », après discussion sous l'angle de l'aide à la décision
+  du DG d'ARS) :
+  - **M0 n'est plus une borne de la fourchette affichée de C**, pour aucune profession. P-B1 l'a réfuté (l'âge est
+    retenu pour les cinq professions) : ce n'est pas une alternative plausible.
+  - **C est servi par l'estimateur retenu** : M1 ; M3 pour les infirmiers. Les estimateurs survivants qui tiennent
+    compte de l'âge (M1, M2a, M3) diffèrent de 0,4 % au plus en 2050 (≤ 0,004 en log, mesuré) : un seul chiffre suffit
+    au regard du choix du modèle de besoin.
+  - **L'écart M0 → M1 est présenté comme l'effet du vieillissement sur le besoin**, à côté de l'effet du levier, pas
+    comme une incertitude. Exemple, IDE, France, 2050 : C = 0,83 avec l'âge, 1,14 sans ; quotas × 1,2 : +11 % (mesuré).
+  - **L'incertitude affichée autour de C est la bande de l'offre** (tirages de C1), qui porte 52 à 92 % de la variance
+    de log C.
+- **Remplace** l'affichage en fourchette de l'entrée « axe 5 : C des kinés et des infirmiers affiché en fourchette
+  entre estimateurs ». **Le verdict gelé ne change pas** : R = 0,77 (MK) et 0,34 (IDE) avec M0 dans l'ensemble, publié
+  tel quel. Ce changement est postérieur au résultat et déclaré comme tel ; aucun seuil n'est modifié.
+- **Pourquoi :** une fourchette bornée par un modèle réfuté se lit « on ne sait pas » ; le message utile au décideur
+  est « le vieillissement pèse plus que ce levier ». La largeur réelle de C vient de l'offre.
+- **Ce qui le renverserait :** un choix normatif d'un « besoin égal par habitant » (M0 servi alors comme option
+  choisie, pas comme borne d'incertitude) ; un estimateur plausible qui s'écarterait de M1 de plus que l'effet des
+  leviers.
+
+## 2026-11-15 — Module de besoin : rôle de M4 précisé ; pas de décomposition de l'écart à l'APL
+- **Décision** (utilisateur·rice : « the actual M4 calculus was to have something rigorous in the metric of spatial
+  accessibility, that's all ») :
+  - **M4 sert de mesure rigoureuse d'accessibilité spatiale**, pas de reproduction de l'APL. Ce qui le rend
+    rigoureux est déjà en place : paliers et poids publiés par la DREES, conservation exacte `Σ P·A = Σ S`
+    (≈ 10⁻¹⁶), limites rayon 0 et ∞ testées, temps routiers OSRM.
+  - **P-B4 reste au registre tel quel** : il dit seulement que M4 n'est pas le chiffre de l'APL (libellé « indice
+    maison » maintenu) ; au département, M4 suit l'APL (ρ = 0,98, MK).
+  - **Abandonné :** la décomposition de l'écart communal (offre contre distancier) ; elle confirmerait un diagnostic
+    sans rien changer à l'usage.
+- **Pourquoi :** le but de M4 est la métrique, pas la cible externe ; l'écart restant tient à des données non
+  ouvertes (activité individuelle, adresse d'exercice).
+- **Ce qui le renverserait :** un besoin de présenter M4 comme l'APL, ou l'ouverture de l'activité individuelle.
 
 
 ## 2026-11-15 — Assistant et compilateur : L23 compilé en transfert, couverture servie par l'API de la carte
@@ -5266,3 +5306,90 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   affichée ». Le réglage de la case est conservé d'une profession à l'autre.
 - **Pourquoi :** un levier sans effet sur la profession affichée prêtait à confusion.
 - **Ce qui le renverserait :** un transfert de tâches calculé pour une autre profession (il prendra place ici).
+
+## 2026-11-15 — Carte : libellés du module de besoin alignés sur « demande de soins de ville »
+- **Décision** (fusion de `besoin-assistant`, qui contient `besoin-carte-api`, avec l'accord de l'utilisateur·rice) :
+  la carte applique la règle de libellé de l'entrée « périmètre libéral de DAMIR ».
+  - **Indicateur, infobulle, fiche, export CSV :** « Couverture de la demande de ville » ; définition « offre privée
+    rapportée à la demande de soins de ville estimée (recours remboursé hors hôpital public, pas le besoin de toute
+    la population) ». Il n'y a plus de « besoin » dans les libellés affichés.
+  - **Norme de l'estimateur :** elle reste affichée telle que l'estimateur la déclare, précédée de « (norme
+    déclarée) ».
+  - **Assistant :** il était déjà aligné, « demande de soins de ville » dans `chatbot/`.
+  - **Exemples de l'assistant :** 3, un par cas d'usage (commit `5f264e3`).
+- **Vérifié :**
+  - `tests/couverture.py` : K1 à K6 passent, p95 18,5 ms ;
+  - `besoin.tests` : 15/15 ;
+  - rendu dans le navigateur (pharmaciens, France, 2050 : 1,01) ;
+  - `jumeau.check` : seul C15 (temps) échoue, sous charge.
+- **Corrigé à la fusion :** `Home.md` de la branche `besoin-assistant` contenait des marqueurs de conflit commités ;
+  ils sont retirés, et les trois lignes du journal sont gardées.
+
+## 2026-11-15 — Carte : la fiche montre la couverture de l'année du curseur seulement
+- **Décision** (demande de l'utilisateur·rice) : la fiche du territoire n'affiche plus la ligne fixe « Couverture de la
+  demande de ville 2035 ». Elle montre seulement l'année du curseur ; l'export suit la même règle. L'étiquette de
+  l'indicateur « Couverture 2040 » retrouve son espace (`&nbsp;`, comme « Densité ») : le bouton en flex supprimait
+  l'espace avant l'année.
+- **Pourquoi :** la ligne 2035 doublait celle du curseur ; une seule année se lit d'un coup d'œil.
+- **Vérifié :** dans le navigateur (Puy-de-Dôme, pharmaciens, curseur sur 2040 : une ligne, 1,01).
+
+## 2026-11-15 — Transferts hypothétiques admis dans l'assistant, étiquetés « hypothèse de l'utilisateur » ; O2 précisé : cible seulement
+- **Décision** (tâche de la session v2, relayée à besoin-axe5-sensibilite ; [plan](derivations/2026-11-15-transfert-hypothetique-plan.md),
+  [rapport](reports/2026-11-15-transfert-hypothetique.md)) :
+  - **Forme :** celle de L23, généralisée à une source et à une cible quelconques. `GET /api/couverture` accepte
+    `tr_src`, `tr_cible`, `tr_a` [0 ; 0,5], `tr_sinf` [0 ; 1], `tr_k` [0,1 ; 3], `tr_tau` [0,1 ; 20] et
+    `tr_t0` [2026 ; 2050]. L'opérateur s'applique après L23, sur le besoin en cache.
+  - **Profession affichée :** `prof` doit être la cible ou la source, sinon 400.
+  - **Demande de la source :**
+    - une des 5 : son propre besoin ;
+    - MG : M1, niveau placeholder ;
+    - spécialistes : M0, placeholder.
+  - **Défauts, tous « supposé (hypothèse de l'utilisateur) » :** a 0,10, s∞ 1, k 1, τ 2,4 (forme de L23,
+    empruntée), t₀ 2026.
+  - **Lecture de la phrase :**
+    - « p % des <acte> de Y » : s∞ = p, et a est balayé sur {5, 10, 20 %} ;
+    - « p % de la demande de Y » : a = p, balayé sur {p/2, p, 2p}.
+  - **Réponse de l'assistant :**
+    - jamais un chiffre unique ;
+    - source, cible et paramètres réaffichés avec leur statut ;
+    - elle dit pourquoi ce n'est pas un levier de la carte : ni volume d'acte ni part du temps publiés en données
+      ouvertes.
+  - **L23 reste le seul transfert sourcé**, inchangé.
+  - **O2 précisé :** la MG et les spécialistes sont refusés comme **cible** de l'indice (`tr_cible` ⇒ 400 ;
+    « couverture des généralistes » ⇒ refus). Ils sont admis comme **source**.
+    - Cela corrige le faux refus constaté en recette sur la phrase d'exemple : le mot « généralistes » déclenchait O2.
+    - Les transferts L23 qui citent les médecins en profitent aussi.
+  - **Carte :** aucun nouvel interrupteur, aucun bandeau. La carte ne propose pas d'afficher un transfert
+    hypothétique, puisqu'elle n'a pas ce levier.
+- **Pourquoi :**
+  - demande de l'utilisateur·rice : que l'assistant « essaie » un transfert arbitraire ;
+  - une seule source pour C, la carte : l'alternative calculée dans la passerelle est rejetée, car elle perd le
+    département et ne se vérifie pas contre L23.
+- **Vérifié :**
+  - générique MG → PH aux paramètres de L23 = `l23=1` (écart 0,0) ;
+  - L23 identique octet pour octet ;
+  - K1–K7 verts, p95 24,7 ms ;
+  - compilateur 10/10 sur des cas écrits avant le code, jeux existants inchangés ;
+  - chatbot 50/51 (le 51ᵉ exige un arbre propre ; vert après nettoyage) ;
+  - navigateur, mode sans IA.
+- **Ce qui le renverserait :**
+  - un volume d'acte ou une part du temps publiés : le transfert deviendrait un levier sourcé, comme L23 ;
+  - un niveau mesuré de la demande MG, qui changerait l'ampleur.
+- **Non fait :**
+  - mode IA non vérifié (pas de clé) ;
+  - pas de bandeau dans la carte.
+
+## 2026-11-15 — Carte : familles de leviers repliées au chargement ; retour à la France sans écran intermédiaire
+- **Décision** (demande de l'utilisateur·rice) :
+  - Les six familles du panneau Scénario (Former, Attirer, Réguler, Retenir, Transférer des tâches, Hypothèses de
+    contexte) sont **repliées à l'arrivée**. Le titre de chaque famille porte toujours l'effet du réglage dès qu'un
+    levier est modifié. **Remplace** « quatre familles ouvertes au chargement » (entrée du 2026-11-14), choisie alors
+    parce que, repliés, « les curseurs semblaient avoir disparu ». Choix confirmé par l'utilisateur·rice, qui avait
+    été averti·e de cette raison.
+  - Bouton « Vue France entière » : la fiche du territoire reste affichée, estompée, jusqu'à l'arrivée des chiffres
+    nationaux, puis passe à « France ». Avant, elle passait par une fiche d'attente « France entière — Chargement… »
+    pendant environ 200 ms. Si les chiffres nationaux n'arrivent pas, la fiche d'attente revient au bout de 4 s.
+- **Vérifié** (navigateur, panneau masqué, dessin de la carte neutralisé) :
+  - 6 familles avec `aria-expanded=false` ;
+  - Puy-de-Dôme → estompée → France en 230 ms, sans titre intermédiaire.
+- **Ce qui le renverserait :** un test de lecture où les curseurs repliés ne sont pas trouvés.

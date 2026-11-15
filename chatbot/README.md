@@ -83,7 +83,7 @@ prompt et sur `eval/evaluer_perimetre.py`.
 
 | Mesure | Résultat |
 |---|---|
-| Tests (`uv run pytest`) | 47/47 (2026-11-15) |
+| Tests (`uv run pytest`) | 51/51 (2026-11-15, transferts hypothétiques) |
 | Grille d'évaluation, contrôle avec le glossaire (`eval/evaluer_analyse.py --deterministe`) | jeu 6 : 21/30, identique au score publié par l'équipe |
 | Compréhension en mode IA, jeux 5 et 6 (`eval/evaluer_analyse.py`) | **pas encore mesurée** (clé d'API requise) ; à battre : 70 % (jeu 6) |
 | Périmètre en mode IA, 27 cas (`eval/evaluer_perimetre.py`) | **pas encore mesuré** ; jeu écrit par l'auteur du prompt (en échantillon) |

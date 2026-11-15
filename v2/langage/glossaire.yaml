@@ -351,3 +351,21 @@ transferts_besoin:
     statut: "parts par vaccinateur sourcées (Cour des comptes 2026), s(t) mesuré sur la série nationale ; k et m supposés"
     fiche: "v2/docs/lab/fiches/param-besoin-l23-vaccination.md"
     parametre_api: l23
+
+# Transferts de tâches HYPOTHÉTIQUES (2026-11-15, plan v2/docs/lab/derivations/2026-11-15-transfert-hypothetique-plan.md) :
+# « X prennent en charge / font p % de <acte> de Y ». Forme de L23, paramètres de l'utilisateur·rice, jamais un levier
+# sourcé (aucun volume d'acte ni part du temps publiés en données ouvertes). Cible : l'une des 5 professions ; source :
+# MG, spécialistes ou l'une des 5 (O2 : MG et spécialistes en source seulement).
+transferts_hypothetiques:
+  sources:
+    medecine-generale: [medecins generalistes, medecin generaliste, generalistes, generaliste, medecine generale,
+                        medecins traitants, medecin traitant]
+    specialistes: [medecins specialistes, medecin specialiste, specialistes, specialiste, cardiologues, dermatologues,
+                   ophtalmologues]
+  libelles_sources: {medecine-generale: médecins généralistes, specialistes: médecins spécialistes}
+  # verbes (racines) entre la cible et la part : « prennent (en charge) », « font », « assurent », « réalisent »…
+  verbes: [prenn, pren, pris, fai, fon, fer, real, assur, repren, effectu, recuper, ger, absorb, charg]
+  # « p % de la demande / du temps de Y » : a = p ; sinon p est la part de l'acte transférée (s∞ = p)
+  mots_demande: [demande, activite, temps, travail, charge, patientele]
+  balayage_acte: [0.05, 0.10, 0.20]      # a, poids de l'acte dans la demande de la source : inconnu, balayé (supposé)
+  balayage_demande: [0.5, 1, 2]          # multiples de a = p quand l'utilisateur·rice donne la part de la demande

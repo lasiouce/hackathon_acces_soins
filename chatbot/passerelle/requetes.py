@@ -462,6 +462,10 @@ def interpreter(texte: str) -> dict:
     out = {k: r[k] for k in ("leviers", "profession", "territoire", "compris", "non_modelise", "non_compris",
                               "avertissements", "reformulations")}
     out["transferts"] = [{k: x[k] for k in ("id", "libelle", "t0", "cible", "statut")} for x in r.get("transferts", [])]
+    out["transferts_hypothetiques"] = [{k: x[k] for k in ("id", "libelle", "source", "cible", "mode", "p", "acte", "t0",
+                                                          "parametres_api", "balayage", "statut")}
+                                       for x in r.get("transferts_hypothetiques", [])]
+    out["o2_cible"] = bool(r.get("o2_cible"))
     return out
 
 
@@ -497,9 +501,14 @@ def _carte_couverture(q: dict) -> dict:
         raise ErreurOutil(f"API de couverture injoignable ({CARTE_URL}/api/couverture) : indice non disponible") from e
 
 
+TR_API = {"source": "tr_src", "cible": "tr_cible", "a": "tr_a", "s_inf": "tr_sinf", "k": "tr_k", "tau": "tr_tau", "t0": "tr_t0"}
+
+
 def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None = None, l23: bool = True,
-               l23_t0: int = 2026, annees: list[int] | None = None) -> dict:
-    """Indice de couverture C (base 2026 = 1) d'une des cinq professions, tendanciel et scénario, écart relatif, fourchette."""
+               l23_t0: int = 2026, annees: list[int] | None = None, transfert: dict | None = None) -> dict:
+    """Indice de couverture C (base 2026 = 1) d'une des cinq professions, tendanciel et scénario, écart relatif, fourchette.
+    transfert : transfert de tâches hypothétique (paramètres de l'utilisateur·rice), forme de L23 ; la MG et les
+    spécialistes n'y sont admis qu'en source (O2)."""
     if str(profession_) in SANS_COUVERTURE:
         raise ErreurOutil("règle O2 : aucun indice de couverture pour la médecine générale ni les spécialistes ; "
                           "ils n'apparaissent que comme source d'un transfert (temps libéré, France entière)")
@@ -507,6 +516,10 @@ def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None 
     lv = dict(leviers_ or {})
     leviers(lv)                                                     # mêmes bornes que projeter
     q = {"prof": p, **{k: ("1" if v is True else "0" if v is False else v) for k, v in lv.items()}, "l23": int(bool(l23))}
+    if transfert:
+        if transfert.get("cible") in SANS_COUVERTURE:
+            raise ErreurOutil("règle O2 : la médecine générale et les spécialistes ne sont admis qu'en source d'un transfert")
+        q |= {TR_API[k]: v for k, v in transfert.items()}
     j = _carte_couverture(q)
     ys = [int(y) for y in j["years"]]
     z = j["fr"] if t == "FR" else (j.get("regs") or {}).get(t) if t[0] == "R" else \
@@ -537,13 +550,20 @@ def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None 
     out = {"profession": S().PROFS[p], "territoire": nom_territoire(t), "code_territoire": t,
            "grandeur": "indice de couverture (offre / demande de soins de ville, base 2026 = 1)",
            "reference": ref, "estimateur_central": j.get("central"), "estimateurs": j.get("estimateurs"),
-           "effectif": "inchangé dans le modèle par L23",
+           "effectif": "inchangé dans le modèle par un transfert de tâches (L23 ou hypothétique)",
            "l23": {"actif": bool(l23), "t0": ref}, "annees": rows, "transferts": tr, "parametres_l23": params,
            "lecture": "1 = couverture de 2026 ; l'écart se lit par rapport au tendanciel de la même année, jamais comme une part du besoin couvert"}
     if l23 and l23_t0 != ref:
         out["avertissement"] = f"l'API date la vaccination en officine à {ref} ; la date demandée ({l23_t0}) n'est pas appliquée"
     if blk.get("note"):
         out["note_l23"] = blk["note"]
+    h = j.get("transfert_hypothetique")
+    if h:
+        out["transfert_hypothetique"] = {
+            "statut": h["statut"], "source": h["source"], "cible": h["cible"],
+            "parametres": [{"nom": x["name"], "valeur": x["value"], "unite": x["unit"], "statut": x["status"]} for x in h["params"]],
+            "besoin_source": h["besoin_source"], "etp_source_transferes_france": round(h["etp_source_transferes"][ia]),
+            "note": h["note"]}
     return out
 
 
