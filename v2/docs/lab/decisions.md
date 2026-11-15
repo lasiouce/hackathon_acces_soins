@@ -5014,3 +5014,42 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** les chercheurs qui clonent le dépôt doivent avoir toutes les entrées de P-B2, P-B3 et P-B5 sans
   reconstruction.
 
+## 2026-11-15 — Module de besoin : M4 construit ; P-B4 échoue en repli, M4 reste un indice maison
+- **Décision** (session besoin-v2-m4, [rapport](reports/2026-11-15-besoin-p-b4-apl.md)) :
+  - **M4** (`v2/besoin/estimateurs/m4.py`) : 2SFCA aux paliers DREES, relus dans l'onglet « Paramètres ». Le besoin
+    vient d'un estimateur d'entrée (M4∘M1…) ; par défaut, poids d'âge ω de l'APL figés à l'année de base (2024 ;
+    2023 pour les MK). `predict()` rend le besoin d'entrée inchangé ; `accessibilite()` rend A en ETP pour 100 000.
+    Temps : vol d'oiseau × 1,3 à 50 km/h (supposé), en attendant OSRM.
+  - **P-B4 passé en repli**, avec 11 écarts écrits et commités avant le passage (`76c04d5`) : `pop_std` de la DREES
+    comme P^std, part des moins de 65 ans départementale, SF lues dans `sf_popage`, ETP = honoraires sans
+    dépassement moyens / médiane.
+  - **Verdict : indice maison pour les 4 professions.** ρ = 0,72 (IDE), 0,77 (MK), 0,66 (SF), 0,74 (CD), sous 0,90 ;
+    EM de 21 à 29 %, au-dessus de 15 %. Le gain sur la meilleure densité naïve passe partout (+0,15 à +0,31, IC à
+    98,75 % > 0). Aucun seuil changé.
+  - **Libellé imposé :** M4 n'est jamais appelé « APL » dans la sortie, la carte ou un rapport.
+  - Critères M4a–M4d dans `besoin.tests` (découverte des modules `criteres_*.py`), 11/11.
+- **Pourquoi :** protocole gelé ; le repli ne peut pas valoir reproduction, et il échoue de toute façon.
+- **Résidu :** la cause probable la plus forte est le distancier (Corse et montagne en tête des écarts ; ρ MK 0,78
+  hors montagne, 0,66 dedans) ; l'ETP moyen départemental est la seconde. Passage OSRM soumis à l'accord de
+  l'utilisateur·rice (extrait OSM de 4,8 Go).
+- **Ce qui le renverserait :** un passage OSRM, daté comme amendement avant calcul, qui atteint les trois seuils.
+- *Résidu complété le 2026-11-15 : le passage OSRM a eu lieu et échoue aussi ; le distancier n'est pas la cause
+  principale. Voir l'entrée « P-B4 sur OSRM ».*
+
+## 2026-11-15 — Module de besoin : P-B4 sur OSRM échoue aussi ; l'écart vient de l'offre communale, pas du distancier
+- **Décision** (session besoin-v2-m4, accord de l'utilisateur·rice « Yes, OSRM », [rapport](reports/2026-11-15-besoin-p-b4-apl.md)) :
+  - **OSRM installé** (Homebrew 26.11.0) ; extrait OSM France du miroir openstreetmap.fr (5,9 Go, plus rapide que
+    Geofabrik) dans `v2/data/raw/osm/` du dépôt principal, non versionné. Graphe : métropole et Corse, voies
+    carrossables seulement (le graphe complet saturait 24 Go de mémoire), algorithme CH.
+  - **Distancier routier** `v2/besoin/donnees/distancier_osrm.py` → `v2/data/odbl/besoin/distancier_osrm.parquet`
+    (ODbL, non commité, règle d'attente) : 2 997 245 paires à 30 min au plus, rayon de recherche 50 km.
+  - **P-B4, passage 2 (voie principale, amendement A1 daté avant calcul) : indice maison pour les 4 professions.**
+    ρ = 0,72 (IDE), 0,76 (MK), 0,71 (SF), 0,73 (CD) ; EM de 23 à 33 % ; gain sur les naïfs +0,15 à +0,35, IC > 0.
+    Aucun seuil changé. Ce verdict remplace celui du repli comme verdict de P-B4 ; le repli reste rapporté.
+  - **Diagnostic :** temps routiers contre vol d'oiseau, ρ change de −0,01 à +0,05 ; au département, ρ = 0,98 (MK).
+    L'écart est dans la répartition de l'offre entre communes d'un même département (ETP individuel borné de la DREES,
+    commune d'exercice SNIIR-AM), non ouverte au grain individuel.
+- **Pourquoi :** voie principale du protocole, accordée ; elle tranche la cause que le repli laissait ouverte.
+- **Résidu :** centres geo.api et non mairies ; voies `service` exclues ; profil OSRM par défaut.
+- **Ce qui le renverserait :** une offre communale plus fidèle (activité individuelle ouverte, ou une offre inversée
+  depuis l'APL publiée) qui, avec nos temps, atteindrait les seuils : l'écart viendrait alors bien de l'offre.
