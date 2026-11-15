@@ -5149,3 +5149,20 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Ce qui le renverserait :** une décision retirant M0 des estimateurs survivants (P-B1 a retenu l'âge) ; un test
   de séparabilité de l'offre qui change R de plus de 0,1.
 
+
+## 2026-11-15 — Assistant et compilateur : L23 compilé en transfert, couverture servie par l'API de la carte
+- **Décision** (tâche de la session v2, [rapport](reports/2026-11-15-besoin-assistant.md)) :
+  - **Compilateur** : la vaccination en officine produit un champ `transferts` (L23, avec t0 : année qui suit le terme
+    dans sa proposition, défaut 2026) **et reste dans `non_modelise`**, car l'effectif ne change pas. L25, L27 et
+    tension/diabète restent hors modèle, avec la raison « non mesurable » de leur fiche, sans transfert.
+  - **Assistant** : l'indice de couverture vient seulement de l'outil `couverture` (passerelle → `GET /api/couverture` de
+    la carte, contrat de l'étape 1 du plan besoin-carte ; branche de l'API absente au 2026-11-15). Écart au tendanciel en
+    relatif, qualifié par seuils (< 1 % proche, < 5 % légèrement, au-delà sans adverbe) ; fourchette entre estimateurs
+    quand l'API la donne. Jamais « % du besoin couvert ». MG et spécialistes : refus (O2), dans le schéma, la passerelle,
+    le périmètre et le prompt.
+  - **La passerelle charge le compilateur du dépôt** (`v2/langage/`) quand il existe, sinon celui de `vendor/` ;
+    `LANGAGE_DIR` le force.
+- **Pourquoi :** garder les jeux à l'aveugle comparables (vaccination toujours « non modélisée » pour l'effectif) ; ne
+  pas recalculer la couverture hors de l'API de la carte ; le glossaire évolue plus vite que la copie du modèle.
+- **Ce qui le renverserait :** une API de couverture publiée sous une autre forme ; une décision de servir le
+  compilateur figé de `vendor/` seulement.

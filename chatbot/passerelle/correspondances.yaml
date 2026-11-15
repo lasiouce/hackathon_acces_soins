@@ -35,13 +35,17 @@ cesp:
   limite: "concerne surtout la médecine (hors périmètre) et les dentistes ; pas de flux CESP dans le jumeau"
 vaccination_officine:
   traduction: aucune
-  limite: "agit sur l'activité et le recours aux soins, pas sur le nombre de professionnels : il faudrait un module de besoin"
+  limite: "effectif inchangé dans le modèle ; le module de besoin calcule son effet sur l'indice de couverture des pharmaciens (outil couverture, l23)"
+  outil: couverture
 ipa:
   traduction: aucune
-  limite: "les IPA ne sont pas distingués dans les effectifs ; agit sur l'activité, pas sur l'effectif projeté"
+  limite: "effectif inchangé dans le modèle ; accès direct aux IPA (L25) non mesurable, pas de couverture calculée"
 acces_direct:
   traduction: aucune
-  limite: "change le parcours et la demande, pas l'effectif ; aucun module de demande"
+  limite: "effectif inchangé dans le modèle ; accès direct au kiné (L27) non mesurable, pas de couverture calculée"
+tension_diabete:
+  traduction: aucune
+  limite: "effectif inchangé dans le modèle ; transfert non mesurable (aucun acte facturable connu), pas de couverture calculée"
 teleconsultation:
   traduction: aucune
   limite: "agit sur l'accès et l'activité, pas sur le nombre de professionnels"

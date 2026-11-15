@@ -22,7 +22,7 @@ from passerelle import schemas as SC
 
 # nom de la requête -> fonction ; noms d'arguments du schéma -> noms Python
 FONCTIONS = {"perimetre": R.perimetre, "projeter": R.projeter, "comparer": R.comparer, "balayer": R.balayer,
-             "classer": R.classer, "atteindre": R.atteindre, "effets_des_leviers": R.effets_des_leviers, "planifier": R.planifier, "traduire_politique": R.traduire_politique, "decrire_leviers": R.decrire_leviers, "incertitude": R.incertitude,
+             "classer": R.classer, "atteindre": R.atteindre, "effets_des_leviers": R.effets_des_leviers, "planifier": R.planifier, "traduire_politique": R.traduire_politique, "couverture": R.couverture, "decrire_leviers": R.decrire_leviers, "incertitude": R.incertitude,
              "interpreter_phrase": R.interpreter}
 ARGS = {"profession": "profession_", "territoire": "territoire_", "leviers": "leviers_"}
 assert set(FONCTIONS) == set(SC.OUTILS), "liste blanche et fonctions désalignées"

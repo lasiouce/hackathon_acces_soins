@@ -34,7 +34,8 @@ LEXIQUE = """| Éviter | Écrire |
 | sur-doté | densité supérieure à la moyenne |
 | catastrophique, critique, alarmant | la densité diminue de X % d'ici AAAA |
 | il faut, on doit, la meilleure politique | le scénario X conduit à… ; le scénario Y conduit à… |
-| prévision, ce qui va arriver | projection sous hypothèses (toujours dire le scénario) |"""
+| prévision, ce qui va arriver | projection sous hypothèses (toujours dire le scénario) |
+| X % du besoin couvert, besoin non couvert | indice de couverture (base 2026 = 1) ; couverture moindre / supérieure au tendanciel |"""
 
 
 def systeme(perimetre: dict) -> str:
@@ -95,6 +96,16 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    « intelligence artificielle » pour le calcul : le modèle de langage traduit et explique, le jumeau calcule.
 11. Sans profession, si la question n'a pas de sens, demande-la en une phrase. Pour « les soignants » en général, tu peux interroger
    les cinq professions.
+
+12. **Couverture (module de besoin).** L'indice de couverture vient UNIQUEMENT de l'outil **couverture** : offre / besoin,
+   base 2026 = 1, tendanciel et scénario, écart relatif au tendanciel. Vaccination en officine, « les pharmaciens peuvent
+   vacciner » (L23) : appelle couverture avec l23 (et l23_t0 si une date est dite) ; la réponse dit « Effectif inchangé dans
+   le modèle ; couverture des pharmaciens … » avec l'indice et l'écart au tendanciel, et la fourchette entre estimateurs si
+   le résultat en donne une (jamais un seul chiffre dans ce cas). Qualifie l'écart avec le champ « qualificatifs » du
+   résultat. Jamais « % du besoin couvert », jamais de besoin en valeur absolue. **Jamais de couverture, de besoin ni d'indice
+   pour la médecine générale ou les spécialistes** (règle O2) : ils ne sont que la source d'un transfert (temps libéré).
+   IPA en accès direct (L25), accès direct au kiné (L27), tension et diabète en officine : « pas dans le modèle », effectif
+   inchangé, transfert non mesurable (raison du périmètre) ; pas d'indice.
 
 ## Forme de chaque réponse sur un scénario (Markdown ; l'interprétation fait partie de la réponse)
 (Pour une question d'objectif, suis la forme de la règle 8, pas celle-ci.)
@@ -191,6 +202,9 @@ def _resume(nom: str, res: dict | None, err: str | None) -> str:
         return f"{res['levier']} : {len(res['points'])} valeurs"
     if nom == "classer":
         return f"{res['nb_departements']} départements classés"
+    if nom == "couverture":
+        a = res["annees"][-1]
+        return f"{res['profession']}, {res['territoire']}, {a['annee']} : indice {a['indice_scenario']} (tendanciel {a['indice_tendanciel']})"
     if nom == "atteindre":
         return f"cible {res['cible']} : {sum(x['suffit_seul'] for x in res['leviers_seuls'])} levier(s) suffisent seuls"
     return "ok"
@@ -316,7 +330,9 @@ class Conversation:
                 return {"texte": f"**{HORS} :** {hors[k]['sujet']}. {hors[k]['raison']}", "appels": [], "graphiques": [],
                         "verification": {"statut": "ok", "non_rattaches": []}}
         r, _ = C.requete("interpreter_phrase", {"texte": texte[:500]})
-        lignes = [f"**{HORS} : {x['libelle']}.** {x['raison']}" for x in r["non_modelise"]]
+        tr = r.get("transferts", [])
+        lignes = [f"**{HORS} : {x['libelle']}.** {x['raison']}" for x in r["non_modelise"]
+                  if not (tr and x["id"] == "vaccination_officine")]       # L23 : répondu par la couverture, plus bas
         prof = r["profession"] or self.defaut["profession"]
         if not prof:
             lignes.append("Quelle profession ? Le modèle couvre : sages-femmes, dentistes, pharmaciens, kinés, infirmiers.")
@@ -350,9 +366,33 @@ class Conversation:
                   "Projection sous hypothèses : la fourchette reprend l'erreur passée du modèle, extrapolée au-delà de l'horizon testé."]
         lignes = ([x for x in lignes if x.startswith("**Je n'ai pas")] + lignes_proj
                   + [x for x in lignes if not x.startswith("**Je n'ai pas")])
+        if tr:
+            lignes += self._couverture(tr[0], terr, args["leviers"], annee, appels, graphiques)
         if res["code_territoire"] != terr or (r["territoire"] and r["territoire"].startswith("D") and not re.search(res["territoire"], texte, re.I)):
             lignes.append(f"{LIMITE} grain départemental : une ville est ramenée à son département ({res['territoire']}).")
         return {"texte": "\n\n".join(lignes), "appels": appels, "graphiques": graphiques, "verification": {"statut": "ok", "non_rattaches": []}}
+
+    def _couverture(self, tr, terr, lv, annee, appels, graphiques) -> list[str]:
+        """L23 : effectif inchangé dans le modèle, indice de couverture des pharmaciens (outil couverture)."""
+        args = {"profession": tr["cible"], "territoire": terr, "leviers": lv, "l23": True, "l23_t0": tr["t0"], "annees": [annee]}
+        err, est_err, res = self._appel("couverture", args, appels, graphiques)
+        tete = f"**{tr['libelle']}, à partir de {tr['t0']} : effectif inchangé dans le modèle.**"
+        if est_err:
+            return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
+        a = res["annees"][-1]
+        f = lambda x: f"{x:.2f}".replace(".", ",")
+        e = f"{a['ecart_tendanciel_pct']:+.1f}".replace(".", ",")
+        lig = [tete + f" Couverture des {res['profession'].lower()} en {a['annee']} ({res['territoire']}, indice base "
+               f"{res['reference']} = 1) : {f(a['indice_scenario'])} avec la vaccination en officine, {f(a['indice_tendanciel'])} au "
+               f"tendanciel, soit {a['qualificatifs']['ecart']} ({e} %)."]
+        if a.get("fourchette_estimateurs"):
+            lo, hi = a["fourchette_estimateurs"]
+            lig.append(f"Selon l'estimateur du besoin, l'indice va de {f(lo)} à {f(hi)} : le choix du modèle pèse, aucun chiffre "
+                       "unique n'est retenu.")
+        st = ", ".join(f"{p['nom']} {p['statut']}" for p in res["parametres_l23"])
+        lig.append(f"{LIMITE} l'indice compare l'offre au besoin par rapport à 2026, ce n'est pas une part du besoin couverte"
+                   + (f" ; paramètres de L23 : {st}." if st else "."))
+        return lig
 
     # -------- objectifs (« comment atteindre +20 % de densité »)
     RX_OBJ = re.compile(r"(comment|que faut|quoi faire|faudrait|objectif|atteindre|pour (?:avoir|obtenir|gagner))", re.I)
