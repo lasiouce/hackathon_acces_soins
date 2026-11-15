@@ -4798,3 +4798,19 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   fenêtre décidée n'est pas lue en entier. La règle de lecture en flux reste.
 - **Ce qui le renverserait :** du temps et une connexion non bloquée. `damir.py --fenetre` reprend là où il s'est
   arrêté.
+
+## 2026-11-15 — Module de besoin : Open DAMIR définitivement limité à 9 mois pour cette phase, faute de temps
+- **Décision** (utilisateur·rice : « mets donc bien dans le rapport qu'on a rien pu faire faute de temps ») :
+  - Open DAMIR reste à 9 mois (2025-01 à 2025-09) pour toute la phase en cours ;
+  - les 40 mois restants ne sont pas lus ;
+  - le rapport de l'axe 4 porte un addendum qui le dit.
+- **Pourquoi :**
+  - l'IP de la machine a été bloquée par le serveur après le passage à 4 flux (proposé par la session parente) ;
+  - la relance depuis un autre ordinateur, sur le même wifi, a échoué ;
+  - le temps manque.
+- **Conséquences :**
+  - profils de M1 et prix moyens de M3 calculés sur 9 mois (biais saisonnier ≤ 1,3 %, mesuré) ;
+  - P-B6 passe sur Open Medic (amendement A1).
+- **Ce qui le renverserait :** une connexion non bloquée et du temps. Commande à 1 flux, dans l'addendum du rapport
+  de l'axe 4.
+

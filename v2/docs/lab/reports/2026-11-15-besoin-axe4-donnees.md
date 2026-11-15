@@ -31,6 +31,17 @@ tags: [besoin, axe4, donnees, open-damir, apl, data-ameli, open-medic, iqvia, di
 > 213 s par mois (0,97 Go, 36,6 M lignes, 4,6 Mo/s). Avec 4 flux, le serveur a refusé les connexions, puis a bloqué
 > la machine. **Limités par le temps du hackathon, nous avons arrêté DAMIR à 9 mois sur 49** (2025-01 à 2025-09) :
 > ils suffisent pour M1 et M3. P-B6 passe sur Open Medic (voir plus bas).
+>
+> **Addendum du 2026-11-15, session besoin-derivation (à la demande de l'utilisateur·rice).** Les 40 mois restants
+> n'ont pas pu être lus : **faute de temps, rien de plus n'a été fait sur Open DAMIR.**
+> - Le passage à 4 flux, proposé par la session parente pour accélérer, a provoqué le blocage de l'adresse IP par le
+>   serveur d'ameli. Le partage de connexion mobile passe le blocage, mais à environ 75 Ko/s.
+> - Une relance des 3 derniers mois de 2025 depuis un autre ordinateur a échoué, très probablement parce qu'il
+>   partageait le même réseau wifi, donc la même IP bloquée. Le message d'erreur n'a pas été relevé.
+> - Les résultats du module reposent donc sur 9 mois de 2025. Le biais saisonnier mesuré sur les profils est d'au plus
+>   1,3 %. P-B6 passe sur Open Medic.
+> - Pour reprendre plus tard, depuis un autre réseau, à 1 flux : `uv run python v2/besoin/donnees/damir.py 202510-202512`
+>   (environ 12 à 15 min), puis la fenêtre entière (`--fenetre`, environ 2 h 30 de machine).
 
 ## Question
 Critères de l'axe 4 du [plan de besoin](../derivations/2026-11-15-besoin-plan.md) :
