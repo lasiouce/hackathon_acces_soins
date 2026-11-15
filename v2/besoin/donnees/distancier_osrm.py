@@ -10,7 +10,7 @@ Préparation (une fois, hors Python ; extrait et graphe dans v2/data/raw/osm/ du
       w/route=ferry r/type=restriction -o voiture.osm.pbf
     osrm-extract -p $(brew --prefix osrm-backend)/share/osrm/profiles/car.lua -t 4 voiture.osm.pbf   (≈ 18 min, 19 Go)
     osrm-contract -t 8 voiture.osrm      (CH : tables bien plus rapides qu'en MLD, même plus court chemin)
-    osrm-routed --algorithm ch --max-table-size 10000 -t 8 -i 127.0.0.1 -p 5055 voiture.osrm
+    osrm-routed --algorithm ch --max-table-size 10000 --max-header-size 2000000 -t 8 -i 127.0.0.1 -p 5055 voiture.osrm
 Run (serveur lancé) : uv run python v2/besoin/donnees/distancier_osrm.py [rayon_km]
 
 Méthode : pour chaque commune i, un appel `table` (source i, destinations = communes à moins de `rayon_km` à vol
@@ -46,25 +46,31 @@ T_MAX = 30.0
 CMD = "uv run python v2/besoin/donnees/distancier_osrm.py   (serveur osrm-routed lancé, voir l'en-tête)"
 
 
-def table(i: int, js: np.ndarray, lonlat: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    pts = np.r_[[i], js]
+def table(src: np.ndarray, dst: np.ndarray, lonlat: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Durées (min) et distances (km) routières [source, destination], un appel `table` plusieurs-à-plusieurs."""
+    pts = np.r_[src, dst]
     coords = ";".join(f"{lonlat[k, 0]:.6f},{lonlat[k, 1]:.6f}" for k in pts)
-    q = f"{URL}/table/v1/driving/{coords}?sources=0&annotations=duration,distance"
+    s = ";".join(map(str, range(len(src))))
+    d = ";".join(map(str, range(len(src), len(pts))))
+    q = f"{URL}/table/v1/driving/{coords}?sources={s}&destinations={d}&annotations=duration,distance"
     for essai in range(3):
         try:
-            with urllib.request.urlopen(q, timeout=120) as r:
+            with urllib.request.urlopen(q, timeout=300) as r:
                 x = json.loads(r.read())
             break
         except Exception:
             if essai == 2:
                 raise
             time.sleep(1)
-    dur = np.array([np.nan if v is None else v for v in x["durations"][0][1:]], float)
-    dist = np.array([np.nan if v is None else v for v in x["distances"][0][1:]], float)
+    dur = np.array([[np.nan if v is None else v for v in row] for row in x["durations"]], float)
+    dist = np.array([[np.nan if v is None else v for v in row] for row in x["distances"]], float)
     return dur / 60.0, dist / 1000.0
 
 
-def main(rayon_km: float = 50.0, limite: int | None = None):
+def main(rayon_km: float = 50.0, limite: int | None = None, tuile_deg: tuple = (0.2, 0.15)):
+    """Un appel par tuile de ~16 km (sources = communes de la tuile, destinations = union de leurs voisines) : CH
+    calcule une table plusieurs-à-plusieurs bien plus vite qu'autant d'appels un-à-plusieurs ; mêmes plus courts
+    chemins. Chaque source ne garde que ses propres voisines à moins de `rayon_km` à vol d'oiseau."""
     c = centres()
     c = c[~c.com.str.startswith("97")].reset_index(drop=True)
     lonlat = c[["lon", "lat"]].to_numpy()
@@ -74,22 +80,32 @@ def main(rayon_km: float = 50.0, limite: int | None = None):
     corde = 2 * np.sin(rayon_km / R_TERRE / 2)
     voisins = tree.query_ball_point(xyz, corde)
     n = len(c) if limite is None else limite
+    cle = (np.floor(lonlat[:n, 0] / tuile_deg[0]).astype(int) * 10000 + np.floor(lonlat[:n, 1] / tuile_deg[1]).astype(int))
+    tuiles = [np.flatnonzero(cle == k) for k in np.unique(cle)]
     t0 = time.time()
 
-    def un(i):
-        js = np.array([j for j in voisins[i] if j != i], int)
-        t, d = table(i, js, lonlat) if len(js) else (np.array([]), np.array([]))
-        return i, js, t, d
+    def une(src):
+        dst = np.unique(np.concatenate([voisins[i] for i in src]))
+        dur, dist = table(src, dst, lonlat)
+        pos = {j: k for k, j in enumerate(dst)}
+        out = []
+        for a, i in enumerate(src):
+            js = np.array([j for j in voisins[i] if j != i], int)
+            k = np.array([pos[j] for j in js], int)
+            out.append((i, js, dur[a, k] if len(k) else np.array([]), dist[a, k] if len(k) else np.array([])))
+        return out
 
-    rows, nan = [], 0
-    with ThreadPoolExecutor(8) as ex:
-        for k, (i, js, t, d) in enumerate(ex.map(un, range(n))):
-            nan += int(np.isnan(t).sum())
-            keep = t <= T_MAX
-            rows.append(pd.DataFrame({"i": i, "j": np.r_[i, js[keep]], "t_min": np.r_[0.0, t[keep]],
-                                      "d_route_km": np.r_[0.0, d[keep]]}))
-            if (k + 1) % 1000 == 0:
-                print(f"{k + 1}/{n} communes, {time.time() - t0:.0f} s", flush=True)
+    rows, nan, fait = [], 0, 0
+    with ThreadPoolExecutor(4) as ex:
+        for res in ex.map(une, tuiles):
+            for i, js, t, d in res:
+                nan += int(np.isnan(t).sum())
+                keep = t <= T_MAX
+                rows.append(pd.DataFrame({"i": i, "j": np.r_[i, js[keep]], "t_min": np.r_[0.0, t[keep]],
+                                          "d_route_km": np.r_[0.0, d[keep]]}))
+            fait += len(res)
+            if fait // 2000 != (fait - len(res)) // 2000:
+                print(f"{fait}/{n} communes, {time.time() - t0:.0f} s", flush=True)
     p = pd.concat(rows, ignore_index=True)
     codes = c.com.to_numpy()
     out = pd.DataFrame({"com_i": codes[p.i], "com_j": codes[p.j], "t_min": p.t_min.astype("float32"),
