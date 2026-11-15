@@ -74,6 +74,40 @@ habitant, ce qui ignore le vieillissement et rend les transferts invisibles.
 \end{enumerate}
 
 % ---------------------------------------------------------------------------------------------------
+\section{Travaux existants}\label{sec:litterature}
+Une passe de littérature a été faite par trois lecteurs, le plus souvent sur résumés, avec les DOI vérifiés. Une
+recherche de nouveauté journalisée (14 requêtes) l'a complétée. Rien ici n'est revendiqué comme \enquote{premier}.
+
+\paragraph{Demande induite.} L'idée que l'offre crée une partie de son recours remonte à \citet{evans1974}. En France,
+une étude en panel sur \num{4500} médecins libéraux de 1979 à 1993 trouve qu'une densité plus forte baisse à peine
+l'activité par médecin, compensée par le volume par séance~\citep{delattre2003}. Une revue de 25~études associe
+toujours densité et consommation, sans saturation rapportée~\citep{leonard2009}. C'est l'a priori défavorable à M2b,
+confirmé par P-B2.
+
+\paragraph{Neutraliser l'offre.} Les formules d'allocation des budgets de santé en Angleterre régressent le recours sur
+des indicateurs de besoin \emph{et} d'offre, puis l'évaluent à l'offre moyenne nationale~\citep{carrhill1994,
+gravelle2003}. M2a reprend cette méthode. Remplacer la référence \enquote{offre moyenne} par un niveau de saturation
+estimé, avec une règle d'abandon en l'absence de plateau, est l'extension testée ici (M2b) ; nous ne l'avons pas
+trouvée publiée.
+
+\paragraph{Besoin épidémiologique.} Le cadre de \citet{birch2007} écrit l'effectif requis comme le produit de la
+population, de l'état de santé, du niveau de service par besoin et de la productivité.
+\citet{mackenzie2019} l'étendent à plusieurs professions, avec des parts de services et des productivités par
+profession. M3 applique ce cadre à la cartographie des pathologies de la CNAM. L'opérateur de transfert en est proche,
+mais il ajoute l'expansion $m$ et une montée en charge $s(t)$.
+
+\paragraph{Accessibilité spatiale.} Le 2SFCA de \citet{luowang2003} et sa version à paliers~\citep{luo2009} fondent
+l'APL de la DREES et de l'IRDES~\citep{barlet2012,vergier2017}. Les paliers de l'APL sont une convention négociée, pas
+une estimation~\citep{vergier2017}. Les formes \enquote{équilibrées} préservent les totaux~\citep{paez2019}. Les
+travaux prospectifs trouvés projettent la population à offre figée. Nous n'avons trouvé ni projection de l'APL sous
+scénarios conjoints de démographie et d'effectifs, ni reproduction publiée de l'APL en données ouvertes.
+
+\paragraph{Transferts de tâches.} La substitution médecin $\to$ infirmier allonge probablement les consultations
+($k>1$) et augmente un peu les retours ($m>0$)~\citep{laurant2018}. Au Canada, l'autorisation de vacciner en officine
+n'augmente la couverture que de 5~\% en valeur relative~\citep{buchan2017}. En France, la part des pharmaciens en
+2019--20 suit la date d'entrée des régions dans l'expérimentation~\citep{liard2022}.
+
+% ---------------------------------------------------------------------------------------------------
 \section{Le problème : un besoin censuré par l'offre}\label{sec:probleme}
 Pour une cellule $i$ (territoire, âge, sexe) et une profession $p$ :
 \[
@@ -184,6 +218,18 @@ le sont en partie, 1 est supposé et 14 sont non mesurables\mesure{}. Seule la v
   \item $k$ reste supposé, dans la plage $[0{,}25\,;\,1]$\suppose{}, faute de durée publiée pour l'acte officinal.
 \end{itemize}
 
+\begin{figure}[h]\centering
+\includegraphics[width=0.62\linewidth]{figures/s_t_vaccination.pdf}
+\caption{Part des vaccinations antigrippales faites en officine : actes IQVIA de la campagne rapportés aux doses
+J07BB délivrées (Open Medic) l'année de début\mesure{}. Ajustement $s(t)=s_\infty(1-e^{-(t-2019)/\tau})$ sur 2021--2024 :
+$s_\infty=0{,}74\pm0{,}07$\derive{}, $\tau=2{,}4\pm0{,}5$\derive{} ans. Les fiches de l'axe~1, dérivées du SNDS,
+donnaient 0,70 et 2,8~ans.}
+\label{fig:st}
+\end{figure}
+
+Dans la grille de sensibilité, ce transfert (L23) ne déplace l'indice national 2050 des pharmaciens que de 0,004 en
+log\mesure{}. Il pèse donc peu sur leur couverture à l'échelle nationale.
+
 % ---------------------------------------------------------------------------------------------------
 \section{Données}\label{sec:donnees}
 \begin{table}[h]\centering\small
@@ -257,6 +303,28 @@ variance de $\log C$\mesure{}.
 L'indice servi est donc M1, et M3 pour les infirmiers. L'effet du vieillissement est montré à part, et la bande
 d'incertitude de l'offre sert d'incertitude.
 
+\begin{figure}[h]\centering
+\includegraphics[width=0.9\linewidth]{figures/c2050_estimateurs.pdf}
+\caption{Indice de couverture national en 2050 (2026 = 1), par estimateur et par profession (grille de l'axe~5,
+trajectoire centrale du jumeau, Omphale central)\mesure{}. M2a n'est pas défini pour les pharmaciens.}
+\label{fig:c2050}
+\end{figure}
+
+\paragraph{Ce que change le vieillissement.} Pour les infirmiers, l'indice national 2050 vaut 1,14 si le besoin suit
+la population (M0), mais 0,83 avec M1, qui pondère par l'âge\mesure{} (figure~\ref{fig:c2050}). L'offre projetée
+croît plus vite que la population, mais moins vite que la demande d'une population qui vieillit. Le signe de
+l'évolution s'inverse. Au département, la médiane de $C_1/C_0-1$ vaut $-28{,}4$~\% pour les infirmiers et
+$-14{,}1$~\% pour les kinés\mesure{} (P-B1, annexe~\ref{ann:protocoles}). Pour les dentistes, l'âge ne change
+presque rien (1,404 contre 1,405).
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.9\linewidth]{figures/ratio_dep.pdf}
+\caption{Rapport $R$ entre l'effet d'une hausse de 20~\% des quotas et l'étendue de $C$ entre estimateurs, par
+département, en 2050 (échelle log, boîtes sans valeurs extrêmes)\mesure{}. Au-dessus de 0 : la politique se
+distingue du choix du modèle.}
+\label{fig:ratio}
+\end{figure}
+
 % ---------------------------------------------------------------------------------------------------
 \section{Menaces à la validité}\label{sec:menaces}
 \begin{itemize}
@@ -303,4 +371,114 @@ Les questions ouvertes ont un prix :
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
+
+\clearpage
+\appendix
+\section{Résultats détaillés des protocoles}\label{ann:protocoles}
+Toutes les valeurs sont mesurées et reprises des rapports de passage
+(\texttt{v2/docs/lab/reports/2026-11-15-besoin-*.md}). Les IC sont à 95~\%, ou à 98,75~\% quand le protocole applique
+la correction de Bonferroni sur quatre professions.
+
+\subsection{P-B1 : l'âge déplace-t-il l'indice ?}
+$S_1$ est la part des départements où $|C_1/C_0-1|<2$~\% en 2050. Abandon de M1 si $S_1>0{,}90$ et $\rho\ge0{,}98$,
+sous P1 (poids APL) \emph{et} sous P2 (profil Open DAMIR).
+\begin{center}\footnotesize
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Profession & n dép. & $S_1$ & $\rho$ & médiane $C_1/C_0-1$ & Verdict \\
+\midrule
+Infirmiers & 100 & 0,000 & 0,835 & $-28{,}4$~\% & M1 retenu \\
+Kinés & 101 & 0,000 & 0,984 & $-14{,}1$~\% & M1 retenu \\
+Sages-femmes & 101 & 0,010 & 0,989 & $+6{,}1$~\% & M1 retenu \\
+Dentistes & 101 & 0,931 (P1) ; 0,871 (P2) & 0,998 ; 0,999 & 0,0~\% & retenu de justesse \\
+Pharmaciens & --- & 0,000 (P2) & 0,987 & --- & M1 retenu (P2 seul) \\
+\bottomrule
+\end{tabular}
+\end{center}
+Sensibilité : avec Omphale bas ou haut, $S_1$ des dentistes tombe à 0,545 et 0,584.
+
+\subsection{P-B2 : saturation du recours}
+$\beta_{Q1}$ et $\beta_{Q5}$ sont les élasticités du recours standardisé à l'accès dans le premier et le dernier
+quintile, et $\delta$ leur différence. M2b tombe si l'IC de $\delta$ contient 0 ou si $\Delta$AIC $<2$.
+\begin{center}\footnotesize
+\begin{tabular}{@{}lrlllr@{}}
+\toprule
+Profession & n & $\beta_{Q1}$ [IC] & $\delta$ [IC] & $\Delta$AIC & Verdict \\
+\midrule
+Infirmiers & 100 & $-0{,}60$ [$-1{,}67$ ; 0,45] & 0,26 [$-1{,}66$ ; 1,63] & $-0{,}06$ & tombe \\
+Kinés & 101 & 0,93 [$-0{,}25$ ; 1,97] & 0,36 [$-0{,}33$ ; 1,10] & 23,11 & tombe (non attribuable) \\
+Dentistes & 101 & 1,09 [0,29 ; 1,50] & $-0{,}29$ [$-0{,}55$ ; 0,37] & 1,94 & tombe \\
+Sages-femmes & 101 & 1,02 [$-0{,}12$ ; 1,59] & $-0{,}57$ [$-1{,}48$ ; 0,82] & 0,87 & tombe \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{P-B3 : morbidité}
+$S_3$ est la part des départements où $|C_3/C_1-1|<2$~\%, sur 3 imputations des cellules masquées. Le test (B) porte
+sur le $\Delta R^2$ hors échantillon de la morbidité au-delà de l'âge (seuil 0,10).
+\begin{center}\footnotesize
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Profession & $S_3$ & $\rho$ & $\Delta R^2$ [IC] & Verdict \\
+\midrule
+Infirmiers & 0,830 & 0,992 & 0,005 [$-0{,}117$ ; 0,114] & M3 retenu pour l'indice ; H-B3 rejetée \\
+Kinés & 1,000 & 0,999 & $-0{,}033$ [$-0{,}166$ ; 0,082] & recoupement ; rejetée \\
+Dentistes & 0,990 & 1,000 & $-0{,}003$ [$-0{,}109$ ; 0,086] & recoupement ; rejetée \\
+Sages-femmes & 0,970 & 0,999 & 0,010 [$-0{,}206$ ; 0,146] & recoupement ; rejetée \\
+Pharmaciens & 0,980 & 0,999 & --- & recoupement \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{P-B4 et P-B4-PH : reproduction de l'APL}
+EM est l'erreur relative médiane, et $G$ le gain de Spearman sur la meilleure densité naïve (commune N1 ou bassin de
+vie N2). Les temps de trajet sont ceux d'OSRM.
+\begin{center}\footnotesize
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Profession & $\rho_{M4}$ [IC] & EM [IC] & $G$ [IC] & Verdict \\
+\midrule
+Infirmiers & 0,717 [0,670 ; 0,760] & 22,7~\% [21,4 ; 24,3] & +0,147 [0,103 ; 0,204] & indice maison \\
+Kinés & 0,756 [0,720 ; 0,788] & 27,5~\% [26,1 ; 29,0] & +0,191 [0,142 ; 0,252] & indice maison \\
+Sages-femmes & 0,713 [0,683 ; 0,743] & 26,5~\% [24,7 ; 28,6] & +0,354 [0,318 ; 0,392] & indice maison \\
+Dentistes & 0,725 [0,701 ; 0,750] & 32,8~\% [31,1 ; 34,6] & +0,299 [0,254 ; 0,345] & indice maison \\
+Pharmaciens (V0 2013) & 0,723 [0,707 ; 0,738] & 33,1~\% [31,3 ; 35,3] & +0,139 [0,121 ; 0,158] & indice maison \\
+\bottomrule
+\end{tabular}
+\end{center}
+Avec le distancier à vol d'oiseau (passage 1, gelé) : $\rho$ de 0,662 à 0,766, EM de 21,2 à 29,4~\%. Le passage par la
+route ne change presque rien.
+
+\subsection{P-B5 : backtest 2016 $\to$ 2025}
+MAPE départementale à 9 ans. $\Delta$ : écart de MAPE, en points, avec son IC par bootstrap des départements.
+\begin{center}\footnotesize
+\begin{tabular}{@{}lrrlrl@{}}
+\toprule
+Profession & Persistance & M1 & $\Delta_{M1}$ [IC] & GBM & $\Delta_{\mathrm{GBM}-M1}$ [IC] \\
+\midrule
+Infirmiers & 15,79 & 7,72 & $-8{,}07$ [$-9{,}22$ ; $-6{,}71$] & 5,81 & $-1{,}91$ [$-3{,}28$ ; $-0{,}53$] \\
+Kinés & 14,11 & 10,79 & $-3{,}32$ [$-4{,}42$ ; $-2{,}13$] & 9,84 & $-0{,}95$ [$-2{,}89$ ; +0,88] \\
+Dentistes & 10,37 & 9,38 & $-0{,}99$ [$-1{,}38$ ; $-0{,}56$] & 6,20 & $-3{,}19$ [$-4{,}95$ ; $-1{,}35$] \\
+Sages-femmes & 65,00 & 66,57 & +1,57 [+1,35 ; +1,79] & 20,73 & $-45{,}84$ [$-51{,}34$ ; $-39{,}28$] \\
+\bottomrule
+\end{tabular}
+\end{center}
+Le gain du GBM suit la croissance de l'offre (corrélation 0,54 à 0,71 avec la croissance de l'effectif ; diagnostic a
+posteriori). Il n'est servi que comme prédicteur du recours, jamais comme besoin.
+
+\subsection{P-B6 : vaccination antigrippale en officine}
+Différence de différences à adoption échelonnée : 12 zones métropolitaines, années 2014--2018, cohortes 2017
+(Auvergne-Rhône-Alpes, Nouvelle-Aquitaine) et 2018 (Hauts-de-France, Occitanie). Variable :
+$\log$(doses J07BB pour 1\,000 habitants).
+\begin{center}\footnotesize
+\begin{tabular}{@{}ll@{}}
+\toprule
+ATT [IC 95~\%, bootstrap sauvage] & +0,0073 [$-0{,}0012$ ; +0,0158] \\
+Permutation exacte (2\,970 affectations) & $p=0{,}153$ \\
+Avant traitement, $e=-3$ ; $e=-2$ & $-0{,}019$ [$-0{,}080$ ; +0,042] ; +0,004 [$-0{,}040$ ; +0,049] \\
+Placebo 0--19 ans & +0,047 [+0,012 ; +0,082] : non attribuable \\
+60 ans et plus ; en montants & +0,0038 [$-0{,}0029$ ; +0,0105] ; +0,0066 [$-0{,}0021$ ; +0,0153] \\
+\bottomrule
+\end{tabular}
+\end{center}
 \end{document}
