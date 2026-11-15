@@ -431,10 +431,11 @@ class Conversation:
         if res.get("avertissement"):
             lig.append(f"{LIMITE} {res['avertissement']}.")
         if not a.get("fourchette_estimateurs") and len(res.get("estimateurs") or []) == 1:
-            lig.append(f"Une seule méthode d'estimation de la demande est servie pour les {res['profession'].lower()} : "
-                       "pas de fourchette entre méthodes ; la fourchette de l'effectif ci-dessus reste celle de l'offre.")
+            lig.append(f"Une seule façon d'estimer la demande de soins de ville existe pour les {res['profession'].lower()} : "
+                       "pas d'écart entre méthodes à montrer ; la fourchette du nombre de professionnels ci-dessus reste valable.")
         st = ", ".join(f"{self.NOMS_L23.get(p['nom'], p['nom'])} ({p['statut']})" for p in res["parametres_l23"])
-        lig.append(f"{LIMITE} l'indice rapporte l'offre à la demande de soins de ville, par rapport à 2026 ; ce n'est pas une part de la demande satisfaite"
+        lig.append(f"{LIMITE} l'indice compare le nombre de professionnels à la demande de soins de ville, par rapport à 2026 "
+                   "(1 = comme en 2026) ; ce n'est pas une part de la demande satisfaite"
                    + (f" ; hypothèses du transfert : {st}." if st else "."))
         return lig
 

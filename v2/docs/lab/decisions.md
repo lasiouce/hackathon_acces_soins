@@ -5311,6 +5311,15 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   la réponse de l'assistant). Capture : `figures/2026-11-15-besoin-carte-assistant-l23.jpg`.
 - **Ce qui le renverserait :** une date de transfert choisie par l'utilisateur·rice (brancher `l23_t0`).
 
+## 2026-11-15 — Assistant : la vaccination en pharmacie dite en langue courante (suite de la carte)
+- **Décision** (demande de l'utilisateur·rice) : la réponse du chatbot (`chatbot/chat/agent.py`) et le libellé du
+  glossaire (`v2/langage/glossaire.yaml`) n'emploient plus « actes de MG libérés », « ETP-équivalents », « L23 »,
+  « estimateur » ni les noms de paramètres. Libellé : « Les pharmaciens vaccinent davantage contre la grippe » ; ligne :
+  « les médecins généralistes ont moins de vaccins à faire … soit le temps de travail d'environ N médecins à temps
+  plein ». Le test `chatbot/tests/test_couverture.py` vérifie l'absence de ces termes. Clés d'API inchangées.
+- **Pourquoi :** un·e utilisateur·rice sans formation doit tout comprendre ; même formulation que la fiche de la carte.
+- **Ce qui le renverserait :** un test de lecture qui montre une phrase encore mal comprise.
+
 ## 2026-11-15 — Assistant : L23 dit en langue courante, comme la carte
 - **Décision** (demande de l'utilisateur·rice relayée par la session besoin-derivation ; carte `3c52883`) : libellé du
   levier dans le compilateur et l'assistant : « Les pharmaciens vaccinent davantage contre la grippe ». Effet sur la MG :
@@ -5328,6 +5337,31 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   3. transfert (L23) → couverture : « Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ? ».
   Les trois sont compris de bout en bout en mode sans IA (mesuré, `v2/langage/mesures/2026-11-15-assistant-trois-exemples.txt`) ;
   mode IA non vérifié (pas de clé). L'assistant dit « demande de soins de ville », plus « besoin ».
+
+## 2026-11-15 — Fusion besoin-assistant (trois exemples) dans la branche de la carte
+- **Décision** : la version de l'assistant de la session besoin-assistant est gardée (« demande de soins de ville »,
+  trois exemples) ; deux lignes encore techniques sont réécrites ici (« un seul estimateur … paramètres de L23 » →
+  « une seule façon d'estimer la demande de soins de ville … » ; limite sans noms de paramètres) et « (L23) » est retiré
+  du libellé du glossaire. Le test vérifie l'absence de « libérés », « ETP », « L23 », « estimateur ».
+- **Pourquoi :** l'utilisateur·rice voyait encore six exemples ; même langage pour un·e utilisateur·rice sans formation.
+
+## 2026-11-15 — Assistant : chaque exemple porte son cas d'usage
+- **Décision** (accord de l'utilisateur·rice) : au-dessus de chacun des trois exemples, un libellé en petites capitales :
+  « Une politique → quel effet ? », « Un objectif → quelles politiques ? », « Un transfert de tâches → quelle couverture ? ».
+  Seule la question est envoyée au clic (`data-q`). Capture : `figures/2026-11-15-assistant-exemples-libelles.jpg`.
+- **Rejeté :** « issue » (laisse croire à un résultat certain ; la carte dit « effet »), « que faire ? » (prescriptif,
+  contraire au lexique neutre), « transfert de compétences » (le registre et le panneau disent « transfert de tâches » ;
+  la compétence de vacciner existe déjà, c'est la tâche qui se déplace).
+- **Ce qui le renverserait :** un test de lecture où un libellé est mal compris.
+
+## 2026-11-15 — Carte : le levier de vaccination n'apparaît que pour les pharmaciens
+- **Décision** (remarque de l'utilisateur·rice : « rubrique kiné mais transfert de tâches pharma ? ») : pour une autre
+  profession, la famille « Transférer des tâches ? » cache la case et dit « Aucun transfert de tâches n'est encore
+  calculé pour les <profession>. Seul exemple disponible : les pharmaciens vaccinent davantage contre la grippe », avec
+  un lien « Afficher les pharmaciens ». Remplace la note « agit sur … (cible) … (source) ; sans effet sur la profession
+  affichée ». Le réglage de la case est conservé d'une profession à l'autre.
+- **Pourquoi :** un levier sans effet sur la profession affichée prêtait à confusion.
+- **Ce qui le renverserait :** un transfert de tâches calculé pour une autre profession (il prendra place ici).
 
 ## 2026-11-15 — Carte : libellés du module de besoin alignés sur « demande de soins de ville »
 - **Décision** (fusion de `besoin-assistant`, qui contient `besoin-carte-api`, avec l'accord de l'utilisateur·rice) :
@@ -5581,3 +5615,11 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   projet ; l'Administration garde le détail en un clic.
 - **Ce qui le renverserait :** un test de lecture qui montre qu'un libellé en clair est mal compris, ou une demande de
   l'Administration d'avoir les codes visibles par défaut.
+## 2026-11-15 — Carte : la rubrique « Transférer des tâches ? » renvoie aussi aux transferts hypothétiques
+- **Décision** (accord de l'utilisateur·rice ; branche des transferts hypothétiques fusionnée dans celle de la carte) :
+  hors pharmaciens, la rubrique dit « Aucun transfert de tâches sourcé pour les <profession>. Seul transfert mesuré :
+  les pharmaciens vaccinent davantage contre la grippe (Afficher les pharmaciens). Pour étudier un transfert
+  hypothétique, demandez à l'assistant (Ouvrir l'assistant). » Remplace « Aucun transfert … n'est encore calculé ».
+  Le troisième exemple de l'assistant reste la vaccination (seul transfert sourcé).
+- **Pourquoi :** l'assistant calcule désormais des transferts hypothétiques ; la carte doit le dire sans les présenter
+  comme des leviers.
