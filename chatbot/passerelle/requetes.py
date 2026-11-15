@@ -504,7 +504,7 @@ def _carte_couverture(q: dict) -> dict:
 TR_API = {"source": "tr_src", "cible": "tr_cible", "a": "tr_a", "s_inf": "tr_sinf", "k": "tr_k", "tau": "tr_tau", "t0": "tr_t0"}
 
 
-def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None = None, l23: bool = True,
+def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None = None, l23: bool = False,
                l23_t0: int = 2026, annees: list[int] | None = None, transfert: dict | None = None) -> dict:
     """Indice de couverture C (base 2026 = 1) d'une des cinq professions, tendanciel et scénario, écart relatif, fourchette.
     transfert : transfert de tâches hypothétique (paramètres de l'utilisateur·rice), forme de L23 ; la MG et les
@@ -516,10 +516,14 @@ def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None 
     lv = dict(leviers_ or {})
     leviers(lv)                                                     # mêmes bornes que projeter
     q = {"prof": p, **{k: ("1" if v is True else "0" if v is False else v) for k, v in lv.items()}, "l23": int(bool(l23))}
+    pts = []
     if transfert:
         if transfert.get("cible") in SANS_COUVERTURE:
             raise ErreurOutil("règle O2 : la médecine générale et les spécialistes ne sont admis qu'en source d'un transfert")
-        q |= {TR_API[k]: v for k, v in transfert.items()}
+        # a : poids de l'acte, rarement connu ; balayé ici (jamais un chiffre unique), le point médian sert de réponse
+        a0 = transfert.get("a")
+        pts = [round(min(0.5, x * a0), 4) for x in (0.5, 1, 2)] if a0 is not None else [0.05, 0.10, 0.20]
+        q |= {TR_API[k]: v for k, v in (transfert | {"a": pts[1]}).items()}
     j = _carte_couverture(q)
     ys = [int(y) for y in j["years"]]
     z = j["fr"] if t == "FR" else (j.get("regs") or {}).get(t) if t[0] == "R" else \
@@ -564,6 +568,26 @@ def couverture(profession_: str, territoire_: str = "FR", leviers_: dict | None 
             "parametres": [{"nom": x["name"], "valeur": x["value"], "unite": x["unit"], "statut": x["status"]} for x in h["params"]],
             "besoin_source": h["besoin_source"], "etp_source_transferes_france": round(h["etp_source_transferes"][ia]),
             "note": h["note"]}
+        for x in out["transfert_hypothetique"]["parametres"]:
+            if x["nom"] == "a":
+                x["statut"] = ("balayé autour de la valeur donnée (hypothèse de l'utilisateur)" if transfert.get("a") is not None
+                               else "inconnu, balayé à 5, 10 et 20 % (supposé)")
+        bal = []
+        for a in pts:                                   # même territoire, même dernière année ; le point médian est `j`
+            jj = j if a == pts[1] else _carte_couverture(q | {"tr_a": a})
+            zz = jj["fr"] if t == "FR" else (jj.get("regs") or {}).get(t) if t[0] == "R" else \
+                (jj.get("deps") or {}).get(t[1:], (jj.get("deps") or {}).get(t))
+            e = 100 * zz["ecart"][ia]
+            pt = {"a": a, "indice_scenario": round(zz["cs"][ia], 3), "indice_tendanciel": round(zz["cb"][ia], 3),
+                  "ecart_tendanciel_pct": round(e, 2), "qualificatifs": {"ecart": q_ecart_couverture(e)},
+                  "temps_plein_source_transferes_france": round(jj["transfert_hypothetique"]["etp_source_transferes"][ia])}
+            if jj.get("fourchette_visible"):
+                pt["fourchette_estimateurs"] = [round(zz["min"][ia], 3), round(zz["max"][ia], 3)]
+            bal.append(pt)
+        out["balayage_a"] = bal
+        out["effectif"] = "inchangé dans le modèle (transfert de tâches hypothétique)"
+        out["lecture_transfert"] = ("transfert hypothétique, paramètres de l'utilisateur·rice : citer les trois valeurs de "
+                                    "balayage_a, jamais un seul chiffre ; ce n'est pas un levier de la carte")
     return out
 
 

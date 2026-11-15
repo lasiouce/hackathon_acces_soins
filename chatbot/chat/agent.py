@@ -109,6 +109,13 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    pour la médecine générale ou les spécialistes** (règle O2) : ils ne sont que la source d'un transfert (temps libéré).
    IPA en accès direct (L25), accès direct au kiné (L27), tension et diabète en officine : « pas dans le modèle », effectif
    inchangé, transfert non mesurable (raison du périmètre) ; pas d'indice.
+   **Transfert de tâches proposé par l'utilisateur·rice** (« les infirmiers prennent 10 % des renouvellements d'ordonnance
+   des généralistes ») : appelle couverture avec `transfert` (source, cible). « p % DES <acte> » : s_inf = p/100 et **ne
+   donne pas a** (poids de l'acte dans la demande de la source : inconnu). « p % DE LA DEMANDE / du temps / de l'activité » :
+   a = p/100. Le résultat contient `balayage_a` (3 valeurs de a) : **donne les trois**, jamais un seul chiffre ; dis
+   « transfert hypothétique (paramètres de l'utilisateur·rice) », réaffiche source, cible et paramètres avec leur statut
+   (`transfert_hypothetique.parametres`), et pourquoi ce n'est pas un levier de la carte (`transfert_hypothetique.note`).
+   L23 ne concerne que la vaccination : n'appelle pas couverture avec l23 pour un autre transfert.
 
 ## Forme de chaque réponse sur un scénario (Markdown ; l'interprétation fait partie de la réponse)
 (Pour une question d'objectif, suis la forme de la règle 8, pas celle-ci.)
@@ -441,17 +448,13 @@ class Conversation:
         src = lib.get(trh["source"], trh["source"])
         tete = (f"**Transfert hypothétique (paramètres de l'utilisateur·rice) : {trh['libelle']}, à partir de {trh['t0']}. "
                 "Effectif inchangé dans le modèle.**")
-        pts = []
-        for a in trh["balayage"]["tr_a"]:
-            args = {"profession": prof, "territoire": terr, "leviers": lv, "l23": l23, "annees": [annee],
-                    "transfert": base | {"a": a}}
-            err, est_err, res = self._appel("couverture", args, appels, graphiques)
-            if est_err:
-                return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
-            pts.append((a, res))
+        args = {"profession": prof, "territoire": terr, "leviers": lv, "l23": l23, "annees": [annee], "transfert": base}
+        err, est_err, res = self._appel("couverture", args, appels, graphiques)       # la passerelle balaie a (3 points)
+        if est_err:
+            return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
         f = lambda x: f"{x:.3f}".replace(".", ",")          # 3 décimales : les points du balayage restent distincts
         pc = lambda x: f"{100 * x:.3g} %".replace(".", ",")
-        h = pts[0][1]["transfert_hypothetique"]
+        h, pts = res["transfert_hypothetique"], res["balayage_a"]
         par = {x["nom"]: x for x in h["parametres"]}
         donne = "a" if trh["mode"] == "demande" else "sinf"
         lig = [tete, f"**Ce que j'ai compris :** source : {src} ; cible : {trh['cible']} ; acte : {trh['acte']} ; "
@@ -461,17 +464,17 @@ class Conversation:
                         f"poids de l'acte dans la demande des {src} (a) : non donné, balayé.")
                      + " " + " ; ".join(f"{self.NOMS_TR[k]} = {str(par[k]['valeur']).replace('.', ',')}"
                                         for k in ("k", "tau", "t0")) + " : supposés (hypothèse de l'utilisateur·rice)."]
-        a0 = pts[0][1]["annees"][-1]
-        lig.append(f"Couverture des {pts[0][1]['profession'].lower()} en {a0['annee']} ({pts[0][1]['territoire']}, indice base "
-                   f"{pts[0][1]['reference']} = 1), tendanciel {f(a0['indice_tendanciel'])} :\n" + "\n".join(
-                       f"- a = {pc(a)} : {f(r['annees'][-1]['indice_scenario'])} "
-                       f"({r['annees'][-1]['ecart_tendanciel_pct']:+.1f} %, {r['annees'][-1]['qualificatifs']['ecart']})".replace(".", ",", 1)
-                       + (" ; selon l'estimateur : de {} à {}".format(*map(f, r['annees'][-1]['fourchette_estimateurs']))
-                          if r["annees"][-1].get("fourchette_estimateurs") else "")
-                       for a, r in pts))
+        a0 = res["annees"][-1]
+        lig.append(f"Couverture des {res['profession'].lower()} en {a0['annee']} ({res['territoire']}, indice base "
+                   f"{res['reference']} = 1), tendanciel {f(a0['indice_tendanciel'])} :\n" + "\n".join(
+                       f"- a = {pc(r['a'])} : {f(r['indice_scenario'])} "
+                       f"({r['ecart_tendanciel_pct']:+.2f} %, {r['qualificatifs']['ecart']})".replace(".", ",", 1)
+                       + (" ; selon l'estimateur : de {} à {}".format(*map(f, r['fourchette_estimateurs']))
+                          if r.get("fourchette_estimateurs") else "")
+                       for r in pts))
         mid = pts[len(pts) // 2]
-        n = mid[1]["transfert_hypothetique"]["etp_source_transferes_france"]
-        lig.append(f"Pour a = {pc(mid[0])}, les {src} transfèrent en {a0['annee']} le temps de travail d'environ {n} "
+        n = mid["temps_plein_source_transferes_france"]
+        lig.append(f"Pour a = {pc(mid['a'])}, les {src} transfèrent en {a0['annee']} le temps de travail d'environ {n} "
                    f"{'médecins' if trh['source'] in lib else src} à temps plein (France entière) ; les {trh['cible']} le reprennent.")
         lig.append("Aucun chiffre unique : l'effet dépend d'abord de a, que les données ouvertes ne mesurent pas.")
         lig.append(f"Pourquoi ce n'est pas un levier de la carte : ni le volume de cet acte ni la part du temps des {src} qu'il "

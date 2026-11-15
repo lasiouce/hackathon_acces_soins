@@ -106,6 +106,13 @@ def test_couverture_transfert_hypothetique_nul_et_cible_mg(passerelle):
                                       "transfert": tr | {"a": 0.0}})
     assert err is None and r["annees"][0]["ecart_tendanciel_pct"] == 0
     assert r["transfert_hypothetique"]["statut"] == "hypothèse de l'utilisateur"
+    r, err = C.requete("couverture", {"profession": "infirmiers", "territoire": "D63", "annees": [2035], "transfert": tr})
+    assert err is None and [x["a"] for x in r["balayage_a"]] == [0.05, 0.1, 0.2]            # a non donné : 5, 10, 20 %
+    e = [x["ecart_tendanciel_pct"] for x in r["balayage_a"]]
+    assert e[0] > e[1] > e[2] and r["annees"][0]["ecart_tendanciel_pct"] == e[1]           # point médian = réponse
+    r, _ = C.requete("couverture", {"profession": "infirmiers", "territoire": "D63", "annees": [2035],
+                                    "transfert": tr | {"a": 0.04}})
+    assert [x["a"] for x in r["balayage_a"]] == [0.02, 0.04, 0.08]                          # a donné : a/2, a, 2a
     for cible in ("medecine-generale", "specialistes"):
         r, err = C.requete("couverture", {"profession": "infirmiers", "transfert": {"source": "infirmiers", "cible": cible}})
         assert r is None and err                                   # schéma (5 professions en cible) ou O2
@@ -120,7 +127,7 @@ def test_deterministe_transfert_hypothetique_balaye(passerelle):
     assert "donnée par vous" in t and "supposés (hypothèse de l'utilisateur·rice)" in t
     assert "ce n'est pas un levier de la carte" in t
     cv = [a for a in out["appels"] if a["outil"] == "couverture"]
-    assert len(cv) == 3 and {a["entree"]["transfert"]["a"] for a in cv} == {0.05, 0.1, 0.2}
+    assert len(cv) == 1 and "a" not in cv[0]["entree"]["transfert"]           # a inconnu : balayé par la passerelle
     assert "ETP" not in t and "besoin couvert" not in t
 
 

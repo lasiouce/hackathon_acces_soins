@@ -38,8 +38,8 @@ def _obj(props: dict, req: list) -> dict:
 # Transfert de tâches hypothétique (forme de L23) : bornes de GET /api/couverture (tr_*) de la carte
 TRANSFERT = _obj({"source": {"type": "string", "enum": ["medecine-generale", "specialistes", *PROF["enum"]]},
                   "cible": PROF,
-                  "a": {"type": "number", "minimum": 0, "maximum": 0.5, "description": "Part de la demande de la source concernée par l'acte."},
-                  "s_inf": {"type": "number", "minimum": 0, "maximum": 1, "description": "Part de l'acte transférée à terme."},
+                  "a": {"type": "number", "minimum": 0, "maximum": 0.5, "description": "Part de la demande de la source concernée par l'acte (poids de l'acte). Ne pas la déduire de « p % des <acte> » : laisser vide, la passerelle balaie 5, 10 et 20 %."},
+                  "s_inf": {"type": "number", "minimum": 0, "maximum": 1, "description": "Part de l'acte transférée à terme : « p % des <acte> » donne s_inf = p/100."},
                   "k": {"type": "number", "minimum": 0.1, "maximum": 3, "description": "Temps de la cible par unité de temps de la source."},
                   "tau": {"type": "number", "minimum": 0.1, "maximum": 20, "description": "Montée en charge, années."},
                   "t0": {"type": "integer", "minimum": 2026, "maximum": 2050, "description": "Année d'autorisation."}},
@@ -109,9 +109,10 @@ OUTILS: dict[str, tuple[str, dict]] = {
                    "(vaccination en officine, à partir de l23_t0) : l'effectif ne change pas, la couverture des pharmaciens oui. "
                    "Jamais pour la médecine générale ni les spécialistes (règle O2). Transfert HYPOTHÉTIQUE (`transfert`) : une part "
                    "a de la demande de la source (MG, spécialistes ou l'une des cinq) passe vers la cible (l'une des cinq), forme "
-                   "de L23 ; paramètres de l'utilisateur·rice, jamais un levier sourcé : balayer a plutôt que donner un chiffre unique.",
+                   "de L23 ; paramètres de l'utilisateur·rice, jamais un levier sourcé. « p % DES <acte> » : s_inf = p/100, a non "
+                   "donné ; « p % DE LA DEMANDE » : a = p/100. Le résultat donne `balayage_a` (3 valeurs de a) : les citer toutes.",
                    _obj({"profession": PROF, "territoire": TERR, "leviers": LEVIERS, "transfert": TRANSFERT,
-                         "l23": {"type": "boolean", "description": "Vaccination en officine (transfert L23) active."},
+                         "l23": {"type": "boolean", "description": "Vaccination en officine (transfert L23) active ; défaut : non. Seulement si la question parle de vaccination."},
                          "l23_t0": {"type": "integer", "minimum": 2019, "maximum": 2050, "description": "Année d'autorisation (défaut 2026)."},
                          "annees": {"type": "array", "items": ANNEE, "maxItems": MAX_LISTE}}, ["profession"])),
     "decrire_leviers": ("Leviers du modèle : bornes, délai d'effet, statut (sourcé / supposé), source.", _obj({}, [])),
