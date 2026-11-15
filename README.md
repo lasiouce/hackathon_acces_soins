@@ -37,19 +37,15 @@ uv run python v2/prototype-carte/server.py
 Puis ouvrir **http://localhost:8767**. Le serveur met une dizaine de secondes à charger les
 5 professions ; il affiche `prêt : http://localhost:8767` quand c'est fait.
 
-**Chatbot « Questions » (facultatif).** Le bouton « Questions » de la carte relaie les questions vers le chatbot de
-`chatbot/` (passerelle en lecture seule + agent ; code de Juliette Konop), qui explique les résultats sans rien calculer :
-chaque nombre vient du jumeau et est vérifié. Deux processus en plus de la carte, dans deux terminaux :
+**Un seul port.** La carte démarre elle-même, en processus séparés et internes (127.0.0.1), la passerelle en lecture
+seule et le chatbot de `chatbot/` (code de Juliette Konop). Le bouton « Assistant de simulation » leur relaie les
+questions par `/api/agent` : il n'y a rien d'autre à lancer, et tout passe par http://localhost:8767. Le chatbot
+explique les résultats sans rien calculer ; chaque nombre vient du jumeau et est vérifié.
 
-```bash
-JUMEAU_REPO=.. uv run --directory chatbot python -m passerelle.server 8770     # interroge le dépôt actuel
-set -a; . ./.env; set +a; CHAT_MODEL=claude-haiku-5-5 CHAT_FALLBACKS=0 uv run --directory chatbot python -m chat.server 8768
-```
-
-`.env` (à la racine, ignoré par git) contient `ANTHROPIC_API_KEY=sk-ant-...` ; la clé reste dans le processus du chatbot,
-jamais dans le navigateur. **Sans clé**, le chatbot répond quand même, avec le glossaire de l'équipe (sans IA). Sans le
-chatbot, la carte fonctionne et le panneau l'indique. Le contrôle du lexique neutre (`v2/agent/garde_fous.py`) s'applique
-à chaque réponse. `CHAT_FALLBACKS=0` : Haiku n'a pas de repli serveur.
+`.env` (à la racine, ignoré par git) contient `ANTHROPIC_API_KEY=sk-ant-...` ; la carte ne la transmet qu'au processus
+du chatbot, jamais au navigateur. **Sans clé**, le chatbot répond quand même, avec le glossaire de l'équipe (sans IA).
+`CARTE_SANS_ASSISTANT=1` lance la carte seule ; le panneau indique alors que l'assistant n'est pas disponible. Le
+contrôle du lexique neutre (`v2/agent/garde_fous.py`) s'applique à chaque réponse.
 
 Déjà cloné ? `git pull` puis `uv sync` suffisent. Si une erreur parle de `data/raw/` ou d'un fichier
 `.parquet` absent :
@@ -241,7 +237,7 @@ v2/
   data/                axe 4 : scripts de construction, processed/ (commité), manifest.py
   langage/             compilateur phrase -> leviers, glossaire, jeux de test à l'aveugle
   agent/               premier agent (gelé) : garde-fous (ancrage, lexique), jeu de 22 questions
-  prototype/           serveur des leviers et du jumeau (bibliothèque de la carte, port 8766)
+  prototype/           serveur des leviers et du jumeau (bibliothèque de la carte)
   prototype-carte/     carte de décision (port 8767)
   papers/              un article par axe et l'article de synthèse (LaTeX)
   docs/lab/            décisions, questions ouvertes, rapports, fiches, lexique ; archive-v1/
