@@ -27,7 +27,7 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | Validation (axe 3) | ✅ protocoles N1–N12 gelés ; dépôts à noter sur les effectifs 2027 |
 | Données (axe 4) | ✅ public / privé séparé : « libéral » = privé 2026, SF 12 059 – 14 660, PH 60 005 – 67 219, CD 40 784 – 47 894, MK 98 828 – 103 986, IDE 2023 277 788 ; zonage par commune ; grain communal |
 | Module de besoin | 🟡 6 protocoles gelés sur 7 passés ([étape](v2/docs/lab/reports/2026-11-15-besoin-etape.md)) : M1 (âge) retenu pour les 5 professions ; M2b tué ; M3 pour l'indice IDE seul ; H-B1 retenue ; M4 indice maison (repli, ρ 0,66–0,77) ; P-B4 OSRM et P-B4-PH à passer ; k, m supposés |
-| Sensibilité (axe 5) | ✅ amplitude de référence DD76 : en 2050 la décision pèse plus que l'incertitude pour IDE (0,89), MK (0,81), SF (0,59) |
+| Sensibilité (axe 5) | ✅ amplitude de référence DD76 : en 2050 la décision pèse plus que l'incertitude pour IDE (0,89), MK (0,81), SF (0,59) | · besoin : R quotas / choix du modèle en 2050 SF 1,91, CD 40, PH 1,14, MK 0,77, IDE 0,34 ; C des MK et IDE en fourchette ([rapport](v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md))
 | Next | recette personas sur la carte finale · module de besoin : P-B4 OSRM, P-B4-PH, fusion des branches de passage · spécialistes : amélioration possible, hors plan (2026-11-15) |
 
 ## Present
@@ -54,6 +54,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
 | 2026-11-15 | [Besoin P-B4-PH : APL V0 des pharmacies](v2/docs/lab/reports/2026-11-15-besoin-p-b4-ph-apl-v0.md) | Échec : Spearman 0,72 [0,71 ; 0,74] (seuil 0,90), erreur médiane 33 % ; gain sur la densité +0,14 ; niveau moyen reproduit (22,1 contre 22,5) → M4 pharmaciens indice maison | session besoin-derivation |
+| 2026-11-15 | [Besoin, axe 5 : sensibilité de C(2050)](v2/docs/lab/reports/2026-11-15-besoin-axe5-sensibilite.md) | R (quotas × 1,2 / choix du modèle de besoin) : SF 1,91, CD 40, PH 1,14 distinguables ; MK 0,77, IDE 0,34 non distinguables → C en fourchette pour MK et IDE ; écart dû à M0 ; l'offre C1 porte 52–92 % de la variance | session besoin-axe5-sensibilite |
 | 2026-11-15 | [Besoin : rapport d'étape](v2/docs/lab/reports/2026-11-15-besoin-etape.md) | 6 protocoles sur 7 passés : M1 retenu pour les 5 professions (CD de justesse, S₁ 87,1 % sous P2) ; M2b tué ; M3 pour l'indice IDE (S₃ 83 %) ; H-B1 retenue (IDE −8,1 pts) ; M4 indice maison en repli ; m = 0 et k supposés ; P-B4 OSRM à compléter | session besoin-etape |
 | 2026-11-15 | [Licences : sources, ODbL, code (brouillon)](v2/docs/lab/reports/2026-11-15-licences-brouillon.md) | 14 tables LO 2.0, 5 ODbL non commitées ; recommandé : ODbL commitée + NOTICE, code EUPL 1.2 ; non décidé | session besoin-axe0-interface |
 | 2026-11-15 | [Besoin → carte : plan de branchement](v2/docs/lab/derivations/2026-11-15-besoin-carte-plan.md) | vue couverture + L23 bout en bout, ~75 min Claude, p95 < 150 ms ; accord attendu | session besoin-axe0-interface |

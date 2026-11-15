@@ -45,3 +45,4 @@ v2/data/odbl/besoin/distancier_osrm.parquet
 v2/data/processed/besoin/distancier_vol_oiseau.parquet
 # agrégats mensuels Open DAMIR (~15 Mo par mois), reconstruits par v2/besoin/donnees/damir.py ; tables dérivées commitées
 v2/data/processed/besoin/damir/agg_*.parquet
+v2/sensibilite/besoin/out/*.npz
