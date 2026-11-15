@@ -9,7 +9,8 @@ Run (serveur de la carte lancé) : uv run python v2/prototype-carte/tests/couver
   K4 L23 = 1    C des pharmaciens change ; ETP de MG libérés > 0 ; chaque paramètre porte statut et source
   K5 latence    /api/couverture, 95ᵉ centile < 150 ms, n ≥ 30, leviers variés ; cache froid exclu et déclaré
   K6 lexique    aucun terme interdit dans index.html (lexicon.md)
-  K7 transfert  transfert hypothétique (tr_*) : MG → PH aux paramètres de L23 = l23=1 (≤ 1e-9) ; tr_a=0 ⇒ écart 0 ;
+  K7 transfert  transfert hypothétique (tr_*) : MG → PH aux paramètres de L23, a divisé par le facteur de niveau
+                (niveau MG mesuré, ameli 2025, contre celui de M1 que garde L23) = l23=1 (≤ 1e-9) ; tr_a=0 ⇒ écart 0 ;
                 cible MG, spécialistes ou hors des 5 ⇒ 400 ; source MG ou spécialistes ⇒ 200, étiqueté « hypothèse de
                 l'utilisateur » ; p95 < 150 ms à chaud
 """
@@ -117,7 +118,9 @@ def k5():
 
 def k7():
     _, l = get("prof=pharmaciens&l23=1")
-    _, t = get("prof=pharmaciens&tr_src=medecine-generale&tr_cible=pharmaciens&tr_a=0.01&tr_k=1&tr_sinf=0.74&tr_tau=2.4&tr_t0=2026")
+    _, t0_ = get("prof=pharmaciens&tr_src=medecine-generale&tr_cible=pharmaciens&tr_a=0.01")
+    f = t0_["transfert_hypothetique"]["besoin_source"]["facteur_niveau"]
+    _, t = get(f"prof=pharmaciens&tr_src=medecine-generale&tr_cible=pharmaciens&tr_a={0.01 / f!r}&tr_k=1&tr_sinf=0.74&tr_tau=2.4&tr_t0=2026")
     egal = max(diff(l["deps"][d]["cs"], t["deps"][d]["cs"]) for d in l["deps"])
     _, z = get("prof=infirmiers&tr_src=medecine-generale&tr_cible=infirmiers&tr_a=0")
     nul = max(max(abs(e) for e in d["ecart"] if e is not None) for d in list(z["deps"].values()) + [z["fr"]])
@@ -137,7 +140,7 @@ def k7():
     ms.sort()
     p95 = ms[math.ceil(0.95 * len(ms)) - 1]
     R["K7_transfert_hypothetique"] = dict(ok=egal <= 1e-9 and nul <= 1e-12 and all(c == 400 for c in refus.values()) and lab
-                                          and p95 < 150, ecart_generique_vs_l23=egal, ecart_a_nul=nul, codes_cible_interdite=refus,
+                                          and p95 < 150, ecart_generique_vs_l23=egal, facteur_niveau_mg=f, ecart_a_nul=nul, codes_cible_interdite=refus,
                                           ecart_fr_2050={s: r["fr"]["ecart"][-1] for s, (_, r) in acc.items()}, n=len(ms),
                                           p95_ms=round(p95, 1))
 

@@ -168,6 +168,10 @@ TR_DEFAUT = {"a": 0.10, "sinf": 1.0, "k": 1.0, "tau": 2.4, "t0": 2026}
 TR_UNITES = {"a": "part de la demande de la source concernée par l'acte", "sinf": "part de l'acte transférée à terme",
              "k": "temps de la cible par unité de temps de la source", "tau": "années (montée en charge)", "t0": "année d'autorisation"}
 TR_SOURCES = ("medecine-generale", "specialistes") + tuple(SURVIVANTS)
+# Niveau de la demande des sources hors des 5 (transfert hypothétique seulement ; L23 garde le niveau de M1) : effectif
+# libéral France au 1er janvier 2025, ameli « Démographie des professionnels de santé » (data/raw/ameli/…, classe
+# tout_age, tout sexe, région FRANCE), 1 professionnel = 1 temps plein comme pour les cibles. Mesuré.
+NIVEAU_SOURCE = {"medecine-generale": 56005, "specialistes": 57346}
 _BES: dict = {}
 _CAR: dict = {}
 _BSRC: dict = {}
@@ -238,8 +242,9 @@ def _tr_params(q: dict, prof: str) -> tuple[tuple | None, str | None]:
 
 def besoin_source(src: str, cible: str, est: str) -> tuple[list, list, np.ndarray, str]:
     """B de la source d'un transfert hypothétique : (territoires, années, B [territoire, année], estimateur).
-    Une des 5 : son propre besoin (même estimateur s'il survit pour elle, sinon M1). MG : M1 (profil DAMIR, niveau
-    placeholder), pour tous les estimateurs de la cible (M2a et M3 n'ont pas de MG). Spécialistes : M0 (placeholder)."""
+    Une des 5 : son propre besoin (même estimateur s'il survit pour elle, sinon M1). MG : M1 (profil DAMIR), pour tous
+    les estimateurs de la cible (M2a et M3 n'ont pas de MG). Spécialistes : M0 (population). Niveau national des deux
+    ramené à l'effectif libéral mesuré (NIVEAU_SOURCE, ameli 2025) à l'année de référence."""
     if src in SURVIVANTS:
         e = est if est in SURVIVANTS[src] else CENTRAL
         r = besoin_cache(src, e, None)
@@ -249,8 +254,15 @@ def besoin_source(src: str, cible: str, est: str) -> tuple[list, list, np.ndarra
         E = _etats(cible)
         years = [y for y in sorted(E) if y >= V1.DECISION]
         B = discover()[e]().fit(_pop(), E, V1.DECISION).predict(_pop(), E, years)
-        _BSRC[(src, cible)] = ([str(t) for t in B.territories], [int(y) for y in B.years], B.values[B.p(src)], e)
-    return _BSRC[(src, cible)]
+        V = B.values[B.p(src)]
+        f = NIVEAU_SOURCE[src] / V[:, list(B.years).index(V1.DECISION)].sum()        # niveau national mesuré à la référence
+        _BSRC[(src, cible)] = ([str(t) for t in B.territories], [int(y) for y in B.years], V * f, e, f)
+    return _BSRC[(src, cible)][:4]
+
+
+def facteur_niveau(src: str, cible: str) -> float:
+    """Rapport du niveau mesuré (NIVEAU_SOURCE) au niveau de l'estimateur seul ; 1 pour une des 5 professions."""
+    return 1.0 if src in SURVIVANTS else _BSRC[(src, cible)][4]
 
 
 def besoin_cache(prof: str, est: str, ov: dict | None) -> dict:
@@ -356,14 +368,15 @@ def couverture_carte(prof: str, lv: dict, ov: dict | None, trh: tuple | None = N
 def _trh_bloc(trh: tuple, years: list, src: dict) -> dict:
     tr, regles = trh
     v = {"a": tr.a, "sinf": tr.s_inf, "k": tr.k, "tau": tr.tau, "t0": tr.t0}
-    st = {"M1": "répartition par âge mesurée (Open DAMIR), niveau supposé (valeur provisoire : 0,9 médecin à temps plein "
-                "pour 1 000 habitants)",
-          "M0": "supposée (valeur provisoire : 0,9 médecin à temps plein pour 1 000 habitants, sans effet de l'âge)"}
+    st = {"medecine-generale": "niveau mesuré : 56 005 médecins généralistes libéraux en France au 1er janvier 2025 "
+                               "(ameli) ; répartition par âge mesurée (Open DAMIR 2025)",
+          "specialistes": "niveau mesuré : 57 346 médecins spécialistes libéraux en France au 1er janvier 2025 "
+                          "(ameli) ; répartition selon la population seule, sans effet de l'âge (supposé)"}
     return {"actif": True, "statut": "hypothèse de l'utilisateur", "source": tr.source, "cible": tr.cible,
             "params": [dict(name=k, value=v[k], unit=TR_UNITES[k], status="hypothèse de l'utilisateur" if k in regles
                             else "supposé (défaut, hypothèse de l'utilisateur)") for k in TR_DEFAUT],
-            "besoin_source": {"estimateur": src["estimateur"], "statut": st.get(src["estimateur"], "comme la profession source")
-                              if tr.source in ("medecine-generale", "specialistes") else "comme la profession source"},
+            "besoin_source": {"estimateur": src["estimateur"], "statut": st.get(tr.source, "comme la profession source"),
+                              "facteur_niveau": round(facteur_niveau(tr.source, tr.cible), 12)},
             "etp_source_transferes": [round(float(x), 1) for x in src["temps_source"]],
             "note": "transfert proposé par l'utilisateur·rice, pas un levier de la carte : ni le volume de l'acte ni la part "
                     "du temps de la source qu'il occupe ne sont publiés en données ouvertes ; effet illustratif"}
