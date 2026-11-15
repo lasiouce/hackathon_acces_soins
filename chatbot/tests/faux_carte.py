@@ -50,7 +50,7 @@ class H(BaseHTTPRequestHandler):
                                             {"name": k, "value": float(q.get(f"tr_{k}", d)), "unit": "u",
                                              "status": "hypothèse de l'utilisateur" if f"tr_{k}" in q else "supposé (défaut, hypothèse de l'utilisateur)"}
                                             for k, d in (("a", 0.1), ("sinf", 1), ("k", 1), ("tau", 2.4), ("t0", 2026))],
-                                        "besoin_source": {"estimateur": "M1", "statut": "niveau supposé"},
+                                        "besoin_source": {"estimateur": "M1", "statut": "niveau supposé (valeur provisoire)"},
                                         "etp_source_transferes": [300.0 * ta] * len(ANNEES),
                                         "note": "transfert proposé par l'utilisateur·rice, pas un levier de la carte"} if tr else None}
         b = json.dumps(j).encode()

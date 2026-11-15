@@ -449,7 +449,7 @@ class Conversation:
             if est_err:
                 return [tete, f"{LIMITE} indice de couverture non disponible ({err})."]
             pts.append((a, res))
-        f = lambda x: f"{x:.2f}".replace(".", ",")
+        f = lambda x: f"{x:.3f}".replace(".", ",")          # 3 décimales : les points du balayage restent distincts
         pc = lambda x: f"{100 * x:.3g} %".replace(".", ",")
         h = pts[0][1]["transfert_hypothetique"]
         par = {x["nom"]: x for x in h["parametres"]}

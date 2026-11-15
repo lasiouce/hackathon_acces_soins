@@ -356,8 +356,9 @@ def couverture_carte(prof: str, lv: dict, ov: dict | None, trh: tuple | None = N
 def _trh_bloc(trh: tuple, years: list, src: dict) -> dict:
     tr, regles = trh
     v = {"a": tr.a, "sinf": tr.s_inf, "k": tr.k, "tau": tr.tau, "t0": tr.t0}
-    st = {"M1": "forme mesurée (profil DAMIR), niveau supposé (placeholder 0,9 ‰ ETP par habitant)",
-          "M0": "supposé (placeholder 0,9 ‰ ETP par habitant, population seule)"}
+    st = {"M1": "répartition par âge mesurée (Open DAMIR), niveau supposé (valeur provisoire : 0,9 médecin à temps plein "
+                "pour 1 000 habitants)",
+          "M0": "supposée (valeur provisoire : 0,9 médecin à temps plein pour 1 000 habitants, sans effet de l'âge)"}
     return {"actif": True, "statut": "hypothèse de l'utilisateur", "source": tr.source, "cible": tr.cible,
             "params": [dict(name=k, value=v[k], unit=TR_UNITES[k], status="hypothèse de l'utilisateur" if k in regles
                             else "supposé (défaut, hypothèse de l'utilisateur)") for k in TR_DEFAUT],
