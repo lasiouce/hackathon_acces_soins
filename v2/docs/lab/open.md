@@ -203,7 +203,8 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : lire la page « Méthode » de la patientèle data.ameli.fr (département d'exercice ou de résidence ; la page « information » n'a que le titre) | ~10 min Claude | passage P-B2 | 2026-11-15 | open |
 | Besoin P-B2 (sensibilité) : offre IDE libérale seule (ameli) au lieu du secteur privé du jumeau (salariés des cliniques compris) | ~10 min Claude | passage P-B2 | 2026-11-15 | open |
 | Besoin M2a : γ de la morbidité très fort pour les IDE (3,7 ; R² 0,34) ; vérifier l'effet des DROM et d'une morbidité restreinte aux pathologies chroniques | ~20 min Claude | construction de M2a | 2026-11-15 | open |
-| Besoin P-B3 : M3 (pathologies × actes) contre M1 sur l'indice, triangulation du niveau M3/M2 | ~1 h Claude après ingestion | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B3 : M3 (pathologies × actes) contre M1 sur l'indice, triangulation du niveau M3/M2 | ~1 h Claude après ingestion | dérivation du besoin | 2026-11-15 | fait 2026-11-15 : [rapport](reports/2026-11-15-besoin-pb3-pathologies.md) ; M3 retenu pour l'indice IDE seul ; H-B3 rejetée (4/4) |
+| Besoin M3, voie (ii) SF : actes réglementaires par grossesse × naissances Omphale (fiche n_grossesse) | ~30 min Claude | passage P-B3 | 2026-11-15 | open |
 | Besoin P-B4 : reproduire l'APL DREES 2024 (IDE, MK, SF, CD) par M4 ; Spearman ≥ 0,90, erreur médiane ≤ 15 %, +0,05 sur deux naïfs | ~2 h Claude + distancier (machine non mesurée) | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B5 : backtest du recours 2016 → 2025 par la structure d'âge contre la persistance (patientèle, MAPE dép.) | ~45 min Claude | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~24 Go DAMIR (machine), saisons 2015-16 à 2019-20 | dérivation du besoin | 2026-11-15 | open |

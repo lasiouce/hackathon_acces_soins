@@ -4849,3 +4849,19 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** seuils gelés appliqués tels quels ; a priori de la littérature confirmé (pas de saturation).
 - **Ce qui le renverserait :** un recours en actes au département ; un département de patientèle qui serait celui
   de résidence ; une offre IDE libérale seule (sensibilité au ledger).
+
+## 2026-11-15 — Module de besoin, P-B3 : M3 sert l'indice des seuls infirmiers ; H-B3 rejetée
+- **Décision** (session besoin-v2-m1-m3, [rapport](reports/2026-11-15-besoin-pb3-pathologies.md)) :
+  - **(A) M3 retenu pour l'indice des infirmiers** (S₃ = 83 % < 90 %, ρ = 0,992, aux trois imputations) ;
+    **réduit au recoupement** pour MK, CD, SF, PH (S₃ de 95 à 100 %, ρ ≥ 0,998 aux trois imputations).
+    Constante `m3.INDICE = {infirmiers}`.
+  - **(B) H-B3 rejetée** pour IDE, MK, CD, SF : ΔR² hors échantillon −0,03 à +0,01 (seuil 0,10).
+  - **M3 (voie i)** : 16 groupes de niveau 1 de la cartographie 2024 (partition de la dépense) × dépense remboursée
+    nationale par patient du groupe / prix moyen DAMIR (9 mois) + résidu national `r₀` par âge et sexe, non borné.
+    Prévalences figées à 2024 (supposé). Unité : actes.
+  - **Écarts écrits avant calcul** (commit `3bf9b5d`) : 18 plis régionaux (DROM compris) au lieu de « 13 » ;
+    triangulation sans objet (M2b tué) ; voie (ii) SF non branchée.
+- **Correction** : le rapport P-B2 disait « P-B3 compare M3 à M2a » ; le protocole ne le prévoit pas (corrigé).
+- **Pourquoi :** seuils gelés appliqués tels quels.
+- **Ce qui le renverserait :** une dépense par cas ventilée par âge ; une morbidité non repérée par la
+  consommation de soins.

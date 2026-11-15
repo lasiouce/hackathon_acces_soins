@@ -33,6 +33,10 @@ POSTE = {"infirmiers": "Soins infirmiers remboursés", "kines": "Soins de kinés
          "pharmaciens": "Médicaments remboursés"}
 ANNEE = 2024
 TOTAL, COURANTS = "POP_TOT_IND", "top_SoiCour"
+# Verdict de P-B3 (2026-11-15, test A) : M3 ne sert l'indice que pour les infirmiers ; pour les autres professions,
+# il est réduit au recoupement (|C₃/C₁ − 1| < 2 % dans ≥ 95 % des départements, ρ ≥ 0,998). H-B3 (test B) rejetée
+# pour IDE, MK, CD, SF. Rapport : v2/docs/lab/reports/2026-11-15-besoin-pb3-pathologies.md.
+INDICE = frozenset({"infirmiers"})
 
 
 @lru_cache(maxsize=1)

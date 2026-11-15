@@ -110,7 +110,8 @@ Rapporté, non décisif :
   enregistrée (aucun chemin de service ne la choisit).
 - **M2a (AREA) reste** : il n'est pas jugé par P-B2 ; c'est le repli prévu. Le niveau absolu du besoin non
   satisfait (`B₂ − R`) n'est donc **pas identifié** par les données ouvertes.
-- P-B3 (triangulation du niveau) compare M3 à M2a au lieu de M2.
+- P-B3 : la triangulation du niveau M3 / M2 est sans objet (M2b tué). *(Corrigé le 2026-11-15 : une première
+  version disait « P-B3 compare M3 à M2a », ce que le protocole ne prévoit pas.)*
 
 ## ? Next
 | Item | Cost |
