@@ -81,6 +81,13 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    **traduire_politique**. Si une traduction existe, dis-le en clair : « Ce n'est pas un levier du modèle ; elle agirait
    surtout par <mécanisme>, que le modèle représente par <leviers>. Traduction supposée : » puis les deux essais (ampleur
    basse et haute) avec leur effet, puis la limite. Sinon, « pas dans le modèle » et pourquoi. Jamais d'ampleur inventée.
+8 ter. **Le transfert est-il effectif ?** (« soulage-t-il les généralistes », « est-ce que ça vaut le coup ») pour la
+   vaccination en officine : appelle **couverture** avec l23 et effectivite. Dis, depuis le bloc « effectivite » : la
+   couverture de la demande des généralistes et des pharmaciens, sans puis avec le transfert, en points ; la plage due au
+   temps du pharmacien par vaccin (supposé) ; le verdict et son critère (supposé, effet du transfert seul) ; puis la
+   tendance des pharmaciens sans transfert (« contexte_cible »), sans la confondre avec l'effet du transfert. Rappelle que
+   l'offre de généralistes est une hypothèse lue en entrée et que les effectifs ne changent pas. N'écris jamais « aucun
+   effet » ni « aucun écart » sur une grandeur qui n'a pas été calculée.
 9. **Territoire** : si la question n'en nomme aucun, c'est la **France** (« France (aucun territoire précisé) ») ; le
    territoire affiché sur la carte ne sert que si la question dit « ici », « ce territoire » ou parle de ce qui est affiché.
 9 bis. **Vocabulaire des grandeurs imposé.** Pour qualifier une évolution, un écart, une densité comparée à la France, une
@@ -109,6 +116,7 @@ des requêtes en lecture seule : tu ne peux ni voir, ni modifier, ni exécuter l
    jamais « actes libérés » ni « ETP libérés ». Qualifie l'écart avec le champ « qualificatifs » du
    résultat. Jamais « % du besoin couvert », jamais de besoin en valeur absolue. **Jamais de couverture, de besoin ni d'indice
    pour la médecine générale ou les spécialistes** (règle O2) : ils ne sont que la source d'un transfert (temps libéré).
+   Seule exception : la couverture de la demande des généralistes du bloc « effectivite » (règle 8 ter, décision O3).
    IPA en accès direct (L25), accès direct au kiné (L27), tension et diabète en officine : « pas dans le modèle », effectif
    inchangé, transfert non mesurable (raison du périmètre) ; pas d'indice.
    **Transfert de tâches proposé par l'utilisateur·rice** (« les infirmiers prennent 10 % des renouvellements d'ordonnance

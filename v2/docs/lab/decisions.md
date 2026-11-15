@@ -2459,6 +2459,15 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   - `.claude/launch.json` ne garde que `decision-carte`, avec `autoPort: false` : un repli sur 8768 aurait pris le port interne du chatbot. Les entrées 8766, 8768, 8769 et 8770 sont retirées.
 - **Pourquoi :** demande de l'utilisateur·rice (« pas 12 000 localhost, tout en 8767 »). La séparation des processus (garantie 1 de `chatbot/README.md` : le chatbot n'importe pas le modèle) est gardée ; seul le lancement est regroupé. Vérifié : réponse en mode IA par `/api/agent` sur le seul port de la carte, et aucun processus orphelin après l'arrêt.
 
+## 2026-11-15 — O3 intégré à l'outil couverture de l'assistant, pas en outil séparé
+- **Décision** (choix de l'utilisateur·rice, « intégrer O3 ») : la branche `claude/besoin-transfert-o3` est fusionnée, mais son outil « transfert » ne devient pas un second outil de transfert de l'assistant.
+  - L'effectivité O3 devient une option de l'outil `couverture` : `effectivite` (avec `l23` et les pharmaciens) et `offre_mg` (défaut : constante, RPPS 2026, supposé).
+  - Le bloc `effectivite` donne la couverture de la source et de la cible avec et sans transfert, la plage de k et le verdict selon le critère par défaut (supposé, 1 point).
+  - Les transferts hypothétiques restent sur `couverture` (paramètre `transfert`).
+  - La règle O2 reste celle de la carte et de `besoin_api`. Seule exception dans l'assistant : la couverture de la demande des généralistes, dans le bloc `effectivite` (règle 8 ter du prompt).
+- **Mesure** : Puy-de-Dôme, 2035, après le correctif P1-4 : verdict « effectif » ; source +0,04 point, cible de −0,01 à −0,03 point selon k ; 0,2 ETP de généraliste libéré (mesuré). Contrôles E1–E4 de `besoin.tests.effectivite` verts.
+- **Pourquoi :** main avait entre-temps adopté les transferts hypothétiques sur `couverture`. Deux outils de transfert concurrents auraient laissé le modèle de langage choisir entre deux réponses. Le choix O3 de l'utilisateur·rice n'était inscrit que sur la branche.
+
 ## Open / not yet decided
 - **Copie commitée du dépôt dans `chatbot/vendor/hackathon_acces_soins/`** (relevé le 2026-11-15, relecture du rapport technique) : 687 fichiers suivis, dont 34 tables traitées (`commune_stock.parquet` compris), hors du manifeste et du contrôle de l'audit ; commitée sans `.gitmodules`, alors que `chatbot/DECISIONS.md` la décrit comme un sous-module. Options : la retirer et lire le dépôt courant (`JUMEAU_REPO=..`, déjà utilisé au lancement), ou l'inclure dans le manifeste et dans le futur seuil de diffusion. Prix ≈ 20 min. Le seuil de diffusion et l'archivage de l'Annuaire (données individuelles, 752 993 personnes, peut atteindre 2 critères AIPD) sont détaillés dans le rapport technique, chap. Conformité.
 - ~~**Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité**~~ **Tranchée le 2026-11-15 : remplacé par SISE (données ouvertes)**, voir l'entrée « Vivier CD/PH : SISE remplace le fichier 990 ». (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
@@ -4689,6 +4698,7 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - une projection de l'APL déjà publiée.
 
 ## 2026-11-15 — Module de besoin : médecine générale comme source seulement (O2) ; plan accepté, vague 1 lancée
+> **Remplacé en partie le 2026-11-15 par O3** (entrée « Transferts de tâches : couverture de la médecine générale lue en entrée (O3) »). O2 reste la règle de la carte et de `besoin_api` ; O3 ne s'applique qu'à l'outil d'effectivité des transferts.
 - **Décision** (choix de l'utilisateur·rice : « okay go O2 », après la recommandation de la session) :
   - **O2 retenu** : la médecine générale entre dans le module de besoin **comme profession source des transferts
     seulement**. `B_MG` est calculé par M1.
@@ -5623,3 +5633,39 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   Le troisième exemple de l'assistant reste la vaccination (seul transfert sourcé).
 - **Pourquoi :** l'assistant calcule désormais des transferts hypothétiques ; la carte doit le dire sans les présenter
   comme des leviers.
+## 2026-11-15 — Transferts de tâches : couverture de la médecine générale lue en entrée (O3) ; critère d'effectivité par défaut
+- **Décision** (choix de l'utilisateur·rice : « Remplacer O2 par O3 » et « Critère par défaut ») :
+  - **O3** : pour juger un transfert, la couverture de la **source** (médecine générale) est calculée avec une offre MG
+    **lue en entrée**, jamais projetée par le jumeau (`v2/besoin/offre_mg.py`). Raison donnée par l'utilisateur·rice : la
+    médecine générale est déjà modélisée par la DGOS (programme Junior) et la DREES (Hippocrate) ; le projet prolonge ce
+    travail aux cinq autres professions et les relie par les transferts de compétences. Projet porté par le Ministère.
+  - Fournisseurs de l'offre MG : `constante` (RPPS 2026, 66 503 généralistes libéraux et mixtes, tenue constante,
+    **supposé**, défaut) ; `nationale` (trajectoire nationale publiée, répartition figée à 2026, fichier à déposer) ;
+    `externe` (table du porteur via `BESOIN_MG_OFFRE`, **hors dépôt**, peut être sous accord).
+  - **Critère d'effectivité, supposé, fixé avant tout calcul** : effectif en (T, t) si la couverture de la source
+    progresse et si celle de la cible reste ≥ son niveau de 2026, pour toute la plage de k ([0,25 ; 1], supposé) ;
+    « dépend de k » sinon ; « non effectif (cible déjà sous son niveau de 2026 sans transfert) » quand la baisse de la
+    cible précède le transfert.
+  - L23 : s_∞ = 0,74 et τ = 2,4 ans (mesurés au national par P-B6) ; a et k restent les placeholders supposés de la fiche.
+- **Portée** : O2 reste la règle de la carte et de `besoin_api` (aucun indice MG affiché sur la carte). O3 ne sert que
+  l'outil `besoin.effectivite` et l'outil « transfert » de l'assistant (passerelle). Les spécialistes restent sans
+  couverture.
+- **Premier résultat, à lire avec ces réserves** (tendanciel, M1, offre MG constante) : en 2035, L23 est « effectif »
+  dans 32 départements, « dépend de k » dans 2, et « non effectif » dans 67, tous parce que la couverture des
+  pharmaciens y est déjà sous son niveau de 2026 sans transfert. Puy-de-Dôme : couverture MG +0,68 point, pharmaciens
+  −0,17 à −0,67 point selon k, 4,8 ETP de MG libérés.
+- **Limite du critère** : il mélange l'effet du transfert et la tendance de la cible ; 67 « non effectif » sur 101 sont
+  dus à la tendance. Un critère sur l'écart dû au transfert seul est l'alternative à trancher.
+- Contrôles : `PYTHONPATH=v2 uv run python -m besoin.tests.effectivite` (E1 s ≡ 0, E2 source = 1/(1 − s·a) à 3e-16,
+  E3 k sans effet sur la source, E4 offre MG RPPS) : 4/4.
+## 2026-11-15 — Effectivité des transferts : critère sur l'effet du transfert seul (remplace le critère par défaut)
+- **Décision** (choix de l'utilisateur·rice : « le 1 alors », après recommandation) : un transfert est **effectif** en
+  (T, t) si la couverture de la source progresse et si la cible ne perd pas plus de **1 point d'indice** (seuil
+  **supposé**) par rapport à la même année **sans transfert**, sur toute la plage de k. La position de la cible par
+  rapport à 2026 est rendue à part (`contexte_cible`), jamais dans le verdict.
+- **Remplace** le « critère par défaut » de l'entrée O3 ci-dessus, qui jugeait la cible contre son niveau de 2026 et
+  classait 67 départements sur 101 « non effectif » à cause de la tendance des pharmaciens, pas du transfert.
+- **Résultat recalculé** (tendanciel, M1, offre MG constante) : L23 « effectif » dans les 101 départements en 2035 et
+  en 2045. **À ne pas citer tel quel** : il tient à `a = 0,01` (part du temps de MG, placeholder supposé de la fiche L23),
+  qui rend la perte des pharmaciens inférieure à 1 point partout. Le verdict ne vaudra que lorsque `a` sera sourcé
+  (fiches de l'axe 1, branche `claude/besoin-axe1-fiches-*`).
