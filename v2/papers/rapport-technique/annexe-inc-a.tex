@@ -1,0 +1,109 @@
+% Annexe : incohérences entre fichiers, chapitres « jumeau » et « sensibilité ».
+% Abréviations : J = v2/docs/lab/reports/2026-11-14-jumeau-axe0.md ; R1, R2, R3 = revues adversariales
+% (v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0{,-v2,-v3}.md) ; S = 2026-11-14-axe5-sensibilite.md ;
+% P0 = v2/papers/axe0-jumeau/main.tex ; P5 = v2/papers/axe5-sensibilite/main.tex ; CK = v2/jumeau/check.py ;
+% RJ = v2/artifacts/a0_jumeau/results.json (run du 2026-11-15, 02:03) ; CL = v2/artifacts/a0_jumeau/check.log
+% (2026-11-14, 08:24) ; D = v2/docs/lab/decisions.md ; PD, PC, CA = rapports du prototype (décision, carte,
+% curseur d'année). Les numéros après « : » sont des numéros de ligne.
+\begingroup\sloppy\setlength{\emergencystretch}{3em}% coupures des chemins longs, local à ce fichier
+
+\subsection{Jumeau et sensibilité}\label{jum:ann}
+
+Règle appliquée : la valeur retenue est la mesure la plus récente, c'est-à-dire le run de \texttt{jumeau.check}
+consigné dans \texttt{v2/artifacts/a0\_jumeau/results.json} (2026-11-15, 02:03), sauf mention contraire. Les fichiers
+plus anciens n'ont pas été modifiés : leurs valeurs circulent encore dans le dépôt.
+
+{\small
+\begin{longtable}{@{}p{2.9cm}p{3.5cm}p{3.5cm}p{4.7cm}@{}}
+\caption{Incohérences relevées entre les fichiers du dépôt : jumeau (axe~0) et sensibilité (axe~5).}
+\label{jum:tab:incoherences}\\
+\toprule
+Grandeur & Fichier 1 (valeur) & Fichier 2 (valeur) & Valeur retenue et raison \\
+\midrule
+\endfirsthead
+\toprule
+Grandeur & Fichier 1 (valeur) & Fichier 2 (valeur) & Valeur retenue et raison \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Nombre de critères & J:6,17 et P0:31,74 : 17 sur 17 ; S:79 : C1--C14 (instantané \texttt{c2dc7601}) & S:253 et
+  P5:311 : « 19 critères au vert » ; CK, CL, RJ : C1--C18 et T & 18 sur 18, plus T (RJ). Les « 19 » de S et P5
+  comptent T ; J et P0 datent d'avant C18. \\
+Temps T au département, 7 professions & J:72 et P0:31,333 : 21~ms ; J:90 : 22--36~ms ; J:113,150 : 17~ms ; R1:23 :
+  18~ms & fiche d'extraction (run de 01:05) : 40~ms ; RJ (02:03) et CL : 16~ms & 16~ms (RJ, dernier run). Mesure
+  sur machine partagée : la dispersion entre runs vient de la charge. \\
+C15, 5 professions à la commune & J:22-26 et P0:33,336-338 : 2,0 à 4,6~s réel sous charge 9--14, « C15 échoue
+  sous charge » ; J:21 : 1,35 à 1,57~s & CL : 1,02~s (charge 6,6) ; fiche d'extraction (run de 01:05) : 1,31~s
+  (charge 13,8) ; RJ : 1,33~s réel, 1,28~s CPU (charge 4,5) & 1,33~s (RJ). Le constat d'échec sous charge de J
+  n'a pas été réfuté par une mesure sous charge comparable : la cible n'est pas établie sous charge
+  (section~\ref{jum:temps}). \\
+1 profession $\times$ 2 secteurs, taille commune & J:150 : 0,61~s ; J:92 : 1,36~s ; J:73 : 0,49~s ; CL : 0,39~s &
+  fiche (01:05) : 0,72~s ; RJ : 0,42~s & 0,42~s (RJ). \\
+Extrapolation à 5 professions $\times$ 2 secteurs & J:115,239 : $\approx$ 3,0~s ; J:231 : $\approx$ 3,9~s ;
+  J:95 : $\approx$ 6,8~s ; PD:80, PC:157 : $\approx$ 3~s & fiche (01:05) : $\approx$ 3,6~s ; CL : $\approx$ 1,9~s ;
+  RJ : $\approx$ 2,1~s & $\approx$ 2,1~s (RJ), dérivé ($5 \times$ 0,42~s). J:231 et J:239 se contredisent dans la
+  même section. \\
+C2, privé des zones en 2050 & J:140,173-174 : MK $-8\,552$, CD $-4\,398$ & P0:263 : $-6\,709$ / $-3\,470$ ; RJ :
+  $-6\,711$ / $-3\,484$ & $-6\,711$ / $-3\,484$ (RJ), configuration 100\,\% salariat, $\theta = 0{,}8$. \\
+C2, bloqués vers le public & J:140,222 ; P0:264,440 ; R2:33 : MK $-474$, CD $+254$ & RJ : $-375$ / $+203$ & $-375$ /
+  $+203$ (RJ). Les valeurs de R2 décrivent le défaut d'avant correction, celles de J et P0 un état intermédiaire. \\
+C2 et C4, $\Delta$ total & J:140,142 et P0:267 : $-2{,}9\cdot10^{-11}$ ; avec plancher $+0{,}046$ (C4), $+0{,}05$ /
+  $+0{,}20$ (C2) & RJ : $+0{,}0$ ; avec plancher $-0{,}00$ (C2), $+0{,}000$ (C4) & RJ. L'ancien résidu est un
+  arrondi flottant (R1:52-53). \\
+Mutation « public sans sorties » & R1:44 et J:142 (« avant ») : $+822$ kinés & J:164 et P0:410 : $+838$ & $+822$
+  pour le défaut constaté par R1 ; $+838$ est la valeur de la mutation réintroduite sur un code ultérieur. Deux
+  grandeurs différentes, non tranché davantage. \\
+Séjour en 65+ avec l'ancien masque, $\Delta = 1$ & R2:32 et J:145 : $+1{,}31$~an & J:155 et P0:401 (mutation) :
+  $+2{,}03$~ans & $+1{,}31$~an, valeur de R2 sur le code fautif ; la mutation est réintroduite dans un état plus
+  récent. Non tranché davantage. \\
+Défauts de la revue 1 & R1:6 : 6 confirmés, dont 4 bloquants & P0:27 : « 6 puis 4 défauts bloquants » & R1 (source
+  primaire) : 6 confirmés, 4 bloquants et 2 importants. \\
+Défauts importants de la revue 3 & R3:6 : « 5 défauts importants » & tableau de R3 (l.~26-30) : 1 bloquant
+  (prototype) et 4 importants ; J:78 et P0:417 : 4 & 1 bloquant (prototype) et 4 importants, d'après le détail de
+  R3. \\
+Compte des refus en C5 & J:143 : 3 erreurs, plus le cas Pool & P0:268-269 : 4 refus & 3 refus de composition et
+  un refus d'accès au Pool (RJ, C5) : les deux comptes décrivent les mêmes tests. \\
+Capacité CD $\times 1{,}2$ & J:47 : $+0{,}73$\,\% en 2033 ; P0:290 (tableau C14) : $+9{,}1$\,\% en 2050 & P0:310
+  (texte) et RJ : $+6{,}3$\,\% ; RJ : $+0{,}51$\,\% en 2033 & RJ : $+0{,}51$\,\% et $+6{,}3$\,\%, avec le flux
+  d'étrangers par défaut (\num{1300} CD par an). $+9{,}1$\,\% correspond au flux bas (665). \\
+Étrangers $\times 2$, dentistes & J:66 : part 0,24, $+18{,}1$\,\% & RJ : part 0,47, $+37{,}2$\,\% & $+37{,}2$\,\%
+  (RJ). J date d'avant la révision du flux (D, 2026-11-14 : l'effet a doublé). \\
+IFSI, perte divisée par deux & J:53-55 et P0:312 : $+15{,}6$\,\% & J:56 et RJ : $+14{,}1$\,\% & $+14{,}1$\,\% (RJ),
+  avec 400 IDE diplômés à l'étranger par an. \\
+MAPE du mode vivier, stock IDE 2018$\to$2023 & J:34 et P0:354 : 7,40\,\% & RJ et CL : 7,43\,\% & 7,43\,\% (RJ). \\
+Âge d'entrée des diplômés à l'étranger & J:36 et P0:296 : « tranche de 28 ans » & RJ : « tranche 25+ seule » & Même
+  tranche : la tranche qui contient 28~ans est libellée 25+ dans l'état. \\
+Exemption des dentistes spécialistes & P0:227-228 : « exemptés » & D, 2026-11-15 : art.~35.5 = dérogation ; statut
+  « supposé » & Dérogation, valeur 0 (D). Le nom du paramètre \texttt{part\_exemptee} est gardé. \\
+Flux CD de diplômés à l'étranger & RJ (\texttt{Param}) : statut « sourcé » & D, 2026-11-15 ; P5:198 : « dérivé » &
+  Dérivé (D) ; le statut du \texttt{Param} reste « sourcé » faute de statut « dérivé » dans le code. \\
+Retraite multi-tranches & J:224-228 : « pas mesuré » & P0:202-206,287 et RJ (C13) : écart de séjour
+  $9{,}8\cdot10^{-15}$ & Mesuré et corrigé (RJ) ; la mention de J est périmée. \\
+Abandon IDE & J:84 : 0,105 & RJ : 0,1045 & 0,1045 (RJ) ; arrondi, pas contradiction. \\
+Durée de \texttt{jumeau.check} & J:213 : $\approx$ 45~s & P0:459 : $\approx$ 1~min & Non retenue dans le texte ; non
+  remesurée. \\
+Version du rapport J & J:117 : « Version 3 de ce rapport » & en-tête de J : version 6 ; P0:467-468 renvoie à la
+  version 3 & Version 6 (en-tête). \\
+Instantané du jumeau, axe 5 partie 1 & S:78-80 : \texttt{c2dc760126b34239} ; S:10 : code de 03:36 ; S:417 :
+  instantané de 04:14 & D (2026-11-14, « relance sur le jumeau b64ce56 ») et P5:311 : les deux parties relancées sur
+  \texttt{b64ce56} & \texttt{b64ce56} (D, P5). S n'a pas été mis à jour pour la partie~1. \\
+Commit de la partie 2 de l'axe 5 & S:241 et P5:311 : \texttt{b64ce56} & S:445 (commande) : « commit 4721268 » &
+  \texttt{b64ce56} ; la commande de S cite l'ancien commit. \\
+SF tendanciel 2050, axe 5 & D (2026-11-14, « relance ») : 19\,124 $\to$ 21\,176 & S:180,254 et D (« statu quo SF
+  et MK corrigé ») : \num{18991} & \num{18991} : 21\,176 venait d'un statu quo qui forçait l'abandon à 0
+  (défaut corrigé, D). \\
+Biais SF du backtest & S:180 (tableau) : $+7{,}9$\,\% à $h = 5$ ; S:196 : $+7{,}8$\,\% ($h = 5$), $+18{,}8$\,\%
+  ($h = 10$) & P5:178-179 : $+7{,}9$ et $+18{,}9$\,\% & S:196, valeurs du texte ($+7{,}8$ ; $+18{,}8$) ; le tableau de
+  S donne $+7{,}9$. Écart d'arrondi non résolu. \\
+Retraite avant correctif, axe 5 & S:212 : « 0,7 à 1,85 fois » B1 & S:212-213 : 1,10 / 1,39 / 1,85 ; S:214 cite « +12
+  \% et +41 \% » de R2, R2:32 ne donne que +41 \% & Non repris dans le texte ; la borne 0,7 n'a pas de valeur listée.
+  \\
+Doubler $N$, partie 2 & S:452-463 : $\approx$ 1~h 30 de machine & S:363-364 : $\approx$ 1~h & 1~h 30 (liste des
+  questions ouvertes) ; prix supposé dans les deux cas. \\
+Dentistes 2050 contre DD76 & PD:68-71 : 76\,400 dans le privé contre 61\,800 tous modes & D (2026-11-14,
+  « l'écart dentistes n'existe pas ») & Pas d'écart : 76\,000 est une projection 2050, le privé 2026 est
+  \num{47347} ; 61\,800 n'a pas de source retrouvée (D). \\
+\end{longtable}
+}
+\endgroup

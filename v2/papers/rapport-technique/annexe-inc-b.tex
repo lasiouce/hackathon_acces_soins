@@ -1,0 +1,77 @@
+% Annexe : incohérences relevées pour le chapitre Méthodes (ch-methodes.tex).
+% Chemins : R-meth, R-apc, R-coh, R-com = v2/docs/lab/reports/2026-11-14-axe2-{methodes,apc-sorties,cohortes-bayesiennes,communes}.md ;
+% R-bud, R-int, R-gbm = v2/docs/lab/reports/2026-11-15-{budget-erreur-c1-a2,c1-intervalles,c1-gbm-global}.md ;
+% DEC = v2/docs/lab/decisions.md ; OPEN = v2/docs/lab/open.md ; TEX = v2/papers/axe2-methodes/main.tex ; OUT = v2/methodes/out/.
+\begingroup\sloppy % chemins longs en \texttt ; groupe local au chapitre
+\subsection{Méthodes}
+\label{met:ann}
+Abréviations : R-meth, R-apc, R-coh et R-com désignent les rapports
+\texttt{v2/docs/lab/reports/2026-11-14-axe2-\{methodes, apc-sorties, cohortes-bayesiennes, communes\}.md} ;
+R-bud, R-int et R-gbm les rapports
+\texttt{v2/docs/lab/reports/2026-11-15-\{budget-erreur-c1-a2, c1-intervalles, c1-gbm-global\}.md} ;
+DEC \texttt{v2/docs/lab/decisions.md} ; OPEN \texttt{v2/docs/lab/open.md} ; TEX
+\texttt{v2/papers/axe2-methodes/main.tex} ; OUT \texttt{v2/methodes/out/}. \enquote{L.} renvoie au numéro de
+ligne au 2026-11-15. Provenance : \mesure{} mesuré, \derive{} dérivé, \suppose{} supposé.
+
+\makeatletter
+\def\metIncHead{%
+\textbf{Grandeur} & \textbf{Fichier 1 (valeur)} & \textbf{Fichier 2 (valeur)} & \textbf{Valeur retenue et pourquoi} \\
+\midrule}
+\def\metIncBody{%
+MAPE A2, banc N1 privé & \texttt{OUT/verdicts\_prive.json}, TEX \texttt{tab:prive} : 8,57\mesure{} (2026-11-14) & \texttt{OUT/budget\_erreur.json}, \texttt{OUT/c1\_gbm\_verdicts.json} : 8,60\mesure{} (2026-11-15) & 8,60 : table privée actuelle, deux recalculs concordants. Écart dû à la table SF modifiée (R-bud) ; 8,57 en note seulement. \\
+MAPE C1, banc N1 privé & \texttt{OUT/coh\_verdicts.json}, TEX : 7,73\mesure{} & \texttt{OUT/budget\_erreur.json} : 7,76\mesure & 7,76, même raison. \\
+Tendance et persistance, banc N1 & \texttt{OUT/verdicts\_prive.json} : 9,30 et 9,92\mesure & \texttt{OUT/c1\_gbm\_verdicts.json}, \texttt{c1\_gbm\_cellules.csv} : 9,32 et 9,94\mesure & 9,32 et 9,94 avec la référence du 15 ; même cause (SF). Tendance SF 14,23 (R-meth) contre 14,29 (R-gbm). \\
+$\Delta$ GBM $-$ C1 & R-gbm L.31, DEC : $+2{,}42$ $[+1{,}49\,;\,+3{,}70]$\mesure{} (C1 du 14, GBM du 15) & Recalcul sur un même millésime : $+2{,}39$\derive{} (10,15 $-$ 7,76) & $+2{,}39$ en point, sans IC : les erreurs par couple de C1 du 15 (\texttt{budget\_erreurs.parquet}) ne sont pas versionnées. Le verdict ne change pas. \\
+Référent du test GBM & R-gbm L.164 : \enquote{A2 reste la meilleure méthode au total} & R-gbm L.25--34 (encadré), DEC : C1 7,73 meilleur et servi & C1 : meilleure MAPE et modèle servi ; la phrase de L.164 est périmée. \\
+Fourchette affichée par la carte & DEC, entrée \enquote{C1 servi} : $\pm$ pente $\times h \times 1{,}6$ (\texttt{OUT/c1\_pente.json}) & DEC du 2026-11-15 et R-int L.118--119 : \enquote{la bande affichée reste celle des tirages de C1} & Tranché : \texttt{v2/prototype/server.py} (l.~9 et 158--180) calcule la fourchette comme pente d'erreur de C1 $\times h \times 1{,}6$ (\texttt{methodes.c1\_jumeau.pente}). La phrase « tirages de C1 » est périmée. \\
+PIT de l'APC, classes extrêmes & R-apc L.59--61 : 594 et 416\mesure & R-coh L.91--92 : 594 et 395\mesure & 416 : rapport de l'APC, produit avec \texttt{OUT/apc\_verdicts.json} ; 395 peut venir du rejeu du banc de cohortes. Non vérifié dans les JSON. \\
+Couverture 80\,\% de l'APC & R-apc L.57, R-coh : 50\,\%\mesure & TEX, table cohortes : 51\,\% & 50\,\%, valeur des rapports ; 51 non retrouvé. \\
+Nombre de cellules du budget & \texttt{OUT/budget\_erreur.json} : \texttt{"cellules": 11} & Protocole N1, \texttt{couples\_dep\_cellule} = 2\,056 : 22 cellules\mesure & 22. \texttt{budget\_erreur.py}, fonction \texttt{main}, divise le nombre de groupes par le nombre de modèles (2)\derive. \\
+Signe des gains d'oracle & R-bud L.6, DEC : \enquote{$-2{,}60$ $[2{,}20\,;\,3{,}05]$} & \texttt{OUT/budget\_erreur.log} : \enquote{gain $+2{,}60$} & $+2{,}60$ écrit comme un gain positif ; l'IC est positif. \\
+Étendue des variantes & R-bud L.23, L.28 : \enquote{toutes les variantes tiennent dans 0,4 point} & TEX \texttt{tab:prive} : A2 8,57 à A3 9,00 ; B4 8,32\mesure & 0,43\derive{} (A2--A3), 0,68\derive{} avec B4 ; 1,27\derive{} avec C1, absent de \texttt{tab:prive}. \\
+Durée de la calibration par simulation, étape 2 & R-coh L.133 : $\approx$ 3 h 30\mesure & R-coh L.188 : $\approx$ 5 h 30\mesure & Non tranché ; aucun journal horodaté complet relu. \\
+Part locale de l'erreur quadratique de C1 & R-bud : 85\,\% & \texttt{OUT/budget\_erreur.json} : $0{,}446 + 0{,}395 = 0{,}841$\mesure & 84\,\% (JSON). La part R (6\,\% dans R-bud) vaut $1{,}6 + 4{,}6 = 6{,}2$\,\% : cohérent à l'arrondi. \\
+Affichage communal & R-com L.14, L.295--299 : règle provisoire IDE 1--50 avec K2 & R-com L.259--261, DEC (N10) : \enquote{l'affichage reste au département} & Département : décision postérieure, après K3--K5. \\
+Total départemental de K3 & DEC L.2988--2990, OPEN L.162 : tirages de C1, passage RPPS $\to$ CartoSanté & Dérivation K3 et TEX L.400--402 : total de K sur CartoSanté & Total de K : c'est ce qui a été inscrit et passé. La phrase de TEX sur \enquote{les tirages départementaux de C1} décrit un plan non réalisé. \\
+Dépôt d'A2 & DEC L.2675--2677 : A2 renversé si \enquote{le dépôt 2027} ne bat pas A0 ; OPEN L.65 : dépôt \enquote{A0 et A2} & DEC L.2844--2867, \texttt{v2/validation/depot/} : A0, C1, K4, K5 seulement & A2 n'est pas déposé ; son critère de renversement n'est pas testable en 2027. \\
+Questions ouvertes déjà traitées & OPEN L.104, L.106, L.107, L.132, L.162, L.166 : ouvertes & Rapports R-coh, R-com : étape 2, Laplace, calibration 5 $\times$ 2 $\times$ 200, dépôt C1, K3 faits & Faits ; OPEN n'est pas à jour. \\
+Familles mesurées & TEX L.69--73 : cohortes bayésiennes \enquote{pas encore mesurées} & TEX § cohortes (L.226--383) : mesurées & Mesurées ; phrase périmée (errata de l'article). \\
+Origine des nombres de l'article & TEX L.44 : \enquote{tous viennent de} R-meth & TEX : nombres de R-apc, R-coh, R-com & Plusieurs rapports ; phrase périmée. \\
+Versionnement du code & TEX L.495--496 : \enquote{aucun commit au 2026-11-14} & \texttt{git log} : commits 4a4f54c, 6f7c25c, 70f8bc9 & Code versionné ; phrase périmée. \\
+Dépôt 2027--2030 & TEX L.524--525 : \enquote{déposer les prévisions} à faire & TEX L.515 et DEC : dépôts faits & Fait. \\
+Origines du banc & TEX L.18 : \enquote{origines glissantes 2016--2025} & DEC, N1 ; R-coh : à $h = 5$, origines 2016--2021 & 2016--2021 à $h = 5$ ; 2016--2025 couvre $h = 1$. \\
+Dentistes contre la tendance & TEX L.300--301 : la référence gagne sur 2 origines sur 6 & R-meth L.83 : A0 2/6, A2 3/6\mesure & Cohérent ; l'article omet A2. \\
+Levier de la rétention 60+ & DEC L.2711--2717 : A3 rejeté, remplacé par l'APC & DEC L.2792--2793 : levier \texttt{tendance\_60plus} gardé ($\lambda = 0$) & Les deux : la méthode est rejetée, le levier reste disponible à 0 par défaut. \\
+Temps de recalcul & TEX L.265 : 14 à 40\mesure{} ms (A0, variantes) & DEC : 280 à 330\mesure{} ms (C1 servi, tous leviers) & Deux mesures de deux objets ; les deux sont citées avec leur objet. \\
+Persistance contre A2 à $h \ge 8$ & TEX L.500 : \enquote{le stock-flux bat les références naïves} & \texttt{OUT/c1\_gbm\_verdicts.json} : persistance 13,56 et 16,06 contre A2 14,33 et 17,59\mesure & Vrai à $h = 5$ seulement ; à $h \ge 8$ la persistance est devant (sans IC). \\
+Biais national SF & R-coh L.69 : A0 $+7{,}64$\,\%\mesure & \texttt{OUT/c1\_gbm\_verdicts.json} : A2 $+7{,}52$\,\%\mesure{} (millésime du 15) ; TEX : $+7{,}6 \to +3{,}0$ & Cohérent ; modèles et millésimes différents, à ne pas comparer. \\
+Clé et année d'Alexander et Alkema & TEX, \texttt{refs.bib} : clé \texttt{alexander2021bayesian}, accolade fermante en trop après l'entrée & Même entrée : \texttt{year = 2022}, \emph{Demography} 59(5) & 2022 (publication) ; la clé garde l'année de la prépublication arXiv. L'accolade en trop est ignorée par BibTeX. \\
+Fichiers d'erreurs par couple & Docstrings de \texttt{budget\_erreur.py} et \texttt{c1\_gbm.py} : écrivent \texttt{budget\_erreurs.parquet}, \texttt{c1\_gbm\_erreurs.parquet} & \texttt{OUT/} au 2026-11-15 : absents & Absents (ignorés par git) : les IC appariés GBM $-$ C1 sur le même millésime ne sont pas recalculables sans relancer. \\
+}
+\@ifundefined{endlongtable}{%
+  % Repli si longtable n'est pas chargé par le préambule : tableau non sécable.
+  {\scriptsize\sloppy\noindent
+  \refstepcounter{table}\label{met:tab:inc}Tableau~\thetable{} : incohérences entre fichiers pour le chapitre Méthodes.\par\medskip\noindent
+  \begin{tabular}{@{}p{0.15\textwidth}p{0.24\textwidth}p{0.24\textwidth}p{0.25\textwidth}@{}}
+  \toprule
+  \metIncHead
+  \metIncBody
+  \bottomrule
+  \end{tabular}\par}%
+}{%
+  {\scriptsize\sloppy
+  \begin{longtable}{@{}p{0.15\textwidth}p{0.24\textwidth}p{0.24\textwidth}p{0.25\textwidth}@{}}
+  \caption{Incohérences entre fichiers pour le chapitre Méthodes.}\label{met:tab:inc}\\
+  \toprule
+  \metIncHead
+  \endfirsthead
+  \toprule
+  \metIncHead
+  \endhead
+  \bottomrule
+  \endfoot
+  \metIncBody
+  \end{longtable}}%
+}
+\makeatother
+\endgroup

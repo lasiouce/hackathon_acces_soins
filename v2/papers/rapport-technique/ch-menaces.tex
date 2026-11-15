@@ -1,0 +1,65 @@
+\section{Menaces à la validité : synthèse}\label{sec:menaces-ref}
+
+Ce chapitre regroupe les menaces relevées dans les chapitres précédents, classées selon leur effet sur ce que le
+projet affirme. Chacune renvoie à sa section détaillée.
+
+\subsection{Sur la précision annoncée}
+\begin{itemize}
+\item \textbf{Petit échantillon temporel.} Les séries couvrent 2012 à 2026, soit au plus 15 années. Le banc
+  départemental compte 22 cellules profession × origine. Les intervalles de confiance sont obtenus par bootstrap des
+  départements, ce qui ignore la dépendance entre professions d'un même département et entre origines voisines. Les
+  intervalles annoncés sont donc probablement trop étroits\derive.
+\item \textbf{Dépendance au millésime.} Une révision de la table privée des sages-femmes a déplacé la MAPE de C1
+  de 7,73 à 7,76\,\%\mesure, et celle d'A2 de 8,57 à 8,60\,\%\mesure. Toute comparaison entre deux runs doit être
+  faite sur le même millésime (section~\ref{sec:methodes-ref}).
+\item \textbf{Bruit incompressible.} Le budget d'erreur attribue 3,11 points\mesure de MAPE au bruit de comptage.
+  Un modèle plus riche ne peut pas réduire cette part. Des gains annoncés au-delà de cette borne signaleraient un
+  surapprentissage.
+\item \textbf{Horizon.} La persistance bat A2 aux horizons 8 et 10 ans\mesure. Les sorties au-delà de dix ans ne
+  sont pas des prévisions.
+\end{itemize}
+
+\subsection{Sur le pré-enregistrement}
+\begin{itemize}
+\item Pour 6 protocoles sur 12, l'historique git ne prouve pas que le gel du protocole a précédé le calcul. De plus,
+  l'historique local a été réécrit au moins une fois (section~\ref{sec:validation-ref}).
+\item Les empreintes recalculées des protocoles gelés concordent toutes\mesure, ce qui garantit leur intégrité
+  depuis le gel, mais pas leur antériorité.
+\item Plusieurs tests ont été lancés sur les mêmes données. Aucune correction de multiplicité n'est appliquée
+  globalement ; seules certaines comparaisons utilisent Bonferroni.
+\end{itemize}
+
+\subsection{Sur les mécanismes et les leviers}
+\begin{itemize}
+\item \textbf{Aucun levier validé de bout en bout.} Le test en différence de différences sur les infirmiers a
+  échoué deux fois. Les effets de levier affichés sont des conséquences du modèle, pas des effets mesurés.
+\item \textbf{Paramètres supposés.} Une partie des hyperparamètres reste supposée ou introuvable après la relecture
+  intégrale des sources (section~\ref{sec:parametres-ref}). Le paramètre $\theta = 0{,}80$ est utilisé par défaut,
+  alors que son protocole le déclare non interprétable.
+\item \textbf{Pas de rétroaction.} L'effectif ne réagit ni au besoin ni à la densité : l'effet de la densité sur les
+  installations mesuré par le protocole N9 est nul. Un transfert de tâches ou une politique d'attractivité ne
+  modifie donc pas l'effectif projeté.
+\end{itemize}
+
+\subsection{Sur les données}
+\begin{itemize}
+\item \textbf{Définition du secteur privé.} La séparation public/privé repose sur des fourchettes, pas sur un
+  comptage direct ; la largeur de la fourchette dépend de la profession (section~\ref{sec:donnees-ref}).
+\item \textbf{Petits effectifs.} Au grain communal, la plupart des cellules comptent moins de cinq personnes : le
+  signal y est dominé par le bruit, et ces cellules posent un problème de confidentialité
+  (section~\ref{sec:conformite-ref}).
+\item \textbf{Ruptures de série.} Les ruptures dans les sources (par exemple la série BTS des infirmiers en 2022)
+  et les changements de millésime peuvent créer des sauts que le modèle prend pour des tendances.
+\end{itemize}
+
+\subsection{Sur la couche de langage et l'assistant}
+\begin{itemize}
+\item Le score du compilateur sur le seul jeu resté entièrement à l'aveugle (70\,\%\mesure) est inférieur au score
+  agrégé affiché ailleurs (77\,\%) ; les jeux précédents ont servi au réglage.
+\item L'apport du LLM face aux réponses déterministes n'a jamais été mesuré. Un cas observé montre l'assistant
+  affirmant un effet nul qui n'a pas été estimé (section~\ref{sec:produit-ref}).
+\end{itemize}
+
+\subsection{Sur l'évaluation du projet lui-même}
+Les notes de la grille du jury (64/100) sont des estimations produites par des agents qui jouaient les jurés. Ce ne
+sont pas des mesures ; seuls les contrôles qu'elles citent (latences, recette, compilateur) sont mesurés.

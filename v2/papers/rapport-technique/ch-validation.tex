@@ -1,0 +1,441 @@
+% Chapitre « Validation » (axe 3). Sources : v2/docs/lab/reports/2026-11-14-axe3-*.md,
+% v2/papers/axe3-validation/main.tex, v2/validation/preregistered/ (lecture seule),
+% v2/docs/lab/decisions.md, v2/docs/lab/open.md, historique git. État relu le 2026-11-15.
+\section{Validation}\label{sec:validation-ref}\label{val:sec}
+\begingroup\setlength{\emergencystretch}{3em}% local à ce chapitre
+
+Ce chapitre décrit comment le jumeau a été jugé, ce que les douze protocoles de l'axe~3 ont
+établi, et ce qu'ils n'établissent pas. Le détail de chaque protocole est dans les rapports
+\texttt{v2/docs/lab/reports/2026-11-14-axe3-n*.md}, abrégés ici \texttt{R/n1} à \texttt{R/n12}.
+Le journal des décisions \texttt{v2/docs/lab/decisions.md} est abrégé \texttt{D}, l'article
+\texttt{v2/papers/axe3-validation/main.tex} est abrégé \texttt{A}, et le registre des questions
+ouvertes \texttt{v2/docs/lab/open.md} est abrégé \texttt{O}. Les numéros de ligne renvoient à
+l'état du 2026-11-15.
+
+\paragraph{Convention.} Chaque nombre porte sa provenance : \mesure{}~mesuré (par le projet ou
+par la source citée), \derive{}~dérivé, \suppose{}~supposé (un choix, un seuil). Les années, les
+identifiants (N1, K3, empreintes, commits) et les dates de calendrier ne sont pas étiquetés. Les
+heures de commit sont lues dans git (\mesure). Les heures de gel « déclarées » sont celles que
+donnent les rapports ; elles n'ont pas de preuve indépendante.
+
+\subsection{Démarche}\label{val:demarche}
+
+\paragraph{Pourquoi pré-enregistrer.} Le premier backtest du projet (K1, version~1) a retenu la
+meilleure de trois variantes après avoir vu les résultats, pour un écart de \num{0.1}\mesure{}
+point de MAPE (\texttt{A} l.58--62). C'est un biais de sélection. L'axe~3 inverse l'ordre : pour
+chaque niveau de validation, un protocole écrit l'hypothèse, la statistique, le seuil et le test
+qui le falsifierait, puis il est gelé avant tout calcul qui le concerne
+(\texttt{v2/docs/lab/reports/2026-11-14-axe3-plan-validation.md}).
+
+\paragraph{Gel par empreinte.} Une copie de chaque protocole est placée dans
+\texttt{v2/\allowbreak validation/\allowbreak preregistered/}, et son empreinte SHA-256 est inscrite. Cette copie ne se
+modifie plus ; la section « Résultat » est ajoutée au rapport, pas à la copie gelée. Le
+2026-11-15, les \num{13}\mesure{} empreintes (plan et N1 à N12) ont été recalculées : toutes
+concordent avec les valeurs inscrites (section~\ref{val:integrite}). Les copies gelées ne
+diffèrent des rapports que par des chemins de liens relatifs, l'en-tête de N3 et la section
+« Résultat » ajoutée ensuite (comparaison de \texttt{v2/\allowbreak validation/\allowbreak preregistered/} et de \texttt{v2/\allowbreak docs/\allowbreak lab/\allowbreak reports/}).
+
+\paragraph{Baselines naïves.} Toute affirmation de précision se mesure contre la meilleure de deux
+références naïves, la persistance (dernier effectif observé) et la tendance linéaire. C'est une
+règle du projet (\texttt{CLAUDE.md}, « Accuracy claims need a backtest against a naive
+baseline »). Pour N1, la statistique est
+$\Delta = \mathrm{MAPE}(\text{candidat}) - \mathrm{MAPE}(\text{meilleure naïve})$, et le
+candidat gagne si la borne haute de l'IC à 95~\% est négative (\texttt{R/n1} l.94--106). Pour les
+prévisions probabilistes (N6, N7-C, N8), la statistique est l'écart de CRPS sur $\log N$
+\citep{gneiting2007jasa}, et la calibration se lit par la couverture et le PIT
+\citep{gneiting2007jrssb}. La SBC \citep{talts2018sbc} contrôle l'inférence dans des mondes
+simulés.
+
+\paragraph{Niveaux.} Les douze protocoles couvrent la prévision à 10\suppose{}~ans au plus (N1),
+la cohérence à 2050 (N2), l'effet d'un levier (N3, N7-A), l'échelle communale (N4, N10 à N12),
+des mondes simulés à vérité connue (N5), la prévision probabiliste (N6, N7-C, N8) et le signe des
+boucles de rétroaction (N9). Les tableaux~\ref{val:tab-protocoles-a} et~\ref{val:tab-protocoles-b}
+les résument. La colonne « Gel » donne l'heure déclarée, puis l'heure du commit qui contient la
+copie gelée.
+
+\begin{table}[p]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.5cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{2.1cm}@{}}
+\toprule
+& \textbf{Hypothèse} & \textbf{Statistique et seuil} & \textbf{Gel} & \textbf{Résultat} & \textbf{Verdict} \\
+\midrule
+N1 & La variante par défaut prévoit l'effectif départemental mieux que la meilleure naïve &
+$\Delta$ MAPE à $h = 5$\suppose, dép.\ avec $N \ge 30$\suppose ; bootstrap de
+\num{2000}\suppose{} tirages ; gagne si borne haute $< 0$ &
+02:54 décl. ; 03:25:50\mesure{} (316a93d), avant le calcul &
+MAPE \num{8.68}\mesure{}~\% contre \num{9.30}\mesure{} (tendance) ; $\Delta = \num{-0.63}$
+$[\num{-0.97} ; \num{-0.27}]$\mesure. Par origine : \num{+0.10}\mesure{} (2016),
+\num{-0.22}\mesure{} (2018), \num{-1.22}\mesure{} (2021) &
+\textbf{passé} au poolé, classement instable ; dépôt \textbf{en attente des données 2027} \\
+\addlinespace
+N2 & (A) reproduire DD76 en ratios $N(t)/N(2020)$ ; (B) cas limites L1--L3 &
+A : $|\text{écart}| \le 2$\suppose{}~\% en 2030, $\le 3$\suppose{}~\% en 2040 et 2050 ; B : écart
+$\le 10^{-9}$\suppose{} (L1, L3), $\le 1$\suppose{}~\% (L2) &
+02:54 décl. ; 03:25:50\mesure, avant A (04:46\mesure) et B (08:08\mesure) &
+A, forme affaiblie : 2050 CD \num{-14.1}\mesure, PH \num{-15.0}\mesure, SF
+\num{-17.4}\mesure{}~\% ; B : L1 écart 0\mesure, L2 \num{-0.05} à \num{-0.46}\mesure{}~\% ;
+ER~1319 : \num{-25.2}\mesure{}~\% en 2050 &
+A \textbf{échoué} (forme fidèle \textbf{non jugeable}) ; B \textbf{passé} ; aucun chiffre 2050
+citable \\
+\addlinespace
+N3 & E1 : la régulation 2009/2012 en zone~5 freine les IDE libéraux ($\beta < 0$) ; E2 : pente
+des kinés négative en marche, remontée à l'arrêt &
+T1 Hotelling $p \ge \num{0.10}$\suppose{} ; T2 placebo de date, IC $\ni 0$ ; T3--T4 placebos ;
+T5 IC $< 0$ ; $\theta$ interprété seulement si T1--T4 passent &
+02:54 décl. ; copie et résultats \textbf{dans le même commit} 316a93d &
+E1 : T1 $p = \num{0.043}$\mesure{} ; effet \num{-30.3} $[\num{-34.1} ; \num{-26.4}]$\mesure{}
+log-points ; $\theta = \num{0.80}$ $[\num{0.74} ; \num{0.87}]$\mesure. E2 : écart des pentes
+\num{+3.1} $[\num{+1.1} ; \num{+5.1}]$\mesure{} pts/an &
+E1 \textbf{échoué} (levier IDE non validé) ; E2 \textbf{passé} au dép. ; $\theta$ \textbf{non
+jugeable} \\
+\addlinespace
+N4 & L'erreur communale à 5~ans décroît avec la taille ; $N_{\min} \ge 16$\derive &
+$N_{\min}$ : P80 de $|$erreur$| \le 25$\suppose{}~\% ; bande P10--P90 couvrant
+$[75 ; 85]$\suppose{}~\% \emph{dans chaque classe} &
+02:54 décl. ; 03:25:50\mesure, avant le résultat (08:08\mesure) &
+$N_{\min} = 51$\mesure{} (21\mesure{} sans les kinés) ; bande calibrée dans 14\mesure{} classes sur
+21\mesure{} ; une inversion de monotonie\mesure{} &
+$N_{\min}$ \textbf{passé} ; bande \textbf{échoué} ; sous oracle seulement \\
+\addlinespace
+N5 & Monde conforme (M1, M3) : variante exacte ; monde non conforme (M4--M7) : signe du biais
+prévisible &
+M1, M3 : $|$erreur$| \le 1$\suppose{}~\% à $h = 15$\suppose{} ; signe dans $\ge 16$\suppose{}
+réplications sur 20\suppose{} ; M5 à 3\suppose{}~points de \num{-12.4}\suppose{}~\% &
+03:46 décl. ; 03:55:53\mesure{} (72812c8), avant les résultats &
+M1 max $4\cdot10^{-14}$\mesure{}~\% ; M3 9\mesure/20 sous 1~\% ; M4 \num{-34.5}\mesure{}~\%,
+0\mesure/20 ; M5 \num{-19.8}\mesure{}~\% ; M6, M7 20\mesure/20 &
+\textbf{échoué} (M3, M4, ampleur de M5) \\
+\addlinespace
+N6 & Bandes calibrées ; le candidat bat la naïve en CRPS &
+CRPS sur $\log N$, critère de N1 ; couverture à 80~\% dans $[75 ; 85]$\suppose{}~\% ; SBC,
+$p \ge \num{0.01}$\suppose{} (Bonferroni) &
+03:53 décl. ; 03:55:53\mesure, avant les résultats &
+279\derive{} cellules (origine 2021) ; $\Delta$CRPS $= \num{+0.0098}$
+$[\num{+0.0037} ; \num{+0.0161}]$\mesure{} ; couverture « 80~\% » de \num{55.6} à
+\num{70.3}\mesure{}~\% ; SBC entrées $p = 3\cdot10^{-46}$\mesure &
+\textbf{échoué} ; SBC de la rétention passée \\
+\bottomrule
+\end{tabular}
+\caption{Protocoles N1 à N6 : hypothèse, critère fixé d'avance, gel, résultat et verdict. Sources :
+\texttt{R/n1} l.94--166, \texttt{R/n2} l.55--188, \texttt{R/n3} l.107--224, \texttt{R/n4}
+l.71--170, \texttt{R/n5} l.42--113, \texttt{R/n6} l.47--157 ; heures de commit lues par
+\texttt{git log -- v2/validation/preregistered}.}
+\label{val:tab-protocoles-a}
+\end{table}
+
+\begin{table}[p]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.5cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{2.1cm}@{}}
+\toprule
+& \textbf{Hypothèse} & \textbf{Statistique et seuil} & \textbf{Gel} & \textbf{Résultat} & \textbf{Verdict} \\
+\midrule
+N7 & Addendum : A, DiD IDE au sein des bassins de vie ; B, stabilité de N1 ; C, bande « pente » ;
+D, cibles DREES &
+A : seuils de N3, $Y \ge 5$\suppose{} ; B : même signe en 2016, 2018, 2021 ; D : résidu de Shapley
+$\le 25$\suppose{}~\% &
+04:37 décl. ; copie et résultats \textbf{dans le même commit} 6f5e034 &
+A : T1 $p = \num{0.025}$\mesure, effet \num{-32.2}\mesure{}~\% ; C : couverture « 80~\% »
+$\approx 96$\mesure{}~\% ; D2 : résidu 16\derive{}~\% &
+A \textbf{échoué} ; B instable ; C CRPS passé, calibration \textbf{échouée} ; D1 \textbf{échoué},
+D2 \textbf{passé} \\
+\addlinespace
+N8 & Bande $\log N \sim \mathcal N(\log \hat N, s^2 h)$ calibrée (forme suggérée par N7-C) &
+$h = 5$\suppose, origines 2017--2021, $N \ge 30$\suppose{} ; couverture à 80~\% dans
+$[75 ; 85]$\suppose{}~\% et à 50~\% dans $[44 ; 56]$\suppose{}~\% &
+08:06 décl. ; copie et résultats \textbf{dans le même commit} 03a67d8 &
+\num{1581}\mesure{} cellules (SF, CD, PH, IDE) ; couverture \num{49.2}\mesure{}~\% et
+\num{75.9}\mesure{}~\% ; $\Delta$CRPS $= \num{-0.0045}$\mesure &
+\textbf{passé} dans l'échantillon, à \num{0.9}\derive{}~point de la borne ; \textbf{en attente des
+données 2027} \\
+\addlinespace
+N9 & B2 : densité $\to$ installations des moins de 40~ans, $\beta < 0$ ; B1 : densité $\to$
+rétention des 45--54~ans, $\beta > 0$ &
+MCO à effets fixes, IC à 95~\% CR1 ; confirmé ou contraire selon l'IC entier ; placebo autres
+professions &
+08:10 décl. ; copie et résultats \textbf{dans le même commit} f1f4f41 &
+B2 : IDE \num{-1.52} $[\num{-4.05} ; \num{+1.01}]$\mesure, MK et CD nuls\mesure{} ; B1 IDE
+\num{+0.11} $[\num{+0.05} ; \num{+0.18}]$\mesure, placebo \num{-0.00}\mesure &
+B2 \textbf{échoué} (signe non établi) ; B1 \textbf{passé} pour les IDE seuls, corrélationnel \\
+\addlinespace
+N10 & Au moins un grain infra-départemental a une bande P10--P90 calibrée &
+couverture dans $[75 ; 85]$\suppose{}~\% dans chaque classe d'au moins 30\suppose{} unités &
+08:31 décl. ; copie et résultats \textbf{dans le même commit} 167d15d &
+aucun grain fiable ; couverture par classe 94\mesure{}~\% (IDE, 1--2 pros) à 22--59\mesure{}~\%
+(plus de 100) ; K3 échoue aussi &
+\textbf{échoué} \\
+\addlinespace
+N11 & K4 passe N10 puis l'origine réservée 2021, $h = 4$ & seuils de N10 ; les deux étapes &
+08:50 décl. ; 08:50:22\mesure{} (a00cd67), avant le jugement (08:54\mesure) &
+étape~1 : 2 à 6\mesure{} classes hors bande par grain ; étape~2 : 3 à 6\mesure &
+\textbf{échoué} ; dépôt K4 \textbf{en attente des données 2027} \\
+\addlinespace
+N12 & K5 passe N10 puis l'origine réservée 2022, $h = 3$ & seuils de N10 ; dépôt écrit avant le
+verdict &
+09:05 décl. ; 09:05:46\mesure{} (2230ed0), \textbf{après} les soumissions (09:04:47 décl.) &
+IDE au BV \num{65.9}\mesure{}~\%, EPCI \num{59.1}\mesure{}~\% ; 3 à 7\mesure{} classes hors bande &
+\textbf{échoué} ; dépôt K5 \textbf{en attente des données 2027} \\
+\bottomrule
+\end{tabular}
+\caption{Protocoles N7 à N12. Sources : \texttt{R/n7} l.21--220, \texttt{R/n8} l.28--70,
+\texttt{R/n9} l.20--147, \texttt{R/n10} l.61--182, \texttt{R/n11} l.24--109, \texttt{R/n12}
+l.19--83 ; heures de commit lues dans git.}
+\label{val:tab-protocoles-b}
+\end{table}
+
+\paragraph{Bilan.} Aucun protocole ne passe sans réserve. Les seules affirmations admises sont
+étroites : la variante par défaut est meilleure que la tendance à l'origine 2021 et égale
+ailleurs (\texttt{D} l.1828--1830) ; le moteur respecte ses cas limites analytiques
+(\texttt{R/n2} l.165--188) ; la prédiction marche/arrêt des kinés tient au département
+(\texttt{R/n3} l.138--146) ; la bande en $\sqrt h$ est calibrée dans l'échantillon pour SF, CD, PH
+et IDE (\texttt{R/n8} l.45--70). Ces verdicts sont rapportés tels que les protocoles les donnent.
+L'un d'eux n'est pas qualifié ainsi dans les rapports : l'échec du critère de bande de N4, qui
+est rapporté (14\mesure{} classes sur 21\mesure) sans le mot « échoue » (annexe~\ref{val:ann}).
+
+\subsection{Intégrité du pré-enregistrement}\label{val:integrite}
+
+Le pré-enregistrement ne vaut que si l'on peut prouver que le gel précède le calcul. Dans ce
+dépôt, la seule preuve disponible est l'historique git. Elle est insuffisante pour la moitié des
+protocoles.
+
+\paragraph{Six protocoles sur douze n'ont pas d'antériorité prouvée par git.}
+Sur 12\mesure{} protocoles, 6\mesure{} ont un gel dont git ne montre pas qu'il précède le calcul
+(lecture de \texttt{git log -- v2/validation/preregistered}, 2026-11-15).
+\begin{itemize}
+  \item \textbf{N3.} La copie gelée et \texttt{out/did\_results.json} entrent dans le même commit
+        316a93d, à 03:25:50\mesure. Le rapport date le calcul vers « 03:0x » (déclaré), donc avant
+        le premier commit. Le gel de 02:54 repose sur des dates de fichiers et sur une
+        auto-déclaration. La copie gelée porte de plus l'en-tête « lancé pour les IDE ».
+  \item \textbf{N7.} Copie et résultats dans le même commit 6f5e034, à 04:46:59\mesure. Le gel
+        déclaré (04:37) est postérieur au résultat de N3, ce qui est assumé : N7 est un addendum.
+  \item \textbf{N8.} Copie et résultats dans le même commit 03a67d8, à 08:08:49\mesure.
+  \item \textbf{N9.} Copie et résultats dans le même commit f1f4f41, à 08:12:33\mesure.
+  \item \textbf{N10.} Copie et résultats dans le même commit 167d15d, à 08:33:07\mesure.
+  \item \textbf{N12.} La copie est commitée seule (2230ed0, 09:05:46\mesure), avant le jugement.
+        Mais les soumissions de K5, datées 09:04:47 et 09:05:00 (déclaré), précèdent ce commit. Le
+        protocole n'est donc pas prouvé antérieur aux soumissions qu'il juge.
+\end{itemize}
+Pour les six autres (N1, N2, N4, N5, N6, N11), la copie gelée est commitée avant le commit des
+résultats. C'est une preuve d'ordre relative, à la réserve suivante près.
+
+\paragraph{L'historique a été réécrit.} Le 2026-11-14, cinq commits ont été réécrits avec
+l'accord de l'utilisatrice ou de l'utilisateur, par \texttt{git commit-tree} et
+\texttt{git update-ref}, pour en retirer une ligne d'attribution, à arbres identiques
+(\texttt{D} l.1158--1164). L'un d'eux, b2756d8 devenu 72812c8, est le commit qui gèle N5 et N6.
+Ses dates d'auteur et de commit ont été conservées (03:55:53\mesure{} toutes deux, lues par
+\texttt{git log}). Cela montre que les dates git se fixent librement : un historique réécrit peut
+porter n'importe quelle date. Aucun horodatage externe n'est mentionné dans les fichiers lus. La
+preuve d'ordre de git est donc une preuve de bonne foi, pas une preuve opposable. Par ailleurs,
+la copie gelée du plan a une date de modification à 10:45 (lue par \texttt{stat} sur le fichier) ; son empreinte
+est intacte.
+
+\paragraph{Les empreintes concordent toutes.} Le 2026-11-15, les 13\mesure{} empreintes SHA-256
+des copies gelées ont été recalculées (\texttt{shasum -a 256 v2/validation/preregistered/*.md}).
+Les 12\suppose{} premiers caractères égalent ceux qui sont inscrits, pour le plan
+(\texttt{0108455d34aa}) et pour N1 à N12. Les empreintes des dépôts de prévision concordent aussi :
+\texttt{ca036374d216} (variante par défaut), \texttt{039d21878b7a} (K4), \texttt{0169b97d4fac} (K5),
+\texttt{4f7400845340} (A0 de l'axe~2). Ce contrôle prouve que les copies n'ont pas changé depuis
+l'inscription de l'empreinte. Il ne prouve pas que l'empreinte a été inscrite avant le calcul :
+elle l'est dans des fichiers du même dépôt.
+
+\paragraph{Mesures proposées pour les prochains dépôts.} Les prix sont proposés ici ; ils sont
+supposés\suppose.
+\begin{enumerate}
+  \item \textbf{Horodatage externe.} Soumettre l'empreinte de chaque copie gelée à un service
+        d'horodatage indépendant (jeton RFC~3161 d'une autorité d'horodatage, ou ancrage
+        OpenTimestamps) au moment du gel, et commiter le jeton. Prix : $\sim 10$\suppose{}~min
+        Claude par lot, plus la création d'un compte si le service l'exige (décision humaine).
+  \item \textbf{Pousser le gel seul.} Commiter et pousser la copie gelée sur le dépôt distant,
+        dans un commit qui ne contient rien d'autre, avant de lancer le calcul. L'heure de
+        réception par l'hébergeur sert de second témoin. Prix : nul en temps Claude ; exige une
+        autorisation de push à chaque gel.
+  \item \textbf{Registre tiers.} Pour un protocole destiné à publication, déposer la copie sur un
+        registre de pré-enregistrement public (par exemple OSF Registries), qui date le dépôt
+        hors du contrôle de l'équipe. Prix : temps humain, quelques minutes par protocole.
+  \item \textbf{Ordre vérifiable par script.} Ajouter un contrôle qui refuse le commit d'un
+        fichier de résultats si la copie gelée correspondante n'est pas déjà dans un commit
+        antérieur. Prix : $\sim 20$\suppose{}~min Claude.
+  \item \textbf{Ne jamais réécrire} un commit qui contient une copie gelée, ou consigner
+        l'ancienne et la nouvelle empreinte de commit dans le registre externe.
+\end{enumerate}
+
+\subsection{Ce qui est validé, ce qui ne l'est pas}\label{val:perimetre}
+
+\paragraph{Prévision départementale à 10~ans au plus.} Validée au poolé : $\Delta = \num{-0.63}$
+$[\num{-0.97} ; \num{-0.27}]$\mesure{} au périmètre privé (\texttt{R/n1} l.160--166). La victoire
+repose sur la seule origine 2021 ; en 2016 et 2018, l'IC contient 0\mesure, et le $\tau$ de Kendall
+entre classements d'origines vaut au plus \num{0.29}\mesure{} (\texttt{R/n7} l.118--220). Le
+garde-fou à $h = 1$ du protocole n'est rapporté dans aucun fichier lu.
+
+\paragraph{Le grain sous le département n'est pas validé.} Aucune variante communale n'a de bande
+calibrée à la commune, au bassin de vie ou à l'EPCI : ni les estimateurs de référence ni K3
+(N10), ni K4 (N11), ni K5 (N12) (\texttt{R/n10} l.84--182, \texttt{R/n11} l.57--109,
+\texttt{R/n12} l.43--83). Le seuil $N_{\min} = 51$\mesure{} de N4 est obtenu sous un oracle
+départemental qui connaît la vraie valeur de la cible ; la version à projection réelle n'est pas
+lancée (\texttt{O} l.138). En conséquence, l'affichage retenu est le département ; à la commune,
+seul l'observé s'affiche (\texttt{D} l.2151--2194). Les sages-femmes et les pharmaciens n'ont pas
+de série communale.
+
+\paragraph{Aucun levier n'est validé de bout en bout.} Le levier de régulation infirmière échoue
+deux fois au test de tendances parallèles fixé d'avance : $p = \num{0.043}$\mesure{} au
+département, $p = \num{0.025}$\mesure{} au bassin de vie, pour un seuil de \num{0.10}\suppose{}
+(\texttt{R/n3} l.165--224, \texttt{R/n7} l.123--153). L'effet estimé est grand
+(\num{-30.3}\mesure{} log-points), mais le design ne permet pas de l'attribuer. Seule la prédiction
+marche/arrêt des kinés passe, au département (écart des pentes \num{+3.1}\mesure{} pts/an), après
+l'annulation par le Conseil d'État \citep{ce2014mk}. Au bassin de vie, son test de tendances
+parallèles échoue ($p = \num{0.059}$\mesure). Le résultat IRDES sur les infirmières
+\citep{irdes270} reste une source externe, pas une validation du module.
+
+\paragraph{$\theta = \num{0.80}$ est utilisé par défaut malgré un verdict « non interprétable ».}
+N3 n'autorise l'interprétation de $\theta = \beta_{\text{obs}}/\beta_{\text{mod}}$ que si T1 à T4
+passent ; T1 échoue, donc $\theta = \num{0.80}$ $[\num{0.74} ; \num{0.87}]$\mesure{} n'est pas
+interprété (\texttt{R/n3} l.189--191). Ce nombre est pourtant devenu le paramètre par défaut
+\texttt{theta} du module de régulation, étiqueté « supposé » (\texttt{D} l.1189--1192), avec une
+plage $[\num{0.5} ; 1]$\suppose{} (\texttt{D} l.1064). L'étiquette est honnête ; l'usage dépasse
+ce que le protocole autorise. Un utilisateur qui lit « \num{0.80} » doit savoir que ce nombre sort
+d'un design invalide. Deux faits limitent la portée : au département et au-dessus, la régulation
+par défaut n'a aucun effet, car les entrants bloqués restent dans la cellule (\texttt{D}
+l.1198--1200) ; à la commune, $\theta$ agit pleinement.
+
+\paragraph{2050 n'est pas validé.} Les cas limites analytiques L1 à L3 passent (\texttt{R/n2}
+l.165--188). Mais la reproduction du tendanciel DREES \citep{drees2021dd76}, jouée en forme
+affaiblie faute de série de quotas, échoue : \num{-14.1}\mesure, \num{-15.0}\mesure{} et
+\num{-17.4}\mesure{}~\% en 2050 pour CD, PH et SF (\texttt{R/n2} l.133--163). La comparaison à la
+projection infirmière \citep{er1319} échoue aussi (\num{-25.2}\mesure{}~\% en 2050). La forme
+fidèle de N2-A n'est pas jouée. L'hypothèse d'entrées domine l'écart : une variante « filière »,
+exploratoire, se place \num{+14} à \num{+15}\mesure{}~\% au-dessus de DD76. Selon la règle de N2,
+un échec bloque tout chiffre 2050 pour la profession : aucun chiffre 2050 n'est citable
+(\texttt{D} l.1841--1846).
+
+\paragraph{La bande des kinés n'est pas calibrée.} N8 calibre la bande en $\sqrt h$ pour SF, CD, PH
+et IDE seulement : les kinés ne figurent pas dans sa liste de professions (\texttt{R/n8} l.8
+et l.48). Le rapport ne donne pas la raison ; une raison plausible est qu'à $h = 5$ les kinés n'ont
+qu'une\derive{} origine jugeable, leur série RPPS commençant en 2017 (\texttt{A} l.127). Les bandes de N6 (trop étroites) et de N7-C (trop
+larges, $\approx 96$\mesure{}~\% pour « 80~\% ») échouent. Le rapport N10 (l.92) et l'article
+(\texttt{A} l.599--600) disent pourtant que l'affichage départemental porte « la bande $\sqrt h$
+calibrée de N8 » sans exclure les kinés. Pour eux, aucune bande départementale n'est calibrée.
+
+\paragraph{Le moteur sous bruit.} Le moteur est exact sans bruit (M1, écart maximal
+$4\cdot10^{-14}$\mesure{}~\%). Sous bruit de Poisson, il est biaisé : M3 a une MAPE départementale
+de \num{10.2}\mesure{}~\% pour un plancher de \num{5.7}\derive{}~\%, et la SBC des entrées échoue
+($p = 3\cdot10^{-46}$\mesure). Le mécanisme proposé est le plafonnement \texttt{min(r, 1)} des taux
+de rétention, l'excédent étant compté en entrées (\texttt{D} l.1847--1849).
+
+\paragraph{Boucles.} B1 (densité $\to$ rétention) n'est confirmé que pour les IDE libéraux, de façon
+corrélationnelle : \num{+0.11}\mesure{} sur l'échelle du protocole, soit $\approx +8$\derive{}~\% de
+rétention quand la densité double. B2 n'a de signe établi pour aucune profession
+(\texttt{R/n9} l.109--147). Rien n'est causal.
+
+\subsection{Le dépôt de prévision 2027}\label{val:depot}
+
+\paragraph{Ce qui est déposé.} Le 2026-11-14, la variante par défaut a déposé ses prévisions de
+l'origine 2026 pour 2027, 2028 et 2030, par profession et département, au périmètre privé, avec
+les quantiles 10 et 90~\% de la bande en $\sqrt h$ :
+\texttt{v2/\allowbreak validation/\allowbreak depot/\allowbreak jumeau\_taux\_locaux\_2026-11-14.parquet}, empreinte
+\texttt{ca036374d216} (\texttt{D} l.1964--1978). Totaux nationaux 2027 : CD
+\num{47835}\mesure, MK \num{104755}\mesure, PH \num{63311}\mesure, SF \num{13301}\mesure{} (sorties
+du modèle). Les infirmiers libéraux en sont exclus, leur série RPPS s'arrêtant en 2023. Les
+dépôts K4 (\texttt{039d21878b7a}) et K5 (\texttt{0169b97d4fac}) portent sur la commune. Le score
+sera calculé à la publication du RPPS 2027, attendue vers juillet 2027 \citep{drees2026demo}, sans
+toucher aux fichiers. C'est le seul test qui ne soit contaminé ni par K1 ni par le choix de la
+bande en $\sqrt h$.
+
+\paragraph{Limites.}
+\begin{itemize}
+  \item \textbf{Il ne jouera pas le critère principal.} Depuis l'origine 2026, les cibles 2027,
+        2028 et 2030 donnent $h = 1$, 2 et 4\derive. Le critère de N1 est à $h = 5$\suppose. Le
+        protocole N1 annonce pourtant un score « avec le même critère » (\texttt{R/n1}
+        l.115--116), ce qui est impossible. Il faudra déclarer, avant 2027, quel critère s'applique
+        à $h \le 4$.
+  \item \textbf{Sa composition est inversée par rapport à la calibration.} Il inclut les kinés,
+        dont la bande n'a jamais été calibrée, et exclut les IDE, que N8 a calibrés.
+  \item \textbf{Une seule origine.} Le score portera sur une origine et au plus trois horizons :
+        il dira si 2026 est une année « facile » ou non, pas si la méthode est stable.
+  \item \textbf{K4 et K5 ne peuvent plus être confirmés.} Leurs dépôts partent de l'origine 2025
+        et non 2026 (écart d'exécution déclaré). Ils mesureront une couverture, mais N11 et N12
+        ont déjà rendu un verdict d'échec.
+  \item \textbf{Calendrier.} La date de publication de CartoSanté 2027 est inconnue ; le prix du
+        score est $\sim 15$\suppose{}~min Claude, mais l'attente en temps du monde va au moins
+        jusqu'en juillet 2027 (\texttt{A} l.744).
+  \item \textbf{Nom sans préfixe.} Le fichier du dépôt garde un nom sans préfixe d'axe, contrairement
+        à la règle de \texttt{D} l.2377, et ce nom a déjà été écrasé une fois (\texttt{D}
+        l.2361--2373) ; son empreinte actuelle concorde avec celle inscrite.
+\end{itemize}
+
+\subsection{Menaces à la validité}\label{val:menaces}
+
+\paragraph{Antériorité des gels.} Voir la section~\ref{val:integrite} : 6\mesure{} protocoles sur
+12\mesure{} sans preuve git d'antériorité, historique réécrit, aucun horodatage externe.
+
+\paragraph{Fuite temporelle.}
+\begin{itemize}
+  \item N1 : les cibles 2023 et 2026 ont été vues par K1 ; le banc rétrospectif est en partie dans
+        l'échantillon de conception (\texttt{R/n1} l.137--140).
+  \item N8 : la forme en $\sqrt h$ a été suggérée par N7-C et testée sur les mêmes origines.
+  \item K3 a été inscrit à 08:41 (déclaré), après les résultats de référence de N10 (08:33\mesure),
+        et sa conception cite ces résultats (\texttt{D} l.3007--3009). K4 et K5 ont été conçus
+        après les jugements précédents : risque de sur-ajustement au juge.
+  \item Origines réservées : l'origine 2021 partage 4\derive{} années sur 5 avec une fenêtre vue,
+        l'origine 2022 3\derive{} sur 3. Ce sont des confirmations partielles, sur des périodes
+        où la tendance calibre déjà 8\mesure{} classes sur 8.
+  \item N2-A, variante filière : elle utilise des inscrits connus après 2020.
+  \item N4 : l'oracle départemental retire $\approx 8$\mesure{}~points de MAPE (K1) ; il sous-estime
+        l'erreur communale.
+\end{itemize}
+
+\paragraph{Cellules vues avant inscription.} N10 a été gelé après le passage de N4 sur les mêmes
+données communales, pour des origines qui se recouvrent (2014--2020) : l'échec de la bande dans les
+grandes classes était connu. N7-A a été écrit après le résultat de N3. La variante \texttt{vivier}
+a été évaluée sur une seule origine, hors pré-enregistrement (\texttt{D} l.1707--1711).
+
+\paragraph{Multiplicité.} 12\mesure{} protocoles et plusieurs dizaines de critères, sans
+correction de famille, sauf Bonferroni dans la SBC. Le registre N1 compte au moins 8\mesure{}
+estimateurs. Le levier IDE a été testé 2\mesure{} fois, les kinés 2\mesure{} fois, et cinq
+variantes communales (K à K5) ont été soumises. N9 fait 8\mesure{} tests de signe à 95~\%, soit
+$\approx \num{0.4}$\derive{} faux positif attendu sous $H_0$ ($8 \times \num{0.05}$) : le seul
+« confirmé », B1 pour les IDE, se lit avec cette réserve.
+
+\paragraph{Petits échantillons.} E1 repose sur $G = 59$\mesure{} départements, E2 sur 26 à
+29\mesure, B1 des sages-femmes sur 15\mesure. N6 n'est jugeable que sur une origine, trois
+professions et 279\derive{} cellules. À $h = 5$, N1 dispose de 6\derive{} origines pour SF, CD et
+PH, 3\derive{} pour les IDE et 1\derive{} pour les kinés. N5 utilise 20\suppose{} réplications.
+
+\paragraph{Intervalles probablement trop étroits.} Le bootstrap par département de N1 et N6
+ignore la corrélation entre origines et entre départements voisins (\texttt{R/n1} l.141--142). Un
+bootstrap par blocs est inscrit au registre (\texttt{O} l.67, $\sim 20$\suppose{}~min).
+
+\paragraph{Critères au bord du seuil.} N8 passe à \num{75.9}\mesure{}~\% pour une borne de
+75\suppose{}~\%. E1 échoue à $p = \num{0.043}$\mesure{} pour un seuil de \num{0.10}\suppose. Le
+test T4 au bassin de vie passe « de justesse » (\texttt{R/n7}).
+
+\paragraph{Écarts d'exécution déclarés.} N2-A en forme affaiblie ; N6 avec 100\mesure{} tirages
+au lieu de 200\suppose{} pour l'APC ; dépôts K4 et K5 à l'origine 2025 ; K5 avec un $\sigma_D$
+robuste, changé avant passage ; N5 avec deux précisions sur M4 fixées sans lecture des résultats
+(déclaré).
+
+\paragraph{Dérive des données après le gel.} La table privée des sages-femmes a été modifiée après
+N1 : la MAPE de A2 passe de \num{8.57} à \num{8.60}\mesure{} (\texttt{O} l.195). Les chiffres de N1
+ne se reproduisent plus exactement sur les données actuelles ; une relance coûte
+$\sim 10$\suppose{}~min machine.
+
+\paragraph{Identification des leviers.} La date du zonage Atlasanté \citep{atlasante2014zonage}
+n'est que « probablement 2012 », par déduction ; si elle est fausse, E1 et E2 tombent ensemble.
+Les dates d'effet viennent de sources secondaires. « Pas de régulation dentaire avant 2025 » est
+supposé. Le retour à la moyenne peut expliquer jusqu'à $\sim 1/7$\derive{} de l'effet IDE. Au
+bassin de vie, le débordement vers les communes voisines fait de $\beta$ une borne haute de
+l'effet sur le total. Une borne de sensibilité à la Rambachan--Roth \citep{rambachan2023} est
+rapportée dans l'article (\texttt{A} l.402).
+
+\paragraph{Différences de champ.} DD76 porte sur tous les modes d'exercice, le jumeau sur le
+privé ; ER~1319 sur les infirmières en emploi, le jumeau sur le RPPS libéral ; B2 sur CartoSanté,
+B1 sur le RPPS libéral et mixte.
+
+\paragraph{Seuils choisis, non dérivés.} 3\suppose{}~\% (N2), 25\suppose{}~\% (N4),
+$p \ge \num{0.10}$\suppose{} (N3), $[75 ; 85]$\suppose{}~\% et $N \ge 30$\suppose{} sont des
+choix. Un autre seuil changerait certains verdicts, en particulier N8.
+\endgroup

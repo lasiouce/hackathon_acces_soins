@@ -1,0 +1,33 @@
+\begin{abstract}
+Ce rapport rassemble, en un seul document, l'état du projet « jumeau numérique de l'offre de soins libérale » au
+15 novembre 2026, pour les équipes qui le reprendront : chercheurs, statisticiens et professionnels de la
+planification sanitaire.
+
+\paragraph{Le modèle.} On projette jusqu'en 2050 l'effectif du secteur privé (« libéral » au sens large) de cinq
+professions : sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et infirmiers. La
+projection porte sur chaque territoire, de la commune à la France. Elle simule des politiques publiques nationales
+exprimées comme des réglages datés d'hyperparamètres sourcés. Le modèle est un jumeau à état explicite
+(profession × territoire × âge × sexe × secteur), composé de modules de flux à contrat vérifiable. L'estimateur
+servi est un modèle de cohortes (C1).
+
+\paragraph{Le principal résultat de précision.} Au banc départemental à cinq ans, l'erreur absolue moyenne en
+pourcentage de C1 est de 7,76\,\%\mesure, contre 9,94\,\%\mesure pour la persistance et 9,32\,\%\mesure pour la
+tendance linéaire. Le budget d'erreur attribue 3,11 points\mesure au seul bruit de comptage, qui est
+incompressible. Trois familles de pistes n'ont pas battu C1 : des intervalles de prévision recalibrés (prévision
+conforme, réconciliation MinT), un gradient boosting global et un perceptron multicouche.
+
+\paragraph{Ce qui n'est pas acquis.} Plusieurs résultats sont négatifs et sont exposés comme tels :
+\begin{itemize}
+\item aucun chiffre à l'horizon 2050 n'est citable comme prévision ;
+\item aucun grain inférieur au département n'est calibré ;
+\item aucun levier n'est validé de bout en bout par une évaluation causale ;
+\item pour la moitié des protocoles pré-enregistrés, l'antériorité du gel sur le calcul n'est pas prouvable par
+  l'historique du dépôt.
+\end{itemize}
+
+\paragraph{Le reste du document.} Il couvre aussi l'interface, la couche de langage naturel et l'assistant, la
+conformité (RGPD, AIPD, règlement 2017/745), un inventaire chiffré des questions ouvertes et le programme du
+module de besoin de soins. Chaque nombre porte sa provenance : mesuré\mesure, dérivé\derive{} ou
+supposé\suppose. Les incohérences relevées entre les fichiers du dépôt sont listées en annexe, avec la valeur
+retenue.
+\end{abstract}

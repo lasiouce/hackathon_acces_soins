@@ -1,0 +1,43 @@
+\documentclass[11pt]{article}
+\input{../template/preamble}
+\usepackage{longtable,array,tabularx}
+\setcounter{tocdepth}{2}
+
+\title{Jumeau numérique de l'offre de soins libérale en France :\\
+rapport technique pour la reprise}
+\author[1]{Équipe hackathon-santé}
+\affil[1]{Dépôt \texttt{progdinh/hackathon\_acces\_soins}, dossier \texttt{v2/}}
+\date{Version du 15 novembre 2026}
+
+\begin{document}
+\maketitle
+\input{resume}
+\tableofcontents
+\clearpage
+
+\input{ch-introduction}
+\input{ch-donnees}
+\input{ch-parametres}
+\input{ch-jumeau}
+\input{ch-methodes}
+\input{ch-validation}
+\input{ch-sensibilite}
+\input{ch-produit}
+\input{ch-conformite}
+\input{ch-menaces}
+\input{ch-ouvertes}
+\input{ch-reproductibilite}
+
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{refs-a,refs-b,refs-c,refs-d,refs-e}
+
+\appendix
+\section{Incohérences relevées entre les fichiers du dépôt}\label{ann:incoherences}
+\input{annexe-inc-a}
+\input{annexe-inc-b}
+\input{annexe-inc-c}
+\input{annexe-inc-d}
+\input{annexe-inc-e}
+\input{annexe-index}
+\end{document}

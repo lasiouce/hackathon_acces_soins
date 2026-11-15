@@ -1,0 +1,530 @@
+% Chapitre : le jumeau numérique (axe 0).
+% Sources principales : v2/jumeau/ (code), v2/artifacts/a0_jumeau/results.json (run de jumeau.check du
+% 2026-11-15, 02:03), v2/docs/lab/reports/2026-11-14-jumeau-axe0.md, les trois revues adversariales
+% v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0{,-v2,-v3}.md et v2/papers/axe0-jumeau/main.tex.
+% Les valeurs anciennes qui circulent encore dans le dépôt sont relevées en annexe (ann:incoherences).
+\begingroup\sloppy\setlength{\emergencystretch}{3em}% coupures des chemins longs, local à ce fichier
+
+\section{Le jumeau numérique}\label{sec:jumeau-ref}\label{jum:sec}
+
+Le jumeau numérique est le moteur de projection commun à tous les axes. Il porte un état démographique
+explicite, des modules qui rendent des flux typés et des scénarios faits d'événements datés. Le code est dans
+\texttt{v2/jumeau/} ; les critères d'acceptation sont dans \texttt{v2/jumeau/check.py}, et leur dernier run est
+consigné dans \texttt{v2/artifacts/a0\_jumeau/results.json} (2026-11-15, 02:03). Sauf mention contraire, toutes
+les valeurs mesurées de ce chapitre viennent de ce fichier. Le contrat a été décidé le 2026-11-14 et corrigé
+après chaque revue (\texttt{v2/docs/lab/decisions.md}, entrées « Contrat du jumeau (axe 0) » et suivantes).
+
+Le jumeau n'est pas un modèle nouveau. Sa composition de référence réécrit le stock-flux de la v1 et le
+reproduit à l'écart nul (critère C1). Cet écart nul est \emph{construit} : il montre que le contrat ne déforme
+rien, pas que le modèle est exact. La précision de la projection relève du banc de validation, pas de ce
+chapitre.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Formalisation de l'état}\label{jum:etat}
+
+\paragraph{Ensembles d'indices.} On note :
+\begin{itemize}
+  \item $\mathcal{P}$ les professions. Le run de référence en compte 7\mesure{} : sages-femmes,
+        chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes, infirmiers libéraux, infirmiers
+        salariés et spécialistes (\texttt{PROFS}, \texttt{v2/jumeau/check.py}) ;
+  \item $\Sigma$ les secteurs : privé, public, et un secteur \texttt{bloques} créé vide par la régulation
+        (section~\ref{jum:leviers}). La sortie « libérale » du projet est le secteur privé, tout employeur
+        public exclu (décision du 2026-11-14, « Recadrage en recherche ») ;
+  \item $\mathcal{T}_\ell$ les territoires d'un niveau $\ell \in \{\text{commune}, \text{dép.}, \text{rég.},
+        \text{nat.}\}$, déclaré par l'état ;
+  \item $\mathcal{S} = \{\text{femme}, \text{homme}\}$ et $\mathcal{A} = \{a_1, \dots, a_J\}$ les tranches
+        d'âge, de largeurs $w_j$ non nécessairement égales (critère C10) ;
+  \item $t \in \{t_0, \dots, 2050\}$ les années, où $t_0$ est l'origine de la projection.
+\end{itemize}
+
+\paragraph{État.} Une cellule est un quadruplet $c = (p, \sigma, \tau, s) \in \mathcal{C} \subseteq
+\mathcal{P} \times \Sigma \times \mathcal{T}_\ell \times \mathcal{S}$. L'état à l'année $t$ est la matrice
+\begin{equation}\label{jum:eq:etat}
+  N(t) = \bigl(N_{c,a}(t)\bigr)_{c \in \mathcal{C},\, a \in \mathcal{A}} \in \mathbb{R}_{+}^{|\mathcal{C}| \times
+  |\mathcal{A}|}.
+\end{equation}
+Le secteur est un \emph{axe} de l'état, pas un filtre appliqué en sortie : un entrant bloqué, ou une transition
+privé $\leftrightarrow$ public, change de cellule au lieu de disparaître. À cet état s'ajoute un vivier de
+formation national $V(t) \in \mathbb{R}_{+}^{|\mathcal{P}| \times K}$, indexé par profession et année d'étude
+$k = 1, \dots, L_p$ (\texttt{v2/jumeau/modules/formation.py}).
+
+\paragraph{Agrégation.} Le passage d'un niveau $\ell$ à un niveau $\ell'$ plus grossier est une matrice
+$G^{\ell \to \ell'} \in \{0,1\}^{|\mathcal{T}_{\ell'}| \times |\mathcal{T}_\ell|}$ dont chaque colonne contient
+exactement un 1. Une unité non rattachée, ou rattachée deux fois, est refusée (\texttt{v2/papers/axe0-jumeau/main.tex},
+section « L'état »). La sortie étudiée par les autres chapitres est
+\begin{equation}\label{jum:eq:sortie}
+  Y_{p,\tau',t} = \sum_{\tau \,:\, G_{\tau'\tau} = 1} \;\sum_{s \in \mathcal{S}} \sum_{a \in \mathcal{A}}
+  N_{(p,\,\text{privé},\,\tau,\,s),\,a}(t).
+\end{equation}
+Le critère C8 vérifie que l'agrégation commune $\to$ département $\to$ région $\to$ national est exacte (écart
+interne $0$\mesure{} aux trois niveaux, sur \num{13147}\mesure{} communes CartoSanté 2025).
+
+\paragraph{Taille.} Au département, l'état des 7 professions compte \num{1410}\mesure{} cellules. À la taille
+communale, l'état de 5 professions sur 2 secteurs compte \num{698212}\mesure{} cellules (critère C15). Ce
+dernier état est \emph{ventilé} à partir du département par la population ; il n'existe pas encore d'état
+communal observé et projetable (section~\ref{jum:limites}).
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Modules et flux}\label{jum:modules}
+
+\paragraph{Déclaration.} Un module est une classe enregistrée par \texttt{@register} et découverte par
+\texttt{discover()} (\texttt{v2/jumeau/module.py}). Il déclare un nom, un rang d'application, des paramètres et
+les flux de l'année qu'il lit (\texttt{needs}) ou produit (\texttt{produces}). Chaque paramètre porte une valeur,
+une unité, une source, un millésime, un statut (mesuré, sourcé, supposé ou non mesurable) et des bornes. Le
+tableau~\ref{jum:tab:modules} donne les sept modules actuels.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lrlp{7.2cm}}
+\toprule
+Module & Rang & \texttt{needs} & Rôle et type de flux \\
+\midrule
+\texttt{formation}      & 5  & --- & Vivier national : passage $k \to k+1$ avec abandon, diplômés, places (Pool) \\
+\texttt{vieillissement} & 10 & --- & Passage d'une tranche d'âge à la suivante (Shift) \\
+\texttt{sorties}        & 20 & --- & Rétention nette ajustée ; leviers retraite, cumul, départs précoces (Rate) \\
+\texttt{entrees}        & 30 & --- & Entrées nettes ajustées ; levier quotas (Add) \\
+\texttt{lien\_formation} & 35 & \texttt{entrees}, \texttt{formation} & Part formée en France des entrées
+                          $\times\, k(t)$ (Add) \\
+\texttt{etrangers}      & 36 & \texttt{entrees} & Part des diplômés à l'étranger des entrées (Add) \\
+\texttt{regulation}     & 40 & \texttt{entrees}, \texttt{sorties} & Plafond « entrées $\le$ sorties » en zone
+                          régulée ; produit \texttt{regulation}, \texttt{regulation\_sortie} (Move, Add) \\
+\bottomrule
+\end{tabular}
+\caption{Modules du jumeau, dans l'ordre d'application (\texttt{v2/jumeau/modules/*.py}).}
+\label{jum:tab:modules}
+\end{table}
+
+\paragraph{Flux typés.} Un module ne modifie jamais l'état. Il rend des flux, appliqués par le moteur :
+\begin{itemize}
+  \item \textbf{Shift} (vieillissement) : $N_{c,a_j} \leftarrow (1 - f_j)\,N_{c,a_j} + f_{j-1}\,N_{c,a_{j-1}}$ ; la
+        tranche ouverte garde tout ($f_J = 0$). Avec des tranches quinquennales, $f_j = 1/5$\suppose{} (âges
+        supposés uniformes dans la tranche) ; avec des largeurs variables, $f_j = 1/w_j$ (C10 : fractions
+        $(0{,}067 ; 0{,}1 ; 0{,}2 ; 0{,}2 ; 0)$\mesure{}, total conservé) ;
+  \item \textbf{Rate} : $N \leftarrow s \odot N$, où $(1 - s) \odot N$ va dans un compte de sortie du registre ;
+  \item \textbf{Add} : $N \leftarrow N + I$ ;
+  \item \textbf{Move} : transfert d'une masse d'une cellule vers une autre, à total constant ;
+  \item \textbf{Pool} : mise à jour du vivier, avec des comptes de diplômés et d'abandons.
+\end{itemize}
+
+\paragraph{Moteur.} Soit $m_1, \dots, m_M$ les modules de la composition, triés par rang. Le moteur
+\texttt{run()} (\texttt{v2/jumeau/engine.py}) applique les flux module par module, par séparation d'opérateurs :
+\begin{equation}\label{jum:eq:moteur}
+  N^{(0)} = N(t), \qquad N^{(i)} = \Phi_{m_i}\bigl(N^{(i-1)}, \mathrm{ctx}_t\bigr), \qquad
+  N(t+1) = \max\bigl(0,\, N^{(M)}\bigr),
+\end{equation}
+où $\Phi_{m}$ applique les flux rendus par $m$ et $\mathrm{ctx}_t$ donne accès aux flux déclarés des modules
+précédents de l'année. Le plancher à 0 est appliqué à la fin de l'année. Chaque flux est inscrit par cellule
+dans un registre. Un chemin rapide (\texttt{ledger=False}) omet le registre ; il donne un état identique au
+chemin complet (écart $0{,}0$\mesure{}, C15).
+
+\paragraph{Stock-flux de référence.} La composition « tendanciel » ne contient que \texttt{vieillissement},
+\texttt{sorties} et \texttt{entrees}. Avec $b = \mathrm{Shift}(N(t))$ et $f = 1/5$\suppose{} :
+\begin{equation}\label{jum:eq:stockflux}
+  N(t+1) = \max\bigl(0,\; s \odot b + k(t)\,(I + p\,h)\bigr), \qquad h = t - t_0,
+\end{equation}
+où $s \le 1$ est la rétention nette ajustée par cellule et âge, $I$ l'entrée nette annuelle, $p$ sa pente et
+$k(t)$ le multiplicateur de filière (\texttt{v2/papers/axe0-jumeau/main.tex}, équation du stock-flux). $s$, $I$
+et $p$ sont ajustés par la fonction \texttt{fit\_rates} de la v1 (\texttt{v2/sante/model.py}), qui sert
+d'oracle figé ; les opérations flottantes sont celles de la v1, dans le même ordre.
+
+\paragraph{Pont vers le banc.} \texttt{twin\_of(EstimatorV1)} enveloppe le jumeau derrière l'interface commune
+\texttt{v2/sante/estimators.py}. \texttt{trajectory(until, scenario)} exécute les modules du scénario. Le
+jumeau se compare donc aux autres estimateurs sur le même banc, sans traitement particulier.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Contrat de dépendances}\label{jum:contrat}
+
+Le contrat a deux volets (\texttt{v2/jumeau/engine.py}, critère C5) :
+\begin{itemize}
+  \item \textbf{À la construction}, \texttt{build()} vérifie que chaque flux lu (\texttt{needs}) est produit par
+        un module placé avant, et qu'aucun flux n'a deux producteurs. Une composition « régulation sans
+        \texttt{sorties} » lève une \texttt{ValueError} explicite\mesure{}, au lieu de bloquer en silence tous
+        les entrants comme avant la première revue.
+  \item \textbf{Pendant le run}, toute lecture et tout flux non déclarés sont refusés. Les flux Pool se lisent
+        par \texttt{ctx.pool\_out} : un accès par \texttt{ctx.delta} lève une \texttt{TypeError}\mesure{}, et
+        \texttt{ctx.pool\_out} rend les \num{4725}\mesure{} diplômés attendus.
+\end{itemize}
+Ajouter un module revient à déposer un fichier : le critère C3 dépose un module factice hors du paquet et
+vérifie que \texttt{twin\_of} l'exécute (flux inscrit \num{4040}\mesure{} = attendu), que le tendanciel est
+inchangé (écart $0{,}0$\mesure{}) et qu'un module inconnu est refusé. Une méthode qui n'est pas un stock-flux s'y
+branche de la même façon, en rendant ses résultats sous forme de flux.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Scénarios et événements datés}\label{jum:scenario}
+
+\paragraph{Contenu.} Un scénario (\texttt{v2/jumeau/scenario.py}, \texttt{FORMAT = 1}) est un quadruplet
+$\mathcal{Z} = (\Theta, \mathcal{E}, \mathcal{M}, \omega)$ :
+\begin{itemize}
+  \item $\Theta$ : des surcharges \texttt{module.param} ;
+  \item $\mathcal{E}$ : des événements datés $e = (\pi, t_d, t_f, \mathrm{op}, \mathrm{sel}, v)$, où $\pi$ est un
+        paramètre, $[t_d, t_f]$ la période, $\mathrm{op} \in \{\texttt{set}, \texttt{mul}, \texttt{add}\}$ et
+        $\mathrm{sel}$ un sélecteur sur les axes de l'état (profession, territoire, secteur, sexe) ;
+  \item $\mathcal{M}$ : une composition de modules ;
+  \item $\omega$ : une graine, exposée aux modules par \texttt{ctx.rng}.
+\end{itemize}
+La valeur effective d'un paramètre $\pi$ pour une cellule $c$ et une année $t$ est obtenue en appliquant, dans
+l'ordre, les événements actifs dont le sélecteur couvre $c$ :
+\begin{equation}\label{jum:eq:evenement}
+  \pi_{c}(t) = \mathrm{op}_{e_n} \circ \cdots \circ \mathrm{op}_{e_1}\bigl(\pi^{\Theta}\bigr), \qquad
+  \{e_1, \dots, e_n\} = \{e \in \mathcal{E} : \pi_e = \pi,\ t_d \le t \le t_f,\ c \in \mathrm{sel}_e\}.
+\end{equation}
+
+\paragraph{Composition avec la base.} Un scénario est \emph{posé sur} le scénario de base de l'estimateur par
+\texttt{over()} : ses paramètres priment, ses événements s'ajoutent. Le critère C11 vérifie que
+\texttt{trajectory(Scenario())} rend la même valeur que \texttt{predict} (\num{102987.2}\mesure{}).
+
+\paragraph{Validation.} Avant le run sont refusés : les noms de paramètres, d'opérations et d'axes inconnus ; les
+valeurs de sélecteur absentes de l'état (par exemple \texttt{'dentiste'} au lieu de \texttt{'dentistes'}) ; les
+valeurs hors des bornes déclarées, y compris sur la valeur \emph{composée} par plusieurs événements et sur les
+paramètres ajustés (C6, C13). Le scénario fait un aller-retour JSON sans perte (écart $0{,}0$\mesure{}), y compris
+sa composition de modules après \texttt{over()} (C13).
+
+\paragraph{Compositions disponibles.} « Tendanciel » : les trois modules du stock-flux v1. « REG » : le
+tendanciel et \texttt{regulation}. « \texttt{LEVIERS} » : les sept modules (\texttt{scenario.py}) ; aux valeurs
+par défaut, elle est identique au tendanciel (écart $0{,}0$\mesure{}, C14).
+
+\paragraph{Délais.} Un multiplicateur de quotas décidé en $t_0$ agit à partir de $t_0 + L_p + 1$, où $L_p$ est la
+durée des études (convention v1). Les durées sont reprises de la v1 (\texttt{v2/sante/levers\_v1.py},
+\texttt{LAG}) : 10 ans pour les spécialistes, 6 pour les dentistes et les pharmaciens, 5 pour les sages-femmes et
+les kinésithérapeutes, 3 pour les infirmiers ; elles sont supposées\suppose{}.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Les leviers}\label{jum:leviers}
+
+Le jumeau expose 12\mesure{} leviers en quatre familles : former, attirer, installer, retenir (C14). Chacun est
+un paramètre d'un module, réglable par surcharge ou par événement daté. Le critère C14 vérifie l'identité au
+tendanciel, l'effet non nul de chaque levier, son délai et sa portée régionale ; 9 mutations qui retirent l'effet
+d'un levier le font échouer (\texttt{v2/docs/lab/reports/2026-11-14-jumeau-axe0.md}, version 5). Les effets
+ci-dessous sont mesurés en 2050 par \texttt{jumeau.check}, sur l'estimateur \texttt{StockFlowLocal} des
+dentistes et des pharmaciens (origine 2026), sauf mention contraire. Ce sont des tests du mécanisme, pas des
+résultats de politique publique.
+
+\paragraph{Former.}
+\begin{itemize}
+  \item \textbf{Quotas} (\texttt{entrees.multiplicateur}, bornes $[0 ; 3]$) : les entrées nettes sont multipliées
+        par $m$ après le délai $L_p$. Le levier accepte un sélecteur régional. Quotas $\times 1{,}1$ : écart
+        $4{,}5\cdot10^{-13}$\mesure{} avec le chemin v1 (\texttt{v2/sante/levers\_v1.project\_flow}, C7).
+        Quotas $\times 1{,}2$ en Auvergne-Rhône-Alpes (84) : $+11{,}9$\mesure{}\,\% dans la région, 0\mesure{}
+        ailleurs.
+  \item \textbf{Capacité de formation} (\texttt{formation.capacite}) : les places de première année sont
+        multipliées par $c$. Le vivier avance d'une année d'étude par an avec un abandon $\alpha_p$ ; la dernière
+        année donne les diplômés $g_p(t)$. Un vivier de référence avance en parallèle aux valeurs par défaut et
+        donne $g^{\mathrm{ref}}_p(t)$. Le module \texttt{lien\_formation} ajoute alors aux entrées positives
+        $I^{+}$ la quantité
+        \begin{equation}\label{jum:eq:lien}
+          \bigl(1 - \varphi_p\bigr)\, I^{+}\, \bigl(k_p(t) - 1\bigr), \qquad k_p(t) = g_p(t) / g^{\mathrm{ref}}_p(t),
+        \end{equation}
+        où $\varphi_p$ est la part des diplômés à l'étranger (ci-dessous). $k_p = 1$ exactement au tendanciel.
+        Capacité dentaire $\times 1{,}2$ : effet nul\mesure{} jusqu'en 2032, $+0{,}51$\mesure{}\,\% en 2033,
+        $+6{,}3$\mesure{}\,\% en 2050 ; aucun effet sur les pharmaciens (0\mesure{}). DD76 donne $\pm 9$\,\% pour
+        $\pm 20$\,\% de quotas \citep{drees2021dd76} ; l'écart vient de la part étrangère (voir « Limites »).
+  \item \textbf{Abandon en formation} (\texttt{formation.abandon}) : taux annuel $\alpha_p$. Pour les infirmiers,
+        $\alpha = 1 - 0{,}718^{1/3} = 0{,}1045$\derive{} par an, dérivé d'un rendement diplômés/inscrits mesuré
+        (DREES, jeu 491). Kinésithérapeutes $0{,}016$\derive{}, sages-femmes $0{,}033$\derive{} ; autres
+        professions $0$\suppose{}. Perte divisée par deux : diplômés $\times 1{,}196$\mesure{}, infirmiers libéraux
+        $+14{,}1$\mesure{}\,\% en 2050.
+\end{itemize}
+
+\paragraph{Attirer.}
+\begin{itemize}
+  \item \textbf{Diplômés à l'étranger} (\texttt{etrangers.multiplicateur}, bornes $[0 ; 3]$) : le RPPS ne
+        distingue pas le lieu de diplôme, donc les entrées ajustées contiennent déjà ces arrivées. Le module
+        isole leur part au lieu d'ajouter un flux (\texttt{v2/jumeau/modules/etrangers.py}) :
+        \begin{equation}\label{jum:eq:etrangers}
+          \varphi_p = \min\Bigl(1,\; F_p \big/ \textstyle\sum I^{+}_p\Bigr), \qquad
+          \text{ajout} = \varphi_p\, I^{+}\, (m - 1),
+        \end{equation}
+        où $F_p$ est le flux annuel de diplômés à l'étranger : dentistes \num{1300}\derive{}, kinésithérapeutes
+        \num{2200}\derive{}, pharmaciens 240\derive{}, sages-femmes 80\derive{}, infirmiers 400\suppose{}
+        (\texttt{FLUX} ; étiquettes de la décision du 2026-11-15). L'ajout entre dans la tranche d'âge qui contient
+        28~ans\suppose{} (C17). Étrangers $\times 2$ : part dentaire $\varphi = 0{,}47$\mesure{}, dentistes
+        $+37{,}2$\mesure{}\,\%, pharmaciens $+6{,}1$\mesure{}\,\% en 2050 ; un flux nul ne produit aucun effet
+        (0\mesure{}).
+\end{itemize}
+
+\paragraph{Installer.} Le module \texttt{regulation} représente la règle conventionnelle « une installation
+pour un départ » dans les zones les mieux dotées (\texttt{v2/jumeau/modules/regulation.py}). Pour chaque cellule
+privée d'une zone régulée et chaque année :
+\begin{equation}\label{jum:eq:regulation}
+  x = \max\bigl(E - D,\, 0\bigr)\,\bigl(1 - \epsilon_p\bigr), \qquad B = \theta\, x,
+\end{equation}
+où $E$ et $D$ sont les entrées et les sorties de l'année, $\epsilon_p$ la part dérogatoire et $\theta$ la part
+contraignante du plafond. Les bloqués $B$ se répartissent entre un territoire voisin non régulé (privé), le
+salariat (secteur \texttt{bloques}) et la sortie. Cinq leviers agissent sur ce mécanisme :
+\begin{itemize}
+  \item \texttt{regulation.zones} : la liste des géocodes régulés, par profession ;
+  \item \texttt{regulation.part\_zones} : la part des zones listées qui est retenue, dans l'ordre de la liste. Pour
+        les kinésithérapeutes, $0 / 0{,}6 / 1$ déplacent $0 / 227 / 356$\mesure{} personnes la première année ;
+  \item \texttt{regulation.theta} : $\theta = 0{,}80$\suppose{}, d'après l'expérience naturelle de l'axe~3 sur le
+        zonage infirmier (exploratoire) ; C12 vérifie que $0{,}800$\mesure{} de l'excédent est bloqué ;
+  \item \texttt{regulation.repartition} : par défaut 100\suppose{}\,\% vers un voisin, ce qui rend la régulation
+        sans effet au département, par construction (C12 : écart $0{,}0$\mesure{}) ;
+  \item \texttt{regulation.part\_exemptee} : la part $\epsilon_p$. Pour les dentistes spécialistes, la convention
+        de 2023 (art.~35.5) prévoit une dérogation ; sa part parmi les entrants n'est pas mesurée et vaut
+        0\suppose{} (décision du 2026-11-15).
+\end{itemize}
+Sur l'état réel à deux secteurs, avec des zones illustratives (départements 06, 13, 34, 66, 83 ;
+\texttt{ZONES}, \texttt{check.py}), $\theta = 0{,}8$ et 100\,\% des bloqués vers le salariat, l'effectif privé des
+zones varie de \num{-6711}\mesure{} kinésithérapeutes et de \num{-3484}\mesure{} dentistes en 2050. Le total ne change pas
+(écart $0{,}0$\mesure{} sans plancher) : la régulation déplace, elle ne crée ni ne supprime (C2). Si les bloqués
+partent vers le secteur public existant, qui a sa propre démographie, le total varie de \num{-375}\mesure{}
+(kinésithérapeutes) et \num{+203}\mesure{} (dentistes).
+
+\paragraph{Retenir.} Le module \texttt{sorties} agit sur les taux de sortie $e = 1 - s$
+(\texttt{v2/jumeau/modules/sorties.py}).
+\begin{itemize}
+  \item \textbf{Report de la retraite} (\texttt{sorties.decalage\_retraite}, $\Delta$ ans, bornes $[0 ; 5]$),
+        mécanisme dit B1 :
+        \begin{equation}\label{jum:eq:retraite}
+          e' =
+          \begin{cases}
+            e / (1 + \lambda e) & \text{tranches de 65~ans et plus,} \\
+            e\, \max(0,\, 1 - \Delta/5) & \text{60--64~ans,} \\
+            e\, \max(0,\, 1 - \Delta/10) & \text{55--59~ans,}
+          \end{cases}
+        \end{equation}
+        les tranches à solde net positif ($e = 0$) restant inchangées. Avec une seule tranche ouverte de
+        65~ans et plus, $\lambda = \Delta$ et le séjour moyen passe de $1/e$ à $1/e + \Delta$. Avec plusieurs
+        tranches ($65$--$69$, $70$--$74$, $75+$), $\lambda$ est calculé par cellule pour que le temps espéré en
+        65+ d'une personne qui entre en 65--69 augmente de $\Delta$ exactement ; ce temps est l'espérance d'une
+        chaîne de Markov dont les transitions sont $f$ et $s$, dans l'ordre du moteur. La montée en charge est
+        de 3\suppose{}~mois par an à partir de l'année qui suit la décision. Mesures (C7, C13) : séjour en 65+
+        allongé de $+1{,}000$ / $+2{,}000$ / $+5{,}000$\mesure{}~an pour $\Delta = 1 / 2 / 5$ (écart maximal
+        $3{,}6\cdot10^{-14}$\mesure{}) ; avec trois tranches de 65~ans et plus, écart de séjour
+        $9{,}8\cdot10^{-15}$\mesure{}. Effet en 2050 : dentistes $+1{,}60$\mesure{}\,\% ($\Delta = 1$) et
+        $+3{,}22$\mesure{}\,\% ($\Delta = 2$) ; kinésithérapeutes $+1{,}55$\mesure{}\,\% et infirmiers libéraux
+        $+3{,}02$\mesure{}\,\% pour $\Delta = 1$.
+  \item \textbf{Cumul emploi-retraite} (\texttt{sorties.cumul\_multiplicateur}, $k$) :
+        $e'_{65+} = e_{65+}\, \max\bigl(0,\, 1 - \kappa_p (k - 1)\bigr)$, où $\kappa_p$ est la part des libéraux en
+        cumul : infirmiers et kinésithérapeutes 0,015, sages-femmes 0,008, dentistes 0,047, pharmaciens
+        0,018\mesure{} au 30/06/2015 (COR 2016, doc.~11, annexe~2). Appliquer la part de la CARPIMKO aux
+        kinésithérapeutes et aux infirmiers est supposé\suppose{}.
+  \item \textbf{Départs précoces} (\texttt{sorties.multiplicateur\_precoces}, $m$) : $e'_{a < 60} = m\, e_{a<60}$.
+        Aucune source ne chiffre l'effet d'une politique sur ce taux ; le mécanisme est supposé\suppose{}.
+        $m = 0{,}5$ : $+5{,}6$\mesure{}\,\% en 2050 (dentistes et pharmaciens réunis).
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Critères d'acceptation}\label{jum:criteres}
+
+Les critères sont écrits pour pouvoir échouer. Pour chacun, \texttt{check.py} garde la valeur mesurée par une
+revue adversariale sur le code d'avant (champ \texttt{avant} de \texttt{results.json}) ; c'est la preuve que le
+test sait échouer. Commande, depuis la racine du dépôt :
+\begin{verbatim}
+PYTHONPATH=v2 uv run python -m jumeau.check
+\end{verbatim}
+Le code de sortie vaut 1 si un critère échoue. Le run du 2026-11-15 (02:03) passe les 18\mesure{} critères sur
+18, plus le critère de temps T (tableau~\ref{jum:tab:criteres}).
+
+{\small
+\begin{longtable}{@{}lp{5.2cm}p{8.0cm}@{}}
+\caption{Critères d'acceptation du jumeau : dernier run de \texttt{jumeau.check}
+(\texttt{v2/artifacts/a0\_jumeau/results.json}, 2026-11-15, 02:03). Toutes les valeurs sont
+mesurées\mesure{}, sauf mention.}\label{jum:tab:criteres}\\
+\toprule
+\# & Ce qui est testé & Valeur mesurée \\
+\midrule
+\endfirsthead
+\toprule
+\# & Ce qui est testé & Valeur mesurée \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1 & Reproduction du stock-flux v1 (5 variantes, banc K1 et origine récente $\to$ 2050) &
+  écart max $0{,}0$ sur 140 comparaisons de \texttt{predict} ; $0{,}0$ sur \num{355248} valeurs
+  cellule $\times$ âge $\times$ année, 7 professions \\
+C2 & Régulation exécutée par \texttt{twin\_of}, état réel à 2 secteurs, sans créer ni supprimer &
+  privé des zones \num{-6711} (MK), \num{-3484} (CD) ; $\Delta$ total sans plancher $0{,}0$ ; vers le
+  public \num{-375} / \num{+203} \\
+C3 & Module factice déposé hors du paquet & flux \num{4040} = attendu ; tendanciel inchangé ($0{,}0$) ; module
+  inconnu refusé \\
+C4 & Régulation vers un secteur vide, mêmes taux : déplacement pur & $\Delta$ total 2050 $0{,}0$ (avec plancher
+  $0{,}000$) ; 202 cellules en repli \\
+C5 & Dépendances déclarées et vérifiées & dépendance manquante, double producteur, lecture non déclarée :
+  refusés ; Pool par \texttt{ctx.delta} : refusé ; par \texttt{ctx.pool\_out} : \num{4725} diplômés \\
+C6 & Scénario validé et sérialisable & faute de frappe, opération, axe, sélecteur \texttt{'dentiste'} ou
+  \texttt{6}, quotas $\times 110$ : refusés ; aller-retour JSON $0{,}0$ \\
+C7 & Leviers quotas et retraite contre leur référence & quotas $\times 1{,}1$ : $4{,}5\cdot10^{-13}$ avec la v1 ;
+  séjour 65+ $+1{,}000 / +2{,}000 / +5{,}000$ an ; montée $[0{,}25 ; 0{,}5 ; 0{,}75 ; 1]$ \\
+C8 & Agrégation commune $\to$ national ; écart au RPPS & écart interne 0 (dép., rég., nat.) ; commune inconnue
+  refusée ; CartoSanté contre RPPS 2025 : CD $-2{,}8$\,\%, MK $-5{,}4$\,\% \\
+C9 & Aucun état partagé entre deux runs & diplômés 2028 : vivier $\times 1$ \num{4253}, $\times 2$ \num{8505} =
+  instances neuves \num{8505} \\
+C10 & Vieillissement à largeurs variables & fractions $(0{,}067 ; 0{,}1 ; 0{,}2 ; 0{,}2 ; 0)$ ; total
+  $430 \to 430$ \\
+C11 & Scénario posé sur la base (\texttt{over}) & \texttt{predict} = \texttt{trajectory(Scenario())} =
+  \num{102987.2} ; quotas $\times 1{,}1$ : $+6{,}53$\,\% (CD, $L_p = 6$\suppose{}) \\
+C12 & Paramètres sourcés de l'axe~1 câblés & $\theta$ 0,8 $\to$ 0,800 des bloqués ; dérogation 50\,\% $\to$
+  0,500 ; 100\,\% voisine au département $\to$ écart 0 ; 100\,\% sortie, année 1 : $\Delta$ \num{-355.8} =
+  compte ; abandon IDE 0,1045\derive{} ; cumul 0,015 / 0,008 / 0,047 \\
+C13 & Défauts de la troisième revue & bornes composées et ajustées, NaN, rétention $\times 1{,}3$ : refusés ;
+  JSON + \texttt{over} garde la régulation ; règle « entrées $\le$ sorties » : écart $7{,}1\cdot10^{-15}$ à une
+  formule indépendante ; séjour à 3 tranches $\ge 65$ : $9{,}8\cdot10^{-15}$ \\
+C14 & 12 leviers branchés (identité, effet, délai, région) & identité $0{,}0$ ; capacité CD $\times 1{,}2$ : 0 en
+  2032, $+0{,}51$\,\% en 2033, $+6{,}3$\,\% en 2050 ; IFSI : $+14{,}1$\,\% ; étrangers $\times 2$ : $+37{,}2$\,\%
+  CD ; précoces $\times 0{,}5$ : $+5{,}6$\,\% ; quotas région 84 : 0 hors région \\
+C15 & Vitesse : 5 professions à la commune $\le 2$~s\suppose{} & \SI{1.33}{\second} réel, \SI{1.28}{\second}
+  CPU (médianes de 3 runs ; \num{698212} cellules ; 24 ans ; charge 4,5) ; chemin rapide = complet \\
+C16 & Vivier réel (DREES 491) branché & identité en mode levier $0{,}0$ ; diplômés IDE \num{25385} contre
+  \num{25249} (2024), \num{26005} contre \num{26020} (2025) ; MAPE vivier / persistance 2019--2025 : IDE 8,4 /
+  3,2\,\%, MK 5,9 / 3,1\,\%, SF 4,4 / 4,1\,\% \\
+C17 & Diplômés à l'étranger entrés à 28~ans & ajout dans la seule tranche qui contient 28~ans (libellée
+  25+) ; hors tranche $0{,}0$ ; ajout année 1 = \num{1300} \\
+C18 & Infirmiers par secteur (axe~4) & \num{1100} dép. $\times$ années, écart max $7{,}3\cdot10^{-12}$ à SNDS +
+  BTS ; 2023 : privé \num{277788}, public \num{329856} ; privé 2050 (tendanciel) \num{336422} \\
+T & Temps de recalcul jusqu'en 2050 & \SI{16}{\milli\second} (dép., 7 professions) ; \SI{0.42}{\second}
+  (taille commune, 1 profession $\times$ 2 secteurs) ; $\approx$ \SI{2.1}{\second}\derive{} extrapolé à 5
+  professions \\
+\end{longtable}
+}
+
+Trois remarques sur la portée de ces critères.
+\begin{itemize}
+  \item C1, C3, C4, C8 (partie interne) et C10 vérifient des propriétés du contrat, en partie vraies par
+        construction ; la première revue l'a relevé (section~\ref{jum:revues}). Elles ne disent rien de
+        l'exactitude des projections.
+  \item C8 publie un écart externe, non corrigé : CartoSanté 2025 compte \num{84946}\mesure{} kinésithérapeutes
+        contre \num{89766}\mesure{} au RPPS ($-5{,}4$\mesure{}\,\%, dont \num{-2084}\mesure{} dans les
+        Bouches-du-Rhône, où Marseille est absente) ; la MAPE départementale vaut 4,2\mesure{}\,\% (CD) et
+        4,7\mesure{}\,\% (MK).
+  \item C16 contient un résultat négatif : sur les diplômés 2019--2025, la persistance prévoit mieux que le
+        vivier pour les trois professions testées. Sur le stock d'infirmiers libéraux 2018 $\to$ 2023, le mode
+        vivier fait 7,43\mesure{}\,\% de MAPE départementale contre 7,82\mesure{}\,\% pour le stock-flux local,
+        sur une seule origine : c'est exploratoire.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Les trois revues adversariales}\label{jum:revues}
+
+Chaque revue a été conduite par des agents qui n'ont modifié aucun fichier, sur un état daté du code. Un défaut
+n'est retenu que s'il résiste à une tentative de réfutation. Chaque défaut corrigé est couvert par un critère, et
+une mutation qui le réintroduit fait échouer ce critère (\texttt{v2/docs/lab/reports/2026-11-14-jumeau-axe0.md},
+section « Mutations »).
+
+\paragraph{Revue 1} (\texttt{v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0.md}). Neuf agents, trois angles
+(les tests peuvent-ils échouer ; justesse de la conservation, de la régulation et de l'agrégation ; contrat). Le
+jumeau annonçait alors 4 critères, dont 3 vrais par construction. Six défauts confirmés sur six soumis, dont
+quatre bloquants et deux importants, plus trois constats non vérifiés :
+\begin{itemize}
+  \item \texttt{trajectory} ignorait \texttt{scenario.modules} ; le test plug-in ne pouvait pas échouer
+        $\Rightarrow$ C3 passe par \texttt{twin\_of}, module inconnu refusé ;
+  \item un secteur public sans sorties ($s = 1$) créait $+822$\mesure{} kinésithérapeutes en 2050 $\Rightarrow$
+        règle de repli sur la cellule privée (supposée), C4 ;
+  \item dépendances implicites $\Rightarrow$ \texttt{needs} / \texttt{produces} vérifiés par \texttt{build()}, C5 ;
+  \item scénario non validé et non sérialisable $\Rightarrow$ validation des noms, JSON versionné, C6 ;
+  \item le levier retraite était comparé à une copie de lui-même ; les quotas agissaient un an trop tôt
+        ($+226$\mesure{} dentistes) $\Rightarrow$ C7 contre le vrai chemin v1 ;
+  \item l'agrégation était vérifiée de façon circulaire $\Rightarrow$ C8 publie l'écart au RPPS.
+\end{itemize}
+Les constats non vérifiés (vieillissement codé à $1/5$, vivier \texttt{\_intake} persistant d'un run à l'autre,
+conservation qui est une identité) ont mené à C9 et C10. Le calibrage de \texttt{fit\_rates} à $1/5$ reste
+ouvert.
+
+\paragraph{Revue 2} (\texttt{v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0-v2.md}). Six constats sur six
+confirmés, soit quatre défauts bloquants distincts :
+\begin{itemize}
+  \item le masque retraite touchait la tranche ouverte 65+ : séjour infini pour $\Delta \ge 5$, effet
+        surestimé de $+41$\mesure{}\,\% à $\Delta = 2$ (dentistes : \num{3137} contre \num{2229} après
+        correctif). Le code contredisait une décision inscrite $\Rightarrow$ mécanisme B1
+        (équation~\ref{jum:eq:retraite}), C7 contre le séjour attendu ;
+  \item la régulation faisait encore varier le total ($+254$\mesure{} dentistes, $-474$\mesure{} kinés)
+        $\Rightarrow$ destination \texttt{bloques} qui conserve le total, C2 ;
+  \item \texttt{trajectory(scenario)}, introduit par la correction précédente, écrasait le scénario de base :
+        quotas $\times 1{,}1 \to -15{,}2$\mesure{}\,\% $\Rightarrow$ \texttt{over()}, C11 ;
+  \item valeurs de sélecteur et plages non validées : quotas $\times 110 \to +$\num{5085033}\mesure{} dentistes
+        $\Rightarrow$ bornes, C6.
+\end{itemize}
+Conséquence enregistrée : les chiffres retraite et régulation du prototype ont été déclarés non citables et les
+leviers suspendus jusqu'à la revue suivante (\texttt{decisions.md}, 2026-11-14, « Le jumeau ne passe pas la
+seconde revue »).
+
+\paragraph{Revue 3} (\texttt{v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0-v3.md}). Aucun défaut bloquant
+dans le jumeau. Le seul défaut bloquant portait sur le prototype (\texttt{IndexError} à la réactivation de la
+régulation, 606 cellules contre 404) et a été corrigé par un masque par trajectoire. Défauts importants corrigés et
+couverts par C13 :
+\begin{itemize}
+  \item bornes contournables par empilement d'événements ($\times 243 \to +14\,317$\mesure{}\,\%) et par NaN ;
+  \item rétention ajustée supérieure à 1 possible (rétention $\times 1{,}3 \to +$\num{127929}\mesure{} au lieu de
+        \num{-2588}) ;
+  \item l'aller-retour JSON avec \texttt{over} perdait la composition ;
+  \item séjour différent de $+\Delta$ avec plusieurs tranches de 65~ans et plus $\Rightarrow$ $\lambda$ par cellule.
+\end{itemize}
+Les trois constats non vérifiés (règle « entrées $\le$ sorties » non testée, entrées négatives déplacées vers les
+bloqués, événement sur les zones qui plantait) sont couverts depuis par C13. La revue mesure une conservation à
+0,5\mesure{}~personne près en 2050 (CD, MK, SF). Les leviers retraite et régulation ont été réactivés, avec des
+bornes côté serveur (\texttt{decisions.md}, 2026-11-14, « Troisième revue »).
+
+\paragraph{Ce que les revues ne couvrent pas.} Les agents ont relu un état daté du code ; les constats non
+réfutés n'ont pas tous été vérifiés par une mesure, et aucune revue n'a porté sur le code après C14--C18
+(leviers branchés, vitesse, vivier réel, diplômés à l'étranger, infirmiers par secteur). Une quatrième revue coûte
+environ 3\suppose{}~min de machine (\texttt{v2/docs/lab/reports/2026-11-14-revue-adversariale-axe0-v2.md}, questions
+ouvertes).
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Temps de recalcul}\label{jum:temps}
+
+Le profil du projet fixe une cible de recalcul inférieure à 2~s\suppose{} (\texttt{docs/lab/profile.md} ; seuil
+de C15). Mesures du run de référence (\texttt{results.json}, bloc \texttt{temps} et critère C15) :
+\begin{itemize}
+  \item \textbf{Département}, 7 professions (\num{1410} cellules), jusqu'en 2050 : \SI{16}{\milli\second}\mesure{}
+        par scénario, médiane de plusieurs répétitions de \texttt{run()} direct (sans le cache de
+        \texttt{trajectory}) ;
+  \item \textbf{Taille communale répliquée}, stock-flux en 3 modules : \SI{0.22}{\second}\mesure{} pour 1
+        profession $\times$ 1 secteur (\num{70094} cellules) ; \SI{0.42}{\second}\mesure{} pour 1 profession
+        $\times$ 2 secteurs (\num{140188} cellules) ; $\approx$ \SI{2.1}{\second}\derive{} extrapolé
+        linéairement à 5 professions ;
+  \item \textbf{C15}, 5 professions $\times$ 2 secteurs à la commune (\num{698212} cellules, 24 ans), chemin
+        rapide : \SI{1.33}{\second}\mesure{} réel et \SI{1.28}{\second}\mesure{} CPU, médianes de 3 runs, charge
+        machine 4,5\mesure{}. Avant optimisation : \SI{3.99}{\second}\mesure{}. D'après le profil fait avant
+        optimisation, le temps se répartissait entre le registre (1,1\mesure{}~s), les passes (1,0\mesure{}~s),
+        les sorties (0,8\mesure{}~s) et les entrées (0,5\mesure{}~s) (\texttt{v2/papers/axe0-jumeau/main.tex}).
+\end{itemize}
+Le temps à la commune dépend de la charge de la machine : des mesures antérieures sous charge ont dépassé
+2~s (annexe~\ref{ann:incoherences}). La marge sous la cible est donc d'environ un facteur 1,5\derive{} sur une
+machine peu chargée, et n'est pas établie sous charge. L'extrapolation T ($\approx 2{,}1$~s) et la mesure directe
+C15 ($1{,}33$~s) ne portent pas sur la même composition : T prolonge un état répliqué à un secteur par
+profession, C15 mesure le chemin rapide. Le prototype de carte, au département, mesure de son côté une réponse
+perçue p50 de \SI{53}{\milli\second}\mesure{} (\texttt{v2/docs/lab/reports/2026-11-14-prototype-carte.md}).
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Limites}\label{jum:limites}
+
+\begin{itemize}
+  \item \textbf{C1 ne valide pas le modèle.} L'écart nul est construit. La précision reste celle du stock-flux v1
+        au banc K1 : 8,08\mesure{}\,\% de MAPE départementale, sur l'ancien périmètre libéral + mixte
+        (\texttt{v2/docs/lab/reports/2026-11-14-jumeau-axe0.md}, menaces).
+  \item \textbf{Calibrage à $1/5$.} \texttt{fit\_rates} suppose des tranches quinquennales ; il n'est pas adapté
+        aux tranches communales ni aux largeurs variables que le moteur accepte (C10). Ouvert depuis la première
+        revue.
+  \item \textbf{Plancher à 0.} Il crée 0,02 à 0,43\mesure{}\,\% de $N(2050)$ selon la profession ; il n'est pas
+        inscrit comme un flux.
+  \item \textbf{Ordre des modules.} La séparation d'opérateurs dépend de l'ordre d'application ; la sensibilité
+        à cet ordre n'est pas mesurée (environ 15\suppose{}~min).
+  \item \textbf{Régulation.} La destination des entrants bloqués n'est chiffrée par aucune source ; la
+        destination \texttt{bloques} conserve le total par construction, et la variante « vers le public »
+        change le total de \num{-375} / \num{+203}\mesure{}. Le défaut (100\,\% voisine) rend la régulation sans
+        effet au département ; à la commune, elle exige une table de voisinage, qui n'existe pas. Les zones des
+        critères (06, 13, 34, 66, 83) sont illustratives, ce ne sont pas les zonages conventionnels.
+  \item \textbf{Repli du public.} Une cellule publique sans historique emprunte la rétention de la cellule privée,
+        ce qui est supposé\suppose{}.
+  \item \textbf{Diplômés à l'étranger.} Les flux mélangent des définitions (primo-inscriptions, entrées au
+        RPPS, autorisations) ; un âge unique d'entrée est appliqué à toutes les professions. La part étrangère
+        dentaire ($\varphi = 0{,}47$\mesure{}) explique que la capacité $\times 1{,}2$ donne $+6{,}3$\,\% contre
+        $\pm 9$\,\% dans DD76 : la concordance avec la DREES dépend d'un paramètre mal mesuré.
+  \item \textbf{IFSI.} Le jumeau donne $+14{,}1$\mesure{}\,\% d'infirmiers libéraux en 2050 pour une perte
+        divisée par deux ; l'équivalent en effectifs du chiffre DREES (ER 1319) est d'environ
+        $+7{,}9$\derive{}\,\%. L'écart, d'environ un facteur 2, n'est pas expliqué.
+  \item \textbf{Retraite.} Le repère DREES d'environ $+1$\,\% n'est pas comparable aux $+1{,}55$ à
+        $+3{,}02$\mesure{}\,\% du jumeau : il porte sur tous les modes d'exercice, les plus de 60~ans, un plafond à
+        67~ans et dès 2020.
+  \item \textbf{Vivier.} La persistance prévoit mieux les diplômés 2019--2025 que le vivier (C16) ; le mode
+        vivier n'est pas le défaut, et la capacité agit par un vivier relatif dont seul le rapport à la référence
+        compte.
+  \item \textbf{Échelle communale.} Les temps à la commune sont mesurés sur un état ventilé ou répliqué ;
+        l'état communal observé n'existe pas, et l'écart CartoSanté / RPPS ($-5{,}4$\mesure{}\,\% pour les MK)
+        n'est pas corrigé.
+  \item \textbf{Revues.} Aucune revue adversariale n'a porté sur C14--C18. Les statuts « supposé » de
+        $\theta$, de la répartition, de la dérogation et des durées $L_p$ restent ceux des fiches de l'axe~1.
+\end{itemize}
+\endgroup

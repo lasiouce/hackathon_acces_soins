@@ -1,0 +1,152 @@
+% Annexe C : incohérences relevées dans les fichiers de la validation (axe 3).
+% Requiert le paquet longtable dans le document principal.
+\subsection{Validation}\label{val:ann}
+\begingroup\setlength{\emergencystretch}{3em}% local à ce chapitre
+
+Abréviations, numéros de ligne à l'état du 2026-11-15 :
+\begin{itemize}
+  \item \texttt{A} = \texttt{v2/papers/axe3-validation/main.tex} ;
+  \item \texttt{D} = \texttt{v2/docs/lab/decisions.md} ; \texttt{O} = \texttt{v2/docs/lab/open.md} ;
+  \item \texttt{R/nX} = \texttt{v2/docs/lab/reports/2026-11-14-axe3-nX-*.md}.
+\end{itemize}
+Aucun de ces fichiers n'a été corrigé par ce rapport.
+
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{5.2cm}@{}}
+\caption{Incohérences entre fichiers, chapitre Validation.}\label{val:tab-incoherences}\\
+\toprule
+\textbf{Grandeur} & \textbf{Fichier 1} & \textbf{Fichier 2} & \textbf{Valeur retenue et pourquoi} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Grandeur} & \textbf{Fichier 1} & \textbf{Fichier 2} & \textbf{Valeur retenue et pourquoi} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Nombre de protocoles &
+\texttt{A} l.9 et l.20 : « dix » ; l.67 : « six » ; table \texttt{tab:sha} arrêtée à N10
+(l.164--175) &
+\texttt{v2/\allowbreak validation/\allowbreak preregistered/} : 12\mesure{} protocoles et le plan ; N11 et N12 décrits en
+\texttt{A} l.605--611 &
+12\mesure{} : comptés dans le dossier gelé, empreintes recalculées. \\
+\addlinespace
+Existence du dépôt 2027 &
+\texttt{A} l.440 : « Aucune prévision n'est encore déposée pour 2027 » &
+\texttt{A} l.537--538 et \texttt{D} l.1964 : dépôt \texttt{ca036374d216} &
+Le dépôt existe : fichier présent, empreinte recalculée. La phrase de l.440 date d'avant le dépôt. \\
+\addlinespace
+Versionnement au moment des calculs &
+\texttt{A} l.708--709 : dépôt « pas encore versionné au moment des calculs » &
+\texttt{git log} : protocoles commités dès 03:25:50\mesure{} (316a93d) &
+Vrai pour le seul calcul N3 ; faux pour tous les calculs suivants. On retient git. \\
+\addlinespace
+Compilation de l'article &
+\texttt{D} l.1094 : « source non compilée (aucun moteur TeX installé) » &
+\texttt{D} l.1291 : « compile avec tectonic 0.17.0 » &
+l.1291, plus récente ; l.1094 n'est pas marquée remplacée. \\
+\addlinespace
+Verdict du critère de bande de N4 &
+\texttt{R/n4} l.80--84 : couverture dans $[75 ; 85]$\suppose{}~\% dans chaque classe &
+\texttt{R/n4} l.158--161, \texttt{D} l.1926, \texttt{A} l.528--529 : 14\mesure{} classes sur 21,
+sans le mot « échoue » &
+\textbf{Échoué}, au sens littéral du protocole gelé (7\derive{} classes hors bande). \\
+\addlinespace
+Bande départementale des kinés &
+\texttt{R/n10} l.92, \texttt{A} l.599--600 : l'affichage départemental a « la bande $\sqrt h$
+calibrée de N8 » &
+\texttt{R/n8} l.8 et l.48 : N8 porte sur SF, CD, PH, IDE ; pas les kinés &
+Aucune bande départementale calibrée pour les kinés. \\
+\addlinespace
+Critère du score du dépôt &
+\texttt{R/n1} l.115--116 : score « avec le même critère » (donc $h = 5$\suppose) &
+cibles 2027, 2028, 2030 depuis 2026 : $h \le 4$\derive{} (\texttt{D} l.1964--1971) &
+Le critère de N1 ne peut pas être joué en 2027 ; un critère à $h \le 4$ reste à déclarer. \\
+\addlinespace
+Composition du dépôt N8 &
+\texttt{R/n8} : bande calibrée pour SF, CD, PH, IDE &
+\texttt{D} l.1966--1971 : dépôt avec MK, sans IDE &
+Les deux sont exacts ; le dépôt teste une bande non calibrée (MK) et omet une bande calibrée (IDE). \\
+\addlinespace
+Grains confiés à N4 &
+\texttt{D} l.2133--2137 : N4 juge EPCI, BV et le modèle de l'axe~2 &
+\texttt{R/n4} : commune seulement ; \texttt{R/n10} fait ce travail &
+\texttt{R/n4} et \texttt{R/n10} : on retient les protocoles gelés. \\
+\addlinespace
+Argument de la tolérance de N2 &
+\texttt{R/n2} l.57--60 (gelé) : « quatre fois plus petite » que des effets de
+$\pm 12$--13\mesure{}~\% &
+\texttt{A} l.205--207 : « au moins trois fois », $\pm 9$\mesure{}~\% pour CD &
+Le chiffre de \texttt{A}, corrigé et déclaré. Pour CD le rapport vaut exactement 3\derive{} :
+l'argument s'affaiblit, la tolérance de 3\suppose{}~\% ne change pas. \\
+\addlinespace
+Règle des placebos &
+\texttt{A} l.253 : « même signe et $\ge \tfrac12$ » pour tous les placebos &
+\texttt{R/n3} l.112 : T2 passe si l'IC contient 0 ; \texttt{A} l.345 applique cette règle &
+La règle gelée de \texttt{R/n3}. \\
+\addlinespace
+Variantes calibrées par N8 &
+\texttt{R/n8} l.59--61 : calibrée aussi pour « les âges fins, la rétention 60+, la combinaison » &
+tableau de \texttt{R/n8} : aucune de ces variantes &
+Non retenu : seule la variante par défaut est montrée calibrée. \\
+\addlinespace
+Commit du jugement de K3 &
+\texttt{D} l.2282 et \texttt{R/n10} l.145 : a042415 &
+\texttt{D} l.2327 : 7b8c8d6 &
+Non tranché ici : a042415 est cité comme soumission, 7b8c8d6 comme jugement ; à vérifier par
+\texttt{git show}. \\
+\addlinespace
+Préfixe des dépôts &
+\texttt{D} l.2377 : un dépôt porte le préfixe de son axe &
+dans \texttt{v2/validation/depot/}, \texttt{jumeau\_taux\_\allowbreak locaux\_\allowbreak 2026-11-14\allowbreak .parquet}, sans préfixe, écrasé une
+fois (\texttt{D} l.2361--2373) &
+Le fichier actuel, dont l'empreinte \texttt{ca036374d216} concorde ; l'A0 de l'axe~2 est restauré
+sous \texttt{axe2\_a0\_}\dots (\texttt{4f7400845340}). \\
+\addlinespace
+Statut de la copie gelée de N3 &
+plan : copie « gelée avant calcul » &
+copie gelée de N3 : « status: protocole gelé ; lancé pour les IDE » &
+La copie se déclare lancée : indice que le gel n'a pas précédé le calcul (section~\ref{val:integrite}). \\
+\addlinespace
+Usage de $\theta$ &
+\texttt{R/n3} l.189--191 : $\theta = \num{0.80}$\mesure{} « non interprété » &
+\texttt{D} l.1190 : défaut du jumeau ; plage $[\num{0.5} ; 1]$\suppose{} (\texttt{D} l.1064) &
+Le défaut reste, étiqueté supposé ; l'usage dépasse le protocole (section~\ref{val:perimetre}). \\
+\addlinespace
+Écart DREES dans le résumé &
+\texttt{A} l.31--32 : reproduction DREES « échoue de 14 à 25~\% » &
+\texttt{R/n2} l.133--163 : DD76 \num{-14.1} à \num{-17.4}\mesure{}~\% ; \texttt{R/n7} l.203--220 :
+ER~1319 \num{-25.2}\mesure{}~\% &
+Deux chiffres séparés : DD76 et ER~1319 ne sont pas la même cible. \\
+\addlinespace
+\multicolumn{4}{@{}p{14.8cm}@{}}{\textit{Lignes du registre \texttt{O} encore « open » alors que le travail est fait : 12\mesure{} lignes, de l.25 à l.166.}} \\
+\addlinespace
+\texttt{O} l.25 & 2\textsuperscript{e} test IDE pré-enregistré, « open » &
+fait en N7-A (\texttt{R/n7} l.123--153) &
+Périmée ; le 3\textsuperscript{e} test (contrôle synthétique) reste ouvert en \texttt{O} l.128. \\
+\texttt{O} l.29 & banc N1 et premier dépôt 2027--2030, « open » &
+\texttt{R/n1} l.160--166 ; dépôt \texttt{D} l.1964 & Périmée. \\
+\texttt{O} l.30 & L1--L3 et partie A de N2, « open » &
+\texttt{O} l.129 « done » (doublon) ; \texttt{R/n2} l.133--188 & Périmée. \\
+\texttt{O} l.31 & lancer N4 sous oracle, « open » & \texttt{R/n4} l.125--170 &
+Périmée ; \texttt{O} l.138 (projection réelle) reste valable. \\
+\texttt{O} l.50 & mondes simulés comme niveau de validation, « open » & \texttt{R/n5} &
+Périmée. \\
+\texttt{O} l.51 & ER~1319 comme comparaison à 2050, « open » & N7-D, \texttt{R/n7} l.203--220 &
+Périmée. \\
+\texttt{O} l.59 & reprise observatoire (mondes, pente, classement, ER~1319), « open » &
+N5, N7-B, N7-C, N7-D & Périmée. \\
+\texttt{O} l.101 & écrire et lancer \texttt{probabilistic.py} (N6), « open » &
+\texttt{R/n6} l.110--157 & Périmée. \\
+\texttt{O} l.102 & SBC de N6, « open » & \texttt{R/n6} l.110--157 & Périmée. \\
+\texttt{O} l.105 & référence naïve probabiliste « pente », « open » & N7-C, \texttt{R/n7} &
+Périmée. \\
+\texttt{O} l.164 & même banc à l'EPCI et au BV, « open » & N10, \texttt{R/n10} l.84--123 &
+Périmée. \\
+\texttt{O} l.166 & juger la soumission K3 avec N10, « open » &
+\texttt{O} l.159 « done » ; \texttt{R/n10} l.144--182 & Périmée. \\
+\end{longtable}
+}
+\endgroup

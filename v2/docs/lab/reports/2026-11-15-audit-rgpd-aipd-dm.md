@@ -100,7 +100,7 @@ Les lignes directrices du G29 (WP248 rév. 01), reprises par la CNIL, donnent 9 
 
 ### 6. Hors RGPD, relevés au passage (mesuré)
 
-- **Habillage DSFR.** `v2/prototype-carte/dsfr/LICENSE.md`, l. 1 : le DSFR « ne doit pas être utilisé par des entités extérieures à l'administration ». La carte affiche le bloc-marque « République française ». Sans porteur public réel, c'est l'identité visuelle de l'État utilisée par une équipe privée, sur un dépôt public. C'est aussi le risque le plus visible pour le jury.
+- **Habillage DSFR.** `v2/prototype-carte/dsfr/LICENSE.md`, l. 1 : le DSFR « ne doit pas être utilisé par des entités extérieures à l'administration ». La carte affiche le bloc-marque « République française ». **Mise à jour du 2026-11-15 :** le projet est porté par le Ministère chargé de la santé (information de l'équipe ; structure exacte à préciser). L'usage du DSFR relève donc de l'administration et n'est plus un point de non-conformité. À écrire dans le README, avec le nom de la structure porteuse.
 - **Pas de licence du code** (pas de fichier `LICENSE`) : légalement, personne ne peut le réutiliser. `open.md` propose l'EUPL, sans décision de l'équipe.
 - **Licences des données :** Insee, DREES, ameli, FINESS et Annuaire Santé sont sous Licence Ouverte Etalab 2.0 (supposé d'après les portails, à confirmer fichier par fichier). Les conditions de réutilisation de CartoSanté (Atlasanté) **n'ont pas été vérifiées**.
 
@@ -126,7 +126,7 @@ Les lignes directrices du G29 (WP248 rév. 01), reprises par la CNIL, donnent 9 
 | Seuil de diffusion sur les tables communales publiées (cellules < 5 regroupées ou masquées, ou tables communales retirées du dépôt public et reconstruites localement) | ~30 min Claude |
 | Page « Conformité » dans le README : finalité, base légale, art. 14, destination non clinique, mention IA, avertissement sur le texte libre | ~20 min Claude |
 | Avertissement à l'ouverture de l'assistant : « réponses rédigées par une IA (Anthropic) ; ne saisissez pas de données personnelles » | ~10 min Claude |
-| Décider le DSFR : porteur public réel, ou habillage neutre (direction A) hors .gouv.fr | 10 min équipe, puis ~30 min Claude |
+| ~~Décider le DSFR~~ levé : projet porté par le Ministère ; nommer la structure porteuse dans le README | 5 min équipe |
 | Choisir une licence de code (EUPL 1.2 proposée) | 10 min équipe |
 | Vérifier les conditions de réutilisation de CartoSanté | ~15 min Claude |
 | Relecture par un DPO ou un juriste | temps humain |

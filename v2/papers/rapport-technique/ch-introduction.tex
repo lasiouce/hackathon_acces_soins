@@ -1,0 +1,98 @@
+\section{Introduction et guide de lecture}\label{int:intro}
+
+\subsection{La question}
+Former un professionnel de santé prend de trois à dix ans. Une décision prise aujourd'hui sur les places de
+formation, l'âge de départ, l'accueil des diplômés étrangers ou la régulation de l'installation n'agit donc sur
+l'offre de soins qu'à l'horizon d'une décennie, et parfois dans d'autres territoires que ceux visés. Les projections
+publiées (DREES) sont nationales ou régionales et tendancielles. Elles ne permettent pas de composer ses propres
+scénarios.
+
+Le projet construit un outil de recherche qui répond à la question suivante : \emph{quel effectif d'une profession,
+dans un territoire donné, à une date donnée, sous une politique donnée ?} La réponse prend la forme d'une
+distribution et non d'un chiffre unique. Elle est comparée à la tendance, et l'écart est décomposé par flux.
+
+\subsection{Périmètre et définitions}\label{int:perimetre}
+\begin{itemize}
+\item \textbf{Professions.} Sages-femmes (SF), chirurgiens-dentistes (CD), pharmaciens (PH),
+  masseurs-kinésithérapeutes (MK) et infirmiers (IDE). La médecine générale est exclue par le sujet. Les médecins
+  spécialistes (cardiologie, dermatologie, ophtalmologie) sont prévus en phase~2 et ne sont pas modélisés.
+\item \textbf{« Libéral ».} Dans tout ce document, le mot désigne le \emph{secteur privé}, lucratif ou non. Sont
+  inclus :
+  \begin{itemize}
+  \item les libéraux et les mixtes ;
+  \item les adjoints salariés d'officine ;
+  \item les salariés des établissements privés.
+  \end{itemize}
+  Tout employeur public est exclu. Les sources emploient « libéral » au sens d'exercice indépendant ; l'écart est
+  traité au chapitre~\ref{sec:donnees-ref}.
+\item \textbf{Échelles.} Commune, EPCI, bassin de vie, département, région et France. Le calcul descend à la
+  commune, mais l'affichage et la validation s'arrêtent au département (chapitre~\ref{sec:validation-ref}).
+\item \textbf{Horizon.} 2050 est l'horizon de référence des scénarios. L'horizon testable par backtest est
+  d'environ dix ans. Au-delà, les sorties sont des \emph{scénarios conditionnels}, pas des prévisions.
+\item \textbf{Données.} Uniquement des données ouvertes. Chaque fichier traité porte sa source, son millésime et le
+  script qui le produit (manifeste contrôlé par \texttt{v2/data/manifest.py --check}).
+\end{itemize}
+
+\subsection{L'état en un coup d'œil}\label{int:etat}
+\begin{center}\small
+\begin{tabular}{@{}p{0.27\textwidth}p{0.66\textwidth}@{}}
+\toprule
+Composant & État au 15 novembre 2026 \\
+\midrule
+Jumeau (chap.~\ref{sec:jumeau-ref}) & 18 critères d'acceptation sur 18\mesure, après trois revues adversariales ;
+  recalcul d'un scénario en 16\,ms\mesure au département (7 professions). \\
+Méthodes (chap.~\ref{sec:methodes-ref}) & C1 (cohortes) servi par le jumeau : MAPE départementale à $h=5$ de
+  7,76\,\%\mesure. Budget d'erreur : 3,11 points\mesure de bruit de comptage. Intervalles recalibrés, GBM et MLP
+  rejetés. \\
+Validation (chap.~\ref{sec:validation-ref}) & 12 protocoles pré-enregistrés. Le grain sous le département, les
+  leviers et 2050 ne sont pas validés. Dépôt de prévisions 2027 à juger en 2027. \\
+Données et paramètres & 34 fichiers traités commités sous manifeste. Hyperparamètres : 29 fiches relues sur le
+  texte intégral des sources le 15 novembre (chap.~\ref{sec:parametres-ref}). \\
+Interface & Carte (9 leviers de politique, 2 hypothèses de contexte), phrase en langage naturel compilée de façon
+  déterministe, assistant LLM ancré sur les sorties. \\
+Conformité & Pas un dispositif médical ; AIPD probablement non requise ; un point réel sur les petits effectifs
+  publiés (chap.~\ref{sec:conformite-ref}). \\
+Module de besoin & Programme défini, non construit (chap.~\ref{sec:ouvertes-ref}). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ce qui peut être cité, et ce qui ne doit pas l'être}\label{int:citer}
+\begin{itemize}
+\item \textbf{Peut être cité.}
+  \begin{itemize}
+  \item Les erreurs de backtest au département, horizon 1 à 5 ans, avec leur intervalle.
+  \item Les écarts entre scénarios, présentés comme des effets \emph{conditionnels au modèle}.
+  \item Les comptages et séparations public/privé de l'année de base, avec leur fourchette.
+  \end{itemize}
+\item \textbf{Ne doit pas être cité comme prévision.}
+  \begin{itemize}
+  \item Un effectif en 2050, y compris dans les supports de présentation du projet. La reproduction des
+    projections DREES à long terme échoue (chapitre~\ref{sec:sensibilite-ref}).
+  \item Un effectif communal.
+  \item L'effet d'un levier présenté comme causal et mesuré.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Guide de lecture selon le lecteur}
+\begin{itemize}
+\item \textbf{Statisticien.} Méthodes (\ref{sec:methodes-ref}), puis validation (\ref{sec:validation-ref}),
+  menaces à la validité (\ref{sec:menaces-ref}) et annexe~\ref{ann:incoherences}.
+\item \textbf{Chercheur en modélisation, programme Apollo.} Jumeau (\ref{sec:jumeau-ref}), sensibilité
+  (\ref{sec:sensibilite-ref}), questions ouvertes et module de besoin (\ref{sec:ouvertes-ref}), reproductibilité
+  (\ref{sec:repro-ref}).
+\item \textbf{Professionnel de la planification.} Ce chapitre, puis données (\ref{sec:donnees-ref}), interface
+  (\ref{sec:produit-ref}) et conformité (\ref{sec:conformite-ref}).
+\end{itemize}
+
+\subsection{Conventions}
+Chaque nombre porte un exposant de provenance :
+\begin{itemize}
+\item \mesure{} : mesuré sur les données ou par un script du dépôt ;
+\item \derive{} : dérivé par calcul de nombres mesurés ou sourcés ;
+\item \suppose{} : supposé, c'est-à-dire posé sans mesure.
+\end{itemize}
+Les chemins cités sont relatifs à la racine du dépôt. Quand deux fichiers du dépôt donnent des valeurs différentes
+pour une même grandeur, le texte retient la mesure la plus récente, et l'annexe~\ref{ann:incoherences} liste les
+deux valeurs et la raison du choix. Le rapport décrit et compare ; il ne qualifie pas les territoires (lexique de
+\texttt{v2/docs/lab/lexicon.md}).

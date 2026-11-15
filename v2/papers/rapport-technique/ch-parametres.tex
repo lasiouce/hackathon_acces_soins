@@ -1,0 +1,222 @@
+% Chapitre « Hyperparamètres » (axe 1). Sources : v2/docs/lab/fiches/param-*.md (29 fiches, sections
+% « Relecture (2026-11-15) »), v2/docs/lab/reports/2026-11-14-axe1-hyperparametres.md,
+% v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md et son dossier (JSON des lecteurs et vérificateurs),
+% v2/docs/lab/reports/2026-11-14-audit-sources.md, v2/papers/axe1-hyperparametres/main.tex. État relu le 2026-11-15.
+\providecommand{\donfic}[1]{\nolinkurl{#1}}
+\section{Hyperparamètres}\label{par:sec}\label{sec:parametres-ref}
+\begingroup\setlength{\emergencystretch}{3em}% local à ce chapitre
+
+Un hyperparamètre est une valeur que le jumeau ne mesure pas sur ses propres séries : une règle de régulation,
+une part de filière, un taux d'abandon en formation, un âge d'entrée, un flux de diplômés étrangers. Chacun a
+une fiche \donfic{v2/docs/lab/fiches/param-*.md} qui donne sa valeur, sa source primaire, son millésime et son
+statut. Abréviations : \donfic{R/axe1} pour \donfic{2026-11-14-axe1-hyperparametres.md}, \donfic{R/relecture}
+pour \donfic{2026-11-15-axe1-relecture-sources.md}, \texttt{Audit} pour \donfic{2026-11-14-audit-sources.md},
+\texttt{A1} pour l'article \donfic{v2/papers/axe1-hyperparametres/main.tex}, \texttt{D} pour
+\donfic{v2/docs/lab/decisions.md}.
+
+\paragraph{Convention.} La convention est celle de \texttt{A1}. \mesure{}~: calculé par le projet sur une
+donnée ouverte, ou lu dans la source primaire citée à côté du nombre (statut « sourcé », So, des fiches).
+\derive{}~: rapport, différence ou arrondi calculé par nous. \suppose{}~: valeur par défaut sans mesure.
+Statuts des fiches : So sourcé, Me mesuré, Su supposé, NM non mesurable. Les années, dates, numéros
+d'articles et de pages ne sont pas étiquetés.
+
+\subsection{Catalogue}\label{par:catalogue}
+
+Le tableau~\ref{par:tab-catalogue} reprend les 29\mesure{} fiches. La dernière colonne donne le verdict de la
+relecture en texte intégral du 2026-11-15 (section~\ref{par:relecture}) : \emph{confirmé}, \emph{corrigé de
+$\to$ à}, ou \emph{introuvable}. Une fiche « confirmée » peut avoir reçu une précision de libellé sans
+changement de valeur.
+
+{\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{2.25cm}p{4.0cm}p{1.55cm}p{2.75cm}p{0.6cm}p{3.75cm}@{}}
+\caption{Catalogue des hyperparamètres et résultat de la relecture du 15/11 (fiches param-$\ast$,
+\donfic{R/relecture}, tableau « Résultat »).}\label{par:tab-catalogue}\\
+\toprule
+Fiche & Valeur & Unité & Source & Statut & Relecture du 15/11 \\
+\midrule\endfirsthead
+\toprule
+Fiche & Valeur & Unité & Source & Statut & Relecture du 15/11 \\
+\midrule\endhead
+\bottomrule\endfoot
+\multicolumn{6}{@{}l}{\emph{Régulation de l'installation}}\\
+ide-regul-regle & zone sur-dotée : 1\mesure{} entrée pour 1\mesure{} cessation ; en périphérie, au moins
+2/3\mesure{} de l'activité dans la zone ; 27,4~\%\derive{} de la population, 13,7~\%\derive{} des communes &
+règle par commune & avenant 6 IDE, art. 3.4 \citep{d-avenant6ide} ; zonage au 20/10/2026
+\citep{d-zonagesdatagouv} & So & confirmé \\
+ide-regul-effet-densite & $-25{,}57$\mesure{} IDEL pour \num{100000} hab. ($-18{,}8$\mesure{} chez les moins de
+40~ans), $p<0{,}001$\mesure & différence de différences & IRDES QES 270, p.~5, 2006--2016 \citep{d-irdes270} &
+So & confirmé ; appariement p.~3 ; repères 2012 sourcés par la presse \\
+regul-theta-fuite & $\theta = \num{0.80}$ $[\num{0.74} ; \num{0.87}]$\suppose & sans dimension & rapport interne
+axe~3, N3 (tendances parallèles : $p = \num{0.043}$\mesure) & Su & confirmé (rapport interne) \\
+sf-regul-regle & 1 pour 1\mesure{} en zone sur-dotée ; 12,2~\%\derive{} de la population, 4,2~\%\derive{} des
+communes & règle & avenant 4 SF, art. 3.3 \citep{d-avenant4sf} & So & corrigé (mécanisme omis) : les entrées
+dérogatoires (art. 3.3.3 a-b) ne rendent pas de place \\
+sf-regul-effet & direction seulement (disparités en baisse, 2016--2019) & --- & IGAS 2022-027R, p.~67
+\citep{d-igas2023} ; Cour des comptes 2024 \citep{d-ccomptes2024} & NM & corrigé (attribution) : le bilan GDR
+porte sur les aides, pas sur la régulation \\
+mk-regul-regle & 1 pour 1\mesure{} en zone non prioritaire ; cédant $\ge \num{1200}$\mesure{} actes ; successeur
+sous 2\mesure{} ans ; 26,5~\%\derive{} de la population, 8,1~\%\derive{} des communes & règle & avenant 7 MK,
+art. 1.2.1 \citep{d-avenant7mk} ; CE n\textsuperscript{o}~488665 \citep{d-ce488665} & So & confirmé ;
+« avenant 5 » non sourcé comme texte de régulation \\
+mk-obligation-exercice & 2\mesure{} ans (au moins \num{6000}\mesure{} actes) en zone sous-dotée, ou 2\mesure{}
+ans en établissement ; premiers diplômés concernés vers 2027--2028\derive & années & avenant 7 MK, art. 4.1.1
+\citep{d-avenant7mk} & So & confirmé \\
+mk-regul-effet & non chiffré & --- & IRDES DRIMK (juillet 2026, p.~4) ; Cour des comptes 2024
+\citep{d-ccomptes2024} & NM & corrigé : travail IRDES achevé, sens établi, ampleur non publiée ; « avenant 5
+(2018) » $\to$ « accord conventionnel de 2018 » \\
+cd-regul-regle & 1 pour 1\mesure{} en zone non prioritaire ; cédant $\ge 2$\mesure{} jours par semaine ;
+successeur sous 1\mesure{} an ; 4,8~\%\mesure{} de la population ; spécialistes dérogatoires (art. 35.5) & règle
+& convention CD 2023, art. 33.1, 35 \citep{d-conventioncd2023} ; ARS PACA \citep{d-arspaca2025cd} & So &
+confirmé ; art. 35.5 relibellé « dérogation » dans le code \\
+cd-regul-effet & non chiffré ; borne haute d'environ 5~\%\derive{} du flux & --- & mémoire EHESP, \S~3.3.2,
+p.~53 \citep{d-bahroun2025} & NM & confirmé \\
+regul-report-entrants ($\psi$) & qualitatif : report en bordure ; « contournement par le remplacement » &
+parts par destination & IRDES QES 270, p.~6 \citep{d-irdes270} ; Cour 2024, p.~95 \citep{d-ccomptes2024} & NM
+& introuvable : « remplacement » et « deux tiers (EHESP) » absents des deux sources ; report en bordure
+confirmé \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Filières en pharmacie}}\\
+ph-filiere-primo-inscrits ($\varphi$) & 2025 : D 71,0 ; H 9,5 ; B 8,6 ; G 5,7 ; E 3,5 ; A 1,2 ; C
+0,4~\%\mesure{} de \num{3044}\mesure{} primo-inscrits & part par section & CNOP, Panorama 2025, p.~2
+\citep{d-cnop2025} & So & confirmé (étiquettes vérifiées sur le rendu image) \\
+ph-part-privee-biologie ($s_G$) & 55,8~\%\derive{} (2025) ; 55,3~\%\derive{} (2024) & part de la section G &
+CNOP 2025 \citep{d-cnop2025} & So & confirmé ; pente $-0{,}5$\derive{} point par an plutôt $-0{,}4$\derive \\
+ph-part-privee-etablissements ($s_H$) & 28,6~\%\derive{} des inscriptions H+E (\num{2548} / \num{8924}\mesure) ;
+30,0~\%\derive{} des fonctions en PUI & part des inscriptions & CNOP 2016, 2024, 2025
+\citep{d-cnop2016,d-cnop2024,d-cnop2025} & So & corrigé : « \num{8106} personnes » $\to$ \num{8106}\mesure{}
+inscriptions, \num{7817}\mesure{} personnes ; ligne 2015 en double \\
+ph-internat-postes & \num{746}\mesure{} postes (biologie \num{266}, pharmacie hospitalière \num{480}\mesure),
+rentrée 2025 ; \num{536}\mesure{} internes inscrits en 1\textsuperscript{re} année ; environ 19~\%\derive{} d'une
+promotion & postes par an & arrêté du 6/12/2024 \citep{d-arrete2024pharma} ; CNOP 2024 \citep{d-cnop2024} & So
+& confirmé \\
+ph-taux-inscription-diplomes ($\varepsilon_{\mathrm{PH}}$) & 32,8~\%\mesure{} de diplômés non inscrits à 3 ans
+(2015) & part & CNOP 2016, p.~7 \citep{d-cnop2016} & So & confirmé \\
+ph-sorties-ordre & \num{3902}\mesure{} radiations en 2024 ; 18,4~\%\mesure{} de 60~ans et plus & personnes par
+an & CNOP, synthèse 2024 \citep{d-cnop2024} & So & corrigé : ajout du solde primo-inscrits $-$ radiations $=
+\num{-975}$\derive \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Odontologie}}\\
+cd-specialisation-des ($\sigma_{\mathrm{CD}}$) & 9,1~\%\derive{} d'une promotion (2024 : 121 /
+$\approx\num{1332}$) ; ODF 52, CO 25, MBD 44\mesure{} ; 140\mesure{} postes en 2026-27 & postes / places en
+2\textsuperscript{e} année à $t-4$\suppose & arrêtés 2023, 2024, 2026
+\citep{d-arrete2023odonto,d-arrete2024odonto,d-arrete2026odonto} ; CNG \citep{d-cng2018} & So & corrigé :
+2023 = 120 / \num{1332} = 9,1 $\to$ 9,0~\%\derive{} ; 2024 confirmé \\
+cd-stock-specialistes & 2022 : ODF \num{2465}\mesure{} (5,4~\%\derive), CO 222\mesure, MBD 100\mesure,
+omnipraticiens \num{43242}\mesure & praticiens & ONCD 2019--2022 \citep{d-oncd2022} & So & corrigé : ODF
+5,3 $\to$ 5,4~\%\derive{} (\num{2465} / \num{46029}) \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Formation infirmière}}\\
+ide-rendement-diplomes ($\rho$) & \num{0.72}\mesure{} (\num{26020} / \num{36218}, entrée 2022) ; \num{0.81} à
+\num{0.85}\mesure{} sur 2009--2018 & diplômés$(t+3)$ / inscrits$(t)$ & DREES 491 \citep{d-drees491} & Me &
+confirmé (\num{0.72}) ; « 76~\% » = diplômés 2022 / inscrits 2019 ; « \num{0.77} » introuvable \\
+ide-abandon-promotion & 25,0~\%\mesure{} de la promotion 2025 ; 11,9~\%\mesure{} définitives (promotion 2024) &
+part d'une promotion & DREES 491 ; ER 1266 \citep{d-drees491,d-er1266} & So & confirmé ; « sans report »
+jusqu'en 2021 \\
+ide-abandon-1a & 12,0~\%\mesure{} (2025) ; 3,3 (2011) $\to$ 10,0 (2021) $\to$ 13,1 à 13,5~\%\mesure{}
+(2022--2024) & part des inscrits de 1\textsuperscript{re} année & DREES 491 \citep{d-drees491} & So & confirmé ;
+« quadruplé » $\to$ « triplé entre 2011 et 2021 » \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Sorties et entrée en exercice}}\\
+cessation-par-age $x_p(a)$ & non publiée ; mesurable sur le RPPS & probabilité annuelle & DD76, tab.~11
+\citep{d-dd76} ; ER 1062, 1075 \citep{d-er1062,d-er1075} & NM & corrigé (libellé) : pas de ventilation par
+sexe pour les SF ; ancrages agrégés ajoutés \\
+mortalite & incluse dans la cessation & --- & DD76 ; ER 1062, 1075, 1319 \citep{d-dd76,d-er1319} & NM &
+confirmé \\
+age-entree-exercice & diplômés en France : SF 24, CD 26, PH 27 à 29~ans\mesure{} ; à l'étranger : SF 28, CD
+28~ans\mesure & âge moyen & DD76, tab.~12-13 \citep{d-dd76} & So & confirmé, complété : MK diplômés à l'étranger
+26~ans\mesure{} \citep{d-er1075} \\
+cumul-emploi-retraite & SF 0,8 ; CD 4,7 ; PH 1,8 ; MK et IDE 1,5~\%\derive & part des cotisants & COR 2016,
+doc.~11 \citep{d-cor2016} & So & confirmé ; répartition MK / IDE de la CARPIMKO\suppose \\
+mk-age-retraite & 66,8 à 67,3~ans\mesure{} (moyenne) ; 657 à 811\mesure{} départs par an & années & CNOMK 2024,
+tab.~5, 7 \citep{d-cnomk2024} & So & confirmé ; libellé « cessation d'activité » précisé \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Ajoutés après l'audit du 14/11}}\\
+part-privee-salaries-sae & 2025 : SF 19,8 ; PH 29,4 ; MK 44,3 ; CD 2,2~\%\mesure & part des salariés au 31/12 &
+SAE, jeu 708, Q20, Q23 \citep{d-sae708} & Me & confirmé (codes ; parts non recalculées) \\
+diplomes-etrangers-flux & CD \num{1300}\derive, MK \num{2200}\derive, IDE 400\mesure, PH 240\derive, SF
+80\derive{} par an & personnes par an & DD76, ER 1026, 1075, 1319, CNOMK, CNOP
+\citep{d-dd76,d-er1075,d-er1319,d-cnomk2024} & So & confirmé (valeurs) ; étiquettes corrigées : CD \num{1300}
+sourcé $\to$ dérivé \\
+\end{longtable}
+}
+
+\subsection{Relecture intégrale du 15 novembre}\label{par:relecture}
+
+\paragraph{Protocole (\donfic{R/relecture}, \S~Comment).} 23\mesure{} lecteurs (modèles Haiku), un par source,
+ont relu en texte intégral 355\mesure{} affirmations des fiches : 247\mesure{} confirmées, 35\mesure{} écarts,
+67\mesure{} introuvables, 6\mesure{} inaccessibles. Chaque écart et chaque introuvable est passé par un
+vérificateur (modèle Sonnet, 10\mesure{} agents) chargé de le réfuter : 6\mesure{} écarts réfutés,
+27\mesure{} introuvables retrouvés, souvent dans une autre source de la même fiche. Les consignes et les JSON
+sont dans \donfic{v2/docs/lab/reports/2026-11-15-axe1-relecture/}.
+
+\paragraph{Verdict par paramètre.} Sur 29\mesure{} paramètres : \textbf{20\mesure{} confirmés, 8\mesure{}
+corrigés, 1\mesure{} introuvable}. Nous avons recompté ces nombres sur le tableau « Résultat » de
+\donfic{R/relecture} : les 8 corrigés sont cd-specialisation-des, cd-stock-specialistes, cessation-par-age,
+mk-regul-effet, ph-part-privee-etablissements, ph-sorties-ordre, sf-regul-effet et sf-regul-regle ;
+l'introuvable est regul-report-entrants. Aucune source n'était entièrement inaccessible ; trois l'étaient en
+partie (base RegProf, communiqué DREES du 07/11/2023, Légifrance lu via des reproductions du JO).
+
+\paragraph{Effet sur le code.} Aucune valeur numérique du code ne change. Les valeurs FLUX (\num{1300},
+\num{2200}, 400, 240, 80), PART\_CUMUL, ABANDON (IDE \num{0.718}\mesure ; SF \num{0.0331} et $L = 4$) et
+$\theta = \num{0.80}$\suppose{} sont confirmées ou défendables. Seuls des libellés changent, dans
+\donfic{regulation.py}, \donfic{etrangers.py} et \donfic{sorties.py}. \donfic{jumeau.check} passe
+18\mesure{} critères sur 18, avec des sorties identiques à la référence.
+
+\paragraph{Écart mesuré, non corrigé : l'âge d'entrée des diplômés à l'étranger.} Le code fixe un âge unique de
+28\suppose{} ans. Les sources donnent 26~ans\mesure{} pour les MK \citep{d-er1075}, 31~ans\mesure{} pour les PH
+\citep{d-dd76}, et pour les CD 32~ans\mesure{} (ER 1026) ou 28~ans\mesure{} (DD76) : elles se contredisent.
+Dans le scénario « étrangers $\times 2$ », l'écart sur $N(2050)$ vaut 0\mesure{} pour les MK (même tranche
+d'âge), $-191$\mesure{} ($-0{,}2$~\%\derive) pour les PH et $\num{-1369}$\mesure{} ($-1{,}3$~\%\derive) pour les
+CD (\donfic{impact_age.py}). Le tendanciel ne bouge pas. C'est ouvert dans \texttt{D}.
+
+\paragraph{Réserves.} Les lecteurs ont souvent lu par mots-clés ; environ la moitié\mesure{} des sources n'a eu
+qu'un accès partiel. Les 247 affirmations « confirmées » n'ont pas eu de second passage : un faux confirmé n'a
+pas été cherché. Deux sources se contredisent elles-mêmes : ONCD 2022 (\num{1333}\mesure{} diplômés hors France
+p.~27, \num{1321}\mesure{} d'après le tableau p.~28) ; dénominateur d'odontologie (\num{1332}\mesure{} selon
+SNESUP et Weka, \num{1322}\mesure{} selon L'Étudiant).
+
+\subsection{Contradictions entre l'audit du 14 et la relecture du 15}\label{par:contradictions}
+
+L'audit du 14/11 a relu 469\mesure{} citations du projet (\texttt{Audit}) ; la relecture du 15/11 a relu les
+sources des fiches param-$\ast$. Elles se contredisent sur deux points. Dans les deux cas, la fiche suit la
+relecture.
+
+\paragraph{IGAS, note 133 (MK).} L'audit (registre A1, fiche \emph{mk-regul-effet}) écrit que l'IGAS ne
+date pas la hausse des disparités d'accès aux MK (« note 133, sans période ; le \S~200 couvre 2016--2021 ») et
+la classe CORRIGÉE (période). La relecture (fiche \emph{mk-regul-effet}, section « Relecture ») écrit que la
+période est bien 2016--2019 et que « sans période précise » est faux \citep{d-igas2023}. Le texte de l'IGAS n'a
+pas été rouvert une troisième fois.
+
+\paragraph{Avenant 5 (2018) des MK.} L'audit (registre A1) ajoute « la régulation de l'avenant 5 (2018) en zones
+sur-dotées », en s'appuyant sur la note 152 de la Cour des comptes (p.~95) et sur la question écrite AN 14922,
+qui parle d'un dispositif « issu des avenants n° 5 et n° 7 ». La relecture lit la note 152 : la Cour écrit
+« accord conventionnel de 2018 », sans numéro \citep{d-ccomptes2024}. L'avenant 7 ne cite l'avenant 5 qu'à
+propos d'options conventionnelles \citep{d-avenant7mk}. Les deux vérificateurs concluent que le numéro n'est
+pas sourcé ; l'un le marque dérivé, l'autre supposé (\donfic{verificateurs/v07}, \texttt{v08}). La question
+écrite AN 14922 n'est pas dans le périmètre de la relecture : le point n'est donc pas clos. \texttt{A1} (\S~Régulation)
+écrit encore « l'avenant~5 de 2018 » ; le tableau~3 de l'article de l'axe~4 et \donfic{v2/data/events.csv}
+gardent une régulation MK au 01/07/2018, que l'audit (registre C2) jugeait déjà non vérifiable.
+
+\subsection{Part des paramètres réellement sourcés}\label{par:sources}
+
+Le décompte des statuts a changé entre deux documents : 27\mesure{} fiches dans \donfic{R/axe1} (19 So, 1 Me,
+1 Su, 6 NM\mesure) ; 29\mesure{} dans \texttt{A1} et \donfic{R/relecture} (20 So, 2 Me, 1 Su, 6 NM\mesure),
+après l'ajout de \texttt{part-privee-salaries-sae} (Me) et \texttt{diplomes-etrangers-flux} (So).
+
+Le statut « sourcé » de 20\mesure{} fiches sur 29, soit 69~\%\derive, surestime ce qui est lu tel quel dans
+une source :
+\begin{itemize}
+  \item 5\mesure{} fiches So ont été corrigées le 15/11 (sf-regul-regle, ph-part-privee-etablissements,
+  ph-sorties-ordre, cd-specialisation-des, cd-stock-specialistes) : 15\derive{} fiches So sur 29, soit
+  52~\%\derive, sont confirmées sans correction ;
+  \item parmi elles, \texttt{diplomes-etrangers-flux} porte des valeurs presque toutes dérivées (CD, MK, PH,
+  SF) ; seule la valeur IDE (400) est lue dans une source \citep{d-er1319} ;
+  \item plusieurs fiches So portent une règle sourcée et une part de population dérivée (zonage) ; c'est la
+  règle qui est sourcée, pas la part.
+\end{itemize}
+Au total, 14\derive{} fiches sur 29, soit 48~\%\derive, ont une valeur principale lue dans une source primaire
+et confirmée sans correction. 2\mesure{} sont mesurées par le projet. Les 13\derive{} autres sont non
+mesurables (6), supposée (1), corrigées (5) ou dérivées pour l'essentiel (1). Les ordres de grandeur du jumeau
+reposent donc, pour moitié, sur des valeurs qui ne sont pas des lectures directes.
+\endgroup

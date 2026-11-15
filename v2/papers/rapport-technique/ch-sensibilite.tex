@@ -1,0 +1,316 @@
+% Chapitre : sensibilité et incertitude à 2050 (axe 5).
+% Sources principales : v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md, v2/papers/axe5-sensibilite/main.tex,
+% v2/sensibilite/ (code), v2/docs/lab/decisions.md (entrées « Axe 5 » du 2026-11-14 et « Axe 3, nuit »).
+% Les valeurs anciennes qui circulent encore dans le dépôt sont relevées en annexe (ann:incoherences).
+\begingroup\sloppy\setlength{\emergencystretch}{3em}% coupures des chemins longs, local à ce fichier
+
+\section{Sensibilité et incertitude à 2050}\label{sec:sensibilite-ref}\label{sen:sec}
+
+L'analyse de sensibilité (axe~5) répond à deux questions. Quels facteurs déplacent l'effectif privé en 2030, 2040
+et 2050, et de combien ? Le choix du décideur pèse-t-il plus, dans la variance de cet effectif, que ce que l'on
+ignore des données et des paramètres ? Elle sert aussi à mettre un prix sur l'axe~1 : il est inutile de sourcer
+finement un paramètre qui ne déplace pas la sortie. Le code est dans \texttt{v2/sensibilite/} ; le rapport est
+\texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md} et le prétirage \texttt{v2/papers/axe5-sensibilite/main.tex}.
+Toutes les valeurs de ce chapitre sont mesurées sur le jumeau (chapitre~\ref{jum:sec}), sauf mention contraire.
+
+\paragraph{Ce que ce chapitre ne donne pas.} Aucun chiffre 2050 n'est citable comme projection. Le registre l'a
+conclu le 2026-11-14 après les protocoles de l'axe~3 : aucune bande n'est calibrée à son niveau nominal, et les
+entrées du moteur sont biaisées vers le haut (\texttt{v2/docs/lab/decisions.md}, « Axe 3, nuit : \dots{} aucun
+chiffre 2050 citable »). Aucun backtest n'existe au-delà de $h = 10$\mesure{}~ans (5\mesure{}~ans pour les
+kinésithérapeutes et les infirmiers). Les niveaux et fourchettes ci-dessous décrivent la réponse du modèle à ses
+facteurs ; ce ne sont pas des prévisions.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Méthode}\label{sen:methode}
+
+\paragraph{Sortie.} $Y_{p,t}$ est l'effectif privé national de la profession $p$, somme de
+l'équation~\eqref{jum:eq:sortie} sur les départements, pour $t \in \{2030, 2040, 2050\}$. Le jumeau tourne au
+département. L'origine est 2026, sauf pour les infirmiers (2023).
+
+\paragraph{Deux parties.}
+\begin{itemize}
+  \item \textbf{Partie 1} (stock-flux de référence, privé seul). Sans régulation ni transition, aucun flux ne
+        relie le privé et le public. Pour les infirmiers, la table par secteur n'a ni âge ni sexe : la partie~1
+        prend les infirmiers libéraux (SNDS), soit \num{98854}\mesure{} en 2023 contre \num{277788}\mesure{}
+        dans tout le privé, environ 36\derive{}\,\%.
+  \item \textbf{Partie 2} (composition \texttt{LEVIERS}, leviers branchés). Pour les infirmiers, le périmètre
+        devient le privé complet, sous une hypothèse d'indépendance secteur--âge--sexe (2013--2023) qui n'est pas
+        variée. Le statu quo égale le tendanciel du jumeau à une personne près\mesure{}.
+\end{itemize}
+
+\paragraph{Facteurs de la partie 1} (tableau~\ref{sen:tab:facteurs}). Les niveaux discrets sont
+équiprobables\suppose{}. Deux familles d'analyse : « tout » (leviers compris) classe ce qui déplace $Y$ ;
+« incertitude » (leviers au tendanciel) donne la fourchette~(a). La variante d'entrées « tendance » (pente
+prolongée) est exclue du plan : elle multiplie $Y_{2050}$ par 4 à 10\mesure{} avec une fenêtre de 2~ans
+(sages-femmes : \num{183200} contre \num{19000}\mesure{}).
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{p{4.0cm}llp{3.6cm}}
+\toprule
+Facteur & Famille & Plage & Statut de la plage \\
+\midrule
+fenêtre d'ajustement & estimation & $\{2, 3, 5, 8\}$ ans & choix \\
+\texttt{shrink} & estimation & $\{20, 200, 2000, \text{national}\}$ & choix \\
+entrées & estimation & \{plates, récentes 2 ans\} & choix \\
+filière (CD, PH) & estimation & \{non, oui\} & choix ; inscrits DREES 2020--2025 \\
+part privée des salariés ambigus (sauf IDE) & données & \{min, centrale, max\} & bornes mesurées (axe~4) \\
+fraction de vieillissement & paramètre & $[0{,}18 ; 0{,}22]$ & supposé\suppose{} \\
+part en cumul emploi-retraite & paramètre & fiche $\times [0{,}5 ; 2]$ & sourcé (COR 2016) $\times$ supposé \\
+report de la retraite & levier & $[0 ; 2]$ ans & levier \\
+multiplicateur de cumul & levier & $[1 ; 2]$ & levier \\
+quotas (après $L_p$) & levier & $[0{,}8 ; 1{,}2]$ & levier ; DD76 $\pm 20$\,\% \\
+\bottomrule
+\end{tabular}
+\caption{Facteurs de la partie~1 (\texttt{v2/papers/axe5-sensibilite/main.tex}, tableau~1).}
+\label{sen:tab:facteurs}
+\end{table}
+
+\paragraph{Plans d'expérience.}
+\begin{itemize}
+  \item \textbf{Morris} \citep{morris1991} : $r = 30$ trajectoires, $p = 4$ niveaux, pas $\Delta = 2/3$ de la
+        plage. On rapporte $\mu^*$, moyenne des effets élémentaires absolus \citep{campolongo2007}, en \% de $Y$
+        tendanciel.
+  \item \textbf{Sobol} \citep{sobol2001} : matrices $A$, $B$ et $A_B^{(i)}$, $N = 2048$, soit $N(k+2)$ runs. Avec
+        $Y$ centré et $V$ sa variance,
+        \begin{equation}\label{sen:eq:sobol}
+          S_i = \frac{\overline{f(B)\,\bigl[f(A_B^{(i)}) - f(A)\bigr]}}{V}, \qquad
+          S_{T,i} = \frac{\overline{\bigl[f(A) - f(A_B^{(i)})\bigr]^2}}{2V},
+        \end{equation}
+        $S_i$ par l'estimateur de \citet{saltelli2010}, $S_{T,i}$ par celui de \citet{jansen1999}. Intervalles à
+        95\,\% par 500 rééchantillonnages bootstrap des lignes, graine \num{20261114}.
+  \item \textbf{Groupes} (partie~2) : les indices de groupe s'obtiennent en remplaçant d'un bloc les colonnes du
+        groupe ; $N = 512$ par profession, soit \num{9216} à \num{11765}\mesure{} runs, 20 à 58\mesure{}~min par
+        profession sur 5 processus.
+\end{itemize}
+La partie~1 a demandé \num{201276}\mesure{} runs en \SI{1187}{\second}\mesure{} sur une machine chargée, soit 2,7 à
+4,2\mesure{}~ms par run au repos une fois les ajustements en cache.
+
+\paragraph{Groupes de la partie 2.}
+\begin{itemize}
+  \item \textbf{Décision} : quotas et capacité de formation ; report de la retraite ; cumul emploi-retraite
+        $\times [0{,}5 ; 2]$ ; départs avant 60~ans $\times [0{,}5 ; 1{,}5]$ ; abandon en formation infirmière
+        $[0{,}056 ; 0{,}105]$\derive{} par an ; diplômés à l'étranger $\times [0{,}5 ; 2]$ ; part des zones
+        régulées $[0 ; 1]$.
+  \item \textbf{Connaissance} : les facteurs de la partie~1 hors leviers ; le flux annuel de diplômés à l'étranger,
+        bas ou haut (dentistes : 665 ou \num{1300}\derive{} par an) ; la part contraignante
+        $\theta \in [0{,}5 ; 1]$\suppose{}, la destination des entrants bloqués et la part dérogatoire.
+  \item \textbf{Amplitude des leviers.} Référence « DD76 » : quotas et capacité $\times [0{,}8 ; 1{,}2]$, retraite
+        0 à 2~ans, plage sourcée \citep{drees2021dd76} et retenue par l'utilisateur·rice
+        (\texttt{decisions.md}, 2026-11-14, « l'amplitude de référence des leviers est celle de DD76 »). Variante
+        « interface » : $\times [0{,}7 ; 1{,}5]$, retraite 0 à 3~ans, plages du prototype ; publiée comme
+        sensibilité.
+\end{itemize}
+
+\paragraph{Fourchettes à 2050.} Deux composantes, jamais additionnées :
+\begin{itemize}
+  \item \textbf{(a) propagation} : quantiles 5 et 95\,\% de $Y$ sur les $2N$ tirages de la famille
+        « incertitude » ;
+  \item \textbf{(b) backtest extrapolé} : banc à origines glissantes (protocole N1 de l'axe~3,
+        $h \in \{1, 3, 5, 8, 10\}$), erreur relative du total national ; pente $a$ de $|\text{erreur}| \propto h$
+        par moindres carrés sans constante, puis $\pm 1{,}6\, a\, h$. Le facteur 1,6 est repris d'un outil de
+        l'équipe pour couvrir environ 8 cas sur 10 ; il est cité, non reproduit.
+\end{itemize}
+Au département (partie~2), la largeur (a) est $(P_{95} - P_5)/Y^{\text{tend}}$ sur 500 tirages de la connaissance
+seule, décisions au statu quo. Elle est comparée à un seuil dérivé : deux fois l'effet national à 2050 de quotas
+$\times 1{,}2$, mesuré par profession (\texttt{decisions.md}, 2026-11-14, « fourchettes départementales et seuil
+\enquote{assez sûr pour décider} »). Sous ce seuil, l'effet du levier le plus fort dépasse la demi-bande de
+connaissance.
+
+\paragraph{Version du code.} Le jumeau a changé pendant l'analyse. Les deux parties ont été relancées sur un
+instantané figé du jumeau (\texttt{git archive} du commit \texttt{b64ce56}) et sur les données du 2026-11-14,
+08:08 ; empreintes SHA-256 tronquées \texttt{c784b1a8} (secteur), \texttt{43ad2c58} (infirmiers),
+\texttt{4e5da69f} (zonage) (\texttt{decisions.md}, 2026-11-14, « relance sur le jumeau b64ce56 »). Les sorties
+antérieures sont gardées dans \texttt{v2/sensibilite/out/avant\_b64ce56/}.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Résultats}\label{sen:resultats}
+
+\paragraph{Partie 1 : sources de la variance en 2050.} Indices totaux $S_T$ (tableau~\ref{sen:tab:st}). Trois sources
+portent l'essentiel :
+\begin{itemize}
+  \item la part privée des salariés ambigus (sages-femmes 0,78\mesure{}, pharmaciens 0,48\mesure{}) ;
+  \item le lien entre formation et entrées : filière 0,55\mesure{} (dentistes) et 0,32\mesure{} (pharmaciens) ;
+        en levier, les quotas pèsent de 0,19 à 0,61\mesure{} selon la profession (famille « tout ») ;
+  \item la fenêtre d'ajustement : 0,53\mesure{} pour les kinésithérapeutes et les infirmiers.
+\end{itemize}
+En 2030, la part privée domine pour les quatre professions où elle est variée (0,69 à 0,95\mesure{}) ; pour les
+infirmiers, la fenêtre (0,65\mesure{}) et les entrées (0,52\mesure{}).
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lp{5.6cm}p{5.6cm}}
+\toprule
+Profession & Famille « incertitude » & Famille « tout » \\
+\midrule
+Sages-femmes & part privée 0,78 & part privée 0,45 ; quotas 0,39 \\
+Dentistes & filière 0,55 ; part privée 0,26 ; fenêtre 0,13 ; entrées 0,10 & filière 0,44 ; part privée 0,21 ;
+  quotas 0,19 \\
+Pharmaciens & part privée 0,48 ; filière 0,32 ; fenêtre 0,15 & part privée 0,37 ; quotas 0,25 ; filière 0,23 \\
+Kinésithérapeutes & fenêtre 0,53 ; part privée 0,18 ; entrées 0,17 ; \texttt{shrink} 0,17 ; fraction 0,12 &
+  quotas 0,61 [0,58--0,64] ; fenêtre 0,21 \\
+Infirmiers (libéraux) & fenêtre 0,53 ; entrées 0,49 ; fraction 0,20 & quotas 0,53 [0,50--0,57] ; entrées 0,27 ;
+  fenêtre 0,25 ; retraite 0,03 \\
+\bottomrule
+\end{tabular}
+\caption{Partie~1 : indices totaux $S_T$ en 2050 (mesurés\mesure{}). Intervalles bootstrap dans
+\texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md}.}
+\label{sen:tab:st}
+\end{table}
+
+\paragraph{Interactions et contrôles.} Sur $Y$ brut, $S_1$ sortait de $[0 ; 1]$ ($-0{,}34$ à $1{,}78$\mesure{}) ; sur
+$Y$ centré, il reste dans $[-0{,}001 ; 1{,}008]$\mesure{}. Les écarts $S_T - S_1$ montrent des interactions : pour
+les infirmiers, fenêtre $S_1 = 0{,}28$ contre $S_T = 0{,}53$\mesure{}, entrées $0{,}24$ contre $0{,}49$\mesure{} ;
+pour les kinésithérapeutes, fenêtre $0{,}35$ contre $0{,}53$\mesure{}. Morris donne le même ordre : $\mu^*$ de 15 à
+19\mesure{}\,\% de $Y_{2050}$ pour les quotas, 24\mesure{}\,\% pour la filière dentaire, de 4 à 8\mesure{}\,\% pour
+la fenêtre et la fraction de vieillissement.
+
+\paragraph{Résultat nul : le cumul emploi-retraite.} $\mu^* \le 0{,}25$\mesure{}\,\% de $Y_{2050}$ pour la part
+comme pour le multiplicateur, $S_T < 0{,}01$\mesure{}. La question est fermée pour l'axe~1. Le report de la
+retraite a un $S_T \le 0{,}02$\mesure{}, sauf pour les infirmiers en 2030 (0,14\mesure{}).
+
+\paragraph{Partie 1 : fourchettes nationales à 2050} (tableau~\ref{sen:tab:fourchettes}).
+
+\begin{table}[h]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrlll}
+\toprule
+Profession & $Y^{\text{tend}}_{2050}$ & (a) P5--P95 & (b) backtest extrapolé & Biais à $h = 5$ \\
+\midrule
+Sages-femmes & \num{18991} & \num{16001}--\num{21000} ($-16$ / $+11$\,\%) & $\pm 66{,}2$\,\% & $+7{,}9$\,\% \\
+Dentistes & \num{76397} & \num{64816}--\num{102482} ($-15$ / $+34$\,\%) & $\pm 34{,}6$\,\% & $-4{,}6$\,\% \\
+Pharmaciens & \num{72309} & \num{65561}--\num{96092} ($-9$ / $+33$\,\%) & $\pm 8{,}7$\,\% & $-0{,}2$\,\% \\
+Kinésithérapeutes & \num{160783} & \num{146683}--\num{176233} ($-9$ / $+10$\,\%) & $\pm 16{,}4$\,\% ($h_{\max} = 5$)
+  & $-1{,}7$\,\% \\
+Infirmiers (libéraux) & \num{115323} & \num{95647}--\num{125972} ($-17$ / $+9$\,\%) & $\pm 49{,}3$\,\%
+  ($h_{\max} = 5$) & $+5{,}8$\,\% \\
+\bottomrule
+\end{tabular}
+\caption{Fourchettes nationales à 2050 (partie~1). $Y^{\text{tend}}$, (a) et le biais sont mesurés\mesure{} ; les
+niveaux discrets sont équiprobables\suppose{}. (b) est dérivé\derive{} avec un facteur 1,6 cité, non reproduit.}
+\label{sen:tab:fourchettes}
+\end{table}
+
+Pour les sages-femmes, l'erreur de backtest est un biais qui croît, pas une dispersion : $+1{,}5$\mesure{}\,\% à
+$h = 1$, $+7{,}8$\mesure{}\,\% à $h = 5$, $+18{,}8$\mesure{}\,\% à $h = 10$. La moitié haute de leur bande (b) est donc
+peu informative. Les deux composantes dépassent la tolérance de $\pm 3$\suppose{}\,\% fixée par le protocole N2 pour la
+reproduction de DD76.
+
+\paragraph{Partie 2 : décision contre connaissance} (tableau~\ref{sen:tab:groupes}).
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{llll}
+\toprule
+Profession & 2050, DD76 (IC 95\,\%) & 2050, interface & 2030, DD76 \\
+\midrule
+Infirmiers (privé) & 0,89 [0,79--1,01] / 0,07 [0,03--0,11] & 0,93 / 0,01 & 0,87 / 0,08 \\
+Kinésithérapeutes & 0,81 [0,71--0,92] / 0,12 [0,07--0,17] & 0,83 / 0,05 & 0,53 / 0,41 \\
+Sages-femmes & 0,59 [0,50--0,69] / 0,38 [0,31--0,46] & 0,76 / 0,16 & 0,06 / 0,94 \\
+Dentistes & 0,54 [0,45--0,63] / 0,50 [0,42--0,57] & 0,66 / 0,35 & 0,16 / 0,90 \\
+Pharmaciens & 0,38 [0,31--0,46] / 0,61 [0,52--0,71] & 0,65 / 0,31 & 0,04 / 0,99 \\
+\bottomrule
+\end{tabular}
+\caption{Partie~2 : part de la variance de l'effectif privé national due à la décision et à la connaissance
+(décision / connaissance, indices de groupe du premier ordre, mesurés\mesure{}). L'interaction
+$1 - S_{\text{déc}} - S_{\text{conn}}$ reste comprise entre $-0{,}04$ et $0{,}12$\mesure{}.}
+\label{sen:tab:groupes}
+\end{table}
+
+\begin{itemize}
+  \item En 2030, la connaissance l'emporte (0,90 à 0,99\mesure{}), sauf pour les infirmiers, où les leviers à délai
+        court (capacité IFSI en 3~ans, abandon) agissent déjà, et pour les kinésithérapeutes (intervalles proches).
+  \item En 2050, avec l'amplitude DD76, la décision pèse plus que la connaissance pour les infirmiers, les
+        kinésithérapeutes et les sages-femmes. Les dentistes sont à égalité (intervalles chevauchants). Pour les
+        pharmaciens, la connaissance l'emporte (0,61 contre 0,38\mesure{}).
+  \item Avec l'amplitude de l'interface, la décision l'emporte en 2050 pour les cinq professions. Le verdict dépend
+        donc de l'amplitude jouable retenue.
+  \item Parmi les leviers (DD76, $S_T$ 2050), les diplômés à l'étranger dominent pour les kinésithérapeutes
+        (0,50\mesure{}) et les dentistes (0,40\mesure{}) ; ailleurs, ce sont les quotas (0,11 à 0,39\mesure{}) et la
+        capacité de formation (0,05 à 0,36\mesure{}). Report de la retraite $\le 0{,}01$, cumul 0,00, part des zones
+        $\le 0{,}01$, $\theta$, destination et dérogation $\le 0{,}01$\mesure{} : ces leviers ne déplacent pas le total
+        national.
+\end{itemize}
+
+\paragraph{Partie 2 : fourchettes départementales.} Effet national de quotas $\times 1{,}2$ en 2050 : sages-femmes
+$+12{,}3$, dentistes $+11{,}9$, pharmaciens $+11{,}3$, kinésithérapeutes $+11{,}9$, infirmiers (privé)
+$+13{,}7$\mesure{}\,\%. Le seuil vaut donc 22,6 à 27,4\derive{}\,\%. Le tableau~\ref{sen:tab:dep} donne la largeur
+(a) départementale et le nombre de départements sous le seuil.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+Profession & Largeur (a) médiane [P10--P90] & (b) médiane & Départements sous le seuil \\
+\midrule
+Sages-femmes & 56\,\% [31--113] & $\pm 80$\,\% & 2 / 101 \\
+Dentistes & 69\,\% [50--116] & $\pm 56$\,\% & 0 / 101 \\
+Pharmaciens & 55\,\% [40--97] & $\pm 32$\,\% & 0 / 101 \\
+Kinésithérapeutes & 34\,\% [19--54] & $\pm 46$\,\% & 22 / 101 \\
+Infirmiers (privé) & 26\,\% [17--47] & $\pm 37$\,\% & 54 / 100 \\
+\bottomrule
+\end{tabular}
+\caption{Partie~2 : largeur relative de la bande de connaissance à 2050 par département (mesurée\mesure{}), composante
+backtest (dérivée\derive{}) et nombre de départements où la largeur (a) est inférieure au seuil dérivé.}
+\label{sen:tab:dep}
+\end{table}
+
+Le seuil porte sur la composante (a) seulement : la composante (b) n'existe pas au-delà de $h = 10$. Un département
+« sous le seuil » est un département où l'effet du levier le plus fort se distingue de la bande de connaissance ; ce
+n'est pas un département où le niveau 2050 est connu.
+
+\paragraph{Convergence.} Partie~1 ($N = 2048$) : la largeur maximale de l'intervalle de $S_T$ (facteurs
+$S_T \ge 0{,}05$ en 2050) passe de 0,19--0,41 à $N = 128$ à 0,05--0,09\mesure{} à $N = 2048$ ; l'écart à la valeur
+finale est $\le 0{,}021$\mesure{} dès $N = 1024$. Partie~2 ($N = 512$) : largeur maximale 0,15--0,19\mesure{}, sur
+72 facteurs de $S_T \ge 0{,}05$ ; écart entre $N = 256$ et $N = 512$ $\le 0{,}06$\mesure{}, sauf pour les pharmaciens
+(0,085\mesure{}). $N = 512$ suffit pour les parts de groupe, mais ni pour trancher le cas des dentistes, ni pour
+départager deux leviers à $\pm 0{,}08$ près.
+
+\paragraph{Où mettre l'effort.} Le gain attendu d'une étude est $S_T \times$ la fraction réductible (1 pour un choix
+tranché par le banc, 0,75 pour une plage divisée par deux, 0,5 pour un encadrement resserré ; fractions
+supposées\suppose{}). Les gains les plus grands portent sur la filière (dentistes 0,29, pharmaciens
+0,17\derive{}) et sur la part privée des salariés ambigus (sages-femmes 0,15, pharmaciens 0,13\derive{}). Cumul,
+$\theta$, destination et dérogation ont un gain $\approx 0$ : il est inutile de les approfondir pour le total national
+(\texttt{v2/papers/axe5-sensibilite/main.tex}, tableau de priorisation).
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Limites}\label{sen:limites}
+
+\begin{itemize}
+  \item \textbf{Les plages font les indices.} L'équiprobabilité des niveaux discrets (une fenêtre de 2~ans pèse
+        autant qu'une de 5) est supposée ; resserrer la fenêtre à $\{5, 8\}$ ferait baisser son indice. Les parts
+        de groupe dépendent de l'amplitude jouable : le passage de DD76 à l'interface change le verdict des
+        pharmaciens.
+  \item \textbf{Double compte d'une même politique.} Quotas et capacité de formation sont deux mécanismes d'une même
+        politique, comptés tous deux dans le groupe « décision ».
+  \item \textbf{Infirmiers.} Partie~1 : libéraux seuls, environ 36\derive{}\,\% du privé. Partie~2 : privé complet
+        sous une hypothèse d'indépendance secteur--âge--sexe non variée ; la part « connaissance » des infirmiers est
+        donc sous-estimée.
+  \item \textbf{Facteurs sans prise.} Dans la partie~1, la formation, la régulation (zones communales, non
+        activables au département) et une vingtaine de fiches de l'axe~1 n'ont pas de point d'entrée : leur
+        sensibilité est indécidable, pas nulle. Dans la partie~2, la régulation, $\theta$ et la destination n'agissent
+        que sur la répartition entre communes, que l'analyse ne mesure pas : un $S_T$ nul ne dit rien de l'effet
+        local.
+  \item \textbf{Échelle.} Les indices portent sur le total national. Au département, le classement des facteurs
+        peut différer (\texttt{shrink} y pèserait plus) ; il n'est pas mesuré.
+  \item \textbf{Extrapolation.} La composante (b) prolonge linéairement des erreurs observées jusqu'à $h = 10$ (5 pour
+        les kinésithérapeutes et les infirmiers) vers $h = 24$--27, avec un facteur 1,6 cité et non reproduit.
+  \item \textbf{Modèle unique.} Les indices sont ceux du stock-flux v1 réécrit. Une méthode de l'axe~2 (diplômés
+        $\to$ entrées, régulation communale) peut changer le classement.
+  \item \textbf{Code en mouvement.} Avant la relance sur \texttt{b64ce56}, sages-femmes et dentistes penchaient du
+        côté de la connaissance (0,41 contre 0,57--0,59\mesure{}) ; le verdict dépend donc de la version du jumeau.
+        L'analyse n'a pas été relancée sur l'état du jumeau validé le 2026-11-15 (chapitre~\ref{jum:sec}). Deux
+        défauts de l'analyse elle-même ont été corrigés avant la version publiée : l'année 2012 des infirmiers, qui
+        ne contenait que les libéraux et produisait un saut fictif de $+190$\mesure{}\,\% ; et l'abandon de formation
+        forcé à 0 au statu quo pour les sages-femmes et les kinésithérapeutes.
+  \item \textbf{Pas de chiffre citable à 2050.} Les fourchettes ci-dessus ne sont pas des intervalles calibrés. Le
+        registre conclut qu'aucun chiffre 2050 n'est citable et qu'aucune bande n'est publiable sous son niveau
+        nominal (\texttt{decisions.md}, 2026-11-14, « Axe 3, nuit »).
+\end{itemize}
+
+\paragraph{Questions ouvertes chiffrées} (prix supposés\suppose{}, \texttt{v2/docs/lab/reports/2026-11-14-axe5-sensibilite.md}) :
+analyse au département, environ 20~min de machine ; reproduire le facteur 1,6, environ 20~min ; plages pondérées par
+l'erreur du banc N1, environ 30~min ; varier l'hypothèse d'indépendance des infirmiers, environ 30~min et 1~h de
+machine ; Sobol par département, environ 2~h de machine ; doubler $N$ de la partie~2, environ 1~h 30 de machine.
+\endgroup

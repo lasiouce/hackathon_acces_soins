@@ -1,0 +1,121 @@
+% Annexe D : incohérences relevées dans les fichiers des données (axe 4) et des hyperparamètres (axe 1).
+% Requiert le paquet longtable dans le document principal.
+\providecommand{\donfic}[1]{\nolinkurl{#1}}
+\subsection{Données et paramètres}\label{don:ann}\label{par:ann}
+\begingroup\setlength{\emergencystretch}{3em}% local à ce chapitre
+
+Abréviations : \texttt{A1} = \donfic{v2/papers/axe1-hyperparametres/main.tex} ; \texttt{A4} =
+\donfic{v2/papers/axe4-donnees/main.tex} ; \texttt{Audit} = \donfic{v2/docs/lab/reports/2026-11-14-audit-sources.md}
+(registres A1 et C2) ; \donfic{R/relecture} = \donfic{2026-11-15-axe1-relecture-sources.md} ; \donfic{R/secteur},
+\donfic{R/grain}, \donfic{R/projcom}, \donfic{R/registre}, \donfic{R/flux} = rapports
+\donfic{2026-11-14-axe4-*.md} ; \texttt{D} = \donfic{v2/docs/lab/decisions.md}. « $\to$ » donne la valeur retenue
+par ce rapport. Les articles A1 et A4 ont reçu, le 15/11, un addendum ou des errata qui renvoient à ces lignes ;
+les autres fichiers n'ont pas été corrigés par ce rapport. Les valeurs de la colonne « Fichiers et valeurs en conflit » sont citées telles qu'elles figurent dans ces fichiers, avec l'étiquette de provenance que leur donne le fichier ; seule la colonne « Valeur retenue » porte nos étiquettes.
+
+{\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{0.5cm}p{2.4cm}p{4.4cm}p{4.5cm}p{3.2cm}@{}}
+\caption{Incohérences entre fichiers, chapitres Données et Hyperparamètres.}\label{don:tab-incoherences}\\
+\toprule
+N° & Grandeur & Fichiers et valeurs en conflit & Valeur retenue et pourquoi & Renvoi \\
+\midrule\endfirsthead
+\toprule
+N° & Grandeur & Fichiers et valeurs en conflit & Valeur retenue et pourquoi & Renvoi \\
+\midrule\endhead
+\bottomrule\endfoot
+\multicolumn{5}{@{}l}{\emph{Fourchettes et effectifs}}\\
+D1 & Fourchette SF 2026 & \donfic{R/secteur} (\texttt{headline}, tableaux) : \num{12059}--\num{14660}, centrale
+\num{12912}, $-81$~\% ; \texttt{A4}, \texttt{D}, fiche \emph{data-secteur-sf} : \num{12059}--\num{13331},
+centrale \num{12819}, $-91$~\% & $\to$ \num{12059}--\num{13331}\mesure : calcul après l'exception
+« Prévention » ; le premier calcul la précède ($\num{14660}-\num{1329}=\num{13331}$\derive) & section~\ref{don:secteur} \\
+D2 & SF « Prévention » 2026 & \donfic{R/secteur} : \num{1329} ; \texttt{A4}, \texttt{A1}, \texttt{D} : \num{1383} &
+les deux : \num{1329}\mesure{} salariées et \num{54}\mesure{} mixtes, soit \num{1383}\mesure{} tous modes
+(\donfic{secteur_stock.parquet}) & section~\ref{don:secteur} \\
+D3 & Effectif MK 2026 & \num{111141} (somme des cellules, v2) ; \num{111384} (« Ensemble » du fichier) ;
+\num{111237} (total v1) & $\to$ \num{111141}\mesure{} ; l'écart de 0,22~\%\mesure{} est interne au fichier DREES &
+section~\ref{don:rapprochements} \\
+D4 & Part privée RPPS des PH hospitaliers & « 17~\% » (\texttt{A1}, \texttt{A4}) ; 16,6 / 18,2 / 19,8~\% (min,
+centrale, max 2026) ; 17,1~\% (min 2023) ; 17,4~\% (tableau SAE de \texttt{A1}) & $\to$ 16,6--19,8~\%\mesure{}
+(2026), centrale 18,2~\% ; « 17~\% » sans année ni borne est non vérifiable (\texttt{Audit}, C2) &
+section~\ref{don:secteur} \\
+D5 & Médianes par EPCI, comptes de classes & \donfic{R/grain}, \texttt{A4} : MK 23, IDE 53, 22\,657 communes IDE à
+0 ; \donfic{R/projcom}, fiche \emph{data-petits-effectifs} : 23,5, 53,2, 22\,647 & deux calculs
+(\donfic{build_commune.py}, \donfic{build_passage.py}) sur la même source ; ce rapport cite \donfic{R/grain} &
+section~\ref{don:grain} \\
+D6 & Nombre de communes & \num{34917} (\donfic{grain_petits_effectifs.csv}) contre \num{34919} géocodes du zonage
+& 2\derive{} géocodes sans ligne dans la table des effectifs (\texttt{Audit}, C2) ; non résolu & section~\ref{don:grain} \\
+D7 & EPCI de moins de 5 privés & \donfic{R/grain} : 881 / 429 / 106 / 73 / 6 ; \donfic{R/projcom} : 878 / 427 /
+105 / 71 / 5 (SF, CD, PH, MK, IDE) & même cause que D5 & section~\ref{don:grain} \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{Article de l'axe 4 contre registre et audit}}\\
+D8 & Lignes partielles du registre & \texttt{A4} (\S~Résultats) : 24 vérifiées, 6 partielles ; \texttt{A4}
+(menaces) : « 7 lignes sont partielles » ; \texttt{Audit} (C2) avait lu 23 / 7 & $\to$ 24 / 6\mesure{}
+(colonne \texttt{confiance} de \donfic{v2/data/events.csv}, relue le 15/11) & errata de \texttt{A4} \\
+D9 & Événements à source secondaire & \texttt{A4} (conclusion), \donfic{open.md} : 12 ; \donfic{R/registre} après
+audit : 9 & $\to$ 9\mesure{} (\donfic{R/registre}), valeur postérieure à l'audit ; non recompté sur le fichier & --- \\
+D10 & Parts supposées à 0,5 & \texttt{A4} (menaces), \donfic{R/secteur} : « trois parts » ; légende corrigée du
+tableau~2 de \texttt{A4} : « deux secteurs, soit 5 cellules » & $\to$ deux secteurs, 5\mesure{} cellules
+(\texttt{Audit}, C2) & errata de \texttt{A4} \\
+D11 & Marseille, IDE & \texttt{A4} : la somme des arrondissements « reproduit l'écart du dép.~13 à l'unité près »,
+marqué mesuré ; \texttt{Audit} (C2) : non vérifiable & $\to$ non vérifiable : il faut les réponses TJS brutes ;
+l'étiquette « mesuré » est retirée & errata de \texttt{A4} \\
+D12 & Rupture BTS 2022 & \texttt{A4} (menaces), \donfic{R/secteur} : rupture de série en 2022 ; Lisez-moi du BTS :
+changement du calcul de l'âge au millésime 2021 seulement & $\to$ non vérifiable (\texttt{Audit}, C2) & errata de
+\texttt{A4} ; section~\ref{don:limites} \\
+D13 & Régulation MK au 01/07/2018 & \donfic{events.csv}, tableau~3 de \texttt{A4} : en vigueur ; \texttt{Audit}
+(C2) : non vérifiable (ameli ne date que des mesures tarifaires) ; \donfic{R/relecture} : « avenant~5 » non sourcé
+comme texte de régulation & ouvert ; la date 2018 est confirmée par la Cour des comptes, le numéro et la date
+d'effet ne le sont pas & section~\ref{par:contradictions} \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{Audit du 14/11 contre relecture du 15/11}}\\
+D14 & IGAS, note 133 (MK) & \texttt{Audit} (A1) : hausse « sans période » ; \donfic{R/relecture} : période
+2016--2019, « sans période » est faux & $\to$ relecture (la fiche la suit) ; la note n'a pas été rouverte une
+troisième fois & section~\ref{par:contradictions} \\
+D15 & Avenant 5 (2018) des MK & \texttt{Audit} (A1) : ajoute la régulation de l'avenant~5 (Cour n.~152 ; QE AN
+14922) ; \donfic{R/relecture} : « accord conventionnel de 2018 », numéro non sourcé ; \texttt{A1} : « avenant~5
+de 2018 » & $\to$ « accord conventionnel de 2018 » ; QE 14922 non relue le 15/11, point non clos &
+section~\ref{par:contradictions} ; addendum de \texttt{A1} \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{Fiches : frontmatter contre section de relecture}}\\
+D16 & fiche \emph{ide-rendement-diplomes} & frontmatter : « 0,77 avec les seuls nouveaux inscrits (33\,972) »,
+« redoublants inclus » ; relecture : introuvable, supposé & $\to$ relecture ; frontmatter non mis à jour &
+tableau~\ref{par:tab-catalogue} \\
+D17 & fiche \emph{ph-part-privee-etablissements} & frontmatter : « 8\,106 personnes inscrites en H » ; relecture :
+8\,106 inscriptions, 7\,817 personnes & $\to$ relecture & tableau~\ref{par:tab-catalogue} \\
+D18 & fiche \emph{ph-part-privee-biologie} & frontmatter : pente d'environ $-0{,}5$ point par an ; relecture :
+$\approx -0{,}4$ & $\to$ $-0{,}4$\derive{} & tableau~\ref{par:tab-catalogue} \\
+D19 & fiche \emph{diplomes-etrangers-flux} & statut global So ; relecture : CD \num{1300} dérivé ; \texttt{A1}
+étiquette MK, PH, SF \derive{} mais pas CD & $\to$ CD \num{1300}\derive{} (arrondi de \num{1313} et \num{1333}) &
+addendum de \texttt{A1} \\
+D20 & Nombre de fiches param-$\ast$ & \donfic{R/axe1} (14/11) : 27 (19 / 1 / 1 / 6) ; \texttt{A1},
+\donfic{R/relecture} : 29 (20 / 2 / 1 / 6) & $\to$ 29\mesure{} ; deux fiches ajoutées après le rapport &
+section~\ref{par:sources} \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{Scripts, rapports et sources}}\\
+D21 & Seuil du test T1 (\donfic{build_flux.py}) & docstring : « à 1~\% » ; \donfic{R/flux} : T1 « passé à partir de
+2012 » avec un écart IDE de 1,69~\% & non tranché : 1,69~\% dépasse le seuil écrit ; ni l'article ni le rapport ne
+le commentent & section~\ref{don:limites} \\
+D22 & Durées d'exécution & docstrings : \donfic{build_annuaire} $\approx$ 40~s, \donfic{build_commune}
+$\approx$ 1~min, \donfic{build_pharmaciens} $\approx$ 30~s, \donfic{build_finess_histo} $\approx$ 1~min ;
+\texttt{A4} et rapports : 15, 3, 5 et 15~s & non remesuré ; sans effet sur les résultats & --- \\
+D23 & Fréquence de l'Annuaire & docstring de \donfic{archive_annuaire.py} : republié « chaque jour » ; page
+data.gouv : ne le dit pas & $\to$ page data.gouv (\texttt{Audit}, C2) ; \texttt{A4} corrigé, docstring non &
+section~\ref{don:catalogue} \\
+D24 & Identifiant RPPS & \donfic{R/grain} : « aucune sortie ne garde de nom ni d'identifiant » ; l'archive brute
+\donfic{v2/data/raw/annuaire/archive/*.parquet} garde l'identifiant RPPS & vrai pour les sorties versionnées,
+faux pour l'archive brute, non versionnée & section~\ref{don:limites} \\
+D25 & Communes MK sur-dotées & fiche \emph{mk-regul-regle} (data.gouv) : 14 ; table de l'axe~4
+(CartoSanté) : 10 géocodes & non tranché ; deux sources et deux dates de zonage & --- \\
+D26 & Millésime d'Omphale & manifeste v1 : Omphale 2022, 3 scénarios ; \donfic{2026-11-14-reprise-observatoire.md} :
+« Omphale 2018 tenu constant avant 2018 » pour les densités passées & non tranché : quel millésime pour quelle
+période & section~\ref{don:catalogue} \\
+D27 & Dénominateurs ONCD et odontologie & ONCD 2022 : \num{1333} (p.~27) contre \num{1321} (p.~28) ; \num{1332}
+(SNESUP, Weka) contre \num{1322} (L'Étudiant) & les sources se contredisent ; la fiche suit \num{1333} et
+\num{1332} & section~\ref{par:relecture} \\
+D28 & Dentistes « \num{62000} » & chiffre en circulation dans l'équipe ; aucune source du dépôt ne le donne &
+origine non identifiée ; socle 2026 = \num{47347.5}\mesure & section~\ref{don:rapprochements} \\
+D29 & Scripts v1 & \donfic{data/processed/MANIFEST.md} : scripts « non commité » & le commit du code de
+\donfic{stock.parquet} n'est pas traçable & section~\ref{don:manifeste} \\
+\end{longtable}
+}
+\endgroup

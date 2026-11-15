@@ -1,0 +1,275 @@
+\begingroup\sloppy
+\section{Interface, langage naturel et assistant}\label{sec:produit-ref}\label{pro:sec}
+
+Ce chapitre décrit ce qu'un utilisateur voit et manipule : la carte, son API, les leviers, le compilateur de phrases et l'assistant conversationnel.
+Il rend compte aussi des recettes utilisateur et de l'évaluation selon la grille du jury.
+L'état décrit est celui du code au commit \texttt{13333f2} (15 novembre 2026).
+Les identifiants (ports, numéros de critère, années de calendrier, empreintes de commit) ne portent pas d'étiquette de provenance ; toutes les quantités en portent une.
+Les recettes et les notes du jury sont des \emph{estimations d'agents} : elles sont étiquetées \suppose{}, sauf les comptages et les latences, qui sont \mesure{}.
+
+\paragraph{Ce qui manque avant tout.}
+Aucun utilisateur réel n'a testé l'outil : toutes les recettes sont jouées par des agents (§\ref{pro:recettes}).
+Aucun levier n'est validé de bout en bout (§\ref{pro:leviers}).
+La comparaison d'utilité entre l'assistant LLM et le compilateur déterministe n'a jamais été faite, alors que le mode IA est devenu le mode par défaut (§\ref{pro:llm-det}).
+
+% ---------------------------------------------------------------------------
+\subsection{Architecture : serveurs, ports, routes}\label{pro:archi}
+
+Trois processus HTTP, tous en écoute sur \texttt{127.0.0.1} seulement, journaux de requêtes désactivés
+(\texttt{log\_\allowbreak{}message} surchargé ; source : \texttt{v2/\allowbreak{}prototype/\allowbreak{}server.py}, \texttt{chatbot/\allowbreak{}passerelle/\allowbreak{}server.py}, \texttt{chatbot/\allowbreak{}chat/\allowbreak{}server.py}, audit \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}15-\allowbreak{}audit-\allowbreak{}rgpd-\allowbreak{}aipd-\allowbreak{}dm.md}, §1).
+
+\begin{description}
+\item[Carte, port 8767] (\texttt{v2/\allowbreak{}prototype-\allowbreak{}carte/\allowbreak{}server.py}, qui hérite du handler de \texttt{v2/\allowbreak{}prototype/\allowbreak{}server.py}).
+HTML, CSS et JavaScript sans build ni framework, fond MapLibre, habillage DSFR~1.15.4 en copie locale (\texttt{v2/\allowbreak{}prototype-\allowbreak{}carte/\allowbreak{}dsfr/\allowbreak{}} ; décision \enquote{Carte : habillage DSFR}, 2026-11-14, \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md}).
+\item[Chat, port 8768] (\texttt{chatbot/\allowbreak{}chat/\allowbreak{}}) : \texttt{GET /\allowbreak{}api/\allowbreak{}etat} et \texttt{POST /\allowbreak{}api/\allowbreak{}chat}. Il n'importe pas le modèle (test statique et test d'exécution, \texttt{chatbot/\allowbreak{}README.md}).
+\item[Passerelle, port 8770] (\texttt{chatbot/\allowbreak{}passerelle/\allowbreak{}}) : seul processus qui importe le jumeau. Une seule route, \texttt{GET /\allowbreak{}v1/\allowbreak{}requete/\allowbreak{}<nom>?args=<json>}, sur une liste blanche de 12\mesure{} requêtes en lecture (\texttt{chatbot/\allowbreak{}passerelle/\allowbreak{}schemas.py}). Les arguments passent un schéma strict : champs inconnus refusés, NaN refusé, tailles maximales ; \texttt{POST}, \texttt{PUT} et \texttt{DELETE} renvoient 405.
+\end{description}
+
+\begin{small}
+\begin{longtable}{@{}p{0.26\textwidth}p{0.41\textwidth}p{0.25\textwidth}@{}}
+\caption{Routes du serveur de la carte (port 8767). Source : \texttt{v2/\allowbreak{}prototype-\allowbreak{}carte/\allowbreak{}server.py}, \texttt{v2/\allowbreak{}prototype/\allowbreak{}server.py} ; trous relevés par \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}14-\allowbreak{}uat-\allowbreak{}carte-\allowbreak{}v2.md} et \texttt{2026-\allowbreak{}11-\allowbreak{}15-\allowbreak{}jury-\allowbreak{}grille.md}.}\label{pro:tab-routes}\\
+\toprule Route & Rôle & Validation \\ \midrule\endfirsthead
+\toprule Route & Rôle & Validation \\ \midrule\endhead
+\bottomrule\endfoot
+\texttt{GET /\allowbreak{}api/\allowbreak{}meta} & professions, territoires, version (commit), 11\mesure{} réglages avec statut, source et unité lus dans les \texttt{Param} du jumeau & --- \\
+\texttt{GET /\allowbreak{}api/\allowbreak{}scenario} & projection d'un territoire : tendanciel, scénario, fourchette, flux, séries annuelles, pyramide, densités & \texttt{parse\_\allowbreak{}levers} : bornes, 400 hors bornes. Trou : \texttt{terr} inconnu donne 500 (D999) ou 200 avec les chiffres France (ZZ) \\
+\texttt{GET /\allowbreak{}api/\allowbreak{}carte} & tous les départements, séries 2026--2050 en un appel & mêmes bornes ; \texttt{terr} sans effet (paramètre mort) \\
+\texttt{GET /\allowbreak{}api/\allowbreak{}interpret} & phrase $\rightarrow$ réglage des leviers (compilateur, §\ref{pro:compilateur}) ; ne calcule aucun effectif & texte tronqué à 500\mesure{} caractères \\
+\texttt{POST /\allowbreak{}api/\allowbreak{}agent} & relaie la question au chat (8768) avec le contexte de la carte ; renvoie réponse, vérification, scénario affichable, au plus 2\mesure{} graphiques, contrôle du lexique & corps $\leq$ 64\mesure{} ko, question tronquée à 1\,000\mesure{} caractères \\
+\texttt{GET /\allowbreak{}api/\allowbreak{}agent/\allowbreak{}etat} & disponibilité, mode (IA ou glossaire), modèle servi & --- \\
+\texttt{GET /\allowbreak{}geo}, \texttt{/\allowbreak{}geo-\allowbreak{}regions} & contours GeoJSON gzip, coordonnées arrondies à $10^{-3}$\mesure{} degré ; 639\,007\mesure{} octets pour \texttt{/\allowbreak{}geo} & --- \\
+\end{longtable}
+\end{small}
+
+\paragraph{Grain et latences.}
+La carte n'affiche que le département et la région : les modèles communaux K3 à K5 n'ont pas été confirmés (N10 à N12 ; \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md}).
+Le curseur d'année va de 2026 à 2050 par pas d'un an.
+\texttt{/\allowbreak{}api/\allowbreak{}carte} renvoie les 25\derive{} années en un appel, en 106\mesure{}~ms pour les kinés et 98\mesure{}~ms pour les infirmiers, réponse de 78\mesure{}~ko (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}14-\allowbreak{}curseur-\allowbreak{}annee.md}).
+Le jumeau recalcule un scénario départemental en 15\mesure{}~ms et 5\mesure{} professions à la commune en 1,1\mesure{}~s (\texttt{README.md}) ; le jury relève 1,31\mesure{}~s sur le critère C15 et, dans le même \texttt{check.txt}, 3,6\derive{}~s extrapolées (\texttt{2026-\allowbreak{}11-\allowbreak{}15-\allowbreak{}jury-\allowbreak{}grille.md}). L'écart est consigné en annexe~\ref{pro:inc-e}.
+La cible du profil (\texttt{docs/\allowbreak{}lab/\allowbreak{}profile.md}) est un recalcul sous 2\suppose{}~s : elle est tenue au département.
+
+% ---------------------------------------------------------------------------
+\subsection{Leviers branchés de bout en bout}\label{pro:leviers}
+
+L'interface expose 11\mesure{} réglages : 9\mesure{} leviers de politique et 2\mesure{} hypothèses de contexte.
+Le statut vient du champ \texttt{Param.status} de chaque module, lu par \texttt{/\allowbreak{}api/\allowbreak{}meta}.
+\textbf{Deux réglages sur onze sont \enquote{sourcés}}\mesure{} : \texttt{regul} et \texttt{pop\_\allowbreak{}scen}. Le relevé du jury donne le même compte (\texttt{2026-\allowbreak{}11-\allowbreak{}15-\allowbreak{}jury-\allowbreak{}grille.md}).
+Parmi les 9\mesure{} leviers de politique au sens strict, un seul est sourcé (\texttt{regul}, pour le zonage seulement)\derive{}.
+
+\begin{small}
+\begin{longtable}{@{}p{0.11\textwidth}p{0.30\textwidth}p{0.25\textwidth}p{0.10\textwidth}p{0.10\textwidth}@{}}
+\caption{Les 11 réglages de la carte. Mécanisme et source lus dans les \texttt{Param} des modules du jumeau (\texttt{v2/\allowbreak{}sante/\allowbreak{}} et \texttt{v2/\allowbreak{}jumeau/\allowbreak{}}), via \texttt{/\allowbreak{}api/\allowbreak{}meta}. Statut : \texttt{Param.status}.}\label{pro:tab-leviers}\\
+\toprule Clé & Mécanisme dans le jumeau & Source citée & Statut & Bornes \\ \midrule\endfirsthead
+\toprule Clé & Mécanisme dans le jumeau & Source citée & Statut & Bornes \\ \midrule\endhead
+\bottomrule\endfoot
+\texttt{quotas} & multiplie les entrées après la durée des études ; décalage de 3 à 6\suppose{} ans selon la profession & loi OTSS~\citep{e-loiotss2019}, arrêtés d'objectifs ; plage DD76 $\times[0{,}8\,;1{,}2]$\suppose{}~\citep{e-dd76} & supposé & 0,7--1,5\mesure{} \\
+\texttt{quotas\_\allowbreak{}region} & même paramètre, limité à une région & idem & supposé & bascule \\
+\texttt{etrangers} & multiplie le flux de diplômés à l'étranger (CD 1\,300\suppose{}/an, MK 2\,200\suppose{}/an) & fiche \texttt{param-\allowbreak{}age-\allowbreak{}entree-\allowbreak{}exercice} & supposé & 0--2\mesure{} \\
+\texttt{regul} & en zone \enquote{remplacement d'un départ seulement}, entrées $\leq$ sorties ; l'excédent est déplacé, jamais créé ni perdu & avenants conventionnels SF, CD, MK, IDE ; zonage CartoSanté~\citep{e-cartosante2026} & \textbf{sourcé} (zones) ; effet non validé & bascule \\
+\texttt{part\_\allowbreak{}zones} & garde les $\mathrm{round}(\text{part}\times n)$ premières zones & \enquote{levier de scénario} & supposé & 0--1\mesure{} \\
+\texttt{dest} & destination des entrants bloqués (voisine, salariat, sortie) & IRDES QES~270~\citep{e-irdes270}, Cour des comptes~\citep{e-ccomptes2024} (qualitatif) & non mesurable (affiché \enquote{supposé}) & 3\mesure{} choix \\
+\texttt{retraite} & séjour en 65+ allongé de $\Delta$ ans, montée de 3\mesure{} mois par an & loi 2023-270, LFSS 2026 & supposé & 0--3\mesure{} ans \\
+\texttt{cumul} & sorties 65+ $\times\,(1-\text{part}\cdot(k-1))$ & parts COR~\citep{e-cor2016} ; effet supposé & supposé ; effet négligeable ($\mu^\ast\leq 0{,}25$\mesure{}\,\%, $S_T<0{,}01$\mesure{}) & 0,5--2\mesure{} \\
+\texttt{precoces} & taux de sortie avant 60 ans $\times\,m$ & aucune source ne chiffre l'effet & supposé & 0,5--1,5\mesure{} \\
+\texttt{pop\_\allowbreak{}scen} & population Omphale 2022, 3\mesure{} scénarios ; ne touche que la densité & Insee Omphale 2022 & \textbf{sourcé} & 3\mesure{} choix \\
+\texttt{activite} & activité par professionnel ; ne touche que la densité & aucune série ouverte vérifiée & supposé & 0,8--1,1\mesure{} \\
+\end{longtable}
+\end{small}
+
+\paragraph{Validation des effets.}
+Source : axe~3, entrées \enquote{Axe 3, nuit} de \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md} et \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}14-\allowbreak{}axe3-\allowbreak{}n3-\allowbreak{}leviers-\allowbreak{}did.md}.
+\begin{itemize}
+\item \textbf{Régulation des infirmiers : non validée.} L'effet en double différence vaut $-30$\mesure{}\,\% [$-34$\,;\,$-26$]\mesure{}, mais le test pré-enregistré de tendances parallèles échoue ($p=0{,}043$\mesure{}). Le second test, par bassin de vie, échoue aussi ($p=0{,}025$\mesure{}, placebo de date).
+\item \textbf{Kinés.} La prédiction marche--arrêt est confirmée ($+3{,}1$\mesure{} points par an [1,1\,;\,5,1]\mesure{}), mais $\theta$ n'était pas pré-enregistré pour E2 : ce n'est pas une validation du module.
+\item \textbf{Bilan : aucun levier validé de bout en bout.} Le critère de l'axe~3 \enquote{au moins un levier validé de bout en bout} (\texttt{v2/\allowbreak{}ROADMAP.md}) n'est pas atteint.
+\end{itemize}
+La règle du projet (\texttt{CLAUDE.md}) ne compte un levier que s'il est branché de bout en bout et si son effet cite un mécanisme ou une source.
+Les 11\mesure{} réglages sont branchés (API, carte, fiche, export) ; leur mécanisme est écrit ; leur \emph{effet} n'est sourcé pour aucun\derive{}.
+
+\paragraph{Défauts connus des leviers.}
+\begin{itemize}
+\item La régulation est sans effet là où aucune zone n'est régulée : \texttt{regul\_\allowbreak{}deps} liste 6\mesure{} départements au niveau national (66, 971, 34, 13, 2A, 67 ; \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}14-\allowbreak{}uat-\allowbreak{}carte-\allowbreak{}v2.md}), donc 0\derive{} des 12\mesure{} départements d'Auvergne-Rhône-Alpes.
+\item La destination \enquote{zone voisine} n'a aucun effet au grain départemental (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md}, \enquote{Limites affichées}).
+\item Le taux d'installation des kinés vaut 107\mesure{}\,\% (3\,152\mesure{} installés pour 2\,947\mesure{} diplômés) : les entrées RPPS mêlent premières installations, retours et changements de secteur. Il est présenté comme une hypothèse constante (registre, § Open).
+\end{itemize}
+
+\paragraph{Hors modèle.}
+Les transferts de tâches (vaccination en officine L23, IPA L25, accès direct au kiné L27), les aides à l'installation, les maisons de santé et les revalorisations sont signalés \enquote{pas dans le modèle}.
+La table \texttt{chatbot/\allowbreak{}passerelle/\allowbreak{}correspondances.yaml} traduit 12\mesure{} politiques hors modèle vers des leviers de même mécanisme, au statut supposé ; 8\mesure{} autres n'ont aucune traduction.
+
+% ---------------------------------------------------------------------------
+\subsection{Compilateur déterministe de phrases}\label{pro:compilateur}
+
+Source : \texttt{v2/\allowbreak{}langage/\allowbreak{}README.md}, \texttt{v2/\allowbreak{}langage/\allowbreak{}compilateur.py}, \texttt{v2/\allowbreak{}langage/\allowbreak{}glossaire.yaml}, fichiers \texttt{score\_\allowbreak{}hors\_\allowbreak{}echantillon*.txt}.
+
+\paragraph{Méthode.}
+Pas de modèle de langage : même texte, même sortie.
+Le texte est normalisé (accents, casse, tirets), puis confronté au glossaire relisible \texttt{glossaire.yaml} : neutralisation du lexique, politiques non modélisées (avec raison et source), professions, territoires (régions, départements, villes, sigles, gentilés).
+La phrase est découpée en propositions sur \enquote{, ; : et} ; une quantité est rattachée au levier de sa proposition (\%, ans, $\times$, \enquote{doubler}, \enquote{moitié}, fractions, demi-années, écart entre deux âges).
+Les valeurs sont bornées aux bornes de l'interface (le bornage est signalé), puis validées par \texttt{parse\_\allowbreak{}levers}.
+Le compilateur produit des \emph{réglages}, jamais un effectif. Un écran de confirmation montre ce qui a été compris et ce qui n'est pas dans le modèle ; rien n'est appliqué sans \enquote{Appliquer ce scénario}.
+
+\paragraph{Protocole hors échantillon.}
+Chaque jeu de 30\mesure{} phrases est écrit par un agent qui n'a vu ni le glossaire, ni le compilateur, ni les jeux précédents.
+Le jeu est noté \emph{avant} toute modification ; ses échecs servent ensuite à corriger des classes d'erreurs, jamais une phrase isolée ; le jeu suivant mesure la nouvelle version.
+Sur 30\mesure{} phrases, l'erreur type d'un taux vaut environ $\pm 8$\derive{} points ($\sqrt{0{,}7\times0{,}3/30}\approx0{,}084$).
+
+\begin{table}[htbp]\centering\small
+\caption{Scores du compilateur par jeu. \enquote{Exact} : tous les réglages, la profession et le territoire justes. Score \enquote{à la notation} : mesuré avant correction du glossaire. Score \enquote{relancé} : fichiers \texttt{score\_\allowbreak{}hors\_\allowbreak{}echantillon*.txt} au commit \texttt{13333f2}. Sources : \texttt{v2/\allowbreak{}langage/\allowbreak{}README.md} et ces fichiers.}\label{pro:tab-compil}
+\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}lrrrrrl@{}}
+\toprule
+Jeu & Exact (notation) & Leviers & Profession & Territoire & Exact (relancé) & Statut \\ \midrule
+cas d'origine (36) & 35/36\mesure{} & --- & 36/36\mesure{} & 36/36\mesure{} & --- & en échantillon \\
+jeu 1 & 14/30\mesure{} (47\,\%) & 17/30\mesure{} & 28/30\mesure{} & 30/30\mesure{} & 29/30\mesure{} & contaminé \\
+jeu 2 & 16/30\mesure{} (53\,\%) & 20/30\mesure{} & 28/30\mesure{} & 28/30\mesure{} & 27/30\mesure{} & contaminé \\
+jeu 3 & 21/30\mesure{} (70\,\%) & 25/30\mesure{} & 30/30\mesure{} & 24/30\mesure{} & 30/30\mesure{} & contaminé \\
+jeu 4 & 24/30\mesure{} (80\,\%) & 25/30\mesure{} & 30/30\mesure{} & 30/30\mesure{} & 30/30\mesure{} & contaminé \\
+jeu 5 & 25/30\mesure{} (83\,\%) & 26/30\mesure{} & 30/30\mesure{} & 29/30\mesure{} & 30/30\mesure{} & contaminé \\
+\textbf{jeu 6} & \textbf{21/30\mesure{} (70\,\%)} & 22/30\mesure{} & 30/30\mesure{} & 29/30\mesure{} & 21/30\mesure{} & \textbf{à l'aveugle} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Le chiffre à citer : 70\,\%\mesure{}, pas 77\,\%.}
+Le \texttt{README.md} et le registre citent \enquote{environ 77\,\%}\derive{}, moyenne des jeux 5 et 6 (46/60).
+Or le jeu 5 a servi à corriger le glossaire : relancé aujourd'hui il vaut 30/30\mesure{}, et son 83\,\% est historique.
+Le seul jeu resté à l'aveugle est le jeu 6 : \textbf{21/30, soit 70\,\%}\mesure{} ($\pm8$\derive{} points), relancé deux fois par le jury (\texttt{2026-\allowbreak{}11-\allowbreak{}15-\allowbreak{}jury-\allowbreak{}grille.md}).
+Par catégorie, le jeu 6 donne : simple 8/12\mesure{}, combinée 3/6\mesure{}, négation 4/4\mesure{}, non modélisé 4/4\mesure{}, piège 2/4\mesure{}.
+Le gain par tour plafonne (80, 83 puis 70\,\%\mesure{}). L'incohérence est consignée en annexe~\ref{pro:inc-e}.
+
+\paragraph{Échecs et limites.}
+Le jeu 6 échoue sur les formes conjuguées de termes de plusieurs mots (\enquote{prolonge l'activité}, \enquote{partir à 65 ans} sans terme de retraite), sur \enquote{conditionnée à un départ}, sur la zone voisine comme destination et sur les propositions combinées.
+Limites connues : une seule profession et un seul territoire par phrase ; pas de dates (\enquote{d'ici 2030} est ignoré) ; la coordination \enquote{A et B de 10\,\%} échoue ; la négation n'est gérée que pour les bascules ; \texttt{evaluer\_\allowbreak{}hors\_\allowbreak{}echantillon.py} plante s'il est lancé depuis \texttt{v2/\allowbreak{}langage} (jury).
+Les six jeux sont écrits par des agents, aucun par un humain (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}open.md}).
+
+% ---------------------------------------------------------------------------
+\subsection{L'assistant LLM}\label{pro:assistant}
+
+Deux moteurs ont existé ; un seul est branché depuis la décision \enquote{Chatbot intégré à la carte} du 2026-11-14 (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md}).
+
+\paragraph{Premier agent, gelé (\texttt{v2/\allowbreak{}agent/\allowbreak{}}).}
+Boucle d'outils sur le SDK \texttt{anthropic}, au plus 8\mesure{} tours, 5\mesure{} outils HTTP vers la carte (\texttt{meta}, \texttt{territoire}, \texttt{scenario}, \texttt{carte}, \texttt{interpreter}). Chaque outil renvoie un résumé déjà arrondi et déjà dérivé par du code déterministe (en-tête de \texttt{v2/\allowbreak{}agent/\allowbreak{}agent.py}).
+Ce moteur n'a jamais été mesuré seul : il n'existe pas de \texttt{v2/\allowbreak{}agent/\allowbreak{}score.txt}. Il en reste le contrôle du lexique (\texttt{v2/\allowbreak{}agent/\allowbreak{}garde\_\allowbreak{}fous.py}) et les scripts de mesure.
+
+\paragraph{Moteur branché (\texttt{chatbot/\allowbreak{}}, jumeau-chat).}
+Architecture en deux processus (§\ref{pro:archi}) : le chat appelle la passerelle en HTTP et n'importe jamais le jumeau.
+Le modèle servi est \texttt{claude-\allowbreak{}haiku-\allowbreak{}5-\allowbreak{}5} (choix de l'utilisateur·rice, \texttt{chatbot/\allowbreak{}DECISIONS.md}), sans repli (\texttt{CHAT\_\allowbreak{}FALLBACKS=0}). Sans clé d'API, le mode déterministe à glossaire prend le relais.
+Le sous-module \texttt{vendor/\allowbreak{}} est épinglé sur \texttt{426422c} ; la carte fait tourner la passerelle sur le dépôt courant (\texttt{JUMEAU\_\allowbreak{}REPO=..}). \texttt{scripts/\allowbreak{}lancer.sh} passe le sous-module en lecture seule ; ce verrou n'a pas été vérifié en développement.
+
+\paragraph{Outils.}
+Les 12\mesure{} requêtes de la passerelle : \texttt{perimetre}, \texttt{projeter}, \texttt{comparer}, \texttt{balayer}, \texttt{classer}, \texttt{atteindre}, \texttt{traduire\_\allowbreak{}politique}, \texttt{planifier}, \texttt{effets\_\allowbreak{}des\_\allowbreak{}leviers}, \texttt{decrire\_\allowbreak{}leviers}, \texttt{incertitude}, \texttt{interpreter\_\allowbreak{}phrase} (\texttt{schemas.py} ; le \texttt{chatbot/\allowbreak{}README.md} en annonce 8\mesure{}).
+\begin{itemize}
+\item \texttt{planifier} résout le problème inverse : objectif chiffré $\rightarrow$ mélanges de leviers. La recherche porte sur la somme des effets seuls ; les 3\mesure{} meilleurs mélanges sont ensuite recalculés par le jumeau. Test d'additivité : écart médian 0,2\mesure{}\,\%, 1\mesure{} mélange sur 20\mesure{} au-delà de 10\,\%. La régulation, non additive, est exclue de la recherche.
+\item \texttt{effets\_\allowbreak{}des\_\allowbreak{}leviers} mesure chaque levier seul à un réglage de référence supposé, puis tous ensemble ; l'interaction vaut combiné moins somme des effets seuls.
+\item \texttt{perimetre} est injecté dans le prompt : il dit ce qui est couvert et ce qui ne l'est pas. Deux marqueurs sont obligatoires, \enquote{Hors du périmètre du modèle :} et \enquote{Limite du modèle :}.
+\end{itemize}
+
+\paragraph{Vérification de l'ancrage des nombres (\texttt{chatbot/\allowbreak{}chat/\allowbreak{}verif.py}).}
+Chaque nombre de la réponse doit venir d'un résultat de la passerelle, de la question ou des arguments envoyés, à $\pm6$\mesure{}\,\% près (\texttt{TOLERANCE = 0.06}).
+Les années 2012 à 2050 et les entiers $\leq 10$\mesure{} sont admis d'office.
+Sinon, le chat demande une correction au modèle, puis bloque la réponse.
+Les qualificatifs (\enquote{légère hausse}, \enquote{incertitude modérée}\ldots{}) sont calculés par la passerelle à partir de seuils supposés (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}lexicon.md}) ; un qualificatif absent des résultats est refusé par la même boucle.
+Les graphiques sont construits à partir des résultats, jamais à partir du texte du modèle.
+
+La tolérance est large. Pour les kinés d'Auvergne-Rhône-Alpes en 2035, la bande de $\pm6$\,\% autour de l'ensemble des nombres de référence accepte tout entier entre environ 12\,450\derive{} et 20\,000\derive{} (dérivé dans l'entrée \enquote{Interprétation conversationnelle}, \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md}).
+D'où une seconde vérification, stricte, à la précision affichée, dans le script d'évaluation \texttt{v2/\allowbreak{}agent/\allowbreak{}evaluer\_\allowbreak{}chatbot.py} seulement.
+
+\paragraph{Scores mesurés.}
+\texttt{v2/\allowbreak{}agent/\allowbreak{}score\_\allowbreak{}chatbot.txt} (Haiku, 22\mesure{} questions, 2026-11-14) :
+\begin{itemize}
+\item réponses entièrement ancrées, règle stricte : 21/22\mesure{} (95\,\%) ; nombres ancrés 311/313\mesure{} (99,4\,\%) ; les 2\mesure{} non ancrés sont des années d'exemple ;
+\item qualificatifs : 54\mesure{} relevés, 0\mesure{} non conforme ; sans terme de jugement : 21/22\mesure{} ;
+\item statuts : 13\mesure{} acceptées, 9\mesure{} corrigées, 0\mesure{} bloquée ; hors périmètre signalé quand attendu 5/5\mesure{} ;
+\item latence médiane 8,0\mesure{}~s, maximum 15,3\mesure{}~s ; coût non mesuré (le chat ne renvoie pas l'usage).
+\end{itemize}
+Le premier passage donnait 13/22\mesure{} réponses ancrées : l'écart venait du script de mesure, qui ne comptait pas \enquote{100\,000} (unité de densité) ni les nombres du périmètre comme sources ; il a été corrigé avant le second passage.
+\texttt{v2/\allowbreak{}agent/\allowbreak{}score\_\allowbreak{}objectifs.txt} (16\mesure{} questions écrites avant le code) : \texttt{planifier} appelé 10/10\mesure{}, mélanges atteignant la cible au recalcul 8/8\mesure{}, impossibles reconnus 2/2\mesure{}, ancrage 13/16\mesure{} (deux écarts cible $-$ tendanciel calculés par le modèle, corrigés ensuite à la source), médiane 11,4\mesure{}~s.
+
+\paragraph{Non mesuré.}
+La compréhension en mode IA sur les jeux 5 et 6 (\texttt{chatbot/\allowbreak{}eval/\allowbreak{}evaluer\_\allowbreak{}analyse.py}), à comparer aux 70\,\%\mesure{} du jeu 6, et le périmètre sur 27\mesure{} cas (\texttt{evaluer\_\allowbreak{}perimetre.py}) n'ont pas été lancés (\texttt{chatbot/\allowbreak{}README.md}, § Mesures).
+La justesse \emph{qualitative} des phrases n'est pas mesurée : seuls les nombres et le lexique le sont.
+Chaque configuration n'a été passée qu'une fois, et les deux jeux de questions sont écrits par l'auteur de l'agent.
+
+\paragraph{Cas observé : un \enquote{aucun écart} affirmé sans estimation.}\label{pro:cas-ecart}
+À la question du sujet, \enquote{Combien de spécialistes à Clermont-Ferrand en 2035 si les pharmaciens peuvent vacciner ?}, l'assistant répond que la vaccination en officine est hors périmètre, puis conclut qu'\enquote{un transfert de tâches ne change donc pas le nombre de professionnels projeté} (\texttt{v2/\allowbreak{}agent/\allowbreak{}reponses\_\allowbreak{}chatbot.jsonl}, \texttt{q06}).
+Dans le jeu d'objectifs, la même question donne \enquote{La vaccination en officine ne change pas ce chiffre} (\texttt{v2/\allowbreak{}agent/\allowbreak{}reponses\_\allowbreak{}objectifs.jsonl}, \texttt{h06}).
+Les deux réponses passent la vérification : aucun nombre n'est faux.
+Mais elles affirment un effet nul, alors que cet effet n'est pas estimé : le mécanisme n'est pas dans le modèle.
+\enquote{Le modèle ne le représente pas} est exact ; \enquote{cela ne change pas l'effectif} est une affirmation sur le monde, que rien dans le dépôt ne mesure.
+La vérification d'ancrage ne voit pas ce défaut, car il ne porte sur aucun nombre.
+\textbf{Défaut connu, à corriger} : le prompt et le périmètre doivent imposer la forme \enquote{effet non estimé (pas dans le modèle)}, et un contrôle doit refuser une absence d'effet qui n'est pas calculée par la passerelle. La correction n'est pas faite au commit \texttt{13333f2}.
+
+% ---------------------------------------------------------------------------
+\subsection{Question ouverte : LLM ou déterministe}\label{pro:llm-det}
+
+Source : entrée \enquote{Interprétation conversationnelle : agent LLM ou réponses déterministes, et un seul moteur} (challenge du 2026-11-14, \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}decisions.md}) et \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}open.md}.
+
+\begin{description}
+\item[Contrainte.] Part des réponses utiles (chiffre, fourchette, flux quand on demande pourquoi, \enquote{pas dans le modèle} quand il le faut), ancrage de 100\suppose{}\,\% des nombres, latence $<30$\suppose{}~s, coût $<0{,}20$\suppose{}~\$ par question, dans un budget de 480\suppose{} heures-personnes (\texttt{docs/\allowbreak{}lab/\allowbreak{}profile.md}).
+\item[Alternative la moins chère.] Glossaire et phrases à trous : ancrage de 100\derive{}\,\% par construction, coût nul, sans clé. Elle ne répond pas aux questions libres (\enquote{pourquoi}, \enquote{quelle confiance}) et comprend 70\mesure{}\,\% des phrases à l'aveugle.
+\item[Verdict.] Indécidable sans mesure. Mesure prévue : les 22\mesure{} questions dans les deux modes, notées sur l'utilité avec la règle d'ancrage stricte ; prix environ 30\suppose{}~min de temps Claude, 10\suppose{}~min de machine et 3\suppose{}~\$. Si le déterministe est à 10\suppose{} points ou moins du LLM, la carte branche le déterministe ; sinon, un seul moteur LLM.
+\item[État.] \enquote{Un seul moteur} est fait (\texttt{chatbot/\allowbreak{}} branché, \texttt{v2/\allowbreak{}agent} gelé). \enquote{LLM par défaut} a été décidé \emph{sans} la mesure, par la décision \enquote{L'agent conversationnel devient l'interface principale}. \textbf{La comparaison d'utilité n'a jamais été faite} : la question est ouverte (tableau~\ref{ouv:tab}).
+\end{description}
+La grille de contrôle du chatbot en mode glossaire (\texttt{-\allowbreak{}-\allowbreak{}deterministe}) reproduit 21/30\mesure{} sur le jeu 6, soit le score du compilateur : c'est une mesure du seul mode déterministe, pas de la comparaison.
+Restent aussi ouverts le recours à Mistral (hérité de la v1, \texttt{chatbot/\allowbreak{}DECISIONS.md}) et le transfert du texte libre vers un fournisseur américain (§\ref{conf:rgpd}).
+
+% ---------------------------------------------------------------------------
+\subsection{Recettes utilisateur et grille du jury}\label{pro:recettes}
+
+Toutes les recettes sont agentiques : des personas jouées par des agents, chaque constat revérifié par un agent adverse. Aucun utilisateur réel n'a testé l'outil.
+
+\begin{small}
+\begin{longtable}{@{}p{0.24\textwidth}p{0.19\textwidth}p{0.12\textwidth}p{0.35\textwidth}@{}}
+\caption{Recettes par personas. Réussies / partielles / échecs : comptage des tâches. Sources : \texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}14-\allowbreak{}uat-\allowbreak{}interface.md}, \texttt{-\allowbreak{}uat-\allowbreak{}carte-\allowbreak{}v2.md}, \texttt{-\allowbreak{}uat-\allowbreak{}agentique-\allowbreak{}carte.md}.}\label{pro:tab-uat}\\
+\toprule Recette & Banc & R / P / É & Gravités restantes, défaut de protocole \\ \midrule\endfirsthead
+\toprule Recette & Banc & R / P / É & Gravités restantes, défaut de protocole \\ \midrule\endhead
+\bottomrule\endfoot
+UAT V1 (port 8766) & 5\mesure{} personas, 46\mesure{} agents & 11/5/6\mesure{} sur 22 & P1 : horizon, export, incertitude, libellés COG, échelle communale ; captures non écrites \\
+UAT V2 carte & 5\mesure{} personas, 44\mesure{} agents & 5/5/6\mesure{} sur 16 & P1 : horizon, jargon, mobile ; onglet partagé, au moins 4\mesure{} échecs dus au protocole \\
+UAT carte V2, 2\textsuperscript{e} passage & onglets isolés, 3\mesure{} vérificateurs & 4/12/3\mesure{} sur 19 & 1\mesure{} P0 (professions hors écran sur mobile), 6\mesure{} P1 dédoublonnés \\
+UAT agentique carte & onglets isolés, 3\mesure{} vérificateurs & 5/14/2\mesure{} sur 21 & 3\mesure{} P0 (titre de fiche d'une autre profession, mobile, export sans sources), 9\mesure{} P1 \\
+\end{longtable}
+\end{small}
+
+Selon le registre, l'horizon (curseur 2026--2050 et repères 2030, 2035, 2040, 2050), l'export avec sources, les recouvrements et les états invalides sont corrigés ; l'export n'est vérifié qu'en navigateur sans affichage (headless).
+Restent relevés : le jargon (\enquote{tendanciel}, \enquote{plancher}, références internes), l'absence de mode simple et de page \enquote{Méthode et limites}, le badge \enquote{non mesurable} affiché \enquote{supposé}, et une API qui accepte en silence un territoire inconnu. À 390\mesure{}~px de large, le jury mesure encore une page qui déborde et une carte vide.
+La recette automatique \texttt{recette.mjs} donne 35/37\mesure{} au commit \texttt{82780ea} (jury ; échecs R25 et R37), alors que le \texttt{README.md} annonce 45/46 (annexe~\ref{pro:inc-e}).
+
+\paragraph{Grille du jury.}
+Cinq jurés simulés, deux vérificateurs chacun, médiane des trois (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}15-\allowbreak{}jury-\allowbreak{}grille.md}).
+\textbf{Les notes sont des estimations d'agents} : seule la somme est dérivée.
+
+\begin{table}[htbp]\centering\small
+\caption{Évaluation selon la grille du jury. Notes estimées par des agents (\suppose{}) ; points et total dérivés (\derive{}).}\label{pro:tab-jury}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule Critère & Poids & Note /10 & Fourchette & Points /100 \\ \midrule
+Pertinence et impact & 25 & 6,5\suppose{} & 5,5--7,5\suppose{} & 16,25\derive{} \\
+Innovation et IA & 20 & 7,0\suppose{} & 6,0--8,0\suppose{} & 14,0\derive{} \\
+Qualité du prototype & 20 & 6,5\suppose{} & 5,5--7,5\suppose{} & 13,0\derive{} \\
+Faisabilité (RGPD, réglementaire) & 20 & 5,5\suppose{} & 4,5--6,5\suppose{} & 11,0\derive{} \\
+Pitch & 15 & 6,5\suppose{} & 5,5--7,5\suppose{} & 9,75\derive{} \\ \midrule
+\textbf{Total} & 100 & & & \textbf{64,0\derive{} (54--74\derive{})} \\ \bottomrule
+\end{tabular}
+\end{table}
+
+Les défauts principaux selon le jury : l'exemple phare du sujet (vaccination en officine) ne change aucun chiffre ; la reproduction de DD76 échoue à 2050 (dentistes $-14{,}07$\mesure{}\,\%, pharmaciens $-15{,}02$\mesure{}\,\%, sages-femmes $-17{,}39$\mesure{}\,\% ; ER1319 $-25{,}2$\mesure{}\,\%)~\citep{e-dd76,e-er1319}, sans que le \texttt{README.md} le dise ; la bande à 80\,\% ne couvre que 73,5\mesure{}\,\% ; rien n'était écrit sur la réglementation et il n'y a pas de licence ; le DSFR est utilisé hors d'un site de l'État ; le deck contredit le \texttt{README.md}.
+Les questions dures n\textsuperscript{os} 7 (leviers fiables), 8 (qui paie), 9 (qui maintient), 13 (secret statistique) et 15 (demande de soins) restent sans réponse.
+Le jury estime que ses corrections 1 à 9 rapporteraient environ $+12$\suppose{} points pour environ 3,9\suppose{}~h de temps Claude.
+
+\paragraph{Défense produit.}
+Deux sous-agents opposés (\texttt{v2/\allowbreak{}docs/\allowbreak{}lab/\allowbreak{}reports/\allowbreak{}2026-\allowbreak{}11-\allowbreak{}14-\allowbreak{}produit.md}) : le sceptique pose 8\mesure{} conditions de signature, aucune remplie entièrement au 2026-11-14 (le jury en compte 1\suppose{} sur 8).
+Modèle proposé, non décidé : commun libre (EUPL) porté par une institution, puis prestations par ARS sous 60\suppose{}~k\texteuro{}~HT (seuil du décret 2025-1386, lu en extrait).
+
+% ---------------------------------------------------------------------------
+\subsection{Limites}\label{pro:limites}
+
+\begin{itemize}
+\item \textbf{Pas d'utilisateur réel.} Les recettes, les durées de tâches et les notes du jury sont des estimations d'agents.
+\item \textbf{Aucun levier validé.} 2\mesure{} réglages sur 11 sont sourcés ; l'effet d'aucun levier n'est validé par l'axe~3.
+\item \textbf{Compréhension.} 70\mesure{}\,\% des phrases à l'aveugle, sur un seul jeu de 30\mesure{} phrases écrit par un agent ($\pm8$\derive{} points).
+\item \textbf{Assistant.} Ancrage vérifié à $\pm6$\mesure{}\,\% seulement en production ; justesse qualitative non mesurée ; affirmation d'absence d'effet non estimée (§\ref{pro:cas-ecart}) ; coût non mesuré ; mode IA par défaut sans comparaison au déterministe.
+\item \textbf{Grain.} Affichage au département ; la commune n'est pas montrée.
+\item \textbf{Dépendances externes.} Chart.js, marked et DOMPurify sont chargés depuis cdnjs ; l'assistant dépend d'une API hors UE.
+\item \textbf{Mobile.} Débordement et carte vide à 390\mesure{}~px (jury).
+\end{itemize}
+\endgroup

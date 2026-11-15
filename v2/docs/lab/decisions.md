@@ -2454,7 +2454,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
   Effet mesuré sur N(2050), scénario « étrangers × 2 » : MK 0, PH −191 (−0,2 %), CD −1 369 (−1,3 %). Le tendanciel ne
   change pas.
   Options : garder 28 ans ; passer à un dictionnaire par profession, ce qui demande de réécrire C17. Prix ≈ 30 min.
-- **Conformité : seuil de diffusion des tables communales publiées, habillage DSFR, licence du code** (ouvert le 2026-11-15, [audit RGPD/AIPD/2017-745](reports/2026-11-15-audit-rgpd-aipd-dm.md)). Constat mesuré : 52,5 % des cellules commune × âge de `commune_stock.parquet`, sur le dépôt public, valent 1 personne (âge d'un professionnel nommable via l'Annuaire Santé). Verdicts dérivés, non juridiques : pas un dispositif médical (2017/745, aucune finalité médicale individuelle) ; AIPD probablement non obligatoire (1 à 2 critères G29), note de non-applicabilité recommandée si un seuil de diffusion est appliqué. Options pour le seuil : masquer ou regrouper les cellules < 5 (≈ 30 min) ; retirer les tables communales du dépôt public et les reconstruire localement (≈ 20 min, mais le clone neuf ne les a plus). DSFR : porteur public réel, ou habillage neutre hors .gouv.fr. Licence : EUPL 1.2 proposée. À trancher par l'équipe.
+- **Conformité : seuil de diffusion des tables communales publiées, habillage DSFR, licence du code** (ouvert le 2026-11-15, [audit RGPD/AIPD/2017-745](reports/2026-11-15-audit-rgpd-aipd-dm.md)). Constat mesuré : 52,5 % des cellules commune × âge de `commune_stock.parquet`, sur le dépôt public, valent 1 personne (âge d'un professionnel nommable via l'Annuaire Santé). Verdicts dérivés, non juridiques : pas un dispositif médical (2017/745, aucune finalité médicale individuelle) ; AIPD probablement non obligatoire (1 à 2 critères G29), note de non-applicabilité recommandée si un seuil de diffusion est appliqué. Options pour le seuil : masquer ou regrouper les cellules < 5 (≈ 30 min) ; retirer les tables communales du dépôt public et les reconstruire localement (≈ 20 min, mais le clone neuf ne les a plus). ~~DSFR : porteur public réel, ou habillage neutre hors .gouv.fr.~~ **Levé le 2026-11-15** : le projet est porté par le Ministère chargé de la santé (information de l'utilisateur·rice) ; le DSFR est gardé, structure porteuse à nommer. Licence : EUPL 1.2 proposée. À trancher par l'équipe.
 - **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
   en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
   de 100 %. Prix : renommage ≈ 10 min ; premières entrées ≈ 2 h.
@@ -4476,3 +4476,16 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - Un panel individuel (flux origine → destination) qui montre une persistance r ≥ 0,3.
 - Un plancher calculé sur flux bruts au-dessus de 50 % de la MAPE. Le verdict deviendrait alors : bruit dominant,
   rien à gagner, effort sur les intervalles.
+
+## 2026-11-15 — Reprise : un rapport technique unique remplace la synthèse comme document d'entrée
+- **Décision** (choix de l'utilisateur·rice entre « dossier + synthèse », « un seul rapport technique » et « index ») :
+  un seul rapport technique LaTeX, `v2/papers/rapport-technique/`, destiné aux équipes qui reprendront le projet
+  (Inria, programme Apollo ; statisticiens ; professionnels). Il agrège les 7 articles, les rapports de
+  `v2/docs/lab/reports/`, les résultats négatifs du 2026-11-15 (budget d'erreur, intervalles, GBM), la relecture des
+  sources de l'axe 1, l'audit de conformité et les questions ouvertes chiffrées.
+- **Pourquoi :** un lecteur extérieur doit trouver en un document ce qui est mesuré, ce qui est supposé, ce qui a
+  échoué et ce qui reste ouvert, sans parcourir 50 rapports.
+- **La synthèse** `v2/papers/synthese/` n'est pas supprimée ; elle est remplacée comme document d'entrée.
+- Avant la rédaction, les 4 branches de recherche du 2026-11-15 ont été fusionnées dans main (accord de
+  l'utilisateur·rice) ; conflits d'ajout dans Home, `decisions.md` et `open.md` résolus en gardant les deux côtés ;
+  `jumeau.check` 18/18 et `manifest.py --check` OK après fusion.

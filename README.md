@@ -118,8 +118,8 @@ la carte. Les deux panneaux latéraux se replient en une barre bleue (un clic la
   contexte (population, activité) forment un cinquième accordéon, replié.
 - **Une phrase en langage naturel** (« augmenter de 20 % les places de kinés dans le Puy-de-Dôme »)
   devient un réglage des leviers. Le compilateur est déterministe et à glossaire (`v2/langage/`) : il
-  traduit, il ne calcule jamais. Environ **77 % des phrases** sont entièrement bien traduites, mesuré
-  sur des jeux écrits à l'aveugle. Un écran montre toujours ce qui a été compris et ce qui n'est pas dans
+  traduit, il ne calcule jamais. Environ **77 % des phrases** sont entièrement bien traduites sur les jeux 5 et 6 écrits à
+  l'aveugle, et **70 %** sur le seul jeu resté à l'aveugle après les réglages. Un écran montre toujours ce qui a été compris et ce qui n'est pas dans
   le modèle, et rien n'est appliqué sans confirmation.
 - **Questions en français** (bouton « Questions », facultatif) : prototype qui relaie vers le chatbot de
   `chatbot/` (Claude Haiku 5.5 avec une clé, glossaire sans clé), avec le contexte affiché (profession,
@@ -182,8 +182,10 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | à venir |
 
-Article de synthèse (feuille de route, six axes, interface, suite) : `v2/papers/synthese/`
-(`python3 build.py && tectonic main.tex`).
+**Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,
+validation, sensibilité, interface, conformité, menaces à la validité, questions ouvertes, reproductibilité) :
+`v2/papers/rapport-technique/` (`tectonic main.tex`). L'ancien article de synthèse reste dans
+`v2/papers/synthese/`.
 
 ## Données et méthode
 
@@ -277,7 +279,9 @@ uv run python v2/langage/evaluer_hors_echantillon.py cas_test_hors_echantillon_6
 
 ## Confidentialité des données
 
-Le dépôt est **privé**, réservé à l'équipe.
+Le dépôt est **public** sur GitHub (vérifié le 2026-11-15). Les tables communales publiées contiennent des
+cellules à une personne : voir l'[audit RGPD, AIPD, 2017/745](v2/docs/lab/reports/2026-11-15-audit-rgpd-aipd-dm.md)
+et la question ouverte sur le seuil de diffusion.
 
 - `data/processed/` et `v2/data/processed/` sont **commités** : ils ne contiennent que des données
   ouvertes (DREES, Insee, ameli, CartoSanté, Annuaire Santé, FINESS, zonage data.gouv).
@@ -301,7 +305,7 @@ Le dépôt est **privé**, réservé à l'équipe.
   qu'une hypothèse supposée, sans série ouverte vérifiée.
 - Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les
   seniors).
-- Le compilateur de phrases bien traduit environ 77 % des phrases : l'écran de confirmation reste
+- Le compilateur de phrases bien traduit environ 70 à 77 % des phrases selon le jeu de test : l'écran de confirmation reste
   indispensable.
 
 ## Feuille de route

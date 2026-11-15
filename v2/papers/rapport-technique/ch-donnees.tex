@@ -1,0 +1,474 @@
+% Chapitre « Données » (axe 4 et sources communes). Sources : v2/docs/lab/reports/2026-11-14-axe4-*.md,
+% 2026-11-14-reconciliation-dentistes.md, 2026-11-14-audit-sources.md (registre C2),
+% v2/papers/axe4-donnees/main.tex, v2/data/processed/MANIFEST.md, data/processed/MANIFEST.md,
+% v2/docs/lab/decisions.md, fiches v2/docs/lab/fiches/data-*.md. État relu le 2026-11-15.
+\providecommand{\donfic}[1]{\nolinkurl{#1}}
+\section{Données}\label{don:sec}\label{sec:donnees-ref}
+\begingroup\setlength{\emergencystretch}{3em}% local à ce chapitre
+
+Ce chapitre décrit les sources du jumeau, la séparation entre secteur public et secteur privé, le grain
+communal, les rapprochements avec des références externes et les limites des données. Abréviations :
+\donfic{R/secteur}, \donfic{R/grain}, \donfic{R/projcom}, \donfic{R/flux}, \donfic{R/zonage},
+\donfic{R/registre} pour les rapports \donfic{v2/docs/lab/reports/2026-11-14-axe4-*.md} ;
+\donfic{R/dentistes} pour \donfic{2026-11-14-reconciliation-dentistes.md} ; \texttt{Audit} pour
+\donfic{2026-11-14-audit-sources.md} ; \texttt{A4} pour l'article \donfic{v2/papers/axe4-donnees/main.tex} ;
+\texttt{D} pour \donfic{v2/docs/lab/decisions.md}.
+
+\paragraph{Convention.} \mesure{}~: mesuré par le projet sur une donnée ouverte téléchargée, ou lu dans la
+source citée à côté du nombre (statut « sourcé » des fiches). \derive{}~: rapport, différence ou arrondi
+calculé par nous à partir de nombres publiés ou mesurés. \suppose{}~: valeur par défaut sans mesure, ou seuil
+choisi. Les années, les dates, les millésimes et les identifiants (codes FINESS, numéros d'articles) ne sont pas
+étiquetés.
+
+\subsection{Périmètre}\label{don:perimetre}
+
+\paragraph{Professions.} Cinq professions sont projetées : sages-femmes (SF), chirurgiens-dentistes (CD),
+pharmaciens (PH), masseurs-kinésithérapeutes (MK) et infirmiers (IDE). La médecine générale est hors champ ;
+les médecins spécialistes (cardiologie, dermatologie, ophtalmologie) relèvent d'une phase ultérieure
+(\donfic{CLAUDE.md}, recadrage du 2026-11-14 ; \donfic{v2/ROADMAP.md}).
+
+\paragraph{« Libéral » désigne le secteur privé.} La sortie du jumeau s'appelle « libéral » dans l'interface et
+\texttt{prive} dans le code. Elle compte tout professionnel dont l'employeur n'est pas public (\texttt{D},
+entrée du 2026-11-14) :
+\begin{itemize}
+  \item \textbf{inclus} : libéraux et mixtes ; pharmaciens adjoints salariés d'officine ; salariés des cliniques
+  privées et des établissements privés non lucratifs ; industrie ; laboratoires privés ;
+  \item \textbf{exclus} : hôpital public, protection maternelle et infantile (PMI), Éducation nationale,
+  EHPAD publics, centres de santé municipaux et tout autre employeur public.
+\end{itemize}
+Les sources emploient « libéral » au sens d'exercice indépendant (RPPS, data.ameli.fr). Le mot n'a donc pas le
+même sens dans le jumeau et dans les fichiers : la sortie du jumeau est plus large que les « libéraux » de
+l'Assurance maladie, puisqu'elle inclut les salariés du privé.
+
+\subsection{Catalogue des sources}\label{don:catalogue}
+
+Le tableau~\ref{don:tab-catalogue} liste les jeux utilisés. Toutes les sources sont ouvertes. Les données
+brutes ne sont pas versionnées (\donfic{data/raw/}, \donfic{v2/data/raw/}) ; les sorties traitées le sont
+(section~\ref{don:manifeste}). Les scripts sont dans \donfic{v2/data/} sauf mention « v1 » (\donfic{v2/sante/}).
+Les fichiers produits sont dans \donfic{v2/data/processed/} sauf mention \donfic{data/processed/}.
+
+\paragraph{Licences.} Trois licences seulement sont écrites dans le dépôt :
+\begin{itemize}
+  \item fiche Atlasanté c987d0e2 : « utilisation libre sous réserve de mentionner la source et la date de
+  dernière mise à jour » (\donfic{R/zonage}) ;
+  \item jeu DREES n\textsuperscript{o}~491 : Licence Ouverte (bibliographie de l'article de l'axe~1)
+  \citep{d-drees491} ;
+  \item zonages data.gouv \donfic{t-zonages-com.csv} : Licence Ouverte v2 (même bibliographie)
+  \citep{d-zonagesdatagouv}.
+\end{itemize}
+Pour les autres jeux, aucun texte lu ne nomme la licence : la colonne porte « non vérifiée ». Que ces jeux
+publics soient sous Licence Ouverte Etalab est plausible, mais c'est une supposition, à vérifier avant toute
+diffusion.
+
+{\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{1.45cm}p{2.45cm}p{1.6cm}p{2.15cm}p{1.35cm}p{1.3cm}p{2.0cm}p{2.5cm}@{}}
+\caption{Catalogue des jeux de données. Producteur, millésime et grain d'après les rapports de l'axe~4, le
+registre C2 de l'audit et les manifestes. « Fiches » : \donfic{v2/docs/lab/fiches/}.}\label{don:tab-catalogue}\\
+\toprule
+Producteur & Jeu & Millésime & Grain & Période & Licence & Script & Fichier produit \\
+\midrule\endfirsthead
+\toprule
+Producteur & Jeu & Millésime & Grain & Période & Licence & Script & Fichier produit \\
+\midrule\endhead
+\bottomrule\endfoot
+\multicolumn{8}{@{}l}{\emph{Stocks nationaux et départementaux}}\\
+DREES & Démographie des professionnels de santé depuis 2012 (RPPS ; ADELI pour les MK avant 2017)
+\citep{d-drees2026demo} & publication du 2026-07-02 (feuilles Lisez-moi) & dép.\ $\times$ secteur
+(8\mesure{} à 12\mesure{} modalités) $\times$ mode (4\mesure) $\times$ âge (10\mesure{} tranches)
+$\times$ sexe, au 1\textsuperscript{er} janvier & 2012--2026 ; MK : ADELI 2012--2016, RPPS 2017--2026 &
+non vérifiée & \donfic{build_secteur.py} ; v1 : \donfic{load.py} & \donfic{secteur_stock.parquet}
+(\num{899250}\mesure{} lignes), \donfic{secteur_split.parquet}, \donfic{secteur_checks.csv},
+\donfic{secteur_finess_shares.csv} ; v1 : \donfic{data/processed/stock.parquet}, \donfic{checks.csv} \\
+DREES, Insee & Infirmières salariées (Base Tous Salariés, BTS) et libérales (SNDS)
+\citep{d-dreesbts2026} & BTS : 2025-03-25, mise à jour 2026-07-02 ; SNDS : 2025-03-25 & dép.\ $\times$
+secteur (6\mesure) ; aucun croisement secteur $\times$ âge ou sexe & BTS 2013--2023 ; SNDS 2012--2023 &
+non vérifiée & \donfic{build_secteur.py}, \donfic{build_infirmiers.py} ; v1 : \donfic{nurses.py} &
+\donfic{infirmiers_secteur_age_sexe.parquet}, \donfic{infirmiers_test_hind.csv} ; v1 :
+\donfic{stock_nurses_salaried.parquet} \\
+CNAM & data.ameli.fr, démographie des professionnels libéraux & modifié le 2026-10-28 & dép., âge par
+5~ans, sexe ; sans les PH & 2010--2025 & non vérifiée & v1 : \donfic{ameli.py} &
+\donfic{data/processed/stock_ameli.parquet} \\
+Insee & Omphale 2022, 3\mesure{} scénarios (central, population basse, population haute) & 2022 &
+dép.\ $\times$ âge $\times$ sexe & projection & non vérifiée & v1 : \donfic{load.py} &
+\donfic{data/processed/population.parquet} \\
+\midrule
+\multicolumn{8}{@{}l}{\emph{Établissements et statut juridique}}\\
+Ministère chargé de la santé & FINESS établissements (\texttt{etalab-cs1100502}, \SI{35.8}{\mega\byte}\mesure)
+et entités juridiques (\texttt{cs1100501}, \SI{11.9}{\mega\byte}\mesure) \citep{d-finessEt2026,d-finessEj2026}
+& arrêté au 2026-05-04, en ligne le 2026-05-12 & établissement, catégorie, statut juridique & instantané 2026
+& non vérifiée & \donfic{build_secteur.py} ; \donfic{build_annuaire.py} & \donfic{secteur_finess_shares.csv} \\
+idem & FINESS historique (\SI{196}{\mega\byte}\mesure) & état au 31/12 de chaque année & établissement ;
+catégories 620, 603 (depuis 2012), 124 (depuis 2014) & 2004--2025 & non vérifiée &
+\donfic{build_finess_histo.py} & \donfic{finess_commune_annee.parquet}, \donfic{officines_flux_commune.parquet},
+\donfic{finess_histo_checks.csv} \\
+\midrule
+\multicolumn{8}{@{}l}{\emph{Grain communal}}\\
+ANS & Annuaire Santé, extraction libre accès du RPPS (\donfic{PS_LibreAcces.zip},
+\SI{228}{\mega\byte}\mesure) \citep{d-ans2026annuaire} & 2026-11-13 & commune de chaque activité
+(arrondissements PLM) ; civilité, mode, secteur, FINESS, origine du diplôme ; sans âge & instantané unique &
+non vérifiée & \donfic{build_annuaire.py} ; \donfic{build_commune.py} ; \donfic{archive_annuaire.py} &
+\donfic{annuaire_commune.parquet}, \donfic{annuaire_checks.csv}, \donfic{annuaire_checks_dep.csv} ; archive
+brute non versionnée (\num{813557}\mesure{} activités, \num{752993}\mesure{} personnes) \\
+Atlasanté (FNPS, SNDS) & CartoSanté, séries \donfic{*_popage} (service TJS) \citep{d-cartosante2026} &
+libéraux actifs au 31/12 & commune COG 2026 et \texttt{arm2026} ; 5\mesure{} tranches d'âge ; sans sexe &
+IDE 2004--2025, MK 2005--2025, CD 2006--2025 ; SF rejetée & non vérifiée & \donfic{build_commune.py},
+\donfic{build_flux.py} ; v1 : \donfic{cartosante.py} & \donfic{commune_stock.parquet},
+\donfic{commune_geo.parquet}, \donfic{commune_checks.csv}, \donfic{grain_petits_effectifs.csv},
+\donfic{grain_bruit.csv}, \donfic{flux_installations_commune.parquet}, \donfic{flux_checks.csv} ; v1 :
+\donfic{stock_commune.parquet} \\
+CNAMTS, ARS & CartoSanté \donfic{zonage_conv} (4\mesure{} fichiers XML d'environ
+\SI{1.6}{\mega\byte}\mesure) \citep{d-cartosante2026} & extrait le 2026-11-14 ; date des arrêtés non servie &
+\num{34919}\mesure{} géocodes & actuel, non daté & non vérifiée & \donfic{build_zonage.py} &
+\donfic{zonage_commune.parquet} \\
+ARS Aquitaine (DOSA) & Atlasanté, fiche c987d0e2 (GeoJSON, \SI{6.4}{\mega\byte}\mesure)
+\citep{d-atlasante2014} & publiée le 2014-01-22, révisée le 2014-10-22 & \num{36700}\mesure{} communes,
+métropole ; IDE, MK, CD & génération « 2012 », déduite & utilisation libre, source et date à mentionner &
+\donfic{build_zonage.py} & \donfic{zonage_commune.parquet} (colonne \texttt{millesime}) \\
+ARS, CNAM (Atlasanté, DataSanté) & Zonages des professionnels de santé libéraux, \donfic{t-zonages-com.csv}
+\citep{d-zonagesdatagouv} & ressource du 2026-10-30, zonage au 2026-10-20 & commune, niveaux 1 à 5 & actuel &
+Licence Ouverte v2 & aucun (fiches \emph{$\ast$-regul-regle}) & aucun \\
+Insee & Bassins de vie 2022 au 2026-01-01 \citep{d-insee2026bv} ; COG 2026 et événements depuis 1943
+\citep{d-insee2026cog} ; séries historiques de population 1876--2023 ; recensements 2012, 2017, 2023 ; grille
+de densité ; aires d'attraction des villes 2020 & selon le jeu & commune & selon le jeu & non vérifiée &
+\donfic{build_commune.py}, \donfic{build_passage.py}, \donfic{build_attributs.py} &
+\donfic{passage_commune.parquet} (\num{39227}\mesure{} codes), \donfic{petits_effectifs.parquet},
+\donfic{petits_effectifs_classes.csv}, \donfic{commune_attributs.parquet} (\num{490154}\mesure{} lignes),
+\donfic{commune_attributs_checks.csv} \\
+Etalab & Découpage administratif, geo.api.gouv.fr \citep{d-geoapi2026} & lu le 2026-11-14 & commune
+(\num{34969}\mesure), arrondissement (45\mesure), EPCI (\num{1255}\mesure) & 2026 & non vérifiée & contrôles
+& aucun \\
+Projet (dérivé) & Pharmaciens par commune reconstitués (DREES, FINESS historique, Annuaire) & --- & commune
+$\times$ an & 2012--2026 & --- & \donfic{build_pharmaciens.py} & \donfic{pharmaciens_commune_annee.parquet},
+\donfic{pharmaciens_checks.csv}, \donfic{pharmaciens_checks_dep.csv} \\
+\midrule
+\multicolumn{8}{@{}l}{\emph{Formation, établissements, événements (sources des paramètres)}}\\
+DREES & Enquête Écoles, jeu 491, séries longues \citep{d-drees491} & mise à jour du 2026-10-29 & national &
+1966--2025 & Licence Ouverte & script en annexe de l'article de l'axe~1 & fiches \emph{ide-$\ast$} \\
+DREES & SAE, bases statistiques, jeu 708 \citep{d-sae708} & mise à jour du 2026-11-04 & établissement &
+2023--2025 & non vérifiée & script de la fiche \emph{part-privee-salaries-sae} & fiche \\
+DREES & Personnel des services de PMI \citep{d-dreespmi} & au 31/12/2024 & national & 2010--2024 & non
+vérifiée & aucun & override SF de \donfic{build_secteur.py} \\
+Projet & Registre des réformes : Légifrance (via reproductions JO), ameli, Conseil d'État, DREES, ARS, Ordres &
+--- & événement daté & 2009--2028 & --- & versionné tel quel & \donfic{v2/data/events.csv}
+(30\mesure{} lignes) \\
+\end{longtable}
+}
+
+\subsection{Séparation public / privé}\label{don:secteur}
+
+\paragraph{Pourquoi.} L'ancienne sortie « libéral + mixte » ignorait les salariés du privé. L'ancienne
+fourchette des SF 2026 allait de \num{12475}\mesure{} à \num{26428}\mesure{} (\donfic{R/secteur}). Les fichiers
+DREES croisent pourtant le secteur d'activité avec le département, le mode, l'âge et le sexe
+\citep{d-drees2026demo} : la séparation était déjà dans les données (\texttt{A4}, \S~Méthode).
+
+\paragraph{Méthode (\donfic{build_secteur.py}).} Chaque cellule (profession, secteur, mode, département, âge,
+sexe, année) reçoit une part privée $\pi$ :
+\begin{itemize}
+  \item libéral ou mixte : $\pi = 1$\derive{}, quel que soit le secteur ;
+  \item salarié d'un secteur sans ambiguïté : $\pi = 0$\derive{} à l'hôpital public ; $\pi = 1$\derive{} en
+  ESPIC, privé lucratif, officine, laboratoire, industrie et cabinet ;
+  \item salarié d'un secteur mixte (centre de santé, prévention, médico-social, « autre ») :
+  $\pi \in [0 ; 1]$, avec une valeur centrale $\hat\pi$.
+\end{itemize}
+Trois sorties en découlent : $N_{\min}$, somme des cellules sûrement privées ; $N_{\max} = N_{\min}$ + somme des
+cellules ambiguës ; $\hat N = \sum \hat\pi\, N$.
+
+\paragraph{Parts centrales par FINESS.} $\hat\pi$ est la part des établissements d'une catégorie FINESS dont
+l'entité juridique est privée. Les statuts juridiques 1 à 46 (sécurité sociale comprise) sont comptés publics,
+les statuts 47 et plus privés (\donfic{R/secteur}). Parts mesurées (tableau~\ref{don:tab-finess}).
+
+\begin{table}[htbp]
+\centering\small
+\caption{Parts privées par catégorie FINESS, 2026\mesure{} (\donfic{R/secteur}, \donfic{secteur_finess_shares.csv}).}
+\label{don:tab-finess}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Catégorie FINESS & Part privée & Établissements \\
+\midrule
+Centres de santé (124) & \num{0.798}\mesure & \num{3395}\mesure \\
+\quad dont centres « dentaires » & \num{0.963}\mesure & \num{1299}\mesure \\
+PMI et planification (223, 228) & \num{0.070}\mesure & \num{1435}\mesure \\
+EHPAD (500) & \num{0.558}\mesure & \num{7399}\mesure \\
+Handicap médicalisé & \num{0.866}\mesure & \num{6008}\mesure \\
+Médico-social, agrégat appliqué aux MK & \num{0.696}\mesure & \num{13407}\mesure \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Deux secteurs n'ont pas de proxy FINESS : « Autre secteur », et « Prévention et établissement de santé » chez
+les PH. Leur part vaut $\hat\pi = 0{,}5$\suppose{}. Cela fait 5\mesure{} cellules profession $\times$ secteur
+(PH autre, PH prévention, MK autre, SF autre, CD autre ; \texttt{Audit}, registre C2, ligne « trois parts »
+corrigée).
+
+\paragraph{Exception des SF en « Prévention ».} Le 2026-11-14 au soir, les SF salariées du secteur
+« Prévention » ont été classées publiques ($\pi = 0$\derive{}, constante \texttt{OVERRIDE} de
+\donfic{build_secteur.py} ; \texttt{D}, entrée « Axe 4 : SF \enquote{Prévention} = public »). Motif : la DREES
+compte \num{1423}\mesure{} SF en PMI au 31/12/2024 \citep{d-dreespmi}, et la PMI est un service
+départemental, donc un employeur public.
+
+\paragraph{Infirmiers.} Le BTS sépare déjà public et privé en trois paires (hôpital, médico-social, autre), et
+les libéraux du SNDS sont privés \citep{d-dreesbts2026} : il n'y a pas d'ambiguïté. Mais le BTS ne donne ni
+âge ni sexe par secteur. La ventilation suppose $H_{\mathrm{ind}}$ : dans un département, le secteur est
+indépendant de l'âge et du sexe. Le test sur le sexe, au seuil de 3\suppose{} points fixé avant calcul, donne
+un écart médian de \num{2.1}\mesure{} points : l'hypothèse n'est pas rejetée (\donfic{infirmiers_test_hind.csv}).
+Elle n'est pas testée sur l'âge.
+
+\paragraph{Fourchettes.} Le tableau~\ref{don:tab-fourchettes} donne la version en vigueur.
+
+\begin{table}[htbp]
+\centering\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\caption{Effectif « libéral » (= privé), France entière, dernière année disponible (\texttt{A4},
+tab.~2 ; \texttt{D}, entrée du 2026-11-14 au soir). Largeur : $N_{\max}-N_{\min}$, avant et après la séparation.}
+\label{don:tab-fourchettes}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Prof. & Année & Tous secteurs & Ancienne fourchette & Min & Centrale & Max & Largeur \\
+\midrule
+SF & 2026 & \num{26428}\mesure & \num{12475}--\num{26428}\mesure & \num{12059}\mesure & \num{12819}\derive & \num{13331}\mesure & \num{13953} $\to$ \num{1272}\derive \\
+PH & 2026 & \num{75335}\mesure & \num{65344}--\num{75335}\mesure & \num{60005}\mesure & \num{63612}\derive & \num{67219}\mesure & \num{9991} $\to$ \num{7214}\derive \\
+CD & 2026 & \num{48690}\mesure & \num{48143}--\num{48690}\mesure & \num{40784}\mesure & \num{47349}\derive & \num{47894}\mesure & \num{547} $\to$ \num{7110}\derive \\
+MK & 2026 & \num{111141}\mesure & \num{98348}--\num{111237}\mesure & \num{98828}\mesure & \num{101951}\derive & \num{103986}\mesure & \num{12889} $\to$ \num{5158}\derive \\
+IDE & 2023 & \num{607644}\mesure & --- & \num{277788}\mesure & \num{277788}\mesure & \num{277788}\mesure & 0\mesure \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La largeur baisse de 91~\%\derive{} pour les SF, 60~\%\derive{} pour les MK et 28~\%\derive{} pour les PH.
+Elle augmente pour les CD : les anciennes bornes basses n'étaient pas des minima, car elles comptaient tout
+« autre salarié » comme privé, PMI et centres municipaux compris ; les \num{6694}\mesure{} CD salariés des
+centres de santé sont désormais ambigus, avec $\hat\pi = \num{0.963}$\mesure. Infirmiers 2023 : \num{98854}\mesure{}
+libéraux (SNDS) et \num{178934}\mesure{} salariés privés (BTS : hôpital \num{94347}, médico-social \num{40050},
+autre \num{44537}\mesure) ; public \num{329856}\mesure{} (\texttt{Audit}, registre C2).
+
+\paragraph{L'incohérence sur les SF, tranchée.} Deux fourchettes SF 2026 circulent :
+\begin{itemize}
+  \item \num{12059}--\num{14660}\mesure{} (centrale \num{12912}, largeur $-81$~\%\derive) dans le
+  \texttt{headline} et les tableaux de \donfic{R/secteur} ;
+  \item \num{12059}--\num{13331}\mesure{} (centrale \num{12819}\derive, largeur $-91$~\%\derive) dans la mise à
+  jour du soir de ce même rapport, dans \texttt{A4}, la fiche \emph{data-secteur-sf} et \texttt{D}.
+\end{itemize}
+\textbf{La valeur en vigueur est \num{12059}--\num{13331}.} La première est le calcul d'avant l'exception
+« Prévention ». Dans ce premier calcul, les \num{1329}\mesure{} SF salariées en « Prévention » étaient ambiguës,
+avec $\hat\pi = \num{0.070}$\mesure{} (part privée FINESS des PMI et centres de planification). Les classer
+publiques les retire du maximum et presque rien de la centrale :
+\[
+\num{14660} - \num{1329} = \num{13331}\derive, \qquad
+\num{12912} - \num{0.070}\times\num{1329} \approx \num{12819}\derive .
+\]
+La largeur passe de \num{2601}\derive{} à \num{1272}\derive{}, soit de $-81$~\% à $-91$~\%\derive{} par
+rapport aux \num{13953}\derive{} d'origine. Le rapport signale la mise à jour en tête, mais garde ses anciens
+tableaux et son ancien \texttt{headline} : c'est la source de l'écart.
+
+Un second écart en découle : \num{1329}\mesure{} SF « Prévention » dans \donfic{R/secteur}, \num{1383} dans \texttt{A4},
+l'article de l'axe~1 et \texttt{D}. Nous l'avons mesuré sur \donfic{secteur_stock.parquet} (2026) : le
+secteur « Prévention » compte \num{1329}\mesure{} salariées, classées publiques, et \num{54}\mesure{} mixtes,
+privées par la règle libéral ou mixte, soit \num{1383}\mesure{} au total. Les deux nombres sont justes ; ils
+portent sur deux champs (salariées seules, tous modes).
+
+\paragraph{Ambiguïté restante.} Les secteurs mixtes de plus de 500\mesure{} personnes en 2026 sont :
+PH « Autre secteur » \num{5805}\mesure{} et « Prévention et établissement de santé » \num{1409}\mesure{}
+($\hat\pi = 0{,}5$\suppose) ; CD centres de santé \num{6694}\mesure{} ($\hat\pi = \num{0.963}$\mesure) ; MK
+établissements sanitaires et sociaux \num{2200}\mesure{} ($\hat\pi = \num{0.696}$\mesure) et « Autre secteur »
+\num{2524}\mesure{} ($0{,}5$\suppose) ; SF « Autre secteur » \num{796}\mesure{} ($0{,}5$\suppose), soit
+63~\%\derive{} du résidu SF. La largeur médiane de la fourchette par département vaut 3,6~\%\mesure{} de
+l'effectif pour les SF, 4~\%\mesure{} pour les MK et 9~\%\mesure{} pour les CD et les PH (\donfic{R/secteur}).
+
+\paragraph{Pharmaciens hospitaliers : trois sources, trois valeurs.} Le RPPS place 16,6~\%\mesure{} (min),
+18,2~\%\mesure{} (centrale) et 19,8~\%\mesure{} (max) des PH salariés hospitaliers dans le privé en 2026. La SAE
+en donne 29,4~\%\mesure{} \citep{d-sae708}, l'Ordre 28,6~\%\derive{} des inscriptions des sections H et E
+\citep{d-cnop2025}. La variante SAE ajouterait \num{1116}\derive{} privés (centrale \num{63612} $\to$
+\num{64728}\derive), dans la fourchette. Le jumeau garde la centrale RPPS, seule croisée par département, âge et
+sexe (\texttt{D}). L'écart n'est pas réconcilié.
+
+\paragraph{Réserves de méthode.}
+\begin{itemize}
+  \item Le secteur DREES est celui de l'activité la plus récente, pas de l'activité principale
+  \citep{d-drees2026demo} : un salarié public qui prend un second poste privé est compté privé.
+  \item Les parts FINESS comptent des établissements, pas des salariés. La pondération par l'effectif n'est
+  pas mesurée.
+  \item Les parts FINESS 2026 sont appliquées à toutes les années 2012--2026\suppose.
+  \item Le SNDS et le BTS peuvent compter deux fois une même infirmière ; ce recouvrement n'est pas mesuré.
+\end{itemize}
+
+\subsection{Grain communal et petits effectifs}\label{don:grain}
+
+\paragraph{Trois sources descendent à la commune.} L'Annuaire Santé couvre les cinq professions, mais c'est
+un instantané (2026-11-13), sans âge ni date de naissance \citep{d-ans2026annuaire}. CartoSanté donne
+l'histoire des libéraux par tranche d'âge pour les IDE, les MK et les CD \citep{d-cartosante2026}. FINESS décrit
+les structures. La série SF de CartoSanté (\donfic{sf_popage}) est rejetée : ses modalités d'âge sont libellées
+en années (\donfic{R/grain}).
+
+\paragraph{Les effectifs communaux sont petits.} La médiane des effectifs privés par commune est nulle pour
+les cinq professions (tableau~\ref{don:tab-grain}).
+
+\begin{table}[htbp]
+\centering\small
+\caption{Effectifs privés par unité, Annuaire Santé du 2026-11-13\mesure{} (\donfic{R/grain} ;
+\donfic{grain_petits_effectifs.csv}). Unités : \num{34917}\mesure{} communes (arrondissements PLM),
+\num{1707}\mesure{} bassins de vie, \num{1255}\mesure{} EPCI, 101\mesure{} départements.}
+\label{don:tab-grain}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+ & \multicolumn{4}{c}{Médiane par unité} & \multicolumn{2}{c}{Part des pros dans une unité $<30$} \\
+\cmidrule(lr){2-5}\cmidrule(l){6-7}
+Profession & Commune & Bassin de vie & EPCI & Dép. & Commune & EPCI \\
+\midrule
+IDE & 0\mesure & \num{35.5}\mesure & 53\mesure & \num{1644}\mesure & 30,6~\%\mesure & 2,6~\%\mesure \\
+MK  & 0\mesure & 17\mesure & 23\mesure & 615\mesure & 49,8~\%\mesure & 10,5~\%\mesure \\
+PH  & 0\mesure & 11\mesure & \num{16.5}\mesure & 444\mesure & 57,5~\%\mesure & 18,4~\%\mesure \\
+CD  & 0\mesure & 6\mesure & 8\mesure & 261\mesure & 53,4~\%\mesure & 20,0~\%\mesure \\
+SF  & 0\mesure & \num{1.5}\mesure & \num{2.5}\mesure & 78\mesure & 69,8~\%\mesure & 39,9~\%\mesure \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Communes sans aucun privé}, sur \num{34917}\mesure{} : IDE \num{22657}\mesure, MK
+  \num{25296}\mesure, PH \num{26704}\mesure, CD \num{29538}\mesure, SF \num{31951}\mesure.
+  \item \textbf{EPCI de moins de 5 privés} : SF 881\mesure, CD 429\mesure, PH 106\mesure, MK 73\mesure, IDE
+  6\mesure{} (\donfic{R/grain} ; \donfic{R/projcom} donne 878, 427, 105, 71 et 5\mesure, calcul de
+  \donfic{build_passage.py} ; annexe~\ref{don:ann}).
+  \item \textbf{Bruit d'une année sur l'autre} (CartoSanté, médiane de $|\Delta \log N|$ entre 2024 et 2025) :
+  5 à 7~\%\mesure{} par an dans la classe 5--29, 1,5 à 3~\%\mesure{} dans la classe 100 et plus. Les flux pèsent
+  5 à 10~\%\derive{} du stock par an, soit moins d'une installation par an dans la plupart des communes de 5 à
+  29 professionnels\derive{} (\donfic{grain_bruit.csv}).
+  \item \textbf{Diffusion} : 52,5~\%\mesure{} des cellules commune $\times$ âge de
+  \donfic{commune_stock.parquet} valent une personne (\donfic{2026-11-15-audit-rgpd-aipd-dm.md}). Le seuil de
+  diffusion des tables communales publiées est une question ouverte.
+\end{itemize}
+
+\paragraph{Grain projetable.} La règle retenue est une convention : médiane d'au moins 30\suppose{} privés par
+unité, soit un bruit de Poisson d'environ $1/\sqrt{30} \approx 18$~\%\derive. Elle donne le bassin de vie ou
+l'EPCI pour les IDE ; l'EPCI, avec un modèle hiérarchique, pour les MK et les PH ; le département pour les CD et
+les SF (\texttt{A4}, \S~Grain). Seul le banc de validation (protocole N10, axe~3) peut remplacer ce seuil. La
+commune reste un grain d'observation et de répartition.
+
+\paragraph{Ce qui a été reconstitué.}
+\begin{itemize}
+  \item \textbf{Pharmaciens par commune, 2012--2026} : reconstitués à partir de la DREES, de FINESS historique
+  et de l'Annuaire ; les parts hors officine sont tenues à leur niveau de 2026\suppose{} (\donfic{R/projcom}).
+  \item \textbf{SF} : aucun historique communal ouvert. Cinq routes ont été testées (\donfic{sf_popage},
+  \donfic{sf_datcom.actifs}, \donfic{offre_ps.dens_sf}, ameli, Annuaire). Le repli (parts communales 2026
+  $\times$ série départementale) est modélisé, non observé.
+  \item \textbf{Flux d'installation} : aucune source ouverte par commune. Le substitut $I_{\mathrm{net}}$ est un
+  solde (entrées moins sorties des moins de 40~ans) qui compte les déménagements et ne voit pas le salariat
+  (\donfic{R/flux}).
+\end{itemize}
+
+\subsection{Rapprochements avec des références externes}\label{don:rapprochements}
+
+\begin{itemize}
+  \item \textbf{Cellules DREES contre total France du fichier} : 0~\%\mesure{} d'écart pour SF, CD, PH et MK
+  ADELI ; MK RPPS 0,22~\%\mesure{} au plus (2026) ; BTS 0,009~\%\mesure{} au plus. L'écart MK est interne au
+  fichier : en 2017, \num{84599}\mesure{} (cellules) contre \num{84449}\mesure{} (total France) ; la feuille
+  Lisez-moi prévient que certains totaux peuvent différer de la somme \citep{d-drees2026demo}.
+  \item \textbf{CartoSanté (au 31/12/$Y$) contre RPPS libéral + mixte et SNDS (même année $Y$)} : MK 2022--2025
+  $-3{,}7$, $-3{,}1$, $-2{,}5$, $-3{,}2$~\%\mesure{} ; CD $-3{,}3$, $-2{,}7$, $+0{,}3$, $-0{,}8$~\%\mesure{} ;
+  IDE 2020--2023 $+3{,}9$, $+3{,}5$, $+4{,}0$, $+4{,}7$~\%\mesure{} (\num{103499} contre \num{98854}\mesure{} en
+  2023). En alignant le 31/12/$Y$ sur le 1/1/$Y+1$ : MK de $-7{,}2$ à $-6{,}0$~\%\mesure{}, CD de $-4{,}4$ à
+  $-2{,}8$~\%\mesure{}, IDE de $+2{,}6$ à $+4{,}4$~\%\mesure. L'écart MK connu de $-5{,}4$~\%\mesure{} en 2025
+  tombe entre ces deux alignements : il dépend de la date de référence\derive{} (\donfic{R/grain}).
+  \item \textbf{Annuaire (privés, novembre 2026) contre centrale DREES 2026, médiane par département} (déciles
+  1 et 9) : PH $-3{,}2$~\% ($-9{,}2$ ; $-0{,}3$), MK $-5{,}5$~\% ($-9{,}3$ ; $-0{,}7$), CD $-10{,}8$~\%
+  ($-16{,}5$ ; $-5{,}5$), SF $-10{,}8$~\% ($-22{,}3$ ; $-1{,}8$), IDE $-14{,}6$~\% ($-22{,}8$ ;
+  $-7{,}8$)\mesure. La référence IDE est 2023, avec trois ans d'écart et un double compte possible. Au national,
+  l'Annuaire compte \num{61882}\mesure{} PH privés, dans la fourchette \num{60005}--\num{67219}.
+  \item \textbf{Pharmaciens d'officine reconstitués contre Annuaire, 2026} : \num{50196} contre
+  \num{50664}\mesure{} ($-0{,}9$~\%\derive) ; corrélation par commune \num{0.98}\mesure{} ; erreur médiane
+  16,1~\%\mesure{} à la commune (seuil 25~\%\suppose, passé) et 10,7~\%\mesure{} à l'EPCI (seuil
+  10~\%\suppose, échoué de peu) (\donfic{R/projcom}).
+  \item \textbf{Officines FINESS contre Ordre} : \num{20324}\mesure{} fin 2024 contre \num{20242}\mesure{} au
+  1/1/2025 ($+0{,}4$~\%\derive) \citep{d-ordre2025demo}.
+  \item \textbf{Hospitaliers, SAE contre RPPS} : SF 19,8 contre 17,4~\%\mesure{} ; MK 44,3 contre
+  44,4~\%\mesure{} ; CD 2,2 contre 3,4~\%\mesure{} \citep{d-sae708}. Concordance à 2\derive{} points pour SF et
+  MK ; les PH divergent (section~\ref{don:secteur}).
+  \item \textbf{Zonage dentaire} : 97\mesure{} géocodes « non prioritaires » et 4,8~\%\mesure{} de la population
+  (\num{3309773} sur \num{68392618}\mesure) ; l'ARS PACA cite 5~\%\mesure{} \citep{d-arspaca2025cd}, le mémoire
+  EHESP 97\mesure{} communes (p.~53, confirmé par la relecture du 15/11) \citep{d-bahroun2025}.
+  \item \textbf{Zonage CartoSanté contre data.gouv} : parts de population IDE 27,6 contre 27,4~\%, MK 27,4
+  contre 26,5~\%, SF 12,3 contre 12,2~\%, CD 4,8~\% dans les deux\mesure{} (\donfic{R/zonage} ;
+  \citep{d-zonagesdatagouv}).
+  \item \textbf{Année blanche MK 2018} \citep{d-er1159} : les moins de 25~ans passent de \num{5634} à
+  \num{3687}\mesure{} au RPPS ($-34{,}6$~\%\derive), puis remontent à \num{5137}\mesure{} en 2026. Le substitut
+  $I_{\mathrm{net}}$ ne la voit qu'en partie : \num{2604} contre \num{2877}\mesure{}, rapport
+  \num{0.90}\derive{} au-dessus du seuil de \num{0.8}\suppose{} (test T2 échoué ; \donfic{R/flux}).
+\end{itemize}
+
+\paragraph{Dentistes : « \num{76000} contre \num{62000} ».} Deux chiffres circulaient dans l'équipe
+(\donfic{R/dentistes}). \num{76397}\mesure{} est la valeur 2050 de la projection de référence (API
+\donfic{/api/scenario}, \texttt{base[2050]}), pas le socle. Le socle privé 2026 vaut \num{47347.5}\mesure{},
+sous les \num{48690}\mesure{} tous modes (libéral \num{36259}, mixte \num{3824}, autre salarié \num{8060},
+salarié hospitalier \num{547}\mesure). Aucun double compte : 0\mesure{} clé dupliquée sur \num{13909}\mesure{}
+lignes 2026, et une série régulière de \num{40488}\mesure{} (2012) à \num{48690}\mesure{} (2026). Aucune
+source du dépôt ne donne \num{62000} ; son origine n'est pas identifiée. Le fichier brut DREES n'a pas été relu
+directement (bibliothèque \texttt{openpyxl} absente).
+
+\subsection{Limites des données}\label{don:limites}
+
+\paragraph{Champs manquants.}
+\begin{itemize}
+  \item Annuaire Santé : ni âge, ni date de naissance, ni archive. 11,5~\%\mesure{} des activités dentaires
+  n'ont pas de commune (0,35~\%\mesure{} pour les PH). Le sexe est la civilité déclarée. L'archive locale garde
+  l'identifiant RPPS : c'est une donnée brute, non versionnée.
+  \item BTS : aucun croisement secteur $\times$ âge ni secteur $\times$ sexe ; les IDE n'entrent dans le jumeau
+  que sous $H_{\mathrm{ind}}$, non testée sur l'âge.
+  \item CartoSanté : pas de sexe ; série SF illisible ; pas de pharmaciens ; les séries \donfic{*_flux} sont
+  des pôles d'attraction des patients, pas des installations.
+  \item data.ameli.fr : département seulement, sans les PH.
+  \item Zonage : la date des arrêtés n'est pas servie ; deux générations seulement (« 2012 », déduite, et
+  « actuelle », non datée) ; générations 2008--2011 et 2018--2023 introuvables.
+\end{itemize}
+
+\paragraph{Ruptures de série.}
+\begin{itemize}
+  \item MK : passage d'ADELI au RPPS en 2017 et année blanche de diplômés en 2018 \citep{d-er1159}.
+  \item BTS : la feuille Lisez-moi ne signale qu'un changement du calcul de l'âge au millésime 2021. La
+  « rupture de série en 2022 » écrite dans \texttt{A4} et \donfic{R/secteur} n'est pas vérifiable
+  (\texttt{Audit}, C2).
+  \item IFSI : changement de définition de l'abandon en 2022 et de questionnaire en 2025 \citep{d-drees491}.
+  \item Substitut $I_{\mathrm{net}}$ : il ne passe le test T1 qu'à partir de 2012 ; en 2006--2011, l'écart
+  atteint 63~\%\mesure{} (MK) et 201~\%\mesure{} (CD).
+  \item FINESS : catégories 603 et 124 disponibles depuis 2012 et 2014 ; un transfert d'officine sous un
+  nouveau numéro compte comme une fermeture et une ouverture ; Mayotte n'a pas d'officines dans FINESS avant
+  2014 (écart de $-62$ à $-71$~\%\mesure{} en 2012--2013).
+  \item Fichier d'inscrits 2025-26 : \num{683}\mesure{} inscrits en 2\textsuperscript{e} année d'odontologie à
+  l'université Paris Cité, contre 188 à 215\mesure{} sur 2020--2024. C'est un artefact de fichier, de cause
+  inconnue ; le registre l'enregistre comme une rupture de données (\donfic{R/registre}).
+  \item Population : 2024--2025 reprennent 2023\suppose{} ; l'âge est interpolé entre les recensements 2012,
+  2017 et 2023.
+\end{itemize}
+
+\paragraph{Secret statistique.} La DREES masque les cellules de moins de 5\mesure{} personnes ; les chargeurs ne
+les comptent pas encore (reprise de l'observatoire, C6, non vérifié).
+
+\subsection{Données traitées commitées et manifeste}\label{don:manifeste}
+
+Les sorties de \donfic{v2/data/processed/} sont versionnées : 28\mesure{} fichiers et leur manifeste
+(\texttt{git ls-files}). Le manifeste \donfic{v2/data/processed/MANIFEST.md} donne, pour chaque fichier, sa
+taille en octets, les 16 premiers caractères de son SHA-256, le script qui le produit, le dernier commit de ce
+script et la commande de reconstruction. Le manifeste \donfic{data/processed/MANIFEST.md} couvre les
+6\mesure{} sorties de la v1 encore lues (\donfic{stock.parquet}, \donfic{population.parquet},
+\donfic{stock_ameli.parquet}, \donfic{stock_commune.parquet}, \donfic{stock_nurses_salaried.parquet},
+\donfic{checks.csv}).
+
+Le contrôle se lance depuis la racine :
+\begin{verbatim}
+uv run python v2/data/manifest.py --check
+\end{verbatim}
+Il a renvoyé, le 2026-11-15, « manifestes à jour, aucun fichier des organisateurs dans la construction », avec
+un code de sortie nul\mesure. Il vérifie donc deux choses : les empreintes des fichiers commités correspondent
+au manifeste, et aucun fichier fourni par les organisateurs sous accord de confidentialité n'entre dans la
+construction.
+
+Deux limites :
+\begin{itemize}
+  \item les scripts v1 portent la mention « non commité » dans \donfic{data/processed/MANIFEST.md} : le commit
+  du code qui a produit \donfic{stock.parquet} n'est pas traçable ;
+  \item le manifeste prouve l'identité des fichiers, pas leur reproductibilité : reconstruire demande les
+  données brutes, non versionnées, aux millésimes du tableau~\ref{don:tab-catalogue}. Les sources servies en
+  continu (Annuaire Santé, CartoSanté, FINESS) ne gardent pas leurs anciens millésimes en ligne ; data.gouv
+  signale d'ailleurs l'arrêt des flux FINESS utilisés, remplacés par une nouvelle version du 2026-07-20.
+\end{itemize}
+\endgroup
