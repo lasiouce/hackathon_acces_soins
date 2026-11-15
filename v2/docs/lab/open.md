@@ -207,3 +207,4 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin : pilote OSRM `table` sur 35 000 communes à 30 min (temps machine) | ~30 min Claude + machine inconnue | exploration besoin | 2026-11-15 | open |
 | Besoin : comparer M1 au besoin pondéré par âge de l'observatoire de l'équipe (Hackathon-Evolution-soin) | ~20 min | dérivation du besoin | 2026-11-15 | open |
 | Besoin : durée d'une vaccination en officine (pour `k`), aucune source officielle trouvée | ~20 min, peut-être non mesurable | exploration besoin | 2026-11-15 | open |
+| Besoin : passe de littérature (2SFCA, demande induite, frontière, needs-based planning, substitution, Bass) ; citations de la dérivation de mémoire, non relues ; dire ce qui est nouveau | ~45 min Claude + lecteurs web | question utilisateur·rice | 2026-11-15 | open |

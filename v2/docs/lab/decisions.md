@@ -4565,3 +4565,11 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** un besoin de profils plus anciens (dérive du recours, L31), ou une liste des régions
   traitées qui commence avant 2017.
 
+
+## 2026-11-15 — Module de besoin : Open DAMIR lu en flux, aucun fichier brut stocké
+- **Décision** (accord de l'utilisateur·rice, 2026-11-15) :
+  - chaque fichier mensuel est lu en flux (`curl | gunzip | filtre`), et seuls les agrégats sont écrits, quelques Mo ;
+  - aucun téléchargement avant l'accord sur le plan ;
+  - un pilote d'un fichier est lancé d'abord.
+- **Pourquoi :** 35 à 47 Go à faire transiter sur la machine locale ; le disque ne doit pas les porter.
+- **Ce qui le renverserait :** un débit trop lent en flux (pilote), ou une ingestion déplacée sur une autre machine.
