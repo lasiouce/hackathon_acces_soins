@@ -1,0 +1,5 @@
+sages-femmes  D_FR=0.054  quotas×1,2 E=0.103 R=1.91 (distinguable), dép. R≥1 93% | meilleur quotas x0,8 R=2.13 | S_π=0.04 S_e=0.01 S_ω=0.03 S_k=0.92 S_j=0.000 | règle=False
+dentistes     D_FR=0.003  quotas×1,2 E=0.114 R=40.44 (distinguable), dép. R≥1 100% | meilleur etrangers x2 R=119.87 | S_π=0.43 S_e=0.00 S_ω=0.05 S_k=0.52 S_j=0.000 | règle=False
+pharmaciens   D_FR=0.096  quotas×1,2 E=0.108 R=1.14 (distinguable), dép. R≥1 63% | meilleur quotas x0,8 R=1.27 | S_π=0.05 S_e=0.03 S_ω=0.04 S_k=0.88 S_j=0.000 | règle=False
+kines         D_FR=0.142  quotas×1,2 E=0.109 R=0.77 (non distinguable), dép. R≥1 5% | meilleur etrangers x2 R=1.73 | S_π=0.15 S_e=0.06 S_ω=0.05 S_k=0.74 S_j=0.000 | règle=True
+infirmiers    D_FR=0.321  quotas×1,2 E=0.110 R=0.34 (non distinguable), dép. R≥1 0% | meilleur quotas x0,8 R=0.38 | S_π=0.02 S_e=0.18 S_ω=0.06 S_k=0.74 S_j=0.000 | règle=True

@@ -2450,6 +2450,16 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 ## Open / not yet decided
 - **Copie commitée du dépôt dans `chatbot/vendor/hackathon_acces_soins/`** (relevé le 2026-11-15, relecture du rapport technique) : 687 fichiers suivis, dont 34 tables traitées (`commune_stock.parquet` compris), hors du manifeste et du contrôle de l'audit ; commitée sans `.gitmodules`, alors que `chatbot/DECISIONS.md` la décrit comme un sous-module. Options : la retirer et lire le dépôt courant (`JUMEAU_REPO=..`, déjà utilisé au lancement), ou l'inclure dans le manifeste et dans le futur seuil de diffusion. Prix ≈ 20 min. Le seuil de diffusion et l'archivage de l'Annuaire (données individuelles, 752 993 personnes, peut atteindre 2 critères AIPD) sont détaillés dans le rapport technique, chap. Conformité.
 - ~~**Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité**~~ **Tranchée le 2026-11-15 : remplacé par SISE (données ouvertes)**, voir l'entrée « Vivier CD/PH : SISE remplace le fichier 990 ». (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
+
+- **M0 reste-t-il une borne de la fourchette de C ?** (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
+  [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md))
+  - **Question** : M0 (besoin ∝ population) est « cas limite » au rapport d'étape et figure dans l'ensemble gelé
+    de l'axe 5. P-B1 a retenu l'âge (M1) contre lui pour les cinq professions. Avec M0, la fourchette MK et IDE est large
+    (C 2050 : MK 1,34–1,54, IDE 0,83–1,14) ; sans lui, elle se réduit à ≤ 0,4 % et la règle d'affichage ne se
+    déclencherait plus.
+  - **Avis de la session** : retirer M0 de la fourchette affichée et le rapporter comme « sans effet de l'âge », car
+    il est réfuté par P-B1, pas plausible. Non appliqué : la règle gelée prime tant que l'utilisateur·rice n'a pas
+    tranché.
 - **Cible externe de M4 pharmaciens** (ouvert le 2026-11-15, session besoin-cible-pharmaciens). Proposé : APL DREES
   « Méthode initiale V0 » aux pharmacies, commune, 2013 (2010 en secondaire), Licence Ouverte 2.0, offre = officines
   sans ETP, paliers 0–5 / 5–10 / 10–15 min (s, Notice). Écartés comme cible : IRDES QES 308 (pas d'APL des pharmacies,
@@ -5165,4 +5175,21 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
      l'indice C s'intitule « couverture de la demande de ville par l'offre privée ». C'est à appliquer au branchement
      dans la carte (plan de la session licences-et-carte).
 - **Pourquoi :** demande de la session v2. La circularité recours/offre de la dérivation (§2) en est le cas général.
+## 2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs
+- **Décision** (règle gelée du protocole `2026-11-15-besoin-axe5-sensibilite`, [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md)) :
+  - **Protocole gelé avant tout calcul de B ou de C** : SHA-256 `10a5b285…cd87834`, RFC 3161 FreeTSA 05:28:15 UTC
+    et DigiCert 05:28:16 UTC, OpenTimestamps soumis ; accord de l'utilisateur·rice (« Oui, horodater »). Jetons dans
+    `v2/validation/preregistered/horodatage/2026-11-15-besoin-axe5-SHA256SUMS*`.
+  - **Ratio R = |Δ log C| de quotas × 1,2 / étendue de log C entre estimateurs survivants**, France, 2050 (mesuré) :
+    SF 1,91, CD 40, PH 1,14 (distinguables) ; MK 0,77, IDE 0,34 (non distinguables).
+  - **Règle d'affichage déclenchée pour les kinés et les infirmiers** : leur indice de couverture est affiché en
+    **fourchette entre estimateurs** (min–max de M0, M1, M2a ; plus M3 pour les IDE), jamais un seul chiffre.
+    SF, CD, PH : estimateur servi seul (M1).
+  - **Statistique et seuil appliqués tels quels.** Aucun seuil changé.
+- **Pourquoi :** seuil gelé du plan (R < 1 ⇒ « non distinguable ») et règle du critère d'acceptation de l'axe 5.
+- **Résidu :** l'étendue vient presque toute de M0 ; sans M0, elle vaut ≤ 0,004 en log et R ≥ 25 partout. Garder
+  M0 comme borne de la fourchette reste une question ouverte (§ Open / not yet decided). Les tirages de l'offre C1 portent 52 à
+  92 % de la variance de log C : c'est la première source de largeur, pas le besoin.
+- **Ce qui le renverserait :** une décision retirant M0 des estimateurs survivants (P-B1 a retenu l'âge) ; un test
+  de séparabilité de l'offre qui change R de plus de 0,1.
 
