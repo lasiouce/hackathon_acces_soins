@@ -264,6 +264,7 @@ l'en-tête de chaque script) :
 PYTHONPATH=v2 uv run python -m sante.load          # DREES RPPS + Insee Omphale -> data/processed/
 uv run python v2/data/build_secteur.py             # séparation public / privé (≈ 30 s)
 uv run python v2/data/build_zonage.py              # zonage par commune
+uv run python v2/data/build_sise.py                # inscrits CD et PH par année d'études (SISE, ouvert)
 uv run python v2/data/manifest.py                  # réécrit les manifestes ; --check pour vérifier
 ```
 
