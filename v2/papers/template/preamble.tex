@@ -1,6 +1,13 @@
 % Préambule commun des prétirages v2 (format arXiv : source TeX autonome, pdfLaTeX).
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+% Moteur : pdfLaTeX (arXiv) → fontenc T1 + inputenc ; XeTeX/LuaTeX (tectonic) → fontspec. Sans ce choix, les
+% guillemets « » tapés en dur sortent en « ń ż » sous tectonic (ledger, 2026-11-14).
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else
+  \usepackage{fontspec}
+\fi
 \usepackage[french]{babel}
 \usepackage{lmodern,microtype}
 \usepackage[a4paper,margin=2.5cm]{geometry}
