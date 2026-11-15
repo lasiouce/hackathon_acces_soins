@@ -2451,7 +2451,7 @@ pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 - **Copie commitée du dépôt dans `chatbot/vendor/hackathon_acces_soins/`** (relevé le 2026-11-15, relecture du rapport technique) : 687 fichiers suivis, dont 34 tables traitées (`commune_stock.parquet` compris), hors du manifeste et du contrôle de l'audit ; commitée sans `.gitmodules`, alors que `chatbot/DECISIONS.md` la décrit comme un sous-module. Options : la retirer et lire le dépôt courant (`JUMEAU_REPO=..`, déjà utilisé au lancement), ou l'inclure dans le manifeste et dans le futur seuil de diffusion. Prix ≈ 20 min. Le seuil de diffusion et l'archivage de l'Annuaire (données individuelles, 752 993 personnes, peut atteindre 2 critères AIPD) sont détaillés dans le rapport technique, chap. Conformité.
 - ~~**Le jumeau lit à l'exécution un fichier des organisateurs sous accord de confidentialité**~~ **Tranchée le 2026-11-15 : remplacé par SISE (données ouvertes)**, voir l'entrée « Vivier CD/PH : SISE remplace le fichier 990 ». (relevé le 2026-11-15 par la relecture du rapport technique). `jumeau.check` (critères C1, C5, C9, C11, variantes avec `pipeline=True`) et le facteur « filière » des deux parties de l’axe 5 lisent `data/raw/990_drees_mmop2_*.xlsx` via `formation.pool_drees` → `sante.pipeline.enrolments` (`v2/jumeau/modules/formation.py` l. 149-153), alors que `manifest.py --check` ne contrôle que les scripts de construction. Le fichier n'est pas commité, mais un clone neuf ne peut pas passer les 18 critères, et l'affirmation « uniquement des données ouvertes » n'est vraie que pour les tables traitées. Options : remplacer ces inscrits par le jeu DREES 491 (ouvert) dans le module de formation et la variante filière (prix à mesurer, ≈ 1 h Claude + revalidation C5, C9, C16) ; ou garder et documenter l'exception (fait dans le rapport technique). À trancher par l'équipe.
 
-- **M0 reste-t-il une borne de la fourchette de C ?** (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
+- ~~**M0 reste-t-il une borne de la fourchette de C ?**~~ **Tranché le 2026-11-15** : M0 retiré, voir l'entrée datée « axe 5 : M0 retiré de la fourchette affichée ». (ouvert le 2026-11-15, session besoin-axe5-sensibilite,
   [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md))
   - **Question** : M0 (besoin ∝ population) est « cas limite » au rapport d'étape et figure dans l'ensemble gelé
     de l'axe 5. P-B1 a retenu l'âge (M1) contre lui pour les cinq professions. Avec M0, la fourchette MK et IDE est large
@@ -5176,6 +5176,9 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
      dans la carte (plan de la session licences-et-carte).
 - **Pourquoi :** demande de la session v2. La circularité recours/offre de la dérivation (§2) en est le cas général.
 ## 2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs
+
+## ~~2026-11-15 — Module de besoin, axe 5 : C des kinés et des infirmiers affiché en fourchette entre estimateurs~~
+*Remplacée le 2026-11-15 pour l'affichage : voir « axe 5 : M0 retiré de la fourchette affichée ». Le verdict gelé ci-dessous reste valable et publié.*
 - **Décision** (règle gelée du protocole `2026-11-15-besoin-axe5-sensibilite`, [rapport](reports/2026-11-15-besoin-axe5-sensibilite.md)) :
   - **Protocole gelé avant tout calcul de B ou de C** : SHA-256 `10a5b285…cd87834`, RFC 3161 FreeTSA 05:28:15 UTC
     et DigiCert 05:28:16 UTC, OpenTimestamps soumis ; accord de l'utilisateur·rice (« Oui, horodater »). Jetons dans
@@ -5193,3 +5196,37 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
 - **Ce qui le renverserait :** une décision retirant M0 des estimateurs survivants (P-B1 a retenu l'âge) ; un test
   de séparabilité de l'offre qui change R de plus de 0,1.
 
+## 2026-11-15 — Module de besoin, axe 5 : M0 retiré de la fourchette affichée ; le vieillissement est montré comme un effet
+- **Décision** (utilisateur·rice : « okay donc go enlève le », après discussion sous l'angle de l'aide à la décision
+  du DG d'ARS) :
+  - **M0 n'est plus une borne de la fourchette affichée de C**, pour aucune profession. P-B1 l'a réfuté (l'âge est
+    retenu pour les cinq professions) : ce n'est pas une alternative plausible.
+  - **C est servi par l'estimateur retenu** : M1 ; M3 pour les infirmiers. Les estimateurs survivants qui tiennent
+    compte de l'âge (M1, M2a, M3) diffèrent de 0,4 % au plus en 2050 (≤ 0,004 en log, mesuré) : un seul chiffre suffit
+    au regard du choix du modèle de besoin.
+  - **L'écart M0 → M1 est présenté comme l'effet du vieillissement sur le besoin**, à côté de l'effet du levier, pas
+    comme une incertitude. Exemple, IDE, France, 2050 : C = 0,83 avec l'âge, 1,14 sans ; quotas × 1,2 : +11 % (mesuré).
+  - **L'incertitude affichée autour de C est la bande de l'offre** (tirages de C1), qui porte 52 à 92 % de la variance
+    de log C.
+- **Remplace** l'affichage en fourchette de l'entrée « axe 5 : C des kinés et des infirmiers affiché en fourchette
+  entre estimateurs ». **Le verdict gelé ne change pas** : R = 0,77 (MK) et 0,34 (IDE) avec M0 dans l'ensemble, publié
+  tel quel. Ce changement est postérieur au résultat et déclaré comme tel ; aucun seuil n'est modifié.
+- **Pourquoi :** une fourchette bornée par un modèle réfuté se lit « on ne sait pas » ; le message utile au décideur
+  est « le vieillissement pèse plus que ce levier ». La largeur réelle de C vient de l'offre.
+- **Ce qui le renverserait :** un choix normatif d'un « besoin égal par habitant » (M0 servi alors comme option
+  choisie, pas comme borne d'incertitude) ; un estimateur plausible qui s'écarterait de M1 de plus que l'effet des
+  leviers.
+
+## 2026-11-15 — Module de besoin : rôle de M4 précisé ; pas de décomposition de l'écart à l'APL
+- **Décision** (utilisateur·rice : « the actual M4 calculus was to have something rigorous in the metric of spatial
+  accessibility, that's all ») :
+  - **M4 sert de mesure rigoureuse d'accessibilité spatiale**, pas de reproduction de l'APL. Ce qui le rend
+    rigoureux est déjà en place : paliers et poids publiés par la DREES, conservation exacte `Σ P·A = Σ S`
+    (≈ 10⁻¹⁶), limites rayon 0 et ∞ testées, temps routiers OSRM.
+  - **P-B4 reste au registre tel quel** : il dit seulement que M4 n'est pas le chiffre de l'APL (libellé « indice
+    maison » maintenu) ; au département, M4 suit l'APL (ρ = 0,98, MK).
+  - **Abandonné :** la décomposition de l'écart communal (offre contre distancier) ; elle confirmerait un diagnostic
+    sans rien changer à l'usage.
+- **Pourquoi :** le but de M4 est la métrique, pas la cible externe ; l'écart restant tient à des données non
+  ouvertes (activité individuelle, adresse d'exercice).
+- **Ce qui le renverserait :** un besoin de présenter M4 comme l'APL, ou l'ouverture de l'activité individuelle.
