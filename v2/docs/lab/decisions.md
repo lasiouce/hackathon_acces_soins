@@ -4615,3 +4615,12 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** les organisateurs jugent que même le besoin de MG en contexte sort du sujet. On passe
   alors à O1, en retirant `B_MG`.
 
+
+## 2026-11-15 — Module de besoin : règle d'attente pour les tables dérivées ODbL
+- **Décision** (provisoire, posée par la session besoin-derivation au lancement de la vague 1) : tant que la question
+  « Licence des tables dérivées de jeux ODbL » reste ouverte, aucune table dérivée des jeux data.ameli.fr ou d'OSM
+  n'est commitée. Elles sont écrites dans un chemin ignoré par git ; seuls le script de reconstruction et le
+  manifeste sont commités.
+- **Pourquoi :** une table ODbL commitée sur le dépôt public engage la licence avant la décision. Ce choix est
+  réversible : on commitera les tables une fois la décision prise.
+- **Ce qui le renverserait :** la décision de licence (§ Open).
