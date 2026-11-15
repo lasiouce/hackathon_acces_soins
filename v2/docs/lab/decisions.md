@@ -5393,3 +5393,12 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   - 6 familles avec `aria-expanded=false` ;
   - Puy-de-Dôme → estompée → France en 230 ms, sans titre intermédiaire.
 - **Ce qui le renverserait :** un test de lecture où les curseurs repliés ne sont pas trouvés.
+
+## 2026-11-15 — Carte : la rubrique « Transférer des tâches ? » renvoie aussi aux transferts hypothétiques
+- **Décision** (accord de l'utilisateur·rice ; branche des transferts hypothétiques fusionnée dans celle de la carte) :
+  hors pharmaciens, la rubrique dit « Aucun transfert de tâches sourcé pour les <profession>. Seul transfert mesuré :
+  les pharmaciens vaccinent davantage contre la grippe (Afficher les pharmaciens). Pour étudier un transfert
+  hypothétique, demandez à l'assistant (Ouvrir l'assistant). » Remplace « Aucun transfert … n'est encore calculé ».
+  Le troisième exemple de l'assistant reste la vaccination (seul transfert sourcé).
+- **Pourquoi :** l'assistant calcule désormais des transferts hypothétiques ; la carte doit le dire sans les présenter
+  comme des leviers.
