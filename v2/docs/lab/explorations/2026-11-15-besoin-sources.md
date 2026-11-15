@@ -141,8 +141,11 @@ sont dans le dossier temporaire de la session, rien n'est commité.
 - **Registre :**
   - question ouverte sur la licence ODbL des tables dérivées ;
   - question de périmètre sur la médecine générale.
-- **Plan de construction :** l'axe 4 commence par un filtrage en flux de DAMIR. On ne garde que les agrégats : environ
-  190 Go compressés pour 2009–2025 (dérivé), jamais commités.
+- **Plan de construction :** l'axe 4 commence par un filtrage en flux de DAMIR. On ne garde que les agrégats, jamais commités.
+  Fenêtre réduite le 2026-11-15 à ~37–49 fichiers (~35–47 Go, dérivé) au lieu de ~190 Go pour 2009–2025.
+- **Pas d'API de requête pour Open DAMIR** (vérifié le 2026-11-15) : un CSV compressé par mois, lien à jeton sur la
+  page `download.php` ; l'API de data.gouv.fr ne donne que les métadonnées ; DAMIR n'est pas dans le catalogue
+  Opendatasoft de data.ameli.fr.
 
 ## ? Suite
 | Point | Coût |
@@ -152,3 +155,4 @@ sont dans le dossier temporaire de la session, rien n'est commité.
 | Sourcer la liste et les dates des régions de l'expérimentation 2017–2019 (arrêtés) | ~15 min |
 | Mesurer le temps machine d'OSRM `table` sur 35 000 communes à 30 min | ~30 min Claude + machine inconnue |
 | Lire le descriptif d'Open Medic (grain, J07BB) | ~10 min |
+| Vérifier `depenses-par-poste` et `demographie-effectifs-et-les-densites` (data.ameli.fr, API) : grain départemental ? | ~5 min |

@@ -4549,3 +4549,19 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
   - l'utilisateur·rice refuse le plan ;
   - O1 est retenue pour la médecine générale : il ne reste plus qu'un seul transfert partiel.
 
+## 2026-11-15 — Module de besoin : fenêtre d'Open DAMIR réduite à ~37–49 fichiers mensuels
+- **Décision** (sur proposition de l'utilisateur·rice : « se limiter à la période du jumeau », affinée) :
+  - profils de M1 : 2025, et 2024 pour la stabilité ;
+  - P-B6 : mois d'octobre à février des saisons 2015-16 à 2019-20 seulement ;
+  - aucun fichier avant 2015, aucun après février 2020 pour P-B6.
+- **Pourquoi :**
+  - avant 2015, DAMIR est en 9 ZEAT, incompatibles avec les régions de l'expérimentation de 2017 ;
+  - le COVID fausse les saisons à partir de 2020 ;
+  - le backtest P-B5 repose sur la patientèle, pas sur DAMIR ;
+  - Open DAMIR n'a pas d'API de requête (vérifié) : chaque fichier (~0,95 Go) se lit en entier.
+- **Correction :** le plan annonçait ~80 Go ; les années prévues faisaient ~100 Go. On passe à ~35–47 Go (dérivé).
+- **Résidu :** deux saisons seulement avant l'expérimentation, donc des tendances parallèles peu testables dans P-B6 ;
+  la menace est écrite dans le protocole.
+- **Ce qui le renverserait :** un besoin de profils plus anciens (dérive du recours, L31), ou une liste des régions
+  traitées qui commence avant 2017.
+

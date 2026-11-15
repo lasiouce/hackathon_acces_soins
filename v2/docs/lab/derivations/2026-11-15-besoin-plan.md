@@ -1,15 +1,16 @@
 ---
 date: 2026-11-15
 statut: plan, non construit (en attente d'accord)
-headline: "Module de besoin en 6 axes : ~12 h 30 de Claude au jugé, ~6 h 20 corrigé (×0,51, plage 2 h–42 h), plus ~80 Go de DAMIR en temps machine ; 4 sous-sessions parallèles en vague 1 ; 6 protocoles gelés avec horodatage externe avant tout calcul"
+headline: "Module de besoin en 6 axes : ~12 h 30 de Claude au jugé, ~6 h 20 corrigé (×0,51, plage 2 h–42 h), plus ~35–47 Go de DAMIR en temps machine ; 4 sous-sessions parallèles en vague 1 ; 6 protocoles gelés avec horodatage externe avant tout calcul"
 ---
 
 # Module de besoin : plan de construction par axes
 
 **ETA, temps Claude :** ~12 h 30 au jugé ; **~6 h 20 après correction** (facteur médian ×0,51 du journal `eta.py`,
 n = 93 ; plage ×0,16–×3,37, soit 2 h–42 h).
-- **Temps machine en plus :** téléchargement et filtrage d'Open DAMIR, ~80 Go compressés (dérivé : ~0,95 Go par mois,
-  mesuré par en-tête HTTP). Débit inconnu : on chronomètre **un pilote d'un mois** avant de lancer le reste.
+- **Temps machine en plus :** téléchargement et filtrage d'Open DAMIR, **~35–47 Go** compressés, soit 37 à 49 fichiers
+  mensuels (dérivé : ~0,95 Go par mois, mesuré par en-tête HTTP). Le premier chiffre (~80 Go) était faux : les années
+  prévues faisaient ~100 Go. La fenêtre a été réduite le 2026-11-15 (registre). Débit inconnu : on chronomètre **un pilote d'un mois** avant de lancer le reste.
 - **Distancier OSRM :** temps machine inconnu, pilote d'abord.
 - **Exclut** le temps d'attente de l'utilisateur·rice.
 
@@ -106,7 +107,11 @@ s'il fiche `B_MG`.
   manifeste, avec les contrôles de totaux :
   - **DAMIR** : filtrage en flux mois par mois ; on ne garde que les agrégats région × âge × sexe × `PSE_ACT_SNDS` ×
     `PRS_NAT` utiles ; les fichiers bruts sont supprimés après agrégation et jamais commités ;
-    - années : 2022–2024 pour les profils, 2014–2019 pour P-B6 ;
+    - profils : 2025, et 2024 pour la stabilité (12 à 24 fichiers) ;
+    - P-B6 : mois de campagne d'octobre à février, saisons 2015-16 à 2019-20 (~25 fichiers). Pas avant 2015 : les
+      9 ZEAT d'avant 2015 ne recoupent pas les régions. Pas après février 2020 : le COVID ;
+    - pas d'API de requête : téléchargement fichier par fichier par la page `download.php` (jeton), vérifié le
+      2026-11-15 ;
     - pilote d'un mois chronométré d'abord ;
   - pathologies (effectifs, dépenses) ;
   - patientèle ;
@@ -168,7 +173,7 @@ flowchart LR
 - **P-B1 et P-B3 abandonnent l'âge et la morbidité pour toutes les professions.** Le module se réduit alors à M0 et aux
   transferts, et la moitié de l'axe 2 est inutile. P-B1 coûte 30 min : on peut le lancer **en premier**, dès le gel,
   avant d'investir dans M2–M4.
-- **Le pilote DAMIR montre un débit trop faible** (au-delà de ~12 h de machine pour 80 Go) : P-B6 est alors reporté, et
+- **Le pilote DAMIR montre un débit trop faible** (au-delà de ~6 h de machine pour ~45 Go) : P-B6 est alors reporté, et
   `m` reste « supposé ».
 - **La décision de licence interdit de commiter les tables dérivées ODbL** : la reproductibilité passe alors par un
   script de reconstruction, pas par des tables commitées.
