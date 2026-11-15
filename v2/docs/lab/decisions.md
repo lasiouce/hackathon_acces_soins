@@ -4983,3 +4983,13 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Why :** l'utilisateur·rice a changé de réseau ; 2025-10 à 2025-12 ont été lus à 3 flux sans refus, en ~6 min de
   machine (mesuré). Contrôles bloquants passés.
 
+## 2026-11-15 — Module de besoin : cible externe de M4 pharmaciens = APL DREES V0 2013 ; P-B4-PH gelé
+- **Decision :** la cible de validation de M4 pharmaciens est l'APL DREES « Méthode initiale V0 » aux pharmacies,
+  2013 (2010 en secondaire). Tranche l'entrée ouverte du même jour (« Cible externe de M4 pharmaciens »). Offre BPE
+  2013, population RP 2011 brute, paliers 5 / 10 / 15 min de la Notice.
+- **Why :** seule APL des pharmacies publiée (s) ; IRDES QES 308 n'en a pas ; le temps Insee au plus proche mesure
+  autre chose.
+- **Gel :** accord de l'utilisateur·rice (« Yes, timestamp it », 2026-11-15). SHA-256 `f96520f9…549d83` ; RFC 3161
+  FreeTSA 04:09:44 UTC et DigiCert 04:09:45 UTC ; OpenTimestamps soumis. Jetons dans
+  `v2/validation/preregistered/horodatage/2026-11-15-besoin-p-b4-ph-SHA256SUMS*`.
+

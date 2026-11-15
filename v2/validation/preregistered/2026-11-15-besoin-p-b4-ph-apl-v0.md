@@ -3,8 +3,8 @@ type: analysis
 date: 2026-11-15
 author: session besoin-cible-pharmaciens
 question: M4 (2SFCA), avec les paramètres publiés de l'APL DREES V0 et une offre en officines, reproduit-il l'APL DREES 2013 aux pharmacies commune par commune, mieux que deux densités naïves ?
-headline: "Protocole rédigé, NON GELÉ (pas de jeton) : succès si Spearman ≥ 0,90, erreur relative absolue médiane ≤ 15 % et gain ≥ 0,05 de Spearman sur la meilleure densité naïve (commune, bassin de vie), borne basse de l'IC 95 % du gain > 0 (bootstrap des départements) ; seuils repris de P-B4, supposés"
-status: protocole rédigé, non gelé (non lancé)
+headline: "Protocole pré-enregistré, gelé avant tout calcul de M4 pharmaciens : succès si Spearman ≥ 0,90, erreur relative absolue médiane ≤ 15 % et gain ≥ 0,05 de Spearman sur la meilleure densité naïve (commune, bassin de vie), borne basse de l'IC 95 % du gain > 0 (bootstrap des départements) ; seuils repris de P-B4, supposés"
+status: protocole gelé (non lancé)
 professions: [pharmaciens]
 hypothesis: H-B4 (dérivation du besoin, §6 M4), extension aux pharmaciens
 sources: [APL DREES Méthode initiale V0 2010/2013 (jeu 530, Licence Ouverte 2.0, fichier pharmacies et Notice APL), BPE 2013 et 2010 (Insee, pharmacies), Insee RP 2011 et 2008 (populations municipales), OSRM sur OpenStreetMap (ODbL), BV2012 (Insee), Insee accès aux équipements (carreaux 200 m, Licence Ouverte 2.0)]
@@ -14,8 +14,8 @@ tags: [validation, besoin, 2SFCA, APL, pharmaciens, pre-registration, P-B4-PH]
 # P-B4-PH — reproduction de l'APL DREES V0 aux pharmacies (cible externe)
 
 > **Headline :** la seule APL publiée des pharmacies est celle de la méthode
-> V0 (2010, 2013). Protocole **rédigé, non gelé** : le gel par jeton
-> OpenTimestamps attend l'accord de l'utilisateur·rice. Rien n'est calculé.
+> V0 (2010, 2013). Gelé avant tout calcul et avant la lecture des valeurs
+> d'APL commune par commune.
 
 Provenance des nombres : (s) sourcé, (d) dérivé, (h) supposé. Source :
 [exploration](../../docs/lab/explorations/2026-11-15-besoin-cible-pharmaciens.md).
