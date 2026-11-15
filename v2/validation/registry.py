@@ -88,3 +88,20 @@ REGISTRY.update({
     "axe2_cohortes_c2": ("2026-11-14", "confirmatoire", _axe2_coh("CohortesLaplace"),
                          "C2 : comme C1, θ propagé par Laplace sur log θ"),
 })
+
+
+# --- C1-GBM (session c1-gbm), 2026-11-15 : apprentissage automatique global contre A2. ---
+# Inscription et test d'abandon : v2/docs/lab/derivations/2026-11-15-c1-gbm-global.md (SHA-256 8e35043aecb2, commit 70f8bc9).
+# Boîtes noires : classées « diagnostic » (plafond de précision), jamais présentées comme le modèle.
+def _c1_global(cls_name):
+    def f():
+        from methodes import gbm
+        return getattr(gbm, cls_name)
+    return f
+
+
+REGISTRY.update({
+    "c1_gbm_global": ("2026-11-15", "diagnostic", _c1_global("GlobalGBM"),
+                      "GBM global à un pas (profession × dép × sexe × âge), itéré ; lire GlobalGBM.panel avant usage"),
+    "c1_mlp_global": ("2026-11-15", "diagnostic", _c1_global("GlobalMLP"), "MLP (32, 16), même panel et même itération"),
+})
