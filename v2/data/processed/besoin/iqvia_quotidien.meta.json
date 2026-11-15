@@ -1,0 +1,23 @@
+{
+ "table": "iqvia_quotidien.parquet",
+ "chemin": "v2/data/processed/besoin/iqvia_quotidien.parquet",
+ "lignes": 3372,
+ "colonnes": [
+  "campagne",
+  "date",
+  "jour",
+  "variable",
+  "groupe",
+  "valeur"
+ ],
+ "sha256_16": "ea1934e032ca8074",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "IQVIA France (Pharmastat), Vaccination Grippe 2021-2022 à 2026-2027, data.gouv.fr",
+ "millesime": "saisons 2021-22 à 2026-27 ; série quotidienne 2020-21 reprise du fichier 2021-22 ; 2026-27 (en cours, au 2026-11-11)",
+ "commande": "uv run python v2/besoin/donnees/iqvia.py",
+ "dom": "national (France entière extrapolée ; périmètre DOM non documenté)",
+ "controles": [],
+ "notes": "",
+ "ecrit_le": "2026-11-15T03:13:23"
+}

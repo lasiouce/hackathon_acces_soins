@@ -1,0 +1,2 @@
+mois,octets_gz,lignes,lignes_agg,secondes,mo_par_s,gunzip,lu_le
+202501,973594858,36640259,919369,213.0,4.57,2 (octets écrits par curl -w dans le flux ; corrigé ensuite ; taille = Content-Length),2026-11-15T03:17:38

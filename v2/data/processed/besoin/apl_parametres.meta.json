@@ -1,0 +1,23 @@
+{
+ "table": "apl_parametres.parquet",
+ "chemin": "v2/data/processed/besoin/apl_parametres.parquet",
+ "lignes": 285,
+ "colonnes": [
+  "prof",
+  "bloc",
+  "cle",
+  "annee",
+  "valeur",
+  "texte"
+ ],
+ "sha256_16": "7ddce0e738652e5a",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "DREES, APL (jeu 530), fichiers par profession, modifié le 2026-07-22, onglet « Paramètres »",
+ "millesime": "poids d'âge DCIR 2020–2022 (onglets 2022–2024)",
+ "commande": "uv run python v2/besoin/donnees/apl.py",
+ "dom": "sans objet",
+ "controles": [],
+ "notes": "",
+ "ecrit_le": "2026-11-15T03:10:56"
+}
