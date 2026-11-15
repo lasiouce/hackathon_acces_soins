@@ -1,0 +1,58 @@
+
+== A2 : MAPE [8.6, [7.8, 9.47]]  plancher [3.11, [2.89, 3.36]]  part [0.362, [0.34, 0.39]]
+  oracle Y_exact                      gain  +2.94  IC95 [2.49, 3.44]
+  oracle M_exact                      gain  +2.64  IC95 [2.13, 3.18]
+  oracle Y_local                      gain  +2.60  IC95 [2.16, 3.05]
+  oracle M_local                      gain  +2.00  IC95 [1.58, 2.46]
+  oracle Y_local_reduit_50pct         gain  +1.37  IC95 [1.14, 1.62]
+  oracle M_local_reduit_50pct         gain  +1.18  IC95 [0.94, 1.45]
+  oracle national_total               gain  +1.08  IC95 [0.67, 1.47]
+  oracle national_tous_blocs          gain  +1.00  IC95 [0.57, 1.41]
+  oracle Y_local_reduit_25pct         gain  +0.76  IC95 [0.64, 0.88]
+  oracle M_national                   gain  +0.65  IC95 [0.44, 0.85]
+  oracle M_local_reduit_25pct         gain  +0.63  IC95 [0.51, 0.77]
+  oracle M_rapport_cohorte_national   gain  +0.56  IC95 [0.15, 1.03]
+  oracle Y_national                   gain  +0.35  IC95 [0.03, 0.66]
+  oracle R_exact                      gain  +0.23  IC95 [0.08, 0.4]
+  oracle R_local                      gain  +0.14  IC95 [0.01, 0.28]
+  oracle R_local_reduit_50pct         gain  +0.13  IC95 [0.07, 0.2]
+  oracle R_national                   gain  +0.10  IC95 [-0.0, 0.19]
+  oracle R_local_reduit_25pct         gain  +0.08  IC95 [0.05, 0.12]
+  parts de MSE {'Y_nat': 0.078, 'Y_loc': 0.413, 'M_nat': 0.098, 'M_loc': 0.357, 'R_nat': 0.017, 'R_loc': 0.037}
+  MSE et bruit {'total_pct2': 153.0, 'part_bruit': 0.126, 'Y': {'mse_pct2': 59.4, 'part_bruit': 0.14}, 'M': {'mse_pct2': 54.1, 'part_bruit': 0.113}, 'R': {'mse_pct2': 7.9, 'part_bruit': 0.604}}
+  persistance de l'écart local {'Y': {'r': 0.17, 'n': 273, 'paires_origines': [(2016, 2021)]}, 'M': {'r': 0.24, 'n': 273, 'paires_origines': [(2016, 2021)]}, 'R': {'r': -0.08, 'n': 273, 'paires_origines': [(2016, 2021)]}}
+  taille {'par_classe': [{'taille': '30–99', 'n': 327, 'mape': 16.42, 'plancher': 6.29}, {'taille': '100–299', 'n': 660, 'mape': 8.24, 'plancher': 3.42}, {'taille': '300–999', 'n': 795, 'mape': 5.63, 'plancher': 1.92}, {'taille': '1000+', 'n': 274, 'mape': 5.77, 'plancher': 1.07}], 'pente_log_ape_log_n': -0.29, 'pente_log_plancher_log_n': -0.54}
+  dentistes            MAPE  8.66 plancher  3.14 Y +3.52 (loc +4.65) M +1.31 (loc +1.36) R +0.34 nat -0.27
+  infirmiers-liberaux  MAPE  5.72 plancher  1.76 Y +1.05 (loc +0.44) M +3.12 (loc +1.63) R +0.36 nat +1.47
+  kines                MAPE  6.62 plancher  1.93 Y +2.40 (loc +2.78) M +0.69 (loc +1.24) R -0.41 nat +0.22
+  pharmaciens          MAPE  5.06 plancher  2.22 Y +0.78 (loc +0.71) M +1.96 (loc +1.68) R -0.39 nat +0.22
+  sages-femmes         MAPE 13.87 plancher  4.86 Y +5.57 (loc +3.48) M +4.74 (loc +3.26) R +0.81 nat +3.24
+
+== C1 : MAPE [7.76, [7.12, 8.4]]  plancher [3.11, [2.89, 3.36]]  part [0.401, [0.37, 0.43]]
+  oracle Y_exact                      gain  +2.84  IC95 [2.41, 3.26]
+  oracle Y_local                      gain  +2.60  IC95 [2.2, 3.05]
+  oracle M_exact                      gain  +2.56  IC95 [2.23, 2.89]
+  oracle M_local                      gain  +2.36  IC95 [2.0, 2.71]
+  oracle M_local_reduit_50pct         gain  +1.30  IC95 [1.12, 1.48]
+  oracle Y_local_reduit_50pct         gain  +1.29  IC95 [1.07, 1.52]
+  oracle M_local_reduit_25pct         gain  +0.71  IC95 [0.62, 0.8]
+  oracle Y_local_reduit_25pct         gain  +0.70  IC95 [0.59, 0.82]
+  oracle national_total               gain  +0.49  IC95 [0.2, 0.77]
+  oracle national_tous_blocs          gain  +0.36  IC95 [0.07, 0.63]
+  oracle Y_national                   gain  +0.23  IC95 [0.03, 0.44]
+  oracle R_exact                      gain  +0.22  IC95 [0.07, 0.37]
+  oracle M_national                   gain  +0.20  IC95 [0.09, 0.3]
+  oracle M_rapport_cohorte_national   gain  +0.18  IC95 [-0.02, 0.38]
+  oracle R_local_reduit_50pct         gain  +0.13  IC95 [0.06, 0.2]
+  oracle R_local                      gain  +0.12  IC95 [-0.02, 0.25]
+  oracle R_national                   gain  +0.10  IC95 [0.03, 0.16]
+  oracle R_local_reduit_25pct         gain  +0.08  IC95 [0.05, 0.12]
+  parts de MSE {'Y_nat': 0.06, 'Y_loc': 0.446, 'M_nat': 0.039, 'M_loc': 0.395, 'R_nat': 0.016, 'R_loc': 0.046}
+  MSE et bruit {'total_pct2': 117.1, 'part_bruit': 0.164, 'Y': {'mse_pct2': 45.4, 'part_bruit': 0.184}, 'M': {'mse_pct2': 36.7, 'part_bruit': 0.166}, 'R': {'mse_pct2': 7.3, 'part_bruit': 0.652}}
+  persistance de l'écart local {'Y': {'r': 0.02, 'n': 273, 'paires_origines': [(2016, 2021)]}, 'M': {'r': 0.22, 'n': 273, 'paires_origines': [(2016, 2021)]}, 'R': {'r': 0.16, 'n': 273, 'paires_origines': [(2016, 2021)]}}
+  taille {'par_classe': [{'taille': '30–99', 'n': 327, 'mape': 14.04, 'plancher': 6.29}, {'taille': '100–299', 'n': 660, 'mape': 7.6, 'plancher': 3.42}, {'taille': '300–999', 'n': 795, 'mape': 5.26, 'plancher': 1.92}, {'taille': '1000+', 'n': 274, 'mape': 5.49, 'plancher': 1.07}], 'pente_log_ape_log_n': -0.27, 'pente_log_plancher_log_n': -0.54}
+  dentistes            MAPE  8.03 plancher  3.14 Y +3.78 (loc +4.04) M +1.54 (loc +1.45) R +0.33 nat +0.19
+  infirmiers-liberaux  MAPE  4.93 plancher  1.76 Y +1.04 (loc +0.72) M +2.56 (loc +2.05) R +0.13 nat +0.36
+  kines                MAPE  6.51 plancher  1.93 Y +2.24 (loc +2.57) M +0.48 (loc +1.38) R -0.32 nat +0.34
+  pharmaciens          MAPE  4.91 plancher  2.22 Y +1.11 (loc +0.95) M +1.96 (loc +1.78) R +0.21 nat +0.29
+  sages-femmes         MAPE 11.96 plancher  4.86 Y +4.62 (loc +3.77) M +4.52 (loc +4.17) R +0.26 nat +1.07
