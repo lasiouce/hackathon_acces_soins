@@ -5288,3 +5288,11 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   - `jumeau.check` : seul C15 (temps) échoue, sous charge.
 - **Corrigé à la fusion :** `Home.md` de la branche `besoin-assistant` contenait des marqueurs de conflit commités ;
   ils sont retirés, et les trois lignes du journal sont gardées.
+
+## 2026-11-15 — Carte : la fiche montre la couverture de l'année du curseur seulement
+- **Décision** (demande de l'utilisateur·rice) : la fiche du territoire n'affiche plus la ligne fixe « Couverture de la
+  demande de ville 2035 ». Elle montre seulement l'année du curseur ; l'export suit la même règle. L'étiquette de
+  l'indicateur « Couverture 2040 » retrouve son espace (`&nbsp;`, comme « Densité ») : le bouton en flex supprimait
+  l'espace avant l'année.
+- **Pourquoi :** la ligne 2035 doublait celle du curseur ; une seule année se lit d'un coup d'œil.
+- **Vérifié :** dans le navigateur (Puy-de-Dôme, pharmaciens, curseur sur 2040 : une ligne, 1,01).

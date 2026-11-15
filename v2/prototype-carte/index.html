@@ -414,7 +414,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture <span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture&nbsp;<span class="yl">2050</span></button></div>
       <div id="lt"></div>
       <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
       <!-- définition facultative de l'indicateur affiché (décision du 2026-11-14) : fermée par défaut, état mémorisé dans le navigateur -->
@@ -944,7 +944,7 @@ function renderCard(f){
 const tw=new WeakMap();
 // lignes « couverture » de la fiche et de l'export : mêmes valeurs que l'API (aucun calcul dans la page)
 function couvRows(T,Yn){if(!COUV||COUV.prof!==S.prof)return null;const o=T=="FR"?COUV.fr:T.startsWith("D")?COUV.deps[T.slice(1)]:COUV.regs[T];if(!o)return null;
-  const at=y=>{const j=COUV.years.indexOf(y);return j<0?null:couvAt(o,j);};const rows=[2035,Yn].filter((y,i,a)=>a.indexOf(y)==i).map(y=>[y,at(y)]).filter(r=>r[1]);
+  const at=y=>{const j=COUV.years.indexOf(y);return j<0?null:couvAt(o,j);};const rows=[[Yn,at(Yn)]].filter(r=>r[1]);   // l'année du curseur seulement
   const tr=COUV.l23?.transferts?.[0],j=COUV.years.indexOf(Yn);
   return {rows,est:COUV.estimateurs,central:COUV.central,mg:tr&&j>=0?{etp:tr.etp_liberes_source[j],actes:tr.actes_mg_liberes[j],recu:tr.etp_recus_cible[j],y:Yn}:null};}
 function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c;if(!c)return;
