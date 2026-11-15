@@ -73,3 +73,29 @@ spatiale à 2SFCA (débordement entre zones), nous couvrons cinq professions hor
 ## ? À étudier ensuite
 - Lire le PDF de Bruns 2026 et la méthode de Doi 2017 : ~20 min Claude.
 - Passe « standard » sur Google Scholar et Scopus, à la main (accès institutionnel) : ~1 h de votre temps.
+
+## Addendum, même jour : textes lus et deuxième passe (APIs ouvertes)
+- **Google Scholar : refusé** (page « trafic exceptionnel » avec CAPTCHA, que je ne contourne pas). Scopus demande
+  votre accès institutionnel. Remplacés par les API ouvertes d'Europe PMC et de HAL.
+- **Bruns et coll. 2026, PDF lu (34 p.) :** besoin = population ÷ ratio population-par-médecin réglementaire (RPPR) par
+  zone de planification ; offre en stock-flux par cohorte (registre KVN 2009–2024, pseudonymisé, non ouvert).
+  **Aucun 2SFCA, aucune distance, aucune accessibilité spatiale, aucun transfert de tâches.** La revendication n° 1 tient.
+  Elle s'en distingue aussi par les données : Bruns s'appuie sur un registre fermé.
+- **Doi et coll. 2017, résumé lu (Europe PMC, DOI 10.3390/ijerph14111367) :** « patient access area model »,
+  hospitalisations projetées tous les 5 ans contre les **lits** à moins d'une heure de route, Tokyo, horizon 2030.
+  L'offre (lits) reste fixe, il n'y a pas de 2SFCA ni de professions. Le texte intégral (MDPI, erreur 403) n'est pas lu.
+
+| # | Moteur | Requête | N | Lus (titres) | Pertinent |
+|---|---|---|---|---|---|
+| 18 | Google Scholar | "floating catchment" projection 2040 OR 2050 workforce supply population scenarios | CAPTCHA | 0 | — |
+| 19 | Europe PMC | "floating catchment" AND (projection OR projected OR future OR scenario) AND (2030…2050) | 116 | 8 | aucun ne projette l'offre ; protonthérapie 2030 = infrastructure |
+| 20 | Europe PMC | "floating catchment" AND (workforce OR "supply projection") AND (forecast OR projection) | 9 | 8 | revue de méthodes de planification rurale 2026 (HRH), Texas 2024 |
+| 21 | Europe PMC | TITLE:"Patient Access Area Model" | 1 | 1 | Doi 2017 |
+| 22 | Europe PMC | ("task shifting" OR "skill mix") AND "workforce planning" AND (conservation OR "induced demand" OR expansion) AND model | 191 | 8 | aucun opérateur conservatif |
+| 23 | HAL | text:(accessibilité potentielle localisée) | 19 | 6 (3 résumés) | Chéron et coll. 2025 (indicateur complémentaire), Carrère 2024, Coris 2022 : aucune projection, aucune reproduction |
+| 24 | HAL | text:(accessibilité potentielle localisée) AND text:(projection) | 0 | — | — |
+| 25 | HAL | title_t:(two-step floating catchment) | 1 | 1 | hôpitaux 2021, transversal |
+| 26 | HAL | vaccination officine pharmaciens (expérimentation OR évaluation) | 24 | 8 | thèses d'exercice descriptives (DUMAS) ; aucune évaluation causale du déploiement échelonné |
+
+**Bilan :** 25 requêtes exécutées, profondeur entre « scan » et « standard ». Les trois formulations restent celles
+du tableau, inchangées : aucun antécédent trouvé. « À notre connaissance » demande encore Scholar et Scopus.

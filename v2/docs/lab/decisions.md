@@ -4840,3 +4840,10 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Pourquoi :** Scholar et Scopus non interrogés directement ; une recherche « scan » ne peut pas établir une nouveauté.
 - **Ce qui le renverserait :** un 2SFCA dans le PDF de Bruns 2026 ou dans Doi 2017 ; une passe « standard » sur
   Scholar et Scopus qui ne trouve toujours rien (permettrait « à notre connaissance »).
+
+## 2026-11-15 — Module de besoin, nouveauté : formulations confirmées après lecture de Bruns 2026 et Doi 2017
+- **Décision :** les formulations de l'entrée précédente sont maintenues sans changement
+  ([addendum](explorations/2026-11-15-besoin-nouveaute.md#addendum-même-jour--textes-lus-et-deuxième-passe-apis-ouvertes)).
+- **Pourquoi :** Bruns 2026 (PDF lu) n'utilise ni 2SFCA ni distance ; Doi 2017 projette la demande contre des lits fixes.
+  25 requêtes au total (Europe PMC, HAL en plus) sans antécédent trouvé.
+- **Ce qui le renverserait :** une passe Scholar et Scopus (CAPTCHA ici, accès institutionnel requis).
