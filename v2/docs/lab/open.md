@@ -285,3 +285,4 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin axe 5 : régulation à l'installation à E = 0 au département dans le modèle servi : déclenchement à vérifier | ~15 min Claude | axe 5 du besoin | 2026-11-15 | open |
 | Besoin axe 5 : sensibilité de l'indice M4 (accessibilité, à part de C) aux leviers, à la commune | ~45 min Claude | axe 5 du besoin | 2026-11-15 | open |
 | Besoin axe 5 : `ots upgrade` du jeton OpenTimestamps du protocole, puis commit | ~2 min Claude, quelques heures de monde | axe 5 du besoin | 2026-11-15 | open |
+| Refactorer `README.md` à la toute fin, une fois toutes les branches fusionnées et les P1 de la recette corrigés : un README unique et à jour (démarrage, module de besoin, grain départemental, assistant, licences) | ~30 min | utilisateur·rice | 2026-11-15 | open, en dernier |
