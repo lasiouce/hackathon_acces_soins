@@ -1,0 +1,43 @@
+{
+ "table": "damir_profils.parquet",
+ "chemin": "v2/data/processed/besoin/damir_profils.parquet",
+ "lignes": 256877,
+ "colonnes": [
+  "flx_ann",
+  "soi_ann",
+  "ben_reg",
+  "age",
+  "sexe",
+  "prof",
+  "stj",
+  "ppu",
+  "top_ps5",
+  "prs_nat",
+  "qte",
+  "nbr",
+  "pai_mnt",
+  "rem_bse",
+  "rem_mnt",
+  "dep_mnt"
+ ],
+ "sha256_16": "e521f90e746f9d53",
+ "licence": "Licence Ouverte 2.0 (Etalab)",
+ "commite": true,
+ "source": "Assurance maladie, Open DAMIR base complète, fichiers mensuels A{AAAAMM}.csv.gz (lus en flux)",
+ "millesime": "flux 202501, 202502, 202503, 202504, 202505, 202506, 202507, 202508, 202509",
+ "commande": "uv run python v2/besoin/donnees/damir.py --fenetre && uv run python v2/besoin/donnees/damir.py --controle",
+ "dom": "DOM regroupés en une zone (code 5), non séparables ; PACA et Corse fusionnées (93) ; 99 = inconnu",
+ "controles": [
+  {
+   "controle": "damir_profils Σ dépense = Σ agg mensuels 2024–2025",
+   "reconstruit": 63058970297.87,
+   "publie": 63058970297.87,
+   "ecart_rel": 0.0,
+   "seuil": 1e-09,
+   "ok": true,
+   "source_publie": "agg_AAAAMM (même lecture)"
+  }
+ ],
+ "notes": "filtre PRS_REM_TYP = 0 ; libéral = stj 1 et ppu 2, à appliquer à l'usage ; une année de soins n'est complète qu'avec les flux des mois suivants (soins de déc. 2025 en partie absents)",
+ "ecrit_le": "2026-11-15T04:08:51"
+}

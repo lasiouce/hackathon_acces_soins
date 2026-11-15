@@ -146,3 +146,24 @@ versions initiale et consolidée.
 | Vérifier les jetons RFC 3161 contre les certificats de FreeTSA et de DigiCert | ~10 min |
 | Geler le seuil de lecture de l'axe 5 avec un jeton | ~15 min |
 | Lancer P-B1 (dès que M1 existe) | ~30 min Claude |
+
+## Addendum 2026-11-15 (04:18 CET) — amendement A1 et ancrage OpenTimestamps
+- **Ancrage du premier gel.** `ots upgrade` a été lancé à 04:18 CET. Le jeton `…SHA256SUMS.ots` porte une
+  attestation `BitcoinBlockHeaderAttestation(975880)` (lue par `ots info`). La vérification contre un nœud Bitcoin
+  n'a pas été faite : il n'y a pas de nœud local.
+- **Amendement A1**, écrit après le rapport d'ingestion de l'axe 4 :
+  [2026-11-15-besoin-amendement-a1.md](../../../validation/preregistered/2026-11-15-besoin-amendement-a1.md).
+  - SHA-256 du fichier : `c36cecd62b9156ba866e929fd7ae125fc4436f4eaa0403c55a17e4cd23384261`.
+  - SHA-256 du manifeste `horodatage/2026-11-15-besoin-amendement-a1-SHA256SUMS` :
+    `3be3705558930f38449eda56badd41b63f7921a1cbc86a8fc6ee891795cae3fd`.
+  - Jetons RFC 3161 : FreeTSA à **2026-11-15 03:18:22 UTC**, DigiCert à 03:18:23 UTC, tous deux accordés, avec
+    l'empreinte vérifiée. OpenTimestamps est soumis et en attente. Commit seul et poussé : `b10a005`.
+- **Contenu de A1.** Il change des définitions et des sources, pas des règles de décision :
+  - P-B2, P-B3 (B), P-B5 : recours = file active moyenne × effectif ameli ;
+  - P-B5 : la sensibilité DAMIR 2016 est remplacée par les poids APL 2022 ;
+  - P-B6 : `m` est inchangé (Open Medic) ; `s(t)` régional par DAMIR est abandonné au profit d'une série descriptive
+    (Cour des comptes, Liard, IQVIA).
+- **Hors de A1.** P-B1 et P-B4 avaient déjà été lancés par d'autres sessions : ils ne sont pas amendés. L'auteur a vu
+  les intitulés de leurs commits, pas leurs fichiers de résultats.
+- **Heure de gel à citer** : pour P-B2, P-B3, P-B5 et P-B6, c'est **03:18:22 UTC** (A1). Pour P-B1 et P-B4, c'est
+  02:17:19 UTC.

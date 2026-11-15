@@ -308,6 +308,10 @@ et la question ouverte sur le seuil de diffusion.
   **M1** (recours par âge, poids APL de la DREES) est retenu par P-B1 pour les infirmiers, les kinés et
   les sages-femmes ; dentistes et pharmaciens attendent le profil Open DAMIR
   ([rapport](v2/docs/lab/reports/2026-11-15-besoin-pb1-age.md)).
+- Données du module de besoin (2026-11-15) : `v2/besoin/donnees/`, un module par source (APL DREES,
+  data.ameli.fr, Open Medic, IQVIA, Open DAMIR lu en flux, distancier à vol d'oiseau), manifeste et contrôles dans
+  `v2/besoin/donnees/MANIFEST.md`. Les tables issues de data.ameli.fr (ODbL) ne sont pas versionnées : les
+  reconstruire avec `uv run python v2/besoin/donnees/ameli.py`.
 - Les effectifs sont comptés en têtes. L'activité par professionnel (équivalents temps plein) n'est
   qu'une hypothèse supposée, sans série ouverte vérifiée.
 - Les tranches d'âge de 5 ans supposent des âges uniformes dans chaque tranche (biais connu sur les
