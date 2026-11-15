@@ -5434,3 +5434,42 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   consigne, aucun constat n'est corrigé pendant la recette ; les 6 P1 vont au ledger.
 - **Pourquoi :** consigne de la recette (« ne corrige rien ») ; règle de confirmation avant toute dépense.
 - **Ce qui le renverserait :** un accord pour quelques appels Haiku (ligne du ledger « UAT en mode IA »).
+
+## 2026-11-15 — L23 : la montée en charge part de la part déjà atteinte (P1-4) ; niveau de la demande MG mesuré dans M1 ; écart au protocole P-B6
+- **Décision** (accord de l'utilisateur·rice : « 1 mais après la fusion », règle fixée avant la mesure : au-delà de
+  20 % d'effet gonflé, corriger le double compte et le niveau ensemble ; enregistrée avant tout changement de code) :
+  - **Constat mesuré (P1-4 de la recette).**
+    - La part officinale nationale vaut déjà **0,687 en 2025-26** (IQVIA ÷ Open Medic, P-B6, mesuré) et 0,670 en
+      2024-25.
+    - La courbe ajustée (t₀ = 2019) donne s(2026) = 0,698 (dérivé).
+    - L23 rejouait toute la montée (0 → 0,74) à partir de 2026 : effet **19 fois** trop grand en 2035
+      (0,723 contre une marge de 0,038 ; dérivé).
+    - L'année de base contient déjà l'officine : la demande des pharmaciens est calée sur leur offre de 2026 et le
+      profil de la MG sur Open DAMIR 2025.
+  - **Correction.**
+    - L23 garde la courbe mesurée : s∞ 0,74, τ 2,4, **t₀ = 2019**.
+    - Il n'applique que **ce qui reste au-delà de la part atteinte à l'année de base** :
+      `s_eff(t) = max(0, s(t) − s(2026))`.
+    - Nouveau champ `s_deja` de `Transfert`, à 0 par défaut : les autres transferts, dont l'hypothétique, ne changent
+      pas.
+  - **Niveau de la demande MG dans M1.**
+    - r̄_MG est calé pour que la demande nationale de la MG à l'année de base égale l'**effectif libéral mesuré**
+      (ameli, 1ᵉʳ janvier 2025 : 56 005, mesuré).
+    - Il remplace le placeholder de 0,9 ‰ (supposé), plus haut d'environ 10 %.
+    - La répartition par âge reste celle d'Open DAMIR.
+  - **Écart au protocole P-B6** (gelé, horodaté).
+    - Le protocole mesure s(t) avec t₀ = 2019 et ne fixe pas son application au besoin ; il est inchangé.
+    - Ce qui change, c'est l'application dans le module de besoin : t₀ = 2019 et soustraction de s(2026), au lieu de
+      t₀ = 2026.
+    - s∞ et τ ne sont pas réajustés.
+- **Pourquoi :**
+  - effet gonflé de +1 830 %, bien au-delà du seuil de 20 % fixé avant la mesure ;
+  - les deux corrections changent les chiffres de L23 : une seule fois, un seul passage de K4.
+- **Effet attendu (dérivé, à vérifier) :** l'écart de couverture des pharmaciens avec L23 passe d'environ −0,7 % à
+  environ −0,04 %. Les « vaccinations en moins pour les généralistes » baissent dans la même proportion.
+- **⚑ Ce qui le fragilise :**
+  - la marge restante (≈ 0,04) est plus petite que l'erreur type de s∞ (± 0,07) : son signe même n'est pas sûr ;
+  - la grille de sensibilité (`v2/sensibilite/besoin/grille.py`) applique L23 avec t₀ = 2019 sans soustraire
+    s(2026) : non corrigée ici, inscrite au ledger.
+- **Ce qui le renverserait :** une année de base de la demande antérieure à 2019 (la soustraction serait alors de
+  trop) ; un nouvel ajustement de P-B6 avec un s∞ nettement plus haut.

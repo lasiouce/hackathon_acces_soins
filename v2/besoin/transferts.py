@@ -1,7 +1,8 @@
 """Opérateur de transfert de tâches (dérivation du 2026-11-15, §6), appliqué au besoin seulement.
 
 Un transfert d'un acte de A (source) vers B (cible), autorisé à la date t₀ :
-  s(t)    = s_∞ · (1 − e^{−(t − t₀)/τ})   pour t ≥ t₀, 0 avant     (montée en charge, pas une décision)
+  s(t)    = max(0, s_∞ · (1 − e^{−(t − t₀)/τ}) − s_déjà)   pour t ≥ t₀, 0 avant     (montée en charge, pas une décision)
+            s_déjà : part déjà atteinte à l'année de base, déjà dans la demande de base (0 par défaut ; L23 : P1-4)
   B'_A    = B_A · (1 − s·a)
   B'_B    = B_B + s·a·B_A·k + m,   m = μ · s·a·B_A·k                 (expansion du recours, μ = 0 par défaut)
   ΣB' − ΣB = s·a·B_A·(k − 1) + m                                      (conservation, testée à 10⁻⁶)
@@ -33,6 +34,7 @@ class Transfert:
     tau: float        # années
     t0: int           # date d'autorisation
     mu: float = 0.0   # expansion : actes ajoutés par acte transféré, en temps de B
+    s_deja: float = 0.0   # part déjà atteinte à l'année de base (incluse dans la demande de base) : seul le reste agit
 
     def __post_init__(self):
         if self.cible in SANS_COUVERTURE:
@@ -46,7 +48,8 @@ class Transfert:
 
     def s(self, years) -> np.ndarray:
         h = np.asarray(years, dtype=float) - self.t0
-        return np.where(h >= 0, self.s_inf * (1 - np.exp(-np.maximum(h, 0) / self.tau)), 0.0)
+        s = np.where(h >= 0, self.s_inf * (1 - np.exp(-np.maximum(h, 0) / self.tau)), 0.0)
+        return np.maximum(s - self.s_deja, 0.0) if self.s_deja else s
 
 
 def appliquer(B: Cube, transferts=()) -> tuple[Cube, list[dict]]:
@@ -82,7 +85,13 @@ L23_PARAMS = (
 )
 
 
-def l23(t0: int = 2026, **override) -> Transfert:
+L23_T0 = 2019     # généralisation de la vaccination en officine ; origine de l'ajustement de s(t) dans P-B6 (mesuré)
+
+
+def l23(ref: int = 2026, **override) -> Transfert:
+    """L23 sur la courbe mesurée (t₀ = 2019) ; seule la part au-delà de celle atteinte à l'année de base `ref` agit
+    (décision P1-4 du 2026-11-15 : la demande de base contient déjà l'officine). ref ≤ 2019 : courbe entière."""
     v = {p.name: p.value for p in L23_PARAMS} | override
+    deja = float(v["s_inf"] * (1 - np.exp(-(ref - L23_T0) / v["tau"]))) if ref > L23_T0 else 0.0
     return Transfert("L23 vaccination en officine", "medecine-generale", "pharmaciens", v["a"], v["k"], v["s_inf"],
-                     v["tau"], t0, v["mu"])
+                     v["tau"], L23_T0, v["mu"], s_deja=deja)

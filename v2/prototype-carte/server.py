@@ -355,7 +355,8 @@ def couverture_carte(prof: str, lv: dict, ov: dict | None, trh: tuple | None = N
             "ecart_modeles_2050": round(float(np.nanmedian(e50)), 4) if len(par) > 1 else 0.0,
             "seuil_fourchette": SEUIL_FOURCHETTE,
             "l23": None if ov is None else {"actif": True, "params": params, "transferts": tr,
-                                            "note": "a et k supposés : effet illustratif ; s(t) : forme mesurée (P-B6)"},
+                                            "note": "a et k supposés : effet illustratif ; s(t) : forme mesurée (P-B6, depuis 2019) ; seule la part "
+                                                    "au-delà de celle déjà atteinte en 2026 (≈ 0,70) agit"},
             "transfert_hypothetique": None if trh is None else _trh_bloc(trh, years, c["src"]),
             "hypotheses": {"norme": c["r1"]["norme"], "estimateurs": {e: besoin_cache(prof, e, None)["norme"] for e in par},
                            "population": c["r1"]["hypotheses"]["population"], "sources": [
