@@ -1,0 +1,293 @@
+{
+ "secondes_banc": 100.4,
+ "fuite": {
+  "c1_gbm_global": 0.0,
+  "c1_mlp_global": 0.0
+ },
+ "boot": 2000,
+ "graine": 20261114,
+ "mape_par_h": {
+  "axe2_shrink_hier": {
+   "1": 2.73,
+   "3": 5.59,
+   "5": 8.6,
+   "8": 14.33,
+   "10": 17.59
+  },
+  "c1_gbm_global": {
+   "1": 2.75,
+   "3": 5.91,
+   "5": 10.15,
+   "8": 25.5,
+   "10": 28.87
+  },
+  "c1_mlp_global": {
+   "1": 3.7,
+   "3": 9.77,
+   "5": 20.52,
+   "8": 23.33,
+   "10": 51.15
+  },
+  "naive_persistance": {
+   "1": 3.12,
+   "3": 6.85,
+   "5": 9.94,
+   "8": 13.56,
+   "10": 16.06
+  },
+  "naive_tendance": {
+   "1": 3.7,
+   "3": 6.39,
+   "5": 9.32,
+   "8": 14.42,
+   "10": 17.78
+  }
+ },
+ "biais_nat_h5": {
+  "axe2_shrink_hier": {
+   "dentistes": -4.95,
+   "infirmiers-liberaux": 5.6,
+   "kines": -2.15,
+   "pharmaciens": -0.37,
+   "sages-femmes": 7.52
+  },
+  "c1_gbm_global": {
+   "dentistes": -7.69,
+   "infirmiers-liberaux": 8.52,
+   "kines": -3.28,
+   "pharmaciens": 1.12,
+   "sages-femmes": 14.24
+  },
+  "c1_mlp_global": {
+   "dentistes": 9.42,
+   "infirmiers-liberaux": 15.08,
+   "kines": 37.05,
+   "pharmaciens": 7.36,
+   "sages-femmes": 16.83
+  },
+  "naive_persistance": {
+   "dentistes": -7.22,
+   "infirmiers-liberaux": -8.84,
+   "kines": -15.22,
+   "pharmaciens": 1.43,
+   "sages-femmes": -12.7
+  },
+  "naive_tendance": {
+   "dentistes": -4.94,
+   "infirmiers-liberaux": 8.51,
+   "kines": -4.18,
+   "pharmaciens": 2.31,
+   "sages-femmes": 9.09
+  }
+ },
+ "c1_gbm_global": {
+  "total": {
+   "mape": 10.15,
+   "mape_A2": 8.6,
+   "mape_tendance": 9.32,
+   "delta": 1.55,
+   "ci95": [
+    0.62,
+    2.75
+   ],
+   "ci975_bonferroni": [
+    0.53,
+    2.91
+   ],
+   "origines": 6,
+   "cellules": 22,
+   "issue": "perd"
+  },
+  "dentistes": {
+   "mape": 8.45,
+   "mape_A2": 8.66,
+   "mape_tendance": 8.7,
+   "delta": -0.21,
+   "ci95": [
+    -0.85,
+    0.43
+   ],
+   "ci975_bonferroni": [
+    -0.93,
+    0.52
+   ],
+   "origines": 6,
+   "cellules": 6,
+   "issue": "égalité"
+  },
+  "infirmiers-liberaux": {
+   "mape": 7.27,
+   "mape_A2": 5.72,
+   "mape_tendance": 7.62,
+   "delta": 1.54,
+   "ci95": [
+    0.92,
+    2.18
+   ],
+   "ci975_bonferroni": [
+    0.84,
+    2.27
+   ],
+   "origines": 3,
+   "cellules": 3,
+   "issue": "perd"
+  },
+  "kines": {
+   "mape": 11.37,
+   "mape_A2": 6.62,
+   "mape_tendance": 9.12,
+   "delta": 4.75,
+   "ci95": [
+    1.13,
+    10.92
+   ],
+   "ci975_bonferroni": [
+    0.97,
+    12.85
+   ],
+   "origines": 1,
+   "cellules": 1,
+   "issue": "perd"
+  },
+  "pharmaciens": {
+   "mape": 6.0,
+   "mape_A2": 5.06,
+   "mape_tendance": 5.85,
+   "delta": 0.94,
+   "ci95": [
+    -0.48,
+    3.48
+   ],
+   "ci975_bonferroni": [
+    -0.54,
+    4.36
+   ],
+   "origines": 6,
+   "cellules": 6,
+   "issue": "égalité"
+  },
+  "sages-femmes": {
+   "mape": 17.25,
+   "mape_A2": 13.87,
+   "mape_tendance": 14.29,
+   "delta": 3.38,
+   "ci95": [
+    1.86,
+    4.92
+   ],
+   "ci975_bonferroni": [
+    1.54,
+    5.11
+   ],
+   "origines": 6,
+   "cellules": 6,
+   "issue": "perd"
+  },
+  "verdict": "rejeté"
+ },
+ "c1_mlp_global": {
+  "total": {
+   "mape": 20.52,
+   "mape_A2": 8.6,
+   "mape_tendance": 9.32,
+   "delta": 11.92,
+   "ci95": [
+    10.54,
+    13.86
+   ],
+   "ci975_bonferroni": [
+    10.43,
+    14.18
+   ],
+   "origines": 6,
+   "cellules": 22,
+   "issue": "perd"
+  },
+  "dentistes": {
+   "mape": 23.23,
+   "mape_A2": 8.66,
+   "mape_tendance": 8.7,
+   "delta": 14.57,
+   "ci95": [
+    13.41,
+    15.75
+   ],
+   "ci975_bonferroni": [
+    13.23,
+    15.96
+   ],
+   "origines": 6,
+   "cellules": 6,
+   "issue": "perd"
+  },
+  "infirmiers-liberaux": {
+   "mape": 14.34,
+   "mape_A2": 5.72,
+   "mape_tendance": 7.62,
+   "delta": 8.62,
+   "ci95": [
+    7.73,
+    9.55
+   ],
+   "ci975_bonferroni": [
+    7.62,
+    9.66
+   ],
+   "origines": 3,
+   "cellules": 3,
+   "issue": "perd"
+  },
+  "kines": {
+   "mape": 60.13,
+   "mape_A2": 6.62,
+   "mape_tendance": 9.12,
+   "delta": 53.51,
+   "ci95": [
+    33.56,
+    88.54
+   ],
+   "ci975_bonferroni": [
+    32.77,
+    101.47
+   ],
+   "origines": 1,
+   "cellules": 1,
+   "issue": "perd"
+  },
+  "pharmaciens": {
+   "mape": 11.75,
+   "mape_A2": 5.06,
+   "mape_tendance": 5.85,
+   "delta": 6.7,
+   "ci95": [
+    5.86,
+    7.59
+   ],
+   "ci975_bonferroni": [
+    5.69,
+    7.72
+   ],
+   "origines": 6,
+   "cellules": 6,
+   "issue": "perd"
+  },
+  "sages-femmes": {
+   "mape": 23.07,
+   "mape_A2": 13.87,
+   "mape_tendance": 14.29,
+   "delta": 9.2,
+   "ci95": [
+    7.32,
+    11.14
+   ],
+   "ci975_bonferroni": [
+    7.06,
+    11.37
+   ],
+   "origines": 6,
+   "cellules": 6,
+   "issue": "perd"
+  },
+  "verdict": "rejeté"
+ }
+}

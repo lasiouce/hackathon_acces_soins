@@ -177,3 +177,4 @@ restent valables : on les reprend ici au moment où on les traite.
 | Axe 0 : point d'injection officiel des taux de base (aujourd'hui C1 passe par un cache de `History`, détail interne du jumeau) | ~30 min axe 0 | C1 servi par la carte | 2026-11-14 | open |
 | Axe 2 : banc N1 de C1 sur la table privée des infirmiers de l'axe 4 (la carte la sert ; C1 n'a été mesuré que sur les libéraux RPPS) | ~20 min machine | C1 servi par la carte | 2026-11-14 | open |
 | Axe 2 : rétention de C1 variable avec l'horizon dans le jumeau (aujourd'hui tenue à sa moyenne, ±1,2 % à 5 ans) | ~1 h | C1 servi par la carte | 2026-11-14 | open |
+| GBM direct à h = 5 (origines ≥ 2018, validation imbriquée) ou GBM sur les résidus de A2 : seul chemin qui reste pour l'apprentissage automatique après le rejet C1-GBM (+1,55 pt) | ~30 min Claude + ~5 min machine | C1-GBM | 2026-11-15 | open |

@@ -4310,3 +4310,36 @@ vrai taux. D'ici là : renommer l'indicateur, ou le borner à l'affichage (voir 
 que les couleurs soient plus claires. Ce n'est pas confortable pour les yeux ».
 **Ce qui le renverserait.** Une recette où deux classes voisines ne se distinguent plus à l'œil, notamment au
 vidéoprojecteur. Il faudrait alors des paliers discrets plutôt qu'un dégradé continu.
+
+## 2026-11-15 — C1-GBM : l'apprentissage automatique global est rejeté contre A2
+
+**Décision** ([rapport](reports/2026-11-15-c1-gbm-global.md), [inscription](derivations/2026-11-15-c1-gbm-global.md)).
+- **Rejeté : GBM global.** Il est appris sur toutes les professions × départements × sexes × âges à la fois, avec un pas
+  d'un an itéré.
+  - MAPE dép. à h = 5 : 10,15 % contre 8,60 % pour A2.
+  - Δ +1,55 pt, IC 95 % [+0,62 ; +2,75], IC 97,5 % (Bonferroni) [+0,53 ; +2,91].
+- **Rejeté : MLP (32, 16)** sur le même panel : 20,52 %, Δ +11,92 pt, IC 95 % [+10,54 ; +13,86].
+- **Par profession**, Δ GBM − A2 :
+
+  | Profession | Δ GBM − A2 | Issue |
+  |---|---|---|
+  | Dentistes | −0,21 [−0,85 ; +0,43] | égalité |
+  | Pharmaciens | +0,94 [−0,48 ; +3,48] | égalité |
+  | Infirmiers | +1,54 | perd |
+  | Kinés | +4,75 | perd |
+  | Sages-femmes | +3,38 | perd |
+
+  Le MLP perd partout.
+- Le test d'abandon a été inscrit avant le banc (commit 70f8bc9) : battre A2 avec un IC 95 % qui exclut 0. Aucun
+  hyperparamètre n'a été réglé.
+- **Fuite contrôlée.** Après perturbation de toutes les données postérieures à l'origine, l'écart des prédictions vaut
+  0,0.
+- Les deux modèles restent au registre comme **diagnostics** (`c1_gbm_global`, `c1_mlp_global`), jamais comme modèle :
+  ce sont des boîtes noires (voir « Les nouveaux modèles ne sont pas tenus d'être des stock-flux »).
+- **A2 reste la meilleure méthode** au banc N1.
+
+**Pourquoi.** Question de l'utilisateur·rice relayée par la session v2 : l'apprentissage automatique ferait-il mieux ?
+Mesuré plutôt qu'argumenté. Le GBM égale A2 à un an (2,75 % contre 2,73 %) mais dérive à l'itération (28,9 % contre
+17,6 % à h = 10). Il dispose de 1 600 à 4 000 départements × années pour apprendre.
+**Ce qui le renverserait.** Un GBM direct à h = 5 ou un GBM sur les résidus de A2, avec validation imbriquée, qui passe
+le même test d'abandon.
