@@ -86,7 +86,7 @@ verdict est le verdict de P-B4 ; le passage 1 (repli) reste rapporté. Aucun seu
   voies carrossables : `motorway`, `trunk`, `primary`, `secondary`, `tertiary` (et leurs bretelles),
   `unclassified`, `residential`, `living_street`, `road`, plus les bacs et les interdictions de tourner. Les voies
   `service` et `track` sont exclues (h) : un centre de commune s'accroche alors à la voie carrossable la plus proche.
-- **Complément du 2026-11-15 à 04:55 UTC, avant la table complète et avant tout calcul de M4 sur OSRM.** Pour
+- **Complément du 2026-11-15 à 04:47 UTC, avant la table complète et avant tout calcul de M4 sur OSRM.** Pour
   accélérer (pilote MLD : 240 s pour 1 000 communes, ≈ 2,3 h pour toutes, mesuré) : algorithme **CH** au lieu de
   MLD (`osrm-contract` ; même graphe, mêmes poids : les deux donnent le plus court chemin exact) et rayon de
   recherche **50 km** au lieu de 60. Sur le pilote de 300 communes, la plus grande distance à vol d'oiseau d'une
