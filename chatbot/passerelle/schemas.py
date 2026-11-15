@@ -73,7 +73,7 @@ OUTILS: dict[str, tuple[str, dict]] = {
                            "la traduction SUPPOSÉE (leviers, sens, mécanisme, limite) et deux essais (ampleur basse et haute), ou « pas "
                            "dans le modèle » s'il n'y a aucun mécanisme commun.",
                            _obj({"politique": {"type": "string", "enum": ["obligation_zone", "exercice_coordonne", "remuneration",
-                                 "duree_etudes", "aides_installation", "cesp", "vaccination_officine", "ipa", "acces_direct",
+                                 "duree_etudes", "aides_installation", "cesp", "vaccination_officine", "ipa", "acces_direct", "tension_diabete",
                                  "teleconsultation", "quatrieme_annee_mg", "medecins_specialistes"]},
                                  "profession": PROF, "territoire": TERR, "annee": ANNEE}, ["politique", "profession"])),
     "planifier": ("OBJECTIF -> LEVIERS. Pour une cible chiffrée à un horizon (« je veux +X % », « atteindre N pour 100 000 », "
@@ -93,6 +93,14 @@ OUTILS: dict[str, tuple[str, dict]] = {
                            "profession, un territoire et une année. À utiliser pour « quelles politiques ont le plus d'effet », "
                            "« quoi d'autre », « par quoi commencer ».",
                            _obj({"profession": PROF, "territoire": TERR, "annee": ANNEE}, ["profession"])),
+    "couverture": ("INDICE DE COUVERTURE (module de besoin) d'une des cinq professions : offre / demande de soins de ville, base 2026 = 1, tendanciel "
+                   "et scénario, écart relatif au tendanciel, fourchette entre estimateurs si le choix du modèle pèse. Levier L23 "
+                   "(vaccination en officine, à partir de l23_t0) : l'effectif ne change pas, la couverture des pharmaciens oui. "
+                   "Jamais pour la médecine générale ni les spécialistes (règle O2).",
+                   _obj({"profession": PROF, "territoire": TERR, "leviers": LEVIERS,
+                         "l23": {"type": "boolean", "description": "Vaccination en officine (transfert L23) active."},
+                         "l23_t0": {"type": "integer", "minimum": 2019, "maximum": 2050, "description": "Année d'autorisation (défaut 2026)."},
+                         "annees": {"type": "array", "items": ANNEE, "maxItems": MAX_LISTE}}, ["profession"])),
     "decrire_leviers": ("Leviers du modèle : bornes, délai d'effet, statut (sourcé / supposé), source.", _obj({}, [])),
     "incertitude": ("Indices de Sobol (axe 5) : quels paramètres et choix d'estimation pèsent le plus sur la projection.",
                     _obj({"profession": PROF, "annee": {"type": "integer", "enum": [2030, 2040, 2050]}}, ["profession"])),

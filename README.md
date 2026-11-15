@@ -103,6 +103,9 @@ les infirmiers, le taux d'installation des diplômés ; Pyramide des âges ; Flu
 l'orange (en dessous de la moyenne nationale) au vert (au-dessus), en couleurs du DSFR. L'assistant de simulation
 s'ouvre dans une fenêtre par trois boutons : « Aide au scénario », « Aide à la lecture » et l'icône en bas à droite de
 la carte. Les deux panneaux latéraux se replient en une barre bleue (un clic la déplie), et la carte s'ouvre centrée sur la France.
+L'assistant et le compilateur comprennent la vaccination en officine (L23) : effectif inchangé dans le modèle,
+indice de couverture des pharmaciens (base 2026) lu sur `/api/couverture` ; jamais de couverture pour la médecine
+générale ([rapport](v2/docs/lab/reports/2026-11-15-besoin-assistant.md)).
 
 - **Carte des départements et des régions**, au choix : variation de l'effectif 2026 → 2050, écart au tendanciel,
   ou **densité 2050 pour 100 000 habitants** (Insee Omphale 2022). Sous la légende, « Comment lire cet indicateur ? » déplie sa
@@ -181,6 +184,7 @@ L'ancienne carte à panneaux flottants a été remplacée le 2026-11-14. Elle re
 | 4. Données | Public / privé, registre de 30 événements datés, zonage par commune, grain communal | ✅ |
 | 5. Sensibilité | Morris puis Sobol : quels paramètres déplacent l'effectif en 2050 ? | ✅ en 2050, la décision pèse plus que l'incertitude pour IDE, MK, SF |
 | Carte | Leviers, phrase, densité, mode expert, export | ✅ démontrable |
+| Besoin → carte | Vue « Couverture » (indice C, référence 2026 = 1, fourchette M1/M2a/M3), levier L23 « vaccination en officine » de bout en bout ; M4 en attente (P-B4) | ✅ 6 critères sur 6 ; `/api/couverture` 28,8 ms au 95ᵉ centile (n = 60) |
 | Phase 2 | Cardiologie, dermatologie, ophtalmologie | amélioration possible (plus au plan depuis le 2026-11-15) |
 
 **Rapport technique pour la reprise** (document d'entrée unique : données, paramètres, jumeau, méthodes,
@@ -274,6 +278,7 @@ Outils de recherche (certains lisent des fichiers bruts, par exemple le vivier d
 ```bash
 PYTHONPATH=v2 uv run python -m jumeau.check                 # critères d'acceptation du jumeau
 PYTHONPATH=v2 uv run --with scipy python -m besoin.tests    # module de besoin : critères d'identité et cas limites
+uv run python v2/prototype-carte/tests/couverture.py http://127.0.0.1:8767   # besoin → carte (serveur lancé) : O2, L23, latence
 PYTHONPATH=v2 uv run python -m besoin.validation.pb1        # besoin, P-B1 : âge (M1) contre population (M0)
 PYTHONPATH=v2 uv run --with scipy python -m besoin.validation.pb2   # besoin, P-B2 : saturation (M2b)
 PYTHONPATH=v2 uv run python -m besoin.validation.pb3        # besoin, P-B3 : morbidité (M3)

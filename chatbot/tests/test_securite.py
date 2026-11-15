@@ -19,7 +19,7 @@ import pytest
 
 RACINE = Path(__file__).resolve().parents[1]
 MODELE = RACINE / "vendor" / "hackathon_acces_soins"
-LISTE_BLANCHE = {"perimetre", "atteindre", "effets_des_leviers", "planifier", "traduire_politique", "projeter", "comparer", "balayer", "classer", "decrire_leviers", "incertitude", "interpreter_phrase"}
+LISTE_BLANCHE = {"perimetre", "atteindre", "effets_des_leviers", "planifier", "traduire_politique", "couverture", "projeter", "comparer", "balayer", "classer", "decrire_leviers", "incertitude", "interpreter_phrase"}
 
 
 def test_chat_n_importe_pas_le_modele_statique():

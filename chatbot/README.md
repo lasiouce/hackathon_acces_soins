@@ -54,6 +54,13 @@ Testé (`tests/test_securite.py`) : méthodes d'écriture, requêtes hors liste 
 (`../pyproject.toml`, `vendor/…`), champ `code`, quotas ×3, NaN, `../../etc/passwd` comme territoire, listes et textes trop
 longs ; après une série de requêtes, `git status` du modèle est vide.
 
+## Couverture et vaccination en officine (2026-11-15)
+L'outil `couverture` lit l'indice de couverture (base 2026 = 1) sur l'API de la carte (`CARTE_URL`, défaut
+`http://127.0.0.1:8767`, `GET /api/couverture` de `v2/prototype-carte/server.py`). « Les pharmaciens peuvent vacciner » (L23) :
+effectif inchangé dans le modèle, couverture des pharmaciens avec écart au tendanciel. Jamais de couverture pour la
+médecine générale ni les spécialistes (règle O2). Le compilateur chargé est celui du dépôt (`v2/langage/`), `LANGAGE_DIR`
+pour en forcer un autre. Rapport : `v2/docs/lab/reports/2026-11-15-besoin-assistant.md`.
+
 ## Garantie 2 : répondre dans le périmètre, sans inventer
 
 1. **Le périmètre est une donnée du modèle**, pas une opinion du modèle de langage : la requête `perimetre` renvoie ce qui est
@@ -76,7 +83,7 @@ prompt et sur `eval/evaluer_perimetre.py`.
 
 | Mesure | Résultat |
 |---|---|
-| Tests (`uv run pytest`) | 30/30 |
+| Tests (`uv run pytest`) | 47/47 (2026-11-15) |
 | Grille d'évaluation, contrôle avec le glossaire (`eval/evaluer_analyse.py --deterministe`) | jeu 6 : 21/30, identique au score publié par l'équipe |
 | Compréhension en mode IA, jeux 5 et 6 (`eval/evaluer_analyse.py`) | **pas encore mesurée** (clé d'API requise) ; à battre : 70 % (jeu 6) |
 | Périmètre en mode IA, 27 cas (`eval/evaluer_perimetre.py`) | **pas encore mesuré** ; jeu écrit par l'auteur du prompt (en échantillon) |

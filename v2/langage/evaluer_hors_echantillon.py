@@ -1,6 +1,6 @@
 """Score du compilateur sur cas_test_hors_echantillon.yaml (écrit à l'aveugle par un agent qui n'a vu ni le glossaire ni le compilateur).
 
-Run (racine du dépôt) : uv run python v2/langage/evaluer_hors_echantillon.py
+Run (racine du dépôt) : uv run python v2/langage/evaluer_hors_echantillon.py [jeu.yaml]
 Un levier à sa valeur par défaut compte comme non réglé (convention du jeu de cas).
 """
 import sys, yaml, importlib.util, collections
@@ -20,6 +20,8 @@ for c in cas:
     r=C.compile(c["texte"]); a=c["attendu"]; cat=c.get("categorie","?"); tot[cat]+=1
     got={"leviers":norm_lv(r["leviers_valides"]),"profession":r["profession"],"territoire":r["territoire"] or "FR","non_modelise":bool(r["non_modelise"])}
     exp={"leviers":norm_lv(a.get("leviers")),"profession":a.get("profession"),"territoire":a.get("territoire") or "FR","non_modelise":bool(a.get("non_modelise"))}
+    if "transferts" in a:   # champ compté seulement par les jeux qui le déclarent (cas_test_transferts.yaml)
+        got["transferts"]=sorted((t["id"],t["t0"]) for t in r.get("transferts",[])); exp["transferts"]=sorted((t["id"],t["t0"]) for t in a["transferts"])
     bad=[f for f in exp if got[f]!=exp[f]]
     for f in exp: fld[f]+= f not in bad
     if not bad: ok[cat]+=1

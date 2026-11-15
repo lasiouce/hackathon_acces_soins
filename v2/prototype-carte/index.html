@@ -35,6 +35,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
 .fold:hover{background:var(--wash)}
 .h4{font-weight:700;margin:0 0 .4rem;color:var(--ink)}
 .note{font-size:.87rem;color:var(--mute);margin:.4rem 0 0}
+.couvk small{display:block;color:var(--mute);font-size:.8rem}#l23-par{padding-left:1rem}.l23x input{width:100%}
 
 /* ---------- grille ---------- */
 #app{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);height:100dvh}
@@ -413,7 +414,7 @@ p{--text-spacing:0}   /* le DSFR espace chaque paragraphe : la page règle ses m
       <button id="zfr" aria-label="Vue France entière"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>
     </div>
     <div id="legend">
-      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button></div>
+      <div id="var" role="group" aria-label="Indicateur"><button class="fr-tag fr-tag--sm" data-v="evo" aria-pressed="true">Variation de l'effectif 2026&nbsp;→&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="ecart" aria-pressed="false">Écart au tendanciel</button><button class="fr-tag fr-tag--sm" data-v="dens" aria-pressed="false">Densité&nbsp;<span class="yl">2050</span></button><button class="fr-tag fr-tag--sm" data-v="couv" aria-pressed="false" title="Couverture de la demande de ville par l'offre privée : offre rapportée à la demande de soins de ville (privé), référence : 2026 = 1">Couverture&nbsp;<span class="yl">2050</span></button></div>
       <div id="lt"></div>
       <div class="rrow"><div id="rampbox"><div id="mark"></div><div id="ramp"></div><div id="ticks"></div></div><span id="unit"></span></div>
       <!-- définition facultative de l'indicateur affiché (décision du 2026-11-14) : fermée par défaut, état mémorisé dans le navigateur -->
@@ -488,7 +489,7 @@ const PCOL={"sages-femmes":"#7A4E8C",dentistes:"#2F6A8A",pharmaciens:"#8A6A1E",k
 // gris 975, vert émeraude 950 → 925 → 850
 const RAMP=["#fcc0b0","#fddfd8","#fee9e5","#f6f6f6","#c3fad5","#9ef9be","#6fe49d"];
 const INK="#111111",SCN="#0E4D64",DIM="#E5E5E5";   // gris DSFR 925 : distinct du centre de la gamme (gris 975)
-const BREAKS={evo:[-.30,-.15,-.05,.05,.15,.30],ecart:[-.08,-.03,-.01,.01,.03,.08],dens:[-.5,-.25,-.1,.1,.25,.5]};
+const BREAKS={couv:[-.3,-.15,-.05,.05,.15,.3],evo:[-.30,-.15,-.05,.05,.15,.30],ecart:[-.08,-.03,-.01,.01,.03,.08],dens:[-.5,-.25,-.1,.1,.25,.5]};
 const FLOWLBL={entrees:"Entrées",sorties:"Sorties",regulation:"Régulation",formation:"Formation",installations:"Installations"};
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n).toLocaleString("fr-FR");
@@ -514,6 +515,8 @@ const GPRE=[["Effectif seul",["eff"]],["Effectif + âge moyen",["eff","age_moyen
   ["Effectif + population",["eff","pop"]],["Effectif, densité et population",["eff","dens","pop"]],
   ["Diplômés et installations",["diplomes","installes_diplomes"]],["Taux d'installation des diplômés",["taux_installation"]]];
 const S={prof:"kines",lv:{},v:"evo",terr:null,cmp:[],y:2050,r:"graph",gs:["eff"],b100:false};
+let COUV=null;const COUVP=["sages-femmes","dentistes","pharmaciens","kines","infirmiers"];
+const L23={on:false,a:null,k:null};
 let META,GEO,REGL,regOf={},focusReg=null,carte=null,map,bbox={},names={},lat=[];
 let F=null,SC=null,PIN=[];
 
@@ -522,10 +525,11 @@ function readHash(){const h=new URLSearchParams(location.hash.slice(1));
   if(h.get("p"))S.prof=h.get("p");if(h.get("l"))try{S.lvHash=Object.fromEntries(h.get("l").split(",").map(x=>x.split(":")));}catch{}if(h.get("v"))S.v=h.get("v");
   if(h.get("t"))S.terr=h.get("t");if(h.get("z"))S.xl=h.get("z")=="1";if(h.get("c"))S.cmp=h.get("c").split(",").filter(Boolean);
   const y=+h.get("y");if(y>=2026&&y<=2050)S.y=y;
-  if(RMODES.includes(h.get("r")))S.r=h.get("r");if(h.get("g")){const g=h.get("g").split(",").filter(k=>k in GS);if(g.length)S.gs=g;}S.b100=h.get("b")=="1";}
+  if(RMODES.includes(h.get("r")))S.r=h.get("r");if(h.get("g")){const g=h.get("g").split(",").filter(k=>k in GS);if(g.length)S.gs=g;}S.b100=h.get("b")=="1";
+  const x=h.get("x");if(x&&x.startsWith("l23")){L23.on=true;for(const kv of x.split(",").slice(1)){const [k,v]=kv.split(":");if((k=="a"||k=="k")&&isFinite(+v))L23[k]=+v;}}}
 function writeHash(){const h=new URLSearchParams({p:S.prof,l:Object.entries(S.lv).map(([k,v])=>k+":"+(typeof v=="boolean"?+v:v)).join(","),v:S.v});
   if(S.terr)h.set("t",S.terr);if(S.xl)h.set("z","1");if(S.cmp.length)h.set("c",S.cmp.join(","));if(S.y!=2050)h.set("y",S.y);
-  if(S.r!="graph")h.set("r",S.r);if(S.gs.join()!="eff")h.set("g",S.gs.join(","));if(S.b100)h.set("b","1");history.replaceState(null,"","#"+h);if(META)crumb();}
+  if(S.r!="graph")h.set("r",S.r);if(S.gs.join()!="eff")h.set("g",S.gs.join(","));if(S.b100)h.set("b","1");if(L23.on)h.set("x","l23"+(L23.a!=null?",a:"+L23.a:"")+(L23.k!=null?",k:"+L23.k:""));history.replaceState(null,"","#"+h);if(META)crumb();}
 
 // ---------- démarrage ----------
 (async()=>{
@@ -606,7 +610,7 @@ function buildMap(){
       if(hov!==id){if(hov)map.setFeatureState({source:"d",id:hov},{h:false});hov=id;map.setFeatureState({source:"d",id},{h:true});}
       const d=carte?.deps[id];
       const rid=regOf["D"+id];
-      tip.innerHTML=`<b>${f.properties.nom}</b> <span style="opacity:.7">${names[rid]||""}</span><br>${d?fmt(d.sy)+" en "+S.y+" · "+pct(raw(d)):"donnée absente"}`;
+      tip.innerHTML=`<b>${f.properties.nom}</b> <span style="opacity:.7">${names[rid]||""}</span><br>${!d?"donnée absente":S.v=="couv"?(d.cy==null?"indice non disponible":`indice de couverture ${fC(d.cy)} (référence : 2026) · ${couvMot(d.cy)}<br>écart au tendanciel ${fE(d.ce)}`+(COUV?.estimateurs.length>1?` · fourchette ${fC(d.clo)} – ${fC(d.chi)}`:"")):fmt(d.sy)+" en "+S.y+" · "+pct(raw(d))}`;
       tip.style.left=e.originalEvent.clientX+14+"px";tip.style.top=e.originalEvent.clientY+14+"px";tip.style.opacity=1;});
     map.on("mouseleave","fill",()=>{if(hov)map.setFeatureState({source:"d",id:hov},{h:false});hov=null;tip.style.opacity=0;map.getCanvas().style.cursor="";});
     // vue par département (décision du 2026-11-14) : un clic ouvre le département ; sa région s'ouvre par le fil d'Ariane ou la recherche
@@ -626,13 +630,25 @@ function pad(){const l=$("#legend"),h=$("#mapwrap").clientHeight,small=innerWidt
 // évolution : lue par rapport à l'évolution nationale (lexique : « au-dessus / en dessous de la moyenne »)
 // densité : professionnels (× activité) pour 100 000 habitants, en écart à la densité France (Insee Omphale 2022)
 // sy/by/py : valeurs à l'année du curseur S.y (posées par derive)
-const raw=d=>S.v=="evo"?d.sy/d.s26-1:S.v=="dens"?(d.py?d.sy*(carte?.activite??1)/d.py/carte.natD-1:0):d.sy/d.by-1;
+const raw=d=>S.v=="couv"?(d.cy==null?NaN:d.cy-1):S.v=="evo"?d.sy/d.s26-1:S.v=="dens"?(d.py?d.sy*(carte?.activite??1)/d.py/carte.natD-1:0):d.sy/d.by-1;
 const val=d=>S.v=="evo"&&carte?raw(d)-carte.nat:raw(d);
 // ---------- année affichée (curseur) ----------
 const yIdx=ys=>{const i=ys.indexOf(S.y);return i<0?(S.y<ys[0]?0:ys.length-1):i;};
 function derive(c){const i=yIdx(c.years||[2026,2050]);   // valeurs à S.y, par département ; totaux France pour l'évolution et la densité
   for(const d of Object.values(c.deps)){d.sy=d.s?d.s[i]:d.s50;d.by=d.b?d.b[i]:d.b50;d.py=d.p?d.p[i]:d.p50;}
+  couvDerive(c,i);
   const T=k=>Object.values(c.deps).reduce((s,d)=>s+d[k],0);c.nat=T("sy")/T("s26")-1;c.natD=T("sy")*(c.activite??1)/T("py");}
+// ---------- indice de couverture (v2/besoin, /api/couverture) : C indexé 2026, jamais une part absolue du besoin ----------
+// O2 : la médecine générale et les spécialistes n'ont jamais d'indice ; ils n'apparaissent que comme source de L23.
+const l23Q=()=>"l23="+(L23.on?1:0)+(L23.on&&L23.a!=null?"&l23_a="+L23.a:"")+(L23.on&&L23.k!=null?"&l23_k="+L23.k:"");
+function couvAt(o,i){return o?{cy:o.cs[i],cb:o.cb[i],ce:o.ecart[i],clo:o.min[i],chi:o.max[i]}:{cy:null,cb:null,ce:null,clo:null,chi:null};}
+function couvDerive(c,i){const C=COUV&&COUV.prof===c.prof?COUV:null,j=C?C.years.indexOf(c.years[i]):-1;
+  for(const [id,d] of Object.entries(c.deps))Object.assign(d,couvAt(j<0?null:C.deps[id],j));c.couvFR=couvAt(j<0?null:C.fr,j);}
+const fC=v=>v==null||!isFinite(v)?"—":v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fE=v=>v==null||!isFinite(v)?"—":(v>=0?"+":"−")+Math.abs(v*100).toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";
+const couvMot=v=>v==null||!isFinite(v)?"":Math.abs(v-1)<.005?"couverture proche de 2026":v<1?"couverture moindre qu'en 2026":"couverture supérieure à 2026";
+async function loadCouv(){if(!COUVP.includes(S.prof)){COUV=null;return;}
+  try{const r=await fetch(`/api/couverture?prof=${S.prof}&${LQ()}&${l23Q()}`).then(r=>r.json());COUV=r.error?null:r;if(r.error)toast(r.error);}catch{COUV=null;}}
 function setYear(y){S.y=+y;$("#yrange").value=S.y;document.querySelectorAll(".yl,#yv").forEach(e=>e.textContent=S.y);
   if(carte){derive(carte);paint();renderCmp();}if(META)levState();if(F&&F.prof===S.prof)renderCard(F);else renderView();writeHash();}
 let yTimer=null;
@@ -642,7 +658,9 @@ function buildYear(){const r=$("#yrange"),b=$("#yplay");r.oninput=()=>setYear(r.
     yTimer=setInterval(()=>{if(S.y>=2050){clearInterval(yTimer);yTimer=null;b.textContent="▶";b.setAttribute("aria-label","Faire défiler les années");return;}setYear(S.y+1);},280);};}
 // paliers de l'écart au tendanciel : fixés tant que l'écart est faible, élargis par paliers ronds sinon
 // bornes calculées sur 2050 : les teintes restent comparables d'une année à l'autre
-function brk(){if(S.v!="ecart"||!carte)return BREAKS[S.v];const m=Math.max(...Object.values(carte.deps).map(d=>Math.abs(d.s50/d.b50-1)));
+function brk(){if(S.v=="couv"&&COUV){const m=Math.max(.05,...Object.values(COUV.deps).map(d=>Math.abs((d.cs.at(-1)??1)-1)).filter(isFinite));
+    const top=[.08,.15,.3,.5,1].find(t=>m<=t)??1;return [-1,-.4,-.12,.12,.4,1].map(x=>Math.round(x*top*100)/100);}
+  if(S.v!="ecart"||!carte)return BREAKS[S.v];const m=Math.max(...Object.values(carte.deps).map(d=>Math.abs(d.s50/d.b50-1)));
   const top=[.08,.15,.3,.5,1].find(t=>m<=t)??1;return [-1,-.4,-.12,.12,.4,1].map(x=>Math.round(x*top*100)/100);}
 // dégradé continu : 7 couleurs réparties de −B à +B (B = dernier palier), interpolées en RVB, bornées aux extrêmes
 const hex=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
@@ -653,6 +671,7 @@ const fmtV=d=>S.v=="evo"?(val(d)>=0?"+":"−")+Math.abs(Math.round(val(d)*100))+
 
 function legend(){
   $("#lt").textContent=(S.v=="evo"?`Variation de l'effectif ${carte.y26} → ${S.y}, en points d'écart à la France (${pct(carte.nat)})`
+    :S.v=="couv"?(COUV?`Couverture de la demande de ville ${S.y}, référence : 2026 = 1 (France ${fC(carte.couvFR.cy)}), écart à 2026 en %`:"Couverture de la demande de ville : non disponible pour cette profession")
     :S.v=="dens"?`Densité ${S.y} pour 100 000 habitants, écart à la moyenne France (${Math.round(carte.natD*1e5)} pour 100 000)`:`Effectif libéral ${S.y}, écart scénario − tendanciel`)
     +(carte.origin<carte.y26?` · observé jusqu'en ${carte.origin}, ${carte.y26} déjà projeté`:"");
   // même gamme que colorOf : 7 couleurs réparties de −B à +B ; chaque graduation est posée à sa position exacte
@@ -661,15 +680,20 @@ function legend(){
   $("#ticks").innerHTML=b.map(x=>`<span style="left:${(x/B+1)/2*100}%">${(x>0?"+":x<0?"−":"")+Math.abs(Math.round(x*100))}</span>`).join("");
   $("#unit").textContent=S.v=="evo"?"pts":"%";
   // définition de l'indicateur affiché, avec la valeur France à l'année affichée (encadré facultatif sous la gamme)
-  $("#deftxt").textContent=S.v=="evo"?`Variation de l'effectif libéral entre ${carte.y26} et ${S.y}, lue par rapport à la France (${pct(carte.nat)} sur la période), en points. 0 : même variation que la France. Vert : au-dessus de la moyenne nationale ; orange : en dessous.`
+  $("#deftxt").textContent=S.v=="couv"?couvDef():S.v=="evo"?`Variation de l'effectif libéral entre ${carte.y26} et ${S.y}, lue par rapport à la France (${pct(carte.nat)} sur la période), en points. 0 : même variation que la France. Vert : au-dessus de la moyenne nationale ; orange : en dessous.`
     :S.v=="ecart"?`Effet du scénario réglé : effectif libéral du scénario comparé au tendanciel (même projection, sans nouvelle politique), en ${S.y}, en %. 0 : le scénario ne change rien sur ce territoire ; sans levier modifié, la carte est uniforme. Vert : effectif du scénario au-dessus du tendanciel ; orange : en dessous.`
     :`Professionnels libéraux (× activité moyenne) pour 100 000 habitants en ${S.y} (population Insee Omphale 2022), comparés à la densité France (${Math.round(carte.natD*1e5)} pour 100 000), en %. Vert : densité supérieure à la moyenne nationale ; orange : inférieure.`;
 }
+function couvDef(){if(!COUV)return "Couverture de la demande de ville : servie pour les sages-femmes, chirurgiens-dentistes, pharmaciens, masseurs-kinésithérapeutes et infirmiers.";
+  const n=COUV.estimateurs.length,f=carte.couvFR;
+  return `Couverture de la demande de ville par l'offre privée (référence : 2026 = 1) : offre privée rapportée à la demande de soins de ville estimée (recours remboursé hors hôpital public, pas le besoin de toute la population), divisée par le même rapport en 2026 sur le même territoire. Ce n'est pas une part de la demande satisfaite. 1 : même couverture qu'en 2026 ; vert : couverture supérieure à 2026 ; orange : couverture moindre qu'en 2026. Estimateur central ${COUV.central}`
+    +(n>1?` ; fourchette entre ${COUV.estimateurs.join(", ")} : France ${fC(f.clo)} – ${fC(f.chi)} en ${S.y}`+(COUV.fourchette_visible?"":` (les estimateurs concordent à ± ${(COUV.ecart_modeles_2050*50).toLocaleString("fr-FR",{maximumFractionDigits:1})} % en 2050)`):" (un seul estimateur servi pour cette profession : pas de fourchette de modèle)")
+    +`. Écart au tendanciel du scénario, France : ${fE(f.ce)}. M4 (accessibilité 2SFCA) : ${COUV.en_attente[0].statut}.`;}
 // repère du territoire ouvert sur la gamme de la légende
 function mark(){const m=$("#mark"),T=cardT(),d=!T||T=="FR"||!carte?null:T.startsWith("D")?carte.deps[T.slice(1)]:carte.reg?.[T];
   if(!d){m.style.display="none";return;}
   const B=brk().at(-1),x=(Math.max(-1,Math.min(1,val(d)/B))+1)/2*100;
-  m.style.display="block";m.style.left=Math.max(8,Math.min(92,x))+"%";m.textContent=`${names[T]} ${fmtV(d)}`;}
+  m.style.display="block";m.style.left=Math.max(8,Math.min(92,x))+"%";m.textContent=`${names[T]} ${S.v=="couv"?fC(d.cy):fmtV(d)}`;}
 
 // ---------- recalcul : un seul appel en vol, le dernier état gagne ----------
 let inflight=null,pending=false,tInput=0;
@@ -681,9 +705,9 @@ async function refresh(){
   const tok=++REQ,t0=S.terr;
   inflight=(async()=>{try{
     const [c,f]=await Promise.all([fetch(`/api/carte?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),
-      fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json())]);
+      fetch(`/api/scenario?${q}&terr=${S.terr||"FR"}`).then(r=>r.json()),loadCouv()]);
     if(c.error){toast(c.error);if(!carte){META.levers.forEach(l=>setL(l,l.default));levState();setTimeout(refresh);}return;}
-    derive(c);carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();if(SC&&fresh)loadCard();renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
+    derive(c);carte=c;const fresh=tok===REQ&&S.terr===t0;if(fresh)SC=f&&!f.error?f:null;levState();paint();renderL23();if(SC&&fresh)loadCard();renderCmp();   // fiche ignorée si un autre territoire a été ouvert entre-temps
     // jusqu'à l'image affichée ; borné à 100 ms (onglet en arrière-plan : rAF suspendu, sinon inflight reste bloqué)
     await Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),new Promise(r=>setTimeout(r,100))]);
     if(tInput){lat.push(performance.now()-tInput);tInput=0;showLat(c.ms);}
@@ -692,7 +716,7 @@ async function refresh(){
 }
 function paint(){legend();const R={};
   for(const [id,d] of Object.entries(carte.deps)){const r=regOf["D"+id];if(!r)continue;R[r]??={s26:0,s50:0,b50:0,p26:0,p50:0,sy:0,by:0,py:0};for(const k in R[r])R[r][k]+=d[k];}
-  carte.reg=R;
+  carte.reg=R;if(COUV&&COUV.prof===carte.prof){const j=COUV.years.indexOf(S.y);for(const r in R)Object.assign(R[r],couvAt(j<0?null:COUV.regs[r],j));}
   for(const [id,d] of Object.entries(carte.deps)){
     // territoire affiché (région ou département) : tout ce qui est hors de lui passe en gris uni ; « France entière » : rien de grisé
     const T=cardT(),inSel=T=="FR"?true:T.startsWith("D")?T=="D"+id:regOf["D"+id]==T;
@@ -801,6 +825,7 @@ const famHTML=(id,titre,corps,open)=>`<section class="fr-accordion" id="q-${id}"
 function buildLevFam(){
   // familles de politiques ouvertes au chargement (décision « curseurs principaux visibles ») ; hypothèses de contexte repliées
   $("#levfam").innerHTML=Object.entries(FAM).map(([f,F])=>famHTML(f,F.q,mainHTML(LV(F.main))+F.more.map(k=>leverHTML(LV(k),false)).join("")+`<span id="st-${f}" hidden></span>`,true)).join("")
+    +famHTML("transferts","Transférer des tâches ?",l23HTML(),true)
     +famHTML("contexte","Hypothèses de contexte",META.levers.filter(l=>l.famille=="contexte").map(l=>leverHTML(l,false)).join(""),false);
   document.querySelectorAll(".ic .src").forEach(e=>e.onclick=()=>$("#src-"+e.dataset.k).classList.toggle("on"));
   const H=S.lvHash||{},bad=[];
@@ -811,9 +836,33 @@ function buildLevFam(){
   META.levers.forEach(l=>{if(H[l.k]!==undefined&&!ok(l,H[l.k])){bad.push(LBL[l.k]+" = "+H[l.k]);delete H[l.k];}
     setL(l,H[l.k]!==undefined?(l.type=="range"?+H[l.k]:H[l.k]):l.default);const e=$("#lv-"+l.k);
     e.addEventListener(l.type=="range"?"input":"change",()=>{setL(l,l.type=="toggle"?e.checked:e.value);levState();tInput=performance.now();refresh();});});
+  l23Wire();
   if(S.terr&&S.terr!="FR"&&!names[S.terr]){bad.push("territoire "+S.terr);S.terr=null;}
   if(bad.length)setTimeout(()=>toast("Lien : valeurs ignorées, remises par défaut — "+bad.join(" ; "),6000),300);
   levState();}
+
+// Transferts de tâches : L23 agit sur la demande de soins de ville (pas sur l'offre), donc sur l'indice de couverture des pharmaciens seulement.
+// Bornes du mode expert : celles des fiches (k : [0,25 ; 1], fiche L23) ; a : [0 ; 0,05] en temps de MG (supposé).
+function l23HTML(){return `<div class="fr-toggle"><input type="checkbox" class="fr-toggle__input" id="lv-l23"${L23.on?" checked":""}><label class="fr-toggle__label" for="lv-l23" data-fr-checked-label="Oui" data-fr-unchecked-label="Non">Les pharmaciens vaccinent davantage contre la grippe</label></div>
+  <p class="note" id="l23-note"></p>
+  <details class="l23x"><summary class="note">Réglages experts (paramètres supposés)</summary>
+   <label class="note" for="l23-a">a, part du temps de MG portant sur l'acte : <b id="l23-av"></b></label><input type="range" id="l23-a" min="0" max="0.05" step="0.005">
+   <label class="note" for="l23-k">k, temps du pharmacien par unité de temps de MG : <b id="l23-kv"></b></label><input type="range" id="l23-k" min="0.25" max="1" step="0.05"></details>
+  <ul class="note" id="l23-par"></ul>`;}
+function l23Wire(){const t=$("#lv-l23"),a=$("#l23-a"),k=$("#l23-k");
+  const sync=()=>{a.value=L23.a??0.01;k.value=L23.k??1;$("#l23-av").textContent=(+a.value).toLocaleString("fr-FR",{maximumFractionDigits:3});$("#l23-kv").textContent=fC(+k.value);};
+  t.onchange=()=>{L23.on=t.checked;renderL23();writeHash();tInput=performance.now();refresh();};
+  a.oninput=()=>{L23.a=+a.value;sync();if(L23.on){writeHash();refresh();}};k.oninput=()=>{L23.k=+k.value;sync();if(L23.on){writeHash();refresh();}};
+  sync();renderL23();}
+// proposition de l'assistant ou de la phrase : même effet que la case du panneau, appliquée après confirmation
+function setL23(on,vue){L23.on=on;const t=$("#lv-l23");if(t)t.checked=on;
+  if(vue&&COUVP.includes(S.prof)){S.v="couv";document.querySelectorAll("#var button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v=="couv"));}
+  renderL23();writeHash();}
+const STAT=s=>s=="mesuré"||s=="sourcé"?s:"supposé";
+function renderL23(){const n=$("#l23-note");if(!n)return;
+  n.textContent=S.prof!="pharmaciens"?"Agit sur la demande de soins de ville adressée aux pharmaciens (cible) et libère du temps de médecine générale (source) ; sans effet sur la profession affichée.":
+    L23.on?"Actif dès 2026 : une part du besoin de vaccination passe de la médecine générale aux pharmaciens ; l'offre ne change pas.":"Inactif : la couverture est celle du tendanciel.";
+  const P=COUV?.l23?.params;$("#l23-par").innerHTML=P?P.map(p=>`<li>${esc(p.name)} = ${esc(String(p.value))} ${esc(p.unit)} · <b>${STAT(p.status)}</b> · ${esc(p.source)}</li>`).join(""):"";}
 
 // ---------- recherche ----------
 function buildSearch(){
@@ -879,6 +928,7 @@ function renderCard(f){
         <div><span>Effectif <span class="yl">${Yn}</span></span><b class="num" data-k="s50">0</b><em class="num" data-k="rg"></em></div>
         <div><span>Écart au tendanciel</span><b class="num" data-k="ec">0</b><em class="num" data-k="ecp"></em></div></section>
       <p class="kpix" data-k="tx" hidden></p>
+      <div class="kpix couvk" data-k="cv" hidden></div>
       <div class="cardact"><ul class="fr-btns-group fr-btns-group--sm fr-btns-group--inline"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" onclick="addCmp()">Ajouter à la comparaison</button></li><li><button class="fr-btn fr-btn--tertiary fr-btn--sm" onclick="exportCard()">Exporter la fiche (CSV)</button></li></ul></div>`;
     c.classList.add("on");
   }
@@ -888,12 +938,22 @@ function renderCard(f){
   // taux d'installation des diplômés à l'année affichée, seulement si l'API le sert (2026-11-15)
   const tx=gData(f).taux_installation,tv=tx?.scn?.[n],tl=q("tx");tl.hidden=tv==null;
   if(tv!=null)tl.innerHTML=`Diplômés installés en libéral : <b class="num">${Math.round(tv).toLocaleString("fr-FR")} %</b> (${Yn})${tx.note?`<small>${esc(tx.note)}</small>`:""}`;
+  couvCard(q("cv"),T,n,Yn);
   // mode Pyramide : proposé seulement si l'API sert la pyramide ; sinon un lien r=pyr retombe sur Graphique
   const pe=$("#rm-pyr").closest(".fr-segmented__element"),ok=pyrOK(f);pe.hidden=!ok;
   if(!ok&&S.r=="pyr"){setMode("graph",false);writeHash();return;}
   renderView();
 }
 const tw=new WeakMap();
+// lignes « couverture » de la fiche et de l'export : mêmes valeurs que l'API (aucun calcul dans la page)
+function couvRows(T,Yn){if(!COUV||COUV.prof!==S.prof)return null;const o=T=="FR"?COUV.fr:T.startsWith("D")?COUV.deps[T.slice(1)]:COUV.regs[T];if(!o)return null;
+  const at=y=>{const j=COUV.years.indexOf(y);return j<0?null:couvAt(o,j);};const rows=[[Yn,at(Yn)]].filter(r=>r[1]);   // l'année du curseur seulement
+  const tr=COUV.l23?.transferts?.[0],j=COUV.years.indexOf(Yn);
+  return {rows,est:COUV.estimateurs,central:COUV.central,mg:tr&&j>=0?{etp:tr.etp_liberes_source[j],actes:tr.actes_mg_liberes[j],recu:tr.etp_recus_cible[j],y:Yn}:null};}
+function couvCard(el,T,n,Yn){const c=couvRows(T,Yn);el.hidden=!c;if(!c)return;
+  el.innerHTML=c.rows.map(([y,v])=>`Couverture de la demande de ville ${y} : <b class="num">${fC(v.cy)}</b> <small>(référence : 2026 = 1 ; ${couvMot(v.cy)} ; écart au tendanciel ${fE(v.ce)}${c.est.length>1?` ; fourchette ${c.est.join(", ")} : ${fC(v.clo)} – ${fC(v.chi)}`:""})</small>`).join("<br>")
+    +`<small>Estimateur central ${c.central} (norme déclarée) : ${esc(COUV.hypotheses.estimateurs[c.central])}. M4 : ${COUV.en_attente[0].statut}.</small>`
+    +(c.mg?`<br>Si les pharmaciens vaccinent davantage contre la grippe, les médecins généralistes ont moins de vaccins à faire : en ${c.mg.y}, environ <b class="num">${fmt(c.mg.actes)}</b> vaccinations en moins pour eux, soit le temps de travail d'environ ${fmt(c.mg.etp)} médecins à temps plein (France entière). Les pharmaciens reprennent ce travail. <small>Ordre de grandeur : la part de temps que la vaccination prend aux médecins n'est pas mesurée, elle est supposée.</small>`:"");}
 function tween(el,to,f){const from=tw.get(el)??to*.96,t0=performance.now();tw.set(el,to);
   const step=t=>{const p=Math.min(1,(t-t0)/280),e=1-Math.pow(1-p,3);el.textContent=f(from+(to-from)*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
 const band=(f,i)=>{const h=f.k*(f.years[i]-f.origin);return [f.scn[i]*(1-h),f.scn[i]*(1+h)];};   // fourchette indicative : scn × (1 ± k × horizon)
@@ -1058,11 +1118,19 @@ function exportCard(){
     `# Leviers (tous, avec valeur, statut et source) :`,...lev,
     `# Fourchette : ≈ 8 cas sur 10, pente d'erreur de backtest ${(G.k*100).toFixed(2)} %/an × horizon ; aucun backtest au-delà d'environ 10 ans : fourchette extrapolée au-delà d'environ 10 ans.`,
     `# Limites : grain départemental (aucun grain infra-départemental fiable, protocole N10) ; régulation approchée au département ; obligation d'exercice, aides et transferts de tâches non modélisés.`,
+    ...couvExport(T),
     "annee;tendanciel;scenario;bas;haut"];
   G.years.forEach((y,i)=>{const h=G.k*(y-G.origin);L.push([y,G.base[i],G.scn[i],G.scn[i]*(1-h),G.scn[i]*(1+h)].map(v=>typeof v=="number"&&v%1?v.toFixed(1):v).join(";"));});
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([L.join("\n")],{type:"text/csv"}));
   a.download=`fiche_${S.prof}_${T}.csv`;a.click();
 }
+function couvExport(T){const c=couvRows(T,G_Y());if(!c)return [];const L=[`# Couverture de la demande de ville par l'offre privée (v2/besoin, référence : 2026 = 1 ; offre privée / demande de soins de ville, rapporté à 2026 ; pas une part de la demande satisfaite) — estimateur central ${c.central} ; estimateurs : ${c.est.join(", ")} ; M4 ${COUV.en_attente[0].statut}`];
+  for(const [y,v] of c.rows)L.push(`#   ${y} : indice ${fC(v.cy)} (tendanciel ${fC(v.cb)}, écart au tendanciel ${fE(v.ce)}${c.est.length>1?`, fourchette ${fC(v.clo)} – ${fC(v.chi)}`:""})`);
+  L.push(`#   Norme du besoin : ${COUV.hypotheses.estimateurs[c.central]} ; population ${COUV.hypotheses.population}`);
+  if(COUV.l23){L.push(`#   L23 vaccination antigrippale en officine (actif) : ${COUV.l23.note}`);for(const p of COUV.l23.params)L.push(`#     ${p.name} = ${p.value} ${p.unit} ; ${STAT(p.status)} ; ${p.source.replace(/;/g,",")}`);
+    if(c.mg)L.push(`#   Vaccinations contre la grippe reprises par les pharmaciens en ${c.mg.y} : environ ${Math.round(c.mg.actes)}, soit le temps de travail d'environ ${Math.round(c.mg.etp)} médecins généralistes à temps plein (France entière ; ordre de grandeur)`);}
+  return L;}
+const G_Y=()=>{const G=F||SC;return G?G.years[yIdx(G.years)]:S.y;};
 // Langage naturel (v2/langage) : le serveur traduit la phrase en leviers ; rien n'est appliqué avant confirmation
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
 const codes=s=>s.replace(/\b(FR|[RD][0-9AB]{2,3})\b/g,m=>names[m]||m).replace(/\b(sages-femmes|dentistes|pharmaciens|kines|infirmiers)\b/g,m=>(META.professions[m]||m).toLowerCase());
@@ -1088,6 +1156,7 @@ function closeNL(){$("#nl").classList.remove("on");$("#nlq").focus();}
 function applyNL(){const r=NLR;if(!r)return;$("#nl").classList.remove("on");
   META.levers.forEach(l=>{if(l.famille!="contexte"&&l.k in r.leviers_valides)setL(l,r.leviers_valides[l.k]);});   // une phrase ne touche pas aux hypothèses
   if(r.profession&&r.profession!==S.prof){S.prof=r.profession;applyProf();}
+  const t23=(r.transferts||[]).find(t=>t.parametres_api?.l23);if(t23)setL23(true,true);
   if($("#levers").classList.contains("closed"))foldPanel("#levers","#fold",false);
   levState();refresh();
   if(r.territoire&&r.territoire!=="FR"&&r.territoire!==S.terr)select(r.territoire);else if(r.territoire=="FR"&&S.terr)closeCard();
@@ -1147,12 +1216,13 @@ function crumb(){const chain=[];for(let t=S.terr||"FR";t;t=parent(t))chain.unshi
 const ASK={busy:false,checked:false,sid:(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2))};
 function askEsc(t){return t.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]);}
 function askMd(t){return askEsc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}   // gras seulement ; le reste en texte
-function askCtx(){const lv={};for(const l of META.levers)if(!isDef(l))lv[l.k]=S.lv[l.k];return{prof:S.prof,terr:S.terr||"FR",territoire:names[S.terr||"FR"],leviers:lv,annee:S.y};}
+function askCtx(){const lv={};for(const l of META.levers)if(!isDef(l))lv[l.k]=S.lv[l.k];return{prof:S.prof,terr:S.terr||"FR",territoire:names[S.terr||"FR"],leviers:lv,annee:S.y,...(COUV?.l23?{transferts:COUV.l23.transferts.map(t=>({transfert:t.transfert,source:t.source,cible:t.cible})),hypotheses_l23:COUV.l23.params}:{})};}
 const VERIF={ok:"Contrôle : chaque nombre vient d'un résultat du modèle",corrigee:"Contrôle : corrigée par la vérification automatique",
   bloquee:"Contrôle : réponse bloquée, des nombres ne venaient d'aucun résultat du modèle"};
 // scénario simulé par le chatbot -> carte : profession, leviers (les autres à leur défaut), année, territoire ; sur clic seulement
 function askApply(c){if(META.professions[c.prof]&&c.prof!==S.prof){S.prof=c.prof;applyProf();}
   for(const l of META.levers)if(!["pop_scen","activite"].includes(l.k)||l.k in c.leviers)setL(l,l.k in c.leviers?c.leviers[l.k]:l.default);
+  if("l23" in c)setL23(!!c.l23,c.vue=="couverture");
   if(c.annee>=2026&&c.annee<=2050)setYear(c.annee);levState();
   // territoire d'abord : un levier régional (quotas_region) n'a pas de sens sur la France et l'API le refuse
   if(c.terr&&c.terr!=S.terr)select(c.terr);refresh();askHide();toast("Scénario de l'assistant affiché sur la carte");}
@@ -1236,19 +1306,15 @@ async function askSend(q){q=q.trim();if(!q||ASK.busy)return;ASK.busy=true;const 
 // accueil selon le bouton d'ouverture (2026-11-15) : « gen » (carte), « scn » (définir un scénario, panneau Scénario),
 // « int » (interpréter le résultat, panneau Résultat) ; les suggestions citent la profession, le territoire et l'année affichés
 const ASKEX=["Former 20 % de kinés en plus et repousser de 2 ans la cessation d'activité en Auvergne-Rhône-Alpes : quel effet en 2040 ?",
-  "Pour les infirmiers en Occitanie, quelles politiques ont le plus d'effet d'ici 2040 ?",
-  "Réguler l'installation des infirmiers en Occitanie et former 10 % de plus : que se passe-t-il d'ici 2040 ?",
-  "Repousser de 2 ans la cessation d'activité des sages-femmes : quel effet en 2040 ?",
-  "Accueillir deux fois plus de dentistes diplômés à l'étranger : quel effet en Bretagne en 2035 ?",
-  "Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?"];
+  "Comment atteindre +10 % de densité de pharmaciens en Normandie d'ici 2040 ?",
+  "Si les pharmaciens vaccinent, quelle couverture dans le Puy-de-Dôme en 2035 ?"];   // un exemple par cas d'usage : leviers → effet ; objectif → possibilités ; transfert (L23) → couverture
 function askIntent(i){const T=S.terr||"FR",nm=names[T]||"France",ou=T.startsWith("D")?`dans le département ${nm}`:`en ${nm}`,
   pr=(META.professions[S.prof]||S.prof).toLowerCase(),y=S.y,cards=a=>`<div class="cards">${a.map(t=>`<button type="button">${esc(t)}</button>`).join("")}</div>`,
   tags=a=>`<div class="cards mini">${a.map(t=>`<button type="button" class="fr-tag">${esc(t)}</button>`).join("")}</div>`,wh=t=>`<p class="wh">${t}</p>`;
   const lire=["Pourquoi ce résultat ?","Quelle confiance accorder à ce chiffre ?",`Quels flux expliquent l'écart au tendanciel ${ou} en ${y} ?`,
     `Comment se situe la densité ${ou} par rapport à la moyenne nationale en ${y} ?`,`Quels départements ont la densité la plus faible en ${y} ?`,"Comment le jumeau calcule-t-il ?"];
   if(i=="scn")return {t:"Définir un scénario",st:"Décrivez la politique à simuler : l'assistant propose les leviers et leurs valeurs, le jumeau calcule. Rien n'est appliqué au panneau Scénario sans votre clic.",
-    h:wh(`Pour les ${esc(pr)}, ${esc(ou)}`)+cards([`Pour les ${pr} ${ou}, quelles politiques ont le plus d'effet d'ici ${y} ?`,`Former 20 % de ${pr} en plus : quel effet ${ou} en ${y} ?`,
-      `Comment atteindre +10 % de densité de ${pr} ${ou} d'ici ${y} ?`])+wh("Autres scénarios à essayer")+cards(ASKEX.slice(0,4))};
+    h:wh("Scénarios à essayer")+cards(ASKEX)};
   if(i=="int")return {t:"Interpréter le résultat",st:`Résultat affiché : ${pr}, ${nm}, ${y}${changedN()?`, ${changedN()} levier${changedN()>1?"s":""} modifié${changedN()>1?"s":""}`:", tendance sans nouvelle politique"}. L'assistant explique d'où vient le chiffre à partir des calculs du jumeau.`,
     h:wh("Questions sur le résultat affiché")+tags(lire)};
   return {t:"Que voulez-vous simuler ?",st:"Décrivez une politique publique en français : l'assistant la traduit en leviers, le jumeau calcule, et chaque chiffre est vérifié.",

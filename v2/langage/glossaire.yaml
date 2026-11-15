@@ -304,18 +304,24 @@ non_modelises:
     libelle: Vaccination en officine et autres transferts de tâches
     termes: [vacciner, vaccination, vaccinent, transfert de taches, transferts de taches, delegation de taches,
              nouvelles missions, prescription par le pharmacien, protocoles de cooperation]
-    raison: "Le jumeau projette des effectifs, pas l'activité ni le recours aux soins : un transfert de tâches ne change pas le nombre de professionnels projeté."
-    source: null
+    raison: "Effectif inchangé dans le modèle : un transfert de tâches ne change pas le nombre de professionnels projeté. La vaccination en officine (L23) est calculée par le module de besoin, sur l'indice de couverture des pharmaciens (voir transferts_besoin) ; les autres transferts ne le sont pas."
+    source: "v2/docs/lab/fiches/param-besoin-l23-vaccination.md"
   ipa:
     libelle: Infirmiers en pratique avancée (IPA)
     termes: [pratique avancee, ipa, infirmiers en pratique avancee]
-    raison: "Les IPA ne sont pas distingués dans les données d'effectifs utilisées ; pas de flux spécifique."
+    raison: "Effectif inchangé dans le modèle (les IPA ne sont pas distingués dans les effectifs). L'accès direct aux IPA (L25) est non mesurable : aucun volume d'actes en accès direct publié, expérimentation en CPTS ouverte le 1er décembre 2026 (fiche param-besoin-l25-ipa) ; pas de couverture calculée."
     source: "Code de la santé publique, art. L4301-1 (exercice en pratique avancée)"
   acces_direct:
     libelle: Accès direct (kiné, IPA, orthophoniste…)
     termes: [acces direct, sans prescription, sans ordonnance]
-    raison: "Change le parcours et la demande, pas l'effectif : le jumeau ne modélise ni la demande ni l'activité."
+    raison: "Effectif inchangé dans le modèle. L'accès direct au kiné (L27) est non mesurable sauf k = 0 : ni volume de séances en accès direct ni part des consultations de MG prescriptrices publiés (fiche param-besoin-l27-kine) ; pas de couverture calculée."
     source: "Loi n° 2023-379 du 19 mai 2023 portant amélioration de l'accès aux soins par la confiance aux professionnels de santé"
+  tension_diabete:
+    libelle: Prise de tension et dépistage du diabète en officine
+    termes: [prise de tension, prennent la tension, prendre la tension, mesurer la tension, mesure de la tension, tension arterielle,
+             pression arterielle, hypertension, depistage du diabete, depistent le diabete, depister le diabete, glycemie, diabete]
+    raison: "Effectif inchangé dans le modèle. Transfert non mesurable : aucun acte facturable connu au 2026-11-15, donc ni volume ni s(t) (fiche param-besoin-tension-diabete) ; pas de couverture calculée."
+    source: "v2/docs/lab/fiches/param-besoin-tension-diabete.md"
   teleconsultation:
     libelle: Téléconsultation, télésoin
     termes: [teleconsultation, teleconsultations, telesoin, telemedecine]
@@ -331,3 +337,35 @@ non_modelises:
     termes: [specialistes, medecins specialistes, cardiologues, dermatologues, ophtalmologues]
     raison: "Prévus en phase 2 ; aucun levier du prototype ne les couvre."
     source: null
+
+# Transferts de tâches calculés par le module de besoin (v2/besoin/transferts.py), 2026-11-15.
+# Ils ne changent pas l'effectif (ils restent aussi dans non_modelises) ; ils agissent sur le besoin et l'indice de couverture
+# de la cible (règle O2 : la source MG n'a jamais d'indice). L23 seul : L25, L27 et tension/diabète sont non mesurables.
+transferts_besoin:
+  L23:
+    libelle: Les pharmaciens vaccinent davantage contre la grippe (L23)
+    termes: [vacciner, vaccination, vaccinations, vaccinent, vaccinant, vaccine]
+    source_tache: medecine-generale
+    cible: pharmaciens
+    t0_defaut: 2026
+    statut: "parts par vaccinateur sourcées (Cour des comptes 2026), s(t) mesuré sur la série nationale ; k et m supposés"
+    fiche: "v2/docs/lab/fiches/param-besoin-l23-vaccination.md"
+    parametre_api: l23
+
+# Transferts de tâches HYPOTHÉTIQUES (2026-11-15, plan v2/docs/lab/derivations/2026-11-15-transfert-hypothetique-plan.md) :
+# « X prennent en charge / font p % de <acte> de Y ». Forme de L23, paramètres de l'utilisateur·rice, jamais un levier
+# sourcé (aucun volume d'acte ni part du temps publiés en données ouvertes). Cible : l'une des 5 professions ; source :
+# MG, spécialistes ou l'une des 5 (O2 : MG et spécialistes en source seulement).
+transferts_hypothetiques:
+  sources:
+    medecine-generale: [medecins generalistes, medecin generaliste, generalistes, generaliste, medecine generale,
+                        medecins traitants, medecin traitant]
+    specialistes: [medecins specialistes, medecin specialiste, specialistes, specialiste, cardiologues, dermatologues,
+                   ophtalmologues]
+  libelles_sources: {medecine-generale: médecins généralistes, specialistes: médecins spécialistes}
+  # verbes (racines) entre la cible et la part : « prennent (en charge) », « font », « assurent », « réalisent »…
+  verbes: [prenn, pren, pris, fai, fon, fer, real, assur, repren, effectu, recuper, ger, absorb, charg]
+  # « p % de la demande / du temps de Y » : a = p ; sinon p est la part de l'acte transférée (s∞ = p)
+  mots_demande: [demande, activite, temps, travail, charge, patientele]
+  balayage_acte: [0.05, 0.10, 0.20]      # a, poids de l'acte dans la demande de la source : inconnu, balayé (supposé)
+  balayage_demande: [0.5, 1, 2]          # multiples de a = p quand l'utilisateur·rice donne la part de la demande

@@ -109,3 +109,9 @@ n'applique rien avant « Appliquer ce scénario » ; les leviers restent ensuite
 - Dans `phrases.py`, l'article du département est « le / l' » (faux pour « la Creuse », « les Landes »).
 - Termes génériques (« prime », « places », « régulation ») : risque de faux positifs.
 - `compile` importe le serveur (charge le jumeau, quelques secondes au premier appel).
+
+## Transferts de tâches (2026-11-15)
+`compile()` renvoie `transferts` : la vaccination en officine devient L23 (`parametres_api: {l23: 1, l23_t0}`), date
+lue dans la proposition (défaut 2026) ; elle reste aussi dans `non_modelise` (effectif inchangé). L25, L27,
+tension/diabète : hors modèle, non mesurables. Jeu `cas_test_transferts.yaml` (12 phrases, écrit avant le code) :
+3/12 → 11/12 ; jeux à l'aveugle inchangés. Rapport : `v2/docs/lab/reports/2026-11-15-besoin-assistant.md`.

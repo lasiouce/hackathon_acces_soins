@@ -218,6 +218,62 @@ def _quantite_facteur(c: str) -> dict | None:
     return None
 
 
+# ---------------------------------------------------------------- transfert hypothétique
+
+def _original(texte: str, n: str) -> str:
+    """Passage de `texte` dont la forme normalisée est `n` (pour réafficher l'acte avec ses accents) ; n si absent."""
+    out, idx = [], []
+    for i, c in enumerate(texte):
+        for x in norm(c) or " ":
+            if x == " " and (not out or out[-1] == " "):
+                continue
+            out.append(x)
+            idx.append(i)
+    j = "".join(out).find(n)
+    return texte[idx[j]:idx[j + len(n) - 1] + 1] if j >= 0 and n else n
+
+
+def transfert_hypothetique(t: str, texte: str = "") -> tuple[dict | None, tuple[int, int] | None]:
+    """« X prennent en charge / font p % de <acte> de Y » -> transfert hypothétique (forme de L23, paramètres de
+    l'utilisateur·rice) et son empan dans t. Cible : l'une des 5 ; source : MG, spécialistes ou l'une des 5."""
+    S, G = serveur(), glossaire()
+    H = G["transferts_hypothetiques"]
+    syn5 = {s: p for p, l in G["professions"].items() for s in l}
+    src_syn = {s: p for p, l in H["sources"].items() for s in l} | syn5
+    alt = "|".join(re.escape(s) for s in sorted(src_syn, key=len, reverse=True))
+    m = re.search(rf"{NUM}\s*(?:%|pour ?cent)\s+(?:(?:de la|de l|des|du|de|d)\s+)?(?P<acte>.{{0,80}}?)\s+"
+                  rf"(?:de la|de l|des|du|de|d|aux|chez les)\s+(?P<src>{alt})(?![a-z])", t)
+    if not m:
+        return None, None
+    avant = [h for h in _find(t[:m.start()], syn5)]
+    if not avant:
+        return None, None
+    c0, c1, terme = avant[-1]                              # profession la plus proche avant la part
+    if not re.search(rf"(?<![a-z])(?:{'|'.join(H['verbes'])})[a-z]*", t[c1:m.start()]):
+        return None, None
+    src, cib = src_syn[m.group("src")], syn5[terme]
+    if src == cib:
+        return None, None
+    p = _nombre(m.group(1))
+    if p is None or not 0 < p <= 100:
+        return None, None
+    acte = _original(texte, m.group("acte").strip()) if texte else m.group("acte").strip()
+    demande = bool(re.match(rf"(?:la |l |le )?(?:{'|'.join(H['mots_demande'])})(?![a-z])", norm(acte)))
+    y = re.search(r"(?:a partir de|des|depuis)\s+(?:l an |janvier |septembre )?(20\d\d)(?!\d)", t)
+    t0 = int(y.group(1)) if y and 2026 <= int(y.group(1)) <= S.H else None
+    lib_src = H["libelles_sources"].get(src) or S.PROFS[src].lower()
+    api = {"tr_src": src, "tr_cible": cib, ("tr_a" if demande else "tr_sinf"): round(p / 100, 4)}
+    if t0:
+        api["tr_t0"] = t0
+    bal = ([round(min(0.5, k * p / 100), 4) for k in H["balayage_demande"]] if demande else list(H["balayage_acte"]))
+    trh = {"id": "hypothetique", "source": src, "cible": cib, "mode": "demande" if demande else "acte", "p": p,
+           "acte": acte, "t0": t0 or 2026,
+           "libelle": f"Les {S.PROFS[cib].lower()} prennent en charge {p:g} % {'de la demande' if demande else 'des ' + acte} "
+                      f"des {lib_src}".replace(".", ","),
+           "parametres_api": api, "balayage": {"tr_a": bal}, "statut": "hypothèse de l'utilisateur", "repere": m.group(0)}
+    return trh, (c0, m.end())
+
+
 # ---------------------------------------------------------------- compilation
 
 def _fmt(l: dict, v) -> str:
@@ -263,8 +319,48 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
             res["non_modelise"].append({"id": k, "libelle": e["libelle"], "raison": e["raison"],
                                         "source": e.get("source"), "repere": h[0][2]})
 
+    # transferts de tâches calculés par le module de besoin (L23) : date = année qui suit le terme dans sa proposition
+    res["transferts"] = []
+    for k, e in G.get("transferts_besoin", {}).items():
+        for c in re.split(r"[,;:?!.]|\s(?:et|puis|ainsi que|mais)\s", t):
+            h = _find(c, e["termes"])
+            if not h or any(x["id"] == k for x in res["transferts"]):
+                continue
+            if re.search(r"(?:^|\s)(?:pas de|pas d|ne pas|ne peuvent pas|ne peut pas|sans|interdire|supprimer)\s", c[:h[0][0]]):
+                res["compris"].append(f"{e['libelle']} : explicitement écarté.")
+                continue
+            y = re.search(r"(?:a partir de|des|en|depuis|au|d ici)\s+(?:l an |janvier |septembre )?(20\d\d)(?!\d)", c[h[0][1]:])
+            y = y or re.search(r"(?:a partir de|des)\s+(20\d\d)(?!\d)", t)
+            t0 = int(y.group(1)) if y else e["t0_defaut"]
+            if not 2019 <= t0 <= S.H:
+                res["avertissements"].append(f"{e['libelle']} : date {t0} hors de 2019–{S.H}, {e['t0_defaut']} retenu.")
+                t0 = e["t0_defaut"]
+            res["transferts"].append({"id": k, "libelle": e["libelle"], "t0": t0, "source": e["source_tache"], "cible": e["cible"],
+                                      "parametres_api": {e["parametre_api"]: 1, f"{e['parametre_api']}_t0": t0},
+                                      "statut": e["statut"], "fiche": e["fiche"], "repere": h[0][2]})
+            res["compris"].append(f"{e['libelle']} à partir de {t0} : effectif inchangé dans le modèle ; agit sur le besoin "
+                                  f"et l'indice de couverture des {e['cible']} (base 2026).")
+
+    # transfert de tâches hypothétique (« X prennent en charge p % de <acte> de Y ») : hypothèse de l'utilisateur·rice
+    trh, span = transfert_hypothetique(t, texte)
+    res["transferts_hypothetiques"] = [trh] if trh else []
+    if trh:
+        res["non_modelise"] = [x for x in res["non_modelise"]            # la MG ou les spécialistes n'y sont que source
+                               if not (x["id"] in ("quatrieme_annee_mg", "medecins_specialistes")
+                                       and _rx(x["repere"]).search(t[span[0]:span[1]]))]
+        res["compris"].append(f"{trh['libelle']} : transfert hypothétique (paramètres de l'utilisateur·rice), effectif "
+                              f"inchangé dans le modèle ; agit sur l'indice de couverture des {trh['cible']}.")
+    # O2 : refus seulement si la MG ou les spécialistes sont la cible de l'indice
+    res["o2_cible"] = bool(re.search(r"couverture (?:pour |de |des |du |de la )?(?:les |la )?(?:medecins?|generalistes?|specialistes?|"
+                                     r"medecine generale|cardiolog|dermatolog|ophtalmolog)", t))
+
     # profession
     profs = detecter_profession(t)
+    if trh:      # profession de l'indice : « couverture des X » si cité, sinon la cible ; la source n'est pas une seconde profession
+        m = re.search(r"couverture (?:pour |de |des |du )?(?:les )?(.{0,40})", t)
+        dem = detecter_profession(m.group(1)) if m else []
+        p0 = dem[0] if dem and dem[0] in (trh["cible"], trh["source"]) else trh["cible"]
+        profs = [p0] + [p for p in profs if p not in (p0, trh["source"], trh["cible"])]
     m = re.search(r"combien d(?:e |es | )(.+)", t)
     if m and len(profs) > 1:
         demandee = detecter_profession(m.group(1))
@@ -278,6 +374,8 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
                 f"« {profs[0]} » retenue, relancer pour les autres.")
     elif profession:
         res["profession"] = profession
+    elif res["transferts"]:
+        res["profession"] = res["transferts"][0]["cible"]
     if res["profession"] and res["profession"] not in S.PROFS:
         res["avertissements"].append(f"profession inconnue du serveur : {res['profession']!r}")
         res["profession"] = None
@@ -297,7 +395,8 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
     all_terms = {s: k for k, l in lever_terms.items() for s in l}
     brut: dict = {}
     en_attente = None
-    clauses = [c.strip() for c in re.split(r"(?<!\d)[,.](?!\d)|(?<=\d)[,.](?!\d)|[;:?!]|\s(?:et|puis|ainsi que|mais)\s", t) if c.strip()]
+    t_lev = t if not trh else t[:span[0]] + " " * (span[1] - span[0]) + t[span[1]:]     # le transfert n'est pas un levier
+    clauses = [c.strip() for c in re.split(r"(?<!\d)[,.](?!\d)|(?<=\d)[,.](?!\d)|[;:?!]|\s(?:et|puis|ainsi que|mais)\s", t_lev) if c.strip()]
     for c in clauses:
         hits = _find(c, all_terms)
         reste = c
@@ -312,6 +411,8 @@ def compile(texte: str, profession: str | None = None, territoire: str | None = 
         if _find(c, G["directions"]["plafonner"]) and not q:
             res["non_compris"].append(f"{c} (plafonnement sans valeur chiffrée : non traduit)")
             continue
+        if not leviers_c and trh and not re.sub(r"(?<![a-z])(?:si|et|les|le|la|l|des|de|du|d|que|qu|alors|quelle|quel)(?![a-z])", "", c).strip():
+            continue                                               # reste de la phrase autour du transfert masqué
         if not leviers_c:
             utile = (_find(c, [s for l in G["professions"].values() for s in l])
                      or any(_rx(f).search(c) for _, _, f in terrs)
