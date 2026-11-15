@@ -5288,3 +5288,11 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
   - `jumeau.check` : seul C15 (temps) échoue, sous charge.
 - **Corrigé à la fusion :** `Home.md` de la branche `besoin-assistant` contenait des marqueurs de conflit commités ;
   ils sont retirés, et les trois lignes du journal sont gardées.
+
+## 2026-11-15 — UAT de l'application : assistant testé sans IA seulement ; constats notés, rien corrigé
+- **Décision** (session uat-application, [rapport](reports/2026-11-15-uat-application.md)) : l'assistant est recetté
+  en mode sans IA (glossaire), sur une passerelle et un chatbot propres à la branche (ports 8782, 8783). Le mode IA
+  n'est pas appelé : une clé existe, mais un appel payant demande l'accord de l'utilisateur·rice. Conformément à la
+  consigne, aucun constat n'est corrigé pendant la recette ; les 6 P1 vont au ledger.
+- **Pourquoi :** consigne de la recette (« ne corrige rien ») ; règle de confirmation avant toute dépense.
+- **Ce qui le renverserait :** un accord pour quelques appels Haiku (ligne du ledger « UAT en mode IA »).
