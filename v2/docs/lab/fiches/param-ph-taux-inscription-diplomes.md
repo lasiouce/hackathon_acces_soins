@@ -11,6 +11,7 @@ incertitude: "fort : 27,8 % en 2014, entre 10 et 26 % sur 2006-2013 ; aucune val
 source: "Ordre national des pharmaciens, Éléments démographiques 2016 (données 2015), p. 7 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf"
 millesime: "2015"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -36,3 +37,9 @@ un poste sans obligation d'inscription (*cité*).
 - ⚑ Ce taux mélange abandon, non-inscription et décalage temporel. Pour le
   « libéral » v2, l'industrie non inscrite est du privé **non observé** :
   le stock privé réel est sous-estimé d'autant.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- 32,8 % = 2 076 inscrits diplômés depuis moins de 3 ans / 3 090 (numerus clausus de t − 6), confirmé (Éléments 2016, p. 6-7).

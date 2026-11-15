@@ -11,6 +11,7 @@ incertitude: "aucune table spécifique ni surmortalité publiée pour ces profes
 source: "DREES, Les Dossiers n° 76 (2021), ER n° 1062, 1075, 1319 : aucune occurrence de mortalité au sens démographique (vérifié par recherche plein texte)"
 millesime: "2018-2024"
 statut: non mesurable
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -29,3 +30,9 @@ mortalité (choc sanitaire), qui n'est pas au programme.
 Insee par âge et sexe (tables de mortalité annuelles, ou hypothèses
 d'Omphale). En l'absence de source, l'hypothèse de non-surmortalité
 professionnelle est *supposée*.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Aucune occurrence de mortalité au sens démographique dans DD76, les ER 1062 et 1075, ni l'ER 1319 : confirmé en texte intégral.

@@ -1,0 +1,95 @@
+{
+ "source": "Bahroun 2025 ; convention CD 2023 (JO 25/08/2023) ; avenant 4 SF (JO 10/08/2018) + ONSSF avenant 7",
+ "items": [
+  {
+   "n": 1,
+   "fiche": "param-cd-regul-effet (Bahroun)",
+   "verdict_lecteur": "introuvable : aucun bilan publié",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "change une valeur de fiche",
+   "preuve": "Mémoire : aucun bilan de la régulation dentaire (grep bilan/évalu/succession : seuls p.36 DREES internationale et recommandations). Convention art. 36.1 p.66-67 : « Une évaluation de la portée du dispositif … est réalisée dans le cadre de la CPN. »",
+   "correction": "Remplacer « Aucun bilan publié » par « aucun bilan chiffré trouvé dans le mémoire EHESP ni dans la convention (qui prévoit un bilan annuel CPN, art. 36.1, et une évaluation, non publiés à notre connaissance) » ; étiquette : supposé (absence non démontrée). Source citée correcte pour 5 %/0,3 %/97 communes : p.53 et note 57 (confirmé, « 5% de la population et 0,3% des communes » ; « limitée à 97 communes »).",
+   "raison": "Le mémoire ne dit pas qu'il n'existe pas de bilan ; l'absence est une affirmation propre à la fiche, non sourcée. La convention prévoit un suivi annuel (art. 36.1), ce qui rend l'assertion « aucun bilan publié » invérifiable ici."
+  },
+  {
+   "n": 2,
+   "fiche": "param-cd-regul-effet (Bahroun)",
+   "verdict_lecteur": "introuvable : millésime convention 2023",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« Aucune distinction entre l’installation et la primo-installation n’est présente au sein de la convention nationale 2023-2028 relatives aux chirurgiens-dentistes. » p.48 (PDF 56)",
+   "correction": "Convention 2023 sourcée dans la convention elle-même (signée 21/07/2023, JO 25/08/2023) ; effet au plus tôt 01/01/2025 (art. 35, p.64, « entrera en vigueur au plus tôt au 1er janvier 2025 ») et sous réserve de transposition aux centres de santé dentaires. Le mémoire n'a pas à dater la règle : citer la convention pour le millésime (sourcé).",
+   "raison": "Le millésime est établi par le texte de la convention (cd_convention.txt p.64) ; le mémoire seul ne le date pas, mais la fiche cite aussi la convention dans r05. Pas d'écart."
+  },
+  {
+   "n": 3,
+   "fiche": "param-cd-regul-effet (Bahroun)",
+   "verdict_lecteur": "introuvable : zonage en vigueur en 2025",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "« les cartes sont établies à partir de CartoSanté, qui recense les arrêtés des ARS. » p.58 (PDF 66)",
+   "correction": "millesime: « zonage CartoSanté tel que repris dans le mémoire (date non précisée, mémoire jury 09/2025) » (sourcé) ; ou remplacer par le millésime du zonage observé 20/10/2026 de param-cd-regul-regle (dérivé).",
+   "raison": "Le mémoire ne date pas le zonage ; seule la date du mémoire (jury 09/2025) est établie. « en vigueur en 2025 » est une inférence."
+  },
+  {
+   "n": 4,
+   "fiche": "param-cd-regul-regle (convention CD)",
+   "verdict_lecteur": "introuvable : arrêté du 20/03/2024",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "paca_guide.txt p.5 : « L'arrêté ministériel du 20 mars 2024 relatif à la méthodologie du zonage des chirurgiens-dentistes » (selon lecteur ; absent de la convention)",
+   "correction": "Ajouter à la fiche : « Méthode : arrêté du 20/03/2024 (cité par le guide ARS PACA, non par la convention) » (sourcé, source secondaire). Autres éléments de la fiche vérifiés dans la convention art. 35 p.64 : cédant ≥ 2 jours/semaine, délai d'un an pour désigner le successeur, effet au plus tôt 01/01/2025 (confirmés).",
+   "raison": "La date vient du guide PACA, déjà dans la liste des sources de la fiche ; pas dans la convention."
+  },
+  {
+   "n": 5,
+   "fiche": "code v2/jumeau/modules/regulation.py (l.18-19, 60-62)",
+   "verdict_lecteur": "écart : « spécialistes exemptés » faux, c'est une dérogation conditionnelle",
+   "verdict_final": "reformulé",
+   "gravite": "change une valeur du code",
+   "preuve": "« En l'absence de départ préalable d’un(e) confrère conventionné(e) dans la zone « non prioritaire », le conventionnement peut être accordé aux chirurgiens-dentistes spécialistes en … orthodontie. » art. 35.5 p.65",
+   "correction": "Écart réel, mais le lecteur le décrit mal. (1) Ce n'est pas « conditionnelle » : la phrase décrit la situation (pas de départ) où l'on peut conventionner SANS succession ; la condition est la spécialité (MBD, CO, ODF), pas autre chose. Pour ces spécialistes la règle 1-pour-1 ne limite donc pas les entrées. (2) Mais c'est une dérogation, pas une exemption : « il ne diminue pas le nombre de places vacantes … conventionnement supplémentaire accordé sur la zone ouvrant droit à une place en cas de cessation » : l'entrée dérogatoire est additionnelle et la cessation suivante crée ensuite une place de succession. (3) La même art. 35.5 ajoute des dérogations de vie personnelle (maladie grave, mutation du conjoint, situation juridique) et une dérogation exceptionnelle CPD→CPN, non modélisées. Libellé à mettre (l.18-19, 61-62) : « spécialistes (ODF, CO, MBD) conventionnables sans succession par dérogation (art. 35.5), en conventionnement supplémentaire qui ouvre une place à leur cessation ; part non mesurée dans nos données → 0 (borne : régulation appliquée à tous) ». Valeur part_exemptee=0 : inchangée (supposé, non mesurable) mais à étiqueter « supposé, sens conservateur : surestime l'effet de la règle ». Nom du paramètre « part_exemptee » à renommer « part_derogatoire ».",
+   "raison": "Texte intégral de l'art. 35.5 relu (cd_convention.txt l.2631-2650). Réponse à la question clé : dérogation, pas exemption ; absolue pour les spécialistes quant à la contrainte d'entrée, mais avec effet sur la cessation suivante, que le code ignore."
+  },
+  {
+   "n": 6,
+   "fiche": "param-sf-regul-regle (avenant 4)",
+   "verdict_lecteur": "écart : « 1 pour 1 » ne vaut pas pour les entrées dérogatoires ; effet sur cessation suivante omis",
+   "verdict_final": "reformulé",
+   "gravite": "change une valeur de fiche",
+   "preuve": "« la cessation d’activité conventionnée suivante d’une sage-femme dans la zone concernée n’ouvre pas droit à un nouveau conventionnement dans cette zone. » art. 3.3.3 b, JO 10/08/2018 texte 100 p.11 du PDF",
+   "correction": "Réel mais plus nuancé que le lecteur : (a) 3.3.3 a/b : entrées dérogatoires pour vie personnelle ET réduction d'activité ≥ 50 % pendant ≥ 2 ans (ce sont des puces de 3.3.3 a, pas une dérogation distincte) : la cessation suivante n'ouvre PAS droit, SAUF si la sage-femme cesse définitivement et a désigné nommément son successeur (« Cette dernière disposition ne s’applique pas … »). (b) 3.3.3 c/d (accompagnement global de la grossesse, ≥ 50 % d'actes) : la cessation suivante ouvre droit à un nouveau conventionnement. Dans la fiche : ajouter ces deux effets et restreindre « 1 pour 1 » à la règle générale (3.3.2). Effet pour le jumeau : entrée dérogatoire vie personnelle = entrée nette +1 sans place rendue ; accompagnement de grossesse = entrée neutre sur le stock de places. Étiquette : sourcé.",
+   "raison": "Texte JO reproduit par bretagne.paps.sante.fr relu (PDF extrait localement, lignes 619-655) ; l'exception du successeur nommé n'était pas relevée par le lecteur. Le module regulation.py ne distingue pas ces cas."
+  },
+  {
+   "n": 7,
+   "fiche": "param-sf-regul-regle",
+   "verdict_lecteur": "introuvable : zonage arrêté par le DG ARS pour 2 ans au plus",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "change une valeur de fiche",
+   "preuve": "« l’arrêté de l’agence régionale de santé définissant le zonage peut modifier le classement » art. 3.1.2, JO 10/08/2018 texte 100",
+   "correction": "Retirer « pour 2 ans au plus » et « DG de l'ARS » de la fiche, ou les sourcer ailleurs (CSP L.1434-4 ; guide ARS PACA pour les dentistes dit « arrêté régional … par le directeur général de l'ARS »). Le « 2 ans » de l'avenant 4 ne concerne que la durée de réduction d'activité (3.3.3 a), pas le zonage : risque de confusion. Étiquette : non sourcé en l'état.",
+   "raison": "Aucune durée de zonage dans le texte de l'avenant 4 (grep « deux ans » : seules occurrences = réduction d'activité l.620 et sanctions l.1943)."
+  },
+  {
+   "n": 8,
+   "fiche": "param-sf-regul-regle",
+   "verdict_lecteur": "introuvable : JORF n° 0183",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "En-tête du texte : « 10 août 2018 JOURNAL OFFICIEL DE LA RÉPUBLIQUE FRANÇAISE Texte 100 sur 121 » ; NOR : SSAS1822073V ; pas de numéro JORF",
+   "correction": "Citer « JORF du 10/08/2018, texte 100 sur 121, NOR SSAS1822073V » (sourcé) ; retirer « n° 0183 » sauf vérification Legifrance (bloqué, non vérifié).",
+   "raison": "Le numéro n'apparaît pas dans le texte lu."
+  },
+  {
+   "n": 9,
+   "fiche": "param-sf-regul-regle",
+   "verdict_lecteur": "introuvable : origine 2012 (avenant 1, signé 09/01/2012)",
+   "verdict_final": "reformulé",
+   "gravite": "libellé ou page",
+   "preuve": "« Depuis 2012, le conventionnement d’une sage femme libérale est conditionné selon la zone » ONSSF flash avenant 7, p.1",
+   "correction": "2012 est trouvé dans l'ONSSF (source secondaire, p.1), que la fiche ne cite pas pour cela. Ajouter l'ONSSF comme source de « depuis 2012 » ; la date « 09/01/2012 » reste uniquement de la Banque des Territoires (non vérifiée ici). L'avenant 4 ne date pas les avenants 1 à 3.",
+   "raison": "Le lecteur ne cherchait pas dans onssf_av7.txt ; l'année est confirmée, le jour exact non."
+  }
+ ]
+}

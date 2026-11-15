@@ -1,0 +1,192 @@
+{
+ "source": "IRDES QES 270 (r11) ; Cour des comptes 2024 (r15) ; IGAS 2022-027R + IRDES DRIMK (r16)",
+ "items": {
+  "r11": [
+   {
+    "n": 1,
+    "fiche": "param-ide-regul-effet-densite",
+    "verdict_lecteur": "écart de page (p.4 -> p.3)",
+    "verdict_final": "retenu",
+    "gravite": "libellé ou page",
+    "preuve": "396 territoires sur-dotés (traités) 454 territoires intermédiaires (témoins) — IRDES 270 p. 3 (selon lecteur ; valeurs fiche exactes)",
+    "correction": "Remplacer « p. 4 » par « p. 3 » pour l'appariement 396/454 (sourcé).",
+    "raison": "Valeurs justes, seule la page diffère."
+   },
+   {
+    "n": 2,
+    "fiche": "param-ide-regul-effet-densite",
+    "verdict_lecteur": "introuvable dans QES 270",
+    "verdict_final": "trouvé",
+    "gravite": "libellé ou page",
+    "preuve": "« 2,9% d'infirmiers en moins dans les zones «surdotées» » (263 infirmiers) ; point d'information Cnam du jeudi 5 avril 2012 — Maire-info, 6 avril 2012",
+    "correction": "Citer la source : Maire-info, édition du 6 avr. 2012 (point d'information Cnam du 5/04/2012) ; banquedesterritoires.fr, 10 avr. 2012 : « reculé de 2,9% dans les zones surdotées ». Valeur : −2,9 % (−263), pas « −3 % » ; « −283 » non retrouvé (supposé issu d'une autre reprise). Étiquette : sourcé (presse), pas de communiqué Cnam primaire trouvé.",
+    "raison": "Les repères sont absents de QES 270 mais existent dans la presse ; la fiche dit déjà « connu seulement par la presse ». −3 % est un arrondi (un bilan antérieur avril 2009-janv. 2010 donnait −3 %, d'après la recherche web ; non relu). Périodes : « 2008-2011 » de la fiche non vérifiée mot à mot (banquedesterritoires : 2008-2011 pour les zones très sous-dotées)."
+   },
+   {
+    "n": 3,
+    "fiche": "param-ide-regul-effet-densite",
+    "verdict_lecteur": "introuvable dans QES 270",
+    "verdict_final": "trouvé",
+    "gravite": "libellé ou page",
+    "preuve": "« a ainsi progressé de 33,5%, passant de 1.056 à 1.410 » ; « total d'infirmières libérales a progressé de 15,6%, atteignant 72.346 » — banquedesterritoires.fr, 10 avr. 2012",
+    "correction": "Ajouter la source : Maire-info 6/04/2012 (+33,5 %, 354 infirmiers) et Banque des Territoires 10/04/2012 (1 056 → 1 410 ; national +15,6 %). Sourcé (presse).",
+    "raison": "Valeurs de la fiche confirmées ; 1 056+354=1 410 cohérent."
+   },
+   {
+    "n": 4,
+    "fiche": "param-regul-report-entrants",
+    "verdict_lecteur": "introuvable dans QES 270",
+    "verdict_final": "confirmé introuvable",
+    "gravite": "change une valeur de fiche",
+    "preuve": "Ni « EHESP », ni « deux tiers », ni « avenant 6 » dans irdes270.txt, ni dans cdc2024.txt (recherche grep)",
+    "correction": "Source à retrouver : le mémoire EHESP n'est vérifiable ni dans QES 270 ni dans la Cour. Marquer « non vérifié » ou retirer l'affirmation « deux tiers » ; ne pas l'attribuer à QES 270 p. 6. Le « contournement par le remplacement » n'est pas non plus dans QES 270 ni dans la Cour.",
+    "raison": "Contrôle de la source citée par la fiche (note 55 EHESP) : non retrouvée dans les sources locales ; non cherchée sur le web au-delà."
+   }
+  ],
+  "r15": [
+   {
+    "n": 1,
+    "fiche": "param-mk-regul-effet",
+    "verdict_lecteur": "meilleure valeur : APL 1 à 6-7",
+    "verdict_final": "reformulé",
+    "gravite": "libellé ou page",
+    "preuve": "« varie de 1 à 6 ou 7 selon les professions (chiffres 2019) » — Cour des comptes p. 31",
+    "correction": "Optionnel : ajouter « niveau de départ 2019 : rapport APL 1 à 6 ou 7 entre déciles extrêmes, infirmier/MK/SF » ; ce n'est pas un β (dérivé de rien, sourcé).",
+    "raison": "Écart réel mais ajout facultatif, pas une erreur de la fiche."
+   },
+   {
+    "n": 2,
+    "fiche": "param-mk-regul-effet",
+    "verdict_lecteur": "libellé de zone différent",
+    "verdict_final": "réfuté",
+    "gravite": "libellé ou page",
+    "preuve": "« zone “surdotée” » remplacé par « zone non prioritaire » ; « zones “non prioritaires” » — avenant 7 MK, texte local, l. 481-490 ; Cour p. 165 : « en zones sur-dotées ou très sur-dotées » (2023)",
+    "correction": "Aucune : « zone non prioritaire (avenant 7) » est le libellé de l'avenant 7 (sourcé) ; la Cour 2023 emploie l'ancien terme.",
+    "raison": "Avenant 7 renomme explicitement sur-dotée en non prioritaire."
+   },
+   {
+    "n": 3,
+    "fiche": "param-mk-regul-effet",
+    "verdict_lecteur": "introuvable : avenant 5 (2018) en vigueur",
+    "verdict_final": "reformulé",
+    "gravite": "change une valeur de fiche",
+    "preuve": "« masseurs-kinésithérapeutes (2018) » accord conventionnel — Cour p. 95 note 152 ; avenant 5 cité par l'avenant 7 pour « nouvelles options conventionnelles » (incitatives)",
+    "correction": "Remplacer « la régulation de l'avenant 5 (2018) » par « un accord conventionnel de 2018 (Cour p. 95 n. 152) ». L'identification « avenant 5 = régulation » n'est pas sourcée : l'avenant 7 ne cite l'avenant 5 qu'à propos d'options conventionnelles. Supposé.",
+    "raison": "Date 2018 confirmée (Cour), numéro d'avenant non confirmé."
+   },
+   {
+    "n": 4,
+    "fiche": "param-mk-regul-effet",
+    "verdict_lecteur": "introuvable : IGAS note 133 dans la Cour",
+    "verdict_final": "réfuté",
+    "gravite": "libellé ou page",
+    "preuve": "« L’inégalité d’accès aux médecins généralistes et aux masseurs kinésithérapeutes s’est accentuée. » — IGAS 2022-027R p. 67 note 133",
+    "correction": "Corriger la fiche : « IGAS note 133 : accentuée entre 2016 et 2019 » (la note donne bien la période 2016-2019 ; la fiche dit « sans période précise », faux). Sourcé.",
+    "raison": "La note 133 est celle de l'IGAS (p. 67), pas celle de la Cour ; le lecteur a cherché dans la mauvaise source."
+   },
+   {
+    "n": 5,
+    "fiche": "param-regul-report-entrants",
+    "verdict_lecteur": "introuvable : report IDE dans la Cour",
+    "verdict_final": "réfuté",
+    "gravite": "libellé ou page",
+    "preuve": "« Voir l’étude récente de l’Irdes sur le bilan du dispositif pour les IDE » — Cour p. 95 note 153",
+    "correction": "Aucune pour la Cour (renvoie à l'IRDES) ; l'affirmation doit être vérifiée dans QES 270 p. 6, hors ce lot.",
+    "raison": "Mauvaise cible : la fiche attribue le report à QES 270, et la Cour renvoie à cette étude."
+   },
+   {
+    "n": 6,
+    "fiche": "param-regul-report-entrants",
+    "verdict_lecteur": "introuvable (remplacement IDE)",
+    "verdict_final": "confirmé introuvable",
+    "gravite": "change une valeur de fiche",
+    "preuve": "grep « remplac » cdc2024.txt : aucun passage sur le contournement par le remplacement des IDE",
+    "correction": "Retirer l'attribution à la Cour ; vérifier dans QES 270 (non trouvé non plus par le premier lecteur) ou marquer « supposé ».",
+    "raison": "Absent de la Cour et de QES 270."
+   },
+   {
+    "n": 7,
+    "fiche": "param-regul-report-entrants",
+    "verdict_lecteur": "introuvable (avenant 6, EHESP)",
+    "verdict_final": "confirmé introuvable",
+    "gravite": "change une valeur de fiche",
+    "preuve": "grep « EHESP », « deux tiers » dans cdc2024.txt : rien ; « avenant n° 6 » = convention médicale (téléconsultation) p. ~140",
+    "correction": "Même correction que R11 n°4 : source EHESP non retrouvée. Attention : « avenant n° 6 » dans la Cour concerne la convention médicale, pas les IDE.",
+    "raison": "Rien dans la Cour."
+   },
+   {
+    "n": 8,
+    "fiche": "param-sf-regul-effet",
+    "verdict_lecteur": "introuvable : « comme pour les IDE »",
+    "verdict_final": "réfuté",
+    "gravite": "libellé ou page",
+    "preuve": "« réduction des disparités pour les professions des infirmières et des sages-femmes » 2016-2019 — IGAS p. 67 note 133",
+    "correction": "Aucune : la fiche cite l'IGAS pour cette phrase (sourcé). Préciser « IGAS note 133 », pas la Cour.",
+    "raison": "L'IGAS associe IDE et SF ; la Cour p. 31 ne donne que SF."
+   },
+   {
+    "n": 9,
+    "fiche": "param-sf-regul-effet",
+    "verdict_lecteur": "meilleure valeur : 1 à 6-7",
+    "verdict_final": "reformulé",
+    "gravite": "libellé ou page",
+    "preuve": "« accéder à un infirmier, un masseur-kinésithérapeute ou une sage-femme varie de 1 à 6 ou 7 » (chiffres 2019) — Cour p. 31",
+    "correction": "Optionnel : ajouter ce niveau de départ (non propre aux SF). Sourcé.",
+    "raison": "Pas une erreur de la fiche."
+   },
+   {
+    "n": 10,
+    "fiche": "param-sf-regul-effet",
+    "verdict_lecteur": "introuvable : IGAS p. 67 § 200 note 133",
+    "verdict_final": "réfuté",
+    "gravite": "libellé ou page",
+    "preuve": "IGAS p. 67, note 133 : « on observe entre 2016 et 2019 une réduction des disparités » (infirmières, sages-femmes)",
+    "correction": "Aucune sur la référence p. 67 / note 133 (confirmée). Le « max/min » du § 200 porte sur 2016-2021 d'après le lecteur R16 (non revérifié) ; la fiche l'attribue à 2016-2019 : à vérifier.",
+    "raison": "La note 133 est bien dans l'IGAS."
+   },
+   {
+    "n": 11,
+    "fiche": "param-sf-regul-effet",
+    "verdict_lecteur": "introuvable : bilan GDR juin 2022",
+    "verdict_final": "reformulé",
+    "gravite": "libellé ou page",
+    "preuve": "Cour p. 69 notes 106/108 : « le 23 juin 2022, Bilan quantitatif et qualitatif des dispositifs d’aide à l’installation » ; IGAS note 130 : « commission GDR juillet 2022 »",
+    "correction": "Écrire : « bilan Cnam commission GDR (23 juin 2022 selon la Cour ; juillet 2022 selon l'IGAS) ». Préciser que ce bilan porte sur les aides à l'installation, pas sur la régulation ; il ne source pas la baisse SF. Sourcé.",
+    "raison": "La Cour confirme juin 2022 ; l'IGAS dit juillet : dates divergentes."
+   }
+  ],
+  "r16": [
+   {
+    "n": 1,
+    "fiche": "param-sf-regul-effet",
+    "verdict_lecteur": "écart d'année : juillet 2022",
+    "verdict_final": "reformulé",
+    "gravite": "libellé ou page",
+    "preuve": "« commission GDR juillet 2022 » — IGAS p. 67 note 130 ; Cour p. 69 : « le 23 juin 2022 »",
+    "correction": "« juin 2022 (Cour) / juillet 2022 (IGAS) » : citer les deux. Sourcé.",
+    "raison": "L'écart du lecteur est réel côté IGAS, mais la Cour donne juin ; la fiche est juste pour l'une des deux sources."
+   },
+   {
+    "n": 2,
+    "fiche": "param-sf-regul-effet",
+    "verdict_lecteur": "champ : le bilan porte sur les aides, pas la régulation",
+    "verdict_final": "retenu",
+    "gravite": "change une valeur de fiche",
+    "preuve": "« Bilan quantitatif et qualitatif des dispositifs d’aide à l’installation des professionnels de santé » — IGAS p. 67 note 130 ; Cour notes 106/108",
+    "correction": "Reformuler : la baisse des disparités SF vient de la note 133 de l'IGAS (observation 2016-2019, sans source), pas du bilan GDR, qui traite des aides à l'installation. Sourcé.",
+    "raison": "La fiche fait du bilan la source de l'ampleur de régulation ; il ne couvre pas cet objet."
+   },
+   {
+    "n": 3,
+    "fiche": "param-mk-regul-effet",
+    "verdict_lecteur": "meilleure valeur : effet établi, travail achevé",
+    "verdict_final": "retenu",
+    "gravite": "change une valeur de fiche",
+    "preuve": "« les mesures de restriction d’accès au conventionnement aient bien l’effet localisé attendu de réduction de la densité. Ce travail, qui est achevé » — IRDES DRIMK p. 4",
+    "correction": "Écrire : « IRDES DRIMK (juillet 2026, p. 4) : travail achevé, en cours de valorisation ; sens établi (restrictions : effet de réduction de la densité localisée ; incitations en zone sous-dotée : pas d'effet), ampleur non publiée ». Le texte parle de zones « sur- et sous-dotés », pas « non prioritaire ». Période du projet 2022-2027 confirmée. Sourcé.",
+    "raison": "La fiche parle d'un effet « attendu » et d'un projet en cours ; la source dit achevé, effet observé (« bien l'effet »). Dérive de sens réelle."
+   }
+  ]
+ },
+ "note": "Recherche web : point d'information Cnam du 5 avril 2012 retrouvé via Maire-info (6/04/2012) et Banque des Territoires (10/04/2012). −2,9 % / 263 ; +33,5 % / 354 / 1 056→1 410 ; national +15,6 %. Valeur « −283 » non retrouvée. IGAS notes 130-133 relues sur PDF (p. 67)."
+}

@@ -11,6 +11,7 @@ incertitude: "zones sur-dotées = 12,2 % de la population et 4,2 % des communes 
 source: "Avenant n° 4 à la convention nationale des sages-femmes, signé le 29/05/2018, avis NOR SSAS1822073V, JORF n° 0183 du 10/08/2018, texte 100, art. 3.3 — https://www.legifrance.gouv.fr/jorf/id/JORFSCTA000037306865 ; avenant 7 (signé le 11/07/2023, JO du 25/08/2023), d'après l'ONSSF — https://onssf.org/images/flash-info/pdf/2023/aout-2023-avenant-7-3.pdf ; zonage : data.gouv.fr, « Zonages des professionnels de santé libéraux » (Atlasanté/DataSanté), fichier t-zonages-com.csv — https://www.data.gouv.fr/datasets/zonages-des-professionnels-de-sante-liberaux"
 millesime: "avenant 2018 (règle reconduite en 2023) ; zonage par commune mis à jour le 20/10/2026"
 statut: sourcé
+relecture: "2026-11-15 : corrigé (mécanisme omis)"
 date: 2026-11-14
 ---
 
@@ -44,3 +45,9 @@ reconduite en substance par l'avenant 7, applicable le 22/02/2024 selon
 l'ONSSF.
 
 **Géocodes (axe 4).** [[data-zonage-sf]] : liste des communes en « remplacement seul », extraite de CartoSanté. Le nombre concorde avec le fichier data.gouv (à ±10 communes près).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **corrigé (mécanisme omis)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Règle générale 1 pour 1 confirmée (art. 3.3.2 c). **Ajout** : pour les entrées dérogatoires au titre de la vie personnelle ou d'une réduction d'activité ≥ 50 % (art. 3.3.3 a et b), la cessation suivante n'ouvre pas de nouveau conventionnement, sauf successeur désigné. Pour la grossesse (3.3.3 c et d), elle en ouvre un. Texte lu dans la reproduction JO (bretagne.paps), Légifrance étant bloqué. « Depuis 2012 » : ONSSF.

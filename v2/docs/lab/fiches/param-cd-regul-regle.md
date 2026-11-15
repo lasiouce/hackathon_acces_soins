@@ -11,6 +11,7 @@ incertitude: "zones non prioritaires = 4,8 % de la population et 0,3 % des commu
 source: "Convention nationale des chirurgiens-dentistes, signée le 21/07/2023, arrêté du 23/08/2023, NOR SPRS2323014A, JO du 25/08/2023, texte 30, art. 33.1 et 35 — https://bretagne.paps.sante.fr/media/42626/download ; guide de zonage ARS PACA (mise en place au 01/01/2025) — https://www.paca.ars.sante.fr/media/139787/download ; zonage : data.gouv.fr, « Zonages des professionnels de santé libéraux » (Atlasanté/DataSanté), fichier t-zonages-com.csv — https://www.data.gouv.fr/datasets/zonages-des-professionnels-de-sante-liberaux"
 millesime: "convention 2023, effet au 01/01/2025 ; zonage par commune mis à jour le 20/10/2026"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -43,3 +44,11 @@ date: 2026-11-14
 L'effet est dans [[param-cd-regul-effet]].
 
 **Géocodes (axe 4).** [[data-zonage-cd]] : liste des communes en « remplacement seul », extraite de CartoSanté. Le nombre concorde avec le fichier data.gouv (à ±10 communes près).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Règle de succession, cédant ≥ 2 jours par semaine, successeur sous 1 an, effet au plus tôt le 01/01/2025 et références de l'arrêté confirmés (art. 33.1 et 35, p. 64).
+- L'arrêté de méthode du 20/03/2024 est cité par le guide ARS PACA (p. 5), pas par la convention.
+- Art. 35.5 : les spécialistes (ODF, CO, MBD) relèvent d'une **dérogation**, pas d'une exemption. Ils sont conventionnables sans succession, sur une place supplémentaire. Libellé corrigé dans `regulation.py`, valeur 0 inchangée (*supposé*).

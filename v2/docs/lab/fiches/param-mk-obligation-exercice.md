@@ -11,6 +11,7 @@ incertitude: "partage entre les deux options (zone sous-dotée contre établisse
 source: "Avenant n° 7 à la convention nationale des masseurs-kinésithérapeutes, arrêté du 21/08/2023, NOR SPRS2322893A, JO du 25/08/2023, art. 4.1.1 — https://bretagne.paps.sante.fr/media/41875/download ; validé par le Conseil d'État le 17/07/2024, n° 488665"
 millesime: "2023 (premier effet vers 2027-2028, déduit)"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -40,3 +41,9 @@ mémoire EHESP 2025 va dans le même sens.
   50 % pour l'axe 5.
 - Rétention en zone sous-dotée après 2 ans : à rapprocher de
   l'obligation dentaire du CESP ou des aides. Non mesurée.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Art. 4.1.1 confirmé : 2 ans, ≥ 6 000 actes, ou 2 240 h en établissement, pour les MK entrés en formation à partir de 2023. CE, 17/07/2024, n° 488665 : requêtes rejetées.

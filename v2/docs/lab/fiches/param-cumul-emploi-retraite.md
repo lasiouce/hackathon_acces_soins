@@ -11,6 +11,7 @@ incertitude: "millésime ancien (30/06/2015) ; libéraux seulement (la CAVP sous
 source: "Conseil d'orientation des retraites, séance 2016, document n° 11, annexe 2 (données des caisses CARCDSF, CAVP, CARPIMKO) — https://www.cor-retraites.fr/sites/default/files/2019-06/doc-3265.pdf"
 millesime: "30/06/2015"
 statut: sourcé
+relecture: "2026-11-15 : confirmé (valeurs) ; libellé corrigé"
 date: 2026-11-14
 ---
 
@@ -33,3 +34,11 @@ date: 2026-11-14
 
 **Mesure.** Rapports annuels des caisses (CARCDSF, CAVP, CARPIMKO) ou mise
 à jour du COR. Coût estimé : ~30 min pour un millésime récent.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé (valeurs) ; libellé corrigé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Valeurs confirmées (COR 2016, doc. 11, annexe 2, au 30/06/2015) : 42 / 5 185, 1 742 / 37 330, 560 / 31 445, 2 960 / 190 979.
+- **Libellé** : la CARPIMKO couvre MK, IDE, pédicures-podologues, orthophonistes et orthoptistes. Appliquer 1,5 % aux MK et aux IDE séparément est *supposé* (écart de dénominateur ≤ 0,2 point).
+- Spécialistes (phase 2), 0,10 : l'ER 1097 donne « près de 10 % » de tous les médecins libéraux ou mixtes au 01/01/2018 ; la CARMF donne 8,6 % en 2015 (COR). L'application aux seuls spécialistes est *supposée*.

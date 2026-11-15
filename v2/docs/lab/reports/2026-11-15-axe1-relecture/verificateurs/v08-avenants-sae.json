@@ -1,0 +1,262 @@
+{
+ "source": "Avenants IDE 6, MK 7 et SAE (verif v08)",
+ "blocs": [
+  {
+   "source": "Avenant 6 IDE (r12)",
+   "items": [
+    {
+     "n": 1,
+     "fiche": "param-ide-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "non vérifiable",
+     "gravite": "libellé ou page",
+     "preuve": "Fiche : « zonage observé… dérivé » du fichier t-zonages-com.csv",
+     "correction": "Aucune ; à recompter sur le CSV data.gouv (étiquette dérivé, déjà posée)",
+     "raison": "Attribué à une AUTRE source (data.gouv), pas à l'avenant : non vérifiable ici, pas un défaut."
+    },
+    {
+     "n": 2,
+     "fiche": "param-ide-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "non vérifiable",
+     "gravite": "libellé ou page",
+     "preuve": "Fiche : « arrêté de méthodologie du 10/01/2020, cité par les ARS, non ouvert » ; avenant 6 : aucune occurrence de « 10 janvier 2020 »",
+     "correction": "Aucune ; la fiche signale elle-même « non ouvert » (équivaut à supposé/cité)",
+     "raison": "Attribué aux ARS, pas à l'avenant. Non vérifiable ici. À citer comme « cité par les ARS » sans l'adosser à l'avenant."
+    },
+    {
+     "n": 3,
+     "fiche": "param-ide-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "non vérifiable",
+     "gravite": "libellé ou page",
+     "preuve": "Fiche : « Mesure de contrôle : … Il doit être ≤ 1, hors dérogations »",
+     "correction": "Étiqueter « dérivé de la règle de succession, art. 3.4 » (indicateur du projet, pas du texte)",
+     "raison": "Pas d'attribution à une source externe : c'est l'indicateur propre du projet, qui découle de l'art. 3.4. Pas de source à trouver ; pas un défaut."
+    },
+    {
+     "n": 4,
+     "fiche": "param-ide-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "trouvé",
+     "gravite": "libellé ou page",
+     "preuve": "« une première expérimentation de « zonage infirmier » a été initiée en 2008 puis généralisée en 2012 » — IRDES QES 270, p.2",
+     "correction": "Aucune",
+     "raison": "Attribué à IRDES QES 270 (p. 2 et 5) ; texte local irdes270.txt lu : confirmé (p.2 ; p.5 « expérimentations du zonage en 2009 puis pérennisation à partir de 2012 »). Nuance : p.5 date l'expérimentation 2009, la fiche dit 2008-2009 (cohérent avec p.2)."
+    }
+   ]
+  },
+  {
+   "source": "Avenant 7 MK (r14)",
+   "items": [
+    {
+     "n": 1,
+     "fiche": "param-mk-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "non vérifiable",
+     "gravite": "libellé ou page",
+     "preuve": "Fiche : « Une régulation de 2012 a été annulée par le Conseil d'État en 2014 » ; aucune occurrence « annul »/2014 pertinente dans mk_avenant7, cnomk2024, cdc2024",
+     "correction": "Aucune sourcée ; la phrase de la fiche n'a pas de source propre adjacente (la citation Cour des comptes p.95 n.152 qui suit ne mentionne ni 2012 MK ni annulation : « infirmiers (2012), sages-femmes (2012) et masseurs-kinésithérapeutes (2018) »). Reformuler « supposé / à sourcer » ou retirer",
+     "raison": "Affirmation placée dans « Historique » sans source attribuée dans la phrase. Reste SANS SOURCE dans les textes lus. À sourcer (décision CE 2014) ou à marquer supposé."
+    },
+    {
+     "n": 2,
+     "fiche": "param-mk-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "trouvé",
+     "gravite": "libellé ou page",
+     "preuve": "CdC 2024 p.95 n.152 : « masseurs-kinésithérapeutes (2018) » ; CNOMK 2024 p.15 : « l'arrêté de zonage… de 2018 a instauré la régulation »",
+     "correction": "Garder « régulation depuis 2018 (Cour des comptes 2024 p.95 n.152 ; CNOMK 2024 p.15) ». Le numéro « avenant 5 » n'est pas dans ces sources : le marquer dérivé ; l'avenant 7 cite « l'avenant 5 » (PDF p.18, art. nomenclature) sans le dire instituteur de la régulation",
+     "raison": "Attribué à CdC p.95 n.152, texte local lu : date 2018 confirmée ; « avenant 5 » seul non confirmé comme véhicule de la règle."
+    },
+    {
+     "n": 3,
+     "fiche": "param-mk-regul-regle",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "non vérifiable",
+     "gravite": "libellé ou page",
+     "preuve": "Fiche : « Méthode : arrêté du 20/03/2024, qui modifie celui du 24/09/2018 » ; aucune occurrence dans mk_avenant7.txt",
+     "correction": "Aucune ; ajouter source JO de l'arrêté (non lue) ou étiquette « cité, non vérifié »",
+     "raison": "La fiche ne rattache pas cette ligne à l'avenant 7 (source = autre texte, JO/arrêté). Non vérifiable ici ; pas un défaut de l'avenant."
+    }
+   ]
+  },
+  {
+   "source": "SAE nomenclature (r23)",
+   "items": [
+    {
+     "n": 1,
+     "fiche": "param-part-privee-salaries-sae",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "confirmé introuvable",
+     "gravite": "libellé ou page",
+     "preuve": "Cherché EFFPNM, ETPPNM, EFFSAL, ETPSAL dans Q23_AR, Q20_AR, Nomenclature_SAE_2025 et AR_SAE_2025 (guide complet) : 0 occurrence",
+     "correction": "Ajouter « noms de colonnes des CSV de la base statistique, non listés dans les guides ; vérifiés par lecture des en-têtes du fichier »",
+     "raison": "Les guides PDF ne portent que les libellés/codes ; les noms de colonnes sont dans les CSV (le script de la fiche les utilise et tourne). Non vérifiable dans la documentation."
+    },
+    {
+     "n": 2,
+     "fiche": "param-part-privee-salaries-sae",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "trouvé",
+     "gravite": "libellé ou page",
+     "preuve": "AR_SAE_2025 : « Sages-femmes N2800 » (pdf p.79 et p.116 ; nomenclature p.50 code 2800 « Sages-femmes y compris encadrement et écoles »)",
+     "correction": "Aucune (N2800 = sages-femmes ; la nomenclature note 2800 sans préfixe N)",
+     "raison": "Confirmé dans le guide AR_SAE_2025 (https://www.sae.drees-faq.sante.gouv.fr/sites/sae.drees-faq.sante.gouv.fr/files/2026-03/AR_SAE_2025.pdf)."
+    },
+    {
+     "n": 3,
+     "fiche": "param-part-privee-salaries-sae",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "trouvé",
+     "gravite": "libellé ou page",
+     "preuve": "AR_SAE_2025 : « Kinésithérapeutes N2410 » (pdf p.42-43) ; nomenclature : « 2410 Kinésithérapeutes hors encadrement » (p.49)",
+     "correction": "Aucune. Préciser « hors encadrement » dans le libellé si souhaité",
+     "raison": "Confirmé : N2410 = kinésithérapeutes (hors encadrement dans la nomenclature) ; Q23 = sages-femmes et personnel non médical (Q23_AR.pdf)."
+    },
+    {
+     "n": 4,
+     "fiche": "param-part-privee-salaries-sae",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "trouvé",
+     "gravite": "libellé ou page",
+     "preuve": "AR_SAE_2025 (tableau personnel médical, pdf p.184-186) : « Odontologie M3030 ; Pharmaciens spécialisés en biologie médicale M3012 ; Pharmaciens (hors biologie médicale) M3050 »",
+     "correction": "Aucune ; préciser M3012 = biologistes, M3050 = hors biologie (la fiche écrit seulement « pharmaciens »)",
+     "raison": "Confirmé dans AR_SAE_2025 ; nomenclature 2025 : 3012 pharmaciens spécialisés en biologie médicale, 3030 Odontologie, 3050 Pharmaciens hospitaliers. Variantes de libellé M3050 : « hospitaliers » (nomenclature) vs « hors biologie » (guide)."
+    },
+    {
+     "n": 5,
+     "fiche": "param-part-privee-salaries-sae",
+     "verdict_lecteur": "introuvable",
+     "verdict_final": "trouvé",
+     "gravite": "libellé ou page",
+     "preuve": "Nomenclature_SAE_2025 pdf p.10 (imprimée 8) : « STJR (STATUT JURIDIQUE REGROUPÉ) 1 Public 2 Privé lucratif 3 Privé non lucratif »",
+     "correction": "Aucune",
+     "raison": "Confirmé : 1 public, 2 privé lucratif, 3 privé non lucratif. Le nom de colonne « STJR » est donc confirmé ; le préfixe « ID. » (bordereau ID) reste non lu."
+    }
+   ]
+  }
+ ],
+ "items": [
+  {
+   "n": 1,
+   "fiche": "param-ide-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Fiche : « zonage observé… dérivé » du fichier t-zonages-com.csv",
+   "correction": "Aucune ; à recompter sur le CSV data.gouv (étiquette dérivé, déjà posée)",
+   "raison": "Attribué à une AUTRE source (data.gouv), pas à l'avenant : non vérifiable ici, pas un défaut."
+  },
+  {
+   "n": 2,
+   "fiche": "param-ide-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Fiche : « arrêté de méthodologie du 10/01/2020, cité par les ARS, non ouvert » ; avenant 6 : aucune occurrence de « 10 janvier 2020 »",
+   "correction": "Aucune ; la fiche signale elle-même « non ouvert » (équivaut à supposé/cité)",
+   "raison": "Attribué aux ARS, pas à l'avenant. Non vérifiable ici. À citer comme « cité par les ARS » sans l'adosser à l'avenant."
+  },
+  {
+   "n": 3,
+   "fiche": "param-ide-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Fiche : « Mesure de contrôle : … Il doit être ≤ 1, hors dérogations »",
+   "correction": "Étiqueter « dérivé de la règle de succession, art. 3.4 » (indicateur du projet, pas du texte)",
+   "raison": "Pas d'attribution à une source externe : c'est l'indicateur propre du projet, qui découle de l'art. 3.4. Pas de source à trouver ; pas un défaut."
+  },
+  {
+   "n": 4,
+   "fiche": "param-ide-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "« une première expérimentation de « zonage infirmier » a été initiée en 2008 puis généralisée en 2012 » — IRDES QES 270, p.2",
+   "correction": "Aucune",
+   "raison": "Attribué à IRDES QES 270 (p. 2 et 5) ; texte local irdes270.txt lu : confirmé (p.2 ; p.5 « expérimentations du zonage en 2009 puis pérennisation à partir de 2012 »). Nuance : p.5 date l'expérimentation 2009, la fiche dit 2008-2009 (cohérent avec p.2)."
+  },
+  {
+   "n": 1,
+   "fiche": "param-mk-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Fiche : « Une régulation de 2012 a été annulée par le Conseil d'État en 2014 » ; aucune occurrence « annul »/2014 pertinente dans mk_avenant7, cnomk2024, cdc2024",
+   "correction": "Aucune sourcée ; la phrase de la fiche n'a pas de source propre adjacente (la citation Cour des comptes p.95 n.152 qui suit ne mentionne ni 2012 MK ni annulation : « infirmiers (2012), sages-femmes (2012) et masseurs-kinésithérapeutes (2018) »). Reformuler « supposé / à sourcer » ou retirer",
+   "raison": "Affirmation placée dans « Historique » sans source attribuée dans la phrase. Reste SANS SOURCE dans les textes lus. À sourcer (décision CE 2014) ou à marquer supposé."
+  },
+  {
+   "n": 2,
+   "fiche": "param-mk-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "CdC 2024 p.95 n.152 : « masseurs-kinésithérapeutes (2018) » ; CNOMK 2024 p.15 : « l'arrêté de zonage… de 2018 a instauré la régulation »",
+   "correction": "Garder « régulation depuis 2018 (Cour des comptes 2024 p.95 n.152 ; CNOMK 2024 p.15) ». Le numéro « avenant 5 » n'est pas dans ces sources : le marquer dérivé ; l'avenant 7 cite « l'avenant 5 » (PDF p.18, art. nomenclature) sans le dire instituteur de la régulation",
+   "raison": "Attribué à CdC p.95 n.152, texte local lu : date 2018 confirmée ; « avenant 5 » seul non confirmé comme véhicule de la règle."
+  },
+  {
+   "n": 3,
+   "fiche": "param-mk-regul-regle",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "non vérifiable",
+   "gravite": "libellé ou page",
+   "preuve": "Fiche : « Méthode : arrêté du 20/03/2024, qui modifie celui du 24/09/2018 » ; aucune occurrence dans mk_avenant7.txt",
+   "correction": "Aucune ; ajouter source JO de l'arrêté (non lue) ou étiquette « cité, non vérifié »",
+   "raison": "La fiche ne rattache pas cette ligne à l'avenant 7 (source = autre texte, JO/arrêté). Non vérifiable ici ; pas un défaut de l'avenant."
+  },
+  {
+   "n": 1,
+   "fiche": "param-part-privee-salaries-sae",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "confirmé introuvable",
+   "gravite": "libellé ou page",
+   "preuve": "Cherché EFFPNM, ETPPNM, EFFSAL, ETPSAL dans Q23_AR, Q20_AR, Nomenclature_SAE_2025 et AR_SAE_2025 (guide complet) : 0 occurrence",
+   "correction": "Ajouter « noms de colonnes des CSV de la base statistique, non listés dans les guides ; vérifiés par lecture des en-têtes du fichier »",
+   "raison": "Les guides PDF ne portent que les libellés/codes ; les noms de colonnes sont dans les CSV (le script de la fiche les utilise et tourne). Non vérifiable dans la documentation."
+  },
+  {
+   "n": 2,
+   "fiche": "param-part-privee-salaries-sae",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "AR_SAE_2025 : « Sages-femmes N2800 » (pdf p.79 et p.116 ; nomenclature p.50 code 2800 « Sages-femmes y compris encadrement et écoles »)",
+   "correction": "Aucune (N2800 = sages-femmes ; la nomenclature note 2800 sans préfixe N)",
+   "raison": "Confirmé dans le guide AR_SAE_2025 (https://www.sae.drees-faq.sante.gouv.fr/sites/sae.drees-faq.sante.gouv.fr/files/2026-03/AR_SAE_2025.pdf)."
+  },
+  {
+   "n": 3,
+   "fiche": "param-part-privee-salaries-sae",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "AR_SAE_2025 : « Kinésithérapeutes N2410 » (pdf p.42-43) ; nomenclature : « 2410 Kinésithérapeutes hors encadrement » (p.49)",
+   "correction": "Aucune. Préciser « hors encadrement » dans le libellé si souhaité",
+   "raison": "Confirmé : N2410 = kinésithérapeutes (hors encadrement dans la nomenclature) ; Q23 = sages-femmes et personnel non médical (Q23_AR.pdf)."
+  },
+  {
+   "n": 4,
+   "fiche": "param-part-privee-salaries-sae",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "AR_SAE_2025 (tableau personnel médical, pdf p.184-186) : « Odontologie M3030 ; Pharmaciens spécialisés en biologie médicale M3012 ; Pharmaciens (hors biologie médicale) M3050 »",
+   "correction": "Aucune ; préciser M3012 = biologistes, M3050 = hors biologie (la fiche écrit seulement « pharmaciens »)",
+   "raison": "Confirmé dans AR_SAE_2025 ; nomenclature 2025 : 3012 pharmaciens spécialisés en biologie médicale, 3030 Odontologie, 3050 Pharmaciens hospitaliers. Variantes de libellé M3050 : « hospitaliers » (nomenclature) vs « hors biologie » (guide)."
+  },
+  {
+   "n": 5,
+   "fiche": "param-part-privee-salaries-sae",
+   "verdict_lecteur": "introuvable",
+   "verdict_final": "trouvé",
+   "gravite": "libellé ou page",
+   "preuve": "Nomenclature_SAE_2025 pdf p.10 (imprimée 8) : « STJR (STATUT JURIDIQUE REGROUPÉ) 1 Public 2 Privé lucratif 3 Privé non lucratif »",
+   "correction": "Aucune",
+   "raison": "Confirmé : 1 public, 2 privé lucratif, 3 privé non lucratif. Le nom de colonne « STJR » est donc confirmé ; le préfixe « ID. » (bordereau ID) reste non lu."
+  }
+ ]
+}

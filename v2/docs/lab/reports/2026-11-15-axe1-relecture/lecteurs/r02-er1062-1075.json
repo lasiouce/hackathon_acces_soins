@@ -1,0 +1,187 @@
+{
+ "source": "DREES, Études et Résultats n° 1062 (mai 2018, infirmiers) et n° 1075 (juillet 2018, masseurs-kinésithérapeutes)",
+ "acces": "texte intégral lu",
+ "url_lue": [
+  "https://drees.solidarites-sante.gouv.fr/sites/default/files/er1062.pdf",
+  "https://www.drees.solidarites-sante.gouv.fr/sites/default/files/er1075.pdf"
+ ],
+ "commentaire": "Les deux PDF ont été lus en entier (6 pages chacun) après extraction locale du texte. Pages citées = index PDF, identiques aux pages imprimées. Non relus : DD76 et ER 1319 (cités dans les fiches, hors de ce lot). Les fiches param-diplomes et param-age citent DD76 pour les flux diplômés étrangers, valeurs non vérifiées ici.",
+ "claims": [
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "MK et IDE : pas d'âge publié",
+   "valeur_fiche": "n.d. (MK) ; IDE non renseigné",
+   "verdict": "ecart",
+   "type_ecart": "meilleure_valeur",
+   "valeur_source": "MK diplômés à l'étranger primo-inscrits 2015 : 26 ans en moyenne",
+   "citation": "ils ont en moyenne 26 ans",
+   "page": "ER 1075, p. 2",
+   "note": "Âge publié, mais seulement pour les MK diplômés à l'étranger arrivant à l'ARS en 2015, pas pour l'ensemble des MK. Aucun âge d'entrée trouvé pour les IDE dans ER 1062."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "MK : 99 % entrent l'année du diplôme (ER 1075)",
+   "valeur_fiche": "99 % installés l'année du diplôme",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "99 % des diplômés en France commencent à exercer l'année de l'obtention",
+   "citation": "En moyenne, 99 % des diplômés d'état de masseurs-kinésithérapie en France commencent à exercer l'année même de l'obtention de leur diplôme",
+   "page": "ER 1075, p. 4 ; encadré 2, p. 3",
+   "note": "Hypothèse de projection reprise de Adeli 2013-2016."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "IDE : 99 % entrent l'année du diplôme (ER 1062)",
+   "valeur_fiche": "99 % entrent l'année du diplôme",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "99 % des infirmiers nouvellement diplômés entrent dans la vie active l'année même de l'obtention",
+   "citation": "99 % des infirmiers nouvellement diplômés entrent dans la vie active l'année même de l'obtention de leur diplôme",
+   "page": "ER 1062, p. 3 (encadré 2)",
+   "note": "Source de cette valeur : enquête Génération CEREQ 2013, et non Adeli."
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "IDE : 2 % de fuite (ER 1062)",
+   "valeur_fiche": "2 % de fuite",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "taux de fuite fixé à 2 % pour l'ensemble de la période de projection",
+   "citation": "est fixé à 2 % pour l'ensemble de la période de projection",
+   "page": "ER 1062, p. 3 (encadré 2)",
+   "note": ""
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "MK : 1 % de fuite (ER 1075)",
+   "valeur_fiche": "1 % de fuite",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "taux de fuite fixé à 1 %",
+   "citation": "est fixé à 1 % pour l'ensemble de la période de projection",
+   "page": "ER 1075, p. 3 (encadré 2)",
+   "note": ""
+  },
+  {
+   "fiche": "param-age-entree-exercice",
+   "affirmation": "Kinés : 1 175 diplômés à l'étranger par an (2015)",
+   "valeur_fiche": "1 175 par an (2015)",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "1 175 masseurs-kinésithérapeutes inscrits pour la première fois en 2015 étaient diplômés à l'étranger",
+   "citation": "1 175 masseurs-kinésithérapeutes inscrits pour la première fois en 2015 étaient diplômés à l'étranger",
+   "page": "ER 1075, p. 2 (graphique 1)",
+   "note": "Flux fixé à 1 175 sur toute la projection par la DREES (encadré 2, p. 3)."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Aucune cessation avant 40 ans ; aucun exercice après 67 ans (IDE)",
+   "valeur_fiche": "bornes 40 ans / 67 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "aucune cessation avant 40 ans et aucun exercice après 67 ans",
+   "citation": "n'exercent plus après 67 ans et ne cessent pas leur activité avant 40 ans",
+   "page": "ER 1062, p. 3 (encadré 2)",
+   "note": ""
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Aucun exercice après 70 ans (MK) ; aucune cessation avant 40 ans",
+   "valeur_fiche": "bornes 40 ans / 70 ans",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "aucune cessation avant 40 ans ; aucun exercice après 70 ans",
+   "citation": "n'exercent plus après 70 ans et qu'il n'y a pas de cessations d'activité avant 40 ans",
+   "page": "ER 1075, p. 3 (encadré 2)",
+   "note": ""
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Millésime CNAM 2011-2015 (IDE, libéraux)",
+   "valeur_fiche": "CNAM 2011-2015",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "comportements de cessation observés entre 2011 et 2015 à partir des données de la CNAM",
+   "citation": "conformes à ceux observés entre 2011 et 2015 à partir des données de la CNAM",
+   "page": "ER 1062, p. 3 (encadré 2)",
+   "note": ""
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Millésime CNAM 2011-2016 (MK, libéraux)",
+   "valeur_fiche": "CNAM 2011-2016",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "comportements de cessation conformes à ceux observés entre 2011 et 2016 à partir des données de la CNAM",
+   "citation": "conformes à ceux observés entre 2011 et 2016 à partir des données de la Caisse nationale d'assurance maladie",
+   "page": "ER 1075, p. 3 (encadré 2)",
+   "note": ""
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Millésime DADS 2011-2014 (salariés)",
+   "valeur_fiche": "DADS 2011-2014",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "comportements de cessation conformes à ceux observés entre 2011 et 2014 (DADS Grand Format)",
+   "citation": "conformes à ceux observés entre 2011 et 2014 à partir des données des déclarations annuelles de données sociales (DADS Grand Format)",
+   "page": "ER 1062 p. 3 ; ER 1075 p. 3 (encadré 2)",
+   "note": "Valable pour les salariés hospitaliers (IDE) et les salariés (MK)."
+  },
+  {
+   "fiche": "param-cessation-par-age",
+   "affirmation": "Aucune valeur numérique de cessation publiée (ER 1062, 1075)",
+   "valeur_fiche": "non publiée (définition seule)",
+   "verdict": "ecart",
+   "type_ecart": "meilleure_valeur",
+   "valeur_source": "effectifs annuels de sorties : MK ~1 600 stabilisées, 1 900 en 2040 ; IDE 13 500 (corps) ou 13 800 (graphique 4), 17 000 en 2040",
+   "citation": "pour se stabiliser autour de 1 600 sorties",
+   "page": "ER 1075, p. 5 ; ER 1062, p. 4 (corps) et p. 5 (graphique 4)",
+   "note": "Les publications ne donnent pas de taux par âge (valeur de x(a) bien non publiée), mais des nombres de sorties agrégés. Les IDE présentent deux chiffres (13 500 et 13 800) pour la même stabilisation."
+  },
+  {
+   "fiche": "param-mortalite",
+   "affirmation": "Aucune occurrence de mortalité au sens démographique (ER 1062, 1075)",
+   "valeur_fiche": "aucune occurrence",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "recherche plein texte : aucun des termes mortalité, décès, décédé ; seul le départ à la retraite est mentionné",
+   "citation": "Le nombre de masseurs-kinésithérapeutes qui cessent leur activité (définitivement ou non)",
+   "page": "ER 1062 ; ER 1075, p. 5",
+   "note": "Vérifié sur ER 1062 et 1075 uniquement. DD76 et ER 1319 non relus pour ce point."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "MK : 1 175 primo-inscrits diplômés à l'étranger (2015), 33 %",
+   "valeur_fiche": "1 175 ; 33 %",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "Ces diplômés représentent ainsi 33 % des inscrits pour la première fois auprès de l'agence régionale de santé (ARS) en 2015",
+   "citation": "1 175 masseurs-kinésithérapeutes inscrits pour la première fois en 2015 étaient diplômés à l'étranger ; 33 %",
+   "page": "ER 1075, p. 2 (graphique 1)",
+   "note": ""
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "MK : flux environ 1 200 par an depuis 2008",
+   "valeur_fiche": "environ 1 200 par an depuis 2008",
+   "verdict": "ecart",
+   "type_ecart": "annee",
+   "valeur_source": "1 240 primo-entrants diplômés à l'étranger en 2008 ; ensuite « plus récemment » stable autour de 1 200",
+   "citation": "Plus récemment, ce flux est stable autour de 1 200",
+   "page": "ER 1075, p. 2",
+   "note": "La source ne dit pas que le flux est stable depuis 2008. Elle donne 1 240 en 2008, puis un plateau récent autour de 1 200."
+  },
+  {
+   "fiche": "param-diplomes-etrangers-flux",
+   "affirmation": "Hypothèse de projection DREES : flux de diplômés à l'étranger MK fixé à 1 175 par an",
+   "valeur_fiche": "1 175 par an (valeur DREES, non reprise en fiche)",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "Ce nombre est fixé à 1 175 pour l'ensemble de la période de projection",
+   "citation": "Ce nombre est fixé à 1 175 pour l'ensemble de la période de projection",
+   "page": "ER 1075, p. 3 (encadré 2)",
+   "note": "Ajouté pour contexte : la fiche propose 2 200 par an (dérivé), donc une valeur différente de la projection DREES."
+  }
+ ]
+}

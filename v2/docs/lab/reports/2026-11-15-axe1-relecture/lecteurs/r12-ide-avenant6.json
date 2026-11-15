@@ -1,0 +1,162 @@
+{
+  "source": "Avenant n° 6 à la convention nationale des infirmiers (signé 29/03/2019, JORF 13/06/2019)",
+  "acces": "texte intégral lu",
+  "url_lue": "texte local /private/tmp/claude-501/-Users-jojo-Documents-progdinh-sevel-hackathon-sante--claude-worktrees-axe1-relecture-sources-73fe41/af2fd571-8be9-4a9d-90fd-205442781564/scratchpad/src/ide_avenant6.txt (miroir https://bretagne.paps.sante.fr/media/62292/download) ; NOR, date et numéro de texte vérifiés sur https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000038599882",
+  "commentaire": "Texte local = 5685 lignes, marqueurs ===== PAGE n ===== (index PDF). Pages imprimées = index PDF pour les pages citées (13, 14, 23, 27, 28, 83, 87). Le texte local est le miroir PAPS ; la vérification Legifrance a été faite par WebFetch (NOR SSAS1916881V, « conclu le 29 mars 2019 », JORF n°0135 du 13 juin 2019, texte n°128). Points de précision : la règle de l'art. 3.4 est une règle de succession (un conventionnement en zone sur-dotée seulement pour un successeur d'un confrère qui cesse définitivement) ; le « 1 pour 1 » de la fiche est une lecture, pas le mot du texte. L'art. 3.4.4 ne s'applique qu'aux nouvellement installés, et seulement à compter de la publication effective du nouveau zonage régional (p. 28) : la fiche ne le dit pas. Le texte ne contient ni le zonage observé, ni l'arrêté de méthodologie de 2020. Meilleure valeur non vérifiée : avenant 11 (2026) cité dans l'incertitude de la fiche, non lu (hors de ce texte).",
+  "claims": [
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "En zone sur-dotée, le conventionnement n'est accordé qu'à une infirmière qui succède à une consœur cessant définitivement son activité dans la zone (art. 3.4) ; mécanisme 1 pour 1 entrées / cessations",
+      "valeur_fiche": "entrées conventionnées ≤ cessations définitives (1 pour 1) en zone sur-dotée",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "règle de succession : conventionnement accordé « qu'au bénéfice d'un infirmier assurant la succession d'un confrère cessant son activité définitivement dans cette même zone sauf dérogations prévues à l'article 3.4.2 »",
+      "citation": "Le conventionnement ne peut être accordé ... dans une « zone sur-dotée » qu'au bénéfice d'un infirmier assurant la succession d'un confrère cessant son activité définitivement",
+      "page": "PDF p. 23 / imprimée p. 23, art. 3.4",
+      "note": "Le texte ne dit pas « 1 pour 1 » ; c'est la lecture de la règle de succession (une entrée par cessation). Les dérogations de l'art. 3.4.2 existent (voir claim dédié)."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "En zone intermédiaire ou très dotée en périphérie d'une zone sur-dotée, un nouvel installé doit réaliser les deux tiers de son activité dans sa zone d'installation (art. 3.4.4)",
+      "valeur_fiche": "≥ 2/3 de l'activité dans la zone d'installation",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "deux tiers de son activité dans sa zone d'installation",
+      "citation": "doit réaliser deux tiers de son activité dans sa zone d'installation",
+      "page": "PDF p. 27 / imprimée p. 27, art. 3.4.4",
+      "note": "Le texte ajoute deux conditions que la fiche omet : le seuil ne vaut que pour les nouvellement installés, et seulement à compter de la publication effective du nouveau zonage régional (p. 28) ; la liste des communes est établie par la CPR. Sans effet rétroactif sur les infirmiers déjà installés."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Cible nationale de population en zone sur-dotée",
+      "valeur_fiche": "28,4 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "28,4 % de la population française totale",
+      "citation": "Les « zones sur-dotées » correspondent aux bassins de vie pseudo-cantons qui recouvrent 28,4 % de la population française totale",
+      "page": "PDF p. 13 / imprimée p. 13, art. 3.2.1 ; repris PDF p. 87 (annexe II, § 3.2)",
+      "note": "Cible nationale, pas un observé. La fiche la juxtapose au 27,4 % observé, dérivé du zonage data.gouv, qui n'est pas dans ce texte."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Cible nationale de population en zone très dotée",
+      "valeur_fiche": "20,4 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "20,4 % de la population française totale",
+      "citation": "Les « zones très-dotées » correspondent aux bassins de vie pseudo-cantons qui recouvrent 20,4 % de la population française totale",
+      "page": "PDF p. 13 / imprimée p. 13, art. 3.2.1",
+      "note": "Valeur de l'art. 3.2.1 du texte. Le tableau de la fiche est à jour sur ce point."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Cible nationale de population en zone intermédiaire",
+      "valeur_fiche": "36,8 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "36,8 % de la population française",
+      "citation": "Les bassins de vie ou pseudo-cantons suivants qui représentent 36,8 % de la population française sont classés en zones « intermédiaires »",
+      "page": "PDF p. 13 / imprimée p. 13, art. 3.2.1",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Cible nationale de population en zone très sous-dotée",
+      "valeur_fiche": "5 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "5 % de la population française totale",
+      "citation": "Les « zones très sous-dotées » correspondent aux bassins de vie pseudo-cantons qui recouvrent 5% de la population française totale",
+      "page": "PDF p. 13-14 / imprimée p. 13-14, art. 3.2.1",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Cible nationale de population en zone sous-dotée",
+      "valeur_fiche": "9,5 %",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "9,5 % de la population française totale",
+      "citation": "Les « zones sous-dotées » correspondent aux bassins de vie pseudo-cantons qui recouvrent 9,5 % de la population française totale",
+      "page": "PDF p. 14 / imprimée p. 14, art. 3.2.1",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Millésime de l'avenant : signé le 29/03/2019",
+      "valeur_fiche": "signé le 29/03/2019",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "Fait à Paris, le 29 mars 2019 ; Legifrance : « conclu le 29 mars 2019 »",
+      "citation": "Fait à Paris, le 29 mars 2019",
+      "page": "PDF p. 83 / imprimée p. 83 (signature) ; Legifrance (page en ligne)",
+      "note": ""
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Référence : avis NOR SSAS1916881V, JORF n° 0135 du 13/06/2019, texte 128",
+      "valeur_fiche": "NOR SSAS1916881V ; JORF n° 0135 du 13/06/2019 ; texte 128",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "NOR SSAS1916881V ; JORF n°0135 du 13 juin 2019 ; Texte n°128",
+      "citation": "JORF n°0135 du 13 juin 2019 ; Texte n°128 (Legifrance)",
+      "page": "page Legifrance JORFTEXT000038599882",
+      "note": "Absent du texte local (qui ne porte pas l'en-tête JORF) ; confirmé par la page Legifrance lue par WebFetch."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Dérogations au principe de régulation (art. 3.4.2) existent ; non quantifiées",
+      "valeur_fiche": "dérogations art. 3.4.2 (non quantifiées)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "dérogations : situation personnelle ou professionnelle ; remplacements d'au moins huit mois en zone sur-dotée",
+      "citation": "Le conventionnement peut être accordé à titre exceptionnel, en l'absence de départ préalable d'un infirmier conventionné dans la zone « sur-dotée »",
+      "page": "PDF p. 26 / imprimée p. 26, art. 3.4.2",
+      "note": "Le texte décrit les dérogations sans les chiffrer, cohérent avec la fiche."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Zonage observé : 27,4 % de la population et 13,7 % des communes en zone sur-dotée (zonage au 20/10/2026, dérivé)",
+      "valeur_fiche": "27,4 % pop. ; 13,7 % communes",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Chiffre observé dérivé du fichier data.gouv t-zonages-com.csv, pas une donnée de l'avenant. Hors de portée de cette source ; à vérifier sur le fichier data.gouv."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Méthode du zonage : arrêté de méthodologie du 10/01/2020, cité par les ARS, non ouvert",
+      "valeur_fiche": "arrêté 10/01/2020",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Le texte renvoie à la « méthode figurant en annexe II » (PDF p. 13, art. 3.2.1) mais ne cite aucun arrêté du 10/01/2020. La date n'est pas dans cette source."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Mesure de contrôle : installations en zone sur-dotée / cessations ≤ 1, hors dérogations",
+      "valeur_fiche": "≤ 1 hors dérogations",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Indicateur de contrôle de la fiche, pas une règle du texte. Il reprend la règle de succession (claim 1), sans seuil chiffré dans l'avenant."
+    },
+    {
+      "fiche": "param-ide-regul-regle",
+      "affirmation": "Historique : expérimentée 2008-2009, généralisée en 2012 (IRDES QES 270)",
+      "valeur_fiche": "2008-2009 puis 2012",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "",
+      "citation": "",
+      "page": "",
+      "note": "Hors de ce texte (un avenant de 2019 ne relate pas l'historique). Relève de la source IRDES QES 270, non relue ici."
+    }
+  ]
+}

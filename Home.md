@@ -22,7 +22,7 @@ territory, to 2035+, and simulate policy levers. Open data only.
 | Lancer | `uv sync && uv run python v2/prototype-carte/server.py` → http://localhost:8767 ; données traitées commitées ([manifeste](v2/data/processed/MANIFEST.md)) |
 | Carte | ✅ option 1 par défaut depuis le 2026-11-14 : 3 colonnes, habillage DSFR (données en direction A), fiche France et bascule nationale, recette 45/46 · 9 leviers en 4 familles, phrase en langage naturel (≈ 77 % sur jeux à l'aveugle, confirmée avant application), densité pour 100 000 (Omphale 2022), hypothèses population / activité, mode expert, export avec sources |
 | Jumeau (axe 0) | ✅ `v2/jumeau/` : 18 critères sur 18 après 3 revues adversariales ; 15 ms par scénario au département, 1,1 s à la commune (5 professions). `PYTHONPATH=v2 uv run python -m jumeau.check` |
-| Hyperparamètres (axe 1) | ✅ fiches sourcées ; sources à relire en texte intégral |
+| Hyperparamètres (axe 1) | ✅ fiches sourcées, relues en texte intégral le 2026-11-15 : 20 confirmées, 8 corrigées, 1 introuvable ; aucune valeur du code changée |
 | Méthodes (axe 2) | ✅ cohortes bayésiennes : MAPE dép. h=5 7,73 % contre 8,68 % (stock-flux) ; projection communale K3–K5 non confirmée, affichage au département |
 | Validation (axe 3) | ✅ protocoles N1–N12 gelés ; dépôts à noter sur les effectifs 2027 |
 | Données (axe 4) | ✅ public / privé séparé : « libéral » = privé 2026, SF 12 059 – 14 660, PH 60 005 – 67 219, CD 40 784 – 47 894, MK 98 828 – 103 986, IDE 2023 277 788 ; zonage par commune ; grain communal |
@@ -52,6 +52,7 @@ Switch views with the menu at the top left of the table: All records · Analyses
 ## Analyses log (newest first)
 | Date | Analysis | Headline | Author |
 |---|---|---|---|
+| 2026-11-15 | [Relecture des sources de l'axe 1](v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md) | 29 paramètres, 355 affirmations : 20 confirmés, 8 corrigés (fiches), 1 introuvable ; 0 valeur du code changée, jumeau.check 18/18 ; âge d'entrée des étrangers : CD −1,3 % de N(2050) à ×2 si 32 ans | lecteurs Haiku + vérificateurs Sonnet |
 | 2026-11-15 | [C1-GBM : apprentissage automatique global contre A2](v2/docs/lab/reports/2026-11-15-c1-gbm-global.md) | Rejeté : GBM global 10,15 % de MAPE dép. h=5 contre 8,60 % pour A2 (Δ +1,55 pt, IC 95 % [+0,62 ; +2,75]) et 7,73 % pour C1, le modèle servi (Δ +2,42, [+1,49 ; +3,70]) ; MLP 20,52 % ; aucune profession gagnée | session c1-gbm |
 | 2026-11-15 | [Intervalles de C1 : conforme et MinT](v2/docs/lab/reports/2026-11-15-c1-intervalles.md) | Non : aucun des 6 candidats ne bat la persistance à l'origine 2021 (meilleur +0,0043 [−0,0006 ; +0,0094] en CRPS log), tous moins bons que C1 brut ; le biais de C1 à h = 5 change de signe entre 2016 et 2021 | Claude (session c1-intervalles) |
 | 2026-11-15 | [Budget d'erreur de C1 et A2](v2/docs/lab/reports/2026-11-15-budget-erreur-c1-a2.md) | MAPE C1 7,76 % [7,12 ; 8,40] : bruit poissonien 3,11 ; entrées locales −2,60 et 35–59 ans locaux −2,36 si connus, national −0,49 ; écart local non persistant (r ≤ 0,24) → ni gravitaire ni agents, test de covariables d'abord | axe 2 |

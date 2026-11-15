@@ -11,6 +11,7 @@ incertitude: "radiation ≠ cessation (changement de pays, non-réinscription d'
 source: "Ordre national des pharmaciens, Synthèse Panorama 2024, p. 4 et 8-9 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2024-synthese"
 millesime: "au 1er janvier 2025 (données 2024)"
 statut: sourcé
+relecture: "2026-11-15 : corrigé"
 date: 2026-11-14
 ---
 
@@ -33,3 +34,9 @@ retours.
 
 **Mesure.** Chaque Panorama, p. 8. Il faut le croiser avec les sorties
 apparentes RPPS par âge ([[param-cessation-par-age]]).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **corrigé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- 3 902 radiations, 18,4 % de 60 ans et plus, et 4 502 inscrits de 66 ans et plus confirmés. **Correction** : primo-inscrits − radiations = 2 927 − 3 902 = **−975** en 2024 (*dérivé*). Le stock croît pourtant de 74 219 à 75 080 (+861), d'où environ 1 836 réinscriptions et retours, *dérivé* et non publié.

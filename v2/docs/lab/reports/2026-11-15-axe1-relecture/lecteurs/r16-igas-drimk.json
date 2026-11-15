@@ -1,0 +1,118 @@
+{
+  "source": "IGAS rapport n° 2022-027R (Albertone, Gueydan, Flamant, Perruchon), Évaluation de la COG 2018-2022 de la CNAM, Tome 1 (rapport définitif, janvier 2023 ; PDF publié 2024) ; IRDES, fiche projet DRIMK (juillet 2026)",
+  "acces": "texte intégral lu",
+  "url_lue": "IGAS : https://igas.gouv.fr/sites/igas/files/2024-03/Evaluation%20de%20la%20convention%20d%E2%80%99objectifs%20et%20de%20gestion%202018%20%E2%80%93%202022%20de%20la%20CNAM%20et%20recommandations%20en%20vue%20de%20son%20renouvellement_0.pdf (193 pages, extraction pypdf complète) ; IRDES : https://www.irdes.fr/recherche/projets/drimk-demographie-modes-d-exercice-et-regulation-de-l-installation-des-masseurs-kinesitherapeutes-liberaux-en-france.pdf (5 pages, extraction pypdf complète)",
+  "commentaire": "Références IGAS vérifiées : n° 2022-027R, auteurs, page 67 (§ 198-200, notes 130-133) confirmés. Ni la Cour des comptes ni la DREES ne sont vérifiées ici (hors périmètre de ces deux sources). Pour l'IRDES, la fiche indique une période 2022-2027 : c'est celle de la fiche elle-même (« Période de réalisation : 2022-2027 », p. 1), à retenir. Pièce hors fiches, à noter : l'IRDES (p. 3) chiffre l'ouverture d'une MSP à plus de 5 MK pour 100 000 habitants sur un territoire de vie-santé ; cet effet porte sur les MSP, pas sur la régulation. Autre point : IGAS § 200 donne le ratio départemental max/min sur 2016-2021 (pour la plupart des professions), pas sur 2016-2019 ; la fiche SF n'en fait pas état.",
+  "claims": [
+    {
+      "fiche": "param-sf-regul-effet",
+      "affirmation": "Disparités en baisse pour les sages-femmes entre 2016 et 2019 (direction seulement, description et non estimation causale)",
+      "valeur_fiche": "réduction des inégalités 2016-2019 (direction)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "« une réduction des disparités pour les professions des infirmières et des sages-femmes » entre 2016 et 2019 (note 133) ; pas d'estimation causale dans le texte",
+      "citation": "on observe entre 2016 et 2019 une réduction des disparités pour les professions des infirmières et des sages-femmes",
+      "page": "p. 67 (PDF index 67), note 133 (bas de page)",
+      "note": "Direction confirmée. Le texte ne dit pas que cette baisse est due à la régulation ; la fiche le précise déjà (« ce n'est pas une estimation causale »), ce qui est juste."
+    },
+    {
+      "fiche": "param-sf-regul-effet",
+      "affirmation": "Indicateur IGAS = rapport des densités départementales max/min, sans valeur citée",
+      "valeur_fiche": "rapport max/min, sans valeur",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "« le rapport entre la densité départementale la plus élevée et celle la plus faible » ; aucune valeur chiffrée du rapport pour les sages-femmes",
+      "citation": "Le rapport entre la densité départementale la plus élevée et celle la plus faible a augmenté pour la plupart des professions de santé",
+      "page": "p. 67, § 200",
+      "note": "Confirmé. Le § 200 dit que ce rapport a augmenté entre 2016 et 2021 pour la plupart des professions, ce qui nuance la lecture « baisse » donnée par la note 133 sur 2016-2019 (les deux périodes se chevauchent). À ajouter à la fiche."
+    },
+    {
+      "fiche": "param-sf-regul-effet",
+      "affirmation": "Aucune ampleur publiée (sur l'effet de la régulation des sages-femmes)",
+      "valeur_fiche": "non chiffré",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "aucun chiffre d'effet de la régulation pour les sages-femmes dans le passage lu",
+      "citation": "une réduction des disparités pour les professions des infirmières et des sages-femmes",
+      "page": "p. 67, note 133",
+      "note": "Confirmé pour IGAS. Le bilan Cnam cité en note 130 n'est pas mentionné comme donnant une ampleur pour les SF (voir claim suivant)."
+    },
+    {
+      "fiche": "param-sf-regul-effet",
+      "affirmation": "Le bilan Cnam présenté en commission GDR en juin 2022 sert de source à l'IGAS (et à la Cour)",
+      "valeur_fiche": "commission GDR, juin 2022",
+      "verdict": "ecart",
+      "type_ecart": "annee",
+      "valeur_source": "« commission GDR juillet 2022 » ; §199 : « L'assurance maladie a produit en juillet 2022 des éléments d'évaluation de ces aides »",
+      "citation": "Bilan quantitatif et qualitatif des dispositifs d'aide à l'installation des professionnels de santé, commission GDR juillet 2022",
+      "page": "p. 67, § 199 et note 130",
+      "note": "Date : juillet 2022 dans l'IGAS, pas juin. Le bilan n'est pas non plus une source attribuée aux données sages-femmes (voir claim suivant). L'affirmation « ne semble pas public » n'est pas vérifiable depuis le texte IGAS."
+    },
+    {
+      "fiche": "param-sf-regul-effet",
+      "affirmation": "Le bilan Cnam (commission GDR) est la source de la baisse des disparités SF 2016-2019 (implicitement, via IGAS)",
+      "valeur_fiche": "source : bilan Cnam commission GDR",
+      "verdict": "ecart",
+      "type_ecart": "champ",
+      "valeur_source": "note 130 : le bilan porte sur les « dispositifs d'aide à l'installation » (incitations) ; la phrase sur les SF (note 133) ne renvoie à aucune source, et ne vise pas la régulation en tant que telle",
+      "citation": "Bilan quantitatif et qualitatif des dispositifs d'aide à l'installation des professionnels de santé, commission GDR juillet 2022",
+      "page": "p. 67, notes 130 et 133",
+      "note": "Champ mal attribué : le bilan cité par l'IGAS concerne les aides à l'installation, pas la régulation du conventionnement en zones sur-dotées. La fiche doit dire que la baisse SF (note 133) est une observation IGAS sans source explicite, et ne pas faire du bilan la source de cette baisse."
+    },
+    {
+      "fiche": "param-mk-regul-effet",
+      "affirmation": "Effet de la régulation des kinés non chiffré",
+      "valeur_fiche": "non chiffré",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "aucune ampleur de l'effet de la régulation (restriction d'accès au conventionnement) ; le seul chiffre (> 5 MK / 100 000 hab.) porte sur l'ouverture d'une MSP",
+      "citation": "les mesures de restriction d'accès au conventionnement aient bien l'effet localisé attendu de réduction de la densité",
+      "page": "p. 4 (4/5), point 3 ; chiffre MSP p. 3",
+      "note": "Non chiffré confirmé. Le chiffre de l'IRDES sur les MSP ne doit pas être confondu avec l'effet de régulation."
+    },
+    {
+      "fiche": "param-mk-regul-effet",
+      "affirmation": "L'IRDES « annonce » un « effet localisé attendu de réduction de la densité » (projet en cours, sans chiffre)",
+      "valeur_fiche": "effet localisé attendu de réduction de la densité ; projet en cours",
+      "verdict": "ecart",
+      "type_ecart": "meilleure_valeur",
+      "valeur_source": "« les mesures de restriction d'accès au conventionnement ont bien l'effet localisé attendu de réduction de la densité. Ce travail, qui est achevé, est en cours de valorisation. »",
+      "citation": "bien l'effet localisé attendu de réduction de la densité. Ce travail, qui est achevé, est en cours de valorisation",
+      "page": "p. 4 (4/5), point 3",
+      "note": "L'IRDES ne « annonce » pas : il présente un résultat achevé (sens de l'effet établi) pour les zones sur-dotées et sous-dotées, dont la publication est en cours. La fiche doit dire : sens de l'effet établi, ampleur non publiée, travail achevé. Le texte IRDES parle de zones « sur- et sous-dotées » et de restriction d'accès au conventionnement, pas de « zone non prioritaire (avenant 7) » : le mapping reste à vérifier."
+    },
+    {
+      "fiche": "param-mk-regul-effet",
+      "affirmation": "Source : IRDES, fiche projet DRIMK (juillet 2026), p. 4",
+      "valeur_fiche": "IRDES, fiche projet DRIMK (juillet 2026), p. 4",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "« Irdes - Juillet 2026 » ; page « 4 / 5 » ; titre : « Démographie, modes d'exercice et régulation de l'installation des masseurs-kinésithérapeutes libéraux en France »",
+      "citation": "Démographie, modes d'exercice et régulation de l'installation des masseurs-kinésithérapeutes libéraux en France",
+      "page": "p. 1 (en-tête) et p. 4 (4/5)",
+      "note": "Référence confirmée. Le statut « Projet en cours » est bien affiché sur la fiche."
+    },
+    {
+      "fiche": "param-mk-regul-effet",
+      "affirmation": "Aucun bilan publié (incertitude)",
+      "valeur_fiche": "aucun bilan publié",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "« Ce travail, qui est achevé, est en cours de valorisation » ; pas de publication citée pour ce résultat",
+      "citation": "Ce travail, qui est achevé, est en cours de valorisation",
+      "page": "p. 4 (4/5), point 3",
+      "note": "Confirmé au sens strict : le résultat n'est pas publié. Mais il est achevé (voir l'écart ci-dessus)."
+    },
+    {
+      "fiche": "param-mk-regul-effet",
+      "affirmation": "IGAS (note 133, sans période précise) : les disparités d'accès aux MK se sont accentuées",
+      "valeur_fiche": "disparités MK en hausse, sans période",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "note 133 : « L'inégalité d'accès aux médecins généralistes et aux masseurs kinésithérapeutes s'est accentuée. »",
+      "citation": "L'inégalité d'accès aux médecins généralistes et aux masseurs kinésithérapeutes s'est accentuée.",
+      "page": "p. 67, note 133",
+      "note": "Confirmé, sans période dans la note. Le § 200 situe la hausse des écarts de densité entre 2016 et 2021 pour la plupart des professions : la fiche peut le préciser."
+    }
+  ]
+}

@@ -2448,6 +2448,12 @@ l'interface est un choix d'ergonomie.
 pour les quotas, par exemple les arrêtés d'objectifs 2026–2030.
 
 ## Open / not yet decided
+- **Âge d'entrée des diplômés à l'étranger par profession** (ouvert le 2026-11-15, relecture des sources de l'axe 1).
+  Aujourd'hui `etrangers.age_entree` est unique, à 28 ans. Les sources donnent : MK 26 ans (ER 1075) ; PH 31 ans (DD76,
+  tab. 13) ; CD 28 ans (DD76) ou 32 ans (ER 1026), qui se contredisent.
+  Effet mesuré sur N(2050), scénario « étrangers × 2 » : MK 0, PH −191 (−0,2 %), CD −1 369 (−1,3 %). Le tendanciel ne
+  change pas.
+  Options : garder 28 ans ; passer à un dictionnaire par profession, ce qui demande de réécrire C17. Prix ≈ 30 min.
 - **Conformité : seuil de diffusion des tables communales publiées, habillage DSFR, licence du code** (ouvert le 2026-11-15, [audit RGPD/AIPD/2017-745](reports/2026-11-15-audit-rgpd-aipd-dm.md)). Constat mesuré : 52,5 % des cellules commune × âge de `commune_stock.parquet`, sur le dépôt public, valent 1 personne (âge d'un professionnel nommable via l'Annuaire Santé). Verdicts dérivés, non juridiques : pas un dispositif médical (2017/745, aucune finalité médicale individuelle) ; AIPD probablement non obligatoire (1 à 2 critères G29), note de non-applicabilité recommandée si un seuil de diffusion est appliqué. Options pour le seuil : masquer ou regrouper les cellules < 5 (≈ 30 min) ; retirer les tables communales du dépôt public et les reconstruire localement (≈ 20 min, mais le clone neuf ne les a plus). DSFR : porteur public réel, ou habillage neutre hors .gouv.fr. Licence : EUPL 1.2 proposée. À trancher par l'équipe.
 - **Taux d'installation des diplômés au-dessus de 100 % (kinés 107 %)** (ouvert le 2026-11-15). Options : renommer
   en « entrées en libéral pour 100 diplômés » ; ne compter que les premières entrées (à dériver du RPPS) ; masquer au-delà
@@ -4311,6 +4317,69 @@ vrai taux. D'ici là : renommer l'indicateur, ou le borner à l'affichage (voir 
 que les couleurs soient plus claires. Ce n'est pas confortable pour les yeux ».
 **Ce qui le renverserait.** Une recette où deux classes voisines ne se distinguent plus à l'œil, notamment au
 vidéoprojecteur. Il faudrait alors des paliers discrets plutôt qu'un dégradé continu.
+
+## 2026-11-15 — Relecture en texte intégral des sources de l'axe 1 : lecteur Haiku, puis vérificateur contradictoire
+
+**Décision.**
+- Les 29 fiches `param-*` ont été relues contre le texte intégral de leurs sources.
+  - 23 lecteurs Haiku, un par source, ont lu 355 affirmations.
+  - Chaque écart et chaque introuvable a ensuite été soumis à un vérificateur Sonnet chargé de le réfuter (10 agents).
+  - Un écart n'est retenu que s'il survit.
+- Résultat : 0 valeur du code à changer ; 8 fiches corrigées sur une valeur ou un mécanisme ; 20 confirmées ; 1 introuvable,
+  et des libellés précisés dans les confirmées.
+  - Rapport : `v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md`.
+- Chaque fiche porte un champ `relecture` et une section « Relecture en texte intégral (2026-11-15) ».
+  - Les anciennes phrases restent, sauf trois valeurs remplacées en place, chacune marquée « corrigé le 2026-11-15 » ou
+    reprise dans la section : ODF 2022 5,3 → 5,4 % ; part CD 2023 9,1 → 9,0 % ; plage IDE et PH ≈ 238 → 237.
+- Les textes téléchargés restent hors du dépôt (droits d'auteur, taille).
+
+**Pourquoi.** Le statut de Home indiquait « sources à relire en texte intégral » : beaucoup de valeurs n'avaient été lues
+qu'en extrait.
+**Ce qui le renverserait.** Un écart réfuté à tort. Les verdicts sont dans les JSON du rapport, avec citation et page.
+
+## 2026-11-15 — `regulation.py` : art. 35.5 (dentistes spécialistes) est une dérogation, pas une exemption
+
+**Décision.**
+- Libellé corrigé dans la docstring et dans la source du paramètre `part_exemptee`.
+  - Convention CD 2023, art. 35.5, p. 66 : les spécialistes (ODF, CO, MBD) sont conventionnables sans succession, sur
+    une place supplémentaire qui ne diminue pas les places vacantes.
+- **Valeur inchangée : 0**. Le statut passe de « non mesurable » à « supposé » dans la docstring.
+- Le nom du paramètre est gardé : le renommer casserait les scénarios enregistrés.
+- `jumeau.check` : 18 sur 18, sorties identiques à la référence hors temps de calcul.
+
+**Pourquoi.** Relecture de l'axe 1. Le lecteur, puis le vérificateur, ont lu l'art. 35.5 en texte intégral.
+**Ce qui le renverserait.** Une part mesurée de spécialistes parmi les entrants en zone non prioritaire. Elle
+remplacerait le 0.
+
+## 2026-11-15 — `etrangers.py` : étiquettes des flux corrigées, valeurs inchangées
+
+**Décision.**
+- **CD 1 300** est *dérivé*, pas *sourcé*. C'est l'arrondi de deux chiffres sur le même champ (primo-inscrits à l'Ordre
+  diplômés hors France, 2022, tous modes d'exercice) :
+  - 1 313, QE AN 15512 ;
+  - 1 333, rapport ONCD 2022, p. 27.
+- **Variante basse** : CD 665 et SF 70 viennent de DD76, tab. 13 ; MK 1 175 vient de l'ER 1075.
+- **IDE** : la borne haute 1 100 est *supposée*. Elle est absente de l'ER 1319, où ce n'est qu'une graduation d'axe.
+- **Âge d'entrée MK** : 26 ans selon l'ER 1075, p. 2. Même tranche que 28 ans : effet mesuré nul.
+- **Statut du `Param`** : il reste « sourcé ». `STATUTS` n'a pas « dérivé », et ajouter ce statut sortirait de la
+  tâche. La description dit « CD/MK/PH/SF dérivés ».
+- Aucune valeur numérique ne change. `jumeau.check` : 18 sur 18.
+
+**Pourquoi.** Relecture de l'axe 1, écarts retenus par le vérificateur.
+**Ce qui le renverserait.** Une source primaire unique du flux d'entrées en exercice des diplômés à l'étranger.
+
+## 2026-11-15 — `sorties.py` : champ de `PART_CUMUL` précisé, valeurs inchangées
+
+**Décision.**
+- MK et IDE, 0,015 : le champ CARPIMKO couvre aussi podologues, orthophonistes et orthoptistes. Appliquer la même part
+  aux MK et aux IDE est *supposé* (écart de dénominateur ≤ 0,2 point).
+- Spécialistes, 0,10 : l'ER 1097 donne « près de 10 % » des médecins libéraux ou mixtes au 01/01/2018, tous médecins
+  confondus ; la CARMF donne 8,6 % en 2015 (COR). Appliquer 0,10 aux seuls spécialistes est *supposé*.
+- Commentaire seulement. `jumeau.check` : 18 sur 18, C12 inchangé.
+
+**Pourquoi.** Relecture de l'axe 1 : le lecteur, puis le vérificateur (ER 1097 lue sur la page DREES).
+**Ce qui le renverserait.** Une part de cumul par profession dans la CARPIMKO, ou une part par spécialité dans
+l'ER 1097.
 
 ## 2026-11-15 — C1-GBM : l'apprentissage automatique global est rejeté contre A2
 

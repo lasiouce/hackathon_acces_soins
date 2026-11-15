@@ -5,12 +5,13 @@ id: param-cd-stock-specialistes
 parametre: "Part des spécialistes qualifiés dans le stock de chirurgiens-dentistes (ODF, CO, MBD)"
 profession: dentistes
 module: filières
-valeur: "2022 : ODF 2 465 (5,3 %) · CO 222 (0,5 %) · MBD 100 (0,2 %) · omnipraticiens 43 242 (94 %)"
+valeur: "2022 : ODF 2 465 (5,4 %) · CO 222 (0,5 %) · MBD 100 (0,2 %) · omnipraticiens 43 242 (94 %)"
 unite: "praticiens en exercice ; part du total"
 incertitude: "±2 % selon la source (RPPS au 01/10/2023, hexagone : ODF 2 398, CO 221, MBD 98) ; stock ODF stable (2 424 à 2 465 sur 2019-2022) ; flux de nouveaux ODF qualifiés non publié (plafond ≈ 50-52 postes par an)"
 source: "Ordre national des chirurgiens-dentistes, rapports d'activité 2019 (p. 18), 2020 (p. 29), 2021 (p. 17), 2022 (p. 29) — https://www.ordre-chirurgiens-dentistes.fr/download/313005 (2022) ; ameli : ODF libéraux (data/processed/stock_ameli.parquet)"
 millesime: "2019-2022 (Ordre) ; 01/10/2023 (RPPS) ; ameli 2010-2025"
 statut: sourcé
+relecture: "2026-11-15 : corrigé"
 date: 2026-11-14
 ---
 
@@ -40,3 +41,9 @@ date: 2026-11-14
 
 **Mesure.** Rapport d'activité annuel de l'Ordre (les éditions 2023 et 2024
 n'ont pas été trouvées), ou RPPS individuel (savoir-faire / qualification).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **corrigé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Stocks 2019-2022 confirmés (ODF 2 465, CO 222, MBD 100, omnipraticiens 43 242). **Correction** : part ODF 2022 = 2 465 / 46 029 = **5,4 %** (*dérivé*), pas 5,3 %.

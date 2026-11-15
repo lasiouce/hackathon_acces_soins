@@ -11,6 +11,7 @@ incertitude: "fondé sur les motifs de radiation déclarés (réinscription poss
 source: "Conseil national de l'Ordre des masseurs-kinésithérapeutes, Démographie des kinésithérapeutes 2024, tableaux 5 et 7 — https://ordremk.fr/wp-content/uploads/2024/11/rapport-de-la-demographie-des-kinesitherapeutes-2024_page_a_page.pdf"
 millesime: "2019-2023 (rapport 2024)"
 statut: sourcé
+relecture: "2026-11-15 : confirmé ; libellé corrigé"
 date: 2026-11-14
 ---
 
@@ -34,3 +35,9 @@ an » (plus de 60 ans, à partir de 2018) donne des effectifs supérieurs de 1 %
 tendanciel dès 2020-2021 (*cité*, ER 1062 et 1075, p. 5). C'est un écart de
 niveau, pas un rythme annuel. *[Corrigé le 2026-11-14 après audit : [[2026-11-14-audit-sources]].]* C'est un premier
 repère de sensibilité pour l'axe 5.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé ; libellé corrigé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Âge moyen 66,8-67,3, médiane 66,2-66,5 et 657-811 départs confirmés (CNOMK 2024, tableaux 5 et 7). **Libellé** : 41,9-48,3 ans correspond au motif « cessation d'activité » (tableau 5, p. 27), pas à tout le « hors retraite ». Les départs à l'étranger (31,7-33,4 ans, tableau 6) sont un autre motif.

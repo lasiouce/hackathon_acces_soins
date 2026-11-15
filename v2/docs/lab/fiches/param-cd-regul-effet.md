@@ -11,6 +11,7 @@ incertitude: "aucun bilan publié ; entrée en vigueur récente ; zones non prio
 source: "Bahroun N., mémoire EHESP 2025 (Memoire123.pdf, dépôt), § 3.3.2, p. 53 et note 57"
 millesime: "zonage en vigueur en 2025"
 statut: non mesurable
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -32,3 +33,9 @@ son activité dans la zone (voir [[param-cd-regul-regle]]).
 dans les 97 communes. Si cette part est inférieure à 5 %, la règle ne peut
 pas déplacer plus de 5 % du flux d'entrée. Coût estimé : ~1 h avec le zonage
 CD par commune.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Non chiffré confirmé : le mémoire ne chiffre aucun effet (p. 53, note 57). « Aucun bilan publié » reste une assertion de la fiche (*supposé*) ; la convention prévoit un bilan annuel en CPN (art. 36.1).

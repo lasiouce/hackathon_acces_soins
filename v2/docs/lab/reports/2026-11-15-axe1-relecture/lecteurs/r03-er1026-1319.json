@@ -1,0 +1,85 @@
+{
+  "source": "DREES Études et Résultats n° 1026 (septembre 2017) et n° 1319 (décembre 2024)",
+  "acces": "texte intégral lu",
+  "url_lue": "https://drees.solidarites-sante.gouv.fr/sites/default/files/er1026.pdf ; https://drees.solidarites-sante.gouv.fr/sites/default/files/2024-12/ER1319EMB.pdf",
+  "commentaire": "Textes extraits des PDF téléchargés (PyMuPDF). Pagination : numéro de page imprimée = index PDF (vérifié sur les deux documents). ER 1026 porte sur les chirurgiens-dentistes uniquement. ER 1319 porte sur les infirmières ; elle ne contient aucune plage 400-1 100 ni de taux de mortalité au sens démographique.",
+  "claims": [
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "CD primo-inscrits à l'Ordre diplômés à l'étranger : 308 / 391 / 501 / 500 pour 2013-2016",
+      "valeur_fiche": "308 / 391 / 501 / 500 (2013-2016)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "308 (2013), 391 (2014), 501 (2015), 500 (2016)",
+      "citation": "308 chirurgien·ne·s-dentistes diplômés à l'étranger se sont inscrits pour la première fois à l'Ordre",
+      "page": "p. 3 (encadré « Une hausse du nombre de diplômés à l'étranger »)",
+      "note": "Chiffres de l'Ordre, primo-inscrits, année d'inscription et d'entrée en activité."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "CD : Roumanie 46 % des diplômés étrangers, rattaché à la plage 2013-2016 de la même ligne",
+      "valeur_fiche": "Roumanie 46 % (dans la ligne 2013-2016)",
+      "verdict": "ecart",
+      "type_ecart": "annee",
+      "valeur_source": "46 % des diplômés étrangers inscrits en 2015 ont obtenu leur diplôme en Roumanie (22 % Espagne, 17 % Portugal)",
+      "citation": "46 % des diplômés étrangers inscrits en 2015 ont obtenu leur diplôme en Roumanie",
+      "page": "p. 3",
+      "note": "La valeur 46 % ne vaut que pour les inscrits de 2015. La fiche l'attache à la plage 2013-2016. La part ne peut donc pas être étendue aux autres années."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "CD : part libérale des diplômés étrangers, 67 % (2016), citée pour le flux vers le libéral",
+      "valeur_fiche": "67 % pour les CD en 2016",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "67 % des diplômés à l'étranger inscrits pour la première fois en 2016 commencent en libéral (contre 87 % des diplômés en France)",
+      "citation": "67 % des chirurgien·ne·s-dentistes diplômés à l'étranger et inscrits pour la première fois à l'Ordre en 2016",
+      "page": "p. 3",
+      "note": "Mode d'exercice à l'installation, pas une part du stock. La fiche l'emploie comme part libérale du flux, ce qui correspond."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "IDE : 400 infirmières étrangères venant exercer en France chaque année (hypothèse de projection, valeur 2021)",
+      "valeur_fiche": "IDE 400 / an",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "400 par an, établi comme observé en 2021, dernière année connue",
+      "citation": "le nombre d'infirmières étrangères venant chaque année exercer en France a été établi à 400, comme observé en 2021",
+      "page": "p. 2 (hypothèses du scénario tendanciel)",
+      "note": "Hypothèse maintenue constante dans le scénario tendanciel (p. 5 : « resterait stable (400) »)."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "IDE : 400 infirmières étrangères par an, entrées de 2010 à 2021 (fiche : source ER 1319 p. 4)",
+      "valeur_fiche": "IDE 400 / an",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "400 infirmières étrangères viennent exercer en France chaque année (2010-2021)",
+      "citation": "400 infirmières étrangères viennent exercer en France chaque année",
+      "page": "p. 4 (« Le nombre de diplômées : principal levier »), note 7",
+      "note": "La note 7 précise que le modèle traite ces infirmières comme des diplômées nouvellement formées."
+    },
+    {
+      "fiche": "param-diplomes-etrangers-flux",
+      "affirmation": "IDE : plage 400 à 1 100 par an",
+      "valeur_fiche": "plage 400 à 1 100",
+      "verdict": "introuvable",
+      "type_ecart": null,
+      "valeur_source": "aucune plage dans ER 1319 ; un seul scénario (400)",
+      "citation": "Le nombre d'infirmières étrangères venant chaque année exercer en France a été établi à 400",
+      "page": "p. 2, 4, 5",
+      "note": "Le seul « 1100 » du texte est une graduation d'axe du graphique de densité (p. 5). Les variantes ne portent que sur les diplômées, pas sur les entrées étrangères. La source donne en revanche une sensibilité non reprise par la fiche : pour garder la densité standardisée de 2021 à 2050, les entrées étrangères devraient être multipliées par 9 (p. 5, graphique complémentaire A8)."
+    },
+    {
+      "fiche": "param-mortalite",
+      "affirmation": "ER 1319 ne contient aucune occurrence de mortalité au sens démographique",
+      "valeur_fiche": "aucune occurrence de mortalité (démographique)",
+      "verdict": "confirme",
+      "type_ecart": null,
+      "valeur_source": "aucun taux de mortalité ; « espérance de vie » apparaît p. 7 (scénario Insee alternatif) ; « certificats de décès » p. 7, note 14 (expérimentation infirmière)",
+      "citation": "accroîtrement plus faible de l'espérance de vie par rapport au scénario tendanciel",
+      "page": "p. 7 (corps et note 14) ; recherche sur le texte intégral p. 1-8",
+      "note": "Les deux occurrences sont hors du sens « taux de mortalité » ; la fiche est correcte. Les projections démographiques et leurs hypothèses sont à chercher dans les documents Insee, non dans ER 1319."
+    }
+  ]
+}

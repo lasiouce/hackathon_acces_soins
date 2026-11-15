@@ -28,7 +28,9 @@ from jumeau.module import Module, Param, Rate, par_profession, register
 from jumeau.scenario import Event
 
 # Part des cotisants libéraux en cumul emploi-retraite au 30/06/2015 (COR 2016, doc. 11, annexe 2 ; fiche axe 1
-# param-cumul-emploi-retraite). MK et IDE non séparables (CARPIMKO). Spécialistes : médecins, DREES ER n° 1097 (2018).
+# param-cumul-emploi-retraite). CARPIMKO = MK, IDE, podologues, orthophonistes, orthoptistes : la même part pour MK et IDE est supposée.
+# Spécialistes : « près de 10 % » des médecins libéraux ou mixtes, tous médecins, au 01/01/2018 (DREES ER n° 1097) ;
+# CARMF 2015 : 8,6 % (COR). Appliqué aux spécialistes seuls : supposé.
 PART_CUMUL = {"sages-femmes": 0.008, "dentistes": 0.047, "pharmaciens": 0.018, "kines": 0.015, "infirmiers": 0.015,
               "specialistes": 0.10}
 

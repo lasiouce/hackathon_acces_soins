@@ -11,6 +11,7 @@ incertitude: "p < 0,001, intervalle non relevé ; borne haute de l'effet net nat
 source: "IRDES, Questions d'économie de la santé n° 270 (2022), Duchaine, Chevillard, Mousquès, p. 5 — https://www.irdes.fr/recherche/questions-d-economie-de-la-sante/270-inegalites-territoriales-de-repartition-des-infirmieres-liberales.pdf"
 millesime: "données 2006-2016, publication 2022"
 statut: sourcé
+relecture: "2026-11-15 : confirmé ; page et source corrigées"
 date: 2026-11-14
 ---
 
@@ -56,3 +57,11 @@ connu seulement par la presse) :
 relative, zones sur-dotées comparées aux intermédiaires, 2012-2019. Le
 module n'est **pas validé** : le test de tendances parallèles échoue,
 p = 0,043. Voir [[param-regul-theta-fuite]].
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé ; page et source corrigées** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- −25,57 et −18,8 IDEL pour 100 000 habitants, ainsi que +4,31, +4,25, −0,66 et −0,35, confirmés (QES 270, p. 5).
+- L'appariement 396 / 454 est à la p. **3**, pas à la p. 4.
+- Les repères 2008-2011 ne sont pas dans QES 270. Ils viennent du point d'information Cnam du 05/04/2012, relayé par la presse (Maire-info du 06/04/2012, Banque des Territoires du 10/04/2012) : −2,9 % (−263) en zone sur-dotée ; +33,5 % (1 056 → 1 410) en zone très sous-dotée ; +15,6 % au national. « −283 » reste introuvable ; « −3 % » arrondit −2,9 %. Aucun communiqué Cnam primaire trouvé.

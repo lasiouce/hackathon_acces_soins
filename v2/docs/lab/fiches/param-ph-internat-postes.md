@@ -11,6 +11,7 @@ incertitude: "postes ≠ postes pourvus (536 inscrits en 1re année pour 746 pos
 source: "Arrêté du 6/12/2024, NOR MSAH2433194A, JORF du 7/12/2024, texte 28 (480 pharmacie hospitalière + 266 biologie médicale) ; Ordre national des pharmaciens, Synthèse Panorama 2024, p. 13-14 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2024-synthese ; ONDPS/DREES 2016 (cité par P15 p. 9) ; données d'inscription DREES (fichier hackathon data/raw/Données pharma 2ème et 3ème cycle.xlsx, onglet Internat Pharma)"
 millesime: "rentrées 2023-24 à 2025-26 ; 2005-2015 (répartition par filière : 2010-2015) ; années universitaires 2020-21 à 2025-26"
 statut: sourcé
+relecture: "2026-11-15 : confirmé"
 date: 2026-11-14
 ---
 
@@ -40,3 +41,9 @@ reste d'une promotion va vers l'officine (D, puis A) ou l'industrie (B).
   et par subdivision.
 - Croiser avec les inscrits en 1re année d'internat, donnée DREES
   `data/raw/990_drees_mmop2_f.xlsx`, type `DES PHARMACIE`.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **confirmé** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- 480 + 266 = 746 postes (arrêté du 06/12/2024, annexes I et II) et 536 inscrits en 1re année (fichier DREES) confirmés. Les postes 2023-24 et 2024-25 viennent de la Synthèse 2024 (p. 13-14). Inscrits / postes : 82 %, 79 % puis 72 % (*dérivé*). Que la différence soit des postes non pourvus reste *supposé*.

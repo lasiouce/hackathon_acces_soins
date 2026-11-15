@@ -1,0 +1,107 @@
+{
+ "source": "Arrêté du 6/12/2024, NOR MSAH2433194A, JORF du 7/12/2024, texte 28 ; fichier local data/raw/Données pharma 2ème et 3ème cycle.xlsx (onglet Internat Pharma)",
+ "acces": "texte intégral lu",
+ "url_lue": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050755273 (métadonnées seules via WebFetch) ; texte intégral lu dans la copie CNG copie CNG du JO (cng.sante.fr, arrete-du-6-decembre-2024_offres-de-postes-concours-national-pha-2025_2026.pdf), 3 pages ; xlsx local",
+ "commentaire": "Totaux 480 (PH) et 266 (biologie) confirmés dans les annexes I et II. Le texte ne couvre que l'AU 2025-2026 : les postes 2023-24 et 2024-25 de la fiche (P24) ne sont pas vérifiables ici. Le texte Légifrance n'a pas été lu en entier (le WebFetch n'a renvoyé que l'article unique et les totaux) ; la copie CNG extraite a le même NOR, la même date et le même numéro de texte. Hors périmètre de cette source, non vérifié : « 497 postes pourvus sur 498 » (CNG 2018) de la section incertitude.",
+ "claims": [
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Postes offerts DES pharmacie hospitalière, AU 2025-2026 (rentrée 2025) = 480",
+   "valeur_fiche": "480",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "480",
+   "citation": "Total général 480",
+   "page": "Annexe I, PDF p.2 (JORF texte 28 sur 105)",
+   "note": "Ligne « Total général » de l'annexe I. Source texte intégral lu."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Postes offerts DES biologie médicale, AU 2025-2026 = 266",
+   "valeur_fiche": "266",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "266",
+   "citation": "Total général 266",
+   "page": "Annexe II, PDF p.3 (JORF texte 28 sur 105)",
+   "note": "Ligne « Total général » de l'annexe II."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Total 746 postes = 266 + 480",
+   "valeur_fiche": "746",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "480 + 266 = 746",
+   "citation": "",
+   "page": "annexes I et II",
+   "note": "Calcul dérivé, pas une valeur publiée ; arithmétique juste."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Référence : arrêté du 6/12/2024, NOR MSAH2433194A, JORF du 7/12/2024, texte 28",
+   "valeur_fiche": "NOR MSAH2433194A ; 6/12/2024 ; JORF 7/12/2024 ; texte 28",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "NOR : MSAH2433194A ; arrêté du 6 décembre 2024 ; JORF n° 0289 du 7 décembre 2024 ; Texte 28 sur 105",
+   "citation": "NOR : MSAH2433194A",
+   "page": "PDF p.1 (en-tête)",
+   "note": "Métadonnées Légifrance (ELI /eli/arrete/2024/12/6/MSAH2433194A/jo/texte) concordantes. La fiche décrit l'objet comme « postes » ; le texte porte sur l'AU 2025-2026, cohérent avec « rentrée 2025 »."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Internes inscrits en 1re année, AU 2025-2026 = 536 (fichier local, onglet Internat Pharma)",
+   "valeur_fiche": "536",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "536",
+   "citation": "",
+   "page": "xlsx « Internat Pharma », ligne Total général, colonne 1ère année 2025-2026",
+   "note": "Lu directement dans le fichier local data/raw/Données pharma 2ème et 3ème cycle.xlsx."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Internes 1re année : 381 (2020-21), 448, 450, 516, 550, 536 (2025-26)",
+   "valeur_fiche": "381 / 448 / 450 / 516 / 550 / 536",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "381 / 448 / 450 / 516 / 550 / 536",
+   "citation": "",
+   "page": "xlsx « Internat Pharma », ligne Total général, colonnes 1ère année 2020-21 à 2025-26",
+   "note": "Série vérifiée cellule par cellule ; les années 2020-21 à 2025-26 correspondent aux colonnes d'en-tête."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Le fichier local masque probablement les petits effectifs (cellules vides, nombreux « 4 »)",
+   "valeur_fiche": "cellules vides et « 4 » fréquents",
+   "verdict": "confirme",
+   "type_ecart": null,
+   "valeur_source": "nombreuses cellules « 4 » et cellules vides (ex. Lille, Paris Cité, Paris-Saclay, Caen 2025-26)",
+   "citation": "",
+   "page": "xlsx « Internat Pharma », corps du tableau",
+   "note": "Constat observé. Que « 4 » soit un masque et non une valeur réelle n'est pas démontré par la source ; la fiche le dit en « probablement », ce qui reste juste."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Postes 2023-24 : biologie 228, pharmacie hospitalière 401 (cités de P24)",
+   "valeur_fiche": "228 ; 401",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "",
+   "citation": "",
+   "page": "",
+   "note": "L'arrêté ne couvre que l'AU 2025-2026. Ces valeurs viennent du Panorama de l'Ordre 2024, source distincte, non lue ici."
+  },
+  {
+   "fiche": "param-ph-internat-postes",
+   "affirmation": "Postes 2024-25 : biologie 253, pharmacie hospitalière 441 (cités de P24)",
+   "valeur_fiche": "253 ; 441",
+   "verdict": "introuvable",
+   "type_ecart": null,
+   "valeur_source": "",
+   "citation": "",
+   "page": "",
+   "note": "Idem : hors de cet arrêté (AU 2025-2026 seul), relève du Panorama de l'Ordre 2024."
+  }
+ ]
+}

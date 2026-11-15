@@ -11,6 +11,7 @@ incertitude: "±2 points selon le dénominateur (inscriptions 8 924 > 8 106 pers
 source: "Ordre national des pharmaciens, Panorama 2025, dépliant — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2025-depliant-fr%20 ; Synthèse 2024 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/demographie-2024-synthese ; Éléments démographiques 2016 — https://www.ordre.pharmacien.fr/mediatheque/fichiers/les-autres-publications/reprise-ancien-site/elements-demographique-ancien-site/panorama-1er-janvier-2016/demographie-2015_brochure-vdef.pdf"
 millesime: "au 1er janvier 2026 ; au 1er janvier 2025 ; 2015"
 statut: sourcé
+relecture: "2026-11-15 : corrigé (libellés, une ligne)"
 date: 2026-11-14
 ---
 
@@ -40,3 +41,12 @@ Les deux se défendent :
 
 Défaut proposé pour le jumeau : la DREES, puisque le stock vient du RPPS
 DREES. L'Ordre sert de borne haute.
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **corrigé (libellés, une ligne)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Valeurs confirmées : 2 548 / 6 376 = 28,6 % ; 2 427 / 8 086 = 30,0 % ; 2 370 / 5 161 (2024).
+- **Unités** : 8 924 inscriptions (H et E-PUI, comptées par fonction) > 8 106 inscriptions H (principales et secondaires) > 7 817 personnes. « 8 106 personnes » est faux. Les sommes 2025 et 2024 ne se comparent pas (rupture de définition).
+- « Postes en PUI » : ce sont des fonctions de pharmaciens exerçant en PUI ; un pharmacien peut en cumuler plusieurs.
+- **Ligne 2015 « Inscriptions H 36 % / 64 % »** : doublon de la ligne PUI 2015 (2 377 / 4 202 = 36,1 %). Il n'existe pas de répartition des inscriptions H en 2015. Comparer sur la ligne PUI seule : 36,1 % → 31,5 % → 30,0 %, soit environ −0,6 point par an.

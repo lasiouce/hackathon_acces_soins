@@ -11,6 +11,7 @@ incertitude: "la DREES calcule ces taux sur le panel RPPS 2016-2020 (DD76, tab. 
 source: "DREES, Les Dossiers n° 76 (mars 2021), tableau 11, p. 41-42 — https://drees.solidarites-sante.gouv.fr/sites/default/files/2021-03/DD76.pdf ; ER n° 1062 (IDE) et n° 1075 (MK), encadré 2 (bornes : aucune cessation avant 40 ans ; aucun exercice après 67 ans pour les IDE, après 70 ans pour les MK)"
 millesime: "panel RPPS 2016-2020 (DD76) ; CNAM 2011-2015 (IDE, ER 1062) et 2011-2016 (MK, ER 1075) ; DADS 2011-2014"
 statut: non mesurable
+relecture: "2026-11-15 : corrigé (libellé)"
 date: 2026-11-14
 ---
 
@@ -34,3 +35,12 @@ pas stationnaire.
 - ⚑ La classe « 65 ans et plus » est ouverte : on ne peut rien mesurer
   au-delà de 65 ans. Il faut l'annuaire santé individuel.
 - Coût estimé : ~1 h (axe 0 ou axe 2).
+
+## Relecture en texte intégral (2026-11-15)
+
+Verdict : **corrigé (libellé)** ([[2026-11-15-axe1-relecture-sources]]). Lecteur Haiku, puis vérificateur contradictoire.
+
+- Aucun taux par âge publié : confirmé (DD76, tableau 11 ; ER 1062 et 1075, encadré 2, p. 3). Bornes 40 / 67 / 70 ans confirmées.
+- **Correction** : le découpage n'est pas le même pour les cinq professions. CD : âge, sexe et mode. Pharmaciens : âge, sexe et type d'activité initiale. SF : âge et mode, **sans le sexe** (DD76 p. 42).
+- Ancrages agrégés disponibles pour un contrôle : MK ≈ 1 600 sorties par an, 1 900 en 2040 (ER 1075 p. 5) ; IDE 13 500 (texte) ou 13 800 (graphique 4), puis 17 000 en 2040 (ER 1062 p. 4-5). Tous *cités*.
+- « Décès inclus » n'est pas écrit dans la source : *dérivé* de la définition (actif en t, inactif en t + 1).
