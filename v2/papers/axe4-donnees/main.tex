@@ -587,6 +587,27 @@ uv run python v2/data/archive_annuaire.py --local
   \item ouvrir les textes primaires des 12 événements à source secondaire (\(\approx\)45~min).
 \end{itemize}
 
+\section{Errata du 15 novembre 2026}\label{sec:errata}
+Quatre passages de cet article contredisent le registre des événements ou l'audit des sources du 14 novembre
+(\texttt{v2/docs/lab/reports/2026-11-14-audit-sources.md}, registre C2). Ils ne sont pas réécrits ici.
+\begin{itemize}
+  \item \textbf{Lignes partielles du registre.} La section~\ref{sec:menaces} (« Registre ») écrit « 7 lignes sont
+  partielles ». Le registre \texttt{v2/data/events.csv} en compte 6\mesure{} sur 30 (24 \texttt{verifie}),
+  comme l'indique la section~\ref{sec:res-evenements}. Le chiffre 7 date d'une lecture antérieure à l'audit
+  (23 et 7).
+  \item \textbf{« Trois parts supposées ».} La section~\ref{sec:menaces} écrit « Trois parts supposées ». Les parts
+  fixées à 0,5\suppose{} portent sur deux secteurs (« Autre secteur » ; « Prévention et établissement de santé »
+  des pharmaciens), soit 5\mesure{} cellules profession $\times$ secteur, comme le dit la légende corrigée du
+  tableau~\ref{tab:fourchettes}.
+  \item \textbf{Marseille.} La section~\ref{sec:res-grain} affirme que la somme des 16 arrondissements
+  « reproduit l'écart du département 13 à l'unité près, chaque année », avec l'étiquette \mesure. L'audit juge ce
+  point non vérifiable : le contrôle demande les réponses TJS brutes par arrondissement, qui n'ont pas été
+  refaites. L'étiquette « mesuré » ne tient donc pas.
+  \item \textbf{Rupture BTS 2022.} La section~\ref{sec:menaces} écrit « Le BTS a une rupture de série en 2022 ».
+  La feuille « Lisez-moi » du BTS ne signale qu'un changement du calcul de l'âge au millésime 2021 ; l'audit juge
+  la rupture de 2022 non vérifiable.
+\end{itemize}
+
 \bibliographystyle{plainnat}
 \bibliography{refs}
 \end{document}

@@ -525,6 +525,98 @@ Autres suites : inscrire et passer la combinaison A2 + A1b (\textasciitilde{}10\
 prévisions 2027--2030 (\textasciitilde{}10\,min), et trancher entre A0 et B4 à 2050 par la
 reproduction des projections DREES~\cite{drees2021dd76} (\textasciitilde{}30\,min).
 
+\section{Addendum du 15 novembre 2026}
+\label{sec:addendum}
+Cette section ajoute les résultats du 15 novembre 2026 sans réécrire le texte qui précède. Sources :
+\texttt{v2/docs/lab/reports/2026-11-15-budget-erreur-c1-a2.md},
+\texttt{v2/docs/lab/reports/2026-11-15-c1-intervalles.md},
+\texttt{v2/docs/lab/reports/2026-11-15-c1-gbm-global.md} et les sorties
+\texttt{v2/methodes/out/budget\_erreur.json}, \texttt{c1i\_verdicts.json}, \texttt{c1\_gbm\_verdicts.json}.
+
+\paragraph{Reproduction : 7,76 et 8,60.} Le banc N1 (périmètre privé, $h = 5$, mêmes 22 cellules et
+2\,056 couples, même bootstrap) a été recalculé deux fois le 15 novembre (\texttt{methodes.budget\_erreur},
+\texttt{methodes.c1\_gbm}). C1 y mesure 7,76\,\%\mesure{} (IC 95\,\% du niveau $[7{,}12\,;\,8{,}40]$\mesure) et
+A2 8,60\,\%\mesure{} ($[7{,}80\,;\,9{,}47]$\mesure), contre 7,73 et 8,57 dans les tableaux ci-dessus ; la
+tendance passe de 9,30 à 9,32\mesure{} et la persistance de 9,92 à 9,94\mesure. La cause est la table
+privée des sages-femmes, modifiée entre les deux bancs (jusqu'à 4,5\mesure{} personnes par département) ;
+les quatre autres professions sont identiques. La MAPE SF d'A2 passe de 13,73 à 13,87\mesure, soit
+$0{,}14 \times 6/22 = +0{,}04$\derive{} point sur le total. L'écart C1 $-$ A2 reste $-0{,}84$\derive{} point.
+Les autres lignes des tableaux n'ont pas été recalculées sur la table actuelle ; relancer
+\texttt{methodes.banc} et \texttt{methodes.banc\_cohortes} coûte environ 10\suppose{} min machine.
+
+\paragraph{Budget d'erreur.} L'erreur relative du département se coupe exactement en trois blocs d'âge à la
+cible ($<35$, 35--59, $\ge 60$ ans) et chaque bloc en une part nationale et une part locale ; des oracles
+donnent au modèle la vraie valeur d'une composante à la fois. Résultats pour C1 (A2 entre parenthèses) :
+\begin{itemize}
+  \item plancher poissonien $\sqrt{2F/\pi}$, $F$ = somme des soldes de cohorte : 3,11\derive{} points,
+        40\,\%\derive{} de la MAPE de C1 (36\,\% de celle d'A2) ;
+  \item gain d'un oracle exact : moins de 35 ans local 2,60\mesure{} (2,60), 35--59 ans local
+        2,36\mesure{} (2,00), 60 ans et plus 0,22\mesure{} (0,23), total national 0,49\mesure{} (1,08) ;
+  \item 84\,\%\mesure{} de l'erreur quadratique de C1 est locale (77\,\% pour A2) ;
+  \item l'écart local persiste peu entre les fenêtres 2016 et 2021 : $r$ = 0,02 à 0,22\mesure{} (A2 : 0,17
+        à 0,24), d'où un gain d'au plus 3\,\%\derive{} pour un correcteur fondé sur le passé ;
+  \item $0{,}59$ des $0{,}84$ point d'écart entre C1 et A2 viennent du niveau national\derive.
+\end{itemize}
+Conséquence enregistrée dans \texttt{v2/docs/lab/decisions.md} : pas de modèle gravitaire, pas d'agents, pas
+de réseau profond. Les critères utilisés (gain réaliste $\ge 0{,}4$ point, persistance $r \ge 0{,}3$) ont été
+posés après un premier passage ; la conclusion est exploratoire. Le plancher est une borne basse : avec des
+flux bruts deux fois plus grands, il atteindrait environ 4,4\suppose{} points.
+
+\paragraph{Intervalles de C1.} Six candidats ont été passés hors protocole N6 sur l'origine 2021 (279
+couples) : prédiction conforme sur le score normalisé (trois variantes), réconciliation MinT
+département $\to$ région $\to$ France, et MinT suivi du conforme (deux variantes). Test d'abandon écrit
+avant : faire mieux que C1 en CRPS. Aucun ne passe ($+0{,}0012$ à $+0{,}0098$\mesure{} contre C1) et aucun ne
+bat la persistance probabiliste. Le conforme abaisse la couverture à 80\,\% de 73,5 à 63--67\,\%\mesure ;
+MinT dégrade le CRPS de $+0{,}0019$ $[+0{,}0010\,;\,+0{,}0030]$\mesure. La cause mesurée est un biais non
+stationnaire : le score normalisé moyen de C1 à $h = 5$ passe de $-0{,}30$ (origine 2016) à $+0{,}59$
+(2021)\mesure. La couverture à 80\,\% de C1 en 2021 vaut 91,4\,\%, 74,2\,\% et 54,8\,\%\mesure{} pour les
+petits, moyens et grands départements. La bande de C1 reste celle de ses tirages ; le prochain effort
+porte sur le centre (choc commun national), pas sur la largeur. Les références de ces méthodes n'ont pas
+été lues en texte intégral et ne sont pas ajoutées à la bibliographie.
+
+\paragraph{Apprentissage automatique global (GBM, MLP).} Un GBM (\texttt{HistGradientBoostingRegressor},
+réglages fixés a priori) et un MLP (32, 16), à un pas et itérés, entraînés sur toutes les professions et
+tous les départements à la fois, inscrits avant le banc (empreinte \texttt{8e35043aecb2}). Sur la table du
+15 : GBM 10,15\,\%\mesure, soit $+1{,}55$ $[+0{,}62\,;\,+2{,}75]$\mesure{} point contre A2 ; MLP
+20,52\,\%\mesure, soit $+11{,}92$ $[+10{,}54\,;\,+13{,}86]$\mesure. Les deux sont rejetés et font moins bien
+que la tendance (9,32\,\%\mesure). Contre C1 sur le même millésime, l'écart du GBM est $+2{,}39$\derive{}
+point (10,15 $-$ 7,76), sans IC apparié faute d'erreurs par couple versionnées ; le rapport donne
+$+2{,}42$ $[+1{,}49\,;\,+3{,}70]$\mesure{} en appariant à C1 du 14. Le GBM se dégrade avec l'horizon
+(28,87\,\%\mesure{} à $h = 10$). Le contrôle de fuite donne un écart nul (0,0\mesure).
+
+\paragraph{Persistance et horizon long.} Sur la table du 15, la persistance fait mieux qu'A2 à $h = 8$
+(13,56 contre 14,33\,\%\mesure) et à $h = 10$ (16,06 contre 17,59\,\%\mesure), sans IC calculé. Le critère du
+protocole ne porte que sur $h = 5$.
+
+\paragraph{Errata.} Les phrases suivantes de cet article sont périmées au 15 novembre 2026. Elles sont laissées
+en place ; cette liste les corrige.
+\begin{enumerate}
+  \item Résumé : \enquote{origines glissantes 2016--2025}. À $h = 5$, horizon de la métrique, les origines
+        sont 2016--2021.
+  \item Provenance des nombres : \enquote{Tous viennent du rapport [\dots]axe2-methodes.md}. Les nombres
+        viennent aussi des rapports de l'APC, des cohortes bayésiennes et des communes, et, dans cet addendum,
+        des trois rapports du 15 novembre.
+  \item Introduction : les cohortes bayésiennes hiérarchiques \enquote{ne sont pas encore mesurées}. Elles le
+        sont dans la section~\ref{sec:cohortes}.
+  \item Tableaux des résultats : 8,57 (A2) et 7,73 (C1) correspondent à la table privée du 14 novembre ; la
+        valeur sur la table actuelle est 8,60 et 7,76 (voir plus haut).
+  \item Couverture de l'APC à 80\,\% : \enquote{51\,\%} dans le tableau des cohortes ; les rapports donnent
+        50\,\%.
+  \item Section commune : la bande du total départemental devait être portée \enquote{par les tirages
+        départementaux de C1}. Les variantes K3 à K5 ont utilisé le total de K, et aucun grain
+        infra-départemental n'est calibré ; l'affichage reste au département.
+  \item Reproductibilité : \enquote{Le code n'est pas encore versionné (aucun commit au 2026-11-14)}. Le code
+        est versionné (commits \texttt{4a4f54c}, \texttt{6f7c25c}, \texttt{70f8bc9} entre autres). La liste des
+        commandes omet \texttt{methodes.budget\_erreur}, \texttt{methodes.c1\_intervalles},
+        \texttt{methodes.c1\_gbm} et \texttt{methodes.communes\_k3}, \texttt{\_k4}, \texttt{\_k5}.
+  \item Conclusion : \enquote{déposer les prévisions 2027--2030} figure dans les suites à faire. Le dépôt est
+        fait (A0, C1, K4, K5 ; A2 n'est pas déposé).
+  \item Conclusion : \enquote{le stock-flux à taux locaux bat les références naïves}. Vrai à $h = 5$ ; à
+        $h \ge 8$, la persistance fait mieux qu'A2.
+  \item Ce que nous ne citons pas encore : la réconciliation optimale et la prédiction conforme ont depuis été
+        essayées (cet addendum) ; leurs références restent non lues en texte intégral.
+\end{enumerate}
+
 \bibliographystyle{plainnat}
 \bibliography{refs}
 \appendix

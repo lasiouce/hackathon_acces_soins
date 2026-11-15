@@ -799,6 +799,112 @@ encore.
   restant) : environ 1~h.
 \end{itemize}
 
+\section{Addendum du 15 novembre 2026 : relecture intégrale des sources}\label{sec:addendum}
+
+\paragraph{Ce qui a été fait.}
+L'audit décrit plus haut (tableau~\ref{tab:audit}) relisait les citations
+de tout le projet. Le 15 novembre, chaque affirmation des 29~fiches
+\texttt{param-*} a été relue dans le texte intégral de sa source.
+\begin{itemize}
+\item \textbf{Lecture.} 23\mesure{}~lecteurs automatiques (modèles Haiku),
+  un par source, ont relu 355\mesure{}~affirmations : 247\mesure{}
+  confirmées, 35\mesure{}~écarts, 67\mesure{}~introuvables et
+  6\mesure{}~inaccessibles.
+\item \textbf{Vérification contradictoire.} Chaque écart et chaque
+  introuvable est passé par un vérificateur (modèle Sonnet,
+  10\mesure{}~agents) chargé de le réfuter : 6\mesure{}~écarts ont été
+  réfutés et 27\mesure{}~introuvables retrouvés.
+\item \textbf{Verdict par paramètre.} Sur 29\mesure{}~paramètres :
+  20\mesure{}~confirmés, 8\mesure{}~corrigés dans leur fiche,
+  1\mesure{}~introuvable. Aucune source n'était entièrement
+  inaccessible.
+\item \textbf{Effet sur le jumeau.} Aucune valeur numérique du code ne
+  change ; seuls des libellés changent (modules \texttt{regulation},
+  \texttt{etrangers}, \texttt{sorties}). Le contrôle \texttt{jumeau.check}
+  passe 18\mesure{}~critères sur~18, avec des sorties identiques.
+\end{itemize}
+Réserve principale : les 247~affirmations confirmées n'ont pas eu de second
+passage, et environ la moitié\mesure{} des sources n'a été lue qu'en
+partie, par mots-clés. Le rapport, les consignes et les verdicts sont dans
+\texttt{v2/docs/lab/reports/2026-11-15-axe1-relecture-sources.md} et son
+dossier.
+
+\paragraph{Corrections.}
+\begin{itemize}
+\item \textbf{Pharmaciens, sorties de l'Ordre.} Les \num{3902}~radiations
+  de 2024 sont confirmées~\cite{cnop2024}. Le solde primo-inscrits moins
+  radiations vaut $\num{2927}-\num{3902}=\num{-975}$\derive. Le stock croît
+  pourtant de \num{74219} à \num{75080}~\cite{cnop2024}, soit
+  $+\num{861}$\derive{} : environ \num{1836}\derive{} réinscriptions et
+  retours, non publiés, comblent l'écart.
+\item \textbf{Sages-femmes, règle de régulation.} La règle générale
+  \enquote{une entrée pour une cessation} est confirmée (art.~3.3.2~c).
+  Mais une entrée dérogatoire au titre de la vie personnelle ou d'une
+  réduction d'activité d'au moins 50~\% (art.~3.3.3~a et~b) ne rend pas de
+  place à la cessation suivante, sauf successeur désigné ; une entrée
+  dérogatoire pour grossesse (3.3.3~c et~d) en rend une~\cite{avenant4sf}.
+  La règle à un pour un surestime donc la fermeture d'une zone. La part de
+  ces entrées n'est pas connue ; elles ne sont pas modélisées.
+\item \textbf{Destination des entrants bloqués ($\psi$).} Le report vers les
+  zones intermédiaires en bordure est confirmé~\cite{irdes270}. Le
+  \enquote{contournement par le remplacement} n'est ni dans l'IRDES ni dans
+  la Cour des comptes~\cite{irdes270,ccomptes2024}, pas plus que le
+  \enquote{deux tiers} attribué au mémoire de l'EHESP. Cette partie est
+  désormais \emph{supposée}\suppose{}, comme le défaut du code (100~\%\suppose{}
+  vers une commune voisine).
+\item \textbf{Âge d'entrée des diplômés à l'étranger.} Le code fixe un âge
+  unique de 28~ans\suppose. Les sources donnent 26~ans pour les
+  kinésithérapeutes~\cite{er1075}, 31~ans pour les pharmaciens~\cite{dd76}
+  et, pour les dentistes, 28~ans~\cite{dd76} ou 32~ans (ER~1026) : elles se
+  contredisent. Dans le scénario \enquote{étrangers $\times 2$}, l'écart sur
+  l'effectif de 2050 vaut 0\mesure{} pour les MK (même tranche d'âge),
+  $\num{-191}$\mesure{} ($-0{,}2$~\%\derive) pour les PH et
+  $\num{-1369}$\mesure{} ($-1{,}3$~\%\derive) pour les CD. Le tendanciel ne
+  bouge pas. Un âge par profession reste à coder.
+\item \textbf{Dentistes diplômés à l'étranger : \num{1300} est dérivé.} La
+  valeur est l'arrondi\derive{} de deux nombres : \num{1313} (texte de la
+  question écrite AN~15512, 2022 : \num{1294} UE et 19 hors UE, sans réponse
+  publiée) et \num{1333} (Ordre, rapport 2022, p.~27, qui donne aussi
+  \num{1321} dans son tableau p.~28~\cite{oncd2022}). Les \num{1309}
+  reconnaissances de la base européenne~\cite{regprof} n'ont pas pu être
+  vérifiées. Les autres flux gardent leur valeur : MK \num{2200}\derive{}
+  (croissance nette du stock, $(\num{32574}-\num{23728})/4$~\cite{cnomk2024}),
+  PH 240\derive{} (moyenne d'environ 237 et 247), IDE 400~\cite{er1319},
+  dont la borne haute de \num{1100} est \emph{supposée}\suppose.
+\item \textbf{Kinésithérapeutes, \enquote{avenant~5 de 2018}.} La Cour des
+  comptes parle d'un \enquote{accord conventionnel} de 2018 (p.~95,
+  note~152), sans numéro~\cite{ccomptes2024}. L'avenant~7 ne cite l'avenant~5
+  qu'à propos d'options conventionnelles~\cite{avenant7mk}. Le numéro n'est
+  donc pas sourcé comme texte de régulation ; la date de 2018 l'est. La
+  question écrite AN~14922, citée par l'audit du 14~novembre, n'a pas été
+  relue : le point reste ouvert.
+\end{itemize}
+
+\paragraph{Errata.}
+Les passages suivants de cet article sont devenus faux ou mal étiquetés. Ils
+ne sont pas réécrits ici ; la correction est celle du paragraphe précédent.
+\begin{itemize}
+\item Résumé, troisième résultat : \enquote{environ \num{1300} dentistes}
+  est présenté comme un flux observé ; c'est une valeur dérivée.
+\item Section~Méthode, équation de régulation $E_p \le X_p$ : pour les sages-femmes, elle ne tient pas
+  compte des entrées dérogatoires qui ne rendent pas de place. La même
+  remarque vaut pour la phrase \enquote{un conventionnement n'est accordé
+  qu'en succession d'une cessation} (§~Régulation, \enquote{Une même règle})
+  et pour la ligne sf-regul-regle du tableau~\ref{tab:catalogue}.
+\item Tableau~\ref{tab:catalogue}, ligne sf-regul-effet : la baisse des
+  disparités 2016--2019 est un bilan des aides, pas de la régulation.
+\item Tableau~\ref{tab:catalogue}, ligne regul-report-entrants :
+  \enquote{remplacement} n'est pas dans les sources citées.
+\item Tableau~\ref{tab:catalogue}, ligne diplomes-etrangers-flux, et
+  §~Flux de diplômés étrangers (\enquote{Valeurs proposées}) : \num{1300}
+  (CD) devrait porter l'étiquette \derive. Dans le même paragraphe, les
+  \num{1313}~inscrits sont le texte d'une question parlementaire, et les
+  \num{1309}~reconnaissances ne sont pas vérifiées.
+\item §~Régulation, \enquote{Kinésithérapeutes, historique} :
+  \enquote{l'avenant~5 de 2018} doit se lire \enquote{un accord
+  conventionnel de 2018}.
+\end{itemize}
+
 \bibliographystyle{plainnat}
 \bibliography{refs}
 \appendix
