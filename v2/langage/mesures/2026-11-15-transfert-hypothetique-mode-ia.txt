@@ -1,3 +1,7 @@
+# ERRATUM 2026-11-15 (P1-4) : les effets de L23 ci-dessous sont dépassés (double compte ×19). Nouveaux chiffres :
+# pharmaciens France 2050 −0,03 % ; 104 110 vaccinations en moins pour les généralistes en 2050 ; ≈ 24 ETP.
+# Voir v2/docs/lab/reports/2026-11-15-l23-p1-4-marge.md. Mesure d'origine conservée telle quelle.
+
 # Transfert hypothétique en mode IA (claude-haiku-5-5, CHAT_FALLBACKS=0), 2026-11-15, carte 8795 / passerelle 8796 / chatbot 8797
 # ia0 : AVANT le balayage dans la passerelle ; ia1-ia3 : après. Sortie de $SP/ia.py (question, appels, valeurs de a, proposition carte, réponse).
 

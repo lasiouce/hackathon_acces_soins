@@ -5473,3 +5473,18 @@ Demande de la session v2 (accord de l'utilisateur·rice relayé, « oui »). Mes
     s(2026) : non corrigée ici, inscrite au ledger.
 - **Ce qui le renverserait :** une année de base de la demande antérieure à 2019 (la soustraction serait alors de
   trop) ; un nouvel ajustement de P-B6 avec un s∞ nettement plus haut.
+
+## 2026-11-15 — Erratum P1-4 propagé : grille de l'axe 5 relancée, rapports annotés
+- **Fait** (rappel de l'utilisateur·rice, relayé par la session transfert-hypothetique : « corrige l'erreur L23
+  partout où elle reste ») :
+  - `v2/sensibilite/besoin/grille.py` appelle `l23(2026, …)` (constante `L23_REF`) au lieu de `l23(2019, …)` ;
+  - la grille des pharmaciens est relancée ; les sorties des quatre autres professions sont gardées, puisqu'elles ne
+    dépendent pas de L23 et que leurs grilles brutes ne sont pas versionnées ;
+  - résultat : L23 en 2050, E 0,0002 et R 0,002, au lieu de 0,004 et 0,05 ; verdict inchangé, non distinguable.
+- **Encadrés « Erratum 2026-11-15 (P1-4) »** en tête des rapports, anciens chiffres conservés et annotés :
+  - `besoin-carte`, `besoin-assistant`, `uat-application`, `besoin-axe5-sensibilite` ;
+  - trois fichiers de mesure de `v2/langage/mesures/` ;
+  - trois lignes du journal de Home.
+- **Article du besoin (`v2/papers/besoin/`)** : la phrase sur L23 est remplacée par les nouveaux chiffres.
+- **Hors champ :** `besoin-axe1-fiches` ne cite pas l'effet de L23, seulement s∞ et τ, qui restent valables.
+
