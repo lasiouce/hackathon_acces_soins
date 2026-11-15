@@ -200,7 +200,7 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin P-B3 : M3 (pathologies × actes) contre M1 sur l'indice, triangulation du niveau M3/M2 | ~1 h Claude après ingestion | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B4 : reproduire l'APL DREES 2024 (IDE, MK, SF, CD) par M4 ; Spearman ≥ 0,90, erreur médiane ≤ 15 %, +0,05 sur deux naïfs | ~2 h Claude + distancier (machine non mesurée) | dérivation du besoin | 2026-11-15 | open |
 | Besoin P-B5 : backtest du recours 2016 → 2025 par la structure d'âge contre la persistance (patientèle, MAPE dép.) | ~45 min Claude | dérivation du besoin | 2026-11-15 | open |
-| Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~24 Go DAMIR (machine), saisons 2015-16 à 2019-20 | dérivation du besoin | 2026-11-15 | open |
+| Besoin P-B6 : DiD sur l'expérimentation 2017 de la vaccination antigrippale en officine (six régions) ; `s(t)` et `m` | ~1 h 30 Claude + ~24 Go DAMIR (machine), saisons 2015-16 à 2019-20 | dérivation du besoin | 2026-11-15 | fait 2026-11-15 : m = 0 supposé (non attribuable), [rapport](reports/2026-11-15-besoin-p-b6-grippe-officine.md) |
 | Besoin : lire le descriptif de la patientèle (département d'exercice ou de résidence ?) | ~5 min | exploration besoin | 2026-11-15 | fait 2026-11-15 : moyenne par professionnel, département des professionnels (déduit du libellé ; page « Méthode » non lue), [axe 4](reports/2026-11-15-besoin-axe4-donnees.md) |
 | Besoin : ouvrir l'archive APL V0 2010/2013 (pharmaciens ?) | ~15 min | exploration besoin | 2026-11-15 | open |
 | Besoin : sourcer la liste et les dates des régions de l'expérimentation de 2017 (arrêtés ; 4 selon les arrêtés relevés, 6 selon la Cour des comptes) | ~15 min | exploration besoin | 2026-11-15 | open |
@@ -240,3 +240,6 @@ restent valables : on les reprend ici au moment où on les traite.
 | Besoin, axe 4 : lire les 40 mois Open DAMIR restants (2025-10 à 2025-12, 2024, campagnes 2015-16 à 2019-20), à 1 flux, sur une connexion non bloquée ; arrêté à 9 mois faute de temps | ~2 h 30 machine + ~37 Go de transfert | [axe 4](reports/2026-11-15-besoin-axe4-donnees.md) | 2026-11-15 | open |
 | Besoin P-B6 : réécrire le protocole sur Open Medic (m, différence de différences annuelle sur J07BB par région) et la part nationale de la Cour des comptes (s(t)) avant le gel | ~20 min (axe 3) | axe 4 | 2026-11-15 | open |
 | Besoin, axe 4 : compléter Open DAMIR à une année complète (2025-10 à 2025-12, 3 mois) depuis un réseau non bloqué, puis `damir.py --controle` pour reconstruire `damir_profils` et `damir_vaccination` (commitées) sur 12 mois, avant de donner le dépôt aux chercheurs | ~15 min machine + ~5 min | utilisateur·rice | 2026-11-15 | open, prévu le 2026-11-16 par l'utilisateur·rice |
+
+| Besoin P-B6 : refaire le placebo 0–19 ans avec la population régionale par âge 2014–2018 (Insee), au lieu de la population totale | ~20 min | P-B6 | 2026-11-15 | open |
+| Besoin : mettre à jour la fiche L23 (s∞ 0,74, τ 2,4 ans, t₀ 2019 mesurés ; m supposé 0 d'après P-B6) | ~10 min | P-B6 | 2026-11-15 | open |

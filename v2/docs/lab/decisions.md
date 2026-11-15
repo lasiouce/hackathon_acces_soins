@@ -4814,3 +4814,18 @@ le modèle à agents a priori ; cette mesure le confirme et y ajoute le modèle 
 - **Ce qui le renverserait :** une connexion non bloquée et du temps. Commande à 1 flux, dans l'addendum du rapport
   de l'axe 4.
 
+## 2026-11-15 — Module de besoin, P-B6 : m reste supposé à 0 (absence d'effet détectable, placebo en échec) ; s(t) de L23 mesuré sur la série nationale
+- **Décision** (règles gelées de P-B6 et de l'amendement A1, [rapport](reports/2026-11-15-besoin-p-b6-grippe-officine.md)) :
+  - **`m` du transfert L23 = 0, étiqueté « supposé ».**
+    - ATT +0,73 % [−0,12 ; +1,58] (IC 95 % bootstrap sauvage), permutation p = 0,15 sur 2 970 affectations.
+    - Le placebo 0–19 ans donne +4,7 % [+1,2 ; +8,2] : verdict « non attribuable ».
+  - **`s(t)` de L23** : s∞ = 0,74 ± 0,07, τ = 2,4 ± 0,5 ans, t₀ = 2019, ajusté sur la part officinale nationale
+    (IQVIA ÷ Open Medic, 2021-22 à 2024-25). Il remplace la forme supposée par l'axe 1.
+- **Pourquoi :** c'est le protocole gelé. Le résultat est cohérent avec les a priori publiés (HAS 46,1 % contre
+  46,0 % ; Buchan 2017, rapport de prévalence 1,05).
+- **Correction :** l'écart 8, écrit avant le calcul, tenait la campagne 2025-26 pour partielle. Elle est complète.
+  L'ajustement de sensibilité qui l'inclut donne le même résultat (s∞ 0,75, τ 2,4).
+- **Ce qui le renverserait :**
+  - un placebo refait avec le vrai dénominateur 0–19 ans, qui passerait ;
+  - un `s(t)` régional tiré de DAMIR 2015–2020.
+
